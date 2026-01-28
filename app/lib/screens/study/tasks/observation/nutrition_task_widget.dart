@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -42,7 +43,6 @@ class NutritionTaskWidget extends StatefulWidget {
 
 class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     with WidgetsBindingObserver {
-  bool _instructionsExpanded = true;
   DailyRecallEntryViewModel? _viewModel;
   late TextEditingController _specialOccasionController;
   VoidCallback? _viewModelListener;
@@ -51,8 +51,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    // Initialize controller with existing value if any
     _specialOccasionController = TextEditingController(
       text: widget.existingRecall?.specialOccasion ?? '',
     );
@@ -60,16 +58,12 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (mounted) {
-      // Lifecycle logic handled in VM
-    }
     _viewModel?.onAppLifecycleStateChanged(state);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // VM initialization handled in build via _vmAllocated check
   }
 
   @override
@@ -114,425 +108,46 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       child: Consumer<DailyRecallEntryViewModel>(
         builder: (context, model, child) {
           final theme = Theme.of(context);
+          final l10n = AppLocalizations.of(context)!;
           final recall = model.recall;
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                widget.task?.title ??
-                    AppLocalizations.of(context)!.daily_food_diary,
-              ),
-            ),
+            appBar: _buildAppBar(context, model, l10n, theme),
             body: Column(
               children: [
-                if (model.lastSaveTime != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    color: Colors.green.shade50,
-                    child: Row(
-                      children: [
-                        Icon(
-                          model.isSaving ? Icons.cloud_queue : Icons.cloud_done,
-                          size: 16,
-                          color: Colors.green.shade700,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          model.isSaving
-                              ? AppLocalizations.of(context)!.saving
-                              : AppLocalizations.of(context)!.saved_ago(
-                                  _formatTimeSince(
-                                    context,
-                                    model.lastSaveTime!,
-                                  ),
-                                ),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.green.shade800,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 16),
                         if (widget.task?.header != null) ...[
                           HtmlText(widget.task!.header, centered: true),
-                          const SizedBox(height: 20),
-                        ],
-                        if (model.isInTaskMode) ...[
-                          Card(
-                            child: Theme(
-                              data: theme.copyWith(
-                                dividerColor: Colors.transparent,
-                              ),
-                              child: ExpansionTile(
-                                initiallyExpanded: _instructionsExpanded,
-                                onExpansionChanged: (expanded) {
-                                  setState(() {
-                                    _instructionsExpanded = expanded;
-                                  });
-                                },
-                                leading: Icon(
-                                  Icons.info_outline,
-                                  color: theme.colorScheme.primary,
-                                ),
-                                title: Text(
-                                  AppLocalizations.of(context)!.instructions,
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      16,
-                                      0,
-                                      16,
-                                      16,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          widget.task!.instructions ??
-                                              AppLocalizations.of(
-                                                context,
-                                              )!.nutrition_instructions_default,
-                                          style: theme.textTheme.bodyMedium,
-                                        ),
-                                        if (widget.task!.minimumMealsRequired !=
-                                            null) ...[
-                                          const SizedBox(height: 12),
-                                          Container(
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              color: theme
-                                                  .colorScheme
-                                                  .primaryContainer,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.restaurant,
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onPrimaryContainer,
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Expanded(
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.min_meals_required(
-                                                      widget
-                                                          .task!
-                                                          .minimumMealsRequired!,
-                                                    ),
-                                                    style: TextStyle(
-                                                      color: theme
-                                                          .colorScheme
-                                                          .onPrimaryContainer,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
                           const SizedBox(height: 16),
                         ],
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!.recall_details,
-                                  style: theme.textTheme.titleLarge,
-                                ),
-                                const SizedBox(height: 16),
-                                ListTile(
-                                  leading: const Icon(Icons.calendar_today),
-                                  title: Text(
-                                    AppLocalizations.of(context)!.date,
-                                  ),
-                                  subtitle: Text(
-                                    '${recall.date.day}/${recall.date.month}/${recall.date.year}',
-                                  ),
-                                  trailing: const Icon(Icons.edit),
-                                  onTap: () => _selectDate(context, model),
-                                ),
-                                const Divider(),
-                                ListTile(
-                                  leading: const Icon(Icons.access_time),
-                                  title: Text(
-                                    AppLocalizations.of(context)!.recall_mode,
-                                  ),
-                                  subtitle: DropdownButton<RecallMode>(
-                                    value: recall.recallMode,
-                                    isExpanded: true,
-                                    underline: Container(),
-                                    items: [
-                                      DropdownMenuItem(
-                                        value: RecallMode.realtimeRecord,
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.recall_mode_realtime,
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: RecallMode.yesterdayRecall,
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.recall_mode_yesterday,
-                                        ),
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        model.updateRecallMode(value);
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const Divider(),
-                                SwitchListTile(
-                                  secondary: const Icon(Icons.calendar_month),
-                                  title: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.usual_intake_day,
-                                  ),
-                                  subtitle: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.usual_intake_question,
-                                  ),
-                                  value: recall.isUsualIntakeDay ?? true,
-                                  onChanged: (value) {
-                                    model.updateUsualIntake(value);
-                                    if (value) {
-                                      _specialOccasionController.clear();
-                                    }
-                                  },
-                                ),
-                                if (recall.isUsualIntakeDay == false) ...[
-                                  const Divider(),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      labelText: AppLocalizations.of(
-                                        context,
-                                      )!.special_occasion,
-                                      hintText: AppLocalizations.of(
-                                        context,
-                                      )!.special_occasion_hint,
-                                      border: const OutlineInputBorder(),
-                                    ),
-                                    onChanged: (value) {
-                                      model.updateSpecialOccasion(
-                                        value.isEmpty ? null : value,
-                                      );
-                                    },
-                                    controller: _specialOccasionController,
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.meals_count(recall.meals.length),
-                              style: theme.textTheme.titleLarge,
-                            ),
-                            Row(
-                              children: [
-                                OutlinedButton.icon(
-                                  onPressed: () =>
-                                      _addMealFromTemplate(context, model),
-                                  icon: const Icon(Icons.bookmark),
-                                  label: Text(
-                                    AppLocalizations.of(context)!.from_template,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                ElevatedButton.icon(
-                                  onPressed: () => _addMeal(context, model),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: theme.colorScheme.primary,
-                                    foregroundColor: theme.colorScheme.onPrimary,
-                                  ),
-                                  icon: const Icon(Icons.add),
-                                  label: Text(
-                                    AppLocalizations.of(context)!.add_meal,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton.icon(
-                            onPressed: () {
-                              Navigator.of(context).push(MyTemplatesScreen.route());
-                            },
-                            icon: Icon(
-                              Icons.settings,
-                              size: 16,
-                              color: theme.colorScheme.primary.withAlpha(180),
-                            ),
-                            label: Text(
-                              AppLocalizations.of(context)!.my_templates,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: theme.colorScheme.primary.withAlpha(180),
-                              ),
-                            ),
-                          ),
+                        if (model.isInTaskMode &&
+                            (widget.task?.instructions != null ||
+                                widget.task?.minimumMealsRequired != null))
+                          _buildInstructionsCard(context, theme, l10n),
+                        _buildDateDisplayCard(
+                          context,
+                          model,
+                          recall,
+                          theme,
+                          l10n,
                         ),
                         const SizedBox(height: 8),
-                        if (recall.meals.isEmpty)
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(32),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.restaurant,
-                                      size: 48,
-                                      color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.5),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.no_meals_recorded,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        else
-                          ...List.generate(recall.meals.length, (index) {
-                            final meal = recall.meals[index];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text('${meal.foods.length}'),
-                                ),
-                                title: Text(
-                                  meal.customMealLabel ??
-                                      _getMealTypeLabel(context, meal.mealType),
-                                ),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context)!.food_items_count(meal.foods.length)} • ${meal.timestamp.hour.toString().padLeft(2, '0')}:${meal.timestamp.minute.toString().padLeft(2, '0')}',
-                                ),
-                                trailing: PopupMenuButton(
-                                  itemBuilder: (popupContext) => [
-                                    PopupMenuItem(
-                                      value: 'edit',
-                                      child: Row(
-                                        children: [
-                                          const Icon(Icons.edit),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            AppLocalizations.of(popupContext)!.edit,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    if (meal.foods.isNotEmpty)
-                                      PopupMenuItem(
-                                        value: 'save_template',
-                                        child: Row(
-                                          children: [
-                                            const Icon(Icons.bookmark_add),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              AppLocalizations.of(
-                                                popupContext,
-                                              )!.save_as_template,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    PopupMenuItem(
-                                      value: 'delete',
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            AppLocalizations.of(
-                                              popupContext,
-                                            )!.delete,
-                                            style: const TextStyle(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                  onSelected: (value) {
-                                    if (value == 'edit') {
-                                      _editMeal(context, model, meal, index);
-                                    } else if (value == 'save_template') {
-                                      _saveMealAsTemplate(context, meal);
-                                    } else if (value == 'delete') {
-                                      model.removeMeal(index);
-                                    }
-                                  },
-                                ),
-                                onTap: () =>
-                                    _editMeal(context, model, meal, index),
-                              ),
-                            );
-                          }),
+                        _buildMealsSection(context, model, recall, theme, l10n),
                         if (recall.meals.isNotEmpty) ...[
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 16),
                           DailyNutritionSummaryCard(dailyRecall: recall),
                         ],
                         if (widget.task?.footer != null) ...[
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
                           HtmlText(widget.task!.footer, centered: true),
                         ],
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
@@ -545,19 +160,272 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     );
   }
 
-  Future<void> _selectDate(
+  PreferredSizeWidget _buildAppBar(
     BuildContext context,
     DailyRecallEntryViewModel model,
-  ) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: model.recall.date,
-      firstDate: DateTime.now().subtract(const Duration(days: 30)),
-      lastDate: DateTime.now().add(const Duration(days: 1)),
+    AppLocalizations l10n,
+    ThemeData theme,
+  ) {
+    return AppBar(
+      title: Text(
+        widget.task?.title ?? l10n.daily_food_diary,
+        style: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      bottom: model.lastSaveTime != null
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(32),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      model.isSaving ? Icons.cloud_queue : Icons.cloud_done,
+                      size: 14,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      model.isSaving
+                          ? l10n.saving
+                          : l10n.saved_ago(
+                              _formatTimeSince(context, model.lastSaveTime!),
+                            ),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: theme.colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
     );
-    if (picked != null) {
-      model.updateDate(picked);
-    }
+  }
+
+  Widget _buildInstructionsCard(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            Icons.info_outline,
+            size: 20,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
+        title: Text(
+          l10n.instructions,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        children: [
+          Text(
+            widget.task?.instructions ?? l10n.nutrition_instructions_default,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          if (widget.task?.minimumMealsRequired != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.restaurant_menu,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.min_meals_required(widget.task!.minimumMealsRequired!),
+                    style: TextStyle(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateDisplayCard(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+    DailyRecall recall,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.today_outlined,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              l10n.today,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              _formatFullDate(recall.date),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatFullDate(DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.yMMMd(locale).format(date);
+  }
+
+  Widget _buildMealsSection(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+    DailyRecall recall,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        TextButton.icon(
+          onPressed: () {
+            Navigator.of(context).push(MyTemplatesScreen.route());
+          },
+          icon: const Icon(Icons.bookmark_outline, size: 18),
+          label: Text(l10n.my_templates),
+          style: TextButton.styleFrom(
+            foregroundColor: theme.colorScheme.primary,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              l10n.meals,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Row(
+              children: [
+                // Quick add from template button
+                Semantics(
+                  label: l10n.from_template,
+                  button: true,
+                  child: IconButton.outlined(
+                    onPressed: () => _addMealFromTemplate(context, model),
+                    icon: const Icon(Icons.bookmark, size: 18),
+                    tooltip: l10n.from_template,
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(44, 44),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Semantics(
+                  label: l10n.add_meal,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () => _addMeal(context, model),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add, size: 18),
+                        const SizedBox(width: 6),
+                        Text(l10n.add_meal),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (recall.meals.isEmpty)
+          _EmptyMealsState(theme: theme, l10n: l10n)
+        else
+          ...List.generate(recall.meals.length, (index) {
+            final meal = recall.meals[index];
+            return _MealCard(
+              meal: meal,
+              index: index,
+              onTap: () => _editMeal(context, model, meal, index),
+              onEdit: () => _editMeal(context, model, meal, index),
+              onSaveTemplate: () => _saveMealAsTemplate(context, meal),
+              onDelete: () => model.removeMeal(index),
+              getMealTypeLabel: (type) => _getMealTypeLabel(context, type),
+            );
+          }),
+      ],
+    );
   }
 
   Future<void> _addMeal(
@@ -585,32 +453,34 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   }
 
   String _getMealTypeLabel(BuildContext context, MealType type) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
       case MealType.breakfast:
-        return AppLocalizations.of(context)!.meal_type_breakfast;
+        return l10n.meal_type_breakfast;
       case MealType.brunch:
-        return AppLocalizations.of(context)!.meal_type_brunch;
+        return l10n.meal_type_brunch;
       case MealType.lunch:
-        return AppLocalizations.of(context)!.meal_type_lunch;
+        return l10n.meal_type_lunch;
       case MealType.dinner:
-        return AppLocalizations.of(context)!.meal_type_dinner;
+        return l10n.meal_type_dinner;
       case MealType.snack:
-        return AppLocalizations.of(context)!.meal_type_snack;
+        return l10n.meal_type_snack;
       case MealType.other:
-        return AppLocalizations.of(context)!.meal_type_other;
+        return l10n.meal_type_other;
     }
   }
 
   String _formatTimeSince(BuildContext context, DateTime time) {
+    final l10n = AppLocalizations.of(context)!;
     final diff = DateTime.now().difference(time);
     if (diff.inSeconds < 10) {
-      return AppLocalizations.of(context)!.just_now;
+      return l10n.just_now;
     } else if (diff.inSeconds < 60) {
-      return AppLocalizations.of(context)!.seconds_ago(diff.inSeconds);
+      return l10n.seconds_ago(diff.inSeconds);
     } else if (diff.inMinutes < 60) {
-      return AppLocalizations.of(context)!.minutes_ago(diff.inMinutes);
+      return l10n.minutes_ago(diff.inMinutes);
     } else {
-      return AppLocalizations.of(context)!.hours_ago(diff.inHours);
+      return l10n.hours_ago(diff.inHours);
     }
   }
 
@@ -625,17 +495,18 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       templateType: TemplateType.meal,
     );
 
-    if (result != null && mounted) {
+    if (result != null && context.mounted) {
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveMealAsTemplate(
         name: result.name,
         meal: meal,
         tags: result.tags,
       );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.template_saved)),
-        );
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
       }
     }
   }
@@ -656,5 +527,245 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     if (result is MealLog) {
       model.addMeal(result);
     }
+  }
+}
+
+class _EmptyMealsState extends StatelessWidget {
+  final ThemeData theme;
+  final AppLocalizations l10n;
+
+  const _EmptyMealsState({required this.theme, required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.restaurant_outlined,
+              size: 32,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l10n.no_meals_recorded,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            l10n.tap_to_add_first_meal,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MealCard extends StatelessWidget {
+  final MealLog meal;
+  final int index;
+  final VoidCallback onTap;
+  final VoidCallback onEdit;
+  final VoidCallback onSaveTemplate;
+  final VoidCallback onDelete;
+  final String Function(MealType) getMealTypeLabel;
+
+  const _MealCard({
+    required this.meal,
+    required this.index,
+    required this.onTap,
+    required this.onEdit,
+    required this.onSaveTemplate,
+    required this.onDelete,
+    required this.getMealTypeLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              _MealTypeAvatar(meal: meal, getMealTypeLabel: getMealTypeLabel),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      meal.customMealLabel ?? getMealTypeLabel(meal.mealType),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${l10n.food_items_count(meal.foods.length)} • ${_formatTime(meal.timestamp)}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, size: 20),
+                tooltip: l10n.more_options,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      onEdit();
+                    case 'save_template':
+                      onSaveTemplate();
+                    case 'delete':
+                      onDelete();
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: _PopupMenuItem(
+                      icon: Icons.edit_outlined,
+                      label: l10n.edit,
+                    ),
+                  ),
+                  if (meal.foods.isNotEmpty)
+                    PopupMenuItem(
+                      value: 'save_template',
+                      child: _PopupMenuItem(
+                        icon: Icons.bookmark_add_outlined,
+                        label: l10n.save_as_template,
+                      ),
+                    ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: _PopupMenuItem(
+                      icon: Icons.delete_outline,
+                      label: l10n.delete,
+                      isDestructive: true,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatTime(DateTime timestamp) {
+    return '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
+  }
+}
+
+class _MealTypeAvatar extends StatelessWidget {
+  final MealLog meal;
+  final String Function(MealType) getMealTypeLabel;
+
+  const _MealTypeAvatar({required this.meal, required this.getMealTypeLabel});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    IconData icon;
+    Color color;
+
+    switch (meal.mealType) {
+      case MealType.breakfast:
+        icon = Icons.wb_sunny_outlined;
+        color = Colors.amber;
+      case MealType.brunch:
+        icon = Icons.brunch_dining_outlined;
+        color = Colors.orange;
+      case MealType.lunch:
+        icon = Icons.lunch_dining_outlined;
+        color = Colors.green;
+      case MealType.dinner:
+        icon = Icons.dinner_dining_outlined;
+        color = Colors.indigo;
+      case MealType.snack:
+        icon = Icons.cookie_outlined;
+        color = Colors.purple;
+      case MealType.other:
+        icon = Icons.restaurant_outlined;
+        color = theme.colorScheme.primary;
+    }
+
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(child: Icon(icon, size: 22, color: color)),
+    );
+  }
+}
+
+class _PopupMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isDestructive;
+
+  const _PopupMenuItem({
+    required this.icon,
+    required this.label,
+    this.isDestructive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: isDestructive
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(
+            color: isDestructive ? Theme.of(context).colorScheme.error : null,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -102,21 +102,6 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     }
   }
 
-  void updateDate(DateTime newDate) {
-    if (newDate != recall.date) {
-      recall = _copyWithRecall(date: newDate);
-      notifyListeners();
-      _scheduleAutoSave('date changed');
-    }
-  }
-
-  void updateRecallMode(RecallMode mode) {
-    if (mode != recall.recallMode) {
-      recall = _copyWithRecall(recallMode: mode);
-      notifyListeners();
-      _scheduleAutoSave('recall mode changed');
-    }
-  }
 
   void updateUsualIntake(bool isUsual) {
     if (isUsual != recall.isUsualIntakeDay) {
@@ -161,19 +146,17 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   // Helper to copy recall with new fields
   DailyRecall _copyWithRecall({
-    DateTime? date,
     bool? isUsualIntakeDay,
     String? specialOccasion,
-    RecallMode? recallMode,
     DateTime? entryCompletedAt,
     DateTime? lastAutoSavedAt,
   }) {
     return DailyRecall(
       id: recall.id,
-      date: date ?? recall.date,
+      date: recall.date,
       isUsualIntakeDay: isUsualIntakeDay ?? recall.isUsualIntakeDay,
       specialOccasion: specialOccasion ?? recall.specialOccasion,
-      recallMode: recallMode ?? recall.recallMode,
+      recallMode: recall.recallMode,
       entryStartedAt: recall.entryStartedAt,
       entryCompletedAt: entryCompletedAt ?? recall.entryCompletedAt,
       meals: recall.meals,
@@ -248,7 +231,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
         studyDaySnapshot: _studyDaySnapshot!,
       );
 
-      if (_shouldSaveToDb) {
+      if (shouldSaveToDb) {
         await subject!.upsertNutritionResult(
           taskId: task!.id,
           periodId: completionPeriod!.id,
@@ -263,7 +246,5 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     }
   }
 
-  bool _shouldSaveToDb = true;
-  bool get shouldSaveToDb => _shouldSaveToDb;
-  set shouldSaveToDb(bool value) => _shouldSaveToDb = value;
+  bool shouldSaveToDb = true;
 }

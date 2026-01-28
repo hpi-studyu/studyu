@@ -1588,4 +1588,126 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get new_name => 'New Name';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get meals => 'Meals';
+
+  @override
+  String get food_items => 'Food items';
+
+  @override
+  String get tap_to_add_first_meal =>
+      'Tap the button above to add your first meal';
+
+  @override
+  String get tap_to_add_food => 'Tap to add food';
+
+  @override
+  String get add_food_title => 'Add Food';
+
+  @override
+  String get edit_food_title => 'Edit Food';
+
+  @override
+  String get add_food_manually => 'Add Food Manually';
+
+  @override
+  String get basic_information => 'Basic Information';
+
+  @override
+  String get macronutrients => 'Macronutrients';
+
+  @override
+  String get detailed_nutrients => 'Detailed Nutrients';
+
+  @override
+  String get daily_nutrition_total => 'Daily Nutrition Total';
+
+  @override
+  String get meal_nutrition => 'Meal Nutrition';
+
+  @override
+  String get nutrition_summary => 'Nutrition Summary';
+
+  @override
+  String get calorie_distribution => 'Calorie Distribution';
+
+  @override
+  String get more_options => 'More options';
+
+  @override
+  String get search_food_hint => 'Search food (e.g., \"apple\", \"chicken\")';
+
+  @override
+  String get my_saved_items => 'My Saved Items';
+
+  @override
+  String get global_database => 'Global Database';
+
+  @override
+  String get quick_actions => 'Quick Actions';
+
+  @override
+  String get create_recipe => 'Create Recipe';
+
+  @override
+  String get create_recipe_subtitle => 'Build from multiple ingredients';
+
+  @override
+  String get add_manually => 'Add Manually';
+
+  @override
+  String get add_manually_subtitle => 'Enter nutrition facts yourself';
+
+  @override
+  String get scan_barcode => 'Scan Barcode';
+
+  @override
+  String get scan_barcode_subtitle => 'Find packaged products quickly';
+
+  @override
+  String get search_for_food => 'Search for Food';
+
+  @override
+  String get search_food_description => 'Type above to search global databases';
+
+  @override
+  String get searching_databases => 'Searching databases...';
+
+  @override
+  String get end_of_results => 'End of results';
+
+  @override
+  String get no_results_found => 'No results found. Try different keywords.';
+
+  @override
+  String get no_matching_templates => 'No matching templates';
+
+  @override
+  String get detailed_nutrition => 'Detailed Nutrition';
+
+  @override
+  String get detailed_nutrition_subtitle => 'Fiber, Sugar, Sodium';
+
+  @override
+  String get advanced_options => 'Advanced Options';
+
+  @override
+  String get advanced_options_subtitle => 'Food type, serving size, portions';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get search_food_database => 'Search Food Database';
+
+  @override
+  String get no_data_yet => 'No data yet';
+
+  @override
+  String get start_tracking_nutrition =>
+      'Start tracking your nutrition by adding meals';
 }

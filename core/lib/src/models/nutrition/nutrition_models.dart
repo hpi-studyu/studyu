@@ -7,4 +7,3 @@ export 'recipe_composition.dart';
 export 'recipe_metadata.dart';
 export 'saved_food_template.dart';
 export 'saved_meal_template.dart';
-

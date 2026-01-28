@@ -1,36 +1,78 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/models/unified_food_result.dart';
+import 'package:studyu_app/models/usda_models.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
-class FoodSearchScreen extends StatefulWidget {
+class FoodSearchScreen extends StatelessWidget {
   const FoodSearchScreen({super.key});
 
-  static MaterialPageRoute<studyu.FoodEntry> route() => MaterialPageRoute(
-        builder: (_) => const FoodSearchScreen(),
-      );
+  static MaterialPageRoute<studyu.FoodEntry> route() =>
+      MaterialPageRoute(builder: (_) => const FoodSearchScreen());
 
   @override
-  State<FoodSearchScreen> createState() => _FoodSearchScreenState();
+  Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    return ChangeNotifierProvider(
+      create: (_) => TemplateViewModel(userId: userId),
+      child: const _FoodSearchScreenContent(),
+    );
+  }
 }
 
-enum FoodApiSource { openFoodFacts, usda }
+class _FoodSearchScreenContent extends StatefulWidget {
+  const _FoodSearchScreenContent();
 
-class _FoodSearchScreenState extends State<FoodSearchScreen> {
+  @override
+  State<_FoodSearchScreenContent> createState() =>
+      _FoodSearchScreenContentState();
+}
+
+class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   final TextEditingController _searchController = TextEditingController();
-  List<Product> _openFoodFactsResults = [];
-  List<UsdaFoodItem> _usdaResults = [];
-  FoodApiSource _selectedApi = FoodApiSource.openFoodFacts;
-  bool _isLoading = false;
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _searchFocusNode = FocusNode();
+
+  // Debounce timer for live search
+  Timer? _debounceTimer;
+  static const _debounceDuration = Duration(milliseconds: 400);
+
+  // Combined results from all sources
+  List<UnifiedFoodResult> _combinedResults = [];
+
+  // Pagination state per source
+  int _offPage = 1;
+  int _usdaPage = 1;
+  bool _offHasMore = true;
+  bool _usdaHasMore = true;
+
+  // Loading states
+  bool _isInitialLoading = false;
+  bool _isLoadingMore = false;
   bool _hasSearched = false;
   String? _errorMessage;
+
+  // Track which sources have been searched
+  bool _offSearched = false;
+  bool _usdaSearched = false;
+
+  static const int _pageSize = 20;
 
   @override
   void initState() {
     super.initState();
-    // Configure OpenFoodFacts
     OpenFoodAPIConfiguration.userAgent = UserAgent(
       name: 'StudyU',
       version: '1.0',
@@ -38,48 +80,128 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
       url: 'https://studyu.health',
     );
     OpenFoodAPIConfiguration.globalLanguages = [OpenFoodFactsLanguage.ENGLISH];
+
+    _scrollController.addListener(_onScroll);
+
+    // Auto-focus search field on load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
+    });
   }
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
+    _scrollController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
-  Future<void> _searchFood() async {
-    if (_searchController.text.trim().isEmpty) {
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _hasSearched = true;
-      _errorMessage = null;
-      _openFoodFactsResults = [];
-      _usdaResults = [];
-    });
-
-    try {
-      if (_selectedApi == FoodApiSource.openFoodFacts) {
-        await _searchOpenFoodFacts();
-      } else {
-        await _searchUsda();
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Error searching: $e';
-      });
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      _loadMore();
     }
   }
 
-  Future<void> _searchOpenFoodFacts() async {
+  /// Debounced search - triggers after user stops typing
+  void _onSearchChanged(String value, TemplateViewModel templateViewModel) {
+    templateViewModel.setSearchQuery(value);
+    setState(() {});
+
+    _debounceTimer?.cancel();
+
+    if (value.trim().isEmpty) {
+      setState(() {
+        _combinedResults = [];
+        _hasSearched = false;
+        _errorMessage = null;
+      });
+      return;
+    }
+
+    _debounceTimer = Timer(_debounceDuration, () {
+      _searchFood(templateViewModel);
+    });
+  }
+
+  Future<void> _searchFood(TemplateViewModel templateViewModel) async {
+    final query = _searchController.text.trim();
+    templateViewModel.setSearchQuery(query);
+
+    if (query.isEmpty) {
+      setState(() {
+        _combinedResults = [];
+        _hasSearched = false;
+        _errorMessage = null;
+      });
+      return;
+    }
+
+    _offPage = 1;
+    _usdaPage = 1;
+    _offHasMore = true;
+    _usdaHasMore = true;
+    _offSearched = false;
+    _usdaSearched = false;
+
+    setState(() {
+      _isInitialLoading = true;
+      _hasSearched = true;
+      _errorMessage = null;
+      _combinedResults = [];
+    });
+
+    await Future.wait([
+      _searchOpenFoodFacts(query, isInitial: true),
+      _searchUsda(query, isInitial: true),
+    ]);
+
+    setState(() {
+      _isInitialLoading = false;
+    });
+  }
+
+  Future<void> _loadMore() async {
+    if (_isLoadingMore || _isInitialLoading) return;
+    if (!_offHasMore && !_usdaHasMore) return;
+
+    final query = _searchController.text.trim();
+    if (query.isEmpty) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    final futures = <Future>[];
+
+    if (_offHasMore) {
+      futures.add(_searchOpenFoodFacts(query, isInitial: false));
+    }
+    if (_usdaHasMore) {
+      futures.add(_searchUsda(query, isInitial: false));
+    }
+
+    await Future.wait(futures);
+
+    setState(() {
+      _isLoadingMore = false;
+    });
+  }
+
+  Future<void> _searchOpenFoodFacts(
+    String query, {
+    required bool isInitial,
+  }) async {
     try {
       final searchResult = await OpenFoodAPIClient.searchProducts(
         null,
         ProductSearchQueryConfiguration(
           parametersList: [
-            SearchTerms(terms: [_searchController.text.trim()]),
+            SearchTerms(terms: [query]),
+            PageNumber(page: _offPage),
+            const PageSize(size: _pageSize),
           ],
           language: OpenFoodFactsLanguage.ENGLISH,
           fields: [
@@ -95,77 +217,87 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         ),
       );
 
-      setState(() {
-        _isLoading = false;
-        if (searchResult.products != null && searchResult.products!.isNotEmpty) {
-          _openFoodFactsResults = searchResult.products!;
-        } else {
-          _errorMessage = 'No results found in OpenFoodFacts';
-        }
-      });
+      _offSearched = true;
+
+      if (searchResult.products != null && searchResult.products!.isNotEmpty) {
+        final newResults = searchResult.products!.map((product) {
+          final nutriments = product.nutriments;
+          final calories = nutriments?.getValue(
+            Nutrient.energyKCal,
+            PerSize.oneHundredGrams,
+          );
+
+          return UnifiedFoodResult(
+            id: product.barcode ?? '',
+            name: product.productName ?? 'Unknown',
+            brand: product.brands,
+            imageUrl: product.imageFrontSmallUrl,
+            calories: calories,
+            source: studyu.FoodSource.openfoodfacts,
+            originalData: product,
+          );
+        }).toList();
+
+        setState(() {
+          _combinedResults.addAll(newResults);
+          _offPage++;
+          _offHasMore = searchResult.products!.length >= _pageSize;
+        });
+      } else {
+        setState(() {
+          _offHasMore = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'OpenFoodFacts error: $e';
-      });
+      _offSearched = true;
+      debugPrint('OpenFoodFacts error: $e');
     }
   }
 
-  Future<void> _searchUsda() async {
+  Future<void> _searchUsda(String query, {required bool isInitial}) async {
     try {
       final searchResult = await UsdaApiService.searchFoods(
-        query: _searchController.text.trim(),
+        query: query,
+        pageSize: _pageSize,
+        pageNumber: _usdaPage,
       );
 
-      setState(() {
-        _isLoading = false;
-        if (searchResult.foods.isNotEmpty) {
-          // Sort: Foundation first, then SR Legacy
-          _usdaResults = List.from(searchResult.foods)
-            ..sort((a, b) {
-              // Foundation comes first (priority 0)
-              // SR Legacy comes second (priority 1)
-              // Other types come last (priority 2)
-              int getPriority(String? dataType) {
-                if (dataType == null) return 2;
-                if (dataType.toLowerCase().contains('foundation')) return 0;
-                if (dataType.toLowerCase().contains('sr legacy') || 
-                    dataType.toLowerCase().contains('sr_legacy')) {
-                  return 1;
-                }
-                return 2;
-              }
-              
-              final priorityA = getPriority(a.dataType);
-              final priorityB = getPriority(b.dataType);
-              
-              if (priorityA != priorityB) {
-                return priorityA.compareTo(priorityB);
-              }
-              
-              // If same priority, sort alphabetically by name
-              return (a.description ?? '').compareTo(b.description ?? '');
-            });
-        } else {
-          _errorMessage = 'No results found in USDA database';
-        }
-      });
+      _usdaSearched = true;
+
+      if (searchResult.foods.isNotEmpty) {
+        final newResults = searchResult.foods.map((food) {
+          return UnifiedFoodResult(
+            id: food.fdcId.toString(),
+            name: food.description ?? 'Unknown',
+            brand: food.brandOwner ?? food.brandName,
+            imageUrl: null,
+            calories: food.energyKcal100g,
+            source: studyu.FoodSource.usda,
+            originalData: food,
+          );
+        }).toList();
+
+        setState(() {
+          _combinedResults.addAll(newResults);
+          _usdaPage++;
+          _usdaHasMore = searchResult.foods.length >= _pageSize;
+        });
+      } else {
+        setState(() {
+          _usdaHasMore = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'USDA API error: $e';
-      });
+      _usdaSearched = true;
+      debugPrint('USDA error: $e');
     }
   }
 
   studyu.FoodEntry _convertUsdaToFoodEntry(UsdaFoodItem food) {
-    // USDA provides nutrients per 100g by default
     final servingSizeGrams = food.servingSize ?? 100.0;
     final servingSizeUnit = food.servingSizeUnit ?? 'g';
-    
-    // Scale nutrients to serving size
     final scale = servingSizeGrams / 100.0;
-    
+
     return studyu.FoodEntry.withId(
       entryType: studyu.FoodEntryType.brandedProduct,
       name: food.description ?? 'Unknown Food',
@@ -188,7 +320,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         saturatedFat: food.saturatedFat100g * scale,
         transFat: 0,
         cholesterol: 0,
-        sodium: food.sodium100g * scale, // Already in mg
+        sodium: food.sodium100g * scale,
         waterContent: 0,
         micros: {},
       ),
@@ -206,21 +338,31 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
 
   studyu.FoodEntry _convertToFoodEntry(Product product) {
     final nutriments = product.nutriments;
-    
-    // Extract nutrition info with fallbacks
-    final energyKcal = nutriments?.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams) ?? 0;
-    final protein = nutriments?.getValue(Nutrient.proteins, PerSize.oneHundredGrams) ?? 0;
-    final carbs = nutriments?.getValue(Nutrient.carbohydrates, PerSize.oneHundredGrams) ?? 0;
-    final fat = nutriments?.getValue(Nutrient.fat, PerSize.oneHundredGrams) ?? 0;
-    final sugars = nutriments?.getValue(Nutrient.sugars, PerSize.oneHundredGrams) ?? 0;
-    final fiber = nutriments?.getValue(Nutrient.fiber, PerSize.oneHundredGrams) ?? 0;
-    final saturatedFat = nutriments?.getValue(Nutrient.saturatedFat, PerSize.oneHundredGrams) ?? 0;
-    final sodium = (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) * 1000; // Convert g to mg
+    final energyKcal =
+        nutriments?.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams) ?? 0;
+    final protein =
+        nutriments?.getValue(Nutrient.proteins, PerSize.oneHundredGrams) ?? 0;
+    final carbs =
+        nutriments?.getValue(Nutrient.carbohydrates, PerSize.oneHundredGrams) ??
+        0;
+    final fat =
+        nutriments?.getValue(Nutrient.fat, PerSize.oneHundredGrams) ?? 0;
+    final sugars =
+        nutriments?.getValue(Nutrient.sugars, PerSize.oneHundredGrams) ?? 0;
+    final fiber =
+        nutriments?.getValue(Nutrient.fiber, PerSize.oneHundredGrams) ?? 0;
+    final saturatedFat =
+        nutriments?.getValue(Nutrient.saturatedFat, PerSize.oneHundredGrams) ??
+        0;
+    final sodium =
+        (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) *
+        1000;
 
-    // Parse serving size
-    double servingSizeGrams = 100.0; // default
+    double servingSizeGrams = 100.0;
     if (product.servingSize != null) {
-      final match = RegExp(r'(\d+(?:\.\d+)?)\s*g').firstMatch(product.servingSize!);
+      final match = RegExp(
+        r'(\d+(?:\.\d+)?)\s*g',
+      ).firstMatch(product.servingSize!);
       if (match != null) {
         servingSizeGrams = double.tryParse(match.group(1)!) ?? 100.0;
       }
@@ -260,614 +402,931 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
     );
   }
 
-  void _selectProduct(Product product) {
-    final foodEntry = _convertToFoodEntry(product);
-    
-    // Navigate to food entry screen for editing before saving
+  void _selectResult(UnifiedFoodResult result) {
+    studyu.FoodEntry foodEntry;
+    if (result.source == studyu.FoodSource.openfoodfacts) {
+      foodEntry = _convertToFoodEntry(result.originalData as Product);
+    } else {
+      foodEntry = _convertUsdaToFoodEntry(result.originalData as UsdaFoodItem);
+    }
+    _navigateToEdit(foodEntry);
+  }
+
+  void _selectTemplate(
+    studyu.SavedFoodTemplate template,
+  ) {
+    Navigator.pop(context, template.prototype);
+  }
+
+  void _navigateToEdit(studyu.FoodEntry foodEntry) {
     Navigator.push(
       context,
       FoodEntryScreen.route(existingFood: foodEntry),
     ).then((result) {
-      if (result != null) {
-        // Return the edited food entry
+      if (result != null && mounted) {
         Navigator.pop(context, result);
       }
     });
   }
 
-  void _selectUsdaFood(UsdaFoodItem food) {
-    final foodEntry = _convertUsdaToFoodEntry(food);
-    
-    // Navigate to food entry screen for editing before saving
-    Navigator.push(
-      context,
-      FoodEntryScreen.route(existingFood: foodEntry),
-    ).then((result) {
-      if (result != null) {
-        // Return the edited food entry
+  void _addManually() {
+    Navigator.push(context, FoodEntryScreen.route()).then((result) {
+      if (result != null && mounted) {
         Navigator.pop(context, result);
       }
     });
+  }
+
+  void _createRecipe() {
+    Navigator.push(context, RecipeBuilderScreen.route()).then((result) {
+      if (result != null && mounted) {
+        Navigator.pop(context, result);
+      }
+    });
+  }
+
+  Future<void> _scanBarcode() async {
+    final result = await Navigator.push(
+      context,
+      BarcodeScannerScreen.route(),
+    );
+    if (result != null && mounted) {
+      Navigator.pop(context, result);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final templateViewModel = Provider.of<TemplateViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Food Database'),
-        actions: [
-          // Only show barcode scanner for OpenFoodFacts
-          if (_selectedApi == FoodApiSource.openFoodFacts)
-            IconButton(
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  BarcodeScannerScreen.route(),
-                );
-                if (result != null) {
-                  // Barcode scan returned a food, pass it back
-                  Navigator.pop(context, result);
-                }
-              },
-              icon: const Icon(Icons.qr_code_scanner),
-              tooltip: 'Scan Barcode',
-            ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search for food (e.g., "apple", "coca cola")',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                        setState(() {
-                          _openFoodFactsResults = [];
-                          _usdaResults = [];
-                          _hasSearched = false;
-                          _errorMessage = null;
-                        });
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-              onSubmitted: (_) => _searchFood(),
-              onChanged: (_) => setState(() {}),
-            ),
-          ),
-        ),
+        title: Text(l10n.add_food_title),
       ),
       body: Column(
         children: [
-          // API Selector and Search
-          Container(
-            padding: const EdgeInsets.all(12),
-            color: Colors.blue.shade50,
-            child: Column(
-              children: [
-                // API Selector
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blue.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildApiButton(
-                          FoodApiSource.openFoodFacts,
-                          'OpenFoodFacts',
-                          Icons.store,
-                          Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildApiButton(
-                          FoodApiSource.usda,
-                          'USDA',
-                          Icons.agriculture,
-                          Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Info banner
-                Row(
-                  children: [
-                    Icon(
-                      _selectedApi == FoodApiSource.openFoodFacts
-                          ? Icons.store
-                          : Icons.agriculture,
-                      color: _selectedApi == FoodApiSource.openFoodFacts
-                          ? Colors.green
-                          : Colors.orange,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _selectedApi == FoodApiSource.openFoodFacts
-                            ? "OpenFoodFacts - World's largest open food database"
-                            : 'USDA FoodData Central - Official US nutrition database',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade900,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: _isLoading ? null : _searchFood,
-                      icon: const Icon(Icons.search),
-                      label: const Text('Search'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedApi == FoodApiSource.openFoodFacts
-                            ? Colors.green
-                            : Colors.orange,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                // Only show barcode scanner button for OpenFoodFacts
-                if (_selectedApi == FoodApiSource.openFoodFacts) ...[
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
-                        BarcodeScannerScreen.route(),
-                      );
-                      if (result != null && mounted) {
-                        Navigator.pop(context, result);
-                      }
-                    },
-                    icon: const Icon(Icons.qr_code_scanner),
-                    label: const Text('Scan Barcode Instead'),
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 40),
-                    ),
-                  ),
-                ],
-              ],
-            ),
+          // Search Bar
+          _SearchBarHeader(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            l10n: l10n,
+            onChanged: (val) => _onSearchChanged(val, templateViewModel),
+            onClear: () {
+              _debounceTimer?.cancel();
+              _searchController.clear();
+              templateViewModel.setSearchQuery('');
+              setState(() {
+                _combinedResults = [];
+                _hasSearched = false;
+                _errorMessage = null;
+              });
+            },
           ),
 
-          // Results
+          // Content
           Expanded(
-            child: _buildResultsArea(),
+            child: _FoodSearchListView(
+              scrollController: _scrollController,
+              l10n: l10n,
+              theme: theme,
+              templateViewModel: templateViewModel,
+              searchController: _searchController,
+              isInitialLoading: _isInitialLoading,
+              isLoadingMore: _isLoadingMore,
+              hasSearched: _hasSearched,
+              offSearched: _offSearched,
+              usdaSearched: _usdaSearched,
+              offHasMore: _offHasMore,
+              usdaHasMore: _usdaHasMore,
+              errorMessage: _errorMessage,
+              combinedResults: _combinedResults,
+              onSelectTemplate: _selectTemplate,
+              onSelectResult: _selectResult,
+              onAddManually: _addManually,
+              onCreateRecipe: _createRecipe,
+              onScanBarcode: _scanBarcode,
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildResultsArea() {
-    if (_isLoading) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            Text(
-              _selectedApi == FoodApiSource.openFoodFacts
-                  ? 'Searching OpenFoodFacts database...'
-                  : 'Searching USDA FoodData Central...',
-            ),
-          ],
-        ),
-      );
-    }
+// ============================================================
+// WIDGETS
+// ============================================================
 
-    if (_errorMessage != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
-              const SizedBox(height: 16),
-              Text(
-                _errorMessage!,
-                style: const TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _searchFood,
-                child: const Text('Try Again'),
-              ),
-            ],
+class _SearchBarHeader extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final AppLocalizations l10n;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+
+  const _SearchBarHeader({
+    required this.controller,
+    required this.focusNode,
+    required this.l10n,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
         ),
-      );
-    }
-
-    if (!_hasSearched) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.search,
-                size: 100,
-                color: Colors.grey.shade300,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Search for Food',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.grey.shade600,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Enter a food name, brand, or barcode',
-                style: TextStyle(color: Colors.grey.shade500),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    final hasResults = _selectedApi == FoodApiSource.openFoodFacts
-        ? _openFoodFactsResults.isNotEmpty
-        : _usdaResults.isNotEmpty;
-
-    if (!hasResults) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.search_off, size: 64, color: Colors.grey.shade400),
-              const SizedBox(height: 16),
-              const Text(
-                'No results found',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Try a different search term',
-                style: TextStyle(color: Colors.grey.shade600),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_selectedApi == FoodApiSource.openFoodFacts) {
-      return ListView.builder(
-        itemCount: _openFoodFactsResults.length,
-        padding: const EdgeInsets.all(8),
-        itemBuilder: (context, index) {
-          final product = _openFoodFactsResults[index];
-          return _buildProductCard(product);
-        },
-      );
-    } else {
-      return ListView.builder(
-        itemCount: _usdaResults.length,
-        padding: const EdgeInsets.all(8),
-        itemBuilder: (context, index) {
-          final food = _usdaResults[index];
-          return _buildUsdaFoodCard(food);
-        },
-      );
-    }
-  }
-
-  Widget _buildProductCard(Product product) {
-    final nutriments = product.nutriments;
-    final energyKcal = nutriments?.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams) ?? 0;
-    final protein = nutriments?.getValue(Nutrient.proteins, PerSize.oneHundredGrams) ?? 0;
-    final carbs = nutriments?.getValue(Nutrient.carbohydrates, PerSize.oneHundredGrams) ?? 0;
-    final fat = nutriments?.getValue(Nutrient.fat, PerSize.oneHundredGrams) ?? 0;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      child: InkWell(
-        onTap: () => _selectProduct(product),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product image
-              if (product.imageFrontSmallUrl != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    product.imageFrontSmallUrl!,
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        _buildPlaceholderImage(),
-                  ),
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        autofocus: true,
+        decoration: InputDecoration(
+          hintText: l10n.search_food_hint,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: controller.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: onClear,
                 )
-              else
-                _buildPlaceholderImage(),
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          filled: true,
+          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        ),
+        onSubmitted: (_) => focusNode.unfocus(),
+        onChanged: onChanged,
+      ),
+    );
+  }
+}
 
-              const SizedBox(width: 12),
+class _SectionHeader extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color iconColor;
 
-              // Product info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.productName ?? 'Unknown Product',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (product.brands != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        product.brands!,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _buildNutrientChip('${energyKcal.toStringAsFixed(0)} kcal', Colors.orange),
-                        const SizedBox(width: 4),
-                        _buildNutrientChip('P: ${protein.toStringAsFixed(1)}g', Colors.blue),
-                        const SizedBox(width: 4),
-                        _buildNutrientChip('C: ${carbs.toStringAsFixed(1)}g', Colors.green),
-                        const SizedBox(width: 4),
-                        _buildNutrientChip('F: ${fat.toStringAsFixed(1)}g', Colors.purple),
-                      ],
-                    ),
-                    if (product.servingSize != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        'Serving: ${product.servingSize}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+    required this.iconColor,
+  });
 
-              // Arrow icon
-              Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400, size: 16),
-            ],
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: iconColor.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Icon(icon, size: 16, color: iconColor),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
           ),
         ),
-      ),
+      ],
     );
   }
+}
 
-  Widget _buildPlaceholderImage() {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Icon(Icons.fastfood, color: Colors.grey.shade400, size: 30),
-    );
-  }
+class _TemplateCard extends StatelessWidget {
+  final studyu.SavedFoodTemplate template;
+  final VoidCallback onTap;
+  final ThemeData theme;
 
-  Widget _buildNutrientChip(String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
-      ),
-    );
-  }
+  const _TemplateCard({
+    required this.template,
+    required this.onTap,
+    required this.theme,
+  });
 
-  Widget _buildApiButton(FoodApiSource api, String label, IconData icon, Color color) {
-    final isSelected = _selectedApi == api;
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedApi = api;
-          _openFoodFactsResults = [];
-          _usdaResults = [];
-          _hasSearched = false;
-          _errorMessage = null;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isSelected ? color : Colors.grey,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? color : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUsdaFoodCard(UsdaFoodItem food) {
-    final energyKcal = food.energyKcal100g;
-    final protein = food.protein100g;
-    final carbs = food.carbohydrates100g;
-    final fat = food.fat100g;
+  @override
+  Widget build(BuildContext context) {
+    final isRecipe =
+        template.prototype.entryType == studyu.FoodEntryType.recipe;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: isRecipe
+                ? Colors.orange.withValues(alpha: 0.12)
+                : theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            isRecipe ? Icons.menu_book_outlined : Icons.fastfood_outlined,
+            size: 22,
+            color: isRecipe
+                ? Colors.orange.shade700
+                : theme.colorScheme.primary,
+          ),
+        ),
+        title: Text(
+          template.name,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          '${isRecipe ? "Recipe • " : ""}${template.prototype.nutrition.energyKcal.round()} kcal',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        trailing: Icon(
+          Icons.add_circle_outline,
+          color: theme.colorScheme.primary,
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class _FoodResultCard extends StatelessWidget {
+  final UnifiedFoodResult result;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  const _FoodResultCard({
+    required this.result,
+    required this.onTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: InkWell(
-        onTap: () => _selectUsdaFood(food),
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // USDA icon placeholder
+              // Image or fallback icon
               Container(
-                width: 60,
-                height: 60,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade100,
-                  borderRadius: BorderRadius.circular(8),
+                  color: theme.colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  Icons.agriculture,
-                  color: Colors.orange.shade700,
-                  size: 30,
-                ),
+                child: result.imageUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          result.imageUrl!,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) {
+                          return _buildFallbackIcon();
+                        },
+                        ),
+                      )
+                    : _buildFallbackIcon(),
               ),
               const SizedBox(width: 12),
-
-              // Food info
+              // Content
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      food.description ?? 'Unknown Food',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      result.name,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (food.brandOwner != null || food.brandName != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        food.brandOwner ?? food.brandName ?? '',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                    if (food.dataType != null) ...[
-                      const SizedBox(height: 2),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          food.dataType!,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.orange.shade700,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
-                        _buildNutrientChip('${energyKcal.toStringAsFixed(0)} kcal', Colors.orange),
-                        const SizedBox(width: 4),
-                        _buildNutrientChip('P: ${protein.toStringAsFixed(1)}g', Colors.blue),
-                        const SizedBox(width: 4),
-                        _buildNutrientChip('C: ${carbs.toStringAsFixed(1)}g', Colors.green),
-                        const SizedBox(width: 4),
-                        _buildNutrientChip('F: ${fat.toStringAsFixed(1)}g', Colors.purple),
-                      ],
-                    ),
-                    if (food.householdServingFullText != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        'Serving: ${food.householdServingFullText}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ],
-                    if (food.gtinUpc != null && food.gtinUpc!.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.qr_code, size: 12, color: Colors.grey.shade500),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Barcode: ${food.gtinUpc}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                              fontFamily: 'monospace',
+                        _SourceBadge(source: result.source),
+                        if (result.brand != null && result.brand!.isNotEmpty) ...[
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              result.brand!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                             ),
                           ),
                         ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ],
                 ),
               ),
-
-              // Arrow icon
-              Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400, size: 16),
+              // Calories
+              if (result.calories != null)
+                Column(
+                  children: [
+                    Text(
+                      '${result.calories!.round()}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    Text(
+                      'kcal',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackIcon() {
+    final isOff = result.source == studyu.FoodSource.openfoodfacts;
+    return Center(
+      child: Icon(
+        isOff ? Icons.eco_outlined : Icons.agriculture_outlined,
+        size: 24,
+        color: isOff ? Colors.green.shade600 : Colors.orange.shade600,
+      ),
+    );
+  }
+}
+
+class _SourceBadge extends StatelessWidget {
+  final studyu.FoodSource source;
+
+  const _SourceBadge({required this.source});
+
+  @override
+  Widget build(BuildContext context) {
+    final isOff = source == studyu.FoodSource.openfoodfacts;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: isOff
+            ? Colors.green.withValues(alpha: 0.12)
+            : Colors.orange.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        isOff ? 'OFF' : 'USDA',
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: isOff ? Colors.green.shade700 : Colors.orange.shade700,
+          letterSpacing: 0.3,
         ),
       ),
     );
   }
 }
 
+class _LoadingState extends StatelessWidget {
+  final ThemeData theme;
+
+  const _LoadingState({required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.all(48),
+      child: Column(
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 16),
+          Text(
+            l10n.searching_databases,
+            style: const TextStyle(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorMessage extends StatelessWidget {
+  final String message;
+
+  const _ErrorMessage({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Text(
+        message,
+        style: const TextStyle(color: Colors.red),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _EmptySectionMessage extends StatelessWidget {
+  final String message;
+
+  const _EmptySectionMessage({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Text(
+        message,
+        style: TextStyle(
+          color: Colors.grey.shade600,
+          fontSize: 14,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _InitialPrompt extends StatelessWidget {
+  final VoidCallback onManualTap;
+  final VoidCallback onRecipeTap;
+  final VoidCallback onScanTap;
+  final ThemeData theme;
+
+  const _InitialPrompt({
+    required this.onManualTap,
+    required this.onRecipeTap,
+    required this.onScanTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Icon(
+            Icons.search_outlined,
+            size: 64,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.search_for_food,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.search_food_description,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActionsCard extends StatelessWidget {
+  final VoidCallback onManualTap;
+  final VoidCallback onRecipeTap;
+  final VoidCallback onScanTap;
+  final ThemeData theme;
+
+  const _QuickActionsCard({
+    required this.onManualTap,
+    required this.onRecipeTap,
+    required this.onScanTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Column(
+        children: [
+          _QuickActionTile(
+            icon: Icons.menu_book_outlined,
+            iconColor: Colors.orange,
+            title: l10n.create_recipe,
+            subtitle: l10n.create_recipe_subtitle,
+            onTap: onRecipeTap,
+            theme: theme,
+          ),
+          const Divider(height: 1, indent: 68),
+          _QuickActionTile(
+            icon: Icons.edit_note_outlined,
+            iconColor: Colors.purple,
+            title: l10n.add_manually,
+            subtitle: l10n.add_manually_subtitle,
+            onTap: onManualTap,
+            theme: theme,
+          ),
+          const Divider(height: 1, indent: 68),
+          _QuickActionTile(
+            icon: Icons.qr_code_scanner_outlined,
+            iconColor: Colors.green,
+            title: l10n.scan_barcode,
+            subtitle: l10n.scan_barcode_subtitle,
+            onTap: onScanTap,
+            theme: theme,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActionTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  const _QuickActionTile({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                size: 22,
+                color: iconColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Optimized ListView.builder for food search results.
+/// Uses lazy loading for better performance with large result sets.
+class _FoodSearchListView extends StatelessWidget {
+  final ScrollController scrollController;
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final TemplateViewModel templateViewModel;
+  final TextEditingController searchController;
+  final bool isInitialLoading;
+  final bool isLoadingMore;
+  final bool hasSearched;
+  final bool offSearched;
+  final bool usdaSearched;
+  final bool offHasMore;
+  final bool usdaHasMore;
+  final String? errorMessage;
+  final List<UnifiedFoodResult> combinedResults;
+  final void Function(studyu.SavedFoodTemplate) onSelectTemplate;
+  final void Function(UnifiedFoodResult) onSelectResult;
+  final VoidCallback onAddManually;
+  final VoidCallback onCreateRecipe;
+  final VoidCallback onScanBarcode;
+
+  const _FoodSearchListView({
+    required this.scrollController,
+    required this.l10n,
+    required this.theme,
+    required this.templateViewModel,
+    required this.searchController,
+    required this.isInitialLoading,
+    required this.isLoadingMore,
+    required this.hasSearched,
+    required this.offSearched,
+    required this.usdaSearched,
+    required this.offHasMore,
+    required this.usdaHasMore,
+    required this.errorMessage,
+    required this.combinedResults,
+    required this.onSelectTemplate,
+    required this.onSelectResult,
+    required this.onAddManually,
+    required this.onCreateRecipe,
+    required this.onScanBarcode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredTemplates = templateViewModel.filteredTemplates
+        .whereType<studyu.SavedFoodTemplate>()
+        .toList();
+    final hasTemplates = templateViewModel.foodTemplates.isNotEmpty;
+    final showTemplates = hasTemplates && filteredTemplates.isNotEmpty;
+    final showNoMatchingTemplates = hasTemplates &&
+        filteredTemplates.isEmpty &&
+        searchController.text.isNotEmpty;
+
+    // Calculate section offsets for itemBuilder
+    // Structure: [padding, templatesHeader, templatesList, globalHeader, content, quickActionsHeader, quickActions, bottomPadding]
+    const int paddingItem = 1;
+    final int templatesHeaderItems = hasTemplates ? 2 : 0; // header + spacing
+    final int templatesListItems = showTemplates ? filteredTemplates.length : 0;
+    final int noMatchingTemplateItem = showNoMatchingTemplates ? 1 : 0;
+    final int templatesSpacing = hasTemplates ? 1 : 0; // SizedBox after templates
+    const int globalHeaderItems = 2; // header + spacing
+    final int contentItems = _getContentItemCount();
+    final int loadingMoreItem = isLoadingMore ? 1 : 0;
+    final int endOfResultsItem = (hasSearched &&
+            combinedResults.isNotEmpty &&
+            !offHasMore &&
+            !usdaHasMore &&
+            !isLoadingMore)
+        ? 1
+        : 0;
+    const int quickActionsHeaderItems = 2; // header + spacing
+    const int quickActionsItem = 1;
+    const int bottomPadding = 1;
+
+    final totalItems = paddingItem +
+        templatesHeaderItems +
+        templatesListItems +
+        noMatchingTemplateItem +
+        templatesSpacing +
+        globalHeaderItems +
+        contentItems +
+        loadingMoreItem +
+        endOfResultsItem +
+        quickActionsHeaderItems +
+        quickActionsItem +
+        bottomPadding;
+
+    return ListView.builder(
+      controller: scrollController,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: totalItems,
+      itemBuilder: (context, index) {
+        return _buildItem(
+          context,
+          index,
+          filteredTemplates,
+          hasTemplates,
+          showTemplates,
+          showNoMatchingTemplates,
+        );
+      },
+    );
+  }
+
+  int _getContentItemCount() {
+    if (isInitialLoading) return 1;
+    if (errorMessage != null) return 1;
+    if (!hasSearched && searchController.text.isEmpty) return 1;
+    if (combinedResults.isEmpty && hasSearched && offSearched && usdaSearched) {
+      return 1;
+    }
+    return combinedResults.length;
+  }
+
+  Widget _buildItem(
+    BuildContext context,
+    int index,
+    List<studyu.SavedFoodTemplate> filteredTemplates,
+    bool hasTemplates,
+    bool showTemplates,
+    bool showNoMatchingTemplates,
+  ) {
+    var currentIndex = 0;
+
+    // Initial padding
+    if (index == currentIndex++) {
+      return const SizedBox(height: 8);
+    }
+
+    // Templates section header
+    if (hasTemplates) {
+      if (index == currentIndex++) {
+        return _SectionHeader(
+          icon: Icons.bookmark_outline,
+          title: l10n.my_saved_items,
+          iconColor: theme.colorScheme.primary,
+        );
+      }
+      if (index == currentIndex++) {
+        return const SizedBox(height: 8);
+      }
+
+      // Templates list or empty message
+      if (showNoMatchingTemplates) {
+        if (index == currentIndex++) {
+          return _EmptySectionMessage(message: l10n.no_matching_templates);
+        }
+      } else if (showTemplates) {
+        final templateIndex = index - currentIndex;
+        if (templateIndex >= 0 && templateIndex < filteredTemplates.length) {
+          return _TemplateCard(
+            template: filteredTemplates[templateIndex],
+            onTap: () => onSelectTemplate(filteredTemplates[templateIndex]),
+            theme: theme,
+          );
+        }
+        currentIndex += filteredTemplates.length;
+      }
+
+      // Spacing after templates
+      if (index == currentIndex++) {
+        return const SizedBox(height: 16);
+      }
+    }
+
+    // Global database section header
+    if (index == currentIndex++) {
+      return _SectionHeader(
+        icon: Icons.public,
+        title: l10n.global_database,
+        iconColor: Colors.grey.shade700,
+      );
+    }
+    if (index == currentIndex++) {
+      return const SizedBox(height: 8);
+    }
+
+    // Content section
+    final contentItemCount = _getContentItemCount();
+    if (contentItemCount > 0) {
+      final contentIndex = index - currentIndex;
+      if (contentIndex >= 0 && contentIndex < contentItemCount) {
+        return _buildContentItem(contentIndex);
+      }
+      currentIndex += contentItemCount;
+    }
+
+    // Loading more indicator
+    if (isLoadingMore && index == currentIndex++) {
+      return const Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // End of results message
+    if (hasSearched &&
+        combinedResults.isNotEmpty &&
+        !offHasMore &&
+        !usdaHasMore &&
+        !isLoadingMore &&
+        index == currentIndex++) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Text(
+            l10n.end_of_results,
+            style: TextStyle(color: Colors.grey.shade500),
+          ),
+        ),
+      );
+    }
+
+    // Quick actions section
+    if (index == currentIndex++) {
+      return const SizedBox(height: 16);
+    }
+    if (index == currentIndex++) {
+      return _SectionHeader(
+        icon: Icons.add_circle_outline,
+        title: l10n.quick_actions,
+        iconColor: theme.colorScheme.secondary,
+      );
+    }
+    if (index == currentIndex++) {
+      return const SizedBox(height: 8);
+    }
+    if (index == currentIndex++) {
+      return _QuickActionsCard(
+        onManualTap: onAddManually,
+        onRecipeTap: onCreateRecipe,
+        onScanTap: onScanBarcode,
+        theme: theme,
+      );
+    }
+    if (index == currentIndex++) {
+      return const SizedBox(height: 24);
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildContentItem(int contentIndex) {
+    if (isInitialLoading) {
+      return _LoadingState(theme: theme);
+    }
+    if (errorMessage != null) {
+      return _ErrorMessage(message: errorMessage!);
+    }
+    if (!hasSearched && searchController.text.isEmpty) {
+      return _InitialPrompt(
+        onManualTap: onAddManually,
+        onRecipeTap: onCreateRecipe,
+        onScanTap: onScanBarcode,
+        theme: theme,
+      );
+    }
+    if (combinedResults.isEmpty && hasSearched && offSearched && usdaSearched) {
+      return _EmptySectionMessage(message: l10n.no_results_found);
+    }
+
+    // Results
+    if (contentIndex < combinedResults.length) {
+      return _FoodResultCard(
+        result: combinedResults[contentIndex],
+        onTap: () => onSelectResult(combinedResults[contentIndex]),
+        theme: theme,
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+}
