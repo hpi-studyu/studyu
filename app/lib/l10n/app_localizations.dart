@@ -3307,6 +3307,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start tracking your nutrition by adding meals'**
   String get start_tracking_nutrition;
+
+  /// No description provided for @photoRecallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Recall'**
+  String get photoRecallTitle;
+
+  /// No description provided for @photoRecallSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View photos from around this time'**
+  String get photoRecallSubtitle;
+
+  /// No description provided for @photoRecallPermissionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to enable photo access'**
+  String get photoRecallPermissionNeeded;
+
+  /// No description provided for @photoRecallPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Photo Access'**
+  String get photoRecallPermissionTitle;
+
+  /// No description provided for @photoRecallPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Access to your photos helps you recall what you ate. Photos are only displayed on your device.'**
+  String get photoRecallPermissionDescription;
+
+  /// No description provided for @photoRecallNoPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos found'**
+  String get photoRecallNoPhotos;
+
+  /// No description provided for @photoRecallNoPhotosSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find any photos taken around this time'**
+  String get photoRecallNoPhotosSubtitle;
+
+  /// No description provided for @photoRecallTapToEnlarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a photo to view it full screen'**
+  String get photoRecallTapToEnlarge;
+
+  /// No description provided for @photoRecallTimeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing photos from around {time} (±2 hours)'**
+  String photoRecallTimeInfo(String time);
+
+  /// No description provided for @grantPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get grantPermission;
 }
 
 class _AppLocalizationsDelegate

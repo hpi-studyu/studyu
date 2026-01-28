@@ -499,5 +499,15 @@
   "template_type_food": "Lebensmittel",
   "template_type_recipe": "Rezept",
   "rename_template": "Vorlage umbenennen",
-  "new_name": "Neuer Name"
+  "new_name": "Neuer Name",
+  "photoRecallTitle": "Foto-Erinnerung",
+  "photoRecallSubtitle": "Fotos von dieser Zeit ansehen",
+  "photoRecallPermissionNeeded": "Tippen, um Fotozugriff zu aktivieren",
+  "photoRecallPermissionTitle": "Fotozugriff aktivieren",
+  "photoRecallPermissionDescription": "Der Zugriff auf Ihre Fotos hilft Ihnen, sich an das Gegessene zu erinnern. Fotos werden nur auf Ihrem Gerät angezeigt.",
+  "photoRecallNoPhotos": "Keine Fotos gefunden",
+  "photoRecallNoPhotosSubtitle": "Wir konnten keine Fotos von dieser Zeit finden",
+  "photoRecallTapToEnlarge": "Tippen Sie auf ein Foto, um es Vollbild anzuzeigen",
+  "photoRecallTimeInfo": "Fotos von {time} (±2 Stunden)",
+  "grantPermission": "Berechtigung erteilen"
 }

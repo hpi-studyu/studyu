@@ -6,6 +6,8 @@ import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
+import 'package:studyu_app/widgets/photo_recall_section.dart';
+import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_app/widgets/template_selection_sheet.dart';
 import 'package:studyu_core/core.dart';
@@ -326,6 +328,17 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     const SizedBox(height: 16),
                     MealNutritionSummaryCard(meal: _meal),
                   ],
+                  const SizedBox(height: 16),
+                  PhotoRecallSection(
+                    mealTime: _timestamp,
+                    onPhotoTap: (photo) {
+                      PhotoViewerDialog.show(
+                        context,
+                        photoId: photo.id,
+                        photoDate: photo.createDateTime,
+                      );
+                    },
+                  ),
                   const SizedBox(height: 16),
                   _MealOptionsCard(
                     mealContext: _mealContext,

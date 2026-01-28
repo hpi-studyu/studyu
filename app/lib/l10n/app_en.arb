@@ -700,5 +700,22 @@
   "search_food_database": "Search Food Database",
 
   "no_data_yet": "No data yet",
-  "start_tracking_nutrition": "Start tracking your nutrition by adding meals"
+  "start_tracking_nutrition": "Start tracking your nutrition by adding meals",
+  "photoRecallTitle": "Photo Recall",
+  "photoRecallSubtitle": "View photos from around this time",
+  "photoRecallPermissionNeeded": "Tap to enable photo access",
+  "photoRecallPermissionTitle": "Enable Photo Access",
+  "photoRecallPermissionDescription": "Access to your photos helps you recall what you ate. Photos are only displayed on your device.",
+  "photoRecallNoPhotos": "No photos found",
+  "photoRecallNoPhotosSubtitle": "We couldn't find any photos taken around this time",
+  "photoRecallTapToEnlarge": "Tap a photo to view it full screen",
+  "photoRecallTimeInfo": "Showing photos from around {time} (±2 hours)",
+  "@photoRecallTimeInfo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "grantPermission": "Grant Permission"
 }

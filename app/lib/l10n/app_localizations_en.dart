@@ -1710,4 +1710,38 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get start_tracking_nutrition =>
       'Start tracking your nutrition by adding meals';
+
+  @override
+  String get photoRecallTitle => 'Photo Recall';
+
+  @override
+  String get photoRecallSubtitle => 'View photos from around this time';
+
+  @override
+  String get photoRecallPermissionNeeded => 'Tap to enable photo access';
+
+  @override
+  String get photoRecallPermissionTitle => 'Enable Photo Access';
+
+  @override
+  String get photoRecallPermissionDescription =>
+      'Access to your photos helps you recall what you ate. Photos are only displayed on your device.';
+
+  @override
+  String get photoRecallNoPhotos => 'No photos found';
+
+  @override
+  String get photoRecallNoPhotosSubtitle =>
+      'We couldn\'t find any photos taken around this time';
+
+  @override
+  String get photoRecallTapToEnlarge => 'Tap a photo to view it full screen';
+
+  @override
+  String photoRecallTimeInfo(String time) {
+    return 'Showing photos from around $time (±2 hours)';
+  }
+
+  @override
+  String get grantPermission => 'Grant Permission';
 }

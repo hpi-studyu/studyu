@@ -45,6 +45,8 @@
 		</dict>
 		<key>NSCameraUsageDescription</key>
 		<string>Need to access your camera to capture a photo for trial observations.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Access to your photo library helps you recall meals by showing photos taken around meal times. Photos are only displayed on your device and are not uploaded.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>
