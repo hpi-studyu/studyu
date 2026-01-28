@@ -101,6 +101,10 @@ class _SaveTemplateDialogState extends State<SaveTemplateDialog> {
           child: Text(l10n.cancel),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
           onPressed: () {
             if (_nameController.text.trim().isEmpty) return;
 
