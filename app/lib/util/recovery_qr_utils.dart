@@ -12,7 +12,8 @@ import 'package:studyu_core/core.dart';
 import 'package:universal_html/html.dart' as html;
 
 class RecoveryQrUtils {
-  static String get deepLinkDomain => core.deepLinkDomain ?? 'app.studyu.health';
+  static String get deepLinkDomain =>
+      core.deepLinkDomain ?? 'app.studyu.health';
   static const String deepLinkPath = '/recover';
   static const String customScheme = 'studyu';
 

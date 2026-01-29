@@ -110,8 +110,11 @@ void main() {
 
       // All words should be from English wordlist
       for (final word in words) {
-        expect(wordlistEn.contains(word), isTrue,
-            reason: 'Word "$word" not found in English wordlist');
+        expect(
+          wordlistEn.contains(word),
+          isTrue,
+          reason: 'Word "$word" not found in English wordlist',
+        );
       }
     });
 
@@ -121,8 +124,11 @@ void main() {
 
       // All words should be from German wordlist
       for (final word in words) {
-        expect(wordlistDe.contains(word), isTrue,
-            reason: 'Word "$word" not found in German wordlist');
+        expect(
+          wordlistDe.contains(word),
+          isTrue,
+          reason: 'Word "$word" not found in German wordlist',
+        );
       }
 
       // Should decode correctly with German wordlist
@@ -144,7 +150,7 @@ void main() {
         'lemon',
         'mango',
         'nectarine',
-        'orange'
+        'orange',
       ];
 
       expect(() => decode(invalidWords), throwsArgumentError);
@@ -207,8 +213,11 @@ void main() {
         final id = testIds[i];
         final words = encode(id);
         final decoded = decode(words);
-        expect(decoded, equals(id),
-            reason: 'Failed for ID: ${id.toRadixString(16)}');
+        expect(
+          decoded,
+          equals(id),
+          reason: 'Failed for ID: ${id.toRadixString(16)}',
+        );
       });
     }
   });

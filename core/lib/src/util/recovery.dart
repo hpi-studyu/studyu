@@ -18,9 +18,7 @@ class RecoveryConstants {
   static const bool defaultUseChecksum = true;
 
   /// Default encoding configuration
-  static const EncodingConfig defaultConfig = EncodingConfig(
-    
-  );
+  static const EncodingConfig defaultConfig = EncodingConfig();
 }
 
 class EncodingConfig {

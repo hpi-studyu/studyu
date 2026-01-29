@@ -150,10 +150,7 @@ class RejoinStudyService {
     try {
       final uuidString = convertBigIntToUuid(recoveryId);
       if (uuidString == null) {
-        return RecoveryResult(
-          success: false,
-          error: 'invalid_recovery_id',
-        );
+        return RecoveryResult(success: false, error: 'invalid_recovery_id');
       }
       final response = await Supabase.instance.client.rpc(
         'recover_account',

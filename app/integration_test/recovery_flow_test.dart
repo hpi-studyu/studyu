@@ -19,10 +19,14 @@ void main() {
       RejoinStudyService.clearCache();
     });
 
-    testWidgets('Recovery phrase encoding and decoding roundtrip',
-        (tester) async {
+    testWidgets('Recovery phrase encoding and decoding roundtrip', (
+      tester,
+    ) async {
       // Test with a known ID
-      final testId = BigInt.parse('1234567890ABCDEF1234567890ABCDEF', radix: 16);
+      final testId = BigInt.parse(
+        '1234567890ABCDEF1234567890ABCDEF',
+        radix: 16,
+      );
 
       // Encode to words
       final words = encode(testId);
@@ -33,8 +37,9 @@ void main() {
       expect(decodedId, equals(testId));
     });
 
-    testWidgets('Recovery phrase validation detects invalid word count',
-        (tester) async {
+    testWidgets('Recovery phrase validation detects invalid word count', (
+      tester,
+    ) async {
       // Test with too few words
       final shortWords = ['word1', 'word2', 'word3'];
       expect(
@@ -50,9 +55,13 @@ void main() {
       );
     });
 
-    testWidgets('Recovery phrase validation detects corrupted phrase',
-        (tester) async {
-      final testId = BigInt.parse('1234567890ABCDEF1234567890ABCDEF', radix: 16);
+    testWidgets('Recovery phrase validation detects corrupted phrase', (
+      tester,
+    ) async {
+      final testId = BigInt.parse(
+        '1234567890ABCDEF1234567890ABCDEF',
+        radix: 16,
+      );
       final words = encode(testId);
 
       // Corrupt one word
@@ -67,13 +76,19 @@ void main() {
     });
 
     testWidgets('UUID conversion works correctly', (tester) async {
-      final testId = BigInt.parse('1234567890ABCDEF1234567890ABCDEF', radix: 16);
+      final testId = BigInt.parse(
+        '1234567890ABCDEF1234567890ABCDEF',
+        radix: 16,
+      );
       final uuid = RejoinStudyService.convertBigIntToUuid(testId);
 
       expect(uuid, isNotNull);
-      expect(uuid, matches(
-        r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
-      ));
+      expect(
+        uuid,
+        matches(
+          r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+        ),
+      );
 
       // Verify the UUID can be parsed back
       final hexString = uuid!.replaceAll('-', '');
@@ -81,7 +96,9 @@ void main() {
       expect(recoveredId, equals(testId));
     });
 
-    testWidgets('UUID conversion validates out of range values', (tester) async {
+    testWidgets('UUID conversion validates out of range values', (
+      tester,
+    ) async {
       // Negative ID should return null
       final negativeId = BigInt.from(-1);
       final negativeUuid = RejoinStudyService.convertBigIntToUuid(negativeId);
@@ -110,15 +127,14 @@ void main() {
       expect(find.byType(OutlinedButton), findsOneWidget);
     });
 
-    testWidgets('RecoveryPhraseContent widget loads and displays phrase',
-        (tester) async {
+    testWidgets('RecoveryPhraseContent widget loads and displays phrase', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: RecoveryPhraseContent(),
-          ),
+          home: Scaffold(body: RecoveryPhraseContent()),
         ),
       );
 
@@ -129,9 +145,11 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       // Should either show error or the phrase content
-      final hasError = find.textContaining('Error').evaluate().isNotEmpty ||
+      final hasError =
+          find.textContaining('Error').evaluate().isNotEmpty ||
           find.textContaining('Failed').evaluate().isNotEmpty;
-      final hasContent = find.byType(GridView).evaluate().isNotEmpty ||
+      final hasContent =
+          find.byType(GridView).evaluate().isNotEmpty ||
           find.byType(Wrap).evaluate().isNotEmpty;
 
       expect(hasError || hasContent, isTrue);
@@ -139,8 +157,19 @@ void main() {
 
     testWidgets('Recovery QR utils generate valid deep links', (tester) async {
       final testPhrase = [
-        'abandon', 'ability', 'able', 'about', 'above', 'absent',
-        'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident', 'account'
+        'abandon',
+        'ability',
+        'able',
+        'about',
+        'above',
+        'absent',
+        'absorb',
+        'abstract',
+        'absurd',
+        'abuse',
+        'access',
+        'accident',
+        'account',
       ];
 
       final deepLink = RecoveryQrUtils.generateDeepLink(testPhrase);

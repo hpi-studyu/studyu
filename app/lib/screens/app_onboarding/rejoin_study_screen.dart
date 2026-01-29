@@ -262,12 +262,14 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                   )!.enter_recovery_phrase,
                   hintText: 'apple banana cherry ...',
                   border: const OutlineInputBorder(),
-                  helperText: '${_words.length}/${RecoveryConstants.totalWordCount} words',
+                  helperText:
+                      '${_words.length}/${RecoveryConstants.totalWordCount} words',
                   helperStyle: TextStyle(
                     color: _words.length == RecoveryConstants.totalWordCount
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight: _words.length == RecoveryConstants.totalWordCount
+                    fontWeight:
+                        _words.length == RecoveryConstants.totalWordCount
                         ? FontWeight.bold
                         : FontWeight.normal,
                   ),
