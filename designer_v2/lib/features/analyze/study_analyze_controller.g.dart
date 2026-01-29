@@ -10,12 +10,12 @@ part of 'study_analyze_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(StudyAnalyzeController)
-const studyAnalyzeControllerProvider = StudyAnalyzeControllerFamily._();
+final studyAnalyzeControllerProvider = StudyAnalyzeControllerFamily._();
 
 final class StudyAnalyzeControllerProvider
     extends
         $NotifierProvider<StudyAnalyzeController, StudyAnalyzeControllerState> {
-  const StudyAnalyzeControllerProvider._({
+  StudyAnalyzeControllerProvider._({
     required StudyAnalyzeControllerFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -72,7 +72,7 @@ final class StudyAnalyzeControllerFamily extends $Family
           StudyAnalyzeControllerState,
           StudyID
         > {
-  const StudyAnalyzeControllerFamily._()
+  StudyAnalyzeControllerFamily._()
     : super(
         retry: null,
         name: r'studyAnalyzeControllerProvider',
@@ -97,7 +97,6 @@ abstract class _$StudyAnalyzeController
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<StudyAnalyzeControllerState, StudyAnalyzeControllerState>;
@@ -112,6 +111,6 @@ abstract class _$StudyAnalyzeController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

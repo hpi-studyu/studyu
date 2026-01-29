@@ -10,12 +10,12 @@ part of 'study_recruit_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(StudyRecruitController)
-const studyRecruitControllerProvider = StudyRecruitControllerFamily._();
+final studyRecruitControllerProvider = StudyRecruitControllerFamily._();
 
 final class StudyRecruitControllerProvider
     extends
         $NotifierProvider<StudyRecruitController, StudyRecruitControllerState> {
-  const StudyRecruitControllerProvider._({
+  StudyRecruitControllerProvider._({
     required StudyRecruitControllerFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -72,7 +72,7 @@ final class StudyRecruitControllerFamily extends $Family
           StudyRecruitControllerState,
           StudyID
         > {
-  const StudyRecruitControllerFamily._()
+  StudyRecruitControllerFamily._()
     : super(
         retry: null,
         name: r'studyRecruitControllerProvider',
@@ -97,7 +97,6 @@ abstract class _$StudyRecruitController
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<StudyRecruitControllerState, StudyRecruitControllerState>;
@@ -112,6 +111,6 @@ abstract class _$StudyRecruitController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

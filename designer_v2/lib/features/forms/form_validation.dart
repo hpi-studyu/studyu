@@ -90,7 +90,7 @@ List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
 
     final validationMessageFunc = control.validationMessages[error.key];
     final String validationMessage =
-        validationMessageFunc?.call(error.value) ?? '[${error.key}]';
+        validationMessageFunc?.call(error.value as Object) ?? '[${error.key}]';
     allValidationErrorMessages.add(Tuple(control, validationMessage));
   }
 
