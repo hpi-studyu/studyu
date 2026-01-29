@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:studyu_core/core.dart' as core;
+import 'package:studyu_core/core.dart';
 
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
@@ -11,7 +13,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart' as html;
 
 class RecoveryQrUtils {
-  static const String deepLinkDomain = 'app.studyu.health';
+  static String get deepLinkDomain => core.deepLinkDomain ?? 'app.studyu.health';
   static const String deepLinkPath = '/recover';
   static const String customScheme = 'studyu';
 
@@ -50,7 +52,7 @@ class RecoveryQrUtils {
           .where((word) => word.isNotEmpty)
           .toList();
 
-      if (words.length != 13) {
+      if (words.length != RecoveryConstants.totalWordCount) {
         return null;
       }
 

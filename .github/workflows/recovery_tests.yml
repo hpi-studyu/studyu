@@ -1,0 +1,162 @@
+name: Recovery Tests
+
+on:
+  push:
+    paths:
+      - 'core/lib/src/util/recovery.dart'
+      - 'core/lib/src/util/wordlists.dart'
+      - 'core/test/util/recovery_test.dart'
+      - 'app/lib/services/rejoin_study_service.dart'
+      - 'app/lib/util/recovery_qr_utils.dart'
+      - 'app/integration_test/recovery_flow_test.dart'
+      - 'supabase/migrations/*user_recovery.sql'
+      - 'supabase/migrations/*recovery_rate_limiting.sql'
+      - '.github/workflows/recovery_tests.yml'
+      - '.github/workflows/init-workspace/**'
+  workflow_dispatch:
+
+env:
+  MELOS_SDK_PATH: 'auto'
+
+concurrency:
+  group: ${{ github.ref }}-recovery-tests
+  cancel-in-progress: true
+
+jobs:
+  unit_tests:
+    name: Recovery Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
+      - name: Run Recovery Unit Tests
+        working-directory: ./core
+        run: flutter test test/util/recovery_test.dart --reporter=expanded
+
+  integration_tests:
+    name: Recovery Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Enable web support
+        run: flutter config --enable-web
+
+      - name: Prepare environment
+        run: |
+          dart pub get
+          dart pub global activate melos
+          melos bootstrap
+
+      - name: Prepare Supabase CI Seed
+        run: |
+          cp supabase/seed-ci.sql supabase/seed.sql
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: |
+          supabase start -x studio,imgproxy
+
+      - name: Configure local StudyU environment
+        run: |
+          cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
+          LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' flutter_common/lib/envs/.env.local
+          echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)" >> flutter_common/lib/envs/.env.local
+
+      - name: Start Chrome Driver
+        run: |
+          export DISPLAY=:99
+          chromedriver --port=4444 &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+
+      - name: Run Recovery Integration Tests
+        working-directory: ./app
+        run: |
+          flutter test integration_test/recovery_flow_test.dart \
+            -d web-server \
+            --dart-define="STUDYU_ENV=.env.local"
+
+  sql_tests:
+    name: Recovery SQL Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: |
+          supabase start -x studio,imgproxy
+
+      - name: Run Recovery Migrations
+        run: |
+          supabase db reset
+
+      - name: Test Recovery Functions
+        run: |
+          # Test get_or_create_recovery function
+          supabase sql "
+            DO \$\$
+            DECLARE
+              result jsonb;
+            BEGIN
+              -- Test that the function exists and returns proper structure
+              SELECT public.get_or_create_recovery() INTO result;
+
+              IF result IS NULL THEN
+                RAISE EXCEPTION 'get_or_create_recovery returned NULL';
+              END IF;
+
+              IF NOT result ? 'success' THEN
+                RAISE EXCEPTION 'get_or_create_response missing success field';
+              END IF;
+            END;
+            \$\$;
+          "
+          echo "✅ SQL function tests passed"
+
+      - name: Test Rate Limiting Functions
+        run: |
+          # Test check_recovery_rate_limit function
+          supabase sql "
+            DO \$\$
+            DECLARE
+              result jsonb;
+            BEGIN
+              -- Test rate limit check
+              result := public.check_recovery_rate_limit('127.0.0.1'::inet, NULL);
+
+              IF NOT (result->>'allowed')::boolean THEN
+                RAISE EXCEPTION 'Rate limit should allow first attempt';
+              END IF;
+
+              -- Test that cleanup function exists
+              PERFORM public.cleanup_recovery_rate_limits();
+            END;
+            \$\$;
+          "
+          echo "✅ Rate limiting tests passed"

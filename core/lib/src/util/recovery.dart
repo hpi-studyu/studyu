@@ -1,10 +1,37 @@
 import 'package:studyu_core/src/util/wordlists.dart';
 
+/// Recovery phrase configuration constants
+class RecoveryConstants {
+  /// Number of bits for the recovery ID (128-bit UUID)
+  static const int defaultBitCount = 128;
+
+  /// Number of bits per word (11 bits = 2048 wordlist)
+  static const int defaultBitsPerWord = 11;
+
+  /// Number of data words (12 words for 128 bits)
+  static const int dataWordCount = 12;
+
+  /// Total number of words including checksum (13 words)
+  static const int totalWordCount = 13;
+
+  /// Whether to include a checksum word
+  static const bool defaultUseChecksum = true;
+
+  /// Default encoding configuration
+  static const EncodingConfig defaultConfig = EncodingConfig(
+    bitsPerWord: defaultBitsPerWord,
+    useChecksum: defaultUseChecksum,
+  );
+}
+
 class EncodingConfig {
   final int bitsPerWord;
   final bool useChecksum;
 
-  const EncodingConfig({this.bitsPerWord = 11, this.useChecksum = true});
+  const EncodingConfig({
+    this.bitsPerWord = RecoveryConstants.defaultBitsPerWord,
+    this.useChecksum = RecoveryConstants.defaultUseChecksum,
+  });
 
   int wordsNeeded(int bitCount) {
     return (bitCount / bitsPerWord).ceil();
@@ -72,8 +99,8 @@ int computeChecksum(List<int> indices, int wordlistSize) {
 List<String> encode(
   BigInt participantId, {
   List<String>? wordlist,
-  int bitCount = 128,
-  EncodingConfig config = const EncodingConfig(),
+  int bitCount = RecoveryConstants.defaultBitCount,
+  EncodingConfig config = RecoveryConstants.defaultConfig,
 }) {
   final effectiveWordlist = wordlist ?? wordlistEn;
 
@@ -96,7 +123,7 @@ List<String> encode(
 BigInt decode(
   List<String> words, {
   List<String>? wordlist,
-  EncodingConfig config = const EncodingConfig(),
+  EncodingConfig config = RecoveryConstants.defaultConfig,
 }) {
   if (words.isEmpty) {
     throw ArgumentError('Must provide at least one word');
@@ -134,4 +161,20 @@ BigInt decode(
   }
 
   return decodeFromWords(dataWords, effectiveWordlist, config);
+}
+
+/// Validates that the word count matches the expected count for recovery
+/// Throws [ArgumentError] if the count is invalid
+void validateRecoveryWordCount(int wordCount) {
+  if (wordCount != RecoveryConstants.totalWordCount) {
+    throw ArgumentError(
+      'Expected ${RecoveryConstants.totalWordCount} words, got $wordCount',
+    );
+  }
+}
+
+/// Returns the expected word count for a given configuration
+int getExpectedWordCount(EncodingConfig config) {
+  final dataWords = config.wordsNeeded(RecoveryConstants.defaultBitCount);
+  return config.useChecksum ? dataWords + 1 : dataWords;
 }

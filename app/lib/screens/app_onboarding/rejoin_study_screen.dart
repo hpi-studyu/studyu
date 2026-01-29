@@ -92,7 +92,7 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
     if (_formKey.currentState!.validate()) {
       final words = _words.map((w) => w.trim().toLowerCase()).toList();
 
-      if (words.length != 13) {
+      if (words.length != RecoveryConstants.totalWordCount) {
         setState(() {
           _errorMessage = AppLocalizations.of(context)!.invalid_recovery_phrase;
         });
@@ -262,16 +262,16 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                   )!.enter_recovery_phrase,
                   hintText: 'apple banana cherry ...',
                   border: const OutlineInputBorder(),
-                  helperText: '${_words.length}/13 words',
+                  helperText: '${_words.length}/${RecoveryConstants.totalWordCount} words',
                   helperStyle: TextStyle(
-                    color: _words.length == 13
+                    color: _words.length == RecoveryConstants.totalWordCount
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight: _words.length == 13
+                    fontWeight: _words.length == RecoveryConstants.totalWordCount
                         ? FontWeight.bold
                         : FontWeight.normal,
                   ),
-                  suffixIcon: _words.length == 13
+                  suffixIcon: _words.length == RecoveryConstants.totalWordCount
                       ? Icon(
                           Icons.check_circle,
                           color: Theme.of(context).colorScheme.primary,

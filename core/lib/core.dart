@@ -1,3 +1,4 @@
+export 'src/env/env.dart';
 export 'src/models/models.dart';
 export 'src/util/analytics.dart';
 export 'src/util/recovery.dart';

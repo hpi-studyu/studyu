@@ -9,6 +9,7 @@ late final String? projectGeneratorUrl;
 late final String? playStoreUrl;
 late final String? appstoreUrl;
 late final String? developerEmail;
+late final String? deepLinkDomain;
 
 void setEnv(
   String envSupabaseUrl,
@@ -20,6 +21,7 @@ void setEnv(
   String? envPlayStoreUrl,
   String? envAppstoreUrl,
   String? envDeveloperEmail,
+  String? envDeepLinkDomain,
 }) {
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
@@ -47,4 +49,5 @@ void setEnv(
   playStoreUrl = envPlayStoreUrl;
   appstoreUrl = envAppstoreUrl;
   developerEmail = envDeveloperEmail;
+  deepLinkDomain = envDeepLinkDomain ?? 'app.studyu.health';
 }
