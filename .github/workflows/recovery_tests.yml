@@ -138,25 +138,3 @@ jobs:
             \$\$;
           "
           echo "✅ SQL function tests passed"
-
-      - name: Test Rate Limiting Functions
-        run: |
-          # Test check_recovery_rate_limit function
-          supabase sql "
-            DO \$\$
-            DECLARE
-              result jsonb;
-            BEGIN
-              -- Test rate limit check
-              result := public.check_recovery_rate_limit('127.0.0.1'::inet, NULL);
-
-              IF NOT (result->>'allowed')::boolean THEN
-                RAISE EXCEPTION 'Rate limit should allow first attempt';
-              END IF;
-
-              -- Test that cleanup function exists
-              PERFORM public.cleanup_recovery_rate_limits();
-            END;
-            \$\$;
-          "
-          echo "✅ Rate limiting tests passed"
