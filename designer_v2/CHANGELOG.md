@@ -1,3 +1,7 @@
+## 1.15.5
+
+ - **FIX**: update balanced description in study schedule translations and upgrade dependencies.
+
 ## 1.15.4
 
  - **FIX**: update balanced description in study schedule translations.

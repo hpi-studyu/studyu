@@ -10,11 +10,11 @@ part of 'auth_form_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(AuthFormController)
-const authFormControllerProvider = AuthFormControllerFamily._();
+final authFormControllerProvider = AuthFormControllerFamily._();
 
 final class AuthFormControllerProvider
     extends $NotifierProvider<AuthFormController, AsyncValue<void>> {
-  const AuthFormControllerProvider._({
+  AuthFormControllerProvider._({
     required AuthFormControllerFamily super.from,
     required AuthFormKey super.argument,
   }) : super(
@@ -70,7 +70,7 @@ final class AuthFormControllerFamily extends $Family
           AsyncValue<void>,
           AuthFormKey
         > {
-  const AuthFormControllerFamily._()
+  AuthFormControllerFamily._()
     : super(
         retry: null,
         name: r'authFormControllerProvider',
@@ -94,7 +94,6 @@ abstract class _$AuthFormController extends $Notifier<AsyncValue<void>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
     final element =
         ref.element
@@ -104,6 +103,6 @@ abstract class _$AuthFormController extends $Notifier<AsyncValue<void>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
