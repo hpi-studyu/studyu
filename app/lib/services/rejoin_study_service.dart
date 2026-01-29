@@ -111,7 +111,7 @@ class RejoinStudyService {
     try {
       final enWords = words.map((w) => w.toLowerCase().trim()).toList();
       return decode(enWords, wordlist: wordlistEn);
-    } on ArgumentError catch (e) {
+    } on Exception catch (e) {
       // Check if error is due to word not found in English list
       final errorStr = e.toString();
       if (errorStr.contains('Invalid word') ||
@@ -120,7 +120,7 @@ class RejoinStudyService {
         try {
           final deWords = words.map((w) => w.toLowerCase().trim()).toList();
           return decode(deWords, wordlist: wordlistDe);
-        } catch (_) {
+        } on Exception catch (_) {
           // German also failed, throw original English error
           rethrow;
         }

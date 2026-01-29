@@ -233,7 +233,7 @@ void main() {
       // Test mixed case
       final mixedWords = words
           .asMap()
-          .map((i, w) => MapEntry(i, i % 2 == 0 ? w.toUpperCase() : w))
+          .map((i, w) => MapEntry(i, i.isEven ? w.toUpperCase() : w))
           .values
           .toList();
       expect(() => decode(mixedWords), throwsArgumentError);

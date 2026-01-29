@@ -14,7 +14,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Recovery Flow Integration Tests', () {
-    setUp(() async {
+    setUp(() {
       // Clear any cached recovery data before each test
       RejoinStudyService.clearCache();
     });
