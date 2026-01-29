@@ -73,6 +73,7 @@ dev_dependencies:
     sdk: flutter
   lint: ^2.8.0
 
+  integration_test: any
 flutter:
   generate: true
   uses-material-design: true

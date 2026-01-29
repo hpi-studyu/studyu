@@ -165,13 +165,13 @@ void main() {
     });
 
     test('should calculate expected word count correctly', () {
-      final config = EncodingConfig();
+      const config = EncodingConfig();
       final count = getExpectedWordCount(config);
       expect(count, equals(RecoveryConstants.totalWordCount));
     });
 
     test('should calculate word count without checksum', () {
-      final config = EncodingConfig(useChecksum: false);
+      const config = EncodingConfig(useChecksum: false);
       final count = getExpectedWordCount(config);
       expect(count, equals(RecoveryConstants.dataWordCount));
     });
@@ -187,7 +187,7 @@ void main() {
     });
 
     test('should calculate words needed correctly', () {
-      final config = EncodingConfig();
+      const config = EncodingConfig();
       expect(config.wordsNeeded(128), equals(12));
       expect(config.wordsNeeded(256), equals(24));
     });

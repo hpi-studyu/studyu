@@ -19,8 +19,7 @@ class RecoveryConstants {
 
   /// Default encoding configuration
   static const EncodingConfig defaultConfig = EncodingConfig(
-    bitsPerWord: defaultBitsPerWord,
-    useChecksum: defaultUseChecksum,
+    
   );
 }
 

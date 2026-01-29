@@ -95,10 +95,10 @@ void main() {
 
     testWidgets('RejoinStudyScreen renders correctly', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const RejoinStudyScreen(),
+          home: RejoinStudyScreen(),
         ),
       );
 
@@ -113,10 +113,10 @@ void main() {
     testWidgets('RecoveryPhraseContent widget loads and displays phrase',
         (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const Scaffold(
+          home: Scaffold(
             body: RecoveryPhraseContent(),
           ),
         ),
