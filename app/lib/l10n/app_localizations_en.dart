@@ -1744,4 +1744,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get grantPermission => 'Grant Permission';
+
+  @override
+  String get analyzePhotoTooltip => 'Analyze this food photo';
+
+  @override
+  String get analyzingPhoto => 'Analyzing photo...';
+
+  @override
+  String get foodAnalysisError => 'Could not analyze image - try manual entry';
+
+  @override
+  String get foodAnalysisNetworkError =>
+      'Could not connect to analysis service';
+
+  @override
+  String get foodAnalysisNoItems => 'No food items detected in image';
+
+  @override
+  String get aiEstimatedBanner => 'AI-estimated values - please review';
+
+  @override
+  String get selectFoodItemsTitle => 'Select Food Items';
+
+  @override
+  String get selectFoodItemsSubtitle =>
+      'Select which items to add to your meal';
+
+  @override
+  String get addSelected => 'Add Selected';
+
+  @override
+  String get analyzeAgain => 'Analyze Again';
+
+  @override
+  String get select_all => 'Select All';
+
+  @override
+  String get deselect_all => 'Deselect All';
+
+  @override
+  String confidenceLabel(int percentage) {
+    return 'Confidence: $percentage%';
+  }
 }

@@ -717,5 +717,26 @@
       }
     }
   },
-  "grantPermission": "Grant Permission"
+  "grantPermission": "Grant Permission",
+
+  "analyzePhotoTooltip": "Analyze this food photo",
+  "analyzingPhoto": "Analyzing photo...",
+  "foodAnalysisError": "Could not analyze image - try manual entry",
+  "foodAnalysisNetworkError": "Could not connect to analysis service",
+  "foodAnalysisNoItems": "No food items detected in image",
+  "aiEstimatedBanner": "AI-estimated values - please review",
+  "selectFoodItemsTitle": "Select Food Items",
+  "selectFoodItemsSubtitle": "Select which items to add to your meal",
+  "addSelected": "Add Selected",
+  "analyzeAgain": "Analyze Again",
+  "select_all": "Select All",
+  "deselect_all": "Deselect All",
+  "confidenceLabel": "Confidence: {percentage}%",
+  "@confidenceLabel": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  }
 }

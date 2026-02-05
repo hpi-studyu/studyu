@@ -509,5 +509,19 @@
   "photoRecallNoPhotosSubtitle": "Wir konnten keine Fotos von dieser Zeit finden",
   "photoRecallTapToEnlarge": "Tippen Sie auf ein Foto, um es Vollbild anzuzeigen",
   "photoRecallTimeInfo": "Fotos von {time} (±2 Stunden)",
-  "grantPermission": "Berechtigung erteilen"
+  "grantPermission": "Berechtigung erteilen",
+
+  "analyzePhotoTooltip": "Dieses Foto analysieren",
+  "analyzingPhoto": "Foto wird analysiert...",
+  "foodAnalysisError": "Bild konnte nicht analysiert werden - versuchen Sie die manuelle Eingabe",
+  "foodAnalysisNetworkError": "Verbindung zum Analysedienst nicht möglich",
+  "foodAnalysisNoItems": "Keine Lebensmittel im Bild erkannt",
+  "aiEstimatedBanner": "KI-geschätzte Werte - bitte überprüfen",
+  "selectFoodItemsTitle": "Lebensmittel auswählen",
+  "selectFoodItemsSubtitle": "Wählen Sie die Elemente aus, die Sie hinzufügen möchten",
+  "addSelected": "Ausgewählte hinzufügen",
+  "analyzeAgain": "Erneut analysieren",
+  "select_all": "Alle auswählen",
+  "deselect_all": "Alle abwählen",
+  "confidenceLabel": "Konfidenz: {percentage}%"
 }

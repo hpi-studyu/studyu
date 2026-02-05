@@ -13,6 +13,8 @@ class PhotoRecallSection extends StatefulWidget {
   const PhotoRecallSection({
     required this.mealTime,
     this.onPhotoTap,
+    this.onAnalyzePhoto,
+    this.analyzingPhotoId,
     super.key,
   });
 
@@ -21,6 +23,12 @@ class PhotoRecallSection extends StatefulWidget {
 
   /// Callback when a photo is tapped.
   final ValueChanged<PhotoReference>? onPhotoTap;
+
+  /// Callback when the analyze button is tapped on a photo.
+  final ValueChanged<PhotoReference>? onAnalyzePhoto;
+
+  /// ID of the photo currently being analyzed (for loading state).
+  final String? analyzingPhotoId;
 
   @override
   State<PhotoRecallSection> createState() => _PhotoRecallSectionState();
@@ -382,6 +390,10 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
             return _PhotoThumbnail(
               photo: photo,
               onTap: () => widget.onPhotoTap?.call(photo),
+              onAnalyze: widget.onAnalyzePhoto != null
+                  ? () => widget.onAnalyzePhoto!.call(photo)
+                  : null,
+              isAnalyzing: widget.analyzingPhotoId == photo.id,
             );
           },
         ),
@@ -393,51 +405,142 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
 class _PhotoThumbnail extends StatelessWidget {
   final PhotoReference photo;
   final VoidCallback? onTap;
+  final VoidCallback? onAnalyze;
+  final bool isAnalyzing;
 
-  const _PhotoThumbnail({required this.photo, this.onTap});
+  const _PhotoThumbnail({
+    required this.photo,
+    this.onTap,
+    this.onAnalyze,
+    this.isAnalyzing = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: onTap,
-        child: FutureBuilder<Uint8List?>(
-          future: AssetEntity(
-            id: photo.id,
-            typeInt: 1,
-            width: 0,
-            height: 0,
-          ).thumbnailDataWithSize(
-            const ThumbnailSize(300, 300),
-            quality: 80,
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return ColoredBox(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: const Center(child: CircularProgressIndicator()),
-              );
-            }
-
-            if (snapshot.hasData && snapshot.data != null) {
-              return Image.memory(
-                snapshot.data!,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Photo thumbnail
+            FutureBuilder<Uint8List?>(
+              future: AssetEntity(
+                id: photo.id,
+                typeInt: 1,
+                width: 0,
+                height: 0,
+              ).thumbnailDataWithSize(
+                const ThumbnailSize(300, 300),
+                quality: 80,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return ColoredBox(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                    child: const Icon(Icons.error),
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: const Center(child: CircularProgressIndicator()),
                   );
-                },
-              );
-            }
+                }
 
-            return ColoredBox(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: const Icon(Icons.image_not_supported),
-            );
-          },
+                if (snapshot.hasData && snapshot.data != null) {
+                  return Image.memory(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return ColoredBox(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        child: const Icon(Icons.error),
+                      );
+                    },
+                  );
+                }
+
+                return ColoredBox(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  child: const Icon(Icons.image_not_supported),
+                );
+              },
+            ),
+
+            // Analyze button overlay
+            if (onAnalyze != null)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: _AnalyzeButton(
+                  onTap: onAnalyze!,
+                  isAnalyzing: isAnalyzing,
+                  tooltip: l10n.analyzePhotoTooltip,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AnalyzeButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final bool isAnalyzing;
+  final String tooltip;
+
+  const _AnalyzeButton({
+    required this.onTap,
+    required this.tooltip,
+    this.isAnalyzing = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Material(
+      color: Colors.transparent,
+      child: Tooltip(
+        message: tooltip,
+        child: InkWell(
+          onTap: isAnalyzing ? null : onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: isAnalyzing
+                  ? theme.colorScheme.primaryContainer
+                  : theme.colorScheme.primary,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Center(
+              child: isAnalyzing
+                  ? SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          theme.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    )
+                  : Icon(
+                      Icons.auto_awesome,
+                      size: 16,
+                      color: theme.colorScheme.onPrimary,
+                    ),
+            ),
+          ),
         ),
       ),
     );

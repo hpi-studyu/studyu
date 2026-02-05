@@ -1756,4 +1756,48 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get grantPermission => 'Berechtigung erteilen';
+
+  @override
+  String get analyzePhotoTooltip => 'Dieses Foto analysieren';
+
+  @override
+  String get analyzingPhoto => 'Foto wird analysiert...';
+
+  @override
+  String get foodAnalysisError =>
+      'Bild konnte nicht analysiert werden - versuchen Sie die manuelle Eingabe';
+
+  @override
+  String get foodAnalysisNetworkError =>
+      'Verbindung zum Analysedienst nicht möglich';
+
+  @override
+  String get foodAnalysisNoItems => 'Keine Lebensmittel im Bild erkannt';
+
+  @override
+  String get aiEstimatedBanner => 'KI-geschätzte Werte - bitte überprüfen';
+
+  @override
+  String get selectFoodItemsTitle => 'Lebensmittel auswählen';
+
+  @override
+  String get selectFoodItemsSubtitle =>
+      'Wählen Sie die Elemente aus, die Sie hinzufügen möchten';
+
+  @override
+  String get addSelected => 'Ausgewählte hinzufügen';
+
+  @override
+  String get analyzeAgain => 'Erneut analysieren';
+
+  @override
+  String get select_all => 'Alle auswählen';
+
+  @override
+  String get deselect_all => 'Alle abwählen';
+
+  @override
+  String confidenceLabel(int percentage) {
+    return 'Konfidenz: $percentage%';
+  }
 }
