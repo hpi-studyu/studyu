@@ -1,6 +1,7 @@
 export 'consent/consent_item.dart';
 export 'contact.dart';
 export 'data/data_reference.dart';
+export 'data/ffq_questions.dart';
 export 'eligibility/eligibility_criterion.dart';
 export 'expressions/expression.dart';
 export 'expressions/types/types.dart';

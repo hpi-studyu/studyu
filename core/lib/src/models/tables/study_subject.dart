@@ -279,6 +279,27 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       }
     }
     for (final observation in study.observations) {
+      // Handle FFQ (Food Frequency Questionnaire) as a one-time task
+      if (observation.title != null && FFQQuestions.isFFQTask(observation.title!)) {
+        // Only show FFQ on the FIRST day of Intervention 1 (first actual intervention, not baseline)
+        final interventionIndex = getInterventionIndexForDate(dateTime);
+        final studyDayIndex = getDayOfStudyFor(dateTime);
+        
+        // Calculate which intervention this is (0 = baseline, 1 = first intervention, etc.)
+        final firstInterventionIndex = study.schedule.includeBaseline ? 1 : 0;
+        final firstInterventionStartDay = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
+        
+        // Only show on the first day of Intervention 1
+        if (interventionIndex != firstInterventionIndex || studyDayIndex != firstInterventionStartDay) {
+          continue;
+        }
+        
+        // Don't show FFQ if it's already been completed
+        if (resultsFor(observation.id).isNotEmpty) {
+          continue;
+        }
+      }
+
       for (final completionPeriod in observation.schedule.completionPeriods) {
         taskSchedule.add(TaskInstance(observation, completionPeriod.id));
       }

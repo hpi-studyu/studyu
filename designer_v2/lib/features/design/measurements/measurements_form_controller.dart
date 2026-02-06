@@ -199,6 +199,29 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
   }
 
+  bool get isFFQEnabled =>
+      measurementViewModels.any((vm) {
+        if (vm is MeasurementSurveyFormViewModel) {
+          final title = vm.formData?.title ?? '';
+          return title.contains('Food Frequency Questionnaire') ||
+                 title.contains('FFQ');
+        }
+        return false;
+      });
+
+  void onNewFFQ() {
+    final ffqTask = FFQQuestions.createFFQTask();
+    final ffqFormData = MeasurementSurveyFormData.fromDomainModel(ffqTask);
+    final viewModel = MeasurementSurveyFormViewModel(
+      study: study,
+      formData: ffqFormData,
+      delegate: this,
+      validationSet: validationSet,
+    );
+    measurementViewModelsCollection.add(viewModel);
+    onSelectItem(viewModel);
+  }
+
   // - IProviderArgsResolver
 
   @override

@@ -32,14 +32,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
           measurementsFormViewModelProvider(studyId),
         );
 
-        final surveys = formViewModel.measurementViewModels
-            .whereType<MeasurementSurveyFormViewModel>()
-            .toList();
-
-        final nutritionTasks = formViewModel.measurementViewModels
-            .whereType<NutritionFormViewModel>()
-            .toList();
-
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -51,6 +43,14 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
               const SizedBox(height: 32.0),
               ReactiveFormConsumer(
                 builder: (context, form, child) {
+                  // Compute surveys inside ReactiveFormConsumer so it updates on form changes
+                  final surveys = formViewModel.measurementViewModels
+                      .whereType<MeasurementSurveyFormViewModel>()
+                      .toList();
+
+                  final nutritionTasks = formViewModel.measurementViewModels
+                      .whereType<NutritionFormViewModel>()
+                      .toList();
                   final bool isEnabled = formViewModel.isNutritionEnabled;
 
                   // M3 SEMANTIC COLORS
@@ -151,6 +151,80 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                                   value
                                         : null,
                                   ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      const SizedBox(height: 16.0),
+
+                      // FFQ (Food Frequency Questionnaire) Card
+                      if (formViewModel.canAddMeasurement)
+                        Card(
+                          elevation: formViewModel.isFFQEnabled ? 2.0 : 0.0,
+                          color: formViewModel.isFFQEnabled
+                              ? colorScheme.surface
+                              : colorScheme.surfaceContainerHighest,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: InkWell(
+                            onTap: formViewModel.isFFQEnabled
+                                ? null
+                                : formViewModel.onNewFFQ,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 12.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.list_alt_rounded,
+                                    color: formViewModel.isFFQEnabled
+                                        ? colorScheme.primary
+                                        : colorScheme.onSurfaceVariant,
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Food Frequency Questionnaire (FFQ)',
+                                          style: theme.textTheme.bodyLarge
+                                              ?.copyWith(
+                                                color: colorScheme.onSurface,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          formViewModel.isFFQEnabled
+                                              ? 'FFQ added - edit below'
+                                              : 'Add standardized dietary assessment questionnaire',
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                color: colorScheme
+                                                    .onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (!formViewModel.isFFQEnabled)
+                                    Icon(
+                                      Icons.add_circle_outline_rounded,
+                                      color: colorScheme.primary,
+                                    ),
+                                  if (formViewModel.isFFQEnabled)
+                                    Icon(
+                                      Icons.check_circle_rounded,
+                                      color: colorScheme.primary,
+                                    ),
                                 ],
                               ),
                             ),
