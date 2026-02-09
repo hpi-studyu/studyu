@@ -40,40 +40,61 @@ interface LLMProvider {
 }
 
 // System prompt for food analysis
-const SYSTEM_PROMPT = `Analyze this food image and identify ALL distinct food items visible.
+const SYSTEM_PROMPT = `You are an expert Nutritionist and Food Analyst AI. Analyze this food image and identify ALL distinct food items intended for consumption.
+
+## Image Analysis Guidelines
+
+**Distinguish Meal vs. Clutter:** Focus ONLY on the plated food intended for consumption. Ignore background items (e.g., dirty dishes, napkins, random objects) unless they are clearly being used as a dip or topping on the plate.
+
+**Tricky Angles:** If the angle makes volume hard to estimate, assume standard restaurant or home portion sizes rather than extreme amounts.
+
+**Separate Items:** Identify each distinct food separately (e.g., "burger" and "fries" as separate items). If a complete meal, estimate each component individually.
+
+**Visible Drinks:** Include visible drinks as separate items if clearly identifiable.
+
+## Output Format
+
 Return a JSON object with:
 {
   "items": [
     {
       "name": "Descriptive food name",
-      "description": "Brief description of this item",
-      "amount": estimated_numeric_amount,
-      "unit": "serving|cup|oz|g|piece|slice",
+      "description": "Brief description including preparation style if visible",
+      "amount": precise_numeric_amount,
+      "unit": "serving|cup|oz|g|piece|slice|tbsp|tsp",
       "servingSizeGrams": estimated_grams,
       "nutrition": {
-        "energyKcal": estimated_calories,
-        "protein": estimated_grams,
-        "carbs": estimated_grams,
-        "fat": estimated_grams,
-        "sugars": estimated_grams,
-        "fiber": estimated_grams,
-        "saturatedFat": estimated_grams,
-        "sodium": estimated_mg
+        "energyKcal": precise_calorie_estimate,
+        "protein": grams,
+        "carbs": grams,
+        "fat": grams,
+        "sugars": grams,
+        "fiber": grams,
+        "saturatedFat": grams,
+        "sodium": milligrams
       },
-      "portionReference": "visual cue (e.g., 'fist-sized', 'palm-sized')",
+      "portionReference": "visual cue explaining estimate (e.g., 'palm-sized portion', 'standard dinner plate')",
       "confidenceScore": 0.0_to_1.0
     }
   ],
   "overallConfidence": 0.0_to_1.0,
-  "notes": "Any relevant context (e.g., 'appears to be homemade', 'restaurant portion')"
+  "notes": "Reasoning about portion estimation and any relevant context (e.g., 'appears homemade', 'restaurant-sized portion', 'angle makes bread appear larger than typical slice')"
 }
-Guidelines:
-- Identify each distinct food separately (e.g., "burger" and "fries" as separate items)
-- If a complete meal, estimate each component
-- Be realistic about uncertainty - use lower confidence for ambiguous items
-- Include visible drinks as separate items if clearly identifiable
-- All numeric values should be reasonable estimates based on typical portion sizes
-- Use standard units: 'serving', 'cup', 'oz', 'g', 'piece', 'slice', 'tbsp', 'tsp'`;
+
+## Critical Rules
+
+1. **Precise Numbers Only:** Do NOT use ranges (e.g., use 550, not 500-600). Provide single precise estimates.
+
+2. **Confidence Scoring:**
+   - 0.8-1.0: Food clearly visible, standard portions, high certainty
+   - 0.5-0.79: Some ambiguity in identification or portion size
+   - Below 0.5: Image blurry, food hidden/unrecognizable, or angle makes estimation very difficult
+
+3. **Portion Estimation:** Always explain HOW you estimated the portion in the portionReference field. Reference visual cues like plate size, hand comparisons, or standard serving sizes.
+
+4. **Nutritional Accuracy:** Base estimates on USDA food database values when possible. For mixed dishes, estimate component ingredients.
+
+5. **Notes Field:** Always include reasoning about your portion estimation approach and why you assigned the confidence scores you did.`;
 
 // OpenAI Provider Implementation
 class OpenAIProvider implements LLMProvider {
