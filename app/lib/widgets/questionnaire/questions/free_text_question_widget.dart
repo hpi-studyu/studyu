@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/free_text_regex_validation.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -162,6 +163,12 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
           validator: (value) {
             final minLength = question.lengthRange.first;
+            final customTypeExpression = question.customTypeExpression;
+
+            if (question.textType == FreeTextQuestionType.custom &&
+                buildFullMatchRegex(customTypeExpression) == null) {
+              return AppLocalizations.of(context)!.free_text_custom_error;
+            }
 
             if (value!.isEmpty && minLength == 0) {
               return null;
@@ -199,12 +206,10 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                   return AppLocalizations.of(context)!.free_text_numeric_error;
                 }
               case FreeTextQuestionType.custom:
-                if (RegExp(question.customTypeExpression!).hasMatch(value)) {
+                if (isValidCustomFreeTextInput(value, customTypeExpression)) {
                   return null;
                 } else {
-                  return AppLocalizations.of(
-                    context,
-                  )!.free_text_custom_error(question.customTypeExpression!);
+                  return AppLocalizations.of(context)!.free_text_custom_error;
                 }
             }
           },

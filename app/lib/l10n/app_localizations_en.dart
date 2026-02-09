@@ -631,9 +631,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get free_text_numeric_error => 'Please enter only numeric characters';
 
   @override
-  String free_text_custom_error(String pattern) {
-    return 'Please enter only characters matching the pattern $pattern';
-  }
+  String get free_text_custom_error =>
+      'Please enter a value in the required format';
 
   @override
   String get app_outdated_message =>

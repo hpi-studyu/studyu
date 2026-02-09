@@ -152,6 +152,12 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                     prefix: const Text('^'),
                     suffix: const Text('\$'),
                   ),
+                  validationMessages: {
+                    ValidationMessage.required: (error) =>
+                        tr.form_field_required,
+                    ValidationMessage.pattern: (error) =>
+                        tr.free_text_validation_pattern,
+                  },
                   onChanged: (_) {
                     formViewModel.freeTextExampleTextControl
                         .updateValueAndValidity();
