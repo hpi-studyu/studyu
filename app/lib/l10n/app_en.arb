@@ -451,5 +451,27 @@
   "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
-  "submit" : "Submit"
+  "submit" : "Submit",
+
+  "date_picker_hint": "Select a date",
+  "date_picker_button_label": "Choose date",
+  "date_time_picker_button_label": "Choose date and time",
+  "date_picker_clear": "Clear",
+  "date_picker_validation_required": "Please select a date",
+  "date_picker_validation_min_date": "Date must be after {minDate}",
+  "@date_picker_validation_min_date": {
+    "placeholders": {
+      "minDate": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_validation_max_date": "Date must be before {maxDate}",
+  "@date_picker_validation_max_date": {
+    "placeholders": {
+      "maxDate": {
+        "type": "String"
+      }
+    }
+  }
 }

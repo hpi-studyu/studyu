@@ -58,6 +58,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     painResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
+    dateResponseOptionsArray.onChanged(
+      (control) => onResponseOptionsChanged(control.controls),
+    );
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -179,6 +182,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.freeText: freeTextResponseOptionsArray,
     SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
     SurveyQuestionType.pain: painResponseOptionsArray,
+    SurveyQuestionType.date: dateResponseOptionsArray,
   }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -224,6 +228,22 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormArray<String> painResponseOptionsArray = FormArray(
     painOptions,
   );
+
+  // Date
+  final FormControl<DateTime?> dateMinControl = FormControl<DateTime?>();
+  final FormControl<DateTime?> dateMaxControl = FormControl<DateTime?>();
+  final FormControl<DateFormatPreset> dateFormatPresetControl =
+      FormControl<DateFormatPreset>(
+    value: DateFormatPreset.isoDate,
+  );
+  final FormControl<DateTime?> dateInitialValueControl = FormControl<DateTime?>();
+
+  late final FormArray dateResponseOptionsArray = FormArray([
+    dateMinControl,
+    dateMaxControl,
+    dateFormatPresetControl,
+    dateInitialValueControl,
+  ]);
 
   // Audio
   static const int kDefaultMaxRecordingDurationSeconds = 60;
@@ -461,6 +481,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.pain: FormGroup({
       'painOptionsArray': painResponseOptionsArray,
     }),
+    SurveyQuestionType.date: FormGroup({
+      'dateMin': dateMinControl,
+      'dateMax': dateMaxControl,
+      'dateFormatPreset': dateFormatPresetControl,
+      'dateInitialValue': dateInitialValueControl,
+    }),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -695,6 +721,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         });
       case SurveyQuestionType.pain:
         break;
+      case SurveyQuestionType.date:
+        dateMinControl.value = (data as DateQuestionFormData).minDate;
+        dateMaxControl.value = data.maxDate;
+        dateFormatPresetControl.value =
+            data.dateFormatPreset ?? DateFormatPreset.isoDate;
+        dateInitialValueControl.value = data.initialDate;
     }
   }
 
@@ -797,6 +829,18 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
+        );
+      case SurveyQuestionType.date:
+        return DateQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
+          minDate: dateMinControl.value,
+          maxDate: dateMaxControl.value,
+          dateFormatPreset: dateFormatPresetControl.value,
+          initialDate: dateInitialValueControl.value,
         );
     }
   }

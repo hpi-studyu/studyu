@@ -1156,4 +1156,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get date_picker_hint => 'Select a date';
+
+  @override
+  String get date_picker_button_label => 'Choose date';
+
+  @override
+  String get date_time_picker_button_label => 'Choose date and time';
+
+  @override
+  String get date_picker_clear => 'Clear';
+
+  @override
+  String get date_picker_validation_required => 'Please select a date';
+
+  @override
+  String date_picker_validation_min_date(String minDate) {
+    return 'Date must be after $minDate';
+  }
+
+  @override
+  String date_picker_validation_max_date(String maxDate) {
+    return 'Date must be before $maxDate';
+  }
 }

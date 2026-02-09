@@ -77,6 +77,11 @@ abstract class QuestionFormData implements IFormData {
           question as PainQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.date: (question, eligibilityCriteria) =>
+        DateQuestionFormData.fromDomainModel(
+          question as DateQuestion,
+          eligibilityCriteria,
+        ),
   };
 
   QuestionFormData({
@@ -823,5 +828,91 @@ class PainQuestionFormData extends QuestionFormData {
     final question = toQuestion() as PainQuestion;
     final value = kResponseOptions[responseOption];
     return question.constructAnswer(value!);
+  }
+}
+
+class DateQuestionFormData extends QuestionFormData {
+  DateQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+    super.conditional,
+    this.minDate,
+    this.maxDate,
+    this.dateFormatPreset,
+    this.initialDate,
+  });
+
+  final DateTime? minDate;
+  final DateTime? maxDate;
+  final DateFormatPreset? dateFormatPreset;
+  final DateTime? initialDate;
+
+  @override
+  List<String> get responseOptions => []; // Date questions don't have fixed response options
+
+  factory DateQuestionFormData.fromDomainModel(
+    DateQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = DateQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.date,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      minDate: question.minDate,
+      maxDate: question.maxDate,
+      dateFormatPreset: question.dateFormatPreset,
+      initialDate: question.initialDate,
+      conditional: question.conditional,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = DateQuestion(
+      minDate: minDate,
+      maxDate: maxDate,
+      dateFormatPreset: dateFormatPreset ?? DateFormatPreset.isoDate,
+      initialDate: initialDate,
+    );
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<DateTime>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as DateTime?,
+          );
+    return question;
+  }
+
+  @override
+  DateQuestionFormData copy() {
+    final data = DateQuestionFormData(
+      questionId: const Uuid().v4(),
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      minDate: minDate,
+      maxDate: maxDate,
+      dateFormatPreset: dateFormatPreset,
+      initialDate: initialDate,
+      conditional: conditional?.deepCopy(),
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as DateQuestion;
+    // For date questions, eligibility criteria aren't typically used
+    // Return a default date for validation purposes
+    return question.constructAnswer(DateTime.now());
   }
 }

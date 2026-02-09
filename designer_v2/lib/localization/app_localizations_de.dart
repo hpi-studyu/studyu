@@ -473,6 +473,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Teilnehmer können ein oder mehrere Körperteile auf einem Diagramm auswählen und jedem ausgewählten Teil mithilfe einer Schmerzskala eine Schmerzstufe zuweisen. Dies ist nützlich für die Verfolgung von lokalisierten Schmerzen.';
 
   @override
+  String get question_type_date => 'Datum';
+
+  @override
+  String get question_type_date_description =>
+      'Teilnehmer können ein Datum und optional eine Uhrzeit auswählen. Dies ist nützlich für die Erfassung bestimmter Daten oder Zeitstempel.';
+
+  @override
   String get question_type_pain_preview_title => 'In-App-Vorschau';
 
   @override
@@ -721,6 +728,48 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.';
+
+  @override
+  String get date_min_date_label => 'Mindestdatum';
+
+  @override
+  String get date_min_date_label_helper =>
+      'Das früheste Datum, das ausgewählt werden kann';
+
+  @override
+  String get date_max_date_label => 'Höchstdatum';
+
+  @override
+  String get date_max_date_label_helper =>
+      'Das späteste Datum, das ausgewählt werden kann';
+
+  @override
+  String get date_format_label => 'Datumsformat';
+
+  @override
+  String get date_format_label_helper =>
+      'Formatmuster für die Anzeige des Datums';
+
+  @override
+  String get date_initial_value_label => 'Anfangsdatum';
+
+  @override
+  String get date_initial_value_label_helper =>
+      'Standarddatum, das den Teilnehmern angezeigt wird';
+
+  @override
+  String get date_preview_label => 'Vorschau';
+
+  @override
+  String get date_preview_helper =>
+      'Testen Sie, wie die Datumsauswahl für die Teilnehmer angezeigt wird';
+
+  @override
+  String get date_picker_hint => 'Datum auswählen';
+
+  @override
+  String get date_validation_min_after_max =>
+      'Das Mindestdatum muss vor dem Höchstdatum liegen';
 
   @override
   String get fitbit_question_title => 'Fitbit';

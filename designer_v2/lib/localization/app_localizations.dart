@@ -944,6 +944,18 @@ abstract class AppLocalizations {
   /// **'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.'**
   String get question_type_pain_description;
 
+  /// No description provided for @question_type_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get question_type_date;
+
+  /// No description provided for @question_type_date_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Participants can select a date and optionally a time. This is useful for recording specific dates or timestamps.'**
+  String get question_type_date_description;
+
   /// No description provided for @question_type_pain_preview_title.
   ///
   /// In en, this message translates to:
@@ -1357,6 +1369,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The input must match the specified regular expression.'**
   String get free_text_question_type_custom_explanation;
+
+  /// No description provided for @date_min_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Date'**
+  String get date_min_date_label;
+
+  /// No description provided for @date_min_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The earliest date that can be selected'**
+  String get date_min_date_label_helper;
+
+  /// No description provided for @date_max_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Date'**
+  String get date_max_date_label;
+
+  /// No description provided for @date_max_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest date that can be selected'**
+  String get date_max_date_label_helper;
+
+  /// No description provided for @date_format_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Format'**
+  String get date_format_label;
+
+  /// No description provided for @date_format_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Format pattern for displaying the date'**
+  String get date_format_label_helper;
+
+  /// No description provided for @date_initial_value_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial Date'**
+  String get date_initial_value_label;
+
+  /// No description provided for @date_initial_value_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date shown to participants'**
+  String get date_initial_value_label_helper;
+
+  /// No description provided for @date_preview_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get date_preview_label;
+
+  /// No description provided for @date_preview_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Test how the date picker will appear to participants'**
+  String get date_preview_helper;
+
+  /// No description provided for @date_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get date_picker_hint;
+
+  /// No description provided for @date_validation_min_after_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum date must be before maximum date'**
+  String get date_validation_min_after_max;
 
   /// No description provided for @fitbit_question_title.
   ///

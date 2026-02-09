@@ -2251,6 +2251,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @date_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get date_picker_hint;
+
+  /// No description provided for @date_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date'**
+  String get date_picker_button_label;
+
+  /// No description provided for @date_time_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date and time'**
+  String get date_time_picker_button_label;
+
+  /// No description provided for @date_picker_clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get date_picker_clear;
+
+  /// No description provided for @date_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date'**
+  String get date_picker_validation_required;
+
+  /// No description provided for @date_picker_validation_min_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date must be after {minDate}'**
+  String date_picker_validation_min_date(String minDate);
+
+  /// No description provided for @date_picker_validation_max_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date must be before {maxDate}'**
+  String date_picker_validation_max_date(String maxDate);
 }
 
 class _AppLocalizationsDelegate
