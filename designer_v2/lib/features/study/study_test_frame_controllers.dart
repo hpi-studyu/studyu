@@ -7,6 +7,40 @@ import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:web/web.dart' as web;
 
+/// Helper to inject CSS to ensure preview iframe stays below Flutter overlays
+void _injectPreviewIframeStyles() {
+  const styleId = 'studyu-preview-iframe-styles';
+  if (web.document.getElementById(styleId) != null) {
+    return; // Already injected
+  }
+
+  final style = web.HTMLStyleElement();
+  style.id = styleId;
+  style.textContent = '''
+    /* Target all platform view containers */
+    .flt-platform-view {
+      position: relative !important;
+      z-index: 0 !important;
+    }
+    /* Target the specific preview iframe by ID */
+    #studyu_app_preview {
+      position: relative !important;
+      z-index: -1 !important;
+    }
+    /* Target iframes within platform views */
+    .flt-platform-view iframe {
+      position: relative !important;
+      z-index: -1 !important;
+    }
+    /* Ensure Flutter overlays are always on top */
+    .flt-overlay {
+      z-index: 999999 !important;
+      position: relative !important;
+    }
+  ''';
+  web.document.head?.appendChild(style);
+}
+
 class RouteInformation {
   String? route;
   String? extra;
@@ -59,16 +93,23 @@ class WebController extends PlatformController {
 
   @override
   void registerViews(Key key) {
+    // Inject CSS to ensure iframe stays below Flutter overlays
+    _injectPreviewIframeStyles();
+
     iFrameElement = web.HTMLIFrameElement()
       ..id = 'studyu_app_preview'
       ..src = previewSrc
-      ..style.border = 'none';
+      ..style.border = 'none'
+      ..style.position = 'relative'
+      ..style.zIndex = '-1';
 
     ui.platformViewRegistry.registerViewFactory(
       '$studyId$key',
       (int viewId) => iFrameElement
         ..style.width = '100%'
-        ..style.height = '100%',
+        ..style.height = '100%'
+        ..style.position = 'relative'
+        ..style.zIndex = '-1',
     );
   }
 

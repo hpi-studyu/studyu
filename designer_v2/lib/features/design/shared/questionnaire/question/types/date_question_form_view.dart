@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class DateQuestionFormView extends ConsumerWidget {
@@ -29,7 +30,8 @@ class DateQuestionFormView extends ConsumerWidget {
 
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
-        final preset = formViewModel.dateFormatPresetControl.value ??
+        final preset =
+            formViewModel.dateFormatPresetControl.value ??
             DateFormatPreset.isoDate;
         final includesTime = preset.includesTime;
 
@@ -38,8 +40,8 @@ class DateQuestionFormView extends ConsumerWidget {
           children: [
             // Date Format Preset
             generateRow(
-              label: tr.date_format_label,
-              labelHelpText: tr.date_format_label_helper,
+              label: "asd",
+              labelHelpText: "asd",
               input: ReactiveDropdownField<DateFormatPreset>(
                 formControl: formViewModel.dateFormatPresetControl,
                 items: DateFormatPreset.values.map((preset) {
@@ -56,39 +58,51 @@ class DateQuestionFormView extends ConsumerWidget {
 
             // Min Date
             generateRow(
-              label: tr.date_min_date_label,
-              labelHelpText: tr.date_min_date_label_helper,
-              input: ReactiveDatePickerField(
-                formControl: formViewModel.dateMinControl,
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100),
-                placeholder: tr.date_picker_hint,
+              label: AppLocalizations.of(context)!.date_min_date_label,
+              labelHelpText: AppLocalizations.of(
+                context,
+              )!.date_min_date_label_helper,
+              input: PointerInterceptor(
+                child: ReactiveDatePickerField(
+                  formControl: formViewModel.dateMinControl,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
+                  placeholder: AppLocalizations.of(context)!.date_picker_hint,
+                ),
               ),
             ),
             const SizedBox(height: 16.0),
 
             // Max Date
             generateRow(
-              label: tr.date_max_date_label,
-              labelHelpText: tr.date_max_date_label_helper,
-              input: ReactiveDatePickerField(
-                formControl: formViewModel.dateMaxControl,
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100),
-                placeholder: tr.date_picker_hint,
+              label: AppLocalizations.of(context)!.date_max_date_label,
+              labelHelpText: AppLocalizations.of(
+                context,
+              )!.date_max_date_label_helper,
+              input: PointerInterceptor(
+                child: ReactiveDatePickerField(
+                  formControl: formViewModel.dateMaxControl,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
+                  placeholder: AppLocalizations.of(context)!.date_picker_hint,
+                ),
               ),
             ),
             const SizedBox(height: 16.0),
 
             // Initial Date
             generateRow(
-              label: tr.date_initial_value_label,
-              labelHelpText: tr.date_initial_value_label_helper,
-              input: ReactiveDatePickerField(
-                formControl: formViewModel.dateInitialValueControl,
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100),
-                placeholder: tr.date_picker_hint,
+              label: AppLocalizations.of(context)!.date_initial_value_label,
+              labelHelpText: AppLocalizations.of(
+                context,
+              )!.date_initial_value_label_helper,
+              input: PointerInterceptor(
+                child: ReactiveDatePickerField(
+                  formControl: formViewModel.dateInitialValueControl,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
+                  placeholder: AppLocalizations.of(context)!.date_picker_hint,
+                ),
               ),
             ),
             const SizedBox(height: 24.0),
@@ -97,12 +111,12 @@ class DateQuestionFormView extends ConsumerWidget {
             const Divider(thickness: 2.0),
             const SizedBox(height: 16.0),
             Text(
-              tr.date_preview_label,
+              AppLocalizations.of(context)!.date_preview_label,
               style: theme.textTheme.titleSmall,
             ),
             const SizedBox(height: 8.0),
             TextParagraph(
-              text: tr.date_preview_helper,
+              text: AppLocalizations.of(context)!.date_preview_helper,
               style: ThemeConfig.bodyTextMuted(theme),
             ),
             const SizedBox(height: 16.0),
@@ -148,8 +162,10 @@ class DateQuestionFormView extends ConsumerWidget {
               icon: const Icon(Icons.access_time),
               label: Text(TimeOfDay.fromDateTime(exampleDate).format(context)),
               style: OutlinedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 12,
+                ),
                 alignment: Alignment.centerLeft,
               ),
             ),
@@ -208,8 +224,8 @@ class ReactiveDatePickerField extends StatelessWidget {
       initialDate: initialDate.isBefore(firstDate)
           ? firstDate
           : initialDate.isAfter(lastDate)
-              ? lastDate
-              : initialDate,
+          ? lastDate
+          : initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
     );
@@ -246,9 +262,7 @@ class ReactiveDatePickerField extends StatelessWidget {
                 ? Text(_formatDate(value))
                 : Text(
                     placeholder ?? '',
-                    style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                    ),
+                    style: TextStyle(color: Theme.of(context).hintColor),
                   ),
           ),
         );

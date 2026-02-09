@@ -138,7 +138,9 @@ abstract class FormViewModel<T> implements IFormGroupController {
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
     }
-    final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
+    final isEqual =
+        jsonEncode(prevFormValue, toEncodable: _jsonEncodable) ==
+        jsonEncode(form.value, toEncodable: _jsonEncodable);
 
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
@@ -146,6 +148,29 @@ abstract class FormViewModel<T> implements IFormGroupController {
     _restoreControlStates(emitEvent: false, updateParent: false);
 
     return !isEqual;
+  }
+
+  static Object? _jsonEncodable(Object? value) {
+    if (value is DateTime) {
+      return value.toIso8601String();
+    }
+    if (value is Enum) {
+      return value.name;
+    }
+    if (value is Map) {
+      final result = <String, dynamic>{};
+      for (final entry in value.entries) {
+        result[entry.key.toString()] = _jsonEncodable(entry.value);
+      }
+      return result;
+    }
+    if (value is Iterable) {
+      return value.map(_jsonEncodable).toList();
+    }
+    if (value is num || value is bool || value is String) {
+      return value;
+    }
+    return value?.toString();
   }
 
   /// The [form]'s JSON value after initializing the controls with [formData]

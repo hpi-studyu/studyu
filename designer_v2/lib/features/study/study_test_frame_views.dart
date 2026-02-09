@@ -20,7 +20,10 @@ class WebFrame extends StatelessWidget {
     // final width = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
     return PhoneContainer(
-      innerContent: HtmlElementView(key: key, viewType: '$studyId$key'),
+      innerContent: HtmlElementView(
+        key: key,
+        viewType: '$studyId$key',
+      ),
       borderColor: theme.colorScheme.secondary.withValues(alpha: 0.4),
       innerContentBackgroundColor: theme.colorScheme.secondary.withValues(
         alpha: 0.025,

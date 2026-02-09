@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:math';
 
@@ -230,13 +231,19 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   );
 
   // Date
-  final FormControl<DateTime?> dateMinControl = FormControl<DateTime?>();
-  final FormControl<DateTime?> dateMaxControl = FormControl<DateTime?>();
+  late final FormControl<DateTime?> dateMinControl = CustomFormControl<DateTime?>(
+    onValueChanged: (_) => _onDateRangeChanged(),
+  );
+  late final FormControl<DateTime?> dateMaxControl = CustomFormControl<DateTime?>(
+    onValueChanged: (_) => _onDateRangeChanged(),
+  );
   final FormControl<DateFormatPreset> dateFormatPresetControl =
       FormControl<DateFormatPreset>(
     value: DateFormatPreset.isoDate,
   );
-  final FormControl<DateTime?> dateInitialValueControl = FormControl<DateTime?>();
+  late final FormControl<DateTime?> dateInitialValueControl = CustomFormControl<DateTime?>(
+    onValueChanged: (_) => _onDateRangeChanged(),
+  );
 
   late final FormArray dateResponseOptionsArray = FormArray([
     dateMinControl,
@@ -431,6 +438,33 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     freeTextLengthMax.value = freeTextLengthControl.value!.end.toInt();
   }
 
+  // Date validation helpers
+  void _onDateRangeChanged() {
+    if (formMode == FormMode.readonly) {
+      return; // prevent change listener from firing in readonly mode
+    }
+    // Auto-correct initial value if it's outside the new range
+    final initial = dateInitialValueControl.value;
+    final min = dateMinControl.value;
+    final max = dateMaxControl.value;
+
+    if (initial != null) {
+      // If both min and max are set, check if initial is within range
+      if (min != null && max != null) {
+        if (initial.isBefore(min) || initial.isAfter(max)) {
+          // If initial is outside range, set it to min (or max if min is null)
+          dateInitialValueControl.value = min;
+        }
+      } else if (min != null && initial.isBefore(min)) {
+        // If only min is set and initial is before min
+        dateInitialValueControl.value = min;
+      } else if (max != null && initial.isAfter(max)) {
+        // If only max is set and initial is after max
+        dateInitialValueControl.value = max;
+      }
+    }
+  }
+
   // Fitbit
 
   final Map<FitbitQuestionType, FormControl<bool>> fitbitQuestionTypesControl =
@@ -511,6 +545,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.fitbit: {
       StudyFormValidationSet.draft: [fitbitTypeRequired],
       StudyFormValidationSet.publish: [fitbitTypeRequired],
+    },
+    SurveyQuestionType.date: {
+      StudyFormValidationSet.draft: [dateRangeValid],
+      StudyFormValidationSet.publish: [dateRangeValid],
     },
   };
 
@@ -608,6 +646,42 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         ValidationMessage.number: (error) => tr.free_text_validation_number,
       },
     );
+  }
+
+  FormControlValidation get dateRangeValid {
+    return FormControlValidation(
+      control: dateMaxControl,
+      validators: [
+        Validators.delegate(_validateDateRange),
+      ],
+      validationMessages: {
+        'minGreaterThanMax': (error) => tr.date_validation_min_greater_than_max,
+        'initialOutsideRange': (error) => tr.date_validation_initial_outside_range,
+      },
+    );
+  }
+
+  Map<String, dynamic>? _validateDateRange(AbstractControl<dynamic> control) {
+    final min = dateMinControl.value;
+    final max = dateMaxControl.value;
+    final initial = dateInitialValueControl.value;
+
+    // Check if min is greater than max
+    if (min != null && max != null && min.isAfter(max)) {
+      return {'minGreaterThanMax': true};
+    }
+
+    // Check if initial value is outside the range
+    if (initial != null) {
+      if (min != null && initial.isBefore(min)) {
+        return {'initialOutsideRange': true};
+      }
+      if (max != null && initial.isAfter(max)) {
+        return {'initialOutsideRange': true};
+      }
+    }
+
+    return null;
   }
 
   /// The form containing the controls for the currently selected
@@ -890,6 +964,53 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       customRegexControl.value = null;
     }
     return super.save();
+  }
+
+  @override
+  bool get isDirty {
+    // For date questions, we need to handle DateTime serialization
+    if (questionType == SurveyQuestionType.date) {
+      // Convert form values to JSON-serializable format
+      final currentFormValue = _convertFormValueToJsonSerializable(form.value);
+      final prevFormValueSerializable = _convertFormValueToJsonSerializable(prevFormValue);
+      final isEqual = jsonEncode(prevFormValueSerializable) == jsonEncode(currentFormValue);
+      return !isEqual;
+    }
+    return super.isDirty;
+  }
+
+  /// Converts form values containing DateTime objects to JSON-serializable format
+  Map<String, dynamic> _convertFormValueToJsonSerializable(Map<String, dynamic>? formValue) {
+    if (formValue == null) return {};
+
+    final result = <String, dynamic>{};
+    for (final entry in formValue.entries) {
+      final value = entry.value;
+      if (value == null) {
+        result[entry.key] = null;
+      } else if (value is DateTime) {
+        result[entry.key] = value.toIso8601String();
+      } else if (value is Map) {
+        result[entry.key] = _convertFormValueToJsonSerializable(
+          Map<String, dynamic>.from(value),
+        );
+      } else if (value is List) {
+        // Handle lists/arrays that might contain DateTime objects
+        result[entry.key] = value.map((item) {
+          if (item == null) {
+            return null;
+          } else if (item is DateTime) {
+            return item.toIso8601String();
+          } else if (item is Map) {
+            return _convertFormValueToJsonSerializable(Map<String, dynamic>.from(item));
+          }
+          return item;
+        }).toList();
+      } else {
+        result[entry.key] = value;
+      }
+    }
+    return result;
   }
 
   @override

@@ -465,13 +465,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.';
 
   @override
-  String get question_type_date => 'Date';
-
-  @override
-  String get question_type_date_description =>
-      'Participants can select a date and optionally a time. This is useful for recording specific dates or timestamps.';
-
-  @override
   String get question_type_pain_preview_title => 'In-App Preview';
 
   @override
@@ -721,46 +714,46 @@ class AppLocalizationsEn extends AppLocalizations {
       'The input must match the specified regular expression.';
 
   @override
-  String get date_min_date_label => 'Minimum Date';
+  String get question_type_date => 'Date';
+
+  @override
+  String get date_min_date_label => 'Minimum date';
 
   @override
   String get date_min_date_label_helper =>
-      'The earliest date that can be selected';
+      'The earliest date participants can select';
 
   @override
-  String get date_max_date_label => 'Maximum Date';
+  String get date_max_date_label => 'Maximum date';
 
   @override
   String get date_max_date_label_helper =>
-      'The latest date that can be selected';
+      'The latest date participants can select';
 
   @override
-  String get date_format_label => 'Date Format';
-
-  @override
-  String get date_format_label_helper =>
-      'Format pattern for displaying the date';
-
-  @override
-  String get date_initial_value_label => 'Initial Date';
+  String get date_initial_value_label => 'Initial date';
 
   @override
   String get date_initial_value_label_helper =>
-      'Default date shown to participants';
+      'The default date value shown to participants';
+
+  @override
+  String get date_picker_hint => 'Select a date';
 
   @override
   String get date_preview_label => 'Preview';
 
   @override
   String get date_preview_helper =>
-      'Test how the date picker will appear to participants';
+      'This is how the date picker will appear to participants in the app';
 
   @override
-  String get date_picker_hint => 'Select a date';
+  String get date_validation_min_greater_than_max =>
+      'Minimum date cannot be greater than maximum date';
 
   @override
-  String get date_validation_min_after_max =>
-      'Minimum date must be before maximum date';
+  String get date_validation_initial_outside_range =>
+      'Initial date must be within the minimum and maximum date range';
 
   @override
   String get fitbit_question_title => 'Fitbit';

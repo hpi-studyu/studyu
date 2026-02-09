@@ -915,4 +915,20 @@ class DateQuestionFormData extends QuestionFormData {
     // Return a default date for validation purposes
     return question.constructAnswer(DateTime.now());
   }
+
+  /// Converts the date question form data to a JSON-serializable map
+  Map<String, dynamic> toJson() {
+    return {
+      'questionId': questionId,
+      'questionText': questionText,
+      'questionType': questionType.name,
+      'questionInfoText': questionInfoText,
+      'minDate': minDate?.toIso8601String(),
+      'maxDate': maxDate?.toIso8601String(),
+      'dateFormatPreset': dateFormatPreset?.name,
+      'initialDate': initialDate?.toIso8601String(),
+      'conditional': conditional?.toString(),
+      'responseOptions': responseOptions,
+    };
+  }
 }
