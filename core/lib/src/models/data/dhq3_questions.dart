@@ -134,32 +134,12 @@ class Dhq3Questions {
   /// About you – exact FFQ wording.
   static List<Question> _aboutYou() {
     final q = <Question>[];
-    final months = List.generate(
-      9,
-      (i) => Choice.withText(text: _month(i + 1), id: '${i + 1}'),
-    );
-    months.add(
-      Choice.withText(text: 'October, November, or December', id: '10_11_12'),
-    );
-    q.add(
-      _q('dhq_birth_month', 'In what month were you born?', choices: months),
-    );
-    q.add(
-      _q(
-        'dhq_birth_year',
-        'In what year were you born?',
-        choices: [
-          Choice.withText(text: '1945-1954', id: '1945_1954'),
-          Choice.withText(text: '1955-1964', id: '1955_1964'),
-          Choice.withText(text: '1965-1974', id: '1965_1974'),
-          Choice.withText(text: '1975-1984', id: '1975_1984'),
-          Choice.withText(text: '1985-1994', id: '1985_1994'),
-          Choice.withText(text: '1995-2004', id: '1995_2004'),
-          Choice.withText(text: '2005-2014', id: '2005_2014'),
-          Choice.withText(text: '2015 or later', id: '2015_plus'),
-        ],
-      ),
-    );
+    
+    final dob = DateQuestion()
+      ..id = 'dhq_dob'
+      ..prompt = 'What is your date of birth?';
+    q.add(dob);
+
     q.add(
       _q(
         'dhq_sex',
