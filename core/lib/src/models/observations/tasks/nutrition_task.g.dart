@@ -14,6 +14,7 @@ NutritionTask _$NutritionTaskFromJson(Map<String, dynamic> json) =>
       ..header = json['header'] as String?
       ..footer = json['footer'] as String?
       ..schedule = Schedule.fromJson(json['schedule'] as Map<String, dynamic>)
+      ..scheduledStudyDay = (json['scheduledStudyDay'] as num?)?.toInt()
       ..instructions = json['instructions'] as String?
       ..collectMealContext = json['collectMealContext'] as bool? ?? true
       ..allowRecipes = json['allowRecipes'] as bool? ?? true
@@ -30,6 +31,7 @@ Map<String, dynamic> _$NutritionTaskToJson(NutritionTask instance) =>
       'header': ?instance.header,
       'footer': ?instance.footer,
       'schedule': instance.schedule.toJson(),
+      'scheduledStudyDay': ?instance.scheduledStudyDay,
       'instructions': ?instance.instructions,
       'collectMealContext': instance.collectMealContext,
       'allowRecipes': instance.allowRecipes,

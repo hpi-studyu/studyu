@@ -47,6 +47,7 @@ class MeasurementSurveyFormViewModel
   );
   final FormControl<String> surveyIntroTextControl = FormControl(value: '');
   final FormControl<String> surveyOutroTextControl = FormControl(value: '');
+  final FormControl<int> scheduledStudyDayControl = FormControl();
 
   MeasurementID get measurementId => measurementIdControl.value!;
   MeasurementID get instanceId => instanceIdControl.value!;
@@ -84,6 +85,7 @@ class MeasurementSurveyFormViewModel
     'surveyTitle': surveyTitleControl,
     'surveyIntroText': surveyIntroTextControl,
     'surveyOutroText': surveyOutroTextControl,
+    'scheduledStudyDay': scheduledStudyDayControl,
     ...questionnaireControls,
     ...scheduleFormControls,
   });
@@ -95,6 +97,7 @@ class MeasurementSurveyFormViewModel
     surveyTitleControl.value = data.title;
     surveyIntroTextControl.value = data.introText ?? '';
     surveyOutroTextControl.value = data.outroText ?? '';
+    scheduledStudyDayControl.value = data.scheduledStudyDay;
 
     setQuestionnaireControlsFrom(data.questionnaireFormData);
     setScheduleControlsFrom(data);
@@ -114,6 +117,7 @@ class MeasurementSurveyFormViewModel
       timeLockEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
       hasReminder: hasReminderControl.value!, // required
       reminderTime: reminderTimeControl.value?.toStudyUTimeOfDay(),
+      scheduledStudyDay: scheduledStudyDayControl.value,
     );
     return data;
   }

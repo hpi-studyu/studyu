@@ -59,6 +59,21 @@ class _MeasurementSurveyFormViewState
               ),
             ),
             FormTableRow(
+              control: widget.formViewModel.scheduledStudyDayControl,
+              label: 'Scheduled study day',
+              labelHelpText: 'Day of the study when this survey appears (0-based)',
+              input: ReactiveTextField<int>(
+                formControl: widget.formViewModel.scheduledStudyDayControl,
+                validationMessages: {
+                    ValidationMessage.pattern: (error) => 'Must be a number',
+                },
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  helperText: 'Leave empty for default scheduling',
+                ),
+              ),
+            ),
+            FormTableRow(
               control: widget.formViewModel.surveyIntroTextControl,
               labelBuilder: (context) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

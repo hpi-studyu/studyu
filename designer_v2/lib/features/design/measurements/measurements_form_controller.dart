@@ -266,14 +266,20 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   /// Add a single FFQ survey for the given day index (0..13).
-  /// Does NOT auto-navigate to the survey editor to avoid
-  /// MeasurementNotFoundException from provider-rebuild race condition.
-  void onNewFFQForDay(int dayIndex) {
+  /// Returns the created view model, or null if it was already added or index is invalid.
+  MeasurementSurveyFormViewModel? onNewFFQForDay(int dayIndex) {
     if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
-      return;
+      return null;
     }
-    if (isFFQDaySurveyAdded(dayIndex)) return;
+    if (isFFQDaySurveyAdded(dayIndex)) return null;
     final task = FFQQuestions.createFFQTaskForDay(dayIndex);
+    // Compute default study day for this survey
+    final phaseDuration = study.schedule.phaseDuration;
+    final baseDay =
+        study.schedule.includeBaseline ? phaseDuration : 0;
+    task.scheduledStudyDay = dayIndex < 7
+        ? baseDay + dayIndex
+        : baseDay + phaseDuration + (dayIndex - 7);
     final ffqFormData = MeasurementSurveyFormData.fromDomainModel(task);
     final viewModel = MeasurementSurveyFormViewModel(
       study: study,
@@ -283,6 +289,43 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
     measurementViewModelsCollection.add(viewModel);
     _invalidateFFQCache();
+    return viewModel;
+  }
+
+  /// Update the scheduled study day for an existing FFQ survey.
+  void updateFFQDaySchedule(int dayIndex, int newStudyDay) {
+    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
+      return;
+    }
+    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
+    for (final vm in measurementViewModels) {
+      if (vm is MeasurementSurveyFormViewModel) {
+        if (vm.formData?.title == title) {
+          // Update the control directly to preserve form state
+          vm.scheduledStudyDayControl.value = newStudyDay;
+          vm.scheduledStudyDayControl.markAsDirty();
+          break;
+        }
+      }
+    }
+  }
+
+  /// Get the current scheduledStudyDay for an FFQ survey by dayIndex.
+  int? getFFQDayScheduledStudyDay(int dayIndex) {
+    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
+      return null;
+    }
+    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
+    for (final vm in measurementViewModels) {
+      if (vm is MeasurementSurveyFormViewModel) {
+        if (vm.formData?.title == title) {
+          // Read from control if available, otherwise fallback to form data
+          return vm.scheduledStudyDayControl.value ??
+              vm.formData?.scheduledStudyDay;
+        }
+      }
+    }
+    return null;
   }
 
   // - IProviderArgsResolver

@@ -13,6 +13,10 @@ abstract class Task {
 
   Schedule schedule = Schedule();
 
+  /// When non-null, this task should only be shown on the given
+  /// study day (0-based from the study start date).
+  int? scheduledStudyDay;
+
   Task(this.type);
 
   Task.withId(this.type) : id = const Uuid().v4();

@@ -14,6 +14,7 @@ QuestionnaireTask _$QuestionnaireTaskFromJson(Map<String, dynamic> json) =>
       ..header = json['header'] as String?
       ..footer = json['footer'] as String?
       ..schedule = Schedule.fromJson(json['schedule'] as Map<String, dynamic>)
+      ..scheduledStudyDay = (json['scheduledStudyDay'] as num?)?.toInt()
       ..questions = StudyUQuestionnaire.fromJson(
         json['questions'] as List<dynamic>,
       );
@@ -26,5 +27,6 @@ Map<String, dynamic> _$QuestionnaireTaskToJson(QuestionnaireTask instance) =>
       'header': ?instance.header,
       'footer': ?instance.footer,
       'schedule': instance.schedule.toJson(),
+      'scheduledStudyDay': ?instance.scheduledStudyDay,
       'questions': instance.questions.toJson(),
     };

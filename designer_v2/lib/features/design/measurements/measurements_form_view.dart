@@ -220,6 +220,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                               final dayIndex = i;
                               final dayTitle = FFQQuestions.ffqDaySurveyTitles[dayIndex];
                               final dayAdded = formViewModel.isFFQDaySurveyAdded(dayIndex);
+                              final scheduledDay = formViewModel.getFFQDayScheduledStudyDay(dayIndex);
                               return Card(
                                 elevation: dayAdded ? 2.0 : 0.0,
                                 color: dayAdded
@@ -232,7 +233,12 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                 child: InkWell(
                                   onTap: dayAdded
                                       ? null
-                                      : () => formViewModel.onNewFFQForDay(dayIndex),
+                                      : () {
+                                          final newVm = formViewModel.onNewFFQForDay(dayIndex);
+                                          if (newVm != null) {
+                                            formViewModel.onSelectItem(newVm);
+                                          }
+                                        },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 16.0,

@@ -260,8 +260,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   int totalTaskCountFor(Task task) {
     var daysCount = daysPerIntervention;
     if (task is Observation) {
-      if (task.title != null && FFQQuestions.isFFQDayTask(task.title)) {
-        daysCount = 1; // Each "FFQ Day N" appears once (on its day)
+      if (task.scheduledStudyDay != null) {
+        daysCount = 1; // Appears once on the scheduled day
+      } else if (task.title != null && FFQQuestions.isFFQDayTask(task.title)) {
+        daysCount = 1; // Legacy: each "FFQ Day N" appears once
       } else {
         daysCount =
             2 * daysCount +
@@ -296,7 +298,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         continue;
       }
 
-      // FFQ Day 1..14: show only on the matching day of the 14-day window
+      // Custom scheduled study day: show only on the matching day
+      if (observation.scheduledStudyDay != null) {
+        if (studyDayIndex != observation.scheduledStudyDay) continue;
+        for (final completionPeriod in observation.schedule.completionPeriods) {
+          taskSchedule.add(TaskInstance(observation, completionPeriod.id));
+        }
+        continue;
+      }
+
+      // FFQ Day 1..14: show only on the matching day of the 14-day window (legacy)
       if (FFQQuestions.isFFQDayTask(title)) {
         final dayNum = FFQQuestions.getFFQDayNumber(title);
         if (dayNum == null) continue;
