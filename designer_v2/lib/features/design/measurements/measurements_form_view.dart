@@ -53,9 +53,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                       .toList();
                   final bool isEnabled = formViewModel.isNutritionEnabled;
 
-                  // M3 SEMANTIC COLORS
-                  // Enabled: High emphasis (Surface color, usually White/Dark Grey)
-                  // Disabled: Medium emphasis (Surface Variant, usually Light Grey/Grey)
                   final backgroundColor = isEnabled
                       ? colorScheme.surface
                       : colorScheme.surfaceContainerHighest;
@@ -65,17 +62,13 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                       const SizedBox(height: 16.0),
                       if (formViewModel.canAddMeasurement || isEnabled)
                         Card(
-                          // M3: Elevated Card (Enabled) vs Filled Card (Disabled)
                           elevation: isEnabled ? 2.0 : 0.0,
                           color: backgroundColor,
-                          // M3: Standard Corner Radius is 12.0 for cards
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                          // Clip is required so InkWell ripple doesn't overflow corners
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
-                            // LOGIC: Tap to edit ONLY if enabled and task exists
                             onTap: (isEnabled && nutritionTasks.isNotEmpty)
                                 ? () => formViewModel.onSelectItem(
                                     nutritionTasks.first,
@@ -88,8 +81,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                               ),
                               child: Row(
                                 children: [
-                                  // LEADING ICON (Visual Anchor)
-                                  // Colored Primary when active to draw attention
                                   Icon(
                                     Icons.restaurant_menu_rounded,
                                     color: isEnabled
@@ -97,8 +88,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                         : colorScheme.onSurfaceVariant,
                                   ),
                                   const SizedBox(width: 16.0),
-
-                                  // TEXT CONTENT
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -109,12 +98,9 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                           style: theme.textTheme.bodyLarge
                                               ?.copyWith(
                                                 color: colorScheme.onSurface,
-                                                fontWeight: FontWeight
-                                                    .w500, // Medium weight
+                                                fontWeight: FontWeight.w500,
                                               ),
                                         ),
-                                        // SUBTITLE
-                                        // Show instruction if disabled, or context if enabled
                                         if (!isEnabled) ...[
                                           const SizedBox(height: 4),
                                           Text(
@@ -129,9 +115,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                       ],
                                     ),
                                   ),
-
-                                  // NAVIGATION AFFORDANCE (The Chevron)
-                                  // Indicates to the user that this row is clickable
                                   if (isEnabled) ...[
                                     Icon(
                                       Icons.chevron_right_rounded,
@@ -140,9 +123,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                     ),
                                     const SizedBox(width: 8),
                                   ],
-
-                                  // THE SWITCH
-                                  // Handles the state toggling independently of navigation
                                   Switch(
                                     value: isEnabled,
                                     onChanged: formViewModel.canAddMeasurement
@@ -231,10 +211,91 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                           ),
                         ),
 
+                      // Individual 14-day FFQ survey cards
+                      if (formViewModel.canAddMeasurement)
+                        for (int i = 0; i < FFQQuestions.ffqDaySurveyTitles.length; i++) ...[
+                          const SizedBox(height: 8.0),
+                          Builder(
+                            builder: (context) {
+                              final dayIndex = i;
+                              final dayTitle = FFQQuestions.ffqDaySurveyTitles[dayIndex];
+                              final dayAdded = formViewModel.isFFQDaySurveyAdded(dayIndex);
+                              return Card(
+                                elevation: dayAdded ? 2.0 : 0.0,
+                                color: dayAdded
+                                    ? colorScheme.surface
+                                    : colorScheme.surfaceContainerHighest,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: InkWell(
+                                  onTap: dayAdded
+                                      ? null
+                                      : () => formViewModel.onNewFFQForDay(dayIndex),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical: 12.0,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_view_week_rounded,
+                                          color: dayAdded
+                                              ? colorScheme.primary
+                                              : colorScheme.onSurfaceVariant,
+                                        ),
+                                        const SizedBox(width: 16.0),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                dayTitle,
+                                                style: theme.textTheme.bodyLarge
+                                                    ?.copyWith(
+                                                      color: colorScheme.onSurface,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                dayAdded
+                                                    ? 'Added - edit below'
+                                                    : 'Add this survey',
+                                                style: theme.textTheme.bodyMedium
+                                                    ?.copyWith(
+                                                      color: colorScheme
+                                                          .onSurfaceVariant,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        if (!dayAdded)
+                                          Icon(
+                                            Icons.add_circle_outline_rounded,
+                                            color: colorScheme.primary,
+                                          ),
+                                        if (dayAdded)
+                                          Icon(
+                                            Icons.check_circle_rounded,
+                                            color: colorScheme.primary,
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+
                       const SizedBox(height: 16.0),
 
                       // VISUAL SEPARATION
-                      // Only show divider if there are surveys below
                       if (surveys.isNotEmpty) ...[
                         Divider(
                           color: colorScheme.outlineVariant,

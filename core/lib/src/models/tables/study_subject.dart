@@ -260,9 +260,13 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   int totalTaskCountFor(Task task) {
     var daysCount = daysPerIntervention;
     if (task is Observation) {
-      daysCount =
-          2 * daysCount +
-          (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
+      if (task.title != null && FFQQuestions.isFFQDayTask(task.title)) {
+        daysCount = 1; // Each "FFQ Day N" appears once (on its day)
+      } else {
+        daysCount =
+            2 * daysCount +
+            (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
+      }
     }
     return daysCount * task.schedule.completionPeriods.length;
   }
@@ -278,26 +282,44 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         taskSchedule.add(TaskInstance(task, completionPeriod.id));
       }
     }
+    final studyDayIndex = getDayOfStudyFor(dateTime);
+    final phaseDuration = study.schedule.phaseDuration;
+    final firstInterventionStartDay =
+        study.schedule.includeBaseline ? phaseDuration : 0;
+
     for (final observation in study.observations) {
-      // Handle FFQ (Food Frequency Questionnaire) as a one-time task
-      if (observation.title != null && FFQQuestions.isFFQTask(observation.title!)) {
-        // Only show FFQ on the FIRST day of Intervention 1 (first actual intervention, not baseline)
+      final title = observation.title;
+      if (title == null) {
+        for (final completionPeriod in observation.schedule.completionPeriods) {
+          taskSchedule.add(TaskInstance(observation, completionPeriod.id));
+        }
+        continue;
+      }
+
+      // FFQ Day 1..14: show only on the matching day of the 14-day window
+      if (FFQQuestions.isFFQDayTask(title)) {
+        final dayNum = FFQQuestions.getFFQDayNumber(title);
+        if (dayNum == null) continue;
+        final expectedStudyDay = dayNum <= 7
+            ? firstInterventionStartDay + (dayNum - 1)
+            : firstInterventionStartDay + phaseDuration + (dayNum - 8);
+        if (studyDayIndex != expectedStudyDay) continue;
+        for (final completionPeriod in observation.schedule.completionPeriods) {
+          taskSchedule.add(TaskInstance(observation, completionPeriod.id));
+        }
+        continue;
+      }
+
+      // Normal (test) FFQ: one-time on first day of intervention 1
+      if (FFQQuestions.isFFQTask(title)) {
+        final firstInterventionIndex =
+            study.schedule.includeBaseline ? 1 : 0;
         final interventionIndex = getInterventionIndexForDate(dateTime);
-        final studyDayIndex = getDayOfStudyFor(dateTime);
-        
-        // Calculate which intervention this is (0 = baseline, 1 = first intervention, etc.)
-        final firstInterventionIndex = study.schedule.includeBaseline ? 1 : 0;
-        final firstInterventionStartDay = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
-        
-        // Only show on the first day of Intervention 1
-        if (interventionIndex != firstInterventionIndex || studyDayIndex != firstInterventionStartDay) {
+        if (interventionIndex != firstInterventionIndex ||
+            studyDayIndex != firstInterventionStartDay) {
           continue;
         }
-        
-        // Don't show FFQ if it's already been completed
-        if (resultsFor(observation.id).isNotEmpty) {
-          continue;
-        }
+        if (resultsFor(observation.id).isNotEmpty) continue;
       }
 
       for (final completionPeriod in observation.schedule.completionPeriods) {

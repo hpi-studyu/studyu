@@ -1,7 +1,10 @@
 import 'package:studyu_core/core.dart';
 
-/// Food Frequency Questionnaire (FFQ) - Dietary Fat and Free Sugar
-/// Based on the short questionnaire for dietary assessment
+import 'dhq3_questions.dart';
+
+/// Food Frequency Questionnaire (FFQ) – test/single survey (26 questions).
+/// Use createFFQTask() for the normal one-off FFQ.
+/// Use createFFQTaskForDay(0..13) for 14-day cluster surveys (DHQ3 split into 14).
 class FFQQuestions {
   /// Standard frequency options for FFQ questions
   static List<Choice> get frequencyChoices => [
@@ -27,167 +30,113 @@ class FFQQuestions {
         ),
       ];
 
-  /// Standard intro text for the FFQ
   static const String introText =
       'Think about what you ate over the last year. Consider breakfast, lunch, dinner, and when you ate out.';
 
-  /// Prompt text for frequency questions
-  static const String promptPrefix =
-      'Select the answer option that best describes how often you consumed the following food or drink:';
-
-  /// Creates all FFQ questions
+  /// Creates the normal (test) FFQ questions – 26 questions.
   static List<Question> createQuestions() {
     final questions = <Question>[];
 
-    // Question 1: Ground meat
     questions.add(_createFrequencyQuestion(
       id: 'ffq_ground_meat',
       prompt: 'Ground meat, e.g. from beef or lamb, in burgers, Bolognese sauce, etc.',
     ));
-
-    // Question 2: Pork or beef
     questions.add(_createFrequencyQuestion(
       id: 'ffq_pork_beef',
       prompt:
           'Pork or beef in the form of steaks, ribs, roasts or as sandwich meat/on sandwiches',
     ));
-
-    // Question 3: Fried chicken
     questions.add(_createFrequencyQuestion(
       id: 'ffq_fried_chicken',
       prompt: 'Fried chicken (such as in chicken burgers, nuggets, etc.)',
     ));
-
-    // Question 4: Sausages
     questions.add(_createFrequencyQuestion(
       id: 'ffq_sausages',
       prompt: 'Sausages, cured meats, e.g. wiener or salami',
     ));
-
-    // Question 5: Bacon
     questions.add(_createFrequencyQuestion(
       id: 'ffq_bacon',
       prompt: 'Bacon/breakfast bacon',
     ));
-
-    // Question 6: Salad dressings
     questions.add(_createFrequencyQuestion(
       id: 'ffq_salad_dressings',
       prompt: 'Salad dressings (not low-fat)',
     ));
-
-    // Question 7: Butter/margarine
     questions.add(_createFrequencyQuestion(
       id: 'ffq_butter_margarine',
       prompt: 'Margarine, butter or oil when cooking',
     ));
-
-    // Question 8: Eggs
     questions.add(_createFrequencyQuestion(
       id: 'ffq_eggs',
       prompt: 'Eggs (not when only egg whites were used)',
     ));
-
-    // Question 9: Pizza
     questions.add(_createFrequencyQuestion(
       id: 'ffq_pizza',
       prompt: 'Pizza',
     ));
-
-    // Question 10: Cheese
     questions.add(_createFrequencyQuestion(
       id: 'ffq_cheese',
       prompt: 'Cheese or cheese spread (not low-fat)',
     ));
-
-    // Question 11: French fries
     questions.add(_createFrequencyQuestion(
       id: 'ffq_french_fries',
       prompt: 'French fries, potato pancakes, etc.',
     ));
-
-    // Question 12: Chips
     questions.add(_createFrequencyQuestion(
       id: 'ffq_chips',
       prompt: 'Corn chips (e.g. nachos/tortilla chips), potato chips',
     ));
-
-    // Question 13: Pastries/cookies
     questions.add(_createFrequencyQuestion(
       id: 'ffq_pastries',
       prompt:
           'Pancakes/donuts, croissants, sweet baked goods (e.g. plum cake, streusel cake, etc.)',
     ));
-
-    // Question 14: Cakes/cookies
     questions.add(_createFrequencyQuestion(
       id: 'ffq_cakes_cookies',
       prompt: 'Cakes, cookies',
     ));
-
-    // Question 15: Ice cream
     questions.add(_createFrequencyQuestion(
       id: 'ffq_ice_cream',
       prompt: 'Ice cream (not low-fat or sorbet)',
     ));
-
-    // Question 16: Chocolate
     questions.add(_createFrequencyQuestion(
       id: 'ffq_chocolate',
       prompt: 'Chocolate',
     ));
-
-    // Question 17: Candy
     questions.add(_createFrequencyQuestion(
       id: 'ffq_candy',
       prompt: 'Lollipops/hard candy/bonbons (with sugar)',
     ));
-
-    // Question 18: Spreads
     questions.add(_createFrequencyQuestion(
       id: 'ffq_spreads',
       prompt: 'Spreads, such as peanut butter, marmalade, honey, Nutella',
     ));
-
-    // Question 19: Pancakes
     questions.add(_createFrequencyQuestion(
       id: 'ffq_american_pancakes',
       prompt: 'American pancakes or French toast',
     ));
-
-    // Question 20: Sports drinks
     questions.add(_createFrequencyQuestion(
       id: 'ffq_sports_drinks',
       prompt: 'Sports drinks or energy drinks (e.g. Red Bull)',
     ));
-
-    // Question 21: Soft drinks
     questions.add(_createFrequencyQuestion(
       id: 'ffq_soft_drinks',
       prompt: 'Soft drinks, lemonade (not "light" versions)',
     ));
-
-    // Question 22: Whole milk
     questions.add(_createFrequencyQuestion(
       id: 'ffq_whole_milk',
       prompt:
           'Whole milk, also in cappuccinos, hot chocolates, shakes, etc.',
     ));
-
-    // Question 23: Sweetened beverages
     questions.add(_createFrequencyQuestion(
       id: 'ffq_sweetened_beverages',
       prompt:
           'Other sweetened beverages (such as juice with added sugar, syrup, iced tea, etc.)',
     ));
-
-    // Question 24: White bread
     questions.add(_createFrequencyQuestion(
       id: 'ffq_white_bread',
       prompt: 'White bread',
     ));
-
-    // Question 25: Fast food frequency
     questions.add(_createFrequencyQuestion(
       id: 'ffq_fast_food',
       prompt:
@@ -200,8 +149,6 @@ class FFQQuestions {
         Choice.withText(text: '7 or more', id: '7_or_more'),
       ],
     ));
-
-    // Question 26: Added sugar
     questions.add(_createFrequencyQuestion(
       id: 'ffq_added_sugar',
       prompt:
@@ -218,7 +165,6 @@ class FFQQuestions {
     return questions;
   }
 
-  /// Helper method to create a frequency question
   static ChoiceQuestion _createFrequencyQuestion({
     required String id,
     required String prompt,
@@ -232,9 +178,7 @@ class FFQQuestions {
     return question;
   }
 
-  /// Create a complete FFQ questionnaire task
-  /// This creates a standard questionnaire task, but the one-time logic
-  /// is handled in the app's dashboard/schedule logic
+  /// Normal (test) FFQ – one survey, 26 questions.
   static QuestionnaireTask createFFQTask() {
     final task = QuestionnaireTask.withId()
       ..title = 'Food Frequency Questionnaire (FFQ)'
@@ -243,8 +187,6 @@ class FFQQuestions {
           'Thank you for completing the Food Frequency Questionnaire!'
       ..questions.questions = createQuestions();
 
-    // Set schedule for one-time completion at study start
-    // Available all day on the first day only
     task.schedule = Schedule()
       ..completionPeriods = [
         CompletionPeriod.noId(
@@ -259,10 +201,26 @@ class FFQQuestions {
     return task;
   }
 
-  /// Check if a task is an FFQ task based on its title
+  /// 14-day FFQ: returns the survey for day index 0..13 (Day 1..14). Each has one cluster of DHQ3 questions.
+  static QuestionnaireTask createFFQTaskForDay(int dayIndex) {
+    return Dhq3Questions.createTaskForDay(dayIndex);
+  }
+
   static bool isFFQTask(String taskTitle) {
     return taskTitle.contains('Food Frequency Questionnaire') ||
-           taskTitle.contains('FFQ');
+        taskTitle.contains('FFQ');
   }
-}
 
+  /// True if this is one of the 14 named DHQ3 surveys (e.g. "About you", "Beverages", "Fruits").
+  static bool isFFQDayTask(String? taskTitle) {
+    return Dhq3Questions.isNamedSurvey(taskTitle);
+  }
+
+  /// Day number 1..14 for the 14 named surveys. Returns null if not one of them.
+  static int? getFFQDayNumber(String? taskTitle) {
+    return Dhq3Questions.dayIndexForTitle(taskTitle);
+  }
+
+  /// Titles for the 14 DHQ3 surveys (one per day/topic). Use with createFFQTaskForDay(index).
+  static List<String> get ffqDaySurveyTitles => Dhq3Questions.surveyTitles;
+}

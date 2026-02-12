@@ -175,9 +175,6 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onNewItem() {
-    // This is called by FormListView when no custom onNewItem is provided,
-    // or if we want a default action.
-    // We will handle the choice in the view, but this can serve as a default.
     onNewSurvey();
   }
 
@@ -203,11 +200,35 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       measurementViewModels.any((vm) {
         if (vm is MeasurementSurveyFormViewModel) {
           final title = vm.formData?.title ?? '';
-          return title.contains('Food Frequency Questionnaire') ||
-                 title.contains('FFQ');
+          return (title.contains('Food Frequency Questionnaire') ||
+                  title.contains('FFQ')) &&
+              !FFQQuestions.isFFQDayTask(title);
         }
         return false;
       });
+
+  bool get isFFQ14DayEnabled =>
+      measurementViewModels.any((vm) {
+        if (vm is MeasurementSurveyFormViewModel) {
+          final title = vm.formData?.title ?? '';
+          return FFQQuestions.isFFQDayTask(title);
+        }
+        return false;
+      });
+
+  /// True if the survey for [dayIndex] (0..13) is already added.
+  bool isFFQDaySurveyAdded(int dayIndex) {
+    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
+      return false;
+    }
+    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
+    return measurementViewModels.any((vm) {
+      if (vm is MeasurementSurveyFormViewModel) {
+        return (vm.formData?.title ?? '') == title;
+      }
+      return false;
+    });
+  }
 
   void onNewFFQ() {
     final ffqTask = FFQQuestions.createFFQTask();
@@ -220,6 +241,25 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
     measurementViewModelsCollection.add(viewModel);
     onSelectItem(viewModel);
+  }
+
+  /// Add a single FFQ survey for the given day index (0..13).
+  /// Does NOT auto-navigate to the survey editor to avoid
+  /// MeasurementNotFoundException from provider-rebuild race condition.
+  void onNewFFQForDay(int dayIndex) {
+    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
+      return;
+    }
+    if (isFFQDaySurveyAdded(dayIndex)) return;
+    final task = FFQQuestions.createFFQTaskForDay(dayIndex);
+    final ffqFormData = MeasurementSurveyFormData.fromDomainModel(task);
+    final viewModel = MeasurementSurveyFormViewModel(
+      study: study,
+      formData: ffqFormData,
+      delegate: this,
+      validationSet: validationSet,
+    );
+    measurementViewModelsCollection.add(viewModel);
   }
 
   // - IProviderArgsResolver
@@ -283,7 +323,6 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     FormMode prevFormMode,
   ) async {
     if (prevFormMode == FormMode.create) {
-      // Commit the managed viewmodel that was eagerly added in [provide]
       measurementViewModelsCollection.commit(
         formViewModel as ManagedFormViewModel<IFormDataWithSchedule>,
       );
