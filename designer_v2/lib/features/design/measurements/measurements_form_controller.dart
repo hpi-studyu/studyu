@@ -196,25 +196,51 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
   }
 
-  bool get isFFQEnabled =>
-      measurementViewModels.any((vm) {
-        if (vm is MeasurementSurveyFormViewModel) {
-          final title = vm.formData?.title ?? '';
-          return (title.contains('Food Frequency Questionnaire') ||
-                  title.contains('FFQ')) &&
-              !FFQQuestions.isFFQDayTask(title);
-        }
-        return false;
-      });
+  // --- FFQ lookup cache ---
+  bool? _isFFQEnabledCache;
+  bool? _isFFQ14DayEnabledCache;
+  Set<String>? _addedFFQDayTitlesCache;
 
-  bool get isFFQ14DayEnabled =>
-      measurementViewModels.any((vm) {
-        if (vm is MeasurementSurveyFormViewModel) {
-          final title = vm.formData?.title ?? '';
-          return FFQQuestions.isFFQDayTask(title);
+  void _invalidateFFQCache() {
+    _isFFQEnabledCache = null;
+    _isFFQ14DayEnabledCache = null;
+    _addedFFQDayTitlesCache = null;
+  }
+
+  Set<String> get _addedFFQDayTitles {
+    if (_addedFFQDayTitlesCache != null) return _addedFFQDayTitlesCache!;
+    final titles = <String>{};
+    for (final vm in measurementViewModels) {
+      if (vm is MeasurementSurveyFormViewModel) {
+        final title = vm.formData?.title ?? '';
+        if (FFQQuestions.isFFQDayTask(title)) {
+          titles.add(title);
         }
-        return false;
-      });
+      }
+    }
+    _addedFFQDayTitlesCache = titles;
+    return titles;
+  }
+
+  bool get isFFQEnabled {
+    if (_isFFQEnabledCache != null) return _isFFQEnabledCache!;
+    _isFFQEnabledCache = measurementViewModels.any((vm) {
+      if (vm is MeasurementSurveyFormViewModel) {
+        final title = vm.formData?.title ?? '';
+        return (title.contains('Food Frequency Questionnaire') ||
+                title.contains('FFQ')) &&
+            !FFQQuestions.isFFQDayTask(title);
+      }
+      return false;
+    });
+    return _isFFQEnabledCache!;
+  }
+
+  bool get isFFQ14DayEnabled {
+    if (_isFFQ14DayEnabledCache != null) return _isFFQ14DayEnabledCache!;
+    _isFFQ14DayEnabledCache = _addedFFQDayTitles.isNotEmpty;
+    return _isFFQ14DayEnabledCache!;
+  }
 
   /// True if the survey for [dayIndex] (0..13) is already added.
   bool isFFQDaySurveyAdded(int dayIndex) {
@@ -222,12 +248,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       return false;
     }
     final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
-    return measurementViewModels.any((vm) {
-      if (vm is MeasurementSurveyFormViewModel) {
-        return (vm.formData?.title ?? '') == title;
-      }
-      return false;
-    });
+    return _addedFFQDayTitles.contains(title);
   }
 
   void onNewFFQ() {
@@ -240,6 +261,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       validationSet: validationSet,
     );
     measurementViewModelsCollection.add(viewModel);
+    _invalidateFFQCache();
     onSelectItem(viewModel);
   }
 
@@ -260,6 +282,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       validationSet: validationSet,
     );
     measurementViewModelsCollection.add(viewModel);
+    _invalidateFFQCache();
   }
 
   // - IProviderArgsResolver
