@@ -231,19 +231,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   );
 
   // Date
-  late final FormControl<DateTime?> dateMinControl = CustomFormControl<DateTime?>(
-    onValueChanged: (_) => _onDateRangeChanged(),
-  );
-  late final FormControl<DateTime?> dateMaxControl = CustomFormControl<DateTime?>(
-    onValueChanged: (_) => _onDateRangeChanged(),
-  );
+  late final FormControl<DateTime?> dateMinControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) => _onDateRangeChanged(),
+      );
+  late final FormControl<DateTime?> dateMaxControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) => _onDateRangeChanged(),
+      );
   final FormControl<DateFormatPreset> dateFormatPresetControl =
-      FormControl<DateFormatPreset>(
-    value: DateFormatPreset.isoDate,
-  );
-  late final FormControl<DateTime?> dateInitialValueControl = CustomFormControl<DateTime?>(
-    onValueChanged: (_) => _onDateRangeChanged(),
-  );
+      FormControl<DateFormatPreset>(value: DateFormatPreset.isoDate);
+  late final FormControl<DateTime?> dateInitialValueControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) => _onDateRangeChanged(),
+      );
 
   late final FormArray dateResponseOptionsArray = FormArray([
     dateMinControl,
@@ -651,12 +652,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   FormControlValidation get dateRangeValid {
     return FormControlValidation(
       control: dateMaxControl,
-      validators: [
-        Validators.delegate(_validateDateRange),
-      ],
+      validators: [Validators.delegate(_validateDateRange)],
       validationMessages: {
         'minGreaterThanMax': (error) => tr.date_validation_min_greater_than_max,
-        'initialOutsideRange': (error) => tr.date_validation_initial_outside_range,
+        'initialOutsideRange': (error) =>
+            tr.date_validation_initial_outside_range,
       },
     );
   }
@@ -972,15 +972,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     if (questionType == SurveyQuestionType.date) {
       // Convert form values to JSON-serializable format
       final currentFormValue = _convertFormValueToJsonSerializable(form.value);
-      final prevFormValueSerializable = _convertFormValueToJsonSerializable(prevFormValue);
-      final isEqual = jsonEncode(prevFormValueSerializable) == jsonEncode(currentFormValue);
+      final prevFormValueSerializable = _convertFormValueToJsonSerializable(
+        prevFormValue,
+      );
+      final isEqual =
+          jsonEncode(prevFormValueSerializable) == jsonEncode(currentFormValue);
       return !isEqual;
     }
     return super.isDirty;
   }
 
   /// Converts form values containing DateTime objects to JSON-serializable format
-  Map<String, dynamic> _convertFormValueToJsonSerializable(Map<String, dynamic>? formValue) {
+  Map<String, dynamic> _convertFormValueToJsonSerializable(
+    Map<String, dynamic>? formValue,
+  ) {
     if (formValue == null) return {};
 
     final result = <String, dynamic>{};
@@ -1002,7 +1007,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           } else if (item is DateTime) {
             return item.toIso8601String();
           } else if (item is Map) {
-            return _convertFormValueToJsonSerializable(Map<String, dynamic>.from(item));
+            return _convertFormValueToJsonSerializable(
+              Map<String, dynamic>.from(item),
+            );
           }
           return item;
         }).toList();

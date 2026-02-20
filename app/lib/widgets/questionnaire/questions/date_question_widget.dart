@@ -8,11 +8,7 @@ class DateQuestionWidget extends QuestionWidget {
   final DateQuestion question;
   final Function(Answer)? onDone;
 
-  const DateQuestionWidget({
-    super.key,
-    required this.question,
-    this.onDone,
-  });
+  const DateQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
   State<DateQuestionWidget> createState() => _DateQuestionWidgetState();
@@ -53,10 +49,9 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
 
   Future<void> _pickTime() async {
     final now = TimeOfDay.now();
-    final initialTime =
-        _selectedDate != null
-            ? TimeOfDay.fromDateTime(_selectedDate!)
-            : now;
+    final initialTime = _selectedDate != null
+        ? TimeOfDay.fromDateTime(_selectedDate!)
+        : now;
 
     final pickedTime = await showTimePicker(
       context: context,
@@ -108,16 +103,16 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
 
     if (widget.question.minDate != null &&
         date.isBefore(widget.question.minDate!)) {
-      return AppLocalizations.of(context)!.date_picker_validation_min_date(
-        _formatDate(widget.question.minDate!),
-      );
+      return AppLocalizations.of(
+        context,
+      )!.date_picker_validation_min_date(_formatDate(widget.question.minDate!));
     }
 
     if (widget.question.maxDate != null &&
         date.isAfter(widget.question.maxDate!)) {
-      return AppLocalizations.of(context)!.date_picker_validation_max_date(
-        _formatDate(widget.question.maxDate!),
-      );
+      return AppLocalizations.of(
+        context,
+      )!.date_picker_validation_max_date(_formatDate(widget.question.maxDate!));
     }
 
     return null;
@@ -140,8 +135,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             _selectedDate != null
                 ? _formatDate(_selectedDate!)
                 : (widget.question.includeTime
-                    ? localizations.date_time_picker_button_label
-                    : localizations.date_picker_button_label),
+                      ? localizations.date_time_picker_button_label
+                      : localizations.date_picker_button_label),
           ),
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -155,9 +150,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
           OutlinedButton.icon(
             onPressed: _pickTime,
             icon: const Icon(Icons.access_time),
-            label: Text(
-              TimeOfDay.fromDateTime(_selectedDate!).format(context),
-            ),
+            label: Text(TimeOfDay.fromDateTime(_selectedDate!).format(context)),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               alignment: Alignment.centerLeft,
