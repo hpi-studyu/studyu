@@ -1,4 +1,5 @@
 import 'package:studyu_core/src/models/models.dart';
+import 'package:studyu_core/src/models/tasks/task_schedule_rule.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class Task {
@@ -13,9 +14,9 @@ abstract class Task {
 
   Schedule schedule = Schedule();
 
-  /// When non-null, this task should only be shown on the given
-  /// study day (0-based from the study start date).
-  int? scheduledStudyDay;
+  /// When non-null, this task appears only on the study days
+  /// resolved by the rule (specific days, every N days, or per cycle).
+  TaskScheduleRule? scheduleRule;
 
   Task(this.type);
 

@@ -196,59 +196,16 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
   }
 
-  // --- FFQ lookup cache ---
-  bool? _isFFQEnabledCache;
-  bool? _isFFQ14DayEnabledCache;
-  Set<String>? _addedFFQDayTitlesCache;
-
-  void _invalidateFFQCache() {
-    _isFFQEnabledCache = null;
-    _isFFQ14DayEnabledCache = null;
-    _addedFFQDayTitlesCache = null;
-  }
-
-  Set<String> get _addedFFQDayTitles {
-    if (_addedFFQDayTitlesCache != null) return _addedFFQDayTitlesCache!;
-    final titles = <String>{};
-    for (final vm in measurementViewModels) {
-      if (vm is MeasurementSurveyFormViewModel) {
-        final title = vm.formData?.title ?? '';
-        if (FFQQuestions.isFFQDayTask(title)) {
-          titles.add(title);
-        }
-      }
-    }
-    _addedFFQDayTitlesCache = titles;
-    return titles;
-  }
+  // --- FFQ support (using TaskScheduleRule) ---
 
   bool get isFFQEnabled {
-    if (_isFFQEnabledCache != null) return _isFFQEnabledCache!;
-    _isFFQEnabledCache = measurementViewModels.any((vm) {
+    return measurementViewModels.any((vm) {
       if (vm is MeasurementSurveyFormViewModel) {
         final title = vm.formData?.title ?? '';
-        return (title.contains('Food Frequency Questionnaire') ||
-                title.contains('FFQ')) &&
-            !FFQQuestions.isFFQDayTask(title);
+        return FFQQuestions.isFFQTask(title);
       }
       return false;
     });
-    return _isFFQEnabledCache!;
-  }
-
-  bool get isFFQ14DayEnabled {
-    if (_isFFQ14DayEnabledCache != null) return _isFFQ14DayEnabledCache!;
-    _isFFQ14DayEnabledCache = _addedFFQDayTitles.isNotEmpty;
-    return _isFFQ14DayEnabledCache!;
-  }
-
-  /// True if the survey for [dayIndex] (0..13) is already added.
-  bool isFFQDaySurveyAdded(int dayIndex) {
-    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
-      return false;
-    }
-    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
-    return _addedFFQDayTitles.contains(title);
   }
 
   void onNewFFQ() {
@@ -261,25 +218,38 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       validationSet: validationSet,
     );
     measurementViewModelsCollection.add(viewModel);
-    _invalidateFFQCache();
     onSelectItem(viewModel);
   }
 
-  /// Add a single FFQ survey for the given day index (0..13).
-  /// Returns the created view model, or null if it was already added or index is invalid.
+  /// True if the 14-day FFQ survey for [dayIndex] (0..13) is already added.
+  bool isFFQDaySurveyAdded(int dayIndex) {
+    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
+      return false;
+    }
+    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
+    return measurementViewModels.any((vm) {
+      if (vm is MeasurementSurveyFormViewModel) {
+        return vm.formData?.title == title;
+      }
+      return false;
+    });
+  }
+
+  /// Add a single FFQ survey for the given day index (0..13) using TaskScheduleRule.
   MeasurementSurveyFormViewModel? onNewFFQForDay(int dayIndex) {
     if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
       return null;
     }
     if (isFFQDaySurveyAdded(dayIndex)) return null;
     final task = FFQQuestions.createFFQTaskForDay(dayIndex);
-    // Compute default study day for this survey
+    // Compute the study day for this FFQ survey
     final phaseDuration = study.schedule.phaseDuration;
-    final baseDay =
-        study.schedule.includeBaseline ? phaseDuration : 0;
-    task.scheduledStudyDay = dayIndex < 7
+    final baseDay = study.schedule.includeBaseline ? phaseDuration : 0;
+    final studyDay = dayIndex < 7
         ? baseDay + dayIndex
         : baseDay + phaseDuration + (dayIndex - 7);
+    // Use TaskScheduleRule instead of scheduledStudyDay
+    task.scheduleRule = TaskScheduleRule.forSpecificDays([studyDay]);
     final ffqFormData = MeasurementSurveyFormData.fromDomainModel(task);
     final viewModel = MeasurementSurveyFormViewModel(
       study: study,
@@ -288,29 +258,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       validationSet: validationSet,
     );
     measurementViewModelsCollection.add(viewModel);
-    _invalidateFFQCache();
     return viewModel;
   }
 
-  /// Update the scheduled study day for an existing FFQ survey.
-  void updateFFQDaySchedule(int dayIndex, int newStudyDay) {
-    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
-      return;
-    }
-    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
-    for (final vm in measurementViewModels) {
-      if (vm is MeasurementSurveyFormViewModel) {
-        if (vm.formData?.title == title) {
-          // Update the control directly to preserve form state
-          vm.scheduledStudyDayControl.value = newStudyDay;
-          vm.scheduledStudyDayControl.markAsDirty();
-          break;
-        }
-      }
-    }
-  }
-
-  /// Get the current scheduledStudyDay for an FFQ survey by dayIndex.
+  /// Get the current scheduled study day(s) for an FFQ survey by dayIndex.
   int? getFFQDayScheduledStudyDay(int dayIndex) {
     if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
       return null;
@@ -319,9 +270,11 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     for (final vm in measurementViewModels) {
       if (vm is MeasurementSurveyFormViewModel) {
         if (vm.formData?.title == title) {
-          // Read from control if available, otherwise fallback to form data
-          return vm.scheduledStudyDayControl.value ??
-              vm.formData?.scheduledStudyDay;
+          final rule = vm.buildScheduleRule();
+          if (rule != null && rule.specificDays.isNotEmpty) {
+            return rule.specificDays.first;
+          }
+          return null;
         }
       }
     }

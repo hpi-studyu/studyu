@@ -260,10 +260,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   int totalTaskCountFor(Task task) {
     var daysCount = daysPerIntervention;
     if (task is Observation) {
-      if (task.scheduledStudyDay != null) {
-        daysCount = 1; // Appears once on the scheduled day
-      } else if (task.title != null && FFQQuestions.isFFQDayTask(task.title)) {
-        daysCount = 1; // Legacy: each "FFQ Day N" appears once
+      if (task.scheduleRule != null) {
+        daysCount = task.scheduleRule!
+            .resolveScheduledDays(study.schedule)
+            .length;
+        if (daysCount == 0) daysCount = 1; // Minimum 1 to avoid zero-count
       } else {
         daysCount =
             2 * daysCount +
@@ -286,8 +287,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     }
     final studyDayIndex = getDayOfStudyFor(dateTime);
     final phaseDuration = study.schedule.phaseDuration;
-    final firstInterventionStartDay =
-        study.schedule.includeBaseline ? phaseDuration : 0;
+    final firstInterventionStartDay = study.schedule.includeBaseline
+        ? phaseDuration
+        : 0;
 
     for (final observation in study.observations) {
       final title = observation.title;
@@ -298,23 +300,14 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         continue;
       }
 
-      // Custom scheduled study day: show only on the matching day
-      if (observation.scheduledStudyDay != null) {
-        if (studyDayIndex != observation.scheduledStudyDay) continue;
-        for (final completionPeriod in observation.schedule.completionPeriods) {
-          taskSchedule.add(TaskInstance(observation, completionPeriod.id));
+      // Scheduled survey: show only on matching days
+      if (observation.scheduleRule != null) {
+        if (!observation.scheduleRule!.isScheduledForDay(
+          studyDayIndex,
+          study.schedule,
+        )) {
+          continue;
         }
-        continue;
-      }
-
-      // FFQ Day 1..14: show only on the matching day of the 14-day window (legacy)
-      if (FFQQuestions.isFFQDayTask(title)) {
-        final dayNum = FFQQuestions.getFFQDayNumber(title);
-        if (dayNum == null) continue;
-        final expectedStudyDay = dayNum <= 7
-            ? firstInterventionStartDay + (dayNum - 1)
-            : firstInterventionStartDay + phaseDuration + (dayNum - 8);
-        if (studyDayIndex != expectedStudyDay) continue;
         for (final completionPeriod in observation.schedule.completionPeriods) {
           taskSchedule.add(TaskInstance(observation, completionPeriod.id));
         }
@@ -323,8 +316,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
       // Normal (test) FFQ: one-time on first day of intervention 1
       if (FFQQuestions.isFFQTask(title)) {
-        final firstInterventionIndex =
-            study.schedule.includeBaseline ? 1 : 0;
+        final firstInterventionIndex = study.schedule.includeBaseline ? 1 : 0;
         final interventionIndex = getInterventionIndexForDate(dateTime);
         if (interventionIndex != firstInterventionIndex ||
             studyDayIndex != firstInterventionStartDay) {
