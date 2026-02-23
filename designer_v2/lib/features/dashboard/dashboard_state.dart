@@ -208,7 +208,13 @@ class DashboardState extends Equatable {
   // - Equatable
 
   @override
-  List<Object?> get props => [studies, studiesFilter];
+  List<Object?> get props => [
+    studies,
+    studiesFilter,
+    sortByColumn,
+    sortAscending,
+    query,
+  ];
 }
 
 extension DashboardStateSafeViewProps on DashboardState {
