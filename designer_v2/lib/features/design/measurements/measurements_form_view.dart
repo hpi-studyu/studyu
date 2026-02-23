@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey_template_picker_dialog.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -139,21 +140,24 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
 
                       const SizedBox(height: 16.0),
 
-                      // FFQ (Food Frequency Questionnaire) Card
+                      // Template survey card
                       if (formViewModel.canAddMeasurement)
                         Card(
-                          elevation: formViewModel.isFFQEnabled ? 2.0 : 0.0,
-                          color: formViewModel.isFFQEnabled
-                              ? colorScheme.surface
-                              : colorScheme.surfaceContainerHighest,
+                          elevation: 0,
+                          color: colorScheme.surfaceContainerHighest,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
-                            onTap: formViewModel.isFFQEnabled
-                                ? null
-                                : formViewModel.onNewFFQ,
+                            onTap: () {
+                              showDialog<void>(
+                                context: context,
+                                builder: (_) => SurveyTemplatePickerDialog(
+                                  formViewModel: formViewModel,
+                                ),
+                              );
+                            },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16.0,
@@ -162,10 +166,8 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.list_alt_rounded,
-                                    color: formViewModel.isFFQEnabled
-                                        ? colorScheme.primary
-                                        : colorScheme.onSurfaceVariant,
+                                    Icons.library_add_rounded,
+                                    color: colorScheme.onSurfaceVariant,
                                   ),
                                   const SizedBox(width: 16.0),
                                   Expanded(
@@ -174,7 +176,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Food Frequency Questionnaire (FFQ)',
+                                          'Use Template',
                                           style: theme.textTheme.bodyLarge
                                               ?.copyWith(
                                                 color: colorScheme.onSurface,
@@ -183,9 +185,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          formViewModel.isFFQEnabled
-                                              ? 'FFQ added - edit below'
-                                              : 'Add standardized dietary assessment questionnaire',
+                                          'Apply a premade survey to your study',
                                           style: theme.textTheme.bodyMedium
                                               ?.copyWith(
                                                 color: colorScheme
@@ -195,109 +195,16 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                       ],
                                     ),
                                   ),
-                                  if (!formViewModel.isFFQEnabled)
-                                    Icon(
-                                      Icons.add_circle_outline_rounded,
-                                      color: colorScheme.primary,
-                                    ),
-                                  if (formViewModel.isFFQEnabled)
-                                    Icon(
-                                      Icons.check_circle_rounded,
-                                      color: colorScheme.primary,
-                                    ),
+                                  Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: colorScheme.onSurfaceVariant
+                                        .withOpacity(0.5),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-
-                      // Individual 14-day FFQ survey cards
-                      if (formViewModel.canAddMeasurement)
-                        for (int i = 0; i < FFQQuestions.ffqDaySurveyTitles.length; i++) ...[
-                          const SizedBox(height: 8.0),
-                          Builder(
-                            builder: (context) {
-                              final dayIndex = i;
-                              final dayTitle = FFQQuestions.ffqDaySurveyTitles[dayIndex];
-                              final dayAdded = formViewModel.isFFQDaySurveyAdded(dayIndex);
-                              final scheduledDay = formViewModel.getFFQDayScheduledStudyDay(dayIndex);
-                              return Card(
-                                elevation: dayAdded ? 2.0 : 0.0,
-                                color: dayAdded
-                                    ? colorScheme.surface
-                                    : colorScheme.surfaceContainerHighest,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: InkWell(
-                                  onTap: dayAdded
-                                      ? null
-                                      : () {
-                                          final newVm = formViewModel.onNewFFQForDay(dayIndex);
-                                          if (newVm != null) {
-                                            formViewModel.onSelectItem(newVm);
-                                          }
-                                        },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 12.0,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.calendar_view_week_rounded,
-                                          color: dayAdded
-                                              ? colorScheme.primary
-                                              : colorScheme.onSurfaceVariant,
-                                        ),
-                                        const SizedBox(width: 16.0),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                dayTitle,
-                                                style: theme.textTheme.bodyLarge
-                                                    ?.copyWith(
-                                                      color: colorScheme.onSurface,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                dayAdded
-                                                    ? 'Added - edit below'
-                                                    : 'Add this survey',
-                                                style: theme.textTheme.bodyMedium
-                                                    ?.copyWith(
-                                                      color: colorScheme
-                                                          .onSurfaceVariant,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        if (!dayAdded)
-                                          Icon(
-                                            Icons.add_circle_outline_rounded,
-                                            color: colorScheme.primary,
-                                          ),
-                                        if (dayAdded)
-                                          Icon(
-                                            Icons.check_circle_rounded,
-                                            color: colorScheme.primary,
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
 
                       const SizedBox(height: 16.0),
 

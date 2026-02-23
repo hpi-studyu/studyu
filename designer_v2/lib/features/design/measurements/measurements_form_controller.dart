@@ -196,37 +196,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
   }
 
-  // --- FFQ support (using TaskScheduleRule) ---
+  // --- Template survey support ---
 
-  bool get isFFQEnabled {
-    return measurementViewModels.any((vm) {
-      if (vm is MeasurementSurveyFormViewModel) {
-        final title = vm.formData?.title ?? '';
-        return FFQQuestions.isFFQTask(title);
-      }
-      return false;
-    });
-  }
-
-  void onNewFFQ() {
-    final ffqTask = FFQQuestions.createFFQTask();
-    final ffqFormData = MeasurementSurveyFormData.fromDomainModel(ffqTask);
-    final viewModel = MeasurementSurveyFormViewModel(
-      study: study,
-      formData: ffqFormData,
-      delegate: this,
-      validationSet: validationSet,
-    );
-    measurementViewModelsCollection.add(viewModel);
-    onSelectItem(viewModel);
-  }
-
-  /// True if the 14-day FFQ survey for [dayIndex] (0..13) is already added.
-  bool isFFQDaySurveyAdded(int dayIndex) {
-    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
-      return false;
-    }
-    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
+  /// Check if a survey with the given [title] is already added.
+  bool isSurveyWithTitleAdded(String title) {
     return measurementViewModels.any((vm) {
       if (vm is MeasurementSurveyFormViewModel) {
         return vm.formData?.title == title;
@@ -235,50 +208,44 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     });
   }
 
-  /// Add a single FFQ survey for the given day index (0..13) using TaskScheduleRule.
-  MeasurementSurveyFormViewModel? onNewFFQForDay(int dayIndex) {
-    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
-      return null;
-    }
-    if (isFFQDaySurveyAdded(dayIndex)) return null;
-    final task = FFQQuestions.createFFQTaskForDay(dayIndex);
-    // Compute the study day for this FFQ survey
-    final phaseDuration = study.schedule.phaseDuration;
-    final baseDay = study.schedule.includeBaseline ? phaseDuration : 0;
-    final studyDay = dayIndex < 7
-        ? baseDay + dayIndex
-        : baseDay + phaseDuration + (dayIndex - 7);
-    // Use TaskScheduleRule instead of scheduledStudyDay
-    task.scheduleRule = TaskScheduleRule.forSpecificDays([studyDay]);
-    final ffqFormData = MeasurementSurveyFormData.fromDomainModel(task);
+  /// Apply a single-task survey template (e.g. FFQ 26-question).
+  void applyTemplate(SurveyTemplate template) {
+    final task = template.buildTask();
+    final formData = MeasurementSurveyFormData.fromDomainModel(task);
     final viewModel = MeasurementSurveyFormViewModel(
       study: study,
-      formData: ffqFormData,
+      formData: formData,
       delegate: this,
       validationSet: validationSet,
     );
     measurementViewModelsCollection.add(viewModel);
-    return viewModel;
+    onSelectItem(viewModel);
   }
 
-  /// Get the current scheduled study day(s) for an FFQ survey by dayIndex.
-  int? getFFQDayScheduledStudyDay(int dayIndex) {
-    if (dayIndex < 0 || dayIndex >= FFQQuestions.ffqDaySurveyTitles.length) {
-      return null;
-    }
-    final title = FFQQuestions.ffqDaySurveyTitles[dayIndex];
-    for (final vm in measurementViewModels) {
-      if (vm is MeasurementSurveyFormViewModel) {
-        if (vm.formData?.title == title) {
-          final rule = vm.buildScheduleRule();
-          if (rule != null && rule.specificDays.isNotEmpty) {
-            return rule.specificDays.first;
-          }
-          return null;
-        }
-      }
-    }
-    return null;
+  /// Apply a single day entry from a multi-day template (e.g. DHQ3 day 3).
+  MeasurementSurveyFormViewModel? applyTemplateDayEntry(
+    SurveyTemplateDayEntry entry,
+  ) {
+    final task = entry.buildTask();
+    if (isSurveyWithTitleAdded(task.title ?? '')) return null;
+    // Compute the study day for this survey
+    final phaseDuration = study.schedule.phaseDuration;
+    final baseDay = study.schedule.includeBaseline ? phaseDuration : 0;
+    final dayIndex = entry.dayIndex;
+    final studyDay = dayIndex < 7
+        ? baseDay + dayIndex
+        : baseDay + phaseDuration + (dayIndex - 7);
+    task.scheduleRule = TaskScheduleRule.forSpecificDays([studyDay]);
+    final formData = MeasurementSurveyFormData.fromDomainModel(task);
+    final viewModel = MeasurementSurveyFormViewModel(
+      study: study,
+      formData: formData,
+      delegate: this,
+      validationSet: validationSet,
+    );
+    measurementViewModelsCollection.add(viewModel);
+    onSelectItem(viewModel);
+    return viewModel;
   }
 
   // - IProviderArgsResolver
