@@ -170,6 +170,8 @@
   "date_min_date_label_helper": "Das früheste Datum, das Teilnehmer auswählen können",
   "date_max_date_label": "Maximales Datum",
   "date_max_date_label_helper": "Das späteste Datum, das Teilnehmer auswählen können",
+  "date_format_preset_label": "Datumsformat-Voreinstellung",
+  "date_format_preset_label_helper": "Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden",
   "date_initial_value_label": "Initialdatum",
   "date_initial_value_label_helper": "Der Standarddatumwert, der den Teilnehmern angezeigt wird",
   "date_picker_hint": "Datum auswählen",
@@ -845,4 +847,3 @@
   "study_schedule_random_description": "Zufällig: Die Sequenz ist für jeden Zyklus vollständig randomisiert und bietet maximale Variabilität.",
   "study_schedule_custom_description": "Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen."
 }
-

@@ -1388,6 +1388,18 @@ abstract class AppLocalizations {
   /// **'The latest date participants can select'**
   String get date_max_date_label_helper;
 
+  /// No description provided for @date_format_preset_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Date format preset'**
+  String get date_format_preset_label;
+
+  /// No description provided for @date_format_preset_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how dates are displayed to participants'**
+  String get date_format_preset_label_helper;
+
   /// No description provided for @date_initial_value_label.
   ///
   /// In en, this message translates to:

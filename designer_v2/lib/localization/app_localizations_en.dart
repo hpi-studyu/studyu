@@ -731,6 +731,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'The latest date participants can select';
 
   @override
+  String get date_format_preset_label => 'Date format preset';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Select how dates are displayed to participants';
+
+  @override
   String get date_initial_value_label => 'Initial date';
 
   @override

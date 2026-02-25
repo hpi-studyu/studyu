@@ -40,8 +40,10 @@ class DateQuestionFormView extends ConsumerWidget {
           children: [
             // Date Format Preset
             generateRow(
-              label: "asd",
-              labelHelpText: "asd",
+              label: AppLocalizations.of(context)!.date_format_preset_label,
+              labelHelpText: AppLocalizations.of(
+                context,
+              )!.date_format_preset_label_helper,
               input: ReactiveDropdownField<DateFormatPreset>(
                 formControl: formViewModel.dateFormatPresetControl,
                 items: DateFormatPreset.values.map((preset) {

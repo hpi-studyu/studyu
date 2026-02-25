@@ -740,6 +740,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Das späteste Datum, das Teilnehmer auswählen können';
 
   @override
+  String get date_format_preset_label => 'Datumsformat-Voreinstellung';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden';
+
+  @override
   String get date_initial_value_label => 'Initialdatum';
 
   @override

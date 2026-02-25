@@ -285,6 +285,8 @@
   "date_min_date_label_helper": "The earliest date participants can select",
   "date_max_date_label": "Maximum date",
   "date_max_date_label_helper": "The latest date participants can select",
+  "date_format_preset_label": "Date format preset",
+  "date_format_preset_label_helper": "Select how dates are displayed to participants",
   "date_initial_value_label": "Initial date",
   "date_initial_value_label_helper": "The default date value shown to participants",
   "date_picker_hint": "Select a date",
@@ -845,4 +847,3 @@
   "study_schedule_random_description": "Random: The sequence is completely randomized for each cycle, providing maximum variability.",
   "study_schedule_custom_description": "Custom: Define your own sequence pattern to meet specific study requirements."
 }
-
