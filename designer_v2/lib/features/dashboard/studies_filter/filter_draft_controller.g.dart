@@ -10,11 +10,11 @@ part of 'filter_draft_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(FilterDraftController)
-const filterDraftControllerProvider = FilterDraftControllerProvider._();
+final filterDraftControllerProvider = FilterDraftControllerProvider._();
 
 final class FilterDraftControllerProvider
     extends $NotifierProvider<FilterDraftController, FilterDraft> {
-  const FilterDraftControllerProvider._()
+  FilterDraftControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,7 +49,6 @@ abstract class _$FilterDraftController extends $Notifier<FilterDraft> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<FilterDraft, FilterDraft>;
     final element =
         ref.element
@@ -59,6 +58,6 @@ abstract class _$FilterDraftController extends $Notifier<FilterDraft> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
