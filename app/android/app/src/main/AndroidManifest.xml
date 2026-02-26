@@ -13,6 +13,11 @@
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <!-- End camera permissions -->
 
+    <!-- Photo gallery permissions for photo recall feature -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- End photo gallery permissions -->
+
     <queries>
         <intent>
         <!-- Interact with web pages -->

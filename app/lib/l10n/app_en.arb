@@ -700,5 +700,43 @@
   "search_food_database": "Search Food Database",
 
   "no_data_yet": "No data yet",
-  "start_tracking_nutrition": "Start tracking your nutrition by adding meals"
+  "start_tracking_nutrition": "Start tracking your nutrition by adding meals",
+  "photoRecallTitle": "Photo Recall",
+  "photoRecallSubtitle": "View photos from around this time",
+  "photoRecallPermissionNeeded": "Tap to enable photo access",
+  "photoRecallPermissionTitle": "Enable Photo Access",
+  "photoRecallPermissionDescription": "Access to your photos helps you recall what you ate. Photos are only displayed on your device.",
+  "photoRecallNoPhotos": "No photos found",
+  "photoRecallNoPhotosSubtitle": "We couldn't find any photos taken around this time",
+  "photoRecallTapToEnlarge": "Tap a photo to view it full screen",
+  "photoRecallTimeInfo": "Showing photos from around {time} (±2 hours)",
+  "@photoRecallTimeInfo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "grantPermission": "Grant Permission",
+
+  "analyzePhotoTooltip": "Analyze this food photo",
+  "analyzingPhoto": "Analyzing photo...",
+  "foodAnalysisError": "Could not analyze image - try manual entry",
+  "foodAnalysisNetworkError": "Could not connect to analysis service",
+  "foodAnalysisNoItems": "No food items detected in image",
+  "aiEstimatedBanner": "AI-estimated values - please review",
+  "selectFoodItemsTitle": "Select Food Items",
+  "selectFoodItemsSubtitle": "Select which items to add to your meal",
+  "addSelected": "Add Selected",
+  "analyzeAgain": "Analyze Again",
+  "select_all": "Select All",
+  "deselect_all": "Deselect All",
+  "confidenceLabel": "Confidence: {percentage}%",
+  "@confidenceLabel": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -43,6 +43,7 @@ dependencies:
   path: ^1.9.1
   path_drawing: ^1.0.1
   path_provider: ^2.1.5
+  photo_manager: ^3.6.0
   pdf: ^3.11.3
   permission_handler: ^12.0.1
   provider: ^6.1.5+1

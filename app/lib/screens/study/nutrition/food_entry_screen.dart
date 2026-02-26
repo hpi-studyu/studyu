@@ -11,11 +11,25 @@ import 'package:studyu_core/core.dart';
 class FoodEntryScreen extends StatefulWidget {
   final FoodEntry? existingFood;
 
-  const FoodEntryScreen({this.existingFood, super.key});
+  /// Confidence score from AI analysis (0.0 to 1.0).
+  /// If provided, shows a banner indicating AI-estimated values.
+  final double? confidenceScore;
 
-  static MaterialPageRoute<FoodEntry> route({FoodEntry? existingFood}) =>
+  const FoodEntryScreen({
+    this.existingFood,
+    this.confidenceScore,
+    super.key,
+  });
+
+  static MaterialPageRoute<FoodEntry> route({
+    FoodEntry? existingFood,
+    double? confidenceScore,
+  }) =>
       MaterialPageRoute(
-        builder: (_) => FoodEntryScreen(existingFood: existingFood),
+        builder: (_) => FoodEntryScreen(
+          existingFood: existingFood,
+          confidenceScore: confidenceScore,
+        ),
       );
 
   @override
@@ -49,6 +63,13 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       PortionEstimationMethod.householdMeasure;
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
+
+  /// Whether the food entry data comes from AI analysis.
+  bool get _isAiAnalyzed => widget.confidenceScore != null;
+
+  /// Whether the confidence is low and fields should be highlighted.
+  bool get _isLowConfidence =>
+      widget.confidenceScore != null && widget.confidenceScore! < 0.6;
 
   @override
   void initState() {
@@ -327,6 +348,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            // ========== AI ESTIMATION BANNER ==========
+            if (_isAiAnalyzed) _AiEstimationBanner(
+              confidenceScore: widget.confidenceScore!,
+              isLowConfidence: _isLowConfidence,
+              l10n: l10n,
+              theme: theme,
+            ),
+            if (_isAiAnalyzed) const SizedBox(height: 12),
+
             // ========== ESSENTIAL FIELDS ==========
             _EssentialFieldsCard(
               nameController: _nameController,
@@ -389,6 +419,78 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 // ============================================================
 // WIDGETS
 // ============================================================
+
+/// Banner displayed when food entry data comes from AI analysis.
+class _AiEstimationBanner extends StatelessWidget {
+  final double confidenceScore;
+  final bool isLowConfidence;
+  final AppLocalizations l10n;
+  final ThemeData theme;
+
+  const _AiEstimationBanner({
+    required this.confidenceScore,
+    required this.isLowConfidence,
+    required this.l10n,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isLowConfidence
+            ? theme.colorScheme.errorContainer.withValues(alpha: 0.5)
+            : theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isLowConfidence
+              ? theme.colorScheme.error.withValues(alpha: 0.3)
+              : theme.colorScheme.primary.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isLowConfidence ? Icons.warning_amber : Icons.auto_awesome,
+            color: isLowConfidence
+                ? theme.colorScheme.error
+                : theme.colorScheme.primary,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.aiEstimatedBanner,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isLowConfidence
+                        ? theme.colorScheme.onErrorContainer
+                        : theme.colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  l10n.confidenceLabel((confidenceScore * 100).round()),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: isLowConfidence
+                        ? theme.colorScheme.onErrorContainer
+                            .withValues(alpha: 0.8)
+                        : theme.colorScheme.onPrimaryContainer
+                            .withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _EssentialFieldsCard extends StatelessWidget {
   final TextEditingController nameController;

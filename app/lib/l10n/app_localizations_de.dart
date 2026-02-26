@@ -1720,4 +1720,84 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get start_tracking_nutrition =>
       'Start tracking your nutrition by adding meals';
+
+  @override
+  String get photoRecallTitle => 'Foto-Erinnerung';
+
+  @override
+  String get photoRecallSubtitle => 'Fotos von dieser Zeit ansehen';
+
+  @override
+  String get photoRecallPermissionNeeded =>
+      'Tippen, um Fotozugriff zu aktivieren';
+
+  @override
+  String get photoRecallPermissionTitle => 'Fotozugriff aktivieren';
+
+  @override
+  String get photoRecallPermissionDescription =>
+      'Der Zugriff auf Ihre Fotos hilft Ihnen, sich an das Gegessene zu erinnern. Fotos werden nur auf Ihrem Gerät angezeigt.';
+
+  @override
+  String get photoRecallNoPhotos => 'Keine Fotos gefunden';
+
+  @override
+  String get photoRecallNoPhotosSubtitle =>
+      'Wir konnten keine Fotos von dieser Zeit finden';
+
+  @override
+  String get photoRecallTapToEnlarge =>
+      'Tippen Sie auf ein Foto, um es Vollbild anzuzeigen';
+
+  @override
+  String photoRecallTimeInfo(String time) {
+    return 'Fotos von $time (±2 Stunden)';
+  }
+
+  @override
+  String get grantPermission => 'Berechtigung erteilen';
+
+  @override
+  String get analyzePhotoTooltip => 'Dieses Foto analysieren';
+
+  @override
+  String get analyzingPhoto => 'Foto wird analysiert...';
+
+  @override
+  String get foodAnalysisError =>
+      'Bild konnte nicht analysiert werden - versuchen Sie die manuelle Eingabe';
+
+  @override
+  String get foodAnalysisNetworkError =>
+      'Verbindung zum Analysedienst nicht möglich';
+
+  @override
+  String get foodAnalysisNoItems => 'Keine Lebensmittel im Bild erkannt';
+
+  @override
+  String get aiEstimatedBanner => 'KI-geschätzte Werte - bitte überprüfen';
+
+  @override
+  String get selectFoodItemsTitle => 'Lebensmittel auswählen';
+
+  @override
+  String get selectFoodItemsSubtitle =>
+      'Wählen Sie die Elemente aus, die Sie hinzufügen möchten';
+
+  @override
+  String get addSelected => 'Ausgewählte hinzufügen';
+
+  @override
+  String get analyzeAgain => 'Erneut analysieren';
+
+  @override
+  String get select_all => 'Alle auswählen';
+
+  @override
+  String get deselect_all => 'Alle abwählen';
+
+  @override
+  String confidenceLabel(int percentage) {
+    return 'Konfidenz: $percentage%';
+  }
 }

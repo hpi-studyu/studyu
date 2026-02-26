@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/services/food_analysis_service.dart';
+import 'package:studyu_app/services/photo_gallery_service.dart';
+import 'package:studyu_app/widgets/food_item_selection_dialog.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
+import 'package:studyu_app/widgets/photo_recall_section.dart';
+import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_app/widgets/template_selection_sheet.dart';
 import 'package:studyu_core/core.dart';
@@ -48,6 +54,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   bool _isSavingTemplate = false;
   bool _isSavingFoodTemplate = false;
+  String? _analyzingPhotoId;
+
+  final PhotoGalleryService _photoService = PhotoGalleryService();
 
   @override
   void initState() {
@@ -260,6 +269,117 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
+  Future<void> _analyzeAndAddFood(PhotoReference photo) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    setState(() => _analyzingPhotoId = photo.id);
+
+    try {
+      // Get the full image bytes
+      final asset = await _photoService.getAsset(photo.id);
+      if (asset == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.foodAnalysisError)),
+          );
+        }
+        return;
+      }
+
+      // Get the origin file (full resolution)
+      final file = await asset.originFile;
+      if (file == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.foodAnalysisError)),
+          );
+        }
+        return;
+      }
+
+      // Read file bytes
+      final bytes = await file.readAsBytes();
+
+      // Call the analysis service
+      final result = await FoodAnalysisService.analyzeImage(
+        imageBytes: bytes,
+        mealTime: _timestamp,
+        mealType: _mealType,
+      );
+
+      if (!mounted) return;
+
+      if (!result.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.errorMessage ?? l10n.foodAnalysisError),
+          ),
+        );
+        return;
+      }
+
+      if (result.items.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.foodAnalysisNoItems)),
+        );
+        return;
+      }
+
+      // Handle single item directly
+      if (result.items.length == 1) {
+        final item = result.items.first;
+        final editedFood = await Navigator.of(context).push<FoodEntry>(
+          FoodEntryScreen.route(
+            existingFood: item.foodEntry,
+            confidenceScore: item.confidenceScore,
+          ),
+        );
+        if (editedFood != null && mounted) {
+          setState(() => _meal.foods.add(editedFood));
+        }
+        return;
+      }
+
+      // Handle multiple items with selection dialog
+      final selectedItems = await FoodItemSelectionDialog.show(
+        context,
+        items: result.items,
+        overallConfidence: result.overallConfidence,
+        notes: result.notes,
+      );
+
+      if (selectedItems == null) {
+        // User chose to analyze again - retry
+        await _analyzeAndAddFood(photo);
+        return;
+      }
+
+      // Add each selected food
+      for (final item in selectedItems) {
+        if (!mounted) return;
+        final editedFood = await Navigator.of(context).push<FoodEntry>(
+          FoodEntryScreen.route(
+            existingFood: item.foodEntry,
+            confidenceScore: item.confidenceScore,
+          ),
+        );
+        if (editedFood != null && mounted) {
+          setState(() => _meal.foods.add(editedFood));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.foodAnalysisError)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _analyzingPhotoId = null);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -326,6 +446,19 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     const SizedBox(height: 16),
                     MealNutritionSummaryCard(meal: _meal),
                   ],
+                  const SizedBox(height: 16),
+                  PhotoRecallSection(
+                    mealTime: _timestamp,
+                    onPhotoTap: (photo) {
+                      PhotoViewerDialog.show(
+                        context,
+                        photoId: photo.id,
+                        photoDate: photo.createDateTime,
+                      );
+                    },
+                    onAnalyzePhoto: _analyzeAndAddFood,
+                    analyzingPhotoId: _analyzingPhotoId,
+                  ),
                   const SizedBox(height: 16),
                   _MealOptionsCard(
                     mealContext: _mealContext,

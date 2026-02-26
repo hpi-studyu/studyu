@@ -1710,4 +1710,81 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get start_tracking_nutrition =>
       'Start tracking your nutrition by adding meals';
+
+  @override
+  String get photoRecallTitle => 'Photo Recall';
+
+  @override
+  String get photoRecallSubtitle => 'View photos from around this time';
+
+  @override
+  String get photoRecallPermissionNeeded => 'Tap to enable photo access';
+
+  @override
+  String get photoRecallPermissionTitle => 'Enable Photo Access';
+
+  @override
+  String get photoRecallPermissionDescription =>
+      'Access to your photos helps you recall what you ate. Photos are only displayed on your device.';
+
+  @override
+  String get photoRecallNoPhotos => 'No photos found';
+
+  @override
+  String get photoRecallNoPhotosSubtitle =>
+      'We couldn\'t find any photos taken around this time';
+
+  @override
+  String get photoRecallTapToEnlarge => 'Tap a photo to view it full screen';
+
+  @override
+  String photoRecallTimeInfo(String time) {
+    return 'Showing photos from around $time (±2 hours)';
+  }
+
+  @override
+  String get grantPermission => 'Grant Permission';
+
+  @override
+  String get analyzePhotoTooltip => 'Analyze this food photo';
+
+  @override
+  String get analyzingPhoto => 'Analyzing photo...';
+
+  @override
+  String get foodAnalysisError => 'Could not analyze image - try manual entry';
+
+  @override
+  String get foodAnalysisNetworkError =>
+      'Could not connect to analysis service';
+
+  @override
+  String get foodAnalysisNoItems => 'No food items detected in image';
+
+  @override
+  String get aiEstimatedBanner => 'AI-estimated values - please review';
+
+  @override
+  String get selectFoodItemsTitle => 'Select Food Items';
+
+  @override
+  String get selectFoodItemsSubtitle =>
+      'Select which items to add to your meal';
+
+  @override
+  String get addSelected => 'Add Selected';
+
+  @override
+  String get analyzeAgain => 'Analyze Again';
+
+  @override
+  String get select_all => 'Select All';
+
+  @override
+  String get deselect_all => 'Deselect All';
+
+  @override
+  String confidenceLabel(int percentage) {
+    return 'Confidence: $percentage%';
+  }
 }

@@ -3307,6 +3307,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start tracking your nutrition by adding meals'**
   String get start_tracking_nutrition;
+
+  /// No description provided for @photoRecallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Recall'**
+  String get photoRecallTitle;
+
+  /// No description provided for @photoRecallSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View photos from around this time'**
+  String get photoRecallSubtitle;
+
+  /// No description provided for @photoRecallPermissionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to enable photo access'**
+  String get photoRecallPermissionNeeded;
+
+  /// No description provided for @photoRecallPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Photo Access'**
+  String get photoRecallPermissionTitle;
+
+  /// No description provided for @photoRecallPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Access to your photos helps you recall what you ate. Photos are only displayed on your device.'**
+  String get photoRecallPermissionDescription;
+
+  /// No description provided for @photoRecallNoPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos found'**
+  String get photoRecallNoPhotos;
+
+  /// No description provided for @photoRecallNoPhotosSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find any photos taken around this time'**
+  String get photoRecallNoPhotosSubtitle;
+
+  /// No description provided for @photoRecallTapToEnlarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a photo to view it full screen'**
+  String get photoRecallTapToEnlarge;
+
+  /// No description provided for @photoRecallTimeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing photos from around {time} (±2 hours)'**
+  String photoRecallTimeInfo(String time);
+
+  /// No description provided for @grantPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get grantPermission;
+
+  /// No description provided for @analyzePhotoTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze this food photo'**
+  String get analyzePhotoTooltip;
+
+  /// No description provided for @analyzingPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing photo...'**
+  String get analyzingPhoto;
+
+  /// No description provided for @foodAnalysisError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not analyze image - try manual entry'**
+  String get foodAnalysisError;
+
+  /// No description provided for @foodAnalysisNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect to analysis service'**
+  String get foodAnalysisNetworkError;
+
+  /// No description provided for @foodAnalysisNoItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No food items detected in image'**
+  String get foodAnalysisNoItems;
+
+  /// No description provided for @aiEstimatedBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-estimated values - please review'**
+  String get aiEstimatedBanner;
+
+  /// No description provided for @selectFoodItemsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Food Items'**
+  String get selectFoodItemsTitle;
+
+  /// No description provided for @selectFoodItemsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select which items to add to your meal'**
+  String get selectFoodItemsSubtitle;
+
+  /// No description provided for @addSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Selected'**
+  String get addSelected;
+
+  /// No description provided for @analyzeAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze Again'**
+  String get analyzeAgain;
+
+  /// No description provided for @select_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get select_all;
+
+  /// No description provided for @deselect_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselect_all;
+
+  /// No description provided for @confidenceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence: {percentage}%'**
+  String confidenceLabel(int percentage);
 }
 
 class _AppLocalizationsDelegate
