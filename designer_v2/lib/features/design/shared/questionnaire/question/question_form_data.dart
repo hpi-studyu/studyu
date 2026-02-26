@@ -77,6 +77,10 @@ abstract class QuestionFormData implements IFormData {
           question as PainQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.date: (question, eligibilityCriteria) =>
+        DateQuestionFormData.fromDomainModel(
+          question as DateQuestion,
+        ),
   };
 
   QuestionFormData({
@@ -823,5 +827,61 @@ class PainQuestionFormData extends QuestionFormData {
     final question = toQuestion() as PainQuestion;
     final value = kResponseOptions[responseOption];
     return question.constructAnswer(value!);
+  }
+}
+
+class DateQuestionFormData extends QuestionFormData {
+  DateQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+    super.conditional,
+  });
+
+  @override
+  List<String> get responseOptions => [];
+
+  factory DateQuestionFormData.fromDomainModel(
+    DateQuestion question,
+  ) {
+    return DateQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.date,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
+    );
+  }
+
+  @override
+  Question toQuestion() {
+    final question = DateQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<DateTime>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as DateTime?,
+          );
+    return question;
+  }
+
+  @override
+  DateQuestionFormData copy() {
+    return DateQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
+    );
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    throw UnimplementedError('DateQuestion does not support responseOptions');
   }
 }

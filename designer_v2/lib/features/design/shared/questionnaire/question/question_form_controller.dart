@@ -461,6 +461,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.pain: FormGroup({
       'painOptionsArray': painResponseOptionsArray,
     }),
+    SurveyQuestionType.date: FormGroup({}),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -695,6 +696,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         });
       case SurveyQuestionType.pain:
         break;
+      case SurveyQuestionType.date:
+        break;
     }
   }
 
@@ -795,6 +798,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionId: questionId,
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
+        );
+      case SurveyQuestionType.date:
+        return DateQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!,
+          questionType: questionTypeControl.value!,
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
         );
