@@ -14,9 +14,9 @@ dependencies:
   flutter_dotenv: ^6.0.0
   flutter_secure_storage: 9.2.2 # Has critical bugs in later versions
   lint: ^2.8.0
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.4
   studyu_core: ^4.7.1
-  supabase_flutter: ^2.10.3
+  supabase_flutter: ^2.12.0
   synchronized: ^3.4.0
   uuid: ^4.5.2
 
