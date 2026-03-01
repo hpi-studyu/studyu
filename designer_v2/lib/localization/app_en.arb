@@ -276,6 +276,14 @@
       }
     }
   },
+  "free_text_example_explanation_custom": "Inputs of type {type} will be accepted based on the regular expression pattern.",
+  "@free_text_example_explanation_custom": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "free_text_question_type_any_explanation": "Any input will be accepted.",
   "free_text_question_type_alphanumeric_explanation": "Alphanumeric input includes letters and numbers only.",
   "free_text_question_type_numeric_explanation": "Numeric input includes numbers without special characters.",

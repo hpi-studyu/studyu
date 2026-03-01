@@ -27,96 +27,102 @@ class FreeTextQuestionFormView extends ConsumerWidget {
       (_) => formViewModel.freeTextExampleTextControl.updateValueAndValidity(),
     );
 
+    final isCustomType =
+        formViewModel.freeTextTypeControl.value == FreeTextQuestionType.custom;
+
     return Column(
       children: [
-        generateRow(
-          label: tr.free_text_range_label,
-          labelHelpText: tr.free_text_range_label_helper,
-          input: disableOnReadonly(
-            child: Row(
-              children: [
-                Expanded(
-                  child: ReactiveTextField(
-                    formControl:
-                        formViewModel.freeTextLengthMin as FormControl<int>,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      NumericalRangeFormatter(
-                        min: QuestionFormViewModel.kDefaultFreeTextMinLength,
-                        max: QuestionFormViewModel.kDefaultFreeTextMaxLength,
-                      ),
-                    ],
-                    onChanged: (_) {
-                      final min = formViewModel.freeTextLengthMin.value;
-                      final currentMax = formViewModel.freeTextLengthMax.value;
-                      if (min == null) return;
+        if (!isCustomType)
+          generateRow(
+            label: tr.free_text_range_label,
+            labelHelpText: tr.free_text_range_label_helper,
+            input: disableOnReadonly(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ReactiveTextField(
+                      formControl:
+                          formViewModel.freeTextLengthMin as FormControl<int>,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumericalRangeFormatter(
+                          min: QuestionFormViewModel.kDefaultFreeTextMinLength,
+                          max: QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                        ),
+                      ],
+                      onChanged: (_) {
+                        final min = formViewModel.freeTextLengthMin.value;
+                        final currentMax =
+                            formViewModel.freeTextLengthMax.value;
+                        if (min == null) return;
 
-                      final newMin = min.clamp(
-                        QuestionFormViewModel.kDefaultFreeTextMinLength,
-                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
-                      );
-                      var newMax = (currentMax ?? newMin).clamp(
-                        QuestionFormViewModel.kDefaultFreeTextMinLength,
-                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
-                      );
+                        final newMin = min.clamp(
+                          QuestionFormViewModel.kDefaultFreeTextMinLength,
+                          QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                        );
+                        var newMax = (currentMax ?? newMin).clamp(
+                          QuestionFormViewModel.kDefaultFreeTextMinLength,
+                          QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                        );
 
-                      if (newMin > newMax) {
-                        newMax = newMin;
-                        formViewModel.freeTextLengthMax.value = newMax;
-                      }
+                        if (newMin > newMax) {
+                          newMax = newMin;
+                          formViewModel.freeTextLengthMax.value = newMax;
+                        }
 
-                      formViewModel.freeTextLengthControl.value = RangeValues(
-                        newMin.toDouble(),
-                        newMax.toDouble(),
-                      );
-                    },
+                        formViewModel.freeTextLengthControl.value = RangeValues(
+                          newMin.toDouble(),
+                          newMax.toDouble(),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12.0),
-                Expanded(
-                  child: ReactiveTextField(
-                    formControl:
-                        formViewModel.freeTextLengthMax as FormControl<int>,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      NumericalRangeFormatter(
-                        min: QuestionFormViewModel.kDefaultFreeTextMinLength,
-                        max: QuestionFormViewModel.kDefaultFreeTextMaxLength,
-                      ),
-                    ],
-                    onChanged: (_) {
-                      final max = formViewModel.freeTextLengthMax.value;
-                      final currentMin = formViewModel.freeTextLengthMin.value;
-                      if (max == null) return;
+                  const SizedBox(width: 12.0),
+                  Expanded(
+                    child: ReactiveTextField(
+                      formControl:
+                          formViewModel.freeTextLengthMax as FormControl<int>,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumericalRangeFormatter(
+                          min: QuestionFormViewModel.kDefaultFreeTextMinLength,
+                          max: QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                        ),
+                      ],
+                      onChanged: (_) {
+                        final max = formViewModel.freeTextLengthMax.value;
+                        final currentMin =
+                            formViewModel.freeTextLengthMin.value;
+                        if (max == null) return;
 
-                      final newMax = max.clamp(
-                        QuestionFormViewModel.kDefaultFreeTextMinLength,
-                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
-                      );
-                      var newMin = (currentMin ?? newMax).clamp(
-                        QuestionFormViewModel.kDefaultFreeTextMinLength,
-                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
-                      );
+                        final newMax = max.clamp(
+                          QuestionFormViewModel.kDefaultFreeTextMinLength,
+                          QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                        );
+                        var newMin = (currentMin ?? newMax).clamp(
+                          QuestionFormViewModel.kDefaultFreeTextMinLength,
+                          QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                        );
 
-                      if (newMax < newMin) {
-                        newMin = newMax;
-                        formViewModel.freeTextLengthMin.value = newMin;
-                      }
+                        if (newMax < newMin) {
+                          newMin = newMax;
+                          formViewModel.freeTextLengthMin.value = newMin;
+                        }
 
-                      formViewModel.freeTextLengthControl.value = RangeValues(
-                        newMin.toDouble(),
-                        newMax.toDouble(),
-                      );
-                    },
+                        formViewModel.freeTextLengthControl.value = RangeValues(
+                          newMin.toDouble(),
+                          newMax.toDouble(),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 16.0),
+        if (!isCustomType) const SizedBox(height: 16.0),
         generateRow(
           label: tr.free_text_type_label,
           labelHelpText: tr.free_text_type_label_helper,
@@ -232,11 +238,13 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             ReactiveFormConsumer(
               builder: (context, formGroup, child) {
                 return TextParagraph(
-                  text: tr.free_text_example_explanation(
-                    type,
-                    minLength,
-                    maxLength,
-                  ),
+                  text: isCustomType
+                      ? tr.free_text_example_explanation_custom(type)
+                      : tr.free_text_example_explanation(
+                          type,
+                          minLength,
+                          maxLength,
+                        ),
                 );
               },
             ),
