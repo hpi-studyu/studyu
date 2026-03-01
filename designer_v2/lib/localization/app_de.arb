@@ -758,6 +758,7 @@
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",
+  "action_export_study_definition": "Studiendefinition exportieren",
   "dialog_continue": "Fortfahren",
   "dialog_close": "Schließen",
   "dialog_cancel": "Abbrechen",
@@ -798,6 +799,21 @@
   "fitbit_credentials_cannot_change_title": "Fitbit-Anmeldedaten können nicht geändert werden",
   "fitbit_credentials_cannot_change_description": "Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.",
   "fitbit_only_participant_title": "Wenn du diese Studie nur für dich selbst durchführst",
+  "fitbit_only_participant_description": "Wenn du diese Studie nur für dich selbst durchführst, musst du deine eigene Client-ID und dein eigenes Client-Secret deines Fitbit-Kontos auf der vorherigen Seite verwenden.",
+  "fitbit_multiple_participant_title": "Wenn du diese Studie für mehrere Teilnehmer durchführst",
+  "fitbit_multiple_participant_description": "Jeder Teilnehmer muss sich mit seinem eigenen Fitbit-Konto in der StudyU-App anmelden. Die Daten werden für jeden Teilnehmer separat gesammelt.",
+  "study_import_title": "Studie importieren",
+  "study_import_description": "Importieren Sie eine Studiendefinition aus einer JSON-Datei. Dies wird einen neuen Studienentwurf erstellen.",
+  "study_import_button": "Studie aus JSON importieren",
+  "study_import_success": "Studie erfolgreich importiert",
+  "study_import_error": "Fehler beim Importieren der Studie: {error}",
+  "@study_import_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "fitbit_only_participant_subtitle": "Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:",
   "fitbit_only_participant_step_1": "Wähle beim Erstellen deiner Fitbit-App als Anwendungstyp „Persönlich“.",
   "fitbit_only_participant_step_2": "Verwende beim Synchronisieren deiner Daten unbedingt dasselbe Google-Konto, das du mit deiner Fitbit-Uhr und der von dir eingerichteten Fitbit-App verbunden hast.",

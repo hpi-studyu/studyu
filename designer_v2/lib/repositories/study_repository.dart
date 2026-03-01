@@ -195,6 +195,14 @@ class StudyRepository extends ModelRepository<Study>
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
+      ModelAction(
+        type: StudyActionType.exportDefinition,
+        label: StudyActionType.exportDefinition.string,
+        onExecute: () {
+          model.downloadDefinition();
+        },
+        isAvailable: model.canCopy(currentUser),
+      ),
       /*
       TODO re-implement this properly
       ModelAction(
