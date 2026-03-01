@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -39,6 +40,8 @@ class DashboardController extends _$DashboardController
     });
 
     _subscribeStudies();
+    _loadUserPreferences();
+
     return DashboardState(
       currentUser: _authRepository.currentUser!,
       searchController: SearchController(),
@@ -55,6 +58,25 @@ class DashboardController extends _$DashboardController
 
   /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
+
+  Future<void> _loadUserPreferences() async {
+    try {
+      await _userRepository.fetchUser();
+
+      final savedFilters = _userRepository.getCustomPresets();
+      const defaultFilter = DashboardState.defaultFilter;
+      final pageKey = _getPageKey(defaultFilter);
+      final active = _userRepository.getActiveFilter(pageKey);
+
+      state = state.copyWith(
+        savedFilters: () => savedFilters,
+        activeFilter: () => active.filterGroup,
+        selectedSavedFilterId: () => active.presetId,
+      );
+    } catch (e) {
+      print("Failed to load user preferences: $e");
+    }
+  }
 
   void _subscribeStudies() {
     _studiesSubscription = _studyRepository.watchAll().listen(
@@ -76,10 +98,56 @@ class DashboardController extends _$DashboardController
     state.searchController.setText(text ?? state.query);
   }
 
-  void setStudiesFilter(StudiesFilter? filter) {
+  Future<void> setStudiesFilter(StudiesFilter? filter) async {
+    await _userRepository.fetchUser();
+    final newFilter = filter ?? DashboardState.defaultFilter;
+    final pageKey = _getPageKey(newFilter);
+    final active = _userRepository.getActiveFilter(pageKey);
+
     state = state.copyWith(
-      studiesFilter: () => filter ?? DashboardState.defaultFilter,
+      studiesFilter: () => newFilter,
+      activeFilter: () => active.filterGroup,
+      selectedSavedFilterId: () => active.presetId,
     );
+  }
+
+  void updateFilter(FilterGroup filter, {String? presetId}) {
+    state = state.copyWith(
+      activeFilter: () => filter,
+      selectedSavedFilterId: () => presetId,
+    );
+    // Persist change
+    final pageKey = _getPageKey(state.studiesFilter);
+    _userRepository.saveActiveFilter(
+      page: pageKey,
+      presetId: presetId,
+      filterGroup: filter,
+    );
+  }
+
+  Future<void> saveFilter(SavedFilter filter) async {
+    await _userRepository.saveCustomPreset(filter);
+    // Reload to reflect changes
+    state = state.copyWith(
+      savedFilters: () => _userRepository.getCustomPresets(),
+    );
+  }
+
+  Future<void> deleteFilter(String id) async {
+    await _userRepository.deleteCustomPreset(id);
+    state = state.copyWith(
+      savedFilters: () => _userRepository.getCustomPresets(),
+    );
+  }
+
+  String _getPageKey(StudiesFilter? filter) {
+    return switch (filter) {
+      StudiesFilter.owned => 'my_studies',
+      StudiesFilter.shared => 'shared_studies',
+      StudiesFilter.public => 'public_studies',
+      StudiesFilter.all => 'all_studies',
+      null => 'my_studies', // Default
+    };
   }
 
   void onSelectStudy(Study study) {
