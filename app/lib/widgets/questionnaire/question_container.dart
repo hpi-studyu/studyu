@@ -16,6 +16,7 @@ import 'package:studyu_core/core.dart';
 
 class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
+  final Function(int)? onInvalid;
   final Question question;
   final int index;
   final String? taskId;
@@ -23,6 +24,7 @@ class QuestionContainer extends StatefulWidget {
 
   const QuestionContainer({
     required this.onDone,
+    this.onInvalid,
     required this.question,
     required this.index,
     this.taskId,
@@ -38,6 +40,10 @@ class _QuestionContainerState extends State<QuestionContainer>
     with AutomaticKeepAliveClientMixin {
   void _onDone(Answer answer) {
     widget.onDone(answer, widget.index);
+  }
+
+  void _onInvalid() {
+    widget.onInvalid?.call(widget.index);
   }
 
   QuestionWidget getQuestionBody(BuildContext context) {
@@ -83,6 +89,7 @@ class _QuestionContainerState extends State<QuestionContainer>
         return FreeTextQuestionWidget(
           question: freeTextQuestion,
           onDone: _onDone,
+          onInvalid: _onInvalid,
         );
       case final FitbitQuestion fitbitQuestion:
         return FitbitQuestionWidget(

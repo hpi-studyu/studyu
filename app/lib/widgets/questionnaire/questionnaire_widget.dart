@@ -55,6 +55,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         containerKey: containerKey,
         question: question,
         onDone: _onQuestionDone,
+        onInvalid: _onQuestionInvalid,
         index: shownQuestions.length,
         taskId: widget.taskId,
       ),
@@ -149,12 +150,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
 
-    // Check if the questionnaire should not continue
-    if (shouldContinue == false) {
-      _finishQuestionnaire(qs);
-      return;
-    }
-
     // Check if there are questions whose visibility depend on this question
     final hasConditionalDependencies = _isConditionalTarget(answer.question);
 
@@ -192,6 +187,17 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         _scrollToNewQuestion();
       }
     }
+  }
+
+  void _onQuestionInvalid(int index) {
+    final questionId = shownQuestions[index].question.id;
+    if (kDebugMode) {
+      debugPrint(
+        "QuestionnaireWidget: Answer invalidated for question $questionId",
+      );
+    }
+    qs.answers.remove(questionId);
+    _finishQuestionnaire(null);
   }
 
   void _handleConditionalQuestionChange(Answer answer, int index) {
