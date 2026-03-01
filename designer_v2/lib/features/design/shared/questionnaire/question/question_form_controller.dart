@@ -418,8 +418,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   Map<String, dynamic>? _validateFreeText(AbstractControl<dynamic> control) {
     final List<Validator> validators = [];
-    validators.add(Validators.minLength(freeTextLengthMin.value!));
-    validators.add(Validators.maxLength(freeTextLengthMax.value!));
+
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      validators.add(Validators.minLength(freeTextLengthMin.value!));
+      validators.add(Validators.maxLength(freeTextLengthMax.value!));
+    }
+
     switch (freeTextTypeControl.value) {
       case FreeTextQuestionType.any:
         break;
