@@ -221,9 +221,11 @@ class DashboardController extends _$DashboardController
       ),
     ].where((action) => action.isAvailable).toList();
 
-    return withIcons([
-      ...pinActions,
-      ..._studyRepository.availableActions(model),
-    ], studyActionIcons);
+    final studyActions = _studyRepository
+        .availableActions(model)
+        .where((action) => action.type != StudyActionType.exportDefinition)
+        .toList();
+
+    return withIcons([...pinActions, ...studyActions], studyActionIcons);
   }
 }

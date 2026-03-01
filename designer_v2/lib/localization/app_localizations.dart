@@ -3489,6 +3489,12 @@ abstract class AppLocalizations {
   /// **'Export results'**
   String get action_study_export_results;
 
+  /// No description provided for @action_export_study_definition.
+  ///
+  /// In en, this message translates to:
+  /// **'Export study definition'**
+  String get action_export_study_definition;
+
   /// No description provided for @dialog_continue.
   ///
   /// In en, this message translates to:
@@ -3734,6 +3740,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Since you\'re both creating and participating in this study, you don\'t need to fill out the intraday data request form. Simply follow these easy steps:'**
   String get fitbit_only_participant_subtitle;
+
+  /// No description provided for @fitbit_only_participant_description.
+  ///
+  /// In en, this message translates to:
+  /// **'If you\'re running this study just for yourself, you must use your own Fitbit account\'s Client ID and Client Secret on the previous page.'**
+  String get fitbit_only_participant_description;
+
+  /// No description provided for @fitbit_multiple_participant_title.
+  ///
+  /// In en, this message translates to:
+  /// **'If you\'re running this study for multiple participants'**
+  String get fitbit_multiple_participant_title;
+
+  /// No description provided for @fitbit_multiple_participant_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Each participant must log in with their own Fitbit account in the StudyU app. The data will be collected separately for each participant.'**
+  String get fitbit_multiple_participant_description;
+
+  /// No description provided for @study_import_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Study'**
+  String get study_import_title;
+
+  /// No description provided for @study_import_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a study definition from a JSON file. This will create a new draft study.'**
+  String get study_import_description;
+
+  /// No description provided for @study_import_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Study from JSON'**
+  String get study_import_button;
+
+  /// No description provided for @study_import_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Study imported successfully'**
+  String get study_import_success;
+
+  /// No description provided for @study_import_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import study: {error}'**
+  String study_import_error(String error);
 
   /// No description provided for @fitbit_only_participant_step_1.
   ///

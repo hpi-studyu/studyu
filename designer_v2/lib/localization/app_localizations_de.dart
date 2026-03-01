@@ -2063,6 +2063,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_study_export_results => 'Ergebnisdaten exportieren';
 
   @override
+  String get action_export_study_definition => 'Studiendefinition exportieren';
+
+  @override
   String get dialog_continue => 'Fortfahren';
 
   @override
@@ -2208,6 +2211,36 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get fitbit_only_participant_subtitle =>
       'Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:';
+
+  @override
+  String get fitbit_only_participant_description =>
+      'Wenn du diese Studie nur für dich selbst durchführst, musst du deine eigene Client-ID und dein eigenes Client-Secret deines Fitbit-Kontos auf der vorherigen Seite verwenden.';
+
+  @override
+  String get fitbit_multiple_participant_title =>
+      'Wenn du diese Studie für mehrere Teilnehmer durchführst';
+
+  @override
+  String get fitbit_multiple_participant_description =>
+      'Jeder Teilnehmer muss sich mit seinem eigenen Fitbit-Konto in der StudyU-App anmelden. Die Daten werden für jeden Teilnehmer separat gesammelt.';
+
+  @override
+  String get study_import_title => 'Studie importieren';
+
+  @override
+  String get study_import_description =>
+      'Importieren Sie eine Studiendefinition aus einer JSON-Datei. Dies wird einen neuen Studienentwurf erstellen.';
+
+  @override
+  String get study_import_button => 'Studie aus JSON importieren';
+
+  @override
+  String get study_import_success => 'Studie erfolgreich importiert';
+
+  @override
+  String study_import_error(String error) {
+    return 'Fehler beim Importieren der Studie: $error';
+  }
 
   @override
   String get fitbit_only_participant_step_1 =>

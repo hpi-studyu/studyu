@@ -14,6 +14,7 @@ enum StudyActionType {
   duplicateDraft,
   addCollaborator,
   export,
+  exportDefinition,
   delete,
 }
 
@@ -37,6 +38,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
+      case StudyActionType.exportDefinition:
+        return tr.action_export_study_definition;
     }
   }
 }
