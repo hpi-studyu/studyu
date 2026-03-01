@@ -10,11 +10,13 @@ import 'package:studyu_core/core.dart';
 class FreeTextQuestionWidget extends QuestionWidget {
   final FreeTextQuestion question;
   final Function(Answer)? onDone;
+  final Function()? onInvalid;
 
   const FreeTextQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
+    this.onInvalid,
   });
 
   @override
@@ -27,6 +29,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _focusNode = FocusNode();
   bool _hasInteracted = false;
   bool _hasSubmitted = false;
+  bool _hadValidSubmission = false;
   Timer? _debounceTimer;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
@@ -91,6 +94,12 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (_formFieldKey.currentState?.validate() == true) {
       widget.onDone?.call(widget.question.constructAnswer(value));
       _hasSubmitted = true;
+      _hadValidSubmission = true;
+    } else if (_hadValidSubmission) {
+      // If we had a valid submission before but now it's invalid,
+      // notify the parent to remove this answer
+      widget.onInvalid?.call();
+      _hadValidSubmission = false;
     }
   }
 
