@@ -1367,7 +1367,7 @@ abstract class AppLocalizations {
   /// No description provided for @date_min_date_label.
   ///
   /// In en, this message translates to:
-  /// **'Minimum date'**
+  /// **'Earliest date'**
   String get date_min_date_label;
 
   /// No description provided for @date_min_date_label_helper.
@@ -1379,7 +1379,7 @@ abstract class AppLocalizations {
   /// No description provided for @date_max_date_label.
   ///
   /// In en, this message translates to:
-  /// **'Maximum date'**
+  /// **'Latest date'**
   String get date_max_date_label;
 
   /// No description provided for @date_max_date_label_helper.
