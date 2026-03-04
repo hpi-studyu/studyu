@@ -90,23 +90,6 @@ class DateQuestionFormView extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16.0),
-
-            // Initial Date
-            generateRow(
-              label: AppLocalizations.of(context)!.date_initial_value_label,
-              labelHelpText: AppLocalizations.of(
-                context,
-              )!.date_initial_value_label_helper,
-              input: PointerInterceptor(
-                child: ReactiveDatePickerField(
-                  formControl: formViewModel.dateInitialValueControl,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime(2100),
-                  placeholder: AppLocalizations.of(context)!.date_picker_hint,
-                ),
-              ),
-            ),
             const SizedBox(height: 24.0),
 
             // Preview section

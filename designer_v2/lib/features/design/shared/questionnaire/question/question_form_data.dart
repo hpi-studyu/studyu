@@ -841,13 +841,11 @@ class DateQuestionFormData extends QuestionFormData {
     this.minDate,
     this.maxDate,
     this.dateFormatPreset,
-    this.initialDate,
   });
 
   final DateTime? minDate;
   final DateTime? maxDate;
   final DateFormatPreset? dateFormatPreset;
-  final DateTime? initialDate;
 
   @override
   List<String> get responseOptions => []; // Date questions don't have fixed response options
@@ -864,7 +862,6 @@ class DateQuestionFormData extends QuestionFormData {
       minDate: question.minDate,
       maxDate: question.maxDate,
       dateFormatPreset: question.dateFormatPreset,
-      initialDate: question.initialDate,
       conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
@@ -877,7 +874,6 @@ class DateQuestionFormData extends QuestionFormData {
       minDate: minDate,
       maxDate: maxDate,
       dateFormatPreset: dateFormatPreset ?? DateFormatPreset.isoDate,
-      initialDate: initialDate,
     );
     question.id = questionId;
     question.prompt = questionText;
@@ -901,7 +897,6 @@ class DateQuestionFormData extends QuestionFormData {
       minDate: minDate,
       maxDate: maxDate,
       dateFormatPreset: dateFormatPreset,
-      initialDate: initialDate,
       conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
@@ -926,7 +921,6 @@ class DateQuestionFormData extends QuestionFormData {
       'minDate': minDate?.toIso8601String(),
       'maxDate': maxDate?.toIso8601String(),
       'dateFormatPreset': dateFormatPreset?.name,
-      'initialDate': initialDate?.toIso8601String(),
       'conditional': conditional?.toString(),
       'responseOptions': responseOptions,
     };

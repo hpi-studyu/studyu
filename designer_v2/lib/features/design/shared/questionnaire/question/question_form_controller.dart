@@ -241,16 +241,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       );
   final FormControl<DateFormatPreset> dateFormatPresetControl =
       FormControl<DateFormatPreset>(value: DateFormatPreset.isoDate);
-  late final FormControl<DateTime?> dateInitialValueControl =
-      CustomFormControl<DateTime?>(
-        onValueChanged: (_) => _onDateRangeChanged(),
-      );
 
   late final FormArray dateResponseOptionsArray = FormArray([
     dateMinControl,
     dateMaxControl,
     dateFormatPresetControl,
-    dateInitialValueControl,
   ]);
 
   // Audio
@@ -444,26 +439,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     if (formMode == FormMode.readonly) {
       return; // prevent change listener from firing in readonly mode
     }
-    // Auto-correct initial value if it's outside the new range
-    final initial = dateInitialValueControl.value;
-    final min = dateMinControl.value;
-    final max = dateMaxControl.value;
-
-    if (initial != null) {
-      // If both min and max are set, check if initial is within range
-      if (min != null && max != null) {
-        if (initial.isBefore(min) || initial.isAfter(max)) {
-          // If initial is outside range, set it to min (or max if min is null)
-          dateInitialValueControl.value = min;
-        }
-      } else if (min != null && initial.isBefore(min)) {
-        // If only min is set and initial is before min
-        dateInitialValueControl.value = min;
-      } else if (max != null && initial.isAfter(max)) {
-        // If only max is set and initial is after max
-        dateInitialValueControl.value = max;
-      }
-    }
   }
 
   // Fitbit
@@ -520,7 +495,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'dateMin': dateMinControl,
       'dateMax': dateMaxControl,
       'dateFormatPreset': dateFormatPresetControl,
-      'dateInitialValue': dateInitialValueControl,
     }),
   };
 
@@ -655,8 +629,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       validators: [Validators.delegate(_validateDateRange)],
       validationMessages: {
         'minGreaterThanMax': (error) => tr.date_validation_min_greater_than_max,
-        'initialOutsideRange': (error) =>
-            tr.date_validation_initial_outside_range,
       },
     );
   }
@@ -664,21 +636,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   Map<String, dynamic>? _validateDateRange(AbstractControl<dynamic> control) {
     final min = dateMinControl.value;
     final max = dateMaxControl.value;
-    final initial = dateInitialValueControl.value;
 
     // Check if min is greater than max
     if (min != null && max != null && min.isAfter(max)) {
       return {'minGreaterThanMax': true};
-    }
-
-    // Check if initial value is outside the range
-    if (initial != null) {
-      if (min != null && initial.isBefore(min)) {
-        return {'initialOutsideRange': true};
-      }
-      if (max != null && initial.isAfter(max)) {
-        return {'initialOutsideRange': true};
-      }
     }
 
     return null;
@@ -800,7 +761,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         dateMaxControl.value = data.maxDate;
         dateFormatPresetControl.value =
             data.dateFormatPreset ?? DateFormatPreset.isoDate;
-        dateInitialValueControl.value = data.initialDate;
     }
   }
 
@@ -914,7 +874,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           minDate: dateMinControl.value,
           maxDate: dateMaxControl.value,
           dateFormatPreset: dateFormatPresetControl.value,
-          initialDate: dateInitialValueControl.value,
         );
     }
   }

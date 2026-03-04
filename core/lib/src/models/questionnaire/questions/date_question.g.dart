@@ -20,9 +20,6 @@ DateQuestion _$DateQuestionFromJson(Map<String, dynamic> json) =>
               json['dateFormatPreset'],
             ) ??
             DateFormatPreset.isoDate,
-        initialDate: json['initialDate'] == null
-            ? null
-            : DateTime.parse(json['initialDate'] as String),
       )
       ..type = json['type'] as String
       ..id = json['id'] as String
@@ -44,7 +41,6 @@ Map<String, dynamic> _$DateQuestionToJson(DateQuestion instance) =>
       'minDate': ?instance.minDate?.toIso8601String(),
       'maxDate': ?instance.maxDate?.toIso8601String(),
       'dateFormatPreset': instance.dateFormatPreset.toJson(),
-      'initialDate': ?instance.initialDate?.toIso8601String(),
     };
 
 const _$DateFormatPresetEnumMap = {

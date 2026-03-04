@@ -1400,18 +1400,6 @@ abstract class AppLocalizations {
   /// **'Select how dates are displayed to participants'**
   String get date_format_preset_label_helper;
 
-  /// No description provided for @date_initial_value_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Initial date'**
-  String get date_initial_value_label;
-
-  /// No description provided for @date_initial_value_label_helper.
-  ///
-  /// In en, this message translates to:
-  /// **'The default date value shown to participants'**
-  String get date_initial_value_label_helper;
-
   /// No description provided for @date_picker_hint.
   ///
   /// In en, this message translates to:
@@ -1435,12 +1423,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Minimum date cannot be greater than maximum date'**
   String get date_validation_min_greater_than_max;
-
-  /// No description provided for @date_validation_initial_outside_range.
-  ///
-  /// In en, this message translates to:
-  /// **'Initial date must be within the minimum and maximum date range'**
-  String get date_validation_initial_outside_range;
 
   /// No description provided for @fitbit_question_title.
   ///

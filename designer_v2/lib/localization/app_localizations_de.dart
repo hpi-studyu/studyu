@@ -747,13 +747,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden';
 
   @override
-  String get date_initial_value_label => 'Initialdatum';
-
-  @override
-  String get date_initial_value_label_helper =>
-      'Der Standarddatumwert, der den Teilnehmern angezeigt wird';
-
-  @override
   String get date_picker_hint => 'Datum auswählen';
 
   @override
@@ -766,10 +759,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get date_validation_min_greater_than_max =>
       'Das Mindestdatum darf nicht nach dem Höchstdatum liegen';
-
-  @override
-  String get date_validation_initial_outside_range =>
-      'Das Initialdatum muss innerhalb des Mindest- und Höchstdatums liegen';
 
   @override
   String get fitbit_question_title => 'Fitbit';

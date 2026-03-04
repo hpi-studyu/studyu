@@ -738,13 +738,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Select how dates are displayed to participants';
 
   @override
-  String get date_initial_value_label => 'Initial date';
-
-  @override
-  String get date_initial_value_label_helper =>
-      'The default date value shown to participants';
-
-  @override
   String get date_picker_hint => 'Select a date';
 
   @override
@@ -757,10 +750,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get date_validation_min_greater_than_max =>
       'Minimum date cannot be greater than maximum date';
-
-  @override
-  String get date_validation_initial_outside_range =>
-      'Initial date must be within the minimum and maximum date range';
 
   @override
   String get fitbit_question_title => 'Fitbit';

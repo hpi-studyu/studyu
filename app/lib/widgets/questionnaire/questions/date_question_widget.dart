@@ -20,12 +20,12 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.question.initialDate;
+    _selectedDate = null;
   }
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
-    final initialDate = _selectedDate ?? widget.question.initialDate ?? now;
+    final initialDate = _selectedDate ?? now;
 
     final pickedDate = await showDatePicker(
       context: context,

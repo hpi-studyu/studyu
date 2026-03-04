@@ -20,21 +20,16 @@ class DateQuestion extends Question<DateTime> {
   @JsonKey(name: 'dateFormatPreset')
   DateFormatPreset dateFormatPreset;
 
-  @JsonKey(name: 'initialDate')
-  DateTime? initialDate;
-
   DateQuestion({
     this.minDate,
     this.maxDate,
     this.dateFormatPreset = DateFormatPreset.isoDate,
-    this.initialDate,
   }) : super(questionType);
 
   DateQuestion.withId({
     this.minDate,
     this.maxDate,
     this.dateFormatPreset = DateFormatPreset.isoDate,
-    this.initialDate,
   }) : super.withId(questionType);
 
   factory DateQuestion.fromJson(Map<String, dynamic> json) =>
