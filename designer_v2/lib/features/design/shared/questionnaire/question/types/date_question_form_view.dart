@@ -5,10 +5,8 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
-import 'package:studyu_designer_v2/theme.dart';
 
 class DateQuestionFormView extends ConsumerWidget {
   const DateQuestionFormView({required this.formViewModel, super.key});
@@ -26,15 +24,8 @@ class DateQuestionFormView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
-        final preset =
-            formViewModel.dateFormatPresetControl.value ??
-            DateFormatPreset.isoDate;
-        final includesTime = preset.includesTime;
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,73 +81,9 @@ class DateQuestionFormView extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 24.0),
-
-            // Preview section
-            const Divider(thickness: 2.0),
-            const SizedBox(height: 16.0),
-            Text(
-              AppLocalizations.of(context)!.date_preview_label,
-              style: theme.textTheme.titleSmall,
-            ),
-            const SizedBox(height: 8.0),
-            TextParagraph(
-              text: AppLocalizations.of(context)!.date_preview_helper,
-              style: ThemeConfig.bodyTextMuted(theme),
-            ),
-            const SizedBox(height: 16.0),
-            _buildPreview(context, preset, includesTime),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildPreview(
-    BuildContext context,
-    DateFormatPreset preset,
-    bool includesTime,
-  ) {
-    final theme = Theme.of(context);
-    final exampleDate = DateTime(2024, 12, 31, 14, 30);
-    final formattedDate = _formatDate(exampleDate, preset);
-
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: theme.dividerColor),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Date picker button preview
-          OutlinedButton.icon(
-            onPressed: null,
-            icon: const Icon(Icons.calendar_today),
-            label: Text(formattedDate),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-              alignment: Alignment.centerLeft,
-            ),
-          ),
-          if (includesTime) ...[
-            const SizedBox(height: 8.0),
-            OutlinedButton.icon(
-              onPressed: null,
-              icon: const Icon(Icons.access_time),
-              label: Text(TimeOfDay.fromDateTime(exampleDate).format(context)),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 12,
-                ),
-                alignment: Alignment.centerLeft,
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 
