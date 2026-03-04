@@ -455,5 +455,27 @@
   "preview_mode_description": "Sie befinden sich derzeit im Vorschau-Modus. Dies ermöglicht Ihnen:\n\n• Schneller Vorlauf durch Studientage mit der \"Nächster Tag\" Schaltfläche\n• Mehrfaches Abschließen von Aufgaben ohne Einschränkungen\n• Erleben des vollständigen Studienablaufs ohne Beeinflussung echter Daten\n\nWichtig: Ergebnisse und Daten aus dem Vorschau-Modus werden nicht gespeichert oder mit tatsächlichen Teilnehmerergebnissen aus laufenden Studien vermischt.",
   "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
   "ok": "OK",
-  "submit" : "Absenden"
+  "submit" : "Absenden",
+
+  "date_picker_hint": "Wählen Sie ein Datum",
+  "date_picker_button_label": "Datum wählen",
+  "date_time_picker_button_label": "Datum und Uhrzeit wählen",
+  "date_picker_clear": "Löschen",
+  "date_picker_validation_required": "Bitte wählen Sie ein Datum",
+  "date_picker_validation_min_date": "Das Datum muss nach {minDate} liegen",
+  "@date_picker_validation_min_date": {
+    "placeholders": {
+      "minDate": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_validation_max_date": "Das Datum muss vor {maxDate} liegen",
+  "@date_picker_validation_max_date": {
+    "placeholders": {
+      "maxDate": {
+        "type": "String"
+      }
+    }
+  }
 }
