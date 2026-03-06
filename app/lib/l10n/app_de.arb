@@ -458,10 +458,36 @@
   "submit" : "Absenden",
 
   "date_picker_hint": "Wählen Sie ein Datum",
+  "time_picker_hint": "Wählen Sie eine Zeit",
   "date_picker_button_label": "Datum wählen",
   "date_time_picker_button_label": "Datum und Uhrzeit wählen",
+  "date_picker_button_label_datetime": "Datum auswählen",
+  "time_picker_button_label_datetime": "Zeit auswählen",
+  "time_picker_button_label": "Zeit auswählen",
   "date_picker_clear": "Löschen",
   "date_picker_validation_required": "Bitte wählen Sie ein Datum",
+  "time_picker_validation_required": "Bitte wählen Sie eine Zeit",
+  "datetime_picker_validation_required": "Bitte wählen Sie Datum und Zeit",
+  "time_picker_validation_range": "Bitte wählen Sie eine Zeit innerhalb des erlaubten Bereichs",
+  "time_picker_range_hint": "Wähle eine Zeit zwischen {min} und {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Früheste erlaubte Zeit: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Späteste erlaubte Zeit: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
   "date_picker_validation_min_date": "Das Datum muss nach {minDate} liegen",
   "@date_picker_validation_min_date": {
     "placeholders": {

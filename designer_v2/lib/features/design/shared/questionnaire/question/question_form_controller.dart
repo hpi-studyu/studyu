@@ -231,6 +231,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   );
 
   // Date
+  final FormControl<DateInputType> dateInputTypeControl =
+      FormControl<DateInputType>(value: DateInputType.date);
   late final FormControl<DateTime?> dateMinControl =
       CustomFormControl<DateTime?>(
         onValueChanged: (_) => _onDateRangeChanged(),
@@ -239,13 +241,30 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       CustomFormControl<DateTime?>(
         onValueChanged: (_) => _onDateRangeChanged(),
       );
+  final FormControl<String?> dateMinTimeControl = FormControl<String?>();
+  final FormControl<String?> dateMaxTimeControl = FormControl<String?>();
   final FormControl<DateFormatPreset> dateFormatPresetControl =
-      FormControl<DateFormatPreset>(value: DateFormatPreset.isoDate);
+      FormControl<DateFormatPreset>(value: DateFormatPreset.iso);
+  final FormControl<TimeFormatPreset> timeFormatPresetControl =
+      FormControl<TimeFormatPreset>(value: TimeFormatPreset.h24);
+  final FormControl<DefaultDateOption> dateDefaultOptionControl =
+      FormControl<DefaultDateOption>(value: DefaultDateOption.none);
+  final FormControl<DateTime?> dateDefaultSpecificDateControl =
+      FormControl<DateTime?>();
+  final FormControl<String?> dateDefaultSpecificTimeControl =
+      FormControl<String?>();
 
   late final FormArray dateResponseOptionsArray = FormArray([
+    dateInputTypeControl,
     dateMinControl,
     dateMaxControl,
+    dateMinTimeControl,
+    dateMaxTimeControl,
     dateFormatPresetControl,
+    timeFormatPresetControl,
+    dateDefaultOptionControl,
+    dateDefaultSpecificDateControl,
+    dateDefaultSpecificTimeControl,
   ]);
 
   // Audio
@@ -492,9 +511,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'painOptionsArray': painResponseOptionsArray,
     }),
     SurveyQuestionType.date: FormGroup({
+      'dateInputType': dateInputTypeControl,
       'dateMin': dateMinControl,
       'dateMax': dateMaxControl,
+      'dateMinTime': dateMinTimeControl,
+      'dateMaxTime': dateMaxTimeControl,
       'dateFormatPreset': dateFormatPresetControl,
+      'timeFormatPreset': timeFormatPresetControl,
+      'dateDefaultOption': dateDefaultOptionControl,
+      'dateDefaultSpecificDate': dateDefaultSpecificDateControl,
+      'dateDefaultSpecificTime': dateDefaultSpecificTimeControl,
     }),
   };
 
@@ -522,8 +548,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       StudyFormValidationSet.publish: [fitbitTypeRequired],
     },
     SurveyQuestionType.date: {
-      StudyFormValidationSet.draft: [dateRangeValid],
-      StudyFormValidationSet.publish: [dateRangeValid],
+      StudyFormValidationSet.draft: [dateRangeValid, dateDefaultValid],
+      StudyFormValidationSet.publish: [dateRangeValid, dateDefaultValid],
     },
   };
 
@@ -645,6 +671,102 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     return null;
   }
 
+  FormControlValidation get dateDefaultValid {
+    return FormControlValidation(
+      control: dateDefaultOptionControl,
+      validators: [Validators.delegate(_validateDateDefault)],
+      validationMessages: {
+        'todayBeforeMinDate': (error) =>
+            tr.date_validation_default_today_before_min,
+        'todayAfterMaxDate': (error) =>
+            tr.date_validation_default_today_after_max,
+        'specificBeforeMinDate': (error) =>
+            tr.date_validation_default_specific_before_min,
+        'specificAfterMaxDate': (error) =>
+            tr.date_validation_default_specific_after_max,
+      },
+    );
+  }
+
+  Map<String, dynamic>? _validateDateDefault(AbstractControl<dynamic> control) {
+    final defaultOption = dateDefaultOptionControl.value;
+    final minDate = dateMinControl.value;
+    final maxDate = dateMaxControl.value;
+    final today = DateTime.now();
+
+    if (defaultOption == null) return null;
+
+    switch (defaultOption) {
+      case DefaultDateOption.today:
+        // Check if "today" is within the allowed date range
+        if (minDate != null) {
+          // Normalize to date only (ignore time)
+          final todayDate = DateTime(today.year, today.month, today.day);
+          final minDateNormalized = DateTime(
+            minDate.year,
+            minDate.month,
+            minDate.day,
+          );
+          if (todayDate.isBefore(minDateNormalized)) {
+            return {'todayBeforeMinDate': true};
+          }
+        }
+        if (maxDate != null) {
+          final todayDate = DateTime(today.year, today.month, today.day);
+          final maxDateNormalized = DateTime(
+            maxDate.year,
+            maxDate.month,
+            maxDate.day,
+          );
+          if (todayDate.isAfter(maxDateNormalized)) {
+            return {'todayAfterMaxDate': true};
+          }
+        }
+        break;
+      case DefaultDateOption.specific:
+        // Check if specific default date is within range
+        final specificDate = dateDefaultSpecificDateControl.value;
+        if (specificDate != null) {
+          if (minDate != null) {
+            final specificDateNormalized = DateTime(
+              specificDate.year,
+              specificDate.month,
+              specificDate.day,
+            );
+            final minDateNormalized = DateTime(
+              minDate.year,
+              minDate.month,
+              minDate.day,
+            );
+            if (specificDateNormalized.isBefore(minDateNormalized)) {
+              return {'specificBeforeMinDate': true};
+            }
+          }
+          if (maxDate != null) {
+            final specificDateNormalized = DateTime(
+              specificDate.year,
+              specificDate.month,
+              specificDate.day,
+            );
+            final maxDateNormalized = DateTime(
+              maxDate.year,
+              maxDate.month,
+              maxDate.day,
+            );
+            if (specificDateNormalized.isAfter(maxDateNormalized)) {
+              return {'specificAfterMaxDate': true};
+            }
+          }
+        }
+        break;
+      default:
+        // "now" for time and "none" don't need date validation
+        break;
+    }
+
+    return null;
+  }
+
   /// The form containing the controls for the currently selected
   /// [SurveyQuestionType]
   ///
@@ -757,10 +879,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case SurveyQuestionType.pain:
         break;
       case SurveyQuestionType.date:
-        dateMinControl.value = (data as DateQuestionFormData).minDate;
+        dateInputTypeControl.value = (data as DateQuestionFormData).inputType;
+        dateMinControl.value = data.minDate;
         dateMaxControl.value = data.maxDate;
-        dateFormatPresetControl.value =
-            data.dateFormatPreset ?? DateFormatPreset.isoDate;
+        dateMinTimeControl.value = data.minTime;
+        dateMaxTimeControl.value = data.maxTime;
+        dateFormatPresetControl.value = data.dateFormatPreset;
+        timeFormatPresetControl.value = data.timeFormatPreset;
+        dateDefaultOptionControl.value = data.defaultOption;
+        dateDefaultSpecificDateControl.value = data.defaultSpecificDate;
+        dateDefaultSpecificTimeControl.value = data.defaultSpecificTime;
     }
   }
 
@@ -871,9 +999,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
+          inputType: dateInputTypeControl.value ?? DateInputType.date,
           minDate: dateMinControl.value,
           maxDate: dateMaxControl.value,
-          dateFormatPreset: dateFormatPresetControl.value,
+          minTime: dateMinTimeControl.value,
+          maxTime: dateMaxTimeControl.value,
+          dateFormatPreset: dateFormatPresetControl.value ?? DateFormatPreset.iso,
+          timeFormatPreset: timeFormatPresetControl.value ?? TimeFormatPreset.h24,
+          defaultOption: dateDefaultOptionControl.value ?? DefaultDateOption.none,
+          defaultSpecificDate: dateDefaultSpecificDateControl.value,
+          defaultSpecificTime: dateDefaultSpecificTimeControl.value,
         );
     }
   }

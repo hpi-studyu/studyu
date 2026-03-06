@@ -16,22 +16,53 @@ class DateQuestionWidget extends QuestionWidget {
 
 class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = null;
+    _initializeDefaults();
+  }
+
+  void _initializeDefaults() {
+    final defaultValue = widget.question.getDefaultValue();
+    final defaultTime = widget.question.getInitialTimeValue();
+
+    if (defaultValue != null) {
+      _selectedDate = defaultValue;
+    }
+
+    if (defaultTime != null) {
+      final parts = defaultTime.split(':');
+      _selectedTime = TimeOfDay(
+        hour: int.parse(parts[0]),
+        minute: int.parse(parts[1]),
+      );
+    }
+
+    // For datetime, initialize date to today if time-only default is set
+    if (widget.question.isDateTime &&
+        _selectedDate == null &&
+        widget.question.defaultOption == DefaultDateOption.now) {
+      _selectedDate = DateTime.now();
+    }
   }
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
     final initialDate = _selectedDate ?? now;
+    final firstDate = widget.question.minDate ?? DateTime(1900);
+    final lastDate = widget.question.maxDate ?? DateTime(2100);
 
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
-      firstDate: widget.question.minDate ?? DateTime(1900),
-      lastDate: widget.question.maxDate ?? DateTime(2100),
+      initialDate: initialDate.isBefore(firstDate)
+          ? firstDate
+          : initialDate.isAfter(lastDate)
+              ? lastDate
+              : initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
       helpText: widget.question.prompt,
     );
 
@@ -39,19 +70,13 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       setState(() {
         _selectedDate = pickedDate;
       });
-
-      // If time is required, pick time next
-      if (widget.question.includeTime && mounted) {
-        await _pickTime();
-      }
+      _checkCompleteAndSubmit();
     }
   }
 
   Future<void> _pickTime() async {
     final now = TimeOfDay.now();
-    final initialTime = _selectedDate != null
-        ? TimeOfDay.fromDateTime(_selectedDate!)
-        : now;
+    final initialTime = _selectedTime ?? now;
 
     final pickedTime = await showTimePicker(
       context: context,
@@ -59,62 +84,146 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       helpText: widget.question.prompt,
     );
 
-    if (pickedTime != null && _selectedDate != null) {
+    if (pickedTime != null) {
+      // Validate time constraints
+      if (!_isTimeValid(pickedTime)) {
+        if (mounted) {
+          final localizations = AppLocalizations.of(context)!;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(localizations.time_picker_validation_range),
+            ),
+          );
+        }
+        return;
+      }
+
       setState(() {
-        _selectedDate = DateTime(
-          _selectedDate!.year,
-          _selectedDate!.month,
-          _selectedDate!.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
+        _selectedTime = pickedTime;
       });
+
+      // For datetime, if no date selected yet, default to today
+      if (widget.question.isDateTime && _selectedDate == null) {
+        setState(() {
+          _selectedDate = DateTime.now();
+        });
+      }
+
+      _checkCompleteAndSubmit();
     }
   }
 
-  void _clearDate() {
+  bool _isTimeValid(TimeOfDay time) {
+    if (widget.question.minTime != null) {
+      final minParts = widget.question.minTime!.split(':');
+      final minHour = int.parse(minParts[0]);
+      final minMinute = int.parse(minParts[1]);
+      final min = TimeOfDay(hour: minHour, minute: minMinute);
+
+      if (time.hour < min.hour ||
+          (time.hour == min.hour && time.minute < min.minute)) {
+        return false;
+      }
+    }
+
+    if (widget.question.maxTime != null) {
+      final maxParts = widget.question.maxTime!.split(':');
+      final maxHour = int.parse(maxParts[0]);
+      final maxMinute = int.parse(maxParts[1]);
+      final max = TimeOfDay(hour: maxHour, minute: maxMinute);
+
+      if (time.hour > max.hour ||
+          (time.hour == max.hour && time.minute > max.minute)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  bool _isComplete() {
+    switch (widget.question.inputType) {
+      case DateInputType.date:
+        return _selectedDate != null;
+      case DateInputType.time:
+        return _selectedTime != null;
+      case DateInputType.dateTime:
+        return _selectedDate != null && _selectedTime != null;
+    }
+  }
+
+  void _checkCompleteAndSubmit() {
+    if (_isComplete()) {
+      _handleSubmit();
+    }
+  }
+
+  void _clear() {
     setState(() {
       _selectedDate = null;
+      _selectedTime = null;
     });
+    _initializeDefaults();
   }
 
   void _handleSubmit() {
-    if (_selectedDate != null) {
-      widget.onDone?.call(widget.question.constructAnswer(_selectedDate!));
+    DateTime? result;
+
+    switch (widget.question.inputType) {
+      case DateInputType.date:
+        if (_selectedDate != null) {
+          result = DateTime(
+            _selectedDate!.year,
+            _selectedDate!.month,
+            _selectedDate!.day,
+          );
+        }
+      case DateInputType.time:
+        if (_selectedTime != null) {
+          // Store time as a DateTime on epoch date for consistency
+          result = DateTime(
+            2000,
+            1,
+            1,
+            _selectedTime!.hour,
+            _selectedTime!.minute,
+          );
+        }
+      case DateInputType.dateTime:
+        if (_selectedDate != null && _selectedTime != null) {
+          result = DateTime(
+            _selectedDate!.year,
+            _selectedDate!.month,
+            _selectedDate!.day,
+            _selectedTime!.hour,
+            _selectedTime!.minute,
+          );
+        }
+    }
+
+    if (result != null) {
+      widget.onDone?.call(widget.question.constructAnswer(result));
     }
   }
 
-  String _formatDate(DateTime date) {
-    try {
-      final format = DateFormat(widget.question.dateFormat);
-      return format.format(date);
-    } catch (e) {
-      // Fallback to default format if custom format fails
-      return widget.question.includeTime
-          ? DateFormat('yyyy-MM-dd HH:mm').format(date)
-          : DateFormat('yyyy-MM-dd').format(date);
-    }
-  }
+  String? _getValidationError() {
+    final localizations = AppLocalizations.of(context);
+    if (localizations == null) return null;
 
-  String? _validateDate(DateTime? date) {
-    if (date == null) {
-      return AppLocalizations.of(context)!.date_picker_validation_required;
+    switch (widget.question.inputType) {
+      case DateInputType.date:
+        if (_selectedDate == null) {
+          return localizations.date_picker_validation_required;
+        }
+      case DateInputType.time:
+        if (_selectedTime == null) {
+          return localizations.time_picker_validation_required;
+        }
+      case DateInputType.dateTime:
+        if (_selectedDate == null || _selectedTime == null) {
+          return localizations.datetime_picker_validation_required;
+        }
     }
-
-    if (widget.question.minDate != null &&
-        date.isBefore(widget.question.minDate!)) {
-      return AppLocalizations.of(
-        context,
-      )!.date_picker_validation_min_date(_formatDate(widget.question.minDate!));
-    }
-
-    if (widget.question.maxDate != null &&
-        date.isAfter(widget.question.maxDate!)) {
-      return AppLocalizations.of(
-        context,
-      )!.date_picker_validation_max_date(_formatDate(widget.question.maxDate!));
-    }
-
     return null;
   }
 
@@ -122,51 +231,71 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
-    final validationError = _validateDate(_selectedDate);
+    final validationError = _getValidationError();
+    final isComplete = _isComplete();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Date picker button
-        OutlinedButton.icon(
-          onPressed: _pickDate,
-          icon: const Icon(Icons.calendar_today),
-          label: Text(
-            _selectedDate != null
-                ? _formatDate(_selectedDate!)
-                : (widget.question.includeTime
-                      ? localizations.date_time_picker_button_label
-                      : localizations.date_picker_button_label),
-          ),
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-            alignment: Alignment.centerLeft,
-          ),
-        ),
-
-        // Time picker button (if includeTime is true and date is selected)
-        if (widget.question.includeTime && _selectedDate != null) ...[
-          const SizedBox(height: 8),
+        // Date picker button (if date or datetime)
+        if (widget.question.isDate) ...[
           OutlinedButton.icon(
-            onPressed: _pickTime,
-            icon: const Icon(Icons.access_time),
-            label: Text(TimeOfDay.fromDateTime(_selectedDate!).format(context)),
+            onPressed: _pickDate,
+            icon: const Icon(Icons.calendar_today),
+            label: Text(
+              _selectedDate != null
+                  ? DateFormat(widget.question.dateFormat).format(_selectedDate!)
+                  : (widget.question.isDateTime
+                      ? localizations.date_picker_button_label_datetime
+                      : localizations.date_picker_button_label),
+            ),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               alignment: Alignment.centerLeft,
             ),
           ),
+          const SizedBox(height: 8),
+        ],
+
+        // Time picker button (if time or datetime)
+        if (widget.question.isTime) ...[
+          OutlinedButton.icon(
+            onPressed: _pickTime,
+            icon: const Icon(Icons.access_time),
+            label: Text(
+              _selectedTime != null
+                  ? DateFormat(widget.question.timeFormat).format(
+                      DateTime(2000, 1, 1, _selectedTime!.hour, _selectedTime!.minute))
+                  : (widget.question.isDateTime
+                      ? localizations.time_picker_button_label_datetime
+                      : localizations.time_picker_button_label),
+            ),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          const SizedBox(height: 8),
         ],
 
         // Validation error message
         if (validationError != null) ...[
-          const SizedBox(height: 8),
           Text(
             validationError,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.error,
             ),
           ),
+          const SizedBox(height: 8),
+        ],
+
+        // Time range hint (if time constraints set)
+        if (widget.question.minTime != null || widget.question.maxTime != null) ...[
+          Text(
+            _formatTimeRangeHint(localizations),
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: 8),
         ],
 
         const SizedBox(height: 16),
@@ -175,23 +304,37 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Clear button (only show if date is selected)
-            if (_selectedDate != null) ...[
+            // Clear button (only show if value is selected)
+            if (_selectedDate != null || _selectedTime != null) ...[
               TextButton.icon(
-                onPressed: _clearDate,
+                onPressed: _clear,
                 icon: const Icon(Icons.clear),
                 label: Text(localizations.date_picker_clear),
               ),
               const SizedBox(width: 8),
             ],
-            // Submit button
+            // Submit button (only enabled when complete)
             OutlinedButton(
-              onPressed: _selectedDate != null ? _handleSubmit : null,
+              onPressed: isComplete ? _handleSubmit : null,
               child: Text(localizations.submit),
             ),
           ],
         ),
       ],
     );
+  }
+
+  String _formatTimeRangeHint(AppLocalizations localizations) {
+    final minTime = widget.question.minTime;
+    final maxTime = widget.question.maxTime;
+
+    if (minTime != null && maxTime != null) {
+      return localizations.time_picker_range_hint(minTime, maxTime);
+    } else if (minTime != null) {
+      return localizations.time_picker_min_hint(minTime);
+    } else if (maxTime != null) {
+      return localizations.time_picker_max_hint(maxTime);
+    }
+    return '';
   }
 }

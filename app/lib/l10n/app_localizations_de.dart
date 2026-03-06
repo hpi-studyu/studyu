@@ -1168,27 +1168,65 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
-  String get date_picker_hint => 'Select a date';
+  String get date_picker_hint => 'Wählen Sie ein Datum';
 
   @override
-  String get date_picker_button_label => 'Choose date';
+  String get time_picker_hint => 'Wählen Sie eine Zeit';
 
   @override
-  String get date_time_picker_button_label => 'Choose date and time';
+  String get date_picker_button_label => 'Datum wählen';
 
   @override
-  String get date_picker_clear => 'Clear';
+  String get date_time_picker_button_label => 'Datum und Uhrzeit wählen';
 
   @override
-  String get date_picker_validation_required => 'Please select a date';
+  String get date_picker_button_label_datetime => 'Datum auswählen';
+
+  @override
+  String get time_picker_button_label_datetime => 'Zeit auswählen';
+
+  @override
+  String get time_picker_button_label => 'Zeit auswählen';
+
+  @override
+  String get date_picker_clear => 'Löschen';
+
+  @override
+  String get date_picker_validation_required => 'Bitte wählen Sie ein Datum';
+
+  @override
+  String get time_picker_validation_required => 'Bitte wählen Sie eine Zeit';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Bitte wählen Sie Datum und Zeit';
+
+  @override
+  String get time_picker_validation_range =>
+      'Bitte wählen Sie eine Zeit innerhalb des erlaubten Bereichs';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Wähle eine Zeit zwischen $min und $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Früheste erlaubte Zeit: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Späteste erlaubte Zeit: $max';
+  }
 
   @override
   String date_picker_validation_min_date(String minDate) {
-    return 'Date must be after $minDate';
+    return 'Das Datum muss nach $minDate liegen';
   }
 
   @override
   String date_picker_validation_max_date(String maxDate) {
-    return 'Date must be before $maxDate';
+    return 'Das Datum muss vor $maxDate liegen';
   }
 }

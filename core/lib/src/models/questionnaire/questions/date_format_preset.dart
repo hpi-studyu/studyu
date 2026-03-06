@@ -1,17 +1,49 @@
 enum DateFormatPreset {
-  isoDate('yyyy-MM-dd'), // 2024-12-31
-  europeanDate('dd/MM/yyyy'), // 31/12/2024
-  usDate('MM/dd/yyyy'), // 12/31/2024
-  germanDate('dd.MM.yyyy'), // 31.12.2024
-  isoDateTime('yyyy-MM-dd HH:mm'), // 2024-12-31 14:30
-  europeanDateTime('dd/MM/yyyy HH:mm'), // 31/12/2024 14:30
-  usDateTimeAmPm('MM/dd/yyyy hh:mm a'); // 12/31/2024 02:30 PM
+  iso('yyyy-MM-dd'),
+  european('dd/MM/yyyy'),
+  us('MM/dd/yyyy'),
+  german('dd.MM.yyyy');
 
   final String pattern;
   const DateFormatPreset(this.pattern);
 
-  bool get includesTime => pattern.contains('H') || pattern.contains('h');
+  String toJson() => name;
+  static DateFormatPreset fromJson(String json) {
+    // Backward compatibility with old enum values
+    final legacyMap = {
+      'isoDate': iso,
+      'europeanDate': european,
+      'usDate': us,
+      'germanDate': german,
+      'isoDateTime': iso,
+      'europeanDateTime': european,
+      'usDateTimeAmPm': us,
+    };
+    // Handle any unknown values by defaulting to iso
+    try {
+      return legacyMap[json] ?? values.byName(json);
+    } catch (_) {
+      return iso;
+    }
+  }
+}
+
+enum TimeFormatPreset {
+  h24('HH:mm'),
+  h12('hh:mm a');
+
+  final String pattern;
+  const TimeFormatPreset(this.pattern);
+
+  bool get is24Hour => this == TimeFormatPreset.h24;
 
   String toJson() => name;
-  static DateFormatPreset fromJson(String json) => values.byName(json);
+  static TimeFormatPreset fromJson(String json) {
+    // Backward compatibility - default to h24 if unknown
+    try {
+      return values.byName(json);
+    } catch (_) {
+      return h24;
+    }
+  }
 }
