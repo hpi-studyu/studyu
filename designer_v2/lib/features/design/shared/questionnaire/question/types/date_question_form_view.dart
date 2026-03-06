@@ -28,9 +28,10 @@ class DateQuestionFormView extends ConsumerWidget {
 
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
-        final inputType = formViewModel.dateInputTypeControl.value ??
-            DateInputType.date;
-        final defaultOption = formViewModel.dateDefaultOptionControl.value ??
+        final inputType =
+            formViewModel.dateInputTypeControl.value ?? DateInputType.date;
+        final defaultOption =
+            formViewModel.dateDefaultOptionControl.value ??
             DefaultDateOption.none;
 
         return Column(
@@ -81,7 +82,9 @@ class DateQuestionFormView extends ConsumerWidget {
                   formControl: formViewModel.timeFormatPresetControl,
                   items: TimeFormatPreset.values.map((preset) {
                     final exampleTime = DateTime(2000, 1, 1, 14, 30);
-                    final example = DateFormat(preset.pattern).format(exampleTime);
+                    final example = DateFormat(
+                      preset.pattern,
+                    ).format(exampleTime);
                     return DropdownMenuItem(
                       value: preset,
                       child: Text(example),
@@ -100,11 +103,14 @@ class DateQuestionFormView extends ConsumerWidget {
                 formControl: formViewModel.dateDefaultOptionControl,
                 items: _getDefaultOptionsForInputType(inputType, localizations)
                     .map((option) {
-                  return DropdownMenuItem(
-                    value: option,
-                    child: Text(_getDefaultOptionLabel(option, localizations)),
-                  );
-                }).toList(),
+                      return DropdownMenuItem(
+                        value: option,
+                        child: Text(
+                          _getDefaultOptionLabel(option, localizations),
+                        ),
+                      );
+                    })
+                    .toList(),
               ),
             ),
             const SizedBox(height: 16.0),
@@ -205,7 +211,10 @@ class DateQuestionFormView extends ConsumerWidget {
     );
   }
 
-  String _getInputTypeLabel(DateInputType type, AppLocalizations localizations) {
+  String _getInputTypeLabel(
+    DateInputType type,
+    AppLocalizations localizations,
+  ) {
     switch (type) {
       case DateInputType.date:
         return localizations.date_input_type_date;
@@ -217,7 +226,9 @@ class DateQuestionFormView extends ConsumerWidget {
   }
 
   String _getDefaultOptionLabel(
-      DefaultDateOption option, AppLocalizations localizations) {
+    DefaultDateOption option,
+    AppLocalizations localizations,
+  ) {
     switch (option) {
       case DefaultDateOption.none:
         return localizations.date_default_option_none;
@@ -231,7 +242,9 @@ class DateQuestionFormView extends ConsumerWidget {
   }
 
   List<DefaultDateOption> _getDefaultOptionsForInputType(
-      DateInputType inputType, AppLocalizations localizations) {
+    DateInputType inputType,
+    AppLocalizations localizations,
+  ) {
     switch (inputType) {
       case DateInputType.date:
         return [
@@ -304,8 +317,8 @@ class ReactiveDatePickerField extends StatelessWidget {
       initialDate: initialDate.isBefore(firstDate)
           ? firstDate
           : initialDate.isAfter(lastDate)
-              ? lastDate
-              : initialDate,
+          ? lastDate
+          : initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
     );
@@ -381,10 +394,7 @@ class ReactiveTimePickerField extends StatelessWidget {
 
   TimeOfDay _parseTime(String time) {
     final parts = time.split(':');
-    return TimeOfDay(
-      hour: int.parse(parts[0]),
-      minute: int.parse(parts[1]),
-    );
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
   }
 
   String _formatTimeDisplay(String? time) {

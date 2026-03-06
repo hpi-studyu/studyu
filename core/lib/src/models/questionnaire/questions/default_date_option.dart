@@ -8,6 +8,8 @@ enum DefaultDateOption {
   const DefaultDateOption(this.value);
 
   String toJson() => value;
-  static DefaultDateOption fromJson(String json) =>
-      values.firstWhere((e) => e.value == json, orElse: () => DefaultDateOption.none);
+  static DefaultDateOption fromJson(String json) => values.firstWhere(
+    (e) => e.value == json,
+    orElse: () => DefaultDateOption.none,
+  );
 }

@@ -115,9 +115,11 @@ class DateQuestion extends Question<DateTime> {
 
   bool get isDateTime => inputType == DateInputType.dateTime;
 
-  bool get isDate => inputType == DateInputType.date || inputType == DateInputType.dateTime;
+  bool get isDate =>
+      inputType == DateInputType.date || inputType == DateInputType.dateTime;
 
-  bool get isTime => inputType == DateInputType.time || inputType == DateInputType.dateTime;
+  bool get isTime =>
+      inputType == DateInputType.time || inputType == DateInputType.dateTime;
 
   DateTime? getDefaultValue() {
     switch (defaultOption) {

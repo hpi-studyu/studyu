@@ -722,7 +722,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             return {'todayAfterMaxDate': true};
           }
         }
-        break;
       case DefaultDateOption.specific:
         // Check if specific default date is within range
         final specificDate = dateDefaultSpecificDateControl.value;
@@ -758,7 +757,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             }
           }
         }
-        break;
       default:
         // "now" for time and "none" don't need date validation
         break;
@@ -1004,9 +1002,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           maxDate: dateMaxControl.value,
           minTime: dateMinTimeControl.value,
           maxTime: dateMaxTimeControl.value,
-          dateFormatPreset: dateFormatPresetControl.value ?? DateFormatPreset.iso,
-          timeFormatPreset: timeFormatPresetControl.value ?? TimeFormatPreset.h24,
-          defaultOption: dateDefaultOptionControl.value ?? DefaultDateOption.none,
+          dateFormatPreset:
+              dateFormatPresetControl.value ?? DateFormatPreset.iso,
+          timeFormatPreset:
+              timeFormatPresetControl.value ?? TimeFormatPreset.h24,
+          defaultOption:
+              dateDefaultOptionControl.value ?? DefaultDateOption.none,
           defaultSpecificDate: dateDefaultSpecificDateControl.value,
           defaultSpecificTime: dateDefaultSpecificTimeControl.value,
         );

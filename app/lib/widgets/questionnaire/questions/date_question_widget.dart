@@ -59,8 +59,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       initialDate: initialDate.isBefore(firstDate)
           ? firstDate
           : initialDate.isAfter(lastDate)
-              ? lastDate
-              : initialDate,
+          ? lastDate
+          : initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
       helpText: widget.question.prompt,
@@ -90,9 +90,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         if (mounted) {
           final localizations = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(localizations.time_picker_validation_range),
-            ),
+            SnackBar(content: Text(localizations.time_picker_validation_range)),
           );
         }
         return;
@@ -244,10 +242,12 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             icon: const Icon(Icons.calendar_today),
             label: Text(
               _selectedDate != null
-                  ? DateFormat(widget.question.dateFormat).format(_selectedDate!)
+                  ? DateFormat(
+                      widget.question.dateFormat,
+                    ).format(_selectedDate!)
                   : (widget.question.isDateTime
-                      ? localizations.date_picker_button_label_datetime
-                      : localizations.date_picker_button_label),
+                        ? localizations.date_picker_button_label_datetime
+                        : localizations.date_picker_button_label),
             ),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -265,10 +265,17 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             label: Text(
               _selectedTime != null
                   ? DateFormat(widget.question.timeFormat).format(
-                      DateTime(2000, 1, 1, _selectedTime!.hour, _selectedTime!.minute))
+                      DateTime(
+                        2000,
+                        1,
+                        1,
+                        _selectedTime!.hour,
+                        _selectedTime!.minute,
+                      ),
+                    )
                   : (widget.question.isDateTime
-                      ? localizations.time_picker_button_label_datetime
-                      : localizations.time_picker_button_label),
+                        ? localizations.time_picker_button_label_datetime
+                        : localizations.time_picker_button_label),
             ),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -290,7 +297,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         ],
 
         // Time range hint (if time constraints set)
-        if (widget.question.minTime != null || widget.question.maxTime != null) ...[
+        if (widget.question.minTime != null ||
+            widget.question.maxTime != null) ...[
           Text(
             _formatTimeRangeHint(localizations),
             style: theme.textTheme.bodySmall,
