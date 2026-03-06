@@ -7,30 +7,40 @@ import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:web/web.dart' as web;
 
-/// Helper to inject CSS to ensure preview iframe stays below Flutter overlays
+/// Style element ID for the preview iframe styles
+const String _previewStyleId = 'studyu-preview-iframe-styles';
+
+/// Injects CSS to ensure preview iframe stays below Flutter overlays.
+///
+/// Uses z-index: 0 for the iframe to keep it interactive (z-index: -1 would
+/// make it unclickable as it renders behind the parent's background).
+/// Flutter overlays use z-index: 999999 to render above the iframe.
 void _injectPreviewIframeStyles() {
-  const styleId = 'studyu-preview-iframe-styles';
-  if (web.document.getElementById(styleId) != null) {
+  // Check if styles are already injected to make this idempotent
+  if (web.document.getElementById(_previewStyleId) != null) {
     return; // Already injected
   }
 
   final style = web.HTMLStyleElement();
-  style.id = styleId;
+  style.id = _previewStyleId;
+  // Scope styles specifically to the preview iframe to avoid affecting
+  // other platform views in the application
   style.textContent = '''
-    /* Target all platform view containers */
-    .flt-platform-view {
+    /* Target only the StudyU preview iframe container */
+    .flt-platform-view:has(#studyu_app_preview) {
       position: relative !important;
       z-index: 0 !important;
     }
     /* Target the specific preview iframe by ID */
     #studyu_app_preview {
       position: relative !important;
-      z-index: -1 !important;
+      /* z-index: 0 keeps iframe interactive while below overlays */
+      z-index: 0 !important;
     }
-    /* Target iframes within platform views */
-    .flt-platform-view iframe {
+    /* Target iframes within the preview platform view */
+    .flt-platform-view:has(#studyu_app_preview) iframe {
       position: relative !important;
-      z-index: -1 !important;
+      z-index: 0 !important;
     }
     /* Ensure Flutter overlays are always on top */
     .flt-overlay {
@@ -39,6 +49,17 @@ void _injectPreviewIframeStyles() {
     }
   ''';
   web.document.head?.appendChild(style);
+}
+
+/// Removes the injected preview iframe styles from the document.
+///
+/// Call this when the preview is no longer needed (e.g., on dispose)
+/// to clean up the DOM.
+void _removePreviewIframeStyles() {
+  final styleElement = web.document.getElementById(_previewStyleId);
+  if (styleElement != null) {
+    styleElement.remove();
+  }
 }
 
 class RouteInformation {
@@ -72,6 +93,7 @@ abstract class PlatformController {
   void listen();
   void send(String message);
   void openNewPage() {}
+  void dispose() {}
 }
 
 class WebController extends PlatformController {
@@ -101,7 +123,8 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none'
       ..style.position = 'relative'
-      ..style.zIndex = '-1';
+      // z-index: 0 keeps iframe interactive while below Flutter overlays
+      ..style.zIndex = '0';
 
     ui.platformViewRegistry.registerViewFactory(
       '$studyId$key',
@@ -109,7 +132,8 @@ class WebController extends PlatformController {
         ..style.width = '100%'
         ..style.height = '100%'
         ..style.position = 'relative'
-        ..style.zIndex = '-1',
+        // z-index: 0 keeps iframe interactive while below Flutter overlays
+        ..style.zIndex = '0',
     );
   }
 
@@ -196,6 +220,12 @@ class WebController extends PlatformController {
       message.toJS,
       (env.appUrl ?? '').toJS,
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up injected styles when the controller is disposed
+    _removePreviewIframeStyles();
   }
 }
 
