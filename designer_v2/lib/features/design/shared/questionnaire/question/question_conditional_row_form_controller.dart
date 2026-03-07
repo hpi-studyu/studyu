@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/utils/comparator_utils.dart';
 
 class ConditionRowFormViewModel
     extends ManagedFormViewModel<ConditionRowFormData> {
@@ -134,12 +135,30 @@ class ConditionRowFormViewModel
         ];
       case ScaleQuestion.questionType:
         return [
-          const FormControlOption(NumericComparator.equal, '='),
-          const FormControlOption(NumericComparator.notEqual, '≠'),
-          const FormControlOption(NumericComparator.greaterThan, '>'),
-          const FormControlOption(NumericComparator.lessThan, '<'),
-          const FormControlOption(NumericComparator.greaterThanOrEqual, '≥'),
-          const FormControlOption(NumericComparator.lessThanOrEqual, '≤'),
+          FormControlOption(
+            NumericComparator.equal,
+            NumericComparator.equal.stringSymbol,
+          ),
+          FormControlOption(
+            NumericComparator.notEqual,
+            NumericComparator.notEqual.stringSymbol,
+          ),
+          FormControlOption(
+            NumericComparator.greaterThan,
+            NumericComparator.greaterThan.stringSymbol,
+          ),
+          FormControlOption(
+            NumericComparator.lessThan,
+            NumericComparator.lessThan.stringSymbol,
+          ),
+          FormControlOption(
+            NumericComparator.greaterThanOrEqual,
+            NumericComparator.greaterThanOrEqual.stringSymbol,
+          ),
+          FormControlOption(
+            NumericComparator.lessThanOrEqual,
+            NumericComparator.lessThanOrEqual.stringSymbol,
+          ),
         ];
       case FreeTextQuestion.questionType:
         return [

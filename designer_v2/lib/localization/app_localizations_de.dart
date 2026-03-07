@@ -208,7 +208,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_status_draft_description => 'Die Studie ist noch in Planung';
 
   @override
-  String get study_status_running => 'Live';
+  String get study_status_running => 'Läuft';
 
   @override
   String get study_status_running_description =>
@@ -2063,6 +2063,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_study_export_results => 'Ergebnisdaten exportieren';
 
   @override
+  String get action_export_study_definition => 'Studiendefinition exportieren';
+
+  @override
   String get dialog_continue => 'Fortfahren';
 
   @override
@@ -2210,6 +2213,36 @@ class AppLocalizationsDe extends AppLocalizations {
       'Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:';
 
   @override
+  String get fitbit_only_participant_description =>
+      'Wenn du diese Studie nur für dich selbst durchführst, musst du deine eigene Client-ID und dein eigenes Client-Secret deines Fitbit-Kontos auf der vorherigen Seite verwenden.';
+
+  @override
+  String get fitbit_multiple_participant_title =>
+      'Wenn du diese Studie für mehrere Teilnehmer durchführst';
+
+  @override
+  String get fitbit_multiple_participant_description =>
+      'Jeder Teilnehmer muss sich mit seinem eigenen Fitbit-Konto in der StudyU-App anmelden. Die Daten werden für jeden Teilnehmer separat gesammelt.';
+
+  @override
+  String get study_import_title => 'Studie importieren';
+
+  @override
+  String get study_import_description =>
+      'Importieren Sie eine Studiendefinition aus einer JSON-Datei. Dies wird einen neuen Studienentwurf erstellen.';
+
+  @override
+  String get study_import_button => 'Studie aus JSON importieren';
+
+  @override
+  String get study_import_success => 'Studie erfolgreich importiert';
+
+  @override
+  String study_import_error(String error) {
+    return 'Fehler beim Importieren der Studie: $error';
+  }
+
+  @override
   String get fitbit_only_participant_step_1 =>
       'Wähle beim Erstellen deiner Fitbit-App als Anwendungstyp „Persönlich“.';
 
@@ -2325,4 +2358,193 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get study_schedule_custom_description =>
       'Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.';
+
+  @override
+  String get filter_studies => 'Studien filtern';
+
+  @override
+  String get filter_manage_presets => 'Vorlagen verwalten';
+
+  @override
+  String get filter_load_preset => 'Vorlage laden';
+
+  @override
+  String get filter_save_changes => 'Änderungen speichern';
+
+  @override
+  String get filter_save_as_new => 'Als neu speichern';
+
+  @override
+  String get filter_delete_preset => 'Vorlage löschen';
+
+  @override
+  String get filter_reset_all => 'Zurücksetzen';
+
+  @override
+  String filter_show_studies(int count) {
+    return '$count Studien anzeigen';
+  }
+
+  @override
+  String get filter_dialog_save_title => 'Filter-Vorlage speichern';
+
+  @override
+  String get filter_dialog_preset_name_hint => 'Vorlagenname';
+
+  @override
+  String get filter_category_basic => 'Basis-Info';
+
+  @override
+  String get filter_category_visibility => 'Sichtbarkeit & Rolle';
+
+  @override
+  String get filter_category_participants => 'Teilnehmer';
+
+  @override
+  String get filter_category_dates => 'Daten';
+
+  @override
+  String get filter_field_title => 'Titel';
+
+  @override
+  String get filter_field_status => 'Status';
+
+  @override
+  String get filter_field_participation => 'Teilnahme';
+
+  @override
+  String get filter_field_result_sharing => 'Ergebnisteilung';
+
+  @override
+  String get filter_field_registry_published => 'Im Register veröffentlicht';
+
+  @override
+  String get filter_field_participant_count => 'Teilnehmeranzahl';
+
+  @override
+  String get filter_field_active_count => 'Aktive Teilnehmer';
+
+  @override
+  String get filter_field_completed_count => 'Abgeschlossene Teilnehmer';
+
+  @override
+  String get filter_field_created_date => 'Erstellungsdatum';
+
+  @override
+  String get filter_date_from => 'Von';
+
+  @override
+  String get filter_date_to => 'Bis';
+
+  @override
+  String get filter_operator_contains => 'Enthält';
+
+  @override
+  String get filter_operator_equals => 'Stimmt überein';
+
+  @override
+  String get filter_operator_starts_with => 'Beginnt mit';
+
+  @override
+  String get filter_operator_ends_with => 'Endet mit';
+
+  @override
+  String get filter_operator_is => 'Ist';
+
+  @override
+  String get filter_operator_is_not => 'Ist nicht';
+
+  @override
+  String get filter_operator_min => 'Min';
+
+  @override
+  String get filter_operator_max => 'Max';
+
+  @override
+  String get filter_operator_exactly => 'Genau';
+
+  @override
+  String get filter_operator_more_than => 'Mehr als';
+
+  @override
+  String get filter_operator_less_than => 'Weniger als';
+
+  @override
+  String get filter_bool_yes => 'Ja';
+
+  @override
+  String get filter_bool_no => 'Nein';
+
+  @override
+  String get preset_my_active_studies => 'Meine aktiven Studien';
+
+  @override
+  String get preset_studies_needing_attention => 'Studien mit Handlungsbedarf';
+
+  @override
+  String get preset_recently_created => 'Kürzlich erstellt';
+
+  @override
+  String get preset_public_studies => 'Öffentliche Studien';
+
+  @override
+  String get preset_draft_studies => 'Entwürfe';
+
+  @override
+  String get preset_custom => 'Benutzerdefiniert';
+
+  @override
+  String get preset_none => 'Keine Vorlagen';
+
+  @override
+  String get preset_tooltip_my_active_studies =>
+      'Studien in deinem Besitz, die aktuell laufen';
+
+  @override
+  String get preset_tooltip_studies_needing_attention =>
+      'Laufende Studien mit geringer Teilnahme';
+
+  @override
+  String get preset_tooltip_recently_created =>
+      'Studien, die in den letzten 30 Tagen erstellt wurden';
+
+  @override
+  String get preset_tooltip_public_studies =>
+      'Studien, die im Register veröffentlicht wurden oder öffentliche Ergebnisse haben';
+
+  @override
+  String get preset_tooltip_draft_studies => 'Studien im Entwurfsmodus';
+
+  @override
+  String get preset_loaded_tooltip => 'Aktuell geladene Vorlage';
+
+  @override
+  String get filter_result_sharing_public => 'Öffentlich';
+
+  @override
+  String get filter_result_sharing_private => 'Privat';
+
+  @override
+  String get filter_result_sharing_organization => 'Organisation';
+
+  @override
+  String get participation_open => 'Offen';
+
+  @override
+  String get participation_invite => 'Nur Einladung';
+
+  @override
+  String get filter_section_default_presets => 'Standardvorlagen';
+
+  @override
+  String get filter_section_custom_presets => 'Benutzerdefinierte Vorlagen';
+
+  @override
+  String get filter_button_advanced => 'Konfiguriere Filter...';
+
+  @override
+  String get filter_button_clear => 'Filter entfernen';
+
+  @override
+  String get filter_button_main => 'Filtern';
 }
