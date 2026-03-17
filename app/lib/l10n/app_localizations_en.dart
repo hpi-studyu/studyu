@@ -86,7 +86,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboarding_page1_subtitle =>
-      'An N-of-1 trial is a scientific study with only one participant: YOU. Stop guessing and discover insights tailored to your unique biology.';
+      'An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.';
 
   @override
   String get onboarding_page2_title => 'Science Made Simple';

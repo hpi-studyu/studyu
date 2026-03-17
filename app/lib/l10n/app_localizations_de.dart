@@ -86,7 +86,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboarding_page1_subtitle =>
-      'Eine N-of-1-Studie ist eine wissenschaftliche Studie mit Ihnen als einziger Testperson. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.';
+      'Eine N-of-1-Studie ist eine wissenschaftliche Studie, in der Sie die einzige Testperson sind. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.';
 
   @override
   String get onboarding_page2_title => 'Wissenschaft einfach gemacht';

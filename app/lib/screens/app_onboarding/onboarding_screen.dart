@@ -15,6 +15,11 @@ class OnboardingScreen extends StatelessWidget {
     return IntroductionScreen(
       pages: [
         _buildPage(
+          title: l10n.onboarding_page0_title,
+          body: l10n.onboarding_page0_subtitle,
+          imagePath: 'assets/icon/logo.png',
+        ),
+        _buildPage(
           title: l10n.onboarding_page1_title,
           body: l10n.onboarding_page1_subtitle,
           imagePath: 'assets/images/onboarding/page1.svg',
@@ -22,17 +27,17 @@ class OnboardingScreen extends StatelessWidget {
         _buildPage(
           title: l10n.onboarding_page2_title,
           body: l10n.onboarding_page2_subtitle,
-          imagePath: 'assets/images/onboarding/page3.svg',
+          imagePath: 'assets/images/onboarding/page2.svg',
         ),
         _buildPage(
           title: l10n.onboarding_page3_title,
           body: l10n.onboarding_page3_subtitle,
-          imagePath: 'assets/images/onboarding/page5.svg',
+          imagePath: 'assets/images/onboarding/page3.svg',
         ),
         _buildPage(
           title: l10n.onboarding_page4_title,
           body: l10n.onboarding_page4_subtitle,
-          imagePath: 'assets/images/onboarding/page6.svg',
+          imagePath: 'assets/images/onboarding/page4.svg',
         ),
       ],
       showBackButton: true,
@@ -40,24 +45,13 @@ class OnboardingScreen extends StatelessWidget {
       next: Text(l10n.next),
       done: Text(
         l10n.get_started,
-        style: const TextStyle(fontWeight: FontWeight.w700),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       onDone: () async {
         await SecureStorage.write('onboarded', 'true');
-
         if (!context.mounted) return;
-        Navigator.pushReplacementNamed(context, Routes.welcome);
+        Navigator.pushReplacementNamed(context, Routes.loading);
       },
-      dotsDecorator: DotsDecorator(
-        size: const Size.square(10.0),
-        activeSize: const Size(20.0, 10.0),
-        activeColor: Theme.of(context).colorScheme.primary,
-        color: Colors.black26,
-        spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.0),
-        ),
-      ),
     );
   }
 
