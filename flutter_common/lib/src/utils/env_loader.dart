@@ -49,8 +49,11 @@ Future<void> loadEnv() async {
     'STUDYU_PROJECT_GENERATOR_URL',
     optional: true,
   );
-  final envPlayStoreUrl = getEnv('STUDYU_PLAY_STORE_URL', optional: true);
-  final envAppstoreUrl = getEnv('STUDYU_APPSTORE_URL', optional: true);
+  final envAndroidPackageName = getEnv(
+    'STUDYU_ANDROID_PACKAGE_ID',
+    optional: true,
+  );
+  final envIosAppStoreId = getEnv('STUDYU_IOS_APP_STORE_ID', optional: true);
   final envDeveloperEmail = getEnv('STUDYU_DEVELOPER_EMAIL', optional: true);
   final envAppDeepLinkScheme = getEnv(
     'STUDYU_APP_DEEP_LINK_SCHEME',
@@ -78,8 +81,8 @@ Future<void> loadEnv() async {
     envAppUrl: envAppUrl,
     envDesignerUrl: envDesignerUrl,
     envProjectGeneratorUrl: envProjectGeneratorUrl,
-    envPlayStoreUrl: envPlayStoreUrl,
-    envAppstoreUrl: envAppstoreUrl,
+    envAndroidPackageName: envAndroidPackageName,
+    envIosAppStoreId: envIosAppStoreId,
     envDeveloperEmail: envDeveloperEmail,
     envAppDeepLinkScheme: envAppDeepLinkScheme,
     supabaseClient: Supabase.instance.client,

@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:stack_deferred_link/stack_deferred_link.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -13,7 +16,9 @@ import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -41,13 +46,61 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (kIsWeb && widget.deepLinkInviteCode != null) {
+        return;
+      }
       if (widget.hasDeepLink) {
-        _initDeepLink();
+        await _initDeepLink();
+      } else if (!kIsWeb) {
+        final deferredCode = await _checkForDeferredLink();
+        if (!mounted) return;
+        if (deferredCode != null) {
+          _handleDeferredInvite(deferredCode);
+        } else {
+          initStudy();
+        }
       } else {
         initStudy();
       }
     });
+  }
+
+  Future<String?> _checkForDeferredLink() async {
+    try {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final info = await StackDeferredLink.getInstallReferrerAndroid();
+        return info.getParam('invite_code') ?? info.getParam('referrer');
+      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        final result = await StackDeferredLink.getInstallReferrerIos(
+          deepLinks: ['app.studyu.health/invite', 'studyu.health/invite'],
+        );
+        if (result != null) {
+          final uri = Uri.tryParse(result.fullReferralDeepLinkPath);
+          if (uri != null && uri.pathSegments.contains('invite')) {
+            final idx = uri.pathSegments.indexOf('invite');
+            if (idx + 1 < uri.pathSegments.length) {
+              return uri.pathSegments[idx + 1];
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Deferred link check failed: $e");
+    }
+    return null;
+  }
+
+  Future<void> _handleDeferredInvite(String inviteCode) async {
+    final state = context.read<AppState>();
+    final result = await DeepLinkService.processDeepLink(
+      studyId: null,
+      inviteCode: inviteCode,
+      isAuthenticated: isUserLoggedIn(),
+      activeStudyId: state.activeSubject?.studyId,
+    );
+    if (!mounted) return;
+    _handleDeepLinkResult(result, inviteCode: inviteCode);
   }
 
   Future<void> _initDeepLink() async {
@@ -62,12 +115,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     if (!mounted) return;
 
+    _handleDeepLinkResult(
+      result,
+      studyId: widget.deepLinkStudyId,
+      inviteCode: widget.deepLinkInviteCode,
+    );
+  }
+
+  void _handleDeepLinkResult(
+    DeepLinkResult result, {
+    String? studyId,
+    String? inviteCode,
+  }) {
+    final state = context.read<AppState>();
     switch (result) {
       case DeepLinkNeedsAuth():
-        if (widget.deepLinkStudyId != null) {
-          state.pendingDeepLinkStudyId = widget.deepLinkStudyId;
-        } else if (widget.deepLinkInviteCode != null) {
-          state.pendingDeepLinkInviteCode = widget.deepLinkInviteCode;
+        if (studyId != null) {
+          state.pendingDeepLinkStudyId = studyId;
+        } else if (inviteCode != null) {
+          state.pendingDeepLinkInviteCode = inviteCode;
         }
         context.go('/${RouteNames.welcome}');
       case DeepLinkError(type: final errorType):
@@ -300,8 +366,90 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
+  Widget _buildWebLayout() {
+    final isMobile =
+        defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android;
+    if (!isMobile) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.phone_android, size: 64, color: Colors.grey),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.open_link_on_mobile,
+                style: const TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context)!.you_have_been_invited,
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _launchAppStore,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.download_app_join,
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _launchAppStore() async {
+    final inviteCode = widget.deepLinkInviteCode!;
+    final link = "https://app.studyu.health/invite/$inviteCode";
+    await Clipboard.setData(ClipboardData(text: link));
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      if (androidPackageName != null) {
+        final referrer = Uri.encodeComponent("invite_code=$inviteCode");
+        final url = Uri.parse(
+          "https://play.google.com/store/apps/details?id=$androidPackageName&referrer=$referrer",
+        );
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+      }
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      if (iosAppStoreId != null) {
+        final url = Uri.parse("https://apps.apple.com/app/id$iosAppStoreId");
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb && widget.deepLinkInviteCode != null) {
+      return _buildWebLayout();
+    }
     if (_error != null) {
       return Scaffold(
         body: SafeArea(

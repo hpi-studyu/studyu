@@ -457,5 +457,8 @@
   "deep_link_study_not_found": "Study not found or not available",
   "deep_link_study_invite_only": "This study requires an invite code to join",
   "deep_link_invite_invalid": "Invalid or expired invite code",
-  "go_back": "Go Back"
+  "deep_link_error_invalid_invite": "Invalid invite code",
+  "open_link_on_mobile": "Please open this link on your mobile device.",
+  "you_have_been_invited": "You have been invited to a study!",
+  "download_app_join": "Download App & Join"
 }

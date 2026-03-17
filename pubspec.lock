@@ -1954,6 +1954,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
+  stack_deferred_link:
+    dependency: transitive
+    description:
+      name: stack_deferred_link
+      sha256: "78f778b5917dad34a00066af7abac0d6851898c878071a2739e6f36b31a1f3c0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   stack_trace:
     dependency: transitive
     description:
