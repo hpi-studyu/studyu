@@ -15,6 +15,11 @@ class OnboardingScreen extends StatelessWidget {
     return IntroductionScreen(
       pages: [
         _buildPage(
+          title: l10n.onboarding_page0_title,
+          body: l10n.onboarding_page0_subtitle,
+          imagePath: 'assets/icon/logo.png',
+        ),
+        _buildPage(
           title: l10n.onboarding_page1_title,
           body: l10n.onboarding_page1_subtitle,
           imagePath: 'assets/images/onboarding/page1.svg',
@@ -79,7 +84,11 @@ class OnboardingScreen extends StatelessWidget {
     return PageViewModel(
       title: title,
       body: body,
-      image: Center(child: SvgPicture.asset(imagePath, height: 250)),
+      image: Center(
+        child: imagePath.endsWith('.svg')
+            ? SvgPicture.asset(imagePath, height: 250)
+            : Image.asset(imagePath, height: 250),
+      ),
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         bodyTextStyle: TextStyle(fontSize: 16),

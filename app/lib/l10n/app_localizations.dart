@@ -206,76 +206,88 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get get_started;
 
+  /// No description provided for @onboarding_page0_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to StudyU'**
+  String get onboarding_page0_title;
+
+  /// No description provided for @onboarding_page0_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.'**
+  String get onboarding_page0_subtitle;
+
   /// No description provided for @onboarding_page1_title.
   ///
   /// In en, this message translates to:
-  /// **'What is an N-of-1 Study?'**
+  /// **'What works for YOU?'**
   String get onboarding_page1_title;
 
   /// No description provided for @onboarding_page1_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Find out what works for you, not for the average person.'**
+  /// **'An N-of-1 trial is a scientific study with only one participant. Start now to discover health insights tailored to your unique biology.'**
   String get onboarding_page1_subtitle;
 
   /// No description provided for @onboarding_page2_title.
   ///
   /// In en, this message translates to:
-  /// **'Why N-of-1 Matters'**
+  /// **'Beyond \"Average\" Advice'**
   String get onboarding_page2_title;
 
   /// No description provided for @onboarding_page2_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'General health advice doesn\'t fit everyone. Your body reacts in its own way.'**
+  /// **'Traditional studies often miss individual differences. Don\'t rely on general statistics. Test what actually makes you feel better.'**
   String get onboarding_page2_subtitle;
 
   /// No description provided for @onboarding_page3_title.
   ///
   /// In en, this message translates to:
-  /// **'How It Works'**
+  /// **'How StudyU Works'**
   String get onboarding_page3_title;
 
   /// No description provided for @onboarding_page3_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'You alternate between options and complete simple daily check-ins.'**
+  /// **'Compare two options (like \'Coffee\' vs \'Tea\') over several weeks. We guide you through alternating phases to measure the real impact.'**
   String get onboarding_page3_subtitle;
 
   /// No description provided for @onboarding_page4_title.
   ///
   /// In en, this message translates to:
-  /// **'What StudyU Provides'**
+  /// **'Science Made Simple'**
   String get onboarding_page4_title;
 
   /// No description provided for @onboarding_page4_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Expert-designed study plans guide you automatically—step by step.'**
+  /// **'No need to be a researcher. StudyU provides expert-designed protocols and daily schedules so you can focus on living your life.'**
   String get onboarding_page4_subtitle;
 
   /// No description provided for @onboarding_page5_title.
   ///
   /// In en, this message translates to:
-  /// **'Your Personal Results'**
+  /// **'Your Personal Evidence'**
   String get onboarding_page5_title;
 
   /// No description provided for @onboarding_page5_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'After enough data, StudyU shows clear insights based on your own patterns.'**
+  /// **'Track your progress with simple daily checks. After a few weeks, unlock statistically significant results about your own health.'**
   String get onboarding_page5_subtitle;
 
   /// No description provided for @onboarding_page6_title.
   ///
   /// In en, this message translates to:
-  /// **'Start Your Journey'**
+  /// **'Take Control'**
   String get onboarding_page6_title;
 
   /// No description provided for @onboarding_page6_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Pick a study, follow the plan, and discover what truly works for you.'**
+  /// **'Select a study, follow your personalized plan, and finally get the answer to: \"Is this good for me?\"'**
   String get onboarding_page6_subtitle;
 
   /// No description provided for @study_selection.

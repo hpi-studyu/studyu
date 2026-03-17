@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -74,46 +75,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
-  String get onboarding_page1_title => 'What is an N-of-1 Study?';
+  String get onboarding_page0_title => 'Welcome to StudyU';
+
+  @override
+  String get onboarding_page0_subtitle =>
+      'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.';
+
+  @override
+  String get onboarding_page1_title => 'What works for YOU?';
 
   @override
   String get onboarding_page1_subtitle =>
-      'Find out what works for you, not for the average person.';
+      'An N-of-1 trial is a scientific study with only one participant. Start now to discover health insights tailored to your unique biology.';
 
   @override
-  String get onboarding_page2_title => 'Why N-of-1 Matters';
+  String get onboarding_page2_title => 'Beyond \"Average\" Advice';
 
   @override
   String get onboarding_page2_subtitle =>
-      'General health advice doesn\'t fit everyone. Your body reacts in its own way.';
+      'Traditional studies often miss individual differences. Don\'t rely on general statistics. Test what actually makes you feel better.';
 
   @override
-  String get onboarding_page3_title => 'How It Works';
+  String get onboarding_page3_title => 'How StudyU Works';
 
   @override
   String get onboarding_page3_subtitle =>
-      'You alternate between options and complete simple daily check-ins.';
+      'Compare two options (like \'Coffee\' vs \'Tea\') over several weeks. We guide you through alternating phases to measure the real impact.';
 
   @override
-  String get onboarding_page4_title => 'What StudyU Provides';
+  String get onboarding_page4_title => 'Science Made Simple';
 
   @override
   String get onboarding_page4_subtitle =>
-      'Expert-designed study plans guide you automatically—step by step.';
+      'No need to be a researcher. StudyU provides expert-designed protocols and daily schedules so you can focus on living your life.';
 
   @override
-  String get onboarding_page5_title => 'Your Personal Results';
+  String get onboarding_page5_title => 'Your Personal Evidence';
 
   @override
   String get onboarding_page5_subtitle =>
-      'After enough data, StudyU shows clear insights based on your own patterns.';
+      'Track your progress with simple daily checks. After a few weeks, unlock statistically significant results about your own health.';
 
   @override
-  String get onboarding_page6_title => 'Start Your Journey';
+  String get onboarding_page6_title => 'Take Control';
 
   @override
   String get onboarding_page6_subtitle =>
-      'Pick a study, follow the plan, and discover what truly works for you.';
+      'Select a study, follow your personalized plan, and finally get the answer to: \"Is this good for me?\"';
 
   @override
   String get study_selection => 'Study Selection';
