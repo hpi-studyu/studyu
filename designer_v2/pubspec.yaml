@@ -58,6 +58,7 @@ dev_dependencies:
     sdk: flutter
   json_diff: ^0.2.1
   lint: ^2.8.0
+  mockito: ^5.6.1
   patrol_finders: ^3.0.0
   riverpod_generator: ^4.0.0+1
   riverpod_lint:
