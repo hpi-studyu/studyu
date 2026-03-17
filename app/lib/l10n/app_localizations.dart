@@ -227,68 +227,44 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page1_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'An N-of-1 trial is a scientific study with only one participant. Start now to discover health insights tailored to your unique biology.'**
+  /// **'An N-of-1 trial is a scientific study with only one participant: YOU. Stop guessing and discover insights tailored to your unique biology.'**
   String get onboarding_page1_subtitle;
 
   /// No description provided for @onboarding_page2_title.
   ///
   /// In en, this message translates to:
-  /// **'Beyond \"Average\" Advice'**
+  /// **'Science Made Simple'**
   String get onboarding_page2_title;
 
   /// No description provided for @onboarding_page2_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Traditional studies often miss individual differences. Don\'t rely on general statistics. Test what actually makes you feel better.'**
+  /// **'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.'**
   String get onboarding_page2_subtitle;
 
   /// No description provided for @onboarding_page3_title.
   ///
   /// In en, this message translates to:
-  /// **'How StudyU Works'**
+  /// **'Your Personal Evidence'**
   String get onboarding_page3_title;
 
   /// No description provided for @onboarding_page3_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Compare two options (like \'Coffee\' vs \'Tea\') over several weeks. We guide you through alternating phases to measure the real impact.'**
+  /// **'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.'**
   String get onboarding_page3_subtitle;
 
   /// No description provided for @onboarding_page4_title.
   ///
   /// In en, this message translates to:
-  /// **'Science Made Simple'**
+  /// **'Take Control'**
   String get onboarding_page4_title;
 
   /// No description provided for @onboarding_page4_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'No need to be a researcher. StudyU provides expert-designed protocols and daily schedules so you can focus on living your life.'**
+  /// **'Ready to find your answers? Select a study and start your journey to better health today.'**
   String get onboarding_page4_subtitle;
-
-  /// No description provided for @onboarding_page5_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Your Personal Evidence'**
-  String get onboarding_page5_title;
-
-  /// No description provided for @onboarding_page5_subtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Track your progress with simple daily checks. After a few weeks, unlock statistically significant results about your own health.'**
-  String get onboarding_page5_subtitle;
-
-  /// No description provided for @onboarding_page6_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Take Control'**
-  String get onboarding_page6_title;
-
-  /// No description provided for @onboarding_page6_subtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Select a study, follow your personalized plan, and finally get the answer to: \"Is this good for me?\"'**
-  String get onboarding_page6_subtitle;
 
   /// No description provided for @study_selection.
   ///

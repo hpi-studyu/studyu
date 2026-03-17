@@ -86,42 +86,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboarding_page1_subtitle =>
-      'An N-of-1 trial is a scientific study with only one participant. Start now to discover health insights tailored to your unique biology.';
+      'An N-of-1 trial is a scientific study with only one participant: YOU. Stop guessing and discover insights tailored to your unique biology.';
 
   @override
-  String get onboarding_page2_title => 'Beyond \"Average\" Advice';
+  String get onboarding_page2_title => 'Science Made Simple';
 
   @override
   String get onboarding_page2_subtitle =>
-      'Traditional studies often miss individual differences. Don\'t rely on general statistics. Test what actually makes you feel better.';
+      'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.';
 
   @override
-  String get onboarding_page3_title => 'How StudyU Works';
+  String get onboarding_page3_title => 'Your Personal Evidence';
 
   @override
   String get onboarding_page3_subtitle =>
-      'Compare two options (like \'Coffee\' vs \'Tea\') over several weeks. We guide you through alternating phases to measure the real impact.';
+      'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.';
 
   @override
-  String get onboarding_page4_title => 'Science Made Simple';
+  String get onboarding_page4_title => 'Take Control';
 
   @override
   String get onboarding_page4_subtitle =>
-      'No need to be a researcher. StudyU provides expert-designed protocols and daily schedules so you can focus on living your life.';
-
-  @override
-  String get onboarding_page5_title => 'Your Personal Evidence';
-
-  @override
-  String get onboarding_page5_subtitle =>
-      'Track your progress with simple daily checks. After a few weeks, unlock statistically significant results about your own health.';
-
-  @override
-  String get onboarding_page6_title => 'Take Control';
-
-  @override
-  String get onboarding_page6_subtitle =>
-      'Select a study, follow your personalized plan, and finally get the answer to: \"Is this good for me?\"';
+      'Ready to find your answers? Select a study and start your journey to better health today.';
 
   @override
   String get study_selection => 'Study Selection';

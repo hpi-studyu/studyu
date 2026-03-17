@@ -86,42 +86,28 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboarding_page1_subtitle =>
-      'Eine N-of-1-Studie ist eine wissenschaftliche Studie mit Ihnen als einziger Testperson. Starten Sie jetzt, um Erkenntnisse zu gewinnen, die genau auf Ihren Körper zugeschnitten sind.';
+      'Eine N-of-1-Studie ist eine wissenschaftliche Studie mit Ihnen als einziger Testperson. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.';
 
   @override
-  String get onboarding_page2_title => 'Besser als der Durchschnitt';
+  String get onboarding_page2_title => 'Wissenschaft einfach gemacht';
 
   @override
   String get onboarding_page2_subtitle =>
-      'Herkömmliche Studien übersehen oft individuelle Unterschiede. Verlassen Sie sich nicht auf allgemeine Statistiken. Finden Sie heraus, was Ihnen wirklich hilft.';
+      'Vergleichen Sie zwei Optionen (z. B. \'Kaffee\' vs. \'Tee\') mit Experten-Plänen. Wir leiten Sie Schritt für Schritt. Ganz ohne Vorwissen.';
 
   @override
-  String get onboarding_page3_title => 'Wie StudyU funktioniert';
+  String get onboarding_page3_title => 'Ihre persönlichen Ergebnisse';
 
   @override
   String get onboarding_page3_subtitle =>
-      'Vergleichen Sie zwei Optionen (z.B. \'Kaffee\' oder \'Tee\') über mehrere Wochen. Wir führen Sie durch abwechselnde Phasen, um die tatsächliche Auswirkung zu messen.';
+      'Allgemeine Statistiken passen nicht immer. Verfolgen Sie Ihren Fortschritt täglich und erhalten Sie Ergebnisse, die zeigen, was Ihrem Körper wirklich hilft.';
 
   @override
-  String get onboarding_page4_title => 'Wissenschaft einfach gemacht';
+  String get onboarding_page4_title => 'Übernehmen Sie die Kontrolle';
 
   @override
   String get onboarding_page4_subtitle =>
-      'Sie brauchen keine Forschungserfahrung. StudyU bietet von Experten entwickelte Protokolle und Tagespläne, damit Sie sich auf Ihr Leben konzentrieren können.';
-
-  @override
-  String get onboarding_page5_title => 'Ihre persönlichen Ergebnisse';
-
-  @override
-  String get onboarding_page5_subtitle =>
-      'Verfolgen Sie Ihren Fortschritt mit einfachen täglichen Checks. Nach einigen Wochen erhalten Sie statistisch signifikante Ergebnisse zu Ihrer eigenen Gesundheit.';
-
-  @override
-  String get onboarding_page6_title => 'Übernehmen Sie die Kontrolle';
-
-  @override
-  String get onboarding_page6_subtitle =>
-      'Wählen Sie eine Studie, folgen Sie Ihrem persönlichen Plan und erhalten Sie endlich die Antwort auf: \"Ist das gut für mich?\"';
+      'Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu besserer Gesundheit.';
 
   @override
   String get study_selection => 'Studienauswahl';

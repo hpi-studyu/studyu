@@ -15,11 +15,6 @@ class OnboardingScreen extends StatelessWidget {
     return IntroductionScreen(
       pages: [
         _buildPage(
-          title: l10n.onboarding_page0_title,
-          body: l10n.onboarding_page0_subtitle,
-          imagePath: 'assets/icon/logo.png',
-        ),
-        _buildPage(
           title: l10n.onboarding_page1_title,
           body: l10n.onboarding_page1_subtitle,
           imagePath: 'assets/images/onboarding/page1.svg',
@@ -27,26 +22,16 @@ class OnboardingScreen extends StatelessWidget {
         _buildPage(
           title: l10n.onboarding_page2_title,
           body: l10n.onboarding_page2_subtitle,
-          imagePath: 'assets/images/onboarding/page2.svg',
+          imagePath: 'assets/images/onboarding/page3.svg',
         ),
         _buildPage(
           title: l10n.onboarding_page3_title,
           body: l10n.onboarding_page3_subtitle,
-          imagePath: 'assets/images/onboarding/page3.svg',
+          imagePath: 'assets/images/onboarding/page5.svg',
         ),
         _buildPage(
           title: l10n.onboarding_page4_title,
           body: l10n.onboarding_page4_subtitle,
-          imagePath: 'assets/images/onboarding/page4.svg',
-        ),
-        _buildPage(
-          title: l10n.onboarding_page5_title,
-          body: l10n.onboarding_page5_subtitle,
-          imagePath: 'assets/images/onboarding/page5.svg',
-        ),
-        _buildPage(
-          title: l10n.onboarding_page6_title,
-          body: l10n.onboarding_page6_subtitle,
           imagePath: 'assets/images/onboarding/page6.svg',
         ),
       ],
