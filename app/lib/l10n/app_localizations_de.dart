@@ -1168,6 +1168,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
+  String get go_back => 'Go back';
+
+  @override
   String get deep_link_error_title => 'Link-Fehler';
 
   @override
@@ -1183,5 +1186,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ungültiger oder abgelaufener Einladungscode';
 
   @override
-  String get go_back => 'Zurück';
+  String get deep_link_error_invalid_invite => 'Ungültiger Einladungscode';
+
+  @override
+  String get open_link_on_mobile =>
+      'Bitte öffnen Sie diesen Link auf Ihrem mobilen Gerät.';
+
+  @override
+  String get you_have_been_invited => 'Sie wurden zu einer Studie eingeladen!';
+
+  @override
+  String get download_app_join => 'App herunterladen & Beitreten';
 }

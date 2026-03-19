@@ -456,6 +456,7 @@
   "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
   "ok": "OK",
   "submit" : "Absenden",
+  "go_back" : "Zurück",
 
   "deep_link_error_title": "Link-Fehler",
   "deep_link_study_not_found": "Studie nicht gefunden oder nicht verfügbar",

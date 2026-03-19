@@ -452,6 +452,7 @@
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
   "submit" : "Submit",
+  "go_back" : "Go back",
 
   "deep_link_error_title": "Link Error",
   "deep_link_study_not_found": "Study not found or not available",

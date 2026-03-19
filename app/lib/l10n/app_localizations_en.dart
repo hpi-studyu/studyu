@@ -1158,6 +1158,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
+  String get go_back => 'Go back';
+
+  @override
   String get deep_link_error_title => 'Link Error';
 
   @override
@@ -1171,5 +1174,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deep_link_invite_invalid => 'Invalid or expired invite code';
 
   @override
-  String get go_back => 'Go Back';
+  String get deep_link_error_invalid_invite => 'Invalid invite code';
+
+  @override
+  String get open_link_on_mobile =>
+      'Please open this link on your mobile device.';
+
+  @override
+  String get you_have_been_invited => 'You have been invited to a study!';
+
+  @override
+  String get download_app_join => 'Download App & Join';
 }

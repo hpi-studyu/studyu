@@ -2252,6 +2252,12 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submit;
 
+  /// No description provided for @go_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get go_back;
+
   /// No description provided for @deep_link_error_title.
   ///
   /// In en, this message translates to:
@@ -2276,11 +2282,29 @@ abstract class AppLocalizations {
   /// **'Invalid or expired invite code'**
   String get deep_link_invite_invalid;
 
-  /// No description provided for @go_back.
+  /// No description provided for @deep_link_error_invalid_invite.
   ///
   /// In en, this message translates to:
-  /// **'Go Back'**
-  String get go_back;
+  /// **'Invalid invite code'**
+  String get deep_link_error_invalid_invite;
+
+  /// No description provided for @open_link_on_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Please open this link on your mobile device.'**
+  String get open_link_on_mobile;
+
+  /// No description provided for @you_have_been_invited.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been invited to a study!'**
+  String get you_have_been_invited;
+
+  /// No description provided for @download_app_join.
+  ///
+  /// In en, this message translates to:
+  /// **'Download App & Join'**
+  String get download_app_join;
 }
 
 class _AppLocalizationsDelegate
