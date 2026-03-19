@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
 class BottomOnboardingNavigation extends StatelessWidget {
@@ -33,12 +34,18 @@ class BottomOnboardingNavigation extends StatelessWidget {
         child: Row(
           children: [
             Visibility(
-              visible: !hideBack && onBack != null,
+              visible: !hideBack && (onBack != null || context.canPop()),
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
               child: TextButton(
-                onPressed: onBack,
+                onPressed:
+                    onBack ??
+                    () {
+                      if (context.canPop()) {
+                        context.pop();
+                      }
+                    },
                 child: Row(
                   children: [
                     backIcon ?? const Icon(Icons.navigate_before),

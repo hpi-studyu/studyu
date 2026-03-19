@@ -1168,7 +1168,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
-  String get go_back => 'Go back';
+  String get go_back => 'Zurück';
 
   @override
   String get deep_link_error_title => 'Link-Fehler';
