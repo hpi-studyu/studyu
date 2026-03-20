@@ -19,6 +19,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -64,6 +65,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
         initStudy();
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(LoadingScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.deepLinkInviteCode != oldWidget.deepLinkInviteCode ||
+        widget.deepLinkStudyId != oldWidget.deepLinkStudyId ||
+        widget.queryParameters != oldWidget.queryParameters) {
+      if (widget.hasDeepLink) {
+        // Reset state so loading spinner shows again instead of old error
+        setState(() => _error = null); 
+        _initDeepLink();
+      }
+    }
   }
 
   Future<String?> _checkForDeferredLink() async {
@@ -125,7 +140,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       activeStudyId: state.activeSubject?.studyId,
     );
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     _handleDeepLinkResult(
       result,
@@ -463,6 +480,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return _buildWebLayout();
     }
     if (_error != null) {
+      FlutterNativeSplash.remove(); // Force remove splash to ensure visibility
       return Scaffold(
         body: SafeArea(
           child: Center(
