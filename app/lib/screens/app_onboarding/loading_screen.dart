@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stack_deferred_link/stack_deferred_link.dart';
@@ -19,7 +20,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -75,7 +75,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         widget.queryParameters != oldWidget.queryParameters) {
       if (widget.hasDeepLink) {
         // Reset state so loading spinner shows again instead of old error
-        setState(() => _error = null); 
+        setState(() => _error = null);
         _initDeepLink();
       }
     }
