@@ -135,7 +135,10 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                         final item = formViewModel.reportItemModels.removeAt(
                           oldIndex,
                         );
-                        formViewModel.reportItemModels.insert(effectiveNewIndex, item);
+                        formViewModel.reportItemModels.insert(
+                          effectiveNewIndex,
+                          item,
+                        );
                         final controlItem = formViewModel.reportItemArray
                             .removeAt(oldIndex);
                         formViewModel.reportItemArray.insert(

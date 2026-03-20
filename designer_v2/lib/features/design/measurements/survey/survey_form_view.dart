@@ -225,7 +225,10 @@ class _MeasurementSurveyFormViewState
                     final item = widget.formViewModel.questionModels.removeAt(
                       oldIndex,
                     );
-                    widget.formViewModel.questionModels.insert(effectiveNewIndex, item);
+                    widget.formViewModel.questionModels.insert(
+                      effectiveNewIndex,
+                      item,
+                    );
                     final controlItem = widget.formViewModel.questionsArray
                         .removeAt(oldIndex);
                     widget.formViewModel.questionsArray.insert(

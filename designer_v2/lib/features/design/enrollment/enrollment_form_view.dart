@@ -181,7 +181,10 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         final item = formViewModel.questionModels.removeAt(
                           oldIndex,
                         );
-                        formViewModel.questionModels.insert(effectiveNewIndex, item);
+                        formViewModel.questionModels.insert(
+                          effectiveNewIndex,
+                          item,
+                        );
                         final controlItem = formViewModel.questionsArray
                             .removeAt(oldIndex);
                         formViewModel.questionsArray.insert(
@@ -256,7 +259,10 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         final item = formViewModel.consentItemModels.removeAt(
                           oldIndex,
                         );
-                        formViewModel.consentItemModels.insert(effectiveNewIndex, item);
+                        formViewModel.consentItemModels.insert(
+                          effectiveNewIndex,
+                          item,
+                        );
                         final controlItem = formViewModel.consentItemArray
                             .removeAt(oldIndex);
                         formViewModel.consentItemArray.insert(
