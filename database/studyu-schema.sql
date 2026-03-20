@@ -204,7 +204,7 @@ CREATE OR REPLACE FUNCTION "public"."get_study_record_from_invite"("invite_code"
   WHERE study.id = (
     SELECT study_invite.study_id
     FROM public.study_invite
-    WHERE invite_code = study_invite.code
+    WHERE lower(invite_code) = lower(study_invite.code)
   );
 $$;
 

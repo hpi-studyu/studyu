@@ -290,9 +290,10 @@ class Study extends SupabaseObjectFunctions<Study>
   /// Fetches a study by invite code using the RPC function.
   /// Returns the Study and StudyInvite, or nulls if not found.
   static Future<(StudyInvite?, Study?)> fetchByInviteCode(String code) async {
+    final cleanCode = code.trim().toLowerCase();
     try {
       final studyResult = await env.client
-          .rpc('get_study_record_from_invite', params: {'invite_code': code})
+          .rpc('get_study_record_from_invite', params: {'invite_code': cleanCode})
           .maybeSingle();
 
       if (studyResult == null || studyResult['id'] == null) {
@@ -305,7 +306,7 @@ class Study extends SupabaseObjectFunctions<Study>
       final inviteResult = await env.client
           .from(StudyInvite.tableName)
           .select('preselected_intervention_ids')
-          .eq('code', code)
+          .eq('code', cleanCode)
           .maybeSingle();
 
       List<String>? preselectedIds;
@@ -317,7 +318,7 @@ class Study extends SupabaseObjectFunctions<Study>
         );
       }
 
-      final invite = StudyInvite(code, study.id)
+      final invite = StudyInvite(cleanCode, study.id)
         ..preselectedInterventionIds = preselectedIds;
 
       return (invite, study);

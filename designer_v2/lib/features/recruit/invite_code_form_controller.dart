@@ -151,7 +151,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   @override
   StudyInvite buildFormData() {
     return StudyInvite(
-      codeControl.value!,
+      codeControl.value!.trim().toLowerCase(),
       study.id,
       preselectedInterventionIds: preconfiguredSchedule,
     );
