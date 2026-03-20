@@ -2261,7 +2261,7 @@ abstract class AppLocalizations {
   /// No description provided for @deep_link_error_title.
   ///
   /// In en, this message translates to:
-  /// **'Link Error'**
+  /// **'Error'**
   String get deep_link_error_title;
 
   /// No description provided for @deep_link_study_not_found.

@@ -1161,7 +1161,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get go_back => 'Go back';
 
   @override
-  String get deep_link_error_title => 'Link Error';
+  String get deep_link_error_title => 'Error';
 
   @override
   String get deep_link_study_not_found => 'Study not found or not available';

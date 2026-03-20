@@ -68,22 +68,34 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<String?> _checkForDeferredLink() async {
     try {
+      final hasProcessed =
+          await SecureStorage.readBool('has_processed_deferred_link') ?? false;
+      if (hasProcessed) return null;
+
+      String? deferredCode;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final info = await StackDeferredLink.getInstallReferrerAndroid();
-        return info.getParam('invite_code') ?? info.getParam('referrer');
+        deferredCode =
+            info.getParam('invite_code');
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        final host = Uri.parse(appDeepLinkScheme!).host;
         final result = await StackDeferredLink.getInstallReferrerIos(
-          deepLinks: ['app.studyu.health/invite', 'studyu.health/invite'],
+          deepLinks: ['$host/invite'],
         );
         if (result != null) {
           final uri = Uri.tryParse(result.fullReferralDeepLinkPath);
           if (uri != null && uri.pathSegments.contains('invite')) {
             final idx = uri.pathSegments.indexOf('invite');
             if (idx + 1 < uri.pathSegments.length) {
-              return uri.pathSegments[idx + 1];
+              deferredCode = uri.pathSegments[idx + 1];
             }
           }
         }
+      }
+
+      if (deferredCode != null && deferredCode.isNotEmpty) {
+        await SecureStorage.write('has_processed_deferred_link', 'true');
+        return deferredCode;
       }
     } catch (e) {
       debugPrint("Deferred link check failed: $e");
@@ -422,7 +434,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> _launchAppStore() async {
     final inviteCode = widget.deepLinkInviteCode!;
-    final link = "https://app.studyu.health/invite/$inviteCode";
+    final link = "$appDeepLinkScheme/invite/$inviteCode";
     await Clipboard.setData(ClipboardData(text: link));
 
     if (defaultTargetPlatform == TargetPlatform.android) {

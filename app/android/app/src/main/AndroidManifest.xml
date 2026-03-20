@@ -60,6 +60,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http" android:host="app.studyu.health" />
                 <data android:scheme="https" android:host="app.studyu.health" />
+                <data android:scheme="http" android:host="app.dev.studyu.health" />
+                <data android:scheme="https" android:host="app.dev.studyu.health" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
