@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -72,6 +73,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get get_started => 'Get started';
+
+  @override
+  String get onboarding_page0_title => 'Welcome to StudyU';
+
+  @override
+  String get onboarding_page0_subtitle =>
+      'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.';
+
+  @override
+  String get onboarding_page1_title => 'What works for YOU?';
+
+  @override
+  String get onboarding_page1_subtitle =>
+      'An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.';
+
+  @override
+  String get onboarding_page2_title => 'Science Made Simple';
+
+  @override
+  String get onboarding_page2_subtitle =>
+      'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.';
+
+  @override
+  String get onboarding_page3_title => 'Your Personal Evidence';
+
+  @override
+  String get onboarding_page3_subtitle =>
+      'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.';
+
+  @override
+  String get onboarding_page4_title => 'Take Control';
+
+  @override
+  String get onboarding_page4_subtitle =>
+      'Ready to find your answers? Select a study and start your journey to better health today.';
 
   @override
   String get study_selection => 'Study Selection';

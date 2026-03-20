@@ -21,6 +21,18 @@
   "description_part9": "Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!",
 
   "get_started": "Los geht's",
+
+  "onboarding_page0_title": "Willkommen bei StudyU",
+  "onboarding_page0_subtitle": "Ihre Reise zu besserer Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf 'Weiter', um fortzufahren.",
+  "onboarding_page1_title": "Was funktioniert für SIE?",
+  "onboarding_page1_subtitle": "Eine N-of-1-Studie ist eine wissenschaftliche Studie, in der Sie die einzige Testperson sind. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.",
+  "onboarding_page2_title": "Wissenschaft einfach gemacht",
+  "onboarding_page2_subtitle": "Vergleichen Sie zwei Optionen (z. B. 'Kaffee' vs. 'Tee') mit Experten-Plänen. Wir leiten Sie Schritt für Schritt. Ganz ohne Vorwissen.",
+  "onboarding_page3_title": "Ihre persönlichen Ergebnisse",
+  "onboarding_page3_subtitle": "Allgemeine Statistiken passen nicht immer. Verfolgen Sie Ihren Fortschritt täglich und erhalten Sie Ergebnisse, die zeigen, was Ihrem Körper wirklich hilft.",
+  "onboarding_page4_title": "Übernehmen Sie die Kontrolle",
+  "onboarding_page4_subtitle": "Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu besserer Gesundheit.",
+
   "test": "test10",
   "study_selection": "Studienauswahl",
   "study_selection_description": "Bitte wählen Sie eine Studie aus.",

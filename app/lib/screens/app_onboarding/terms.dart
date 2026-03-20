@@ -36,6 +36,7 @@ class _TermsScreenState extends State<TermsScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        hideBack: true,
         onNext: userCanContinue()
             ? () async {
                 final success = await anonymousSignUp();
