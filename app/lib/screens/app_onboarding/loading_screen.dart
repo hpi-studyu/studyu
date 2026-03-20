@@ -90,8 +90,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       String? deferredCode;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final info = await StackDeferredLink.getInstallReferrerAndroid();
-        deferredCode =
-            info.getParam('invite_code');
+        deferredCode = info.getParam('invite_code');
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
         final host = Uri.parse(appDeepLinkScheme!).host;
         final result = await StackDeferredLink.getInstallReferrerIos(
