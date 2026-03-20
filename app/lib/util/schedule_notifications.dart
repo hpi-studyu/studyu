@@ -51,11 +51,11 @@ Future<int> scheduleReminderForDate(
     }
 
     flutterLocalNotificationsPlugin.zonedSchedule(
-      currentId,
-      task.title,
-      body,
-      reminderTime,
-      notificationDetails,
+      id: currentId,
+      title: task.title,
+      body: body,
+      scheduledDate: reminderTime,
+      notificationDetails: notificationDetails,
       payload: studyNotification.taskInstance.id,
       // exactAllowWhileIdle only works if the exact alarm permission has been granted
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
