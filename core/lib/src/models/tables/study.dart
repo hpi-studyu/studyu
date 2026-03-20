@@ -293,7 +293,10 @@ class Study extends SupabaseObjectFunctions<Study>
     final cleanCode = code.trim().toLowerCase();
     try {
       final studyResult = await env.client
-          .rpc('get_study_record_from_invite', params: {'invite_code': cleanCode})
+          .rpc(
+            'get_study_record_from_invite',
+            params: {'invite_code': cleanCode},
+          )
           .maybeSingle();
 
       if (studyResult == null || studyResult['id'] == null) {
