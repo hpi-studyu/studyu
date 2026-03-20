@@ -359,7 +359,7 @@ class Study extends SupabaseObjectFunctions<Study>
             .toList(growable: false),
       ),
     ];
-    return const ListToCsvConverter().convert(resultsTable);
+    return Csv().encode(resultsTable);
   }
 
   // - Status
