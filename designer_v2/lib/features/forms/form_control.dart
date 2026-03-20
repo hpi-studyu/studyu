@@ -9,7 +9,6 @@ class CustomFormControl<T> extends FormControl<T> {
     super.value,
     super.validators = const [],
     super.asyncValidators = const [],
-    super.asyncValidatorsDebounceTime = 250,
     super.touched = false,
     super.disabled = false,
     this.onValueChanged,
