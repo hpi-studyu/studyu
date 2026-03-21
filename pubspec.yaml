@@ -1,4 +1,4 @@
-name: studyu_workspace
+name: studyu
 description: The root of the StudyU project
 publish_to: none
 environment:
