@@ -1280,6 +1280,24 @@ abstract class AppLocalizations {
   /// **'Any input that does not match the expression will be rejected. The input length constraints specified above are still applied. A leading ^ and trailing \$ character will be added automatically.'**
   String get free_text_type_custom_explanation;
 
+  /// No description provided for @free_text_custom_error_message_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Error message'**
+  String get free_text_custom_error_message_label;
+
+  /// No description provided for @free_text_custom_error_message_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom error message shown to participants when their input does not match the pattern. Leave empty for a generic message.'**
+  String get free_text_custom_error_message_helper;
+
+  /// No description provided for @free_text_custom_error_message_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Please enter a code in format: XX-1234'**
+  String get free_text_custom_error_message_hint;
+
   /// No description provided for @free_text_example_label.
   ///
   /// In en, this message translates to:

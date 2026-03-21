@@ -606,11 +606,13 @@ class FreeTextQuestionFormData extends QuestionFormData {
     required this.textLengthRange,
     required this.textType,
     required this.textTypeExpression,
+    this.customTypeErrorMessage,
   });
 
   List<int> textLengthRange;
   FreeTextQuestionType textType;
   String? textTypeExpression;
+  String? customTypeErrorMessage;
 
   @override
   List<String> get responseOptions => [];
@@ -627,6 +629,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textLengthRange: question.lengthRange,
       textType: question.textType,
       textTypeExpression: question.customTypeExpression,
+      customTypeErrorMessage: question.customTypeErrorMessage,
       conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
@@ -639,6 +642,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textType: textType,
       lengthRange: textLengthRange,
       customTypeExpression: textTypeExpression,
+      customTypeErrorMessage: customTypeErrorMessage,
     );
     question.id = questionId;
     question.prompt = questionText;
@@ -662,6 +666,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textLengthRange: textLengthRange,
       textType: textType,
       textTypeExpression: textTypeExpression,
+      customTypeErrorMessage: customTypeErrorMessage,
       conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;

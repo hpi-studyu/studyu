@@ -13,6 +13,7 @@ FreeTextQuestion _$FreeTextQuestionFromJson(Map<String, dynamic> json) =>
             .map((e) => (e as num).toInt())
             .toList(),
         customTypeExpression: json['customTypeExpression'] as String?,
+        customTypeErrorMessage: json['customTypeErrorMessage'] as String?,
       )
       ..type = json['type'] as String
       ..id = json['id'] as String
@@ -34,6 +35,7 @@ Map<String, dynamic> _$FreeTextQuestionToJson(FreeTextQuestion instance) =>
       'lengthRange': instance.lengthRange,
       'textType': instance.textType.toJson(),
       'customTypeExpression': ?instance.customTypeExpression,
+      'customTypeErrorMessage': ?instance.customTypeErrorMessage,
     };
 
 const _$FreeTextQuestionTypeEnumMap = {

@@ -141,6 +141,12 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     }
   }
 
+  void _onQuestionInvalid(int index) {
+    final questionId = shownQuestions[index].question.id;
+    qs.answers.remove(questionId);
+    _finishQuestionnaire(null);
+  }
+
   void _onQuestionDone(Answer answer, int index) {
     if (kDebugMode) {
       debugPrint(
@@ -187,17 +193,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         _scrollToNewQuestion();
       }
     }
-  }
-
-  void _onQuestionInvalid(int index) {
-    final questionId = shownQuestions[index].question.id;
-    if (kDebugMode) {
-      debugPrint(
-        "QuestionnaireWidget: Answer invalidated for question $questionId",
-      );
-    }
-    qs.answers.remove(questionId);
-    _finishQuestionnaire(null);
   }
 
   void _handleConditionalQuestionChange(Answer answer, int index) {
