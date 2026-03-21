@@ -154,6 +154,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
 
   Future<void> _contactSupport(BuildContext context) async {
     StudyULogger.info("User chose to contact support from AppErrorScreen");
+    final loc = AppLocalizations.of(context)!;
 
     const emailSubject = 'StudyU Support Request - Loading Error';
 
@@ -185,7 +186,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       StudyULogger.error('No contact email available.');
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.no_contact_email)),
+        SnackBar(content: Text(loc.no_contact_email)),
       );
       return;
     }
@@ -193,19 +194,40 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
     final uriString =
         'mailto:$contactEmail?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
     final emailUri = Uri.parse(uriString);
-    await launchUrl(emailUri);
+    bool didLaunch = false;
+    try {
+      didLaunch = await launchUrl(
+        emailUri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      StudyULogger.warning('Failed to launch support email uri: $e');
+    }
+
+    if (!didLaunch) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.no_contact_email)),
+      );
+      return;
+    }
 
     // Show non dismissible dialog to inform the user that support has been contacted
     if (!context.mounted) return;
     await showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.support_email_sent),
+          title: Text(loc.support_email_sent),
           content: Text(
-            AppLocalizations.of(context)!.support_email_sent_description,
+            loc.support_email_sent_description,
           ),
+          actions: [
+            TextButton(
+              onPressed: () => context.pop(),
+              child: Text(loc.ok),
+            ),
+          ],
         );
       },
     );
