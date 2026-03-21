@@ -382,13 +382,16 @@ class AboutScreen extends StatelessWidget {
                   children: [
                     OutlinedButton.icon(
                       icon: Icon(MdiIcons.playCircleOutline),
-                      onPressed: () => context.push('/${RouteNames.onboarding}'),
+                      onPressed: () =>
+                          context.push('/${RouteNames.onboarding}'),
                       label: Text(
                         hasActiveSubject
                             ? AppLocalizations.of(
-                              context,
-                            )!.show_onboarding_switch_study
-                            : AppLocalizations.of(context)!.show_onboarding_again,
+                                context,
+                              )!.show_onboarding_switch_study
+                            : AppLocalizations.of(
+                                context,
+                              )!.show_onboarding_again,
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
