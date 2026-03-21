@@ -1,3 +1,9 @@
+## 4.8.0
+
+ - **FIX**: migrate csv.
+ - **FIX**: update to flutter v3.41.5.
+ - **FEAT**: Add persistent user-defined study filters and active filter state to user preferences.
+
 ## 4.7.1
 
  - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
