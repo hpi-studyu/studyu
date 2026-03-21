@@ -160,8 +160,9 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   hideLeadingTrailingWhenEmpty: true,
                   reorderable: !widget.formViewModel.isReadonly,
                   onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
+                    var effectiveNewIndex = newIndex;
+                    if (effectiveNewIndex > oldIndex) {
+                      effectiveNewIndex -= 1;
                     }
                     final item = widget
                         .formViewModel
@@ -169,7 +170,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                         .formViewModels
                         .removeAt(oldIndex);
                     widget.formViewModel.tasksCollection.formViewModels.insert(
-                      newIndex,
+                      effectiveNewIndex,
                       item,
                     );
                     final controlItem = widget
@@ -177,7 +178,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                         .interventionTasksArray
                         .removeAt(oldIndex);
                     widget.formViewModel.interventionTasksArray.insert(
-                      newIndex,
+                      effectiveNewIndex,
                       controlItem,
                     );
                   },

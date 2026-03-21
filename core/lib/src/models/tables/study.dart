@@ -289,7 +289,7 @@ class Study extends SupabaseObjectFunctions<Study>
   bool get hasConsentCheck => consent.isNotEmpty;
 
   int get totalMissedDays => missedDays.isNotEmpty
-      ? missedDays.reduce((total, days) => total += days)
+      ? missedDays.reduce((total, days) => total + days)
       : 0;
 
   double get percentageMissedDays =>
@@ -359,7 +359,7 @@ class Study extends SupabaseObjectFunctions<Study>
             .toList(growable: false),
       ),
     ];
-    return const ListToCsvConverter().convert(resultsTable);
+    return Csv().encode(resultsTable);
   }
 
   // - Status

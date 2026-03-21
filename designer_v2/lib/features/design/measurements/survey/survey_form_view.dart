@@ -218,17 +218,21 @@ class _MeasurementSurveyFormViewState
                       widget.formViewModel.questionModels.length > 1 &&
                       !widget.formViewModel.isReadonly,
                   onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
+                    var effectiveNewIndex = newIndex;
+                    if (effectiveNewIndex > oldIndex) {
+                      effectiveNewIndex -= 1;
                     }
                     final item = widget.formViewModel.questionModels.removeAt(
                       oldIndex,
                     );
-                    widget.formViewModel.questionModels.insert(newIndex, item);
+                    widget.formViewModel.questionModels.insert(
+                      effectiveNewIndex,
+                      item,
+                    );
                     final controlItem = widget.formViewModel.questionsArray
                         .removeAt(oldIndex);
                     widget.formViewModel.questionsArray.insert(
-                      newIndex,
+                      effectiveNewIndex,
                       controlItem,
                     );
                   },
