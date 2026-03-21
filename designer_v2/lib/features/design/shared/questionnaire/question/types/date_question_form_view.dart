@@ -321,6 +321,7 @@ class ReactiveDatePickerField extends StatelessWidget {
           : initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+      builder: (context, child) => PointerInterceptor(child: child!),
     );
 
     if (pickedDate != null) {
@@ -384,6 +385,7 @@ class ReactiveTimePickerField extends StatelessWidget {
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: initialTime,
+      builder: (context, child) => PointerInterceptor(child: child!),
     );
 
     if (pickedTime != null) {

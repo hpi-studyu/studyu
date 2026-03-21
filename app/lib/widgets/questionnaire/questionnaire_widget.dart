@@ -46,6 +46,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void _finishQuestionnaire(QuestionnaireState? result) =>
       widget.onComplete?.call(result);
 
+  void _onQuestionCleared() {
+    _finishQuestionnaire(null);
+  }
+
   void _addQuestionToList(Question question) {
     final containerKey = GlobalKey();
     questionKeys.add(containerKey);
@@ -55,6 +59,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         containerKey: containerKey,
         question: question,
         onDone: _onQuestionDone,
+        onCleared: _onQuestionCleared,
         index: shownQuestions.length,
         taskId: widget.taskId,
       ),

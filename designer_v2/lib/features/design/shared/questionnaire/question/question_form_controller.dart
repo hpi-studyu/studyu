@@ -235,11 +235,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       FormControl<DateInputType>(value: DateInputType.date);
   late final FormControl<DateTime?> dateMinControl =
       CustomFormControl<DateTime?>(
-        onValueChanged: (_) => _onDateRangeChanged(),
+        onValueChanged: (_) => _onDateRangeChanged('dateMin'),
       );
   late final FormControl<DateTime?> dateMaxControl =
       CustomFormControl<DateTime?>(
-        onValueChanged: (_) => _onDateRangeChanged(),
+        onValueChanged: (_) => _onDateRangeChanged('dateMax'),
       );
   final FormControl<String?> dateMinTimeControl = FormControl<String?>();
   final FormControl<String?> dateMaxTimeControl = FormControl<String?>();
@@ -249,8 +249,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       FormControl<TimeFormatPreset>(value: TimeFormatPreset.h24);
   final FormControl<DefaultDateOption> dateDefaultOptionControl =
       FormControl<DefaultDateOption>(value: DefaultDateOption.none);
-  final FormControl<DateTime?> dateDefaultSpecificDateControl =
-      FormControl<DateTime?>();
+  late final FormControl<DateTime?> dateDefaultSpecificDateControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) =>
+            dateDefaultOptionControl.updateValueAndValidity(),
+      );
   final FormControl<String?> dateDefaultSpecificTimeControl =
       FormControl<String?>();
 
@@ -454,10 +457,21 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   // Date validation helpers
-  void _onDateRangeChanged() {
-    if (formMode == FormMode.readonly) {
-      return; // prevent change listener from firing in readonly mode
+  bool _isRevalidatingDateRange = false;
+
+  void _onDateRangeChanged([String? source]) {
+    if (formMode == FormMode.readonly) return;
+    if (_isRevalidatingDateRange) {
+      return;
     }
+    _isRevalidatingDateRange = true;
+    Future.microtask(() {
+      // emitEvent: false prevents valueChanges emissions that would trigger
+      // downstream CustomFormControl.onValueChanged callbacks, breaking the loop
+      dateMaxControl.updateValueAndValidity(emitEvent: false);
+      dateDefaultOptionControl.updateValueAndValidity(emitEvent: false);
+      _isRevalidatingDateRange = false;
+    });
   }
 
   // Fitbit

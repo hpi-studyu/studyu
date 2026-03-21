@@ -17,6 +17,7 @@ import 'package:studyu_core/core.dart';
 
 class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
+  final VoidCallback? onCleared;
   final Question question;
   final int index;
   final String? taskId;
@@ -26,6 +27,7 @@ class QuestionContainer extends StatefulWidget {
     required this.onDone,
     required this.question,
     required this.index,
+    this.onCleared,
     this.taskId,
     this.containerKey,
     super.key,
@@ -94,7 +96,11 @@ class _QuestionContainerState extends State<QuestionContainer>
       case final PainQuestion painQuestion:
         return PainQuestionWidget(question: painQuestion, onDone: _onDone);
       case final DateQuestion dateQuestion:
-        return DateQuestionWidget(question: dateQuestion, onDone: _onDone);
+        return DateQuestionWidget(
+          question: dateQuestion,
+          onDone: _onDone,
+          onCleared: widget.onCleared,
+        );
       default:
         throw ArgumentError(
           'Question type ${widget.question.type} not supported',

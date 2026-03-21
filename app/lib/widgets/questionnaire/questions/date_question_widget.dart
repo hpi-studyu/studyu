@@ -7,8 +7,14 @@ import 'package:studyu_core/core.dart';
 class DateQuestionWidget extends QuestionWidget {
   final DateQuestion question;
   final Function(Answer)? onDone;
+  final VoidCallback? onCleared;
 
-  const DateQuestionWidget({super.key, required this.question, this.onDone});
+  const DateQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+    this.onCleared,
+  });
 
   @override
   State<DateQuestionWidget> createState() => _DateQuestionWidgetState();
@@ -17,6 +23,7 @@ class DateQuestionWidget extends QuestionWidget {
 class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  bool _hasInteracted = false;
 
   @override
   void initState() {
@@ -66,10 +73,11 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       helpText: widget.question.prompt,
     );
 
+    setState(() {
+      _hasInteracted = true;
+      if (pickedDate != null) _selectedDate = pickedDate;
+    });
     if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
       _checkCompleteAndSubmit();
     }
   }
@@ -97,6 +105,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       }
 
       setState(() {
+        _hasInteracted = true;
         _selectedTime = pickedTime;
       });
 
@@ -108,6 +117,10 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       }
 
       _checkCompleteAndSubmit();
+    } else {
+      setState(() {
+        _hasInteracted = true;
+      });
     }
   }
 
@@ -162,6 +175,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       _selectedTime = null;
     });
     _initializeDefaults();
+    widget.onCleared?.call();
   }
 
   void _handleSubmit() {
@@ -229,8 +243,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
-    final validationError = _getValidationError();
-    final isComplete = _isComplete();
+    final validationError = _hasInteracted ? _getValidationError() : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -306,28 +319,18 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
           const SizedBox(height: 8),
         ],
 
-        const SizedBox(height: 16),
-
-        // Action buttons
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            // Clear button (only show if value is selected)
-            if (_selectedDate != null || _selectedTime != null) ...[
-              TextButton.icon(
-                onPressed: _clear,
-                icon: const Icon(Icons.clear),
-                label: Text(localizations.date_picker_clear),
-              ),
-              const SizedBox(width: 8),
-            ],
-            // Submit button (only enabled when complete)
-            OutlinedButton(
-              onPressed: isComplete ? _handleSubmit : null,
-              child: Text(localizations.submit),
+        // Clear button (only show if value is selected)
+        if (_selectedDate != null || _selectedTime != null) ...[
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: _clear,
+              icon: const Icon(Icons.clear),
+              label: Text(localizations.date_picker_clear),
             ),
-          ],
-        ),
+          ),
+        ],
       ],
     );
   }
