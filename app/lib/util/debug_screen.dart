@@ -57,10 +57,10 @@ class DebugScreen {
       return;
     }
     await studyNotifications.flutterLocalNotificationsPlugin.show(
-      99,
-      'StudyU Test Notification',
-      'This notification confirms that you receive StudyU notifications',
-      notificationDetails,
+      id: 99,
+      title: 'StudyU Test Notification',
+      body: 'This notification confirms that you receive StudyU notifications',
+      notificationDetails: notificationDetails,
     );
   }
 

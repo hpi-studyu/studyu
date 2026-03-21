@@ -21,6 +21,18 @@
   "description_part9": "But enough from our side, now it's time for StudyU!",
 
   "get_started": "Get started",
+
+  "onboarding_page0_title": "Welcome to StudyU",
+  "onboarding_page0_subtitle": "Your journey to better health starts here. Let's see how it works! Tap 'Next' to continue.",
+  "onboarding_page1_title": "What works for YOU?",
+  "onboarding_page1_subtitle": "An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.",
+  "onboarding_page2_title": "Science Made Simple",
+  "onboarding_page2_subtitle": "Compare two options (like 'Coffee' vs 'Tea') with expert-designed plans. We guide you step-by-step. No research experience needed.",
+  "onboarding_page3_title": "Your Personal Evidence",
+  "onboarding_page3_subtitle": "General stats don't always apply to you. Track your progress daily and unlock results that show what actually helps your body.",
+  "onboarding_page4_title": "Take Control",
+  "onboarding_page4_subtitle": "Ready to find your answers? Select a study and start your journey to better health today.",
+
   "study_selection": "Study Selection",
   "study_selection_description": "Please select a study.",
   "study_selection_single": "You can only participate in one study at a time.",

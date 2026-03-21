@@ -1,4 +1,4 @@
-name: studyu_workspace
+name: studyu
 description: The root of the StudyU project
 publish_to: none
 environment:
@@ -9,7 +9,7 @@ workspace:
   - app
   - designer_v2
 dev_dependencies:
-  melos: ^7.3.0
+  melos: ^7.4.1
 
 melos:
   repository: https://github.com/hpi-studyu/studyu
