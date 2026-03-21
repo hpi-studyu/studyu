@@ -388,10 +388,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return false;
     }
 
-    final confirmedSwitch =
-        selectedDeleteMode == 'soft'
-            ? await _runFinalSoftDeleteConfirmation(loc, currentSubject)
-            : await _runFinalHardDeleteConfirmation(loc, currentSubject);
+    final confirmedSwitch = selectedDeleteMode == 'soft'
+        ? await _runFinalSoftDeleteConfirmation(loc, currentSubject)
+        : await _runFinalHardDeleteConfirmation(loc, currentSubject);
 
     if (!confirmedSwitch) {
       return false;

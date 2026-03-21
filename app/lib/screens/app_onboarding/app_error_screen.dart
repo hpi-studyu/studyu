@@ -185,9 +185,9 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
     if (contactEmail == null || contactEmail.isEmpty) {
       StudyULogger.error('No contact email available.');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.no_contact_email)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.no_contact_email)));
       return;
     }
 
@@ -206,9 +206,9 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
 
     if (!didLaunch) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.no_contact_email)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.no_contact_email)));
       return;
     }
 
@@ -219,14 +219,9 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text(loc.support_email_sent),
-          content: Text(
-            loc.support_email_sent_description,
-          ),
+          content: Text(loc.support_email_sent_description),
           actions: [
-            TextButton(
-              onPressed: () => context.pop(),
-              child: Text(loc.ok),
-            ),
+            TextButton(onPressed: () => context.pop(), child: Text(loc.ok)),
           ],
         );
       },
