@@ -433,8 +433,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await cancelNotifications(context);
 
     final bool onBoarded = await SecureStorage.readBool('onboarded') ?? false;
-    // If no subject found and user has not done any onboarding, redirect to onboarding
-    final route = onBoarded ? RouteNames.terms : RouteNames.onboarding;
+    // If onboarding is done, return to welcome; otherwise show onboarding.
+    final route = onBoarded ? RouteNames.welcome : RouteNames.onboarding;
 
     if (!mounted) return;
     context.goNamed(route);
