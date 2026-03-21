@@ -6,6 +6,7 @@ import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/onboarding_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
@@ -33,6 +34,7 @@ class RouteNames {
   static const String appErrorScreen = 'appError';
   static const String dashboard = 'dashboard';
   static const String welcome = 'welcome';
+  static const String onboarding = 'onboarding';
   static const String about = 'about';
   static const String terms = 'terms';
   static const String studySelection = 'studySelection';
@@ -127,6 +129,11 @@ GoRouter createAppRouter({
         path: '/${RouteNames.welcome}',
         name: RouteNames.welcome,
         builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: '/${RouteNames.onboarding}',
+        name: RouteNames.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: '/${RouteNames.about}',

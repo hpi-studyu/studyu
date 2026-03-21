@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -50,7 +51,7 @@ class OnboardingScreen extends StatelessWidget {
       onDone: () async {
         await SecureStorage.write('onboarded', 'true');
         if (!context.mounted) return;
-        Navigator.pushReplacementNamed(context, Routes.loading);
+        context.goNamed(RouteNames.loading);
       },
     );
   }

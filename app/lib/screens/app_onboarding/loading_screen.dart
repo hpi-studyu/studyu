@@ -48,6 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      print("LoadingScreen initState: sessionString=${widget.sessionString}, queryParameters=${widget.queryParameters}, deepLinkStudyId=${widget.deepLinkStudyId}, deepLinkInviteCode=${widget.deepLinkInviteCode}");
       if (kIsWeb && widget.deepLinkInviteCode != null) {
         return;
       }
@@ -222,10 +223,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     final bool onBoarded = await SecureStorage.readBool('onboarded') ?? false;
     // If no subject found and user has not done any onboarding, redirect to onboarding
-    final route = onBoarded ? Routes.terms : Routes.onboarding;
+    final route = onBoarded ? RouteNames.terms : RouteNames.onboarding;
 
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, route);
+    context.goNamed(route);
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
