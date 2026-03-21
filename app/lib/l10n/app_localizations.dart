@@ -206,6 +206,66 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get get_started;
 
+  /// No description provided for @onboarding_page0_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to StudyU'**
+  String get onboarding_page0_title;
+
+  /// No description provided for @onboarding_page0_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.'**
+  String get onboarding_page0_subtitle;
+
+  /// No description provided for @onboarding_page1_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What works for YOU?'**
+  String get onboarding_page1_title;
+
+  /// No description provided for @onboarding_page1_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.'**
+  String get onboarding_page1_subtitle;
+
+  /// No description provided for @onboarding_page2_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Science Made Simple'**
+  String get onboarding_page2_title;
+
+  /// No description provided for @onboarding_page2_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.'**
+  String get onboarding_page2_subtitle;
+
+  /// No description provided for @onboarding_page3_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Personal Evidence'**
+  String get onboarding_page3_title;
+
+  /// No description provided for @onboarding_page3_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.'**
+  String get onboarding_page3_subtitle;
+
+  /// No description provided for @onboarding_page4_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Control'**
+  String get onboarding_page4_title;
+
+  /// No description provided for @onboarding_page4_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to find your answers? Select a study and start your journey to better health today.'**
+  String get onboarding_page4_subtitle;
+
   /// No description provided for @study_selection.
   ///
   /// In en, this message translates to:
