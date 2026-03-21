@@ -471,6 +471,29 @@
   "deep_link_study_invite_only": "This study requires an invite code to join",
   "deep_link_invite_invalid": "Invalid or expired invite code",
   "deep_link_error_invalid_invite": "Invalid invite code",
+  "deep_link_switch_warning_title": "You are already in a study",
+  "deep_link_switch_warning_description": "You are currently enrolled in:\n{currentStudy}\n\nThe deep link points to:\n{targetStudy}\n\nYou can return to your current study (recommended) or continue to leave it and switch.",
+  "@deep_link_switch_warning_description": {
+    "placeholders": {
+      "currentStudy": {
+        "type": "String"
+      },
+      "targetStudy": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_switch_primary_return": "Return to current study",
+  "deep_link_switch_secondary_continue": "Leave current study and switch",
+  "deep_link_switch_data_choice_title": "How do you want to leave your current study?",
+  "deep_link_switch_data_choice_description": "Choose what should happen to your current study data before switching.",
+  "deep_link_switch_soft_delete_button": "Soft delete and switch",
+  "deep_link_switch_hard_delete_button": "Hard delete and switch",
+  "deep_link_switch_confirm_soft_title": "Confirm soft delete",
+  "deep_link_switch_confirm_soft_button": "Confirm soft delete",
+  "deep_link_switch_confirm_hard_title": "Confirm hard delete",
+  "deep_link_switch_confirm_hard_description": "This will permanently and irreversibly delete all your data.",
+  "deep_link_switch_confirm_hard_button": "Confirm hard delete",
   "open_link_on_mobile": "Please open this link on your mobile device.",
   "you_have_been_invited": "You have been invited to a study!",
   "download_app_join": "Download App & Join"

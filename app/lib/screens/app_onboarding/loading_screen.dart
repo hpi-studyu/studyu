@@ -15,6 +15,7 @@ import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart';
@@ -44,27 +45,91 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   String? _error;
 
+  Future<bool> _runFinalSoftDeleteConfirmation(
+    AppLocalizations loc,
+    StudySubject currentSubject,
+  ) async {
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(loc.deep_link_switch_confirm_soft_title),
+              content: Text(
+                '${loc.soft_delete_desc}${currentSubject.study.title}${loc.soft_delete_desc_2}',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(false),
+                  child: Text(loc.cancel),
+                ),
+                FilledButton(
+                  onPressed: () => context.pop(true),
+                  child: Text(loc.deep_link_switch_confirm_soft_button),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+
+    if (!confirmed) {
+      return false;
+    }
+
+    await currentSubject.softDelete();
+    await deleteActiveStudyReference();
+    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
+    if (mounted) {
+      await cancelNotifications(context);
+    }
+    return true;
+  }
+
+  Future<bool> _runFinalHardDeleteConfirmation(
+    AppLocalizations loc,
+    StudySubject currentSubject,
+  ) async {
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(loc.deep_link_switch_confirm_hard_title),
+              content: Text(loc.deep_link_switch_confirm_hard_description),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(false),
+                  child: Text(loc.cancel),
+                ),
+                FilledButton(
+                  onPressed: () => context.pop(true),
+                  child: Text(loc.deep_link_switch_confirm_hard_button),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+
+    if (!confirmed) {
+      return false;
+    }
+
+    await currentSubject.delete();
+    await deleteLocalData();
+    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
+    if (mounted) {
+      await cancelNotifications(context);
+    }
+    return true;
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      print("LoadingScreen initState: sessionString=${widget.sessionString}, queryParameters=${widget.queryParameters}, deepLinkStudyId=${widget.deepLinkStudyId}, deepLinkInviteCode=${widget.deepLinkInviteCode}");
-      if (kIsWeb && widget.deepLinkInviteCode != null) {
-        return;
-      }
-      if (widget.hasDeepLink) {
-        await _initDeepLink();
-      } else if (!kIsWeb) {
-        final deferredCode = await _checkForDeferredLink();
-        if (!mounted) return;
-        if (deferredCode != null) {
-          _handleDeferredInvite(deferredCode);
-        } else {
-          initStudy();
-        }
-      } else {
-        initStudy();
-      }
+      await _runStartupFlow();
     });
   }
 
@@ -80,6 +145,28 @@ class _LoadingScreenState extends State<LoadingScreen> {
         _initDeepLink();
       }
     }
+  }
+
+  Future<void> _runStartupFlow() async {
+    if (kIsWeb && widget.deepLinkInviteCode != null) {
+      return;
+    }
+
+    if (widget.hasDeepLink) {
+      await _initDeepLink();
+      return;
+    }
+
+    if (!kIsWeb) {
+      final deferredCode = await _checkForDeferredLink();
+      if (!mounted) return;
+      if (deferredCode != null) {
+        await _handleDeferredInvite(deferredCode);
+        return;
+      }
+    }
+
+    await initStudy();
   }
 
   Future<String?> _checkForDeferredLink() async {
@@ -120,42 +207,44 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> _handleDeferredInvite(String inviteCode) async {
     final state = context.read<AppState>();
+    final activeStudyId = await _getCurrentStudyId(state);
     final result = await DeepLinkService.processDeepLink(
       studyId: null,
       inviteCode: inviteCode,
       isAuthenticated: isUserLoggedIn(),
-      activeStudyId: state.activeSubject?.studyId,
+      activeStudyId: activeStudyId,
     );
     if (!mounted) return;
-    _handleDeepLinkResult(result, inviteCode: inviteCode);
+    await _handleDeepLinkResult(result, inviteCode: inviteCode);
   }
 
   Future<void> _initDeepLink() async {
     final state = context.read<AppState>();
+    final activeStudyId = await _getCurrentStudyId(state);
 
     final result = await DeepLinkService.processDeepLink(
       studyId: widget.deepLinkStudyId,
       inviteCode: widget.deepLinkInviteCode,
       isAuthenticated: isUserLoggedIn(),
-      activeStudyId: state.activeSubject?.studyId,
+      activeStudyId: activeStudyId,
     );
 
     if (!mounted) {
       return;
     }
 
-    _handleDeepLinkResult(
+    await _handleDeepLinkResult(
       result,
       studyId: widget.deepLinkStudyId,
       inviteCode: widget.deepLinkInviteCode,
     );
   }
 
-  void _handleDeepLinkResult(
+  Future<void> _handleDeepLinkResult(
     DeepLinkResult result, {
     String? studyId,
     String? inviteCode,
-  }) {
+  }) async {
     final state = context.read<AppState>();
     switch (result) {
       case DeepLinkNeedsAuth():
@@ -164,6 +253,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         } else if (inviteCode != null) {
           state.pendingDeepLinkInviteCode = inviteCode;
         }
+        if (!mounted) return;
         context.go('/${RouteNames.welcome}');
       case DeepLinkError(type: final errorType):
         setState(() => _error = _getErrorMessage(errorType));
@@ -173,7 +263,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         :final preselectedInterventionIds,
         :final alreadyEnrolled,
       ):
+        if (!alreadyEnrolled) {
+          final shouldContinue = await _confirmSwitchToDeepLinkedStudy(study);
+          if (!shouldContinue) {
+            if (!mounted) return;
+            context.go('/${RouteNames.dashboard}');
+            return;
+          }
+        }
         if (alreadyEnrolled) {
+          if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
         } else {
           state.selectedStudy = study;
@@ -181,6 +280,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             state.inviteCode = inviteCode;
             state.preselectedInterventionIds = preselectedInterventionIds;
           }
+          if (!mounted) return;
           context.go('/${RouteNames.studyOverview}');
         }
     }
@@ -188,6 +288,118 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   String _getErrorMessage(DeepLinkErrorType errorType) {
     return getDeepLinkErrorMessage(AppLocalizations.of(context)!, errorType);
+  }
+
+  Future<String?> _getCurrentStudyId(AppState state) async {
+    if (state.activeSubject?.studyId != null) {
+      return state.activeSubject!.studyId;
+    }
+    try {
+      final cachedSubject = await Cache.loadSubject();
+      return cachedSubject.studyId;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<StudySubject?> _getCurrentSubject(AppState state) async {
+    if (state.activeSubject != null) {
+      return state.activeSubject;
+    }
+    try {
+      return await Cache.loadSubject();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<bool> _confirmSwitchToDeepLinkedStudy(Study targetStudy) async {
+    final state = context.read<AppState>();
+    final currentSubject = await _getCurrentSubject(state);
+    if (currentSubject == null || currentSubject.studyId == targetStudy.id) {
+      return true;
+    }
+
+    if (!mounted) return false;
+    final loc = AppLocalizations.of(context)!;
+    final stayInCurrentStudy =
+        await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(loc.deep_link_switch_warning_title),
+              content: Text(
+                loc.deep_link_switch_warning_description(
+                  currentSubject.study.title ?? '',
+                  targetStudy.title ?? '',
+                ),
+              ),
+              actions: [
+                FilledButton(
+                  onPressed: () => context.pop(true),
+                  child: Text(loc.deep_link_switch_primary_return),
+                ),
+                TextButton(
+                  onPressed: () => context.pop(false),
+                  child: Text(loc.deep_link_switch_secondary_continue),
+                ),
+              ],
+            );
+          },
+        ) ??
+        true;
+
+    if (stayInCurrentStudy) {
+      return false;
+    }
+
+    if (!mounted) return false;
+    final selectedDeleteMode =
+        await showDialog<String>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(loc.deep_link_switch_data_choice_title),
+              content: Text(
+                '${loc.deep_link_switch_data_choice_description}\n\n'
+                '${loc.soft_delete_desc}${currentSubject.study.title}${loc.soft_delete_desc_2}\n\n'
+                '${loc.hard_delete_desc}',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop('cancel'),
+                  child: Text(loc.cancel),
+                ),
+                FilledButton(
+                  onPressed: () => context.pop('soft'),
+                  child: Text(loc.deep_link_switch_soft_delete_button),
+                ),
+                FilledButton(
+                  onPressed: () => context.pop('hard'),
+                  child: Text(loc.deep_link_switch_hard_delete_button),
+                ),
+              ],
+            );
+          },
+        ) ??
+        'cancel';
+
+    if (selectedDeleteMode == 'cancel') {
+      return false;
+    }
+
+    final confirmedSwitch =
+        selectedDeleteMode == 'soft'
+            ? await _runFinalSoftDeleteConfirmation(loc, currentSubject)
+            : await _runFinalHardDeleteConfirmation(loc, currentSubject);
+
+    if (!confirmedSwitch) {
+      return false;
+    }
+
+    state.activeSubject = null;
+    state.selectedStudy = null;
+    return true;
   }
 
   Future<void> initStudy() async {

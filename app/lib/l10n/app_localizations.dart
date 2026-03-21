@@ -2348,6 +2348,87 @@ abstract class AppLocalizations {
   /// **'Invalid invite code'**
   String get deep_link_error_invalid_invite;
 
+  /// No description provided for @deep_link_switch_warning_title.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already in a study'**
+  String get deep_link_switch_warning_title;
+
+  /// No description provided for @deep_link_switch_warning_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently enrolled in:\n{currentStudy}\n\nThe deep link points to:\n{targetStudy}\n\nYou can return to your current study (recommended) or continue to leave it and switch.'**
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  );
+
+  /// No description provided for @deep_link_switch_primary_return.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to current study'**
+  String get deep_link_switch_primary_return;
+
+  /// No description provided for @deep_link_switch_secondary_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave current study and switch'**
+  String get deep_link_switch_secondary_continue;
+
+  /// No description provided for @deep_link_switch_data_choice_title.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to leave your current study?'**
+  String get deep_link_switch_data_choice_title;
+
+  /// No description provided for @deep_link_switch_data_choice_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what should happen to your current study data before switching.'**
+  String get deep_link_switch_data_choice_description;
+
+  /// No description provided for @deep_link_switch_soft_delete_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft delete and switch'**
+  String get deep_link_switch_soft_delete_button;
+
+  /// No description provided for @deep_link_switch_hard_delete_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard delete and switch'**
+  String get deep_link_switch_hard_delete_button;
+
+  /// No description provided for @deep_link_switch_confirm_soft_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm soft delete'**
+  String get deep_link_switch_confirm_soft_title;
+
+  /// No description provided for @deep_link_switch_confirm_soft_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm soft delete'**
+  String get deep_link_switch_confirm_soft_button;
+
+  /// No description provided for @deep_link_switch_confirm_hard_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm hard delete'**
+  String get deep_link_switch_confirm_hard_title;
+
+  /// No description provided for @deep_link_switch_confirm_hard_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently and irreversibly delete all your data.'**
+  String get deep_link_switch_confirm_hard_description;
+
+  /// No description provided for @deep_link_switch_confirm_hard_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm hard delete'**
+  String get deep_link_switch_confirm_hard_button;
+
   /// No description provided for @open_link_on_mobile.
   ///
   /// In en, this message translates to:

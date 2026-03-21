@@ -51,7 +51,7 @@ class OnboardingScreen extends StatelessWidget {
       onDone: () async {
         await SecureStorage.write('onboarded', 'true');
         if (!context.mounted) return;
-        context.goNamed(RouteNames.loading);
+        context.goNamed(RouteNames.terms);
       },
     );
   }

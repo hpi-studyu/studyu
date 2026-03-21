@@ -475,6 +475,29 @@
   "deep_link_study_invite_only": "Diese Studie erfordert einen Einladungscode zur Teilnahme",
   "deep_link_invite_invalid": "Ungültiger oder abgelaufener Einladungscode",
   "deep_link_error_invalid_invite": "Ungültiger Einladungscode",
+  "deep_link_switch_warning_title": "Sie nehmen bereits an einer Studie teil",
+  "deep_link_switch_warning_description": "Sie sind aktuell eingeschrieben in:\n{currentStudy}\n\nDer Deep Link verweist auf:\n{targetStudy}\n\nSie können zur aktuellen Studie zurückkehren (empfohlen) oder fortfahren, diese zu verlassen und zu wechseln.",
+  "@deep_link_switch_warning_description": {
+    "placeholders": {
+      "currentStudy": {
+        "type": "String"
+      },
+      "targetStudy": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_switch_primary_return": "Zur aktuellen Studie zurückkehren",
+  "deep_link_switch_secondary_continue": "Aktuelle Studie verlassen und wechseln",
+  "deep_link_switch_data_choice_title": "Wie möchten Sie die aktuelle Studie verlassen?",
+  "deep_link_switch_data_choice_description": "Wählen Sie, was vor dem Wechsel mit Ihren aktuellen Studiendaten passieren soll.",
+  "deep_link_switch_soft_delete_button": "Soft-Delete und wechseln",
+  "deep_link_switch_hard_delete_button": "Hard-Delete und wechseln",
+  "deep_link_switch_confirm_soft_title": "Soft-Delete bestätigen",
+  "deep_link_switch_confirm_soft_button": "Soft-Delete bestätigen",
+  "deep_link_switch_confirm_hard_title": "Hard-Delete bestätigen",
+  "deep_link_switch_confirm_hard_description": "Dadurch werden alle Ihre Daten dauerhaft und unwiderruflich gelöscht.",
+  "deep_link_switch_confirm_hard_button": "Hard-Delete bestätigen",
   "open_link_on_mobile": "Bitte öffnen Sie diesen Link auf Ihrem mobilen Gerät.",
   "you_have_been_invited": "Sie wurden zu einer Studie eingeladen!",
   "download_app_join": "App herunterladen & Beitreten"

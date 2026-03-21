@@ -1224,6 +1224,56 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deep_link_error_invalid_invite => 'Ungültiger Einladungscode';
 
   @override
+  String get deep_link_switch_warning_title =>
+      'Sie nehmen bereits an einer Studie teil';
+
+  @override
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  ) {
+    return 'Sie sind aktuell eingeschrieben in:\n$currentStudy\n\nDer Deep Link verweist auf:\n$targetStudy\n\nSie können zur aktuellen Studie zurückkehren (empfohlen) oder fortfahren, diese zu verlassen und zu wechseln.';
+  }
+
+  @override
+  String get deep_link_switch_primary_return =>
+      'Zur aktuellen Studie zurückkehren';
+
+  @override
+  String get deep_link_switch_secondary_continue =>
+      'Aktuelle Studie verlassen und wechseln';
+
+  @override
+  String get deep_link_switch_data_choice_title =>
+      'Wie möchten Sie die aktuelle Studie verlassen?';
+
+  @override
+  String get deep_link_switch_data_choice_description =>
+      'Wählen Sie, was vor dem Wechsel mit Ihren aktuellen Studiendaten passieren soll.';
+
+  @override
+  String get deep_link_switch_soft_delete_button => 'Soft-Delete und wechseln';
+
+  @override
+  String get deep_link_switch_hard_delete_button => 'Hard-Delete und wechseln';
+
+  @override
+  String get deep_link_switch_confirm_soft_title => 'Soft-Delete bestätigen';
+
+  @override
+  String get deep_link_switch_confirm_soft_button => 'Soft-Delete bestätigen';
+
+  @override
+  String get deep_link_switch_confirm_hard_title => 'Hard-Delete bestätigen';
+
+  @override
+  String get deep_link_switch_confirm_hard_description =>
+      'Dadurch werden alle Ihre Daten dauerhaft und unwiderruflich gelöscht.';
+
+  @override
+  String get deep_link_switch_confirm_hard_button => 'Hard-Delete bestätigen';
+
+  @override
   String get open_link_on_mobile =>
       'Bitte öffnen Sie diesen Link auf Ihrem mobilen Gerät.';
 

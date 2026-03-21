@@ -1212,6 +1212,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deep_link_error_invalid_invite => 'Invalid invite code';
 
   @override
+  String get deep_link_switch_warning_title => 'You are already in a study';
+
+  @override
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  ) {
+    return 'You are currently enrolled in:\n$currentStudy\n\nThe deep link points to:\n$targetStudy\n\nYou can return to your current study (recommended) or continue to leave it and switch.';
+  }
+
+  @override
+  String get deep_link_switch_primary_return => 'Return to current study';
+
+  @override
+  String get deep_link_switch_secondary_continue =>
+      'Leave current study and switch';
+
+  @override
+  String get deep_link_switch_data_choice_title =>
+      'How do you want to leave your current study?';
+
+  @override
+  String get deep_link_switch_data_choice_description =>
+      'Choose what should happen to your current study data before switching.';
+
+  @override
+  String get deep_link_switch_soft_delete_button => 'Soft delete and switch';
+
+  @override
+  String get deep_link_switch_hard_delete_button => 'Hard delete and switch';
+
+  @override
+  String get deep_link_switch_confirm_soft_title => 'Confirm soft delete';
+
+  @override
+  String get deep_link_switch_confirm_soft_button => 'Confirm soft delete';
+
+  @override
+  String get deep_link_switch_confirm_hard_title => 'Confirm hard delete';
+
+  @override
+  String get deep_link_switch_confirm_hard_description =>
+      'This will permanently and irreversibly delete all your data.';
+
+  @override
+  String get deep_link_switch_confirm_hard_button => 'Confirm hard delete';
+
+  @override
   String get open_link_on_mobile =>
       'Please open this link on your mobile device.';
 
