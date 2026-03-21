@@ -5,6 +5,7 @@ import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/onboarding_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
@@ -21,6 +22,7 @@ import 'package:studyu_app/screens/study/report/report_history.dart';
 
 class Routes {
   static const String loading = '/loading';
+  static const String onboarding = '/onboarding';
   static const String preview = '/preview';
   static const String appOutdated = '/appOutdated';
   static const String appErrorScreen = '/appError';
@@ -72,6 +74,11 @@ class Routes {
       case loading:
         return MaterialPageRoute(
           builder: (_) => const LoadingScreen(),
+          settings: settings,
+        );
+      case onboarding:
+        return MaterialPageRoute(
+          builder: (_) => const OnboardingScreen(),
           settings: settings,
         );
       case preview:
