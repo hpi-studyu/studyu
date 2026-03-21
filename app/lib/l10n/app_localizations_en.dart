@@ -74,6 +74,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
+  String get show_onboarding_again => 'Show onboarding again';
+
+  @override
+  String get show_onboarding_switch_study => 'Switch study (open onboarding)';
+
+  @override
   String get onboarding_page0_title => 'Welcome to StudyU';
 
   @override

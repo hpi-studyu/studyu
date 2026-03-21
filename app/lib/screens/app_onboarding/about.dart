@@ -11,6 +11,7 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasActiveSubject = context.read<AppState>().activeSubject != null;
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.what_is_studyu)),
       body: PageView(
@@ -377,15 +378,32 @@ class AboutScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 40),
-                if (context.read<AppState>().activeSubject == null)
-                  OutlinedButton.icon(
-                    icon: Icon(MdiIcons.rocket),
-                    onPressed: () => context.push('/${RouteNames.terms}'),
-                    label: Text(
-                      AppLocalizations.of(context)!.get_started,
-                      style: const TextStyle(fontSize: 20),
+                Column(
+                  children: [
+                    OutlinedButton.icon(
+                      icon: Icon(MdiIcons.playCircleOutline),
+                      onPressed: () => context.push('/${RouteNames.onboarding}'),
+                      label: Text(
+                        hasActiveSubject
+                            ? AppLocalizations.of(
+                              context,
+                            )!.show_onboarding_switch_study
+                            : AppLocalizations.of(context)!.show_onboarding_again,
+                        style: const TextStyle(fontSize: 18),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    if (!hasActiveSubject)
+                      OutlinedButton.icon(
+                        icon: Icon(MdiIcons.rocket),
+                        onPressed: () => context.push('/${RouteNames.terms}'),
+                        label: Text(
+                          AppLocalizations.of(context)!.get_started,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),

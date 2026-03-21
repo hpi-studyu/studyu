@@ -74,6 +74,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
+  String get show_onboarding_again => 'Onboarding erneut ansehen';
+
+  @override
+  String get show_onboarding_switch_study =>
+      'Studie wechseln (Onboarding öffnen)';
+
+  @override
   String get onboarding_page0_title => 'Willkommen bei StudyU';
 
   @override
