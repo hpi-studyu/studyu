@@ -46,6 +46,7 @@ class _TermsScreenState extends State<TermsScreen> {
         :final preselectedInterventionIds,
         :final alreadyEnrolled,
       ):
+        await SecureStorage.delete('pending_invite_code');
         if (alreadyEnrolled) {
           context.go('/${RouteNames.dashboard}');
         } else {
@@ -57,6 +58,7 @@ class _TermsScreenState extends State<TermsScreen> {
           context.go('/${RouteNames.studyOverview}');
         }
       case DeepLinkError(type: final errorType):
+        await SecureStorage.delete('pending_invite_code');
         final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

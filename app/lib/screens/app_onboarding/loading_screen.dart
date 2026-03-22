@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -17,10 +16,10 @@ import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -162,7 +161,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     if (!kIsWeb) {
-      final deferredCode = await _checkForDeferredLink();
+      String? deferredCode = await SecureStorage.read('pending_invite_code');
+      if (deferredCode != null) {
+        await SecureStorage.write(
+          'debug_startup',
+          'Found pending code in storage: $deferredCode',
+        );
+      } else {
+        deferredCode = await _checkForDeferredLink();
+      }
+
       if (!mounted) return;
       if (deferredCode != null) {
         await _handleDeferredInvite(deferredCode);
@@ -258,6 +266,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       if (deferredCode != null && deferredCode.isNotEmpty) {
         await SecureStorage.write('has_processed_deferred_link', 'true');
+        await SecureStorage.write('pending_invite_code', deferredCode);
         return deferredCode;
       }
       // Add else block for debugging empty code
@@ -328,6 +337,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (!mounted) return;
         context.go('/${RouteNames.welcome}');
       case DeepLinkError(type: final errorType):
+        await SecureStorage.delete('pending_invite_code');
         setState(() => _error = _getErrorMessage(errorType));
       case DeepLinkSuccess(
         :final study,
@@ -335,6 +345,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         :final preselectedInterventionIds,
         :final alreadyEnrolled,
       ):
+        await SecureStorage.delete('pending_invite_code');
         if (!alreadyEnrolled) {
           final shouldContinue = await _confirmSwitchToDeepLinkedStudy(study);
           if (!shouldContinue) {
@@ -684,80 +695,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Widget _buildWebLayout() {
-    final isMobile =
-        defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.android;
-    if (!isMobile) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.phone_android, size: 64, color: Colors.grey),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context)!.open_link_on_mobile,
-                style: const TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 20),
-            Text(
-              AppLocalizations.of(context)!.you_have_been_invited,
-              style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            FilledButton(
-              onPressed: _launchAppStore,
-              child: Text(AppLocalizations.of(context)!.download_app_join),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _launchAppStore() async {
-    final inviteCode = widget.deepLinkInviteCode!;
-    final link = "$appDeepLinkScheme/invite/$inviteCode";
-    await Clipboard.setData(ClipboardData(text: link));
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      if (androidPackageName != null) {
-        final referrer = Uri.encodeComponent("invite_code=$inviteCode");
-        final url = Uri.parse(
-          "https://play.google.com/store/apps/details?id=$androidPackageName&referrer=$referrer",
-        );
-        if (await canLaunchUrl(url)) {
-          await launchUrl(url, mode: LaunchMode.externalApplication);
-        }
-      }
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      if (iosAppStoreId != null) {
-        final url = Uri.parse("https://apps.apple.com/app/id$iosAppStoreId");
-        if (await canLaunchUrl(url)) {
-          await launchUrl(url, mode: LaunchMode.externalApplication);
-        }
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (kIsWeb && widget.deepLinkInviteCode != null) {
-      return _buildWebLayout();
+      return DeepLinkWebLandingPage(inviteCode: widget.deepLinkInviteCode!);
     }
     if (_error != null) {
       FlutterNativeSplash.remove(); // Force remove splash to ensure visibility

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/debug_screen.dart';
+import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final hasPendingInvite = context.select<AppState, bool>(
+      (s) => s.hasPendingDeepLink,
+    );
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -27,6 +33,10 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              if (hasPendingInvite) ...[
+                const PendingInviteBanner(),
+                const SizedBox(height: 20),
+              ],
               OutlinedButton.icon(
                 icon: const Icon(Icons.info),
                 onPressed: () => context.push('/${RouteNames.about}'),
