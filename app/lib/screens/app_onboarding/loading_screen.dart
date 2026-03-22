@@ -647,18 +647,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
+            FilledButton(
               onPressed: _launchAppStore,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
-              ),
-              child: Text(
-                AppLocalizations.of(context)!.download_app_join,
-                style: const TextStyle(fontSize: 18),
-              ),
+              child: Text(AppLocalizations.of(context)!.download_app_join),
             ),
           ],
         ),
