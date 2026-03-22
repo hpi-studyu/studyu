@@ -11,6 +11,16 @@ late final String? iosAppStoreId;
 late final String? developerEmail;
 late final String? appDeepLinkScheme;
 
+String get appScheme {
+  if (appDeepLinkScheme != null) {
+    try {
+      final scheme = Uri.parse(appDeepLinkScheme!).scheme;
+      if (scheme.isNotEmpty) return scheme;
+    } catch (_) {}
+  }
+  return 'studyu-app';
+}
+
 void setEnv(
   String envSupabaseUrl,
   String envSupabaseAnonKey, {
