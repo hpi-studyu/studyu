@@ -25,6 +25,7 @@ import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/screens/study/report/report_history.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart';
 
 /// Route name constants
 class RouteNames {
@@ -54,6 +55,7 @@ class RouteNames {
   static const String eligibilityCheck = 'eligibilityCheck';
   static const String capturePicture = 'capturePicture';
   static const String invite = 'invite';
+  static const String studyShared = 'studyShared';
 }
 
 /// Creates and configures the GoRouter instance for the app
@@ -67,7 +69,7 @@ GoRouter createAppRouter({
     initialLocation: initialLocation,
     observers: [SentryNavigatorObserver()],
     redirect: (context, state) {
-      if (state.uri.scheme == 'studyu-app') {
+      if (state.uri.scheme == appScheme) {
         if (state.uri.host == 'invite') {
           final code = state.uri.pathSegments.isNotEmpty
               ? state.uri.pathSegments.first
@@ -82,7 +84,7 @@ GoRouter createAppRouter({
               ? state.uri.pathSegments.first
               : '';
           if (studyId.isNotEmpty) {
-            return '/${RouteNames.loading}';
+            return '/${RouteNames.studyShared}/$studyId';
           }
         }
       }
@@ -260,6 +262,12 @@ GoRouter createAppRouter({
         name: RouteNames.invite,
         builder: (context, state) =>
             LoadingScreen(deepLinkInviteCode: state.pathParameters['code']),
+      ),
+      GoRoute(
+        path: '/${RouteNames.studyShared}/:id',
+        name: RouteNames.studyShared,
+        builder: (context, state) =>
+            LoadingScreen(deepLinkStudyId: state.pathParameters['id']),
       ),
     ],
   );
