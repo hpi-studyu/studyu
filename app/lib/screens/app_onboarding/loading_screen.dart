@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:stack_deferred_link/stack_deferred_link.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
+import 'package:studyu_app/screens/app_onboarding/study_switch_dialogs.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
+import 'package:studyu_app/services/deferred_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -43,86 +42,6 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   String? _error;
-
-  Future<bool> _runFinalSoftDeleteConfirmation(
-    AppLocalizations loc,
-    StudySubject currentSubject,
-  ) async {
-    final confirmed =
-        await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(loc.deep_link_switch_confirm_soft_title),
-              content: Text(
-                '${loc.soft_delete_desc}${currentSubject.study.title}${loc.soft_delete_desc_2}',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(false),
-                  child: Text(loc.cancel),
-                ),
-                FilledButton(
-                  onPressed: () => context.pop(true),
-                  child: Text(loc.deep_link_switch_confirm_soft_button),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
-
-    if (!confirmed) {
-      return false;
-    }
-
-    await currentSubject.softDelete();
-    await deleteActiveStudyReference();
-    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
-    if (mounted) {
-      await cancelNotifications(context);
-    }
-    return true;
-  }
-
-  Future<bool> _runFinalHardDeleteConfirmation(
-    AppLocalizations loc,
-    StudySubject currentSubject,
-  ) async {
-    final confirmed =
-        await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(loc.deep_link_switch_confirm_hard_title),
-              content: Text(loc.deep_link_switch_confirm_hard_description),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(false),
-                  child: Text(loc.cancel),
-                ),
-                FilledButton(
-                  onPressed: () => context.pop(true),
-                  child: Text(loc.deep_link_switch_confirm_hard_button),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
-
-    if (!confirmed) {
-      return false;
-    }
-
-    await currentSubject.delete();
-    await deleteLocalData();
-    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
-    if (mounted) {
-      await cancelNotifications(context);
-    }
-    return true;
-  }
 
   @override
   void initState() {
@@ -161,7 +80,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     if (!kIsWeb) {
-      final deferredCode = await _checkForDeferredLink();
+      final deferredCode = await DeferredLinkService.checkForDeferredLink();
       if (!mounted) return;
       if (deferredCode != null) {
         await _handleDeferredInvite(deferredCode);
@@ -170,108 +89,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     await initStudy();
-  }
-
-  Future<String?> _checkForDeferredLink() async {
-    try {
-      final hasProcessed =
-          await SecureStorage.readBool('has_processed_deferred_link') ?? false;
-      if (hasProcessed) {
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'Check skipped: has_processed_deferred_link is true',
-        );
-        return null;
-      }
-
-      String? deferredCode;
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        final info = await StackDeferredLink.getInstallReferrerAndroid();
-        final referrer = info.installReferrer; // capture to local for promotion
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'Raw: $referrer\nParams: ${info.asQueryParameters}',
-        );
-        deferredCode = info.getParam('invite_code');
-
-        // [FIX ATTEMPT 1] Fallback: manual parsing if getParam fails
-        if (deferredCode.isEmpty && referrer != null) {
-          final uri = Uri.tryParse('?$referrer');
-          if (uri != null) {
-            final manualCode = uri.queryParameters['invite_code'];
-            if (manualCode != null && manualCode.isNotEmpty) {
-              deferredCode = manualCode;
-              await SecureStorage.write(
-                'debug_install_referrer',
-                'Status: Manual parsing triggered.\nExtracted Code: $deferredCode',
-              );
-            }
-          }
-        }
-
-        // [FIX ATTEMPT 2] "Dirty" string parsing if still null (just in case)
-        if (deferredCode.isEmpty &&
-            referrer != null &&
-            referrer.contains('invite_code=')) {
-          try {
-            // Split by '&' or just regex find
-            final regexp = RegExp(r'invite_code=([^&]+)');
-            final match = regexp.firstMatch(referrer);
-            if (match != null) {
-              deferredCode = match.group(1);
-              await SecureStorage.write(
-                'debug_install_referrer',
-                'Status: Regex parsing triggered.\nExtracted Code: $deferredCode',
-              );
-            }
-          } catch (e) {
-            // ignore
-          }
-        }
-      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final host = Uri.parse(appDeepLinkScheme!).host;
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'iOS Check. Host: $host',
-        );
-
-        final result = await StackDeferredLink.getInstallReferrerIos(
-          deepLinks: ['$host/invite'],
-        );
-
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'iOS Result: ${result?.fullReferralDeepLinkPath}',
-        );
-
-        if (result != null) {
-          final uri = Uri.tryParse(result.fullReferralDeepLinkPath);
-          if (uri != null && uri.pathSegments.contains('invite')) {
-            final idx = uri.pathSegments.indexOf('invite');
-            if (idx + 1 < uri.pathSegments.length) {
-              deferredCode = uri.pathSegments[idx + 1];
-            }
-          }
-        }
-      }
-
-      if (deferredCode != null && deferredCode.isNotEmpty) {
-        await SecureStorage.write('has_processed_deferred_link', 'true');
-        return deferredCode;
-      }
-      // Add else block for debugging empty code
-      else {
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'Code parsed but empty or null. Final code: $deferredCode',
-        );
-      }
-    } catch (e) {
-      debugPrint("Deferred link check failed: $e");
-      // debug error
-      await SecureStorage.write('debug_install_referrer', 'Error: $e');
-    }
-    return null;
   }
 
   Future<void> _handleDeferredInvite(String inviteCode) async {
@@ -436,76 +253,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     if (!mounted) return false;
-    final loc = AppLocalizations.of(context)!;
-    final stayInCurrentStudy =
-        await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(loc.deep_link_switch_warning_title),
-              content: Text(
-                loc.deep_link_switch_warning_description(
-                  currentSubject.study.title ?? '',
-                  targetStudy.title ?? '',
-                ),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () => context.pop(true),
-                  child: Text(loc.deep_link_switch_primary_return),
-                ),
-                TextButton(
-                  onPressed: () => context.pop(false),
-                  child: Text(loc.deep_link_switch_secondary_continue),
-                ),
-              ],
-            );
-          },
-        ) ??
-        true;
 
-    if (stayInCurrentStudy) {
-      return false;
-    }
-
-    if (!mounted) return false;
-    final selectedDeleteMode =
-        await showDialog<String>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(loc.deep_link_switch_data_choice_title),
-              content: Text(
-                '${loc.deep_link_switch_data_choice_description}\n\n'
-                '${loc.soft_delete_desc}${currentSubject.study.title}${loc.soft_delete_desc_2}\n\n'
-                '${loc.hard_delete_desc}',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop('cancel'),
-                  child: Text(loc.cancel),
-                ),
-                FilledButton(
-                  onPressed: () => context.pop('soft'),
-                  child: Text(loc.deep_link_switch_soft_delete_button),
-                ),
-                FilledButton(
-                  onPressed: () => context.pop('hard'),
-                  child: Text(loc.deep_link_switch_hard_delete_button),
-                ),
-              ],
-            );
-          },
-        ) ??
-        'cancel';
-
-    if (selectedDeleteMode == 'cancel') {
-      return false;
-    }
-
-    final confirmedSwitch = selectedDeleteMode == 'soft'
-        ? await _runFinalSoftDeleteConfirmation(loc, currentSubject)
-        : await _runFinalHardDeleteConfirmation(loc, currentSubject);
+    final confirmedSwitch =
+        await StudySwitchDialogs.confirmSwitchToDeepLinkedStudy(
+          context,
+          targetStudy,
+          currentSubject,
+        );
 
     if (!confirmedSwitch) {
       return false;
