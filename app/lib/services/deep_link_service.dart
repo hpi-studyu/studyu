@@ -26,7 +26,17 @@ class DeepLinkError extends DeepLinkResult {
 }
 
 /// User needs to authenticate first
-class DeepLinkNeedsAuth extends DeepLinkResult {}
+class DeepLinkNeedsAuth extends DeepLinkResult {
+  final Study study;
+  final String? inviteCode;
+  final List<String>? preselectedInterventionIds;
+
+  DeepLinkNeedsAuth({
+    required this.study,
+    this.inviteCode,
+    this.preselectedInterventionIds,
+  });
+}
 
 /// Types of deep link errors
 enum DeepLinkErrorType { studyNotFound, inviteOnly, invalidInvite }
@@ -69,22 +79,21 @@ class DeepLinkService {
     required bool isAuthenticated,
     String? activeStudyId,
   }) async {
-    // If user is not authenticated, they need to go through the auth flow
-    if (!isAuthenticated) {
-      return DeepLinkNeedsAuth();
-    }
-
     // Process study deep link
     if (studyId != null) {
       return _processStudyDeepLink(
         studyId: studyId,
         activeStudyId: activeStudyId,
+        isAuthenticated: isAuthenticated,
       );
     }
 
     // Process invite deep link
     if (inviteCode != null) {
-      return _processInviteDeepLink(inviteCode: inviteCode);
+      return _processInviteDeepLink(
+        inviteCode: inviteCode,
+        isAuthenticated: isAuthenticated,
+      );
     }
 
     // No valid deep link data provided
@@ -95,11 +104,16 @@ class DeepLinkService {
   static Future<DeepLinkResult> _processStudyDeepLink({
     required String studyId,
     String? activeStudyId,
+    required bool isAuthenticated,
   }) async {
     final study = await fetchStudyById(studyId);
 
     if (study == null) {
       return DeepLinkError(DeepLinkErrorType.studyNotFound);
+    }
+
+    if (!isAuthenticated) {
+      return DeepLinkNeedsAuth(study: study);
     }
 
     // Check if study requires an invite
@@ -118,12 +132,21 @@ class DeepLinkService {
   /// Process an invite code deep link
   static Future<DeepLinkResult> _processInviteDeepLink({
     required String inviteCode,
+    required bool isAuthenticated,
   }) async {
     try {
       final (invite, study) = await Study.fetchByInviteCode(inviteCode);
 
       if (invite == null || study == null) {
         return DeepLinkError(DeepLinkErrorType.invalidInvite);
+      }
+
+      if (!isAuthenticated) {
+        return DeepLinkNeedsAuth(
+          study: study,
+          inviteCode: inviteCode,
+          preselectedInterventionIds: invite.preselectedInterventionIds,
+        );
       }
 
       return DeepLinkSuccess(

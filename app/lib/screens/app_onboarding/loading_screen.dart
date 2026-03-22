@@ -161,16 +161,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     if (!kIsWeb) {
-      String? deferredCode = await SecureStorage.read('pending_invite_code');
-      if (deferredCode != null) {
-        await SecureStorage.write(
-          'debug_startup',
-          'Found pending code in storage: $deferredCode',
-        );
-      } else {
-        deferredCode = await _checkForDeferredLink();
-      }
-
+      final deferredCode = await _checkForDeferredLink();
       if (!mounted) return;
       if (deferredCode != null) {
         await _handleDeferredInvite(deferredCode);
@@ -266,7 +257,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       if (deferredCode != null && deferredCode.isNotEmpty) {
         await SecureStorage.write('has_processed_deferred_link', 'true');
-        await SecureStorage.write('pending_invite_code', deferredCode);
         return deferredCode;
       }
       // Add else block for debugging empty code
@@ -328,16 +318,40 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await SecureStorage.write('debug_flow', 'Result: ${result.runtimeType}');
     final state = context.read<AppState>();
     switch (result) {
-      case DeepLinkNeedsAuth():
-        if (studyId != null) {
-          state.pendingDeepLinkStudyId = studyId;
-        } else if (inviteCode != null) {
-          state.pendingDeepLinkInviteCode = inviteCode;
+      case DeepLinkNeedsAuth(
+        :final study,
+        :final inviteCode,
+        :final preselectedInterventionIds,
+      ):
+        final onBoarded = await SecureStorage.readBool('onboarded') ?? false;
+        if (!onBoarded) {
+          state.selectedStudy = study;
+          if (inviteCode != null) {
+            state.inviteCode = inviteCode;
+            state.preselectedInterventionIds = preselectedInterventionIds;
+            state.pendingDeepLinkInviteCode = inviteCode;
+          } else {
+            state.pendingDeepLinkStudyId = study.id;
+          }
+
+          if (!mounted) return;
+          context.go('/${RouteNames.onboarding}');
+          return;
         }
+
+        // Automatically pre-select the study and redirect to overview
+        state.selectedStudy = study;
+        if (inviteCode != null) {
+          state.inviteCode = inviteCode;
+          state.preselectedInterventionIds = preselectedInterventionIds;
+          state.pendingDeepLinkInviteCode = inviteCode;
+        } else {
+          state.pendingDeepLinkStudyId = study.id;
+        }
+
         if (!mounted) return;
-        context.go('/${RouteNames.welcome}');
+        context.go('/${RouteNames.studyOverview}');
       case DeepLinkError(type: final errorType):
-        await SecureStorage.delete('pending_invite_code');
         setState(() => _error = _getErrorMessage(errorType));
       case DeepLinkSuccess(
         :final study,
@@ -345,15 +359,22 @@ class _LoadingScreenState extends State<LoadingScreen> {
         :final preselectedInterventionIds,
         :final alreadyEnrolled,
       ):
-        await SecureStorage.delete('pending_invite_code');
-        if (!alreadyEnrolled) {
-          final shouldContinue = await _confirmSwitchToDeepLinkedStudy(study);
-          if (!shouldContinue) {
-            if (!mounted) return;
-            context.go('/${RouteNames.dashboard}');
-            return;
+        final onBoarded = await SecureStorage.readBool('onboarded') ?? false;
+        if (!onBoarded) {
+          state.selectedStudy = study;
+          if (inviteCode != null) {
+            state.inviteCode = inviteCode;
+            state.preselectedInterventionIds = preselectedInterventionIds;
+            state.pendingDeepLinkInviteCode = inviteCode;
+          } else {
+            state.pendingDeepLinkStudyId = study.id;
           }
+
+          if (!mounted) return;
+          context.go('/${RouteNames.onboarding}');
+          return;
         }
+
         if (alreadyEnrolled) {
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');

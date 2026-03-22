@@ -30,6 +30,10 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
+    if (Supabase.instance.client.auth.currentUser == null) {
+      context.push('/${RouteNames.terms}');
+      return;
+    }
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy!,
