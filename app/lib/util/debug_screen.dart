@@ -157,6 +157,8 @@ class __DebugDialogState extends State<_DebugDialog> {
           _buildPendingNotificationsPluginInfo(),
           const SizedBox(height: 16),
           _buildScheduledNotificationsInfo(),
+          const SizedBox(height: 16),
+          _buildReferrerDebugInfo(),
         ],
       ),
       scrollable: true,
@@ -260,6 +262,25 @@ class __DebugDialogState extends State<_DebugDialog> {
           StudyNotifications.scheduledNotificationsDebug ?? 'No data',
         ),
       ],
+    );
+  }
+
+  Widget _buildReferrerDebugInfo() {
+    return FutureBuilder<String?>(
+      future: SecureStorage.read('debug_install_referrer'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Last Install Referrer (Debug):",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SelectableText(snapshot.data ?? 'None'),
+          ],
+        );
+      },
     );
   }
 

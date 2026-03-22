@@ -173,11 +173,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       final hasProcessed =
           await SecureStorage.readBool('has_processed_deferred_link') ?? false;
-      if (hasProcessed) return null;
+      if (hasProcessed) {
+        await SecureStorage.write(
+          'debug_install_referrer',
+          'Check skipped: has_processed_deferred_link is true',
+        );
+        return null;
+      }
 
       String? deferredCode;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final info = await StackDeferredLink.getInstallReferrerAndroid();
+        await SecureStorage.write(
+          'debug_install_referrer',
+          'Raw: ${info.installReferrer}\nParams: ${info.asQueryParameters}',
+        );
         deferredCode = info.getParam('invite_code');
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
         final host = Uri.parse(appDeepLinkScheme!).host;
