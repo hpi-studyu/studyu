@@ -87,7 +87,9 @@ class DeferredLinkService {
         }
       }
 
-      if (deferredCode != null && deferredCode.isNotEmpty) {
+      deferredCode = _sanitizeCode(deferredCode);
+
+      if (deferredCode != null) {
         await SecureStorage.write('has_processed_deferred_link', 'true');
         return deferredCode;
       }
@@ -104,5 +106,18 @@ class DeferredLinkService {
       await SecureStorage.write('debug_install_referrer', 'Error: $e');
     }
     return null;
+  }
+
+  static String? _sanitizeCode(String? code) {
+    if (code == null) return null;
+    var sanitized = code.trim();
+    if (sanitized.isEmpty) return null;
+
+    try {
+      sanitized = Uri.decodeComponent(sanitized);
+    } catch (_) {
+      // ignore
+    }
+    return sanitized.trim();
   }
 }
