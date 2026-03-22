@@ -56,11 +56,11 @@ class _TermsScreenState extends State<TermsScreen> {
           }
           context.go('/${RouteNames.studyOverview}');
         }
-      case DeepLinkError(type: final errorType):
+      case DeepLinkError(type: final errorType, :final errorValue):
         final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(getDeepLinkErrorMessage(l10n, errorType)),
+            content: Text(getDeepLinkErrorMessage(l10n, errorType, errorValue)),
             duration: const Duration(seconds: 5),
             action: SnackBarAction(label: l10n.ok, onPressed: () {}),
           ),

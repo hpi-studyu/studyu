@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1205,14 +1206,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deep_link_error_title => 'Error';
 
   @override
-  String get deep_link_study_not_found => 'Study not found or not available';
+  String deep_link_study_not_found(String studyId) {
+    return 'Study with ID $studyId not found or not available';
+  }
 
   @override
   String get deep_link_study_invite_only =>
       'This study requires an invite code to join';
 
   @override
-  String get deep_link_invite_invalid => 'Invalid or expired invite code';
+  String deep_link_invite_invalid(String code) {
+    return 'Invalid or expired invite code: $code';
+  }
 
   @override
   String get deep_link_error_invalid_invite => 'Invalid invite code';

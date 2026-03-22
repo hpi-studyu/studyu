@@ -351,8 +351,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         if (!mounted) return;
         context.go('/${RouteNames.studyOverview}');
-      case DeepLinkError(type: final errorType):
-        setState(() => _error = _getErrorMessage(errorType));
+      case DeepLinkError(type: final errorType, :final errorValue):
+        setState(() => _error = _getErrorMessage(errorType, errorValue));
       case DeepLinkSuccess(
         :final study,
         :final inviteCode,
@@ -397,8 +397,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  String _getErrorMessage(DeepLinkErrorType errorType) {
-    return getDeepLinkErrorMessage(AppLocalizations.of(context)!, errorType);
+  String _getErrorMessage(DeepLinkErrorType errorType, [String? errorValue]) {
+    return getDeepLinkErrorMessage(
+      AppLocalizations.of(context)!,
+      errorType,
+      errorValue,
+    );
   }
 
   Future<String?> _getCurrentStudyId(AppState state) async {

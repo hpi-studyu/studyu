@@ -473,9 +473,23 @@
   "go_back" : "Zurück",
 
   "deep_link_error_title": "Fehler",
-  "deep_link_study_not_found": "Studie nicht gefunden oder nicht verfügbar",
+  "deep_link_study_not_found": "Studie mit ID {studyId} nicht gefunden oder nicht verfügbar",
+  "@deep_link_study_not_found": {
+    "placeholders": {
+      "studyId": {
+        "type": "String"
+      }
+    }
+  },
   "deep_link_study_invite_only": "Diese Studie erfordert einen Einladungscode zur Teilnahme",
-  "deep_link_invite_invalid": "Ungültiger oder abgelaufener Einladungscode",
+  "deep_link_invite_invalid": "Ungültiger oder abgelaufener Einladungscode: {code}",
+  "@deep_link_invite_invalid": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "deep_link_error_invalid_invite": "Ungültiger Einladungscode",
   "deep_link_switch_warning_title": "Sie nehmen bereits an einer Studie teil",
   "deep_link_switch_warning_description": "Sie sind aktuell eingeschrieben in:\n{currentStudy}\n\nDer Deep Link verweist auf:\n{targetStudy}\n\nSie können zur aktuellen Studie zurückkehren (empfohlen) oder fortfahren, diese zu verlassen und zu wechseln.",

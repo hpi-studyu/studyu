@@ -2339,8 +2339,8 @@ abstract class AppLocalizations {
   /// No description provided for @deep_link_study_not_found.
   ///
   /// In en, this message translates to:
-  /// **'Study not found or not available'**
-  String get deep_link_study_not_found;
+  /// **'Study with ID {studyId} not found or not available'**
+  String deep_link_study_not_found(String studyId);
 
   /// No description provided for @deep_link_study_invite_only.
   ///
@@ -2351,8 +2351,8 @@ abstract class AppLocalizations {
   /// No description provided for @deep_link_invite_invalid.
   ///
   /// In en, this message translates to:
-  /// **'Invalid or expired invite code'**
-  String get deep_link_invite_invalid;
+  /// **'Invalid or expired invite code: {code}'**
+  String deep_link_invite_invalid(String code);
 
   /// No description provided for @deep_link_error_invalid_invite.
   ///

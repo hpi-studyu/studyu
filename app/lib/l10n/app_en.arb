@@ -469,9 +469,23 @@
   "go_back" : "Go back",
 
   "deep_link_error_title": "Error",
-  "deep_link_study_not_found": "Study not found or not available",
+  "deep_link_study_not_found": "Study with ID {studyId} not found or not available",
+  "@deep_link_study_not_found": {
+    "placeholders": {
+      "studyId": {
+        "type": "String"
+      }
+    }
+  },
   "deep_link_study_invite_only": "This study requires an invite code to join",
-  "deep_link_invite_invalid": "Invalid or expired invite code",
+  "deep_link_invite_invalid": "Invalid or expired invite code: {code}",
+  "@deep_link_invite_invalid": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "deep_link_error_invalid_invite": "Invalid invite code",
   "deep_link_switch_warning_title": "You are already in a study",
   "deep_link_switch_warning_description": "You are currently enrolled in:\n{currentStudy}\n\nThe deep link points to:\n{targetStudy}\n\nYou can return to your current study (recommended) or continue to leave it and switch.",

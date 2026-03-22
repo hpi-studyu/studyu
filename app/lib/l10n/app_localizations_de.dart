@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -85,7 +86,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboarding_page0_subtitle =>
-      'Ihre Reise zu besserer Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf \'Weiter\', um fortzufahren.';
+      'Ihre Reise zu einer besseren Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf \'Weiter\', um fortzufahren.';
 
   @override
   String get onboarding_page1_title => 'Was funktioniert für SIE?';
@@ -113,7 +114,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboarding_page4_subtitle =>
-      'Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu besserer Gesundheit.';
+      'Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu einer besseren Gesundheit.';
 
   @override
   String get study_selection => 'Studienauswahl';
@@ -1216,16 +1217,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deep_link_error_title => 'Fehler';
 
   @override
-  String get deep_link_study_not_found =>
-      'Studie nicht gefunden oder nicht verfügbar';
+  String deep_link_study_not_found(String studyId) {
+    return 'Studie mit ID $studyId nicht gefunden oder nicht verfügbar';
+  }
 
   @override
   String get deep_link_study_invite_only =>
       'Diese Studie erfordert einen Einladungscode zur Teilnahme';
 
   @override
-  String get deep_link_invite_invalid =>
-      'Ungültiger oder abgelaufener Einladungscode';
+  String deep_link_invite_invalid(String code) {
+    return 'Ungültiger oder abgelaufener Einladungscode: $code';
+  }
 
   @override
   String get deep_link_error_invalid_invite => 'Ungültiger Einladungscode';

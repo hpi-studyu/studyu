@@ -22,7 +22,9 @@ class DeepLinkSuccess extends DeepLinkResult {
 /// Deep link processing failed
 class DeepLinkError extends DeepLinkResult {
   final DeepLinkErrorType type;
-  DeepLinkError(this.type);
+  final String? errorValue;
+
+  DeepLinkError(this.type, [this.errorValue]);
 }
 
 /// User needs to authenticate first
@@ -81,19 +83,30 @@ class DeepLinkService {
   }) async {
     // Process study deep link
     if (studyId != null) {
-      return _processStudyDeepLink(
+      final result = await _processStudyDeepLink(
         studyId: studyId,
         activeStudyId: activeStudyId,
         isAuthenticated: isAuthenticated,
       );
+      if (result is DeepLinkError && result.errorValue == null) {
+        return DeepLinkError(result.type, studyId); // Ensure studyId is passed
+      }
+      return result;
     }
 
     // Process invite deep link
     if (inviteCode != null) {
-      return _processInviteDeepLink(
+      final result = await _processInviteDeepLink(
         inviteCode: inviteCode,
         isAuthenticated: isAuthenticated,
       );
+      if (result is DeepLinkError && result.errorValue == null) {
+        return DeepLinkError(
+          result.type,
+          inviteCode,
+        ); // Ensure inviteCode is passed
+      }
+      return result;
     }
 
     // No valid deep link data provided
@@ -109,7 +122,7 @@ class DeepLinkService {
     final study = await fetchStudyById(studyId);
 
     if (study == null) {
-      return DeepLinkError(DeepLinkErrorType.studyNotFound);
+      return DeepLinkError(DeepLinkErrorType.studyNotFound, studyId);
     }
 
     if (!isAuthenticated) {
@@ -138,7 +151,7 @@ class DeepLinkService {
       final (invite, study) = await Study.fetchByInviteCode(inviteCode);
 
       if (invite == null || study == null) {
-        return DeepLinkError(DeepLinkErrorType.invalidInvite);
+        return DeepLinkError(DeepLinkErrorType.invalidInvite, inviteCode);
       }
 
       if (!isAuthenticated) {
@@ -156,7 +169,7 @@ class DeepLinkService {
       );
     } catch (e) {
       debugPrint('Failed to fetch study by invite code: $e');
-      return DeepLinkError(DeepLinkErrorType.invalidInvite);
+      return DeepLinkError(DeepLinkErrorType.invalidInvite, inviteCode);
     }
   }
 }
