@@ -379,6 +379,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
         } else {
+          final confirmed = await _confirmSwitchToDeepLinkedStudy(study);
+          if (!confirmed) {
+            if (!mounted) return;
+            context.go('/${RouteNames.dashboard}');
+            return;
+          }
+
           state.selectedStudy = study;
           if (inviteCode != null) {
             state.inviteCode = inviteCode;
