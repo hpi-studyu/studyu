@@ -148,6 +148,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> _runStartupFlow() async {
+    await SecureStorage.write(
+      'debug_startup',
+      'Flow: Start. Web: $kIsWeb, DL: ${widget.hasDeepLink}',
+    );
     if (kIsWeb && widget.deepLinkInviteCode != null) {
       return;
     }
@@ -184,16 +188,63 @@ class _LoadingScreenState extends State<LoadingScreen> {
       String? deferredCode;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final info = await StackDeferredLink.getInstallReferrerAndroid();
+        final referrer = info.installReferrer; // capture to local for promotion
         await SecureStorage.write(
           'debug_install_referrer',
-          'Raw: ${info.installReferrer}\nParams: ${info.asQueryParameters}',
+          'Raw: $referrer\nParams: ${info.asQueryParameters}',
         );
         deferredCode = info.getParam('invite_code');
+
+        // [FIX ATTEMPT 1] Fallback: manual parsing if getParam fails
+        if (deferredCode.isEmpty && referrer != null) {
+          final uri = Uri.tryParse('?$referrer');
+          if (uri != null) {
+            final manualCode = uri.queryParameters['invite_code'];
+            if (manualCode != null && manualCode.isNotEmpty) {
+              deferredCode = manualCode;
+              await SecureStorage.write(
+                'debug_install_referrer',
+                'Status: Manual parsing triggered.\nExtracted Code: $deferredCode',
+              );
+            }
+          }
+        }
+
+        // [FIX ATTEMPT 2] "Dirty" string parsing if still null (just in case)
+        if (deferredCode.isEmpty &&
+            referrer != null &&
+            referrer.contains('invite_code=')) {
+          try {
+            // Split by '&' or just regex find
+            final regexp = RegExp(r'invite_code=([^&]+)');
+            final match = regexp.firstMatch(referrer);
+            if (match != null) {
+              deferredCode = match.group(1);
+              await SecureStorage.write(
+                'debug_install_referrer',
+                'Status: Regex parsing triggered.\nExtracted Code: $deferredCode',
+              );
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
         final host = Uri.parse(appDeepLinkScheme!).host;
+        await SecureStorage.write(
+          'debug_install_referrer',
+          'iOS Check. Host: $host',
+        );
+
         final result = await StackDeferredLink.getInstallReferrerIos(
           deepLinks: ['$host/invite'],
         );
+
+        await SecureStorage.write(
+          'debug_install_referrer',
+          'iOS Result: ${result?.fullReferralDeepLinkPath}',
+        );
+
         if (result != null) {
           final uri = Uri.tryParse(result.fullReferralDeepLinkPath);
           if (uri != null && uri.pathSegments.contains('invite')) {
@@ -209,13 +260,23 @@ class _LoadingScreenState extends State<LoadingScreen> {
         await SecureStorage.write('has_processed_deferred_link', 'true');
         return deferredCode;
       }
+      // Add else block for debugging empty code
+      else {
+        await SecureStorage.write(
+          'debug_install_referrer',
+          'Code parsed but empty or null. Final code: $deferredCode',
+        );
+      }
     } catch (e) {
       debugPrint("Deferred link check failed: $e");
+      // debug error
+      await SecureStorage.write('debug_install_referrer', 'Error: $e');
     }
     return null;
   }
 
   Future<void> _handleDeferredInvite(String inviteCode) async {
+    await SecureStorage.write('debug_flow', 'Handling deferred: $inviteCode');
     final state = context.read<AppState>();
     final activeStudyId = await _getCurrentStudyId(state);
     final result = await DeepLinkService.processDeepLink(
@@ -255,6 +316,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     String? studyId,
     String? inviteCode,
   }) async {
+    await SecureStorage.write('debug_flow', 'Result: ${result.runtimeType}');
     final state = context.read<AppState>();
     switch (result) {
       case DeepLinkNeedsAuth():
