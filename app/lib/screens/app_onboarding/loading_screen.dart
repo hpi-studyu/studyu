@@ -213,23 +213,44 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<String?> _getCurrentStudyId(AppState state) async {
-    if (state.activeSubject?.studyId != null) {
-      return state.activeSubject!.studyId;
+    final activeSubjectId = await getActiveSubjectId();
+    if (activeSubjectId == null) {
+      return null;
     }
+
+    final activeSubject = state.activeSubject;
+    if (activeSubject != null && activeSubject.id == activeSubjectId) {
+      return activeSubject.studyId;
+    }
+
     try {
       final cachedSubject = await Cache.loadSubject();
-      return cachedSubject.studyId;
+      if (cachedSubject.id == activeSubjectId) {
+        return cachedSubject.studyId;
+      }
     } catch (_) {
       return null;
     }
+    return null;
   }
 
   Future<StudySubject?> _getCurrentSubject(AppState state) async {
-    if (state.activeSubject != null) {
-      return state.activeSubject;
+    final activeSubjectId = await getActiveSubjectId();
+    if (activeSubjectId == null) {
+      return null;
     }
+
+    final activeSubject = state.activeSubject;
+    if (activeSubject != null && activeSubject.id == activeSubjectId) {
+      return activeSubject;
+    }
+
     try {
-      return await Cache.loadSubject();
+      final cachedSubject = await Cache.loadSubject();
+      if (cachedSubject.id == activeSubjectId) {
+        return cachedSubject;
+      }
+      return null;
     } catch (_) {
       return null;
     }
