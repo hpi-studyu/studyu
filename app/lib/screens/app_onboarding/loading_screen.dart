@@ -176,14 +176,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
           state.preselectedInterventionIds = preselectedInterventionIds;
         }
 
-        if (alreadyEnrolled) {
+        final confirmed = await _confirmSwitchToDeepLinkedStudy(study);
+        if (!confirmed) {
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
           return;
         }
 
-        final confirmed = await _confirmSwitchToDeepLinkedStudy(study);
-        if (!confirmed) {
+        if (alreadyEnrolled) {
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
           return;
@@ -238,11 +238,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<bool> _confirmSwitchToDeepLinkedStudy(Study targetStudy) async {
     final state = context.read<AppState>();
     final currentSubject = await _getCurrentSubject(state);
-    if (currentSubject == null || currentSubject.studyId == targetStudy.id) {
+    if (currentSubject == null) {
       return true;
     }
 
     if (!mounted) return false;
+
+    if (currentSubject.studyId == targetStudy.id) {
+      return await StudySwitchDialogs.confirmDeepLinkWarning(
+        context,
+        targetStudy,
+        currentSubject,
+      );
+    }
 
     final confirmedSwitch =
         await StudySwitchDialogs.confirmSwitchToDeepLinkedStudy(

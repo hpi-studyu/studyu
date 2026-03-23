@@ -7,8 +7,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudySwitchDialogs {
-  // Returns true if the switch was successfully confirmed and executed
-  static Future<bool> confirmSwitchToDeepLinkedStudy(
+  // Returns true if the user decides to continue with deeplink handling.
+  static Future<bool> confirmDeepLinkWarning(
     BuildContext context,
     Study targetStudy,
     StudySubject currentSubject,
@@ -44,8 +44,27 @@ class StudySwitchDialogs {
     if (stayInCurrentStudy) {
       return false;
     }
+    return true;
+  }
+
+  // Returns true if the switch was successfully confirmed and executed
+  static Future<bool> confirmSwitchToDeepLinkedStudy(
+    BuildContext context,
+    Study targetStudy,
+    StudySubject currentSubject,
+  ) async {
+    final proceedWithDeepLink = await confirmDeepLinkWarning(
+      context,
+      targetStudy,
+      currentSubject,
+    );
+
+    if (!proceedWithDeepLink) {
+      return false;
+    }
 
     if (!context.mounted) return false;
+    final loc = AppLocalizations.of(context)!;
 
     final selectedDeleteMode =
         await showDialog<String>(
@@ -53,23 +72,46 @@ class StudySwitchDialogs {
           builder: (context) {
             return AlertDialog(
               title: Text(loc.deep_link_switch_data_choice_title),
-              content: Text(
-                '${loc.deep_link_switch_data_choice_description}\n\n'
-                '${loc.soft_delete_desc}${currentSubject.study.title}${loc.soft_delete_desc_2}\n\n'
-                '${loc.hard_delete_desc}',
+              // Wrap the Column in a SingleChildScrollView
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(loc.deep_link_switch_data_choice_description),
+                    const SizedBox(height: 16),
+                    Text(
+                      loc.opt_out,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${loc.soft_delete_desc}${currentSubject.study.title}${loc.soft_delete_desc_2}',
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButton(
+                      onPressed: () => context.pop('soft'),
+                      child: Text(loc.opt_out),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      loc.delete_data,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(loc.hard_delete_desc),
+                    const SizedBox(height: 8),
+                    OutlinedButton(
+                      onPressed: () => context.pop('hard'),
+                      child: Text(loc.delete_data),
+                    ),
+                  ],
+                ),
               ),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => context.pop('cancel'),
                   child: Text(loc.cancel),
-                ),
-                FilledButton(
-                  onPressed: () => context.pop('soft'),
-                  child: Text(loc.deep_link_switch_soft_delete_button),
-                ),
-                FilledButton(
-                  onPressed: () => context.pop('hard'),
-                  child: Text(loc.deep_link_switch_hard_delete_button),
                 ),
               ],
             );
