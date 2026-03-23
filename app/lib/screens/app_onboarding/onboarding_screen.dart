@@ -62,7 +62,7 @@ class OnboardingScreen extends StatelessWidget {
         } else if (state.pendingDeepLinkStudyId != null ||
             state.pendingDeepLinkInviteCode != null) {
           // If pending deep link, go directly to terms to skip welcome screen
-          context.goNamed(RouteNames.terms);
+          context.pushNamed(RouteNames.terms);
         } else {
           context.goNamed(RouteNames.welcome);
         }
