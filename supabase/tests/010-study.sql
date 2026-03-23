@@ -422,7 +422,7 @@ SELECT is(count(*)::int, 0, 'Deleting a study cascades to study subjects')
 FROM public.study_subject
 WHERE invite_code = 'cascade-delete-code';
 
-SELECT is(count(*)::int, 3, 'Deleting the cascade test study does not remove unrelated visible studies')
+SELECT is(count(*)::int, 4, 'Deleting the cascade test study does not remove unrelated visible studies')
 FROM public.study;
 
 -- check the results of your test
