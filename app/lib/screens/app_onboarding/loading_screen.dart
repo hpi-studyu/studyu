@@ -12,13 +12,15 @@ import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase/supabase.dart' show AuthApiException, PostgrestException;
+import 'package:supabase/supabase.dart'
+    show AuthApiException, PostgrestException;
 
 class SubjectDeletedException implements Exception {
   const SubjectDeletedException();
 
   @override
-  String toString() => 'SubjectDeletedException: subject no longer exists in the backend';
+  String toString() =>
+      'SubjectDeletedException: subject no longer exists in the backend';
 }
 
 class LoadingScreen extends StatefulWidget {

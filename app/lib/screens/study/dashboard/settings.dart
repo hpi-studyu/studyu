@@ -243,8 +243,9 @@ class DeleteAlertDialog extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      AppLocalizations.of(context)!
-                          .error_occurred_with_message(e.message),
+                      AppLocalizations.of(
+                        context,
+                      )!.error_occurred_with_message(e.message),
                     ),
                   ),
                 );
