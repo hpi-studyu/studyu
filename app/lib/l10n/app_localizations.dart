@@ -212,12 +212,6 @@ abstract class AppLocalizations {
   /// **'Show onboarding again'**
   String get show_onboarding_again;
 
-  /// No description provided for @show_onboarding_switch_study.
-  ///
-  /// In en, this message translates to:
-  /// **'Switch study (open onboarding)'**
-  String get show_onboarding_switch_study;
-
   /// No description provided for @onboarding_page0_title.
   ///
   /// In en, this message translates to:

@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -76,9 +75,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get show_onboarding_again => 'Show onboarding again';
-
-  @override
-  String get show_onboarding_switch_study => 'Switch study (open onboarding)';
 
   @override
   String get onboarding_page0_title => 'Welcome to StudyU';

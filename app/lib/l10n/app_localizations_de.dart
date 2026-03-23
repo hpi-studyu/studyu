@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -76,10 +75,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get show_onboarding_again => 'Onboarding erneut ansehen';
-
-  @override
-  String get show_onboarding_switch_study =>
-      'Studie wechseln (Onboarding öffnen)';
 
   @override
   String get onboarding_page0_title => 'Willkommen bei StudyU';

@@ -385,13 +385,7 @@ class AboutScreen extends StatelessWidget {
                       onPressed: () =>
                           context.push('/${RouteNames.onboarding}'),
                       label: Text(
-                        hasActiveSubject
-                            ? AppLocalizations.of(
-                                context,
-                              )!.show_onboarding_switch_study
-                            : AppLocalizations.of(
-                                context,
-                              )!.show_onboarding_again,
+                        AppLocalizations.of(context)!.show_onboarding_again,
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -400,6 +394,16 @@ class AboutScreen extends StatelessWidget {
                       OutlinedButton.icon(
                         icon: Icon(MdiIcons.rocket),
                         onPressed: () => context.push('/${RouteNames.terms}'),
+                        label: Text(
+                          AppLocalizations.of(context)!.get_started,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      )
+                    else
+                      OutlinedButton.icon(
+                        icon: Icon(MdiIcons.rocket),
+                        onPressed: () =>
+                            context.push('/${RouteNames.dashboard}'),
                         label: Text(
                           AppLocalizations.of(context)!.get_started,
                           style: const TextStyle(fontSize: 20),
