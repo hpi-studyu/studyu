@@ -42,6 +42,7 @@ class StudyRecruitController extends _$StudyRecruitController
 
   void _subscribeInvites() {
     print("StudyRecruitController.subscribe");
+    _invitesSubscription?.cancel();
     _invitesSubscription = state.inviteCodeRepository.watchAll().listen((
       wrappedModels,
     ) {
@@ -68,11 +69,7 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where(
-          (action) =>
-              action.type != ModelActionType.share &&
-              action.type != ModelActionType.delete,
-        )
+        .where((action) => action.type != ModelActionType.share)
         .toList();
     return withIcons(actions, modelActionIcons);
   }
@@ -80,11 +77,7 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableInlineActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where(
-          (action) =>
-              action.type == ModelActionType.share ||
-              action.type == ModelActionType.delete,
-        )
+        .where((action) => action.type == ModelActionType.share)
         .toList();
     return withIcons(actions, modelActionIcons);
   }

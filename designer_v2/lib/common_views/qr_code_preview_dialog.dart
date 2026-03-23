@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
 class QrCodePreviewDialog extends StatelessWidget {
@@ -19,7 +18,8 @@ class QrCodePreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StandardDialog(
-      titleText: title ?? tr.action_qr_code_show,
+      // todo fix translation
+      titleText: title ?? "tr.action_qr_code_show",
       minHeight: 400,
       body: FutureBuilder<Widget>(
         future: QrCodeDownloader.generateQrWidget(data: data),
@@ -49,7 +49,8 @@ class QrCodePreviewDialog extends StatelessWidget {
       ),
       actionButtons: [
         PrimaryButton(
-          text: tr.action_qr_code_download,
+          // todo fix translation
+          text: "tr.action_qr_code_download",
           icon: Icons.download,
           onPressed: () async {
             await QrCodeDownloader.downloadQrCode(

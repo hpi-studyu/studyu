@@ -79,7 +79,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
             : Icons.more_horiz_rounded);
 
     return PopupMenuButton(
-      key: ValueKey(actions),
+      key: key,
       icon:
           triggerBuilder ??
           Icon(
@@ -91,7 +91,15 @@ class ActionPopUpMenuButton extends StatelessWidget {
       elevation: elevation,
       splashRadius: splashRadius,
       position: position,
-      onSelected: (action) => action is ModelAction ? action.onExecute() : null,
+      onSelected: (action) {
+        if (action is ModelAction) {
+          if (action.onExecuteWithContext != null) {
+            action.onExecuteWithContext!(context);
+          } else {
+            action.onExecute();
+          }
+        }
+      },
       itemBuilder: (BuildContext context) {
         final textTheme = theme.textTheme.labelMedium!;
         final List<PopupMenuEntry> popupList = [];

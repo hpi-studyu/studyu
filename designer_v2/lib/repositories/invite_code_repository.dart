@@ -12,7 +12,6 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
@@ -81,8 +80,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       ModelAction(
         type: ModelActionType.share,
         label: ModelActionType.share.string,
-        onExecute: ([BuildContext? context]) {
-          if (context == null) return;
+        onExecute: () {},
+        onExecuteWithContext: (BuildContext context) {
           _showSharePopup(context, deepLink, model.code);
         },
       ),
@@ -115,28 +114,56 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
 
   void _showSharePopup(BuildContext context, String deepLink, String filename) {
     final effectiveContext = context;
+
+    // Determine where to render the popup based on the clicked element
+    final RenderBox button = context.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset(0, button.size.height), ancestor: overlay),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme.labelMedium!;
+    final iconColorDefault =
+        theme.iconTheme.color?.withValues(alpha: 0.7) ?? Colors.grey;
+
     showMenu<String>(
       context: context,
-      position: const RelativeRect.fromLTRB(100, 100, 100, 100),
+      position: position,
+      elevation: 5,
       items: [
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
           value: 'copy_link',
-          child: Row(
-            children: [
-              Icon(Icons.link_rounded, size: 20),
-              SizedBox(width: 12),
-              Text('Copy link'),
-            ],
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            horizontalTitleGap: 4.0,
+            leading: Icon(
+              Icons.link_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: iconColorDefault,
+            ),
+            title: Text(ModelActionType.clipboard.string, style: textTheme),
           ),
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
           value: 'qr_code',
-          child: Row(
-            children: [
-              Icon(Icons.qr_code_rounded, size: 20),
-              SizedBox(width: 12),
-              Text('QR Code'),
-            ],
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            horizontalTitleGap: 4.0,
+            leading: Icon(
+              Icons.qr_code_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: iconColorDefault,
+            ),
+            title: Text(ModelActionType.qrCodeShow.string, style: textTheme),
           ),
         ),
       ],
@@ -239,6 +266,7 @@ class InviteCodeRepositoryDelegate
     final deleteOperation = OptimisticUpdate(
       applyOptimistic: () {
         study.invites!.remove(model);
+        /*study.invites!.removeWhere((i) => i.code == model.code);*/
         studyRepository.upsertLocally(study);
       },
       apply: () => apiClient.deleteStudyInvite(model),

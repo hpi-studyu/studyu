@@ -7,6 +7,7 @@ class ModelAction<T> {
   IconData? icon;
   final String? tooltip;
   final void Function() onExecute;
+  final void Function(BuildContext context)? onExecuteWithContext;
   final bool isHeader;
   final bool isSeparator;
   final bool isAvailable;
@@ -18,8 +19,9 @@ class ModelAction<T> {
     required this.type,
     required this.label,
     required this.onExecute,
+    this.onExecuteWithContext,
     this.isSeparator = false,
-    this.isHeader = false, // Added default
+    this.isHeader = false,
     this.isAvailable = true,
     this.isDestructive = false,
     this.icon,
@@ -85,12 +87,13 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.action_clipboard;
       case ModelActionType.share:
         return tr.action_share;
+      // TODO
       case ModelActionType.qrCode:
-        return tr.action_qr_code_show;
+        return "tr.action_qr_code_show";
       case ModelActionType.qrCodeShow:
-        return tr.action_qr_code_show;
+        return "tr.action_qr_code_show";
       case ModelActionType.qrCodeDownload:
-        return tr.action_qr_code_download;
+        return "tr.action_qr_code_download";
       case ModelActionType.primary:
         return tr.action_reportPrimary;
     }
