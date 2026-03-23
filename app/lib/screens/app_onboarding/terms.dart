@@ -91,7 +91,13 @@ class _TermsScreenState extends State<TermsScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        hideBack: true,
+        onBack: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/${RouteNames.welcome}');
+          }
+        },
         onNext: userCanContinue()
             ? () async {
                 final success = await anonymousSignUp();
