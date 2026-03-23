@@ -1291,5 +1291,5 @@ class AppLocalizationsDe extends AppLocalizations {
   String get you_have_been_invited => 'Sie wurden zu einer Studie eingeladen!';
 
   @override
-  String get download_app_join => 'App herunterladen & Beitreten';
+  String get download_app_join => 'StudyU App herunterladen & Beitreten';
 }

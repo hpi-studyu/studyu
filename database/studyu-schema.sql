@@ -778,8 +778,7 @@ CREATE POLICY "Study subjects can view their joined study" ON "public"."study" F
 
 
 
-CREATE POLICY "Study visibility" ON "public"."study" FOR SELECT TO "authenticated" USING (((("status" = 'running'::"public"."study_status") OR ("status" = 'closed'::"public"."study_status")) AND (("registry_published" = true) OR ("participation" = 'open'::"public"."participation") OR ("result_sharing" = 'public'::"public"."result_sharing"))));
-
+CREATE POLICY "Study visibility" ON "public"."study" FOR SELECT USING (((("status" = 'running'::"public"."study_status") OR ("status" = 'closed'::"public"."study_status")) AND (("registry_published" = true) OR ("participation" = 'open'::"public"."participation") OR ("result_sharing" = 'public'::"public"."result_sharing"))));
 
 
 CREATE POLICY "Users can do everything with their progress" ON "public"."subject_progress" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = ( SELECT "study_subject"."user_id"

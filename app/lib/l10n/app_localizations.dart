@@ -2456,7 +2456,7 @@ abstract class AppLocalizations {
   /// No description provided for @download_app_join.
   ///
   /// In en, this message translates to:
-  /// **'Download App & Join'**
+  /// **'Download the StudyU App & Join'**
   String get download_app_join;
 }
 

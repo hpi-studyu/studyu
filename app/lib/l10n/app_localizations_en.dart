@@ -1278,5 +1278,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get you_have_been_invited => 'You have been invited to a study!';
 
   @override
-  String get download_app_join => 'Download App & Join';
+  String get download_app_join => 'Download the StudyU App & Join';
 }
