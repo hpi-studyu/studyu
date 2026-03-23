@@ -152,7 +152,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         :final inviteCode,
         :final preselectedInterventionIds,
       ):
-        _storePendingDeepLink(studyId: study.id, inviteCode: inviteCode);
+        _storePendingDeepLink(
+          studyId: inviteCode != null ? null : study.id,
+          inviteCode: inviteCode,
+        );
         state.preselectedInterventionIds = preselectedInterventionIds;
 
         final onBoarded = await SecureStorage.readBool('onboarded') ?? false;

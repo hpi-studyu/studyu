@@ -81,19 +81,6 @@ class DeepLinkService {
     required bool isAuthenticated,
     String? activeStudyId,
   }) async {
-    // Process study deep link
-    if (studyId != null) {
-      final result = await _processStudyDeepLink(
-        studyId: studyId,
-        activeStudyId: activeStudyId,
-        isAuthenticated: isAuthenticated,
-      );
-      if (result is DeepLinkError && result.errorValue == null) {
-        return DeepLinkError(result.type, studyId); // Ensure studyId is passed
-      }
-      return result;
-    }
-
     // Process invite deep link
     if (inviteCode != null) {
       final result = await _processInviteDeepLink(
@@ -105,6 +92,18 @@ class DeepLinkService {
           result.type,
           inviteCode,
         ); // Ensure inviteCode is passed
+      }
+      return result;
+    }
+    // Process study deep link
+    else if (studyId != null) {
+      final result = await _processStudyDeepLink(
+        studyId: studyId,
+        activeStudyId: activeStudyId,
+        isAuthenticated: isAuthenticated,
+      );
+      if (result is DeepLinkError && result.errorValue == null) {
+        return DeepLinkError(result.type, studyId); // Ensure studyId is passed
       }
       return result;
     }
