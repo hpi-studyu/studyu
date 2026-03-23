@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2054,10 +2055,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_clipboard => 'In Zwischenablage kopieren';
 
   @override
-  String get action_qr_code => 'QR-Code anzeigen';
+  String get action_qr_code_show => 'QR-Code anzeigen';
+
+  @override
+  String get action_qr_code_download => 'QR-Code herunterladen';
 
   @override
   String get action_share => 'Teilen';
+
+  @override
+  String get action_copy_link => 'Link kopieren';
 
   @override
   String get action_reportPrimary => 'Als Primärauswertung setzen';
