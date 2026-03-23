@@ -12,6 +12,7 @@ import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase/supabase.dart' show PostgrestException;
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -175,7 +176,20 @@ class OptOutAlertDialog extends StatelessWidget {
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
           onPressed: () async {
-            await subject!.softDelete();
+            try {
+              await subject!.softDelete();
+            } on SocketException catch (_) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context)!.no_internet_connection,
+                    ),
+                  ),
+                );
+              }
+              return;
+            }
             await deleteActiveStudyReference();
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
@@ -209,18 +223,47 @@ class DeleteAlertDialog extends StatelessWidget {
         style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
         onPressed: () async {
           try {
-            await subject!.delete(); // hard-delete the subject
-            await deleteLocalData();
-            await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
-            if (context.mounted) await cancelNotifications(context);
+            await subject!.delete();
+          } on SocketException catch (_) {
+            // Device is offline — preserve local data so nothing is lost
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.welcome,
-                (_) => false,
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    AppLocalizations.of(context)!.no_internet_connection,
+                  ),
+                ),
               );
             }
-          } on SocketException catch (_) {}
+            return;
+          } on PostgrestException catch (e) {
+            if (e.code != 'PGRST116') {
+              // Unexpected DB error — don't clear local data
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context)!
+                          .error_occurred_with_message(e.message),
+                    ),
+                  ),
+                );
+              }
+              return;
+            }
+            // PGRST116: subject already deleted from DB — proceed with local cleanup
+          }
+          // Reached when delete succeeded or subject was already gone from DB
+          await deleteLocalData();
+          await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
+          if (context.mounted) await cancelNotifications(context);
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.welcome,
+              (_) => false,
+            );
+          }
         },
       ),
     ],
