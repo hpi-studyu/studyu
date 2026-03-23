@@ -68,8 +68,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
 
   /// Generate the deep link URL for an invite code
   String generateInviteDeepLink(String code) {
-    final scheme = env.appDeepLinkScheme ?? 'https://app.studyu.health';
-    return '$scheme/invite/$code';
+    return env.generateAppDeepLink('invite/$code');
   }
 
   @override

@@ -21,6 +21,15 @@ String get appScheme {
   return 'studyu-app';
 }
 
+String generateAppSchemeLink(String path) {
+  return '$appScheme://${path.startsWith('/') ? path.substring(1) : path}';
+}
+
+String generateAppDeepLink(String path) {
+  final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
+  return '$scheme/${path.startsWith('/') ? path.substring(1) : path}';
+}
+
 void setEnv(
   String envSupabaseUrl,
   String envSupabaseAnonKey, {

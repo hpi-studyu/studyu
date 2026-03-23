@@ -33,7 +33,7 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
       return;
     }
 
-    final link = "$appScheme://invite/${widget.inviteCode}";
+    final link = generateAppSchemeLink("invite/${widget.inviteCode}");
     final uri = Uri.parse(link);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
@@ -42,7 +42,7 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
 
   Future<void> _launchAppStore() async {
     // For iOS deferred deep linking via clipboard, we need the full valid URL
-    final link = "$appDeepLinkScheme/invite/${widget.inviteCode}";
+    final link = generateAppDeepLink("invite/${widget.inviteCode}");
     await Clipboard.setData(ClipboardData(text: link));
 
     if (defaultTargetPlatform == TargetPlatform.android) {
