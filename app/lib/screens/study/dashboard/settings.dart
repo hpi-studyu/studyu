@@ -181,9 +181,9 @@ class OptOutAlertDialog extends StatelessWidget {
             } on SocketException catch (_) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(
-                      'No internet connection. Please try again when online.',
+                      AppLocalizations.of(context)!.no_internet_connection,
                     ),
                   ),
                 );
@@ -228,9 +228,9 @@ class DeleteAlertDialog extends StatelessWidget {
             // Device is offline — preserve local data so nothing is lost
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
-                    'No internet connection. Please try again when online.',
+                    AppLocalizations.of(context)!.no_internet_connection,
                   ),
                 ),
               );
@@ -241,7 +241,12 @@ class DeleteAlertDialog extends StatelessWidget {
               // Unexpected DB error — don't clear local data
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('An error occurred: ${e.message}')),
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context)!
+                          .error_occurred_with_message(e.message),
+                    ),
+                  ),
                 );
               }
               return;

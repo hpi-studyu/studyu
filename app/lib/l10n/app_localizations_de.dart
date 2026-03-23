@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1202,4 +1201,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get submit => 'Absenden';
+
+  @override
+  String get no_internet_connection =>
+      'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'Ein Fehler ist aufgetreten: $message';
+  }
 }

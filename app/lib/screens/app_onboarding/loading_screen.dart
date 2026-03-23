@@ -16,6 +16,9 @@ import 'package:supabase/supabase.dart' show AuthApiException, PostgrestExceptio
 
 class SubjectDeletedException implements Exception {
   const SubjectDeletedException();
+
+  @override
+  String toString() => 'SubjectDeletedException: subject no longer exists in the backend';
 }
 
 class LoadingScreen extends StatefulWidget {
