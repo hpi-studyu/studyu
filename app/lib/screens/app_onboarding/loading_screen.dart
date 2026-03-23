@@ -206,6 +206,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
+  Future<void> _acknowledgeDeepLinkError() async {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+
+    if (!mounted) return;
+    context.goNamed(RouteNames.loading);
+  }
+
   Future<String?> _getCurrentStudyId(AppState state) async {
     if (state.activeSubject?.studyId != null) {
       return state.activeSubject!.studyId;
@@ -506,8 +516,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 ),
                 const SizedBox(height: 24),
                 OutlinedButton(
-                  onPressed: () => context.go('/${RouteNames.welcome}'),
-                  child: Text(AppLocalizations.of(context)!.go_back),
+                  onPressed: _acknowledgeDeepLinkError,
+                  child: Text(AppLocalizations.of(context)!.ok),
                 ),
               ],
             ),

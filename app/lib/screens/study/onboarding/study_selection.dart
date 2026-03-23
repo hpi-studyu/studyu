@@ -34,7 +34,10 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
       ),
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
-        TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(AppLocalizations.of(context)!.ok),
+        ),
       ],
     ),
   );
@@ -47,7 +50,10 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
       title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
       content: Text(AppLocalizations.of(context)!.study_selection_closed),
       actions: [
-        TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(AppLocalizations.of(context)!.ok),
+        ),
       ],
     ),
   );
