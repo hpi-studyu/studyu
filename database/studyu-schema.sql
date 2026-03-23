@@ -847,7 +847,9 @@ REVOKE EXECUTE ON FUNCTION public.is_active_subject(uuid, integer) FROM public, 
 REVOKE EXECUTE ON FUNCTION public.last_completed_task(uuid) FROM public, anon;
 
 -- RPC/API functions
-REVOKE EXECUTE ON FUNCTION public.get_study_record_from_invite(text) FROM public, anon;
+REVOKE EXECUTE ON FUNCTION public.get_study_record_from_invite(text) FROM public;
+GRANT EXECUTE ON FUNCTION public.get_study_record_from_invite(text) TO anon;
+GRANT EXECUTE ON FUNCTION public.get_study_record_from_invite(text) TO authenticated;
 
 -- Trigger functions
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM public, anon;

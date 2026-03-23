@@ -63,28 +63,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
     String? inviteCode,
   }) async {
     final state = context.read<AppState>();
-    final onboarded = await SecureStorage.readBool('onboarded') ?? false;
 
-    if (!isUserLoggedIn()) {
-      _storePendingDeepLink(studyId: studyId, inviteCode: inviteCode);
-      if (!mounted) return;
-      context.go('/${onboarded ? RouteNames.terms : RouteNames.onboarding}');
-      return;
-    }
+    // 1. Check login status
+    final loggedIn = isUserLoggedIn();
 
-    final activeStudyId = await _getCurrentStudyId(state);
+    // 2. Only try to get an active study ID if they are actually logged in
+    final activeStudyId = loggedIn ? await _getCurrentStudyId(state) : null;
+
+    // 3. ALWAYS process/validate the deep link first
     final result = await DeepLinkService.processDeepLink(
       studyId: studyId,
       inviteCode: inviteCode,
-      isAuthenticated: true,
+      isAuthenticated: loggedIn,
       activeStudyId: activeStudyId,
     );
+
     if (!mounted) return;
-    await _handleDeepLinkResult(
-      result,
-      studyId: studyId,
-      inviteCode: inviteCode,
-    );
+
+    // 4. Handle the result (Errors will be caught here, NeedsAuth will route to onboarding)
+    await _handleDeepLinkResult(result);
   }
 
   @override
@@ -147,11 +144,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  Future<void> _handleDeepLinkResult(
-    DeepLinkResult result, {
-    String? studyId,
-    String? inviteCode,
-  }) async {
+  Future<void> _handleDeepLinkResult(DeepLinkResult result) async {
     final state = context.read<AppState>();
     switch (result) {
       case DeepLinkNeedsAuth(
