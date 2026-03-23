@@ -1736,7 +1736,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get code_public_disabled_description =>
-      'Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung für diese Studie aktiviert ist. Alle Teilnehmer können ohne Teilnahmecodes beitreten.';
+      'Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung aktiviert ist. Die Studie wird automatisch in der öffentlichen Studienliste der App angezeigt. Alternativ können Teilnehmer über den folgenden Link oder QR-Code beitreten.';
 
   @override
   String get code_list_empty_title => 'Noch keine Teilnehmer eingeladen';
@@ -1897,6 +1897,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get monitoring_table_completed_surveys_header_tooltip =>
       'Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden';
+
+  @override
+  String get banner_text_study_recruit_draft =>
+      'Solange die Studie noch nicht live ist, funktionieren die Links auf dieser Seite noch nicht.';
 
   @override
   String get banner_text_study_analyze_draft =>

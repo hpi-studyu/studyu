@@ -3006,7 +3006,7 @@ abstract class AppLocalizations {
   /// No description provided for @code_public_disabled_description.
   ///
   /// In en, this message translates to:
-  /// **'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.'**
+  /// **'The invite codes are disabled for this study as it is open for public recruitment. The study will automatically appear in the app\'s public study list. Alternatively, participants can join using the following link or QR code.'**
   String get code_public_disabled_description;
 
   /// No description provided for @code_list_empty_title.
@@ -3272,6 +3272,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A survey is completed, if all of its tasks have been completed for that day'**
   String get monitoring_table_completed_surveys_header_tooltip;
+
+  /// No description provided for @banner_text_study_recruit_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Because this study has not been launched yet, the links on this page will not work yet.'**
+  String get banner_text_study_recruit_draft;
 
   /// No description provided for @banner_text_study_analyze_draft.
   ///

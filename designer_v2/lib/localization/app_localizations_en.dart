@@ -1714,7 +1714,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get code_public_disabled_description =>
-      'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.';
+      'The invite codes are disabled for this study as it is open for public recruitment. The study will automatically appear in the app\'s public study list. Alternatively, participants can join using the following link or QR code.';
 
   @override
   String get code_list_empty_title => 'You haven\'t invited anyone yet';
@@ -1871,6 +1871,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get monitoring_table_completed_surveys_header_tooltip =>
       'A survey is completed, if all of its tasks have been completed for that day';
+
+  @override
+  String get banner_text_study_recruit_draft =>
+      'Because this study has not been launched yet, the links on this page will not work yet.';
 
   @override
   String get banner_text_study_analyze_draft =>
