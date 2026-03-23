@@ -65,7 +65,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           : Padding(
               padding: const EdgeInsets.only(top: 24),
               child: EmptyBody(
-                icon: Icons.block_sharp,
+                icon: Icons.share_rounded,
                 title: tr.code_public_disabled,
                 description: tr.code_public_disabled_description,
                 button: _publicStudyActionButtons(context, ref),

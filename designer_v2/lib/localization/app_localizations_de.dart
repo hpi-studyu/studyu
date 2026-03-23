@@ -1732,11 +1732,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get code_list_section_title => 'Teilnahmecodes';
 
   @override
-  String get code_public_disabled => 'Teilnahmecodes deaktiviert';
+  String get code_public_disabled => 'Öffentliche Rekrutierung';
 
   @override
   String get code_public_disabled_description =>
-      'Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung aktiviert ist. Die Studie wird automatisch in der öffentlichen Studienliste der App angezeigt. Alternativ können Teilnehmer über den folgenden Link oder QR-Code beitreten.';
+      'Teilnehmer können dieser Studie einfach über die untenstehenden Links, durch Scannen des QR-Codes oder über die öffentliche Studienliste der App beitreten. Beachten Sie, dass Teilnahmecodes hier nicht verfügbar sind, da sie ausschließlich für private Studien verwendet werden.';
 
   @override
   String get code_list_empty_title => 'Noch keine Teilnehmer eingeladen';

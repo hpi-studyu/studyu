@@ -3000,13 +3000,13 @@ abstract class AppLocalizations {
   /// No description provided for @code_public_disabled.
   ///
   /// In en, this message translates to:
-  /// **'Invite codes disabled'**
+  /// **'Public Recruitment'**
   String get code_public_disabled;
 
   /// No description provided for @code_public_disabled_description.
   ///
   /// In en, this message translates to:
-  /// **'The invite codes are disabled for this study as it is open for public recruitment. The study will automatically appear in the app\'s public study list. Alternatively, participants can join using the following link or QR code.'**
+  /// **'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.'**
   String get code_public_disabled_description;
 
   /// No description provided for @code_list_empty_title.

@@ -1710,11 +1710,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_section_title => 'Invite codes';
 
   @override
-  String get code_public_disabled => 'Invite codes disabled';
+  String get code_public_disabled => 'Public Recruitment';
 
   @override
   String get code_public_disabled_description =>
-      'The invite codes are disabled for this study as it is open for public recruitment. The study will automatically appear in the app\'s public study list. Alternatively, participants can join using the following link or QR code.';
+      'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.';
 
   @override
   String get code_list_empty_title => 'You haven\'t invited anyone yet';
