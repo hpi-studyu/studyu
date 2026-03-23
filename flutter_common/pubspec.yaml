@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^6.0.0
-  flutter_secure_storage: 9.2.2 # Has critical bugs in later versions
+  flutter_secure_storage: ^10.0.0
   lint: ^2.8.0
   shared_preferences: ^2.5.4
   studyu_core: ^4.8.0
