@@ -65,11 +65,10 @@ class _SurveyQuestionFormViewState
           AudioRecordingQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.freeText: (_) =>
           FreeTextQuestionFormView(formViewModel: formViewModel),
-      SurveyQuestionType.fitbit: (_) =>
-          FitbitQuestionFormView(
-            formViewModel: formViewModel,
-            studyId: widget.studyId,
-          ),
+      SurveyQuestionType.fitbit: (_) => FitbitQuestionFormView(
+        formViewModel: formViewModel,
+        studyId: widget.studyId,
+      ),
       SurveyQuestionType.pain: (_) =>
           PainQuestionFormView(formViewModel: formViewModel),
     };

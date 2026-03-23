@@ -8,10 +8,7 @@ import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FitbitCredentialsSection extends StatelessWidget {
-  const FitbitCredentialsSection({
-    required this.formViewModel,
-    super.key,
-  });
+  const FitbitCredentialsSection({required this.formViewModel, super.key});
 
   final FitbitCredentialsFormViewModel formViewModel;
 
@@ -30,9 +27,8 @@ class FitbitCredentialsSection extends StatelessWidget {
         Collapsible(
           title: AppLocalizations.of(context)!.fitbit_credentials_how_to_obtain,
           maintainState: false,
-          contentBuilder: (context, isCollapsed) => FitbitCredentialsHelpContent(
-            onLaunchUrl: _launchURL,
-          ),
+          contentBuilder: (context, isCollapsed) =>
+              FitbitCredentialsHelpContent(onLaunchUrl: _launchURL),
         ),
         const SizedBox(height: 16.0),
         FormTableLayout(
@@ -51,8 +47,9 @@ class FitbitCredentialsSection extends StatelessWidget {
             FormTableRow(
               control: formViewModel.clientSecretControl,
               label: AppLocalizations.of(context)!.client_secret,
-              labelHelpText:
-                  AppLocalizations.of(context)!.client_secret_label_help,
+              labelHelpText: AppLocalizations.of(
+                context,
+              )!.client_secret_label_help,
               input: ReactiveTextField<String>(
                 formControl: formViewModel.clientSecretControl,
                 decoration: InputDecoration(
@@ -69,10 +66,7 @@ class FitbitCredentialsSection extends StatelessWidget {
 }
 
 class FitbitCredentialsHelpContent extends StatelessWidget {
-  const FitbitCredentialsHelpContent({
-    required this.onLaunchUrl,
-    super.key,
-  });
+  const FitbitCredentialsHelpContent({required this.onLaunchUrl, super.key});
 
   final Future<void> Function(String url) onLaunchUrl;
 
@@ -106,14 +100,21 @@ class FitbitCredentialsHelpContent extends StatelessWidget {
             ),
           ),
         ),
-        TextParagraph(text: AppLocalizations.of(context)!.fitbit_credentials_step3),
-        TextParagraph(text: AppLocalizations.of(context)!.fitbit_credentials_step4),
-        TextParagraph(text: AppLocalizations.of(context)!.fitbit_credentials_step5),
-        TextParagraph(text: AppLocalizations.of(context)!.fitbit_credentials_step6),
+        TextParagraph(
+          text: AppLocalizations.of(context)!.fitbit_credentials_step3,
+        ),
+        TextParagraph(
+          text: AppLocalizations.of(context)!.fitbit_credentials_step4,
+        ),
+        TextParagraph(
+          text: AppLocalizations.of(context)!.fitbit_credentials_step5,
+        ),
+        TextParagraph(
+          text: AppLocalizations.of(context)!.fitbit_credentials_step6,
+        ),
         InkWell(
-          onTap: () => onLaunchUrl(
-            'https://fitbit.google/enterprise/researchers-faqs/',
-          ),
+          onTap: () =>
+              onLaunchUrl('https://fitbit.google/enterprise/researchers-faqs/'),
           child: Text(
             AppLocalizations.of(context)!.fitbit_credentials_step7,
             style: TextStyle(
@@ -122,7 +123,9 @@ class FitbitCredentialsHelpContent extends StatelessWidget {
             ),
           ),
         ),
-        TextParagraph(text: AppLocalizations.of(context)!.fitbit_credentials_step8),
+        TextParagraph(
+          text: AppLocalizations.of(context)!.fitbit_credentials_step8,
+        ),
         const SizedBox(height: 12.0),
         const FitbitCredentialsScreenshotsSection(),
         const SizedBox(height: 16.0),

@@ -336,7 +336,8 @@ class _MeasurementSurveyFormViewState
           final requiresFitbitCredentials =
               formViewModel.questionType == SurveyQuestionType.fitbit;
 
-          if (!requiresFitbitCredentials || fitbitCredentialsFormViewModel == null) {
+          if (!requiresFitbitCredentials ||
+              fitbitCredentialsFormViewModel == null) {
             final validationSummary = formViewModel.form.validationErrorSummary
                 .trim();
             return PrimaryButton(
@@ -344,12 +345,14 @@ class _MeasurementSurveyFormViewState
               tooltipDisabled: _buildInvalidTooltip(validationSummary),
               icon: null,
               enabled: formViewModel.isValid,
-              onPressedFuture: formViewModel.isValid ? () {
-                final navigator = Navigator.of(context);
-                return formViewModel.save().then((_) {
-                  if (mounted) navigator.maybePop();
-                });
-              } : null,
+              onPressedFuture: formViewModel.isValid
+                  ? () {
+                      final navigator = Navigator.of(context);
+                      return formViewModel.save().then((_) {
+                        if (mounted) navigator.maybePop();
+                      });
+                    }
+                  : null,
             );
           }
 
@@ -361,7 +364,8 @@ class _MeasurementSurveyFormViewState
                   fitbitCredentialsFormViewModel.form.valid;
               final validationSummary = [
                 formViewModel.form.validationErrorSummary.trim(),
-                fitbitCredentialsFormViewModel.form.validationErrorSummary.trim(),
+                fitbitCredentialsFormViewModel.form.validationErrorSummary
+                    .trim(),
               ].where((summary) => summary.trim().isNotEmpty).join('\n\n');
 
               return PrimaryButton(
@@ -369,12 +373,14 @@ class _MeasurementSurveyFormViewState
                 tooltipDisabled: _buildInvalidTooltip(validationSummary),
                 icon: null,
                 enabled: isValid,
-                onPressedFuture: isValid ? () {
-                  final navigator = Navigator.of(context);
-                  return formViewModel.save().then((_) {
-                    if (mounted) navigator.maybePop();
-                  });
-                } : null,
+                onPressedFuture: isValid
+                    ? () {
+                        final navigator = Navigator.of(context);
+                        return formViewModel.save().then((_) {
+                          if (mounted) navigator.maybePop();
+                        });
+                      }
+                    : null,
               );
             },
           );

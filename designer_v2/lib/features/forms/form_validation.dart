@@ -162,12 +162,13 @@ extension FormGroupX on FormGroup {
   String get validationErrorSummary => getValidationErrorSummary();
 
   String getValidationErrorSummary({bool uniqueErrors = true}) {
-    final errorMessages = (uniqueErrors
-            ? {...formattedErrorMessages}.toList()
-            : formattedErrorMessages)
-        .map((message) => message.trim())
-        .where((message) => message.isNotEmpty)
-        .toList();
+    final errorMessages =
+        (uniqueErrors
+                ? {...formattedErrorMessages}.toList()
+                : formattedErrorMessages)
+            .map((message) => message.trim())
+            .where((message) => message.isNotEmpty)
+            .toList();
     if (errorMessages.isEmpty) {
       return '';
     }

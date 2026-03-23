@@ -656,7 +656,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   void attachFitbitCredentialsFormViewModel(
     FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel,
   ) {
-    if (identical(_fitbitCredentialsFormViewModel, fitbitCredentialsFormViewModel)) {
+    if (identical(
+      _fitbitCredentialsFormViewModel,
+      fitbitCredentialsFormViewModel,
+    )) {
       return;
     }
     _fitbitCredentialsFormViewModel = fitbitCredentialsFormViewModel;

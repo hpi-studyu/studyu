@@ -24,7 +24,8 @@ class FitbitQuestionFormView extends ConsumerStatefulWidget {
       _FitbitQuestionFormViewState();
 }
 
-class _FitbitQuestionFormViewState extends ConsumerState<FitbitQuestionFormView> {
+class _FitbitQuestionFormViewState
+    extends ConsumerState<FitbitQuestionFormView> {
   QuestionFormViewModel get formViewModel => widget.formViewModel;
 
   @override
