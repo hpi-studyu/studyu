@@ -70,8 +70,8 @@ class StudyRecruitController extends _$StudyRecruitController
         .availableActions(model)
         .where(
           (action) =>
-              action.type != ModelActionType.clipboard &&
-              action.type != ModelActionType.qrCode,
+              action.type != ModelActionType.share &&
+              action.type != ModelActionType.delete,
         )
         .toList();
     return withIcons(actions, modelActionIcons);
@@ -82,8 +82,8 @@ class StudyRecruitController extends _$StudyRecruitController
         .availableActions(model)
         .where(
           (action) =>
-              action.type == ModelActionType.clipboard ||
-              action.type == ModelActionType.qrCode,
+              action.type == ModelActionType.share ||
+              action.type == ModelActionType.delete,
         )
         .toList();
     return withIcons(actions, modelActionIcons);

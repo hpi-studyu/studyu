@@ -8,6 +8,30 @@ import 'package:web/web.dart' as web;
 class QrCodeDownloader {
   QrCodeDownloader._();
 
+  /// Generates a QR code widget for display in the UI
+  static Future<Widget> generateQrWidget({
+    required String data,
+    double size = 200,
+  }) async {
+    final qrCode = QrCode.fromData(
+      data: data,
+      errorCorrectLevel: QrErrorCorrectLevel.H,
+    );
+
+    final logoBytes = await rootBundle.load('assets/icon/icon.png');
+    final logoData = logoBytes.buffer.asUint8List();
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: PrettyQrView(
+        qrImage: QrImage(qrCode),
+        decoration: _getDefaultDecoration(logoData),
+      ),
+    );
+  }
+
+  /// Downloads a QR code as a PNG file
   static Future<void> downloadQrCode({
     required String data,
     required String filename,
@@ -25,10 +49,7 @@ class QrCodeDownloader {
 
     final qrImageBytes = await qrImage.toImageAsBytes(
       size: size,
-      decoration: PrettyQrDecoration(
-        background: Colors.white,
-        image: PrettyQrDecorationImage(image: MemoryImage(logoData)),
-      ),
+      decoration: _getDefaultDecoration(logoData),
     );
 
     if (qrImageBytes == null) {
@@ -45,5 +66,20 @@ class QrCodeDownloader {
       ..download = '$filename.png';
     anchor.click();
     web.URL.revokeObjectURL(url);
+  }
+
+  /// Returns default QR decoration with logo overlay
+  /// Uses standard black-on-white style for maximum scanning compatibility
+  static PrettyQrDecoration _getDefaultDecoration(Uint8List logoData) {
+    return PrettyQrDecoration(
+      background: Colors.white,
+      image: PrettyQrDecorationImage(image: MemoryImage(logoData)),
+      // ignore: experimental_member_use
+      shape: const PrettyQrShape.custom(
+        PrettyQrSquaresSymbol(),
+        finderPattern: PrettyQrSmoothSymbol(),
+        alignmentPatterns: PrettyQrDotsSymbol(),
+      ),
+    );
   }
 }

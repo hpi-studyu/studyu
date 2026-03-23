@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -10,10 +12,10 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
-import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
 part 'invite_code_repository.g.dart';
 
@@ -73,27 +75,15 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
 
   @override
   List<ModelAction> availableActions(StudyInvite model) {
+    final deepLink = generateInviteDeepLink(model.code);
+
     final actions = [
       ModelAction(
-        type: ModelActionType.clipboard,
-        label: ModelActionType.clipboard.string,
-        onExecute: () => {
-          ref
-              .read(clipboardServiceProvider)
-              .copy(model.code)
-              .then(
-                (value) => ref
-                    .read(notificationServiceProvider)
-                    .show(Notifications.inviteCodeClipped),
-              ),
-        },
-      ),
-      ModelAction(
-        type: ModelActionType.qrCode,
-        label: ModelActionType.qrCode.string,
-        onExecute: () {
-          final deepLink = generateInviteDeepLink(model.code);
-          QrCodeDownloader.downloadQrCode(data: deepLink, filename: model.code);
+        type: ModelActionType.share,
+        label: ModelActionType.share.string,
+        onExecute: ([BuildContext? context]) {
+          if (context == null) return;
+          _showSharePopup(context, deepLink, model.code);
         },
       ),
       ModelAction(
@@ -121,6 +111,55 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     ];
 
     return actions.where((action) => action.isAvailable).toList();
+  }
+
+  void _showSharePopup(BuildContext context, String deepLink, String filename) {
+    final effectiveContext = context;
+    showMenu<String>(
+      context: context,
+      position: const RelativeRect.fromLTRB(100, 100, 100, 100),
+      items: [
+        const PopupMenuItem<String>(
+          value: 'copy_link',
+          child: Row(
+            children: [
+              Icon(Icons.link_rounded, size: 20),
+              SizedBox(width: 12),
+              Text('Copy link'),
+            ],
+          ),
+        ),
+        const PopupMenuItem<String>(
+          value: 'qr_code',
+          child: Row(
+            children: [
+              Icon(Icons.qr_code_rounded, size: 20),
+              SizedBox(width: 12),
+              Text('QR Code'),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'copy_link') {
+        ref
+            .read(clipboardServiceProvider)
+            .copy(deepLink)
+            .then(
+              (_) => ref
+                  .read(notificationServiceProvider)
+                  .show(Notifications.inviteCodeClipped),
+            );
+      } else if (value == 'qr_code') {
+        if (effectiveContext.mounted) {
+          showDialog(
+            context: effectiveContext,
+            builder: (ctx) =>
+                QrCodePreviewDialog(data: deepLink, filename: filename),
+          );
+        }
+      }
+    });
   }
 
   @override
