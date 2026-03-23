@@ -1,3 +1,34 @@
+## 1.16.0
+
+ - **REFACTOR**: fix and format.
+ - **REFACTOR**: Update widget constructors to use `super.key` and refine filter UI constants and German localization.
+ - **REFACTOR**: remove "Clear all" filter option from dashboard studies filter.
+ - **REFACTOR**: filter_builder smaller.
+ - **REFACTOR**: Add new filter widgets for enum, boolean, number, text, and date range types for dashboard studies, and update the filter builder to utilize them.
+ - **FIX**: migrate csv.
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: resolve hash conflict in dashboardControllerHash.
+ - **FIX**: filter out exportDefinition action from available study actions.
+ - **FIX**: cast error value to Object for validation message function.
+ - **FIX**: Center studies table content and headers, adjust column sizing, and add DevTools options file.
+ - **FIX**: upgrade to flutter v3.38.4.
+ - **FIX**: Introduce comparator utility for symbol display and enhance filter chip labels and conditional form options.
+ - **FIX**: filter translation.
+ - **FIX**: preset highlighting bug.
+ - **FIX**: make `setStudiesFilter` asynchronous and fetch user data.
+ - **FIX**: improve dashboard responsiveness by adapting UI elements to screen sizes and add a DevTools options file.
+ - **FEAT**: Implement study definition export as JSON and add null check for study import.
+ - **FEAT**: Implement study import functionality, include study definition in export, and add customizable row spacing to form layouts.
+ - **FEAT**: localize dashboard filter UI, preset management, and related enum labels.
+ - **FEAT**: Track expanded filter fields in controller and enhance selected preset UI in filter builder.
+ - **FEAT**: add active state highlighting to filter presets, update filter action button labels and icons, and remove filter match count display.
+ - **FEAT**: Add 6px horizontal spacing to the filter builder UI.
+ - **FEAT**: Add persistent user-defined study filters and active filter state to user preferences.
+ - **FEAT**: Initialize filter builder's active preset from dashboard state or by matching saved filters.
+ - **FEAT**: Overhaul dashboard filter UI with auto-apply on close, enhanced preset management, and expandable filter sections.
+ - **FEAT**: Add dashboard filter presets and a unified filter menu, replacing old filter view components.
+ - **FEAT**: Implement dynamic and hierarchical study filtering on the dashboard, including UI, data models, and evaluation logic.
+
 ## 1.15.5
 
  - **FIX**: update balanced description in study schedule translations and upgrade dependencies.

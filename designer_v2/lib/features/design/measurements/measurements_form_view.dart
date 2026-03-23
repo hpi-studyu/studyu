@@ -60,21 +60,22 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                         hideLeadingTrailingWhenEmpty: true,
                         reorderable: !formViewModel.isReadonly,
                         onReorder: (oldIndex, newIndex) {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
+                          var effectiveNewIndex = newIndex;
+                          if (effectiveNewIndex > oldIndex) {
+                            effectiveNewIndex -= 1;
                           }
                           // Reorder the view models
                           final item = formViewModel.measurementViewModels
                               .removeAt(oldIndex);
                           formViewModel.measurementViewModels.insert(
-                            newIndex,
+                            effectiveNewIndex,
                             item,
                           );
                           // Reorder the underlying form array to match
                           final controlItem = formViewModel.measurementsArray
                               .removeAt(oldIndex);
                           formViewModel.measurementsArray.insert(
-                            newIndex,
+                            effectiveNewIndex,
                             controlItem,
                           );
                           formViewModel.save();

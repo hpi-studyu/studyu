@@ -86,11 +86,12 @@ class FormListView<T> extends StatelessWidget {
             onReorder:
                 onReorder ??
                 (oldIndex, newIndex) {
-                  if (newIndex > oldIndex) {
-                    newIndex -= 1;
+                  var effectiveNewIndex = newIndex;
+                  if (effectiveNewIndex > oldIndex) {
+                    effectiveNewIndex -= 1;
                   }
                   final item = items.removeAt(oldIndex);
-                  items.insert(newIndex, item);
+                  items.insert(effectiveNewIndex, item);
                   // Optionally, call setState or notify listeners if needed
                 },
             itemBuilder: (context, index) {

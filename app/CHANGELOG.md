@@ -1,3 +1,9 @@
+## 2.12.5
+
+ - **FIX**: migrate flutter_local_notifications.
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: upgrade to flutter v3.38.4.
+
 ## 2.12.4
 
  - **FIX**: fix caching.
