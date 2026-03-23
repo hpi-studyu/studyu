@@ -3,7 +3,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 
@@ -228,12 +227,8 @@ class _NotificationDispatcherState
         widget.snackbarInnerPadding,
       ),
       behavior: widget.snackbarBehavior,
-      action: SnackBarAction(
-        label: "X".hardcoded,
-        onPressed: () {
-          messengerState.hideCurrentSnackBar();
-        },
-      ),
+      showCloseIcon: true,
+      closeIconColor: theme.colorScheme.onPrimary,
     );
   }
 
