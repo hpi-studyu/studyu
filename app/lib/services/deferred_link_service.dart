@@ -47,7 +47,7 @@ class DeferredLinkService {
             referrer.contains('invite_code=')) {
           try {
             // Split by '&' or just regex find
-            final regexp = RegExp(r'invite_code=([^&]+)');
+            final regexp = RegExp('invite_code=([^&]+)');
             final match = regexp.firstMatch(referrer);
             if (match != null) {
               deferredCode = match.group(1);
