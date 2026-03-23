@@ -218,7 +218,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       delegate: this,
       validationSet: validationSet,
     );
-    measurementViewModelsCollection.add(viewModel);
+    measurementViewModelsCollection.stage(viewModel);
     onSelectItem(viewModel);
   }
 
@@ -228,7 +228,6 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   ) {
     final task = entry.buildTask();
     if (isSurveyWithTitleAdded(task.title ?? '')) return null;
-    // Compute the study day for this survey
     final phaseDuration = study.schedule.phaseDuration;
     final baseDay = study.schedule.includeBaseline ? phaseDuration : 0;
     final dayIndex = entry.dayIndex;
@@ -243,7 +242,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       delegate: this,
       validationSet: validationSet,
     );
-    measurementViewModelsCollection.add(viewModel);
+    measurementViewModelsCollection.stage(viewModel);
     onSelectItem(viewModel);
     return viewModel;
   }
@@ -300,7 +299,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onCancel(ManagedFormViewModel formViewModel, FormMode formMode) {
-    return; // no-op
+    measurementViewModelsCollection.unstage(
+      formViewModel as ManagedFormViewModel<IFormDataWithSchedule>,
+    );
   }
 
   @override
@@ -308,12 +309,13 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     ManagedFormViewModel formViewModel,
     FormMode prevFormMode,
   ) async {
-    if (prevFormMode == FormMode.create) {
-      measurementViewModelsCollection.commit(
-        formViewModel as ManagedFormViewModel<IFormDataWithSchedule>,
-      );
-    } else if (prevFormMode == FormMode.edit) {
-      // nothing to do here
+    final typedVm =
+        formViewModel as ManagedFormViewModel<IFormDataWithSchedule>;
+    final isStaged = measurementViewModelsCollection.stagedViewModels.contains(
+      typedVm,
+    );
+    if (prevFormMode == FormMode.create || isStaged) {
+      measurementViewModelsCollection.commit(typedVm);
     }
     await super.save();
   }

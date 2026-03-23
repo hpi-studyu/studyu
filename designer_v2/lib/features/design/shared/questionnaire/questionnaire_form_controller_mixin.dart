@@ -96,9 +96,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
   QuestionnaireFormData buildQuestionnaireFormData() {
     // If VMs haven't been created yet, build directly from stored data
     if (!_questionViewModelsInitialized && _deferredQuestionsData != null) {
-      return QuestionnaireFormData(
-        questionsData: _deferredQuestionsData,
-      );
+      return QuestionnaireFormData(questionsData: _deferredQuestionsData);
     }
     return QuestionnaireFormData(
       questionsData: questionFormViewModels.formData,
@@ -124,7 +122,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
 
   @override
   void onCancel(Q formViewModel, FormMode prevFormMode) {
-    return; // no-op
+    questionFormViewModels.unstage(formViewModel);
   }
 
   @override
@@ -174,4 +172,3 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
         as Q;
   }
 }
-
