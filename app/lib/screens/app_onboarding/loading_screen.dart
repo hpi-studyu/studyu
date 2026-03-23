@@ -109,7 +109,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> _runStartupFlow() async {
     await _restoreParticipantSession();
 
-    if (kIsWeb && widget.deepLinkInviteCode != null) {
+    if (kIsWeb && widget.hasDeepLink) {
       return;
     }
 
@@ -480,8 +480,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb && widget.deepLinkInviteCode != null) {
-      return DeepLinkWebLandingPage(inviteCode: widget.deepLinkInviteCode!);
+    if (kIsWeb && widget.hasDeepLink) {
+      return DeepLinkWebLandingPage(
+        inviteCode: widget.deepLinkInviteCode ?? widget.deepLinkStudyId!,
+      );
     }
     if (_error != null) {
       FlutterNativeSplash.remove(); // Force remove splash to ensure visibility
