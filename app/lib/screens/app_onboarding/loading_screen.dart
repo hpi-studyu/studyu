@@ -288,7 +288,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await _restoreParticipantSession();
     if (isUserLoggedIn()) {
       if (!mounted) return;
-      context.goNamed(RouteNames.studySelection);
+      context.goNamed(RouteNames.welcome);
       return;
     }
 
