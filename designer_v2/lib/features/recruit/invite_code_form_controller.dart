@@ -117,6 +117,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   @override
   void initControls() {
     regenerateCode(); // initialize randomly
+    prevFormValue = {...form.value};
   }
 
   // - Validation
