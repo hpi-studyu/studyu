@@ -134,7 +134,7 @@ class Dhq3Questions {
   /// About you – exact FFQ wording.
   static List<Question> _aboutYou() {
     final q = <Question>[];
-    
+
     final dob = DateQuestion()
       ..id = 'dhq_dob'
       ..prompt = 'What is your date of birth?';
@@ -3625,8 +3625,8 @@ class Dhq3Questions {
     q.add(
       _q(
         'dhq_supps_intro',
-        'The following questions are about dietary supplements you may have taken during the past 12 months. Please include supplements you took every day and those you took less often.',
-        choices: [Choice.withText(text: 'Continue', id: 'continue')],
+        'The following questions are about dietary supplements you may have taken during the past 12 months. Have you taken any dietary supplements in the past 12 months?',
+        choices: Dhq3Choices.yesNo,
       ),
     );
 
