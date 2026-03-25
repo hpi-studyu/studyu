@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import { corsHeaders, handleCors } from '../_shared/cors.ts';
 
 // Types
