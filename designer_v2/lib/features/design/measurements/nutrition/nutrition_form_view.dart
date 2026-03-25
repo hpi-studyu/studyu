@@ -26,12 +26,11 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
           rows: [
             FormTableRow(
               control: widget.formViewModel.titleControl,
-              label: tr
-                  .form_field_measurement_survey_title, // Reusing survey title label
+              label: tr.form_field_measurement_survey_title,
               input: ReactiveTextField(
                 formControl: widget.formViewModel.titleControl,
                 decoration: InputDecoration(
-                  hintText: tr.form_field_measurement_survey_title,
+                  hintText: tr.form_field_nutrition_default_title,
                 ),
                 inputFormatters: [LengthLimitingTextInputFormatter(200)],
                 validationMessages:
@@ -75,15 +74,112 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
                 decoration: InputDecoration(
                   hintText: tr.form_field_nutrition_minimum_meals_hint,
                 ),
+                validationMessages:
+                    widget.formViewModel.minimumMealsRequiredControl
+                        .validationMessages,
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 20.0),
+        _CustomMealTypesSection(
+          formViewModel: widget.formViewModel,
+          isReadonly: widget.formViewModel.isReadonly,
         ),
         const SizedBox(height: 28.0),
         ScheduleControls(
           formViewModel: widget.formViewModel,
           isReadonly: widget.formViewModel.isReadonly,
         ),
+      ],
+    );
+  }
+}
+
+class _CustomMealTypesSection extends StatelessWidget {
+  final NutritionFormViewModel formViewModel;
+  final bool isReadonly;
+
+  const _CustomMealTypesSection({
+    required this.formViewModel,
+    required this.isReadonly,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              tr.form_field_nutrition_custom_meal_types,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (!isReadonly)
+              TextButton.icon(
+                onPressed: () {
+                  formViewModel.customMealTypesControl.add(
+                    FormControl<String>(value: ''),
+                  );
+                },
+                icon: const Icon(Icons.add, size: 16),
+                label: Text(tr.form_field_nutrition_add_meal_type),
+              ),
+          ],
+        ),
+        if (formViewModel.customMealTypesControl.controls.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              tr.form_field_nutrition_custom_meal_types_hint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          )
+        else
+          ReactiveFormArray<String>(
+            formArray: formViewModel.customMealTypesControl,
+            builder: (context, formArray, child) {
+              return Column(
+                children: List.generate(
+                  formArray.controls.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ReactiveTextField<String>(
+                            formControl: formArray.controls[index]
+                                as FormControl<String>,
+                            decoration: InputDecoration(
+                              hintText:
+                                  '${tr.form_field_nutrition_custom_meal_types} ${index + 1}',
+                              isDense: true,
+                            ),
+                            readOnly: isReadonly,
+                          ),
+                        ),
+                        if (!isReadonly)
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outline,
+                                size: 20),
+                            onPressed: () =>
+                                formArray.removeAt(index),
+                            tooltip: 'Remove',
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
       ],
     );
   }

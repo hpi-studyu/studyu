@@ -38,7 +38,7 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
   final FormControl<bool> collectMealContextControl = FormControl(value: true);
   final FormControl<bool> allowRecipesControl = FormControl(value: true);
   final FormControl<int> minimumMealsRequiredControl = FormControl();
-  // TODO: Add support for customMealTypes
+  final FormArray<String> customMealTypesControl = FormArray<String>([]);
 
   MeasurementID get measurementId => measurementIdControl.value!;
   MeasurementID get instanceId => instanceIdControl.value!;
@@ -46,8 +46,8 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
   @override
   FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [titleRequired],
-    StudyFormValidationSet.publish: [titleRequired],
-    StudyFormValidationSet.test: [titleRequired],
+    StudyFormValidationSet.publish: [titleRequired, minimumMealsMin],
+    StudyFormValidationSet.test: [titleRequired, minimumMealsMin],
   };
 
   FormControlValidation get titleRequired => FormControlValidation(
@@ -55,7 +55,16 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     validators: [Validators.required],
     validationMessages: {
       ValidationMessage.required: (error) => tr
-          .form_field_measurement_survey_title_required, // Reusing survey title required message
+          .form_field_measurement_survey_title_required,
+    },
+  );
+
+  FormControlValidation get minimumMealsMin => FormControlValidation(
+    control: minimumMealsRequiredControl,
+    validators: [Validators.min(1)],
+    validationMessages: {
+      ValidationMessage.min: (_) =>
+          tr.form_field_nutrition_minimum_meals_min_error,
     },
   );
 
@@ -67,6 +76,7 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     'collectMealContext': collectMealContextControl,
     'allowRecipes': allowRecipesControl,
     'minimumMealsRequired': minimumMealsRequiredControl,
+    'customMealTypes': customMealTypesControl,
     ...scheduleFormControls,
   });
 
@@ -79,6 +89,11 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     collectMealContextControl.value = data.collectMealContext;
     allowRecipesControl.value = data.allowRecipes;
     minimumMealsRequiredControl.value = data.minimumMealsRequired;
+
+    customMealTypesControl.clear();
+    for (final type in data.customMealTypes ?? <String>[]) {
+      customMealTypesControl.add(FormControl<String>(value: type));
+    }
 
     setScheduleControlsFrom(data);
   }
@@ -93,6 +108,13 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
       collectMealContext: collectMealContextControl.value ?? true,
       allowRecipes: allowRecipesControl.value ?? true,
       minimumMealsRequired: minimumMealsRequiredControl.value,
+      customMealTypes: () {
+        final types = customMealTypesControl.controls
+            .map((c) => (c as FormControl<String>).value ?? '')
+            .where((s) => s.isNotEmpty)
+            .toList();
+        return types.isEmpty ? null : types;
+      }(),
       isTimeLocked: isTimeRestrictedControl.value!, // required
       timeLockStart: restrictedTimeStartControl.value?.toStudyUTimeOfDay(),
       timeLockEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),

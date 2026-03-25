@@ -845,6 +845,12 @@
   "form_field_nutrition_collect_meal_context": "Mahlzeitkontext erfassen",
   "form_field_nutrition_allow_recipes": "Rezepte erlauben",
   "form_field_nutrition_minimum_meals_required": "Mindestanzahl erforderlicher Mahlzeiten",
-  "form_field_nutrition_minimum_meals_hint": "Optional"
+  "form_field_nutrition_minimum_meals_hint": "Optional",
+  "form_field_nutrition_default_title": "Ernährungserfassung",
+  "form_field_nutrition_custom_meal_types": "Benutzerdefinierte Mahlzeittypen",
+  "form_field_nutrition_custom_meal_types_hint": "Leer lassen für Standardwerte",
+  "form_field_nutrition_add_meal_type": "Mahlzeittyp hinzufügen",
+  "form_field_nutrition_meal_type_label": "Mahlzeittyp {index}",
+  "form_field_nutrition_minimum_meals_min_error": "Muss mindestens 1 sein"
 }
 

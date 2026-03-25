@@ -4010,6 +4010,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional'**
   String get form_field_nutrition_minimum_meals_hint;
+
+  /// No description provided for @form_field_nutrition_default_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Tracking'**
+  String get form_field_nutrition_default_title;
+
+  /// No description provided for @form_field_nutrition_custom_meal_types.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Meal Types'**
+  String get form_field_nutrition_custom_meal_types;
+
+  /// No description provided for @form_field_nutrition_custom_meal_types_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use defaults'**
+  String get form_field_nutrition_custom_meal_types_hint;
+
+  /// No description provided for @form_field_nutrition_add_meal_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Add meal type'**
+  String get form_field_nutrition_add_meal_type;
+
+  /// No description provided for @form_field_nutrition_minimum_meals_min_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be at least 1'**
+  String get form_field_nutrition_minimum_meals_min_error;
 }
 
 class _AppLocalizationsDelegate

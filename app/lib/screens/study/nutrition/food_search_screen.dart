@@ -15,10 +15,14 @@ import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
 class FoodSearchScreen extends StatelessWidget {
-  const FoodSearchScreen({super.key});
+  final bool allowRecipes;
 
-  static MaterialPageRoute<studyu.FoodEntry> route() =>
-      MaterialPageRoute(builder: (_) => const FoodSearchScreen());
+  const FoodSearchScreen({this.allowRecipes = true, super.key});
+
+  static MaterialPageRoute<studyu.FoodEntry> route({bool allowRecipes = true}) =>
+      MaterialPageRoute(
+        builder: (_) => FoodSearchScreen(allowRecipes: allowRecipes),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +31,15 @@ class FoodSearchScreen extends StatelessWidget {
 
     return ChangeNotifierProvider(
       create: (_) => TemplateViewModel(userId: userId),
-      child: const _FoodSearchScreenContent(),
+      child: _FoodSearchScreenContent(allowRecipes: allowRecipes),
     );
   }
 }
 
 class _FoodSearchScreenContent extends StatefulWidget {
-  const _FoodSearchScreenContent();
+  final bool allowRecipes;
+
+  const _FoodSearchScreenContent({this.allowRecipes = true});
 
   @override
   State<_FoodSearchScreenContent> createState() =>
@@ -507,6 +513,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onAddManually: _addManually,
               onCreateRecipe: _createRecipe,
               onScanBarcode: _scanBarcode,
+              allowRecipes: widget.allowRecipes,
             ),
           ),
         ],
@@ -936,12 +943,14 @@ class _QuickActionsCard extends StatelessWidget {
   final VoidCallback onManualTap;
   final VoidCallback onRecipeTap;
   final VoidCallback onScanTap;
+  final bool allowRecipes;
   final ThemeData theme;
 
   const _QuickActionsCard({
     required this.onManualTap,
     required this.onRecipeTap,
     required this.onScanTap,
+    this.allowRecipes = true,
     required this.theme,
   });
 
@@ -953,15 +962,17 @@ class _QuickActionsCard extends StatelessWidget {
       color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Column(
         children: [
-          _QuickActionTile(
-            icon: Icons.menu_book_outlined,
-            iconColor: Colors.orange,
-            title: l10n.create_recipe,
-            subtitle: l10n.create_recipe_subtitle,
-            onTap: onRecipeTap,
-            theme: theme,
-          ),
-          const Divider(height: 1, indent: 68),
+          if (allowRecipes) ...[
+            _QuickActionTile(
+              icon: Icons.menu_book_outlined,
+              iconColor: Colors.orange,
+              title: l10n.create_recipe,
+              subtitle: l10n.create_recipe_subtitle,
+              onTap: onRecipeTap,
+              theme: theme,
+            ),
+            const Divider(height: 1, indent: 68),
+          ],
           _QuickActionTile(
             icon: Icons.edit_note_outlined,
             iconColor: Colors.purple,
@@ -1076,6 +1087,7 @@ class _FoodSearchListView extends StatelessWidget {
   final VoidCallback onAddManually;
   final VoidCallback onCreateRecipe;
   final VoidCallback onScanBarcode;
+  final bool allowRecipes;
 
   const _FoodSearchListView({
     required this.scrollController,
@@ -1097,12 +1109,14 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onAddManually,
     required this.onCreateRecipe,
     required this.onScanBarcode,
+    this.allowRecipes = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final filteredTemplates = templateViewModel.filteredTemplates
         .whereType<studyu.SavedFoodTemplate>()
+        .where((t) => allowRecipes || t.prototype.entryType != studyu.FoodEntryType.recipe)
         .toList();
     final hasTemplates = templateViewModel.foodTemplates.isNotEmpty;
     final showTemplates = hasTemplates && filteredTemplates.isNotEmpty;
@@ -1289,6 +1303,7 @@ class _FoodSearchListView extends StatelessWidget {
         onManualTap: onAddManually,
         onRecipeTap: onCreateRecipe,
         onScanTap: onScanBarcode,
+        allowRecipes: allowRecipes,
         theme: theme,
       );
     }

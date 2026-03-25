@@ -111,7 +111,38 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           final l10n = AppLocalizations.of(context)!;
           final recall = model.recall;
 
-          return Scaffold(
+          return PopScope(
+            canPop: !model.isInTaskMode ||
+                widget.task?.minimumMealsRequired == null ||
+                model.meetsMinimumMeals,
+            onPopInvokedWithResult: (bool didPop, _) async {
+              if (didPop) return;
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(l10n.min_meals_not_met_title),
+                  content: Text(
+                    l10n.min_meals_not_met_message(
+                      widget.task!.minimumMealsRequired!,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(false),
+                      child: Text(l10n.cancel),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(true),
+                      child: Text(l10n.leave_anyway),
+                    ),
+                  ],
+                ),
+              );
+              if (shouldPop == true && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: Scaffold(
             appBar: _buildAppBar(context, model, l10n, theme),
             body: Column(
               children: [
@@ -154,6 +185,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 ),
               ],
             ),
+          ),
           );
         },
       ),
@@ -360,11 +392,25 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10n.meals,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+            Row(
+              children: [
+                Text(
+                  l10n.meals,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (widget.task?.minimumMealsRequired != null) ...[
+                  const SizedBox(width: 8),
+                  _MinMealsProgressChip(
+                    current: recall.meals
+                        .where((m) => !m.isSkipped)
+                        .length,
+                    minimum: widget.task!.minimumMealsRequired!,
+                    theme: theme,
+                  ),
+                ],
+              ],
             ),
             Row(
               children: [
@@ -432,7 +478,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     BuildContext context,
     DailyRecallEntryViewModel model,
   ) async {
-    final result = await Navigator.of(context).push(MealEntryScreen.route());
+    final result = await Navigator.of(context).push(
+      MealEntryScreen.route(task: widget.task),
+    );
     if (result != null) {
       model.addMeal(result);
     }
@@ -444,9 +492,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     MealLog meal,
     int index,
   ) async {
-    final result = await Navigator.of(
-      context,
-    ).push(MealEntryScreen.route(existingMeal: meal));
+    final result = await Navigator.of(context).push(
+      MealEntryScreen.route(existingMeal: meal, task: widget.task),
+    );
     if (result != null) {
       model.updateMeal(index, result);
     }
@@ -766,6 +814,51 @@ class _PopupMenuItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _MinMealsProgressChip extends StatelessWidget {
+  final int current;
+  final int minimum;
+  final ThemeData theme;
+
+  const _MinMealsProgressChip({
+    required this.current,
+    required this.minimum,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final met = current >= minimum;
+    final color = met ? Colors.green : theme.colorScheme.error;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            met ? Icons.check_circle_outline : Icons.restaurant_menu,
+            size: 13,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '$current/$minimum',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

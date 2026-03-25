@@ -2370,4 +2370,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_field_nutrition_minimum_meals_hint => 'Optional';
+
+  @override
+  String get form_field_nutrition_default_title => 'Ernährungserfassung';
+
+  @override
+  String get form_field_nutrition_custom_meal_types =>
+      'Benutzerdefinierte Mahlzeittypen';
+
+  @override
+  String get form_field_nutrition_custom_meal_types_hint =>
+      'Leer lassen für Standardwerte';
+
+  @override
+  String get form_field_nutrition_add_meal_type => 'Mahlzeittyp hinzufügen';
+
+  @override
+  String get form_field_nutrition_minimum_meals_min_error =>
+      'Muss mindestens 1 sein';
 }

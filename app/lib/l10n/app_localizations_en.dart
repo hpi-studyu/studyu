@@ -1787,4 +1787,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String confidenceLabel(int percentage) {
     return 'Confidence: $percentage%';
   }
+
+  @override
+  String get min_meals_not_met_title => 'Minimum meals not reached';
+
+  @override
+  String min_meals_not_met_message(int count) {
+    return 'This task requires at least $count meal(s). You have recorded fewer than required. Leave anyway?';
+  }
+
+  @override
+  String get leave_anyway => 'Leave anyway';
 }

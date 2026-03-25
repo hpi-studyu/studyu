@@ -1800,4 +1800,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String confidenceLabel(int percentage) {
     return 'Konfidenz: $percentage%';
   }
+
+  @override
+  String get min_meals_not_met_title =>
+      'Mindestanzahl an Mahlzeiten nicht erreicht';
+
+  @override
+  String min_meals_not_met_message(int count) {
+    return 'Diese Aufgabe erfordert mindestens $count Mahlzeit(en). Du hast weniger als erforderlich aufgezeichnet. Trotzdem verlassen?';
+  }
+
+  @override
+  String get leave_anyway => 'Trotzdem verlassen';
 }
