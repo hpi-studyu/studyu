@@ -45,6 +45,13 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   bool get isInTaskMode => task != null && completionPeriod != null;
 
+  bool get meetsMinimumMeals {
+    final minimum = task?.minimumMealsRequired;
+    if (minimum == null) return true;
+    final nonSkippedCount = recall.meals.where((m) => !m.isSkipped).length;
+    return nonSkippedCount >= minimum;
+  }
+
   Future<void> _initialize() async {
     if (subject == null) return;
 

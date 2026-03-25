@@ -845,6 +845,12 @@
   "form_field_nutrition_collect_meal_context": "Collect Meal Context",
   "form_field_nutrition_allow_recipes": "Allow Recipes",
   "form_field_nutrition_minimum_meals_required": "Minimum Meals Required",
-  "form_field_nutrition_minimum_meals_hint": "Optional"
+  "form_field_nutrition_minimum_meals_hint": "Optional",
+  "form_field_nutrition_default_title": "Nutrition Tracking",
+  "form_field_nutrition_custom_meal_types": "Custom Meal Types",
+  "form_field_nutrition_custom_meal_types_hint": "Leave empty to use defaults",
+  "form_field_nutrition_add_meal_type": "Add meal type",
+  "form_field_nutrition_meal_type_label": "Meal type {index}",
+  "form_field_nutrition_minimum_meals_min_error": "Must be at least 1"
 }
 

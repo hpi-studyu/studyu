@@ -2336,4 +2336,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_field_nutrition_minimum_meals_hint => 'Optional';
+
+  @override
+  String get form_field_nutrition_default_title => 'Nutrition Tracking';
+
+  @override
+  String get form_field_nutrition_custom_meal_types => 'Custom Meal Types';
+
+  @override
+  String get form_field_nutrition_custom_meal_types_hint =>
+      'Leave empty to use defaults';
+
+  @override
+  String get form_field_nutrition_add_meal_type => 'Add meal type';
+
+  @override
+  String get form_field_nutrition_minimum_meals_min_error =>
+      'Must be at least 1';
 }

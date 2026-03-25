@@ -738,5 +738,15 @@
         "type": "int"
       }
     }
-  }
+  },
+  "min_meals_not_met_title": "Minimum meals not reached",
+  "min_meals_not_met_message": "This task requires at least {count} meal(s). You have recorded fewer than required. Leave anyway?",
+  "@min_meals_not_met_message": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leave_anyway": "Leave anyway"
 }

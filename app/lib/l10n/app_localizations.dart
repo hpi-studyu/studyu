@@ -3445,6 +3445,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confidence: {percentage}%'**
   String confidenceLabel(int percentage);
+
+  /// No description provided for @min_meals_not_met_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum meals not reached'**
+  String get min_meals_not_met_title;
+
+  /// No description provided for @min_meals_not_met_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This task requires at least {count} meal(s). You have recorded fewer than required. Leave anyway?'**
+  String min_meals_not_met_message(int count);
+
+  /// No description provided for @leave_anyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave anyway'**
+  String get leave_anyway;
 }
 
 class _AppLocalizationsDelegate
