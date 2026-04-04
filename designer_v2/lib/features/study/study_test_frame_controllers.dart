@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:js_interop' as js;
 import 'dart:js_interop_unsafe';
 import 'dart:ui_web' as ui;
@@ -27,6 +28,11 @@ abstract class PlatformController {
   late String previewSrc;
   late RouteInformation routeInformation;
   late Widget frameWidget;
+  VoidCallback? onLoadStarted;
+  VoidCallback? onConnected;
+  VoidCallback? onLoading;
+  VoidCallback? onReady;
+  ValueChanged<String>? onError;
 
   PlatformController(this.baseSrc, this.studyId);
 
@@ -42,6 +48,7 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
+  bool _isListening = false;
 
   WebController(super.baseSrc, super.studyId) {
     super.frameWidget = Container();
@@ -52,7 +59,6 @@ class WebController extends PlatformController {
   void activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    // debugLog("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -64,6 +70,14 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
+    iFrameElement.onLoad.listen((_) {
+      onConnected?.call();
+    });
+
+    iFrameElement.onError.listen((_) {
+      onError?.call('The StudyU app preview could not be loaded.');
+    });
+
     ui.platformViewRegistry.registerViewFactory(
       '$studyId$key',
       (int viewId) => iFrameElement
@@ -74,6 +88,7 @@ class WebController extends PlatformController {
 
   @override
   void generateUrl({String? route, String? extra, String? cmd, String? data}) {
+    onLoadStarted?.call();
     routeInformation = RouteInformation(route, extra, cmd, data);
     if (baseSrc == '') {
       previewSrc = '';
@@ -102,7 +117,6 @@ class WebController extends PlatformController {
     //if (frame != null) {
     // iFrameElement = frame;
     if (iFrameElement.src != previewSrc) {
-      // debugLog("*********NAVIGATE TO: $previewSrc");
       iFrameElement.src = previewSrc;
       //iFrameElement.src = newPrev;
     } /* else {
@@ -137,9 +151,46 @@ class WebController extends PlatformController {
 
   @override
   void listen() {
+    if (_isListening) return;
+    _isListening = true;
     web.window.onMessage.listen((event) {
-      final data = event.data;
-      if (data == 'routeFinished'.toJS) {
+      final data = event.data.dartify();
+      if (data is String) {
+        try {
+          final parsed = jsonDecode(data);
+          if (parsed is Map<String, dynamic> &&
+              parsed['type'] == 'previewStatus') {
+            final status = parsed['status'] as String?;
+            final message = parsed['message'] as String?;
+            switch (status) {
+              case 'loading':
+                onLoading?.call();
+                return;
+              case 'loaded':
+                onReady?.call();
+                return;
+              case 'error':
+                onError?.call(
+                  message ??
+                      'The StudyU app preview could not be opened right now.',
+                );
+                return;
+            }
+          }
+        } catch (_) {
+          // Fall through to legacy string handling.
+        }
+      }
+      if (data == 'previewConnected') {
+        onConnected?.call();
+        return;
+      }
+      if (data == 'previewReady') {
+        onReady?.call();
+        return;
+      }
+      if (data == 'routeFinished') {
+        onReady?.call();
         // debugLog("Preview route finished");
         refresh();
       }
@@ -148,9 +199,6 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    // debugLog("Send updated study to client");
-    // Send to all windows for debugging
-    // iFrameElement.contentWindow?.postMessage(message, '*');
     iFrameElement.contentWindow?.postMessage(
       message.toJS,
       (env.appUrl ?? '').toJS,

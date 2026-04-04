@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -7,6 +9,9 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+
+enum PreviewOverlayStage { healthChecking, connecting, appLoading, error, none }
 
 class WebFrame extends StatelessWidget {
   final String previewSrc;
@@ -50,6 +55,150 @@ class DisabledFrame extends StatelessWidget {
       innerContentBackgroundColor: theme.colorScheme.secondary.withValues(
         alpha: 0.03,
       ),
+    );
+  }
+}
+
+class PreviewStatusFrame extends StatelessWidget {
+  const PreviewStatusFrame({
+    required this.icon,
+    required this.title,
+    required this.description,
+    this.action,
+    this.borderColor,
+    this.innerContentBackgroundColor,
+    super.key,
+  });
+
+  final IconData icon;
+  final String title;
+  final String description;
+  final Widget? action;
+  final Color? borderColor;
+  final Color? innerContentBackgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return PhoneContainer(
+      innerContent: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 28.0,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  color: Colors.white.withValues(alpha: 0.68),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.7),
+                    width: 1.2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
+                    ),
+                  ],
+                ),
+                child: EmptyBody(
+                  icon: icon,
+                  title: title,
+                  description: description,
+                  button: action,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      borderColor:
+          borderColor ?? theme.colorScheme.secondary.withValues(alpha: 0.35),
+      innerContentBackgroundColor:
+          innerContentBackgroundColor ??
+          theme.colorScheme.secondary.withValues(alpha: 0.08),
+    );
+  }
+}
+
+class LoadingFrame extends StatelessWidget {
+  const LoadingFrame({
+    required this.configuredUrl,
+    required this.isLocalDevelopment,
+    required this.stage,
+    this.message,
+    super.key,
+  });
+
+  final String configuredUrl;
+  final bool isLocalDevelopment;
+  final PreviewOverlayStage stage;
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    final title = switch (stage) {
+      PreviewOverlayStage.healthChecking => 'Checking app availability',
+      PreviewOverlayStage.connecting => 'Connecting to app preview',
+      PreviewOverlayStage.appLoading => 'Loading app preview',
+      PreviewOverlayStage.error || PreviewOverlayStage.none => '',
+    };
+    final description =
+        message ??
+        switch (stage) {
+          PreviewOverlayStage.healthChecking => isLocalDevelopment
+              ? 'Checking whether the StudyU app is running at $configuredUrl.'
+              : 'Checking whether the participant app is reachable at $configuredUrl.',
+          PreviewOverlayStage.connecting => isLocalDevelopment
+              ? 'The local StudyU app is reachable. Establishing the iframe connection now.'
+              : 'The participant app is reachable. Establishing the preview connection now.',
+          PreviewOverlayStage.appLoading => isLocalDevelopment
+              ? 'The app preview is connected. The app is now loading inside the phone frame.'
+              : 'The app preview is connected. The participant app is now loading.',
+          PreviewOverlayStage.error || PreviewOverlayStage.none => '',
+        };
+
+    return PreviewStatusFrame(
+      icon: Icons.sync_rounded,
+      title: title.hardcoded,
+      description: description.hardcoded,
+      action: const Padding(
+        padding: EdgeInsets.only(top: 8.0),
+        child: SizedBox(
+          width: 28,
+          height: 28,
+          child: CircularProgressIndicator(strokeWidth: 2.5),
+        ),
+      ),
+      innerContentBackgroundColor: Colors.white.withValues(alpha: 0.5),
+    );
+  }
+}
+
+class ErrorFrame extends StatelessWidget {
+  const ErrorFrame({
+    required this.title,
+    required this.message,
+    super.key,
+  });
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return PreviewStatusFrame(
+      icon: Icons.warning_amber_rounded,
+      title: title,
+      description: message,
+      innerContentBackgroundColor: Colors.white.withValues(alpha: 0.5),
     );
   }
 }

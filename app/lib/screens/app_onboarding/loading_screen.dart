@@ -24,6 +24,8 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  final IFrameHelper _iFrameHelper = IFrameHelper();
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +34,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
-    await _initPreview(state);
+    try {
+      await _initPreview(state);
+    } catch (error, stackTrace) {
+      StudyULogger.error(
+        'Preview failed to initialize.',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      _iFrameHelper.postPreviewStatus(
+        status: 'error',
+        message:
+            'The preview could not be opened for this study yet. Please try resetting the preview.',
+      );
+      rethrow;
+    }
 
     final selectedSubjectId = await getActiveSubjectId();
     if (!mounted) return;
@@ -69,6 +85,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final route = onBoarded ? Routes.terms : Routes.onboarding;
 
     if (!mounted) return;
+    _iFrameHelper.postPreviewStatus(status: 'loaded');
     Navigator.pushReplacementNamed(context, route);
   }
 
@@ -125,19 +142,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
     final lang = AppLanguage(AppLocalizations.supportedLocales);
     final preview = study_preview.Preview(widget.queryParameters, lang);
-    final iFrameHelper = IFrameHelper();
     state.isPreview = true;
+    _iFrameHelper.postPreviewStatus(status: 'loading');
     await preview.init();
 
     // Authorize
-    if (!await preview.handleAuthorization()) {
+    final isAuthorized = await preview.handleAuthorization();
+    if (!isAuthorized) {
+      _iFrameHelper.postPreviewStatus(
+        status: 'error',
+        message:
+            'The preview could not be opened right now. Please try resetting the preview.',
+      );
       return;
     }
     state.selectedStudy = preview.study;
 
     await preview.runCommands();
 
-    iFrameHelper.listen(state);
+    _iFrameHelper.listen(state);
 
     if (preview.hasRoute()) {
       // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');
@@ -145,21 +168,23 @@ class _LoadingScreenState extends State<LoadingScreen> {
       // ELIGIBILITY CHECK
       if (preview.selectedRoute == '/eligibilityCheck') {
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
         await Navigator.push<EligibilityResult>(
           context,
           EligibilityScreen.routeFor(study: preview.study),
         );
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
 
       // INTERVENTION SELECTION
       if (preview.selectedRoute == Routes.interventionSelection) {
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await Navigator.pushNamed(context, Routes.interventionSelection);
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
 
@@ -171,24 +196,27 @@ class _LoadingScreenState extends State<LoadingScreen> {
       // CONSENT
       if (preview.selectedRoute == Routes.consent) {
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await Navigator.pushNamed<bool>(context, Routes.consent);
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
 
       // JOURNEY
       if (preview.selectedRoute == Routes.journey) {
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await Navigator.pushNamed(context, Routes.journey);
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
 
       // DASHBOARD
       if (preview.selectedRoute == Routes.dashboard) {
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await Navigator.pushReplacementNamed(context, Routes.dashboard);
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
 
@@ -200,8 +228,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         state.selectedStudy!.schedule.includeBaseline = false;
         state.activeSubject!.study.schedule.includeBaseline = false;
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await Navigator.pushReplacementNamed(context, Routes.dashboard);
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
 
@@ -213,6 +242,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           ),
         ];
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await Navigator.push<bool>(
           context,
           TaskScreen.routeFor(
@@ -222,7 +252,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ),
           ),
         );
-        iFrameHelper.postRouteFinished();
+        _iFrameHelper.postRouteFinished();
         return;
       }
     } else {
@@ -231,15 +261,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (subject != null) {
           state.activeSubject = subject;
           if (!mounted) return;
+          _iFrameHelper.postPreviewStatus(status: 'loaded');
           Navigator.pushReplacementNamed(context, Routes.dashboard);
           return;
         } else {
           if (!mounted) return;
+          _iFrameHelper.postPreviewStatus(status: 'loaded');
           Navigator.pushReplacementNamed(context, Routes.studyOverview);
           return;
         }
       } else {
         if (!mounted) return;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
