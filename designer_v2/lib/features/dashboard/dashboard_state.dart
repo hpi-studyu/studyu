@@ -115,6 +115,16 @@ class DashboardState extends Equatable {
   }) {
     final sortedStudies = studiesToSort ?? studies.value!;
     switch (sortByColumn) {
+      case StudiesTableColumn.serial:
+        if (!sortAscending) {
+          sortedStudies.sort(
+            (study, other) => other.createdAt!.compareTo(study.createdAt!),
+          );
+        } else {
+          sortedStudies.sort(
+            (study, other) => study.createdAt!.compareTo(other.createdAt!),
+          );
+        }
       case StudiesTableColumn.title:
         if (sortAscending) {
           sortedStudies.sort(
