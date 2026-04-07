@@ -212,7 +212,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           Row(
             children: [
               SizedBox(
-                height: 36.0, // Fixed height for alignment
+                height: 30.0,
                 child: MediaQuery.of(context).size.width < 500
                     ? IconButton.filled(
                         icon: const Icon(Icons.add),
@@ -222,6 +222,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     : PrimaryButton(
                         text: tr.action_button_new_study,
                         onPressed: controller.onClickNewStudy,
+                        minimumSize: const Size(0, 30),
+                        innerPadding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 0,
+                        ),
+                        iconTextSpacing: 14,
                       ),
               ),
               const SizedBox(width: 20.0),

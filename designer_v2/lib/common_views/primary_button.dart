@@ -16,6 +16,7 @@ class PrimaryButton extends StatefulWidget {
       horizontal: 4.0,
       vertical: 8.0,
     ),
+    this.iconTextSpacing = 6.0,
     this.minimumSize,
     super.key,
   });
@@ -41,6 +42,7 @@ class PrimaryButton extends StatefulWidget {
   final FutureFactory? onPressedFuture;
 
   final EdgeInsets innerPadding;
+  final double iconTextSpacing;
 
   bool get isDisabled =>
       !enabled || (onPressed == null && onPressedFuture == null);
@@ -112,7 +114,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                   )
                 else
                   Icon(widget.icon),
-                const SizedBox(width: 6.0),
+                SizedBox(width: widget.iconTextSpacing),
                 Text(widget.text, textAlign: TextAlign.center),
               ],
             ),
