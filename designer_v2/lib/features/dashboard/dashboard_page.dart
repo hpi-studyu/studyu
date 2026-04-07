@@ -472,7 +472,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   child: Search(
                                     key: const ValueKey('search_field'),
                                     searchController: state.searchController,
-                                    hintText: tr.search,
+                                    hintText: "Search",
                                     onQueryChanged: (query) =>
                                         controller.filterStudies(query),
                                   ),
@@ -488,7 +488,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             child: Search(
                               key: const ValueKey('search_field'),
                               searchController: state.searchController,
-                              hintText: tr.search,
+                              hintText: "Search",
                               onQueryChanged: (query) =>
                                   controller.filterStudies(query),
                             ),

@@ -47,10 +47,36 @@ class SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SearchBar(
       hintText: widget.hintText ?? "Search",
       controller: _searchController,
-      leading: const Icon(Icons.search),
+      leading: const Padding(
+        padding: EdgeInsetsDirectional.only(start: 4),
+        child: Icon(Icons.search_rounded, size: 20),
+      ),
+      elevation: const WidgetStatePropertyAll<double>(0),
+      constraints: const BoxConstraints(
+        minHeight: 35,
+        maxHeight: 35,
+      ),
+      backgroundColor: WidgetStatePropertyAll<Color>(
+        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+      ),
+      side: WidgetStatePropertyAll<BorderSide>(
+        BorderSide(
+          color: theme.colorScheme.outlineVariant,
+        ),
+      ),
+      padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+        EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+      ),
+      textStyle: WidgetStatePropertyAll<TextStyle?>(theme.textTheme.bodyMedium),
+      hintStyle: WidgetStatePropertyAll<TextStyle?>(
+        theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
       shadowColor: WidgetStateProperty.resolveWith((states) {
         return Colors.transparent;
       }),
