@@ -47,8 +47,10 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 textAlign: widget.center ? TextAlign.center : TextAlign.start,
-                style: theme.textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                style: theme.textTheme.labelMedium!.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.88),
+                  letterSpacing: 0.15,
                 ),
               ),
             ),
