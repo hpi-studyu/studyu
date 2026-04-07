@@ -12,6 +12,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudiesTableItem extends StatefulWidget {
   final Study study;
+  final int serialNumber;
   final double itemHeight;
   final double itemPadding;
   final double rowSpacing;
@@ -25,6 +26,7 @@ class StudiesTableItem extends StatefulWidget {
   const StudiesTableItem({
     super.key,
     required this.study,
+    required this.serialNumber,
     required this.actions,
     required this.columnSizes,
     required this.isPinned,
@@ -34,7 +36,7 @@ class StudiesTableItem extends StatefulWidget {
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
     this.columnSpacing = 10.0,
-  }) : assert(columnSizes.length == 9);
+  }) : assert(columnSizes.length == 10);
 
   @override
   State<StudiesTableItem> createState() => _StudiesTableItemState();
@@ -94,6 +96,19 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                 child: Row(
                   children: [
                     widget.columnSizes[0].createContainer(
+                      child: Center(
+                        child: Text(
+                          widget.serialNumber.toString(),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: widget.columnSizes[0].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
+                    widget.columnSizes[1].createContainer(
                       height: widget.itemHeight,
                       child: MouseEventsRegion(
                         onTap: () => widget.onPinnedChanged?.call(
@@ -108,11 +123,11 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                      width: widget.columnSizes[0].collapsed
+                      width: widget.columnSizes[1].collapsed
                           ? 0
                           : widget.columnSpacing,
                     ),
-                    widget.columnSizes[1].createContainer(
+                    widget.columnSizes[2].createContainer(
                       child: Text(
                         widget.study.title ?? '[Missing study title]',
                         maxLines: 3,
@@ -120,11 +135,11 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                      width: widget.columnSizes[1].collapsed
+                      width: widget.columnSizes[2].collapsed
                           ? 0
                           : widget.columnSpacing,
                     ),
-                    widget.columnSizes[2].createContainer(
+                    widget.columnSizes[3].createContainer(
                       child: Center(
                         child: StudyStatusBadge(
                           status: widget.study.status,
@@ -134,28 +149,13 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                      width: widget.columnSizes[2].collapsed
-                          ? 0
-                          : widget.columnSpacing,
-                    ),
-                    widget.columnSizes[3].createContainer(
-                      child: StudyParticipationBadge(
-                        participation: widget.study.participation,
-                      ),
-                    ),
-                    SizedBox(
                       width: widget.columnSizes[3].collapsed
                           ? 0
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[4].createContainer(
-                      child: Center(
-                        child: Text(
-                          widget.study.createdAt?.toTimeAgoString() ?? '',
-                          maxLines: 3,
-                          overflow: TextOverflow.fade,
-                          textAlign: TextAlign.center,
-                        ),
+                      child: StudyParticipationBadge(
+                        participation: widget.study.participation,
                       ),
                     ),
                     SizedBox(
@@ -166,10 +166,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[5].createContainer(
                       child: Center(
                         child: Text(
-                          widget.study.participantCount.toString(),
-                          style: mutedTextStyleIfZero(
-                            widget.study.participantCount,
-                          ),
+                          widget.study.createdAt?.toTimeAgoString() ?? '',
+                          maxLines: 3,
+                          overflow: TextOverflow.fade,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -181,9 +181,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[6].createContainer(
                       child: Center(
                         child: Text(
-                          widget.study.activeSubjectCount.toString(),
+                          widget.study.participantCount.toString(),
                           style: mutedTextStyleIfZero(
-                            widget.study.activeSubjectCount,
+                            widget.study.participantCount,
                           ),
                         ),
                       ),
@@ -196,8 +196,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[7].createContainer(
                       child: Center(
                         child: Text(
-                          widget.study.endedCount.toString(),
-                          style: mutedTextStyleIfZero(widget.study.endedCount),
+                          widget.study.activeSubjectCount.toString(),
+                          style: mutedTextStyleIfZero(
+                            widget.study.activeSubjectCount,
+                          ),
                         ),
                       ),
                     ),
@@ -207,10 +209,23 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[8].createContainer(
-                      child: _buildActionMenu(context, widget.actions),
+                      child: Center(
+                        child: Text(
+                          widget.study.endedCount.toString(),
+                          style: mutedTextStyleIfZero(widget.study.endedCount),
+                        ),
+                      ),
                     ),
                     SizedBox(
                       width: widget.columnSizes[8].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
+                    widget.columnSizes[9].createContainer(
+                      child: _buildActionMenu(context, widget.actions),
+                    ),
+                    SizedBox(
+                      width: widget.columnSizes[9].collapsed
                           ? 0
                           : widget.columnSpacing,
                     ),

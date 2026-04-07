@@ -8,8 +8,10 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 enum StudiesTableColumn {
+  serial,
   pin,
   title,
   status,
@@ -81,6 +83,13 @@ class StudiesTable extends StatelessWidget {
       return emptyWidget;
     }
 
+    final serialNumberByStudyId = <String, int>{};
+    final studiesBySerial = [...studies]
+      ..sort((study, other) => study.createdAt!.compareTo(other.createdAt!));
+    for (int index = 0; index < studiesBySerial.length; index++) {
+      serialNumberByStudyId[studiesBySerial[index].id] = index + 1;
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < compactWidthThreshold;
@@ -126,6 +135,9 @@ class StudiesTable extends StatelessWidget {
 
         // Set column definitions
         final columnDefinitionsMap = {
+          StudiesTableColumn.serial: StudiesTableColumnSize.fixedWidth(
+            itemHeight,
+          ),
           StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(32),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(
@@ -158,78 +170,17 @@ class StudiesTable extends StatelessWidget {
               height: itemHeight,
               child: Row(
                 children: [
-                  columnDefinitions[0].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[0].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[0].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[1].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[1].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[1].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[2].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[2].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[2].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[3].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[3].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[3].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[4].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[4].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[4].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[5].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[5].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[5].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[6].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[6].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[6].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[7].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[7].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[7].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[8].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[8].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[8].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
+                  for (int index = 0; index < columnDefinitions.length; index++)
+                    ...[
+                      columnDefinitions[index].value.createContainer(
+                        child: _buildColumnHeader(columnDefinitions[index].key),
+                      ),
+                      SizedBox(
+                        width: columnDefinitions[index].value.collapsed
+                            ? 0
+                            : columnSpacing,
+                      ),
+                    ],
                 ],
               ),
             ),
@@ -242,6 +193,7 @@ class StudiesTable extends StatelessWidget {
                 final item = studies[index];
                 return StudiesTableItem(
                   study: item,
+                  serialNumber: serialNumberByStudyId[item.id] ?? (index + 1),
                   columnSizes: columnDefinitionsMap.values.toList(),
                   actions: getActions(item),
                   isPinned: pinnedStudies.contains(item.id),
@@ -268,6 +220,8 @@ class StudiesTable extends StatelessWidget {
     switch (column) {
       case StudiesTableColumn.title:
         title = tr.studies_list_header_title;
+      case StudiesTableColumn.serial:
+        title = 'Serial'.hardcoded;
       case StudiesTableColumn.status:
         title = tr.studies_list_header_status;
       case StudiesTableColumn.participation:
