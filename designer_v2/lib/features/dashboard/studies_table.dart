@@ -281,8 +281,9 @@ class StudiesTable extends StatelessWidget {
       case StudiesTableColumn.completed:
         title = tr.studies_list_header_participants_completed;
       case StudiesTableColumn.pin:
-      case StudiesTableColumn.action:
         title = '';
+      case StudiesTableColumn.action:
+        title = 'Actions';
     }
 
     final sortAscending = dashboardController.isSortAscending;
