@@ -8,8 +8,11 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 enum StudiesTableColumn {
+  selection,
+  serial,
   pin,
   title,
   status,
@@ -51,6 +54,9 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
+    required this.selectedStudyIds,
+    required this.onSelectionChanged,
+    required this.onSelectAllChanged,
     this.itemHeight = 60.0,
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
@@ -74,11 +80,21 @@ class StudiesTable extends StatelessWidget {
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
+  final Set<String> selectedStudyIds;
+  final ValueChanged<Study> onSelectionChanged;
+  final VoidCallback onSelectAllChanged;
 
   @override
   Widget build(BuildContext context) {
     if (studies.isEmpty) {
       return emptyWidget;
+    }
+
+    final serialNumberByStudyId = <String, int>{};
+    final studiesBySerial = [...studies]
+      ..sort((study, other) => study.createdAt!.compareTo(other.createdAt!));
+    for (int index = 0; index < studiesBySerial.length; index++) {
+      serialNumberByStudyId[studiesBySerial[index].id] = index + 1;
     }
 
     return LayoutBuilder(
@@ -126,6 +142,12 @@ class StudiesTable extends StatelessWidget {
 
         // Set column definitions
         final columnDefinitionsMap = {
+          StudiesTableColumn.selection: StudiesTableColumnSize.fixedWidth(
+            itemHeight,
+          ),
+          StudiesTableColumn.serial: StudiesTableColumnSize.fixedWidth(
+            itemHeight,
+          ),
           StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(32),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(
@@ -158,78 +180,20 @@ class StudiesTable extends StatelessWidget {
               height: itemHeight,
               child: Row(
                 children: [
-                  columnDefinitions[0].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[0].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[0].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[1].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[1].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[1].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[2].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[2].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[2].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[3].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[3].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[3].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[4].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[4].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[4].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[5].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[5].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[5].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[6].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[6].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[6].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[7].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[7].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[7].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[8].value.createContainer(
-                    child: _buildColumnHeader(columnDefinitions[8].key),
-                  ),
-                  SizedBox(
-                    width: columnDefinitions[8].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
+                  for (int index = 0; index < columnDefinitions.length; index++)
+                    ...[
+                      columnDefinitions[index].value.createContainer(
+                        child: _buildColumnHeader(
+                          context,
+                          columnDefinitions[index].key,
+                        ),
+                      ),
+                      SizedBox(
+                        width: columnDefinitions[index].value.collapsed
+                            ? 0
+                            : columnSpacing,
+                      ),
+                    ],
                 ],
               ),
             ),
@@ -242,12 +206,15 @@ class StudiesTable extends StatelessWidget {
                 final item = studies[index];
                 return StudiesTableItem(
                   study: item,
+                  serialNumber: serialNumberByStudyId[item.id] ?? (index + 1),
+                  isSelected: selectedStudyIds.contains(item.id),
                   columnSizes: columnDefinitionsMap.values.toList(),
                   actions: getActions(item),
                   isPinned: pinnedStudies.contains(item.id),
                   itemHeight: itemHeight,
                   rowSpacing: rowSpacing,
                   columnSpacing: columnSpacing,
+                  onSelectionChanged: (_) => onSelectionChanged(item),
                   onPinnedChanged: (study, pinned) {
                     pinnedStudies.contains(item.id)
                         ? dashboardController.pinOffStudy(item.id)
@@ -263,11 +230,35 @@ class StudiesTable extends StatelessWidget {
     );
   }
 
-  Widget _buildColumnHeader(StudiesTableColumn column) {
+  Widget _buildColumnHeader(BuildContext context, StudiesTableColumn column) {
+    if (column == StudiesTableColumn.selection) {
+      final visibleIds = studies.map((study) => study.id).toSet();
+      final selectedVisibleCount = visibleIds
+          .where(selectedStudyIds.contains)
+          .length;
+      final allVisibleSelected =
+          visibleIds.isNotEmpty && selectedVisibleCount == visibleIds.length;
+      final someVisibleSelected =
+          selectedVisibleCount > 0 && selectedVisibleCount < visibleIds.length;
+
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: Checkbox(
+          value: allVisibleSelected ? true : (someVisibleSelected ? null : false),
+          tristate: true,
+          onChanged: (_) => onSelectAllChanged(),
+        ),
+      );
+    }
+
     final String title;
     switch (column) {
       case StudiesTableColumn.title:
         title = tr.studies_list_header_title;
+      case StudiesTableColumn.selection:
+        title = '';
+      case StudiesTableColumn.serial:
+        title = 'Serial'.hardcoded;
       case StudiesTableColumn.status:
         title = tr.studies_list_header_status;
       case StudiesTableColumn.participation:
@@ -281,13 +272,15 @@ class StudiesTable extends StatelessWidget {
       case StudiesTableColumn.completed:
         title = tr.studies_list_header_participants_completed;
       case StudiesTableColumn.pin:
-      case StudiesTableColumn.action:
         title = '';
+      case StudiesTableColumn.action:
+        title = 'Actions';
     }
 
     final sortAscending = dashboardController.isSortAscending;
     final sortable =
-        !(column == StudiesTableColumn.pin ||
+        !(column == StudiesTableColumn.selection ||
+            column == StudiesTableColumn.pin ||
             column == StudiesTableColumn.action);
     final sortingActive = dashboardController.isSortingActiveForColumn(column);
 
@@ -296,6 +289,11 @@ class StudiesTable extends StatelessWidget {
       sortable: sortable,
       sortingActive: sortingActive,
       sortAscending: sortAscending(),
+      alignRight:
+          column == StudiesTableColumn.serial ||
+          column == StudiesTableColumn.enrolled ||
+          column == StudiesTableColumn.active ||
+          column == StudiesTableColumn.completed,
       center:
           column != StudiesTableColumn.title &&
           column != StudiesTableColumn.pin,

@@ -23,6 +23,8 @@ abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
   Future<void> close(Study study);
+  Future<void> deletePersisted(ModelID studyId);
+  Future<void> duplicateAndSavePersisted(Study model);
   // Future<void> deleteProgress(Study study);
 }
 
@@ -116,6 +118,20 @@ class StudyRepository extends ModelRepository<Study>
       authRepository.currentUser!.id,
     );
     await save(duplicate);
+  }
+
+  @override
+  Future<void> duplicateAndSavePersisted(Study model) async {
+    final Study completeModel = await apiClient.fetchStudy(model.id);
+    final duplicate = completeModel.duplicateAsDraft(
+      authRepository.currentUser!.id,
+    );
+    await save(duplicate, runOptimistically: false);
+  }
+
+  @override
+  Future<void> deletePersisted(ModelID studyId) {
+    return delete(studyId, runOptimistically: false);
   }
 
   @override

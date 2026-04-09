@@ -55,7 +55,23 @@ abstract class StudyUApi {
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 
 /// Base class for domain-specific exceptions
-class APIException implements Exception {}
+class APIException implements Exception {
+  APIException({this.statusCode, this.message, this.details});
+
+  final String? statusCode;
+  final String? message;
+  final Object? details;
+
+  @override
+  String toString() {
+    final parts = <String>[
+      if (statusCode != null) 'statusCode=$statusCode',
+      if (message != null && message!.isNotEmpty) 'message=$message',
+      if (details != null) 'details=$details',
+    ];
+    return parts.isEmpty ? 'APIException' : 'APIException(${parts.join(', ')})';
+  }
+}
 
 class StudyNotFoundException extends APIException {}
 
@@ -204,9 +220,8 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<void> deleteStudy(Study study) async {
     await _testDelay();
-    // Delegate to [SupabaseObjectMethods]
-    // TODO: proper error handling here (encountered so far: 409, 406)
-    await study.delete();
+    // Delegate to [SupabaseObjectMethods] but preserve backend error details.
+    await _awaitGuarded<Study>(study.delete());
   }
 
   @override
@@ -352,13 +367,29 @@ class StudyUApiClient extends SupabaseClientDependant
       debugLog(error.statusCode.toString());
       debugLog(error.details.toString());
       debugLog(error.message);
+      return APIException(
+        statusCode: error.statusCode,
+        message: error.message,
+        details: error.details,
+      );
+    } else if (error != null && error is PostgrestException) {
+      debugLog("Postgrest Exception encountered");
+      debugLog(error.code.toString());
+      debugLog(error.details.toString());
+      debugLog(error.message);
+      return APIException(
+        statusCode: error.code,
+        message: error.message,
+        details: error.details,
+      );
     } else if (error != null) {
       debugLog("Unknown exception encountered");
       debugLog(error.toString());
+      return APIException(message: error.toString());
     } else {
       debugLog("Unknown exception encountered. No error provided.");
+      return APIException();
     }
-    return APIException();
   }
 
   Future<void> _testDelay() async {

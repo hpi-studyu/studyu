@@ -9,6 +9,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final bool sortingActive;
   final void Function()? onSort;
   final bool center;
+  final bool alignRight;
 
   const StudiesTableColumnHeader(
     this.title, {
@@ -18,6 +19,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
     required this.sortAscending,
     this.onSort,
     this.center = false,
+    this.alignRight = false,
   });
 
   @override
@@ -35,9 +37,11 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     return MouseEventsRegion(
       builder: (context, state) {
         return Row(
-          mainAxisAlignment: widget.center
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
+          mainAxisAlignment: widget.alignRight
+              ? MainAxisAlignment.end
+              : (widget.center
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start),
           children: [
             Flexible(
               child: Text(
@@ -45,9 +49,13 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 maxLines: 1,
                 overflow: TextOverflow.fade,
                 softWrap: false,
-                textAlign: widget.center ? TextAlign.center : TextAlign.start,
-                style: theme.textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                textAlign: widget.alignRight
+                    ? TextAlign.end
+                    : (widget.center ? TextAlign.center : TextAlign.start),
+                style: theme.textTheme.labelMedium!.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.88),
+                  letterSpacing: 0.15,
                 ),
               ),
             ),

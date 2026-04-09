@@ -18,6 +18,10 @@ class DashboardState extends Equatable {
     this.studiesFilter = defaultFilter,
     this.activeFilter,
     this.query = '',
+    this.selectedStudyIds = const {},
+    this.isBulkActionInProgress = false,
+    this.bulkActionCompletedCount = 0,
+    this.bulkActionTotalCount = 0,
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
     this.savedFilters = const [],
@@ -56,6 +60,14 @@ class DashboardState extends Equatable {
   final User currentUser;
 
   final String query;
+
+  final Set<String> selectedStudyIds;
+
+  final bool isBulkActionInProgress;
+
+  final int bulkActionCompletedCount;
+
+  final int bulkActionTotalCount;
 
   /// Search controller for managing search functionality
   final SearchController searchController;
@@ -115,6 +127,18 @@ class DashboardState extends Equatable {
   }) {
     final sortedStudies = studiesToSort ?? studies.value!;
     switch (sortByColumn) {
+      case StudiesTableColumn.selection:
+        break;
+      case StudiesTableColumn.serial:
+        if (!sortAscending) {
+          sortedStudies.sort(
+            (study, other) => other.createdAt!.compareTo(study.createdAt!),
+          );
+        } else {
+          sortedStudies.sort(
+            (study, other) => study.createdAt!.compareTo(other.createdAt!),
+          );
+        }
       case StudiesTableColumn.title:
         if (sortAscending) {
           sortedStudies.sort(
@@ -220,6 +244,10 @@ class DashboardState extends Equatable {
     List<SavedFilter> Function()? savedFilters,
     User Function()? currentUser,
     String? query,
+    Set<String>? selectedStudyIds,
+    bool? isBulkActionInProgress,
+    int? bulkActionCompletedCount,
+    int? bulkActionTotalCount,
     StudiesTableColumn? sortByColumn,
     bool? sortAscending,
     SearchController? searchController,
@@ -234,6 +262,12 @@ class DashboardState extends Equatable {
       savedFilters: savedFilters != null ? savedFilters() : this.savedFilters,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
+      selectedStudyIds: selectedStudyIds ?? this.selectedStudyIds,
+      isBulkActionInProgress:
+          isBulkActionInProgress ?? this.isBulkActionInProgress,
+      bulkActionCompletedCount:
+          bulkActionCompletedCount ?? this.bulkActionCompletedCount,
+      bulkActionTotalCount: bulkActionTotalCount ?? this.bulkActionTotalCount,
       sortByColumn: sortByColumn ?? this.sortByColumn,
       sortAscending: sortAscending ?? this.sortAscending,
       searchController: searchController ?? this.searchController,
@@ -252,6 +286,10 @@ class DashboardState extends Equatable {
     activeFilter,
     savedFilters,
     query,
+    selectedStudyIds,
+    isBulkActionInProgress,
+    bulkActionCompletedCount,
+    bulkActionTotalCount,
     sortByColumn,
     sortAscending,
     selectedSavedFilterId,

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:archive/archive.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -14,6 +16,11 @@ extension StudyExportZipX on StudyExportData {
     final toCSVString = CSVStringEncoder();
     final toJsonString = JsonStringEncoder();
 
+    developer.log(
+      'Building export archive for study ${study.id} (${study.title})',
+      name: 'StudyExportZip',
+    );
+
     final files = {
       'study_definition.json': prettyJson(study.toJson()),
       'measurements.csv': toCSVString(measurementsData),
@@ -28,11 +35,19 @@ extension StudyExportZipX on StudyExportData {
     });
 
     for (final mediaFile in mediaData) {
+      developer.log(
+        'Downloading media asset for export: $mediaFile',
+        name: 'StudyExportZip',
+      );
       final content = await BlobStorageHandler().downloadObservation(mediaFile);
       final archiveFile = ArchiveFile(mediaFile, content.length, content);
       archive.addFile(archiveFile);
     }
 
+    developer.log(
+      'Archive build complete for study ${study.id}; files=${archive.length}',
+      name: 'StudyExportZip',
+    );
     return archive;
   }
 
@@ -43,10 +58,25 @@ extension StudyExportZipX on StudyExportData {
 
   Future downloadAsZip({String? filename}) async {
     filename ??= defaultFilename;
-    return downloadBytes(
-      bytes: (await encodedZip)!,
-      filename: filename.ensureSuffix('.zip'),
-    );
+    try {
+      final zipBytes = (await encodedZip)!;
+      developer.log(
+        'Downloading zip for study ${study.id} as ${filename.ensureSuffix('.zip')} (${zipBytes.length} bytes)',
+        name: 'StudyExportZip',
+      );
+      return downloadBytes(
+        bytes: zipBytes,
+        filename: filename.ensureSuffix('.zip'),
+      );
+    } catch (error, stackTrace) {
+      developer.log(
+        'Zip export failed for study ${study.id} (${study.title}): $error',
+        name: 'StudyExportZip',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 }
 

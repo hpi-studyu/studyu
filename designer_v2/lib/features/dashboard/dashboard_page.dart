@@ -206,9 +206,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return DashboardScaffold(
       scaffoldKey: _scaffoldKey,
       endDrawer: const Drawer(width: 400, child: FilterBuilder()),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+      body: Stack(
+        children: [
+          AbsorbPointer(
+            absorbing: state.isBulkActionInProgress,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
           Row(
             children: [
               SizedBox(
@@ -516,54 +520,216 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           ],
           const SizedBox(height: 24.0), // spacing between body elements
-          FutureBuilder<StudyUUser>(
-            future: ref.read(userRepositoryProvider).fetchUser(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return AsyncValueWidget<List<Study>>(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  value: state.displayedStudies(
-                    snapshot.data!.preferences.pinnedStudies,
-                    state.query,
-                  ),
-                  data: (visibleStudies) => StudiesTable(
-                    studies: visibleStudies,
-                    pinnedStudies: snapshot.data!.preferences.pinnedStudies,
-                    dashboardController: ref.watch(
-                      dashboardControllerProvider.notifier,
-                    ),
-                    onSelect: controller.onSelectStudy,
-                    getActions: controller.availableActions,
-                    emptyWidget:
-                        (widget.filter == null ||
-                            widget.filter == StudiesFilter.owned)
-                        ? (state.query.isNotEmpty)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_not_found,
-                                    description: tr.modify_query,
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_empty,
-                                    description: tr.studies_empty_description,
-                                    // "...or create a new draft copy from an already published study!",
-                                    /* button: PrimaryButton(text: "From template",); */
-                                  ),
-                                )
-                        : const SizedBox.shrink(),
-                  ),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
+                FutureBuilder<StudyUUser>(
+                  future: ref.read(userRepositoryProvider).fetchUser(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return AsyncValueWidget<List<Study>>(
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        value: state.displayedStudies(
+                          snapshot.data!.preferences.pinnedStudies,
+                          state.query,
+                        ),
+                        data: (visibleStudies) {
+                          final selectedCount = state.selectedStudyIds.length;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '$selectedCount Studies selected.',
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                    if (selectedCount > 0) ...[
+                                      const SizedBox(width: 12),
+                                      MenuAnchor(
+                                        builder:
+                                            (context, menuController, child) {
+                                              return OutlinedButton.icon(
+                                                onPressed:
+                                                    state.isBulkActionInProgress
+                                                    ? null
+                                                    : () {
+                                                        if (
+                                                            menuController
+                                                                .isOpen) {
+                                                          menuController.close();
+                                                        } else {
+                                                          menuController.open();
+                                                        }
+                                                      },
+                                                icon: state
+                                                        .isBulkActionInProgress
+                                                    ? const SizedBox(
+                                                        width: 16,
+                                                        height: 16,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              strokeWidth: 2,
+                                                            ),
+                                                      )
+                                                    : const Icon(
+                                                        Icons.checklist_rounded,
+                                                      ),
+                                                label: Text(
+                                                  state.isBulkActionInProgress
+                                                      ? 'Working...'
+                                                      : 'Bulk actions',
+                                                ),
+                                              );
+                                            },
+                                        menuChildren: [
+                                          MenuItemButton(
+                                            leadingIcon: const Icon(
+                                              Icons.download_rounded,
+                                            ),
+                                            onPressed:
+                                                controller.exportSelectedStudies,
+                                            child: const Text(
+                                              'Export selected',
+                                            ),
+                                          ),
+                                          MenuItemButton(
+                                            leadingIcon: const Icon(
+                                              Icons.file_copy_rounded,
+                                            ),
+                                            onPressed: controller
+                                                .confirmDuplicateSelectedStudies,
+                                            child: const Text(
+                                              'Duplicate selected',
+                                            ),
+                                          ),
+                                          MenuItemButton(
+                                            leadingIcon: Icon(
+                                              Icons.delete_rounded,
+                                              color: theme.colorScheme.error,
+                                            ),
+                                            onPressed: controller
+                                                .confirmDeleteSelectedStudies,
+                                            child: Text(
+                                              'Delete selected',
+                                              style: TextStyle(
+                                                color: theme.colorScheme.error,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              StudiesTable(
+                                studies: visibleStudies,
+                                pinnedStudies:
+                                    snapshot.data!.preferences.pinnedStudies,
+                                selectedStudyIds: state.selectedStudyIds,
+                                dashboardController: ref.watch(
+                                  dashboardControllerProvider.notifier,
+                                ),
+                                onSelectionChanged: (study) =>
+                                    controller.toggleStudySelection(study.id),
+                                onSelectAllChanged: () => controller
+                                    .toggleSelectAllVisibleStudies(
+                                      visibleStudies,
+                                    ),
+                                onSelect: controller.onSelectStudy,
+                                getActions: controller.availableActions,
+                                emptyWidget:
+                                    (widget.filter == null ||
+                                        widget.filter == StudiesFilter.owned)
+                                    ? (state.query.isNotEmpty)
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 24.0,
+                                              ),
+                                              child: EmptyBody(
+                                                icon: Icons
+                                                    .content_paste_search_rounded,
+                                                title: tr.studies_not_found,
+                                                description: tr.modify_query,
+                                              ),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 24.0,
+                                              ),
+                                              child: EmptyBody(
+                                                icon: Icons
+                                                    .content_paste_search_rounded,
+                                                title: tr.studies_empty,
+                                                description: tr
+                                                    .studies_empty_description,
+                                                /* button: PrimaryButton(text: "From template",); */
+                                              ),
+                                            )
+                                    : const SizedBox.shrink(),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                ),
+              ],
+            ),
           ),
+          if (state.isBulkActionInProgress)
+            Positioned.fill(
+              child: ColoredBox(
+                color: theme.colorScheme.scrim.withValues(alpha: 0.08),
+                child: Center(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          const SizedBox(width: 12),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Bulk action in progress...',
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Completed ${state.bulkActionCompletedCount} of ${state.bulkActionTotalCount}',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

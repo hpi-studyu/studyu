@@ -167,3 +167,6 @@ megalinter-reports/
 
 # No localization file on workspace level
 l10n-missing.txt
+
+# Local Codex instructions
+AGENTS.md
