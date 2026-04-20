@@ -49,7 +49,7 @@ class _FitbitQuestionFormViewState
           rows: [
             FormTableRow(
               control: formViewModel.fitbitResponseOptionsArray,
-              label: tr.fitbit_question_title,
+              label: '',
               input: _FitbitTypeSelector(formViewModel: formViewModel),
             ),
           ],
