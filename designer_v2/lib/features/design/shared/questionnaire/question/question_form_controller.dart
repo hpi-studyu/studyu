@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
@@ -424,6 +425,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     fitbitQuestionTypesControl.values.toList(),
   );
 
+  FitbitCredentialsFormViewModel? _fitbitCredentialsFormViewModel;
+  FitbitCredentialsFormViewModel? get fitbitCredentialsFormViewModel =>
+      _fitbitCredentialsFormViewModel;
+
   // - Form fields (question type-specific) - end
 
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
@@ -483,8 +488,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       StudyFormValidationSet.publish: [maxRecordingDurationValid],
     },
     SurveyQuestionType.fitbit: {
-      StudyFormValidationSet.draft: [fitbitTypeRequired],
-      StudyFormValidationSet.publish: [fitbitTypeRequired],
+      StudyFormValidationSet.draft: [
+        fitbitTypeRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientIdRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientSecretRequired,
+      ],
+      StudyFormValidationSet.publish: [
+        fitbitTypeRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientIdRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientSecretRequired,
+      ],
     },
   };
 
@@ -520,7 +533,23 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     ],
     validationMessages: {
       CountWhereValidator.kValidationMessageMinCount: (error) =>
-          "At least one Fitbit type must be selected.", //TODO: translations
+          tr.fitbit_question_type_required,
+    },
+  );
+
+  FormControlValidation get fitbitClientIdRequired => FormControlValidation(
+    control: _fitbitCredentialsFormViewModel!.clientIdControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (_) => tr.fitbit_client_id_required,
+    },
+  );
+
+  FormControlValidation get fitbitClientSecretRequired => FormControlValidation(
+    control: _fitbitCredentialsFormViewModel!.clientSecretControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (_) => tr.fitbit_client_secret_required,
     },
   );
 
@@ -622,6 +651,21 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     form.addAll(subtypeFormControls);
     markFormGroupChanged();
     onResponseOptionsChanged(answerOptionsControls);
+  }
+
+  void attachFitbitCredentialsFormViewModel(
+    FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel,
+  ) {
+    if (identical(
+      _fitbitCredentialsFormViewModel,
+      fitbitCredentialsFormViewModel,
+    )) {
+      return;
+    }
+    _fitbitCredentialsFormViewModel = fitbitCredentialsFormViewModel;
+    fitbitCredentialsFormViewModel.enableQuestionValidation();
+    revalidate();
+    form.updateValueAndValidity();
   }
 
   @override
@@ -845,7 +889,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
       customRegexControl.value = null;
     }
-    return super.save();
+    if (questionType != SurveyQuestionType.fitbit ||
+        _fitbitCredentialsFormViewModel == null) {
+      return super.save();
+    }
+
+    final fitbitCredentialsFormViewModel = _fitbitCredentialsFormViewModel!;
+    fitbitCredentialsFormViewModel.revalidate();
+    fitbitCredentialsFormViewModel.form.updateValueAndValidity();
+
+    if (!fitbitCredentialsFormViewModel.form.valid) {
+      throw FormInvalidException();
+    }
+
+    return fitbitCredentialsFormViewModel.save().then((_) => super.save());
   }
 
   @override

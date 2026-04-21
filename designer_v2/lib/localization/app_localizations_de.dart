@@ -2271,6 +2271,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get client_secret_hint => 'Client Secret';
 
   @override
+  String get fitbit_credentials_how_to_obtain =>
+      'So erhalten Sie Fitbit-Zugangsdaten';
+
+  @override
+  String get fitbit_client_id_required => 'Client-ID ist erforderlich';
+
+  @override
+  String get fitbit_client_secret_required => 'Client-Secret ist erforderlich';
+
+  @override
+  String get fitbit_question_type_required =>
+      'Mindestens ein Fitbit-Datentyp muss ausgewählt werden.';
+
+  @override
   String get screenshots_for_guidance => 'Screenshots zur Anleitung:';
 
   @override

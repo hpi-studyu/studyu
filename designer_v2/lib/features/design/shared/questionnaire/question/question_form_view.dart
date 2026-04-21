@@ -17,8 +17,6 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -53,15 +51,6 @@ class _SurveyQuestionFormViewState
     isStylingInformationDismissed = !isStylingInformationDismissed;
   });
 
-  bool _areFitbitCredentialsInvalid() {
-    final state = ref.watch(studyControllerProvider(widget.studyId));
-
-    final fitbitCredentials = state.studyValue?.fitbitCredentials;
-    return fitbitCredentials == null ||
-        fitbitCredentials.fitbitCredentials.clientId.isEmpty ||
-        fitbitCredentials.fitbitCredentials.clientSecret.isEmpty;
-  }
-
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
       SurveyQuestionType.choice: (_) =>
@@ -76,20 +65,13 @@ class _SurveyQuestionFormViewState
           AudioRecordingQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.freeText: (_) =>
           FreeTextQuestionFormView(formViewModel: formViewModel),
-      SurveyQuestionType.fitbit: (_) =>
-          FitbitQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.fitbit: (_) => FitbitQuestionFormView(
+        formViewModel: formViewModel,
+        studyId: widget.studyId,
+      ),
       SurveyQuestionType.pain: (_) =>
           PainQuestionFormView(formViewModel: formViewModel),
     };
-    //TODO: If question type is fitbit and credentials are not set, show a message to set credentials
-
-    if (formViewModel.questionType == SurveyQuestionType.fitbit &&
-        _areFitbitCredentialsInvalid()) {
-      return (_) => TextParagraph(
-        text: AppLocalizations.of(context)!.fitbit_credentials_not_set,
-        style: ThemeConfig.bodyTextMuted(Theme.of(context)),
-      );
-    }
 
     final questionType = formViewModel.questionType;
 
@@ -104,42 +86,40 @@ class _SurveyQuestionFormViewState
 
   @override
   Widget build(BuildContext context) {
-    return ReactiveFormConsumer(
-      builder: (context, formGroup, child) {
-        // Wrap everything in a [ReactiveFormConsumer] for convenience so that the
-        // sidesheet content is re-rendered when the form changes
-        //
-        // Note: if this becomes a performance issue, remove the
-        // ReactiveFormConsumer here & use consumers / listeners selectively for
-        // the UI parts that need to be rebuild
-        return PointerInterceptor(
-          child: SelectionArea(
-            child: Column(
-              children: [
-                _buildQuestionText(context),
-                if (isQuestionHelpTextFieldVisible)
-                  Column(
-                    children: [
-                      const SizedBox(height: 16.0),
-                      _buildQuestionHelpText(context),
-                    ],
-                  )
-                else
-                  const SizedBox.shrink(),
-                if (widget.isHtmlStyleable)
-                  HtmlStylingBanner(
-                    isDismissed: isStylingInformationDismissed,
-                    onDismissed: onDismissedCallback,
-                  ),
-                const SizedBox(height: 24.0),
-                _buildResponseTypeHeader(context),
-                const SizedBox(height: 16.0),
-                questionTypeBodyBuilder(context),
-              ],
+    return PointerInterceptor(
+      child: SelectionArea(
+        child: Column(
+          children: [
+            _buildQuestionText(context),
+            if (isQuestionHelpTextFieldVisible)
+              Column(
+                children: [
+                  const SizedBox(height: 16.0),
+                  _buildQuestionHelpText(context),
+                ],
+              )
+            else
+              const SizedBox.shrink(),
+            if (widget.isHtmlStyleable)
+              HtmlStylingBanner(
+                isDismissed: isStylingInformationDismissed,
+                onDismissed: onDismissedCallback,
+              ),
+            const SizedBox(height: 24.0),
+            ReactiveFormConsumer(
+              builder: (context, formGroup, child) {
+                return Column(
+                  children: [
+                    _buildResponseTypeHeader(context),
+                    const SizedBox(height: 16.0),
+                    questionTypeBodyBuilder(context),
+                  ],
+                );
+              },
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 

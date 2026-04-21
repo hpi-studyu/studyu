@@ -3837,6 +3837,30 @@ abstract class AppLocalizations {
   /// **'Client Secret'**
   String get client_secret_hint;
 
+  /// No description provided for @fitbit_credentials_how_to_obtain.
+  ///
+  /// In en, this message translates to:
+  /// **'How to obtain Fitbit credentials'**
+  String get fitbit_credentials_how_to_obtain;
+
+  /// No description provided for @fitbit_client_id_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Client ID is required'**
+  String get fitbit_client_id_required;
+
+  /// No description provided for @fitbit_client_secret_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Client secret is required'**
+  String get fitbit_client_secret_required;
+
+  /// No description provided for @fitbit_question_type_required.
+  ///
+  /// In en, this message translates to:
+  /// **'At least one Fitbit type must be selected.'**
+  String get fitbit_question_type_required;
+
   /// No description provided for @screenshots_for_guidance.
   ///
   /// In en, this message translates to:
