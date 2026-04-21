@@ -54,7 +54,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
-      await noSubjectFound();
+      await noSubjectFound(state);
       return;
     }
     StudyULogger.info("Retrieving subject with ID: $selectedSubjectId");
@@ -77,12 +77,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<void> noSubjectFound() async {
+  Future<void> noSubjectFound(AppState state) async {
     await cancelNotifications(context);
 
     final bool onBoarded = await SecureStorage.readBool('onboarded') ?? false;
-    // If no subject found and user has not done any onboarding, redirect to onboarding
-    final route = onBoarded ? Routes.terms : Routes.onboarding;
+    // Designer previews should skip the generic app introduction and go straight
+    // to the participant study flow.
+    final route = state.isPreview || onBoarded
+        ? Routes.terms
+        : Routes.onboarding;
 
     if (!mounted) return;
     _iFrameHelper.postPreviewStatus(status: 'loaded');
