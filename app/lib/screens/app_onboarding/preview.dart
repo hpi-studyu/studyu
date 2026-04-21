@@ -189,6 +189,8 @@ class Preview {
         print(
           '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e',
         );
+        await deleteActiveStudyReference();
+        selectedStudyObjectId = null;
         // todo try sign in again if token expired see loading screen
       }
     }

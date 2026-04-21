@@ -25,6 +25,7 @@ class RouteInformation {
 abstract class PlatformController {
   final String studyId;
   final String baseSrc;
+  final ValueNotifier<bool> navigationEnabled = ValueNotifier(false);
   late String previewSrc;
   late RouteInformation routeInformation;
   late Widget frameWidget;
@@ -89,6 +90,7 @@ class WebController extends PlatformController {
   @override
   void generateUrl({String? route, String? extra, String? cmd, String? data}) {
     onLoadStarted?.call();
+    navigationEnabled.value = false;
     routeInformation = RouteInformation(route, extra, cmd, data);
     if (baseSrc == '') {
       previewSrc = '';
@@ -111,6 +113,20 @@ class WebController extends PlatformController {
 
   @override
   void navigate({String? route, String? extra, String? cmd, String? data}) {
+    if (navigationEnabled.value && cmd == null) {
+      routeInformation = RouteInformation(route, extra, cmd, data);
+      send(
+        jsonEncode({
+          'type': 'previewNavigate',
+          if (route != null) 'route': route,
+          if (extra != null) 'extra': extra,
+          if (data != null) 'data': data,
+        }),
+      );
+      navigationEnabled.value = false;
+      return;
+    }
+
     generateUrl(route: route, extra: extra, cmd: cmd, data: data);
 
     //html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
@@ -167,9 +183,11 @@ class WebController extends PlatformController {
                 onLoading?.call();
                 return;
               case 'loaded':
+                navigationEnabled.value = true;
                 onReady?.call();
                 return;
               case 'error':
+                navigationEnabled.value = false;
                 onError?.call(
                   message ??
                       'The StudyU app preview could not be opened right now.',
@@ -186,13 +204,14 @@ class WebController extends PlatformController {
         return;
       }
       if (data == 'previewReady') {
+        navigationEnabled.value = true;
         onReady?.call();
         return;
       }
       if (data == 'routeFinished') {
+        navigationEnabled.value = true;
         onReady?.call();
         // debugLog("Preview route finished");
-        refresh();
       }
     });
   }

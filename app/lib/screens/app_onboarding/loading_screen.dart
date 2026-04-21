@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/main.dart' show navigatorKey;
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
@@ -25,6 +26,8 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   final IFrameHelper _iFrameHelper = IFrameHelper();
+  bool _previewNavigationInProgress = false;
+  String? _pendingPreviewRoute;
 
   @override
   void initState() {
@@ -163,7 +166,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     await preview.runCommands();
 
-    _iFrameHelper.listen(state);
+    _iFrameHelper.listen(
+      state,
+      onNavigate: (route) => _navigatePreviewRoute(state, route),
+    );
 
     if (preview.hasRoute()) {
       // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');
@@ -278,6 +284,99 @@ class _LoadingScreenState extends State<LoadingScreen> {
         _iFrameHelper.postPreviewStatus(status: 'loaded');
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
+      }
+    }
+  }
+
+  Future<void> _navigatePreviewRoute(AppState state, String? route) async {
+    if (_previewNavigationInProgress) {
+      _pendingPreviewRoute = route;
+      return;
+    }
+    _previewNavigationInProgress = true;
+
+    try {
+      final navigator = navigatorKey.currentState;
+      if (navigator == null) return;
+
+      Future<bool> ensureSubject() async {
+        if (state.activeSubject != null) return true;
+        if (state.selectedStudy == null) return false;
+
+        final preview = study_preview.Preview(
+          {
+            ...?widget.queryParameters,
+            if (route != null) 'route': route,
+          },
+          AppLanguage(AppLocalizations.supportedLocales),
+        );
+        await preview.init();
+        preview.study = state.selectedStudy;
+        state.activeSubject = await preview.getStudySubject(
+          state,
+          createSubject: true,
+        );
+        return state.activeSubject != null;
+      }
+
+      Future<void> waitForNavigator() async {
+        await WidgetsBinding.instance.endOfFrame;
+        await Future<void>.delayed(const Duration(milliseconds: 120));
+      }
+
+      Future<void> replaceNamed(String routeName) async {
+        await waitForNavigator();
+        navigatorKey.currentState?.pushReplacementNamed(routeName);
+      }
+
+      Future<void> replaceWithEligibility() async {
+        if (state.selectedStudy == null) return;
+        await waitForNavigator();
+        navigatorKey.currentState?.pushReplacement(
+          EligibilityScreen.routeFor(study: state.selectedStudy),
+        );
+      }
+
+      if (route == null || route.isEmpty) {
+        await replaceNamed(Routes.studyOverview);
+        return;
+      }
+
+      if (route == 'eligibilityCheck') {
+        if (state.selectedStudy == null) return;
+        await replaceWithEligibility();
+        return;
+      }
+
+      if (route == Routes.interventionSelection ||
+          route == 'interventionSelection') {
+        await replaceNamed(Routes.interventionSelection);
+        return;
+      }
+
+      if (!await ensureSubject()) {
+        _iFrameHelper.postPreviewStatus(
+          status: 'error',
+          message: 'The preview route could not be opened right now.',
+        );
+        return;
+      }
+
+      if (route == 'consent') {
+        await replaceNamed(Routes.consent);
+      } else if (route == 'journey') {
+        await replaceNamed(Routes.journey);
+      } else if (route == 'dashboard') {
+        await replaceNamed(Routes.dashboard);
+      }
+    } finally {
+      _previewNavigationInProgress = false;
+      final pendingRoute = _pendingPreviewRoute;
+      _pendingPreviewRoute = null;
+      if (pendingRoute != null && pendingRoute != route) {
+        await _navigatePreviewRoute(state, pendingRoute);
+      } else {
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
       }
     }
   }

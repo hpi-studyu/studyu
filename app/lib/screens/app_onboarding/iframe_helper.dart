@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:studyu_app/models/app_state.dart';
@@ -5,7 +6,11 @@ import 'package:studyu_core/core.dart' show Study;
 import 'package:studyu_core/env.dart' as env;
 import "package:universal_html/html.dart" as html;
 
+typedef PreviewNavigationHandler = Future<void> Function(String? route);
+
 class IFrameHelper {
+  static StreamSubscription<html.MessageEvent>? _messageSubscription;
+
   String _designerOrigin() {
     final referrer = html.document.referrer;
     if (referrer.isNotEmpty) {
@@ -33,10 +38,32 @@ class IFrameHelper {
     html.window.parent!.postMessage('routeFinished', _designerOrigin());
   }
 
-  void listen(AppState state) {
-    html.window.onMessage.listen((event) {
-      final message = event.data as String;
-      final messageContent = jsonDecode(message) as Map<String, dynamic>;
+  void listen(AppState state, {PreviewNavigationHandler? onNavigate}) {
+    _messageSubscription?.cancel();
+    _messageSubscription = html.window.onMessage.listen((event) async {
+      final data = event.data;
+      if (data is! String) return;
+
+      final Object? decodedMessage;
+      try {
+        decodedMessage = jsonDecode(data);
+      } catch (_) {
+        return;
+      }
+      if (decodedMessage is! Map<String, dynamic>) return;
+
+      final messageContent = decodedMessage;
+      if (messageContent['type'] == 'previewNavigate') {
+        await onNavigate?.call(messageContent['route'] as String?);
+        return;
+      }
+
+      if (messageContent.containsKey('type') ||
+          messageContent['id'] is! String ||
+          messageContent['user_id'] is! String) {
+        return;
+      }
+
       state.updateStudy(Study.fromJson(messageContent));
     });
   }
