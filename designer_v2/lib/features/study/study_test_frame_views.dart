@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -83,40 +81,11 @@ class PreviewStatusFrame extends StatelessWidget {
     return PhoneContainer(
       innerContent: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(28),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 28.0,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  color: Colors.white.withValues(alpha: 0.68),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    width: 1.2,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: EmptyBody(
-                  icon: icon,
-                  title: title,
-                  description: description,
-                  button: action,
-                ),
-              ),
-            ),
-          ),
+        child: EmptyBody(
+          icon: icon,
+          title: title,
+          description: description,
+          button: action,
         ),
       ),
       borderColor:
@@ -177,7 +146,7 @@ class LoadingFrame extends StatelessWidget {
           child: CircularProgressIndicator(strokeWidth: 2.5),
         ),
       ),
-      innerContentBackgroundColor: Colors.white.withValues(alpha: 0.5),
+      innerContentBackgroundColor: Colors.white,
     );
   }
 }
@@ -198,7 +167,7 @@ class ErrorFrame extends StatelessWidget {
       icon: Icons.warning_amber_rounded,
       title: title,
       description: message,
-      innerContentBackgroundColor: Colors.white.withValues(alpha: 0.5),
+      innerContentBackgroundColor: Colors.white,
     );
   }
 }
