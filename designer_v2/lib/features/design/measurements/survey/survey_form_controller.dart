@@ -30,7 +30,10 @@ class MeasurementSurveyFormViewModel
     super.delegate,
     super.formData,
     super.validationSet = StudyFormValidationSet.draft,
-  });
+  }) {
+    // Persist survey changes when managed questions are added, edited, or removed.
+    propagateOnSave = true;
+  }
 
   final Study study;
 
