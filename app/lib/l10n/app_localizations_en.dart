@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -142,7 +141,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.';
+      'Some studies could not be displayed right now. You can still join the studies shown below.';
 
   @override
   String get study_overview_title => 'Overview';
