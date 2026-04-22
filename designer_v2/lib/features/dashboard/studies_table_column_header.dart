@@ -31,6 +31,12 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final headerTextStyle =
+        (theme.textTheme.labelLarge ?? theme.textTheme.bodyMedium)!.copyWith(
+          fontWeight: FontWeight.w700,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.88),
+          letterSpacing: 0.15,
+        );
 
     return MouseEventsRegion(
       key: ValueKey('studies_table_column_header_${widget.title}'),
@@ -47,11 +53,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 textAlign: widget.center ? TextAlign.center : TextAlign.start,
-                style: theme.textTheme.labelMedium!.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.88),
-                  letterSpacing: 0.15,
-                ),
+                style: headerTextStyle,
               ),
             ),
             if (widget.sortable)
