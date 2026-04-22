@@ -71,6 +71,7 @@ class DashboardController extends _$DashboardController
       state = state.copyWith(
         savedFilters: () => savedFilters,
         activeFilter: () => active.filterGroup,
+        pinnedStudies: () => _userRepository.user.preferences.pinnedStudies,
         selectedSavedFilterId: () => active.presetId,
       );
     } catch (e) {
@@ -162,11 +163,17 @@ class DashboardController extends _$DashboardController
 
   Future<void> pinStudy(String modelId) async {
     await _userRepository.updatePreferences(PreferenceAction.pin, modelId);
+    state = state.copyWith(
+      pinnedStudies: () => _userRepository.user.preferences.pinnedStudies,
+    );
     sortStudies();
   }
 
   Future<void> pinOffStudy(String modelId) async {
     await _userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
+    state = state.copyWith(
+      pinnedStudies: () => _userRepository.user.preferences.pinnedStudies,
+    );
     sortStudies();
   }
 
@@ -182,9 +189,7 @@ class DashboardController extends _$DashboardController
   }
 
   Future<void> sortStudies() async {
-    final studies = state.sort(
-      pinnedStudies: _userRepository.user.preferences.pinnedStudies,
-    );
+    final studies = state.sort(pinnedStudies: state.pinnedStudies);
     state = state.copyWith(studies: () => AsyncValue.data(studies));
   }
 

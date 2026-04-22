@@ -251,9 +251,9 @@ class StudiesTable extends StatelessWidget {
                   rowSpacing: rowSpacing,
                   columnSpacing: columnSpacing,
                   onPinnedChanged: (study, pinned) {
-                    pinnedStudies.contains(item.id)
-                        ? dashboardController.pinOffStudy(item.id)
-                        : dashboardController.pinStudy(item.id);
+                    pinned
+                        ? dashboardController.pinStudy(study.id)
+                        : dashboardController.pinOffStudy(study.id);
                   },
                   onTap: (study) => onSelect.call(study),
                 );

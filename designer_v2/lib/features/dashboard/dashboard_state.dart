@@ -21,6 +21,7 @@ class DashboardState extends Equatable {
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
     this.savedFilters = const [],
+    this.pinnedStudies = const {},
     this.selectedSavedFilterId,
     required this.currentUser,
     required this.searchController,
@@ -43,6 +44,9 @@ class DashboardState extends Equatable {
 
   /// List of saved custom filters
   final List<SavedFilter> savedFilters;
+
+  /// Pinned study ids from the current user's preferences.
+  final Set<String> pinnedStudies;
 
   /// Currently selected sort column to be applied to the list of studies
   /// in order to determine the [displayedStudies]
@@ -113,7 +117,7 @@ class DashboardState extends Equatable {
     required Set<String> pinnedStudies,
     List<Study>? studiesToSort,
   }) {
-    final sortedStudies = studiesToSort ?? studies.value!;
+    final sortedStudies = List<Study>.from(studiesToSort ?? studies.value!);
     switch (sortByColumn) {
       case StudiesTableColumn.title:
         if (sortAscending) {
@@ -218,6 +222,7 @@ class DashboardState extends Equatable {
     StudiesFilter? Function()? studiesFilter,
     FilterGroup? Function()? activeFilter,
     List<SavedFilter> Function()? savedFilters,
+    Set<String> Function()? pinnedStudies,
     User Function()? currentUser,
     String? query,
     StudiesTableColumn? sortByColumn,
@@ -232,6 +237,7 @@ class DashboardState extends Equatable {
           : this.studiesFilter,
       activeFilter: activeFilter != null ? activeFilter() : this.activeFilter,
       savedFilters: savedFilters != null ? savedFilters() : this.savedFilters,
+      pinnedStudies: pinnedStudies != null ? pinnedStudies() : this.pinnedStudies,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,
@@ -251,6 +257,7 @@ class DashboardState extends Equatable {
     studiesFilter,
     activeFilter,
     savedFilters,
+    pinnedStudies,
     query,
     sortByColumn,
     sortAscending,
