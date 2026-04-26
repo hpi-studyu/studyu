@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:marionette_flutter/marionette_flutter.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:marionette_flutter/marionette_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:studyu_app/app.dart';
 import 'package:studyu_app/routes.dart';
@@ -42,10 +42,9 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey(
 Future<void> main() async {
   final bool isFlutterTest =
       !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
-  final WidgetsBinding widgetsBinding =
-      kDebugMode && !isFlutterTest
-          ? MarionetteBinding.ensureInitialized()
-          : WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding widgetsBinding = kDebugMode && !isFlutterTest
+      ? MarionetteBinding.ensureInitialized()
+      : WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
     FlutterError.onError = (FlutterErrorDetails details) {

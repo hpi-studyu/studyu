@@ -145,7 +145,7 @@ class ThemeProvider extends InheritedWidget {
       return custom.color;
     }
   }
- 
+
   Color blend(Color targetColor) {
     return Color(
       Blend.harmonize(

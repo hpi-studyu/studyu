@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:marionette_flutter/marionette_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:marionette_flutter/marionette_flutter.dart';
 import 'package:studyu_designer_v2/features/app.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
