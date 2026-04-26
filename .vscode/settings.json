@@ -1,5 +1,6 @@
 {
   "dart.flutterSdkPath": ".fvm/flutter_sdk",
+  "dart.mcpServer": true,
   "search.exclude": {
     "**/.fvm": true
   }
