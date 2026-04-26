@@ -27,6 +27,7 @@ dependencies:
     sdk: flutter
   go_router: ^17.1.0
   intl: ^0.20.2
+  marionette_flutter: ^0.5.0
   material_color_utilities: ^0.13.0 # integration_test
   material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^9.0.0

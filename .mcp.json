@@ -6,6 +6,16 @@
         "mcp-server"
       ],
       "env": {}
+    },
+    "marionette": {
+      "command": "dart",
+      "args": [
+        "pub",
+        "global",
+        "run",
+        "marionette_mcp"
+      ],
+      "env": {}
     }
   },
   "servers": {
@@ -14,6 +24,16 @@
       "command": "dart",
       "args": [
         "mcp-server"
+      ]
+    },
+    "marionette": {
+      "type": "stdio",
+      "command": "dart",
+      "args": [
+        "pub",
+        "global",
+        "run",
+        "marionette_mcp"
       ]
     }
   }
