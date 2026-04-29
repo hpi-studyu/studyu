@@ -74,9 +74,12 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                 //formControl: widget.formViewModel.sequenceTypeControl,
                 onChanged: widget.formViewModel.sequenceTypeControl.disabled
                     ? null
-                    : (PhaseSequence? value) =>
+                    : (PhaseSequence? value) {
+                        setState(() {
                           widget.formViewModel.sequenceTypeControl.value =
-                              value,
+                              value;
+                        });
+                      },
                 initialValue: widget.formViewModel.sequenceTypeControl.value,
                 decoration: InputDecoration(
                   helperText:
