@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin:0; background:#fff; font-family:var(--font-sans); padding:16px 20px; }
+  h4 { margin:0 0 10px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#999; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600; }
+  .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  /* status badges */
+  .badge-active   { background:#E3F2FD; color:#2196F3; }
+  .badge-done     { background:#E8F5E9; color:#4CAF50; }
+  .badge-pending  { background:#FFF3E0; color:#FF9800; }
+  .badge-error    { background:#FFEBEE; color:#F44336; }
+  .badge-neutral  { background:#ECEFF1; color:#607D8B; }
+  /* intervention phase pills */
+  .phase { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; font-size:12px; font-weight:600; background:#EBF4FD; color:#2196F3; }
+  /* timeline node */
+  .node { width:36px; height:36px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; }
+  /* progress indicator */
+  .progress-bar { height:4px; border-radius:2px; background:#BBDEFB; flex:1; position:relative; overflow:hidden; }
+  .progress-fill { position:absolute; left:0; top:0; height:100%; background:#2196F3; border-radius:2px; }
+</style>
+</head><body>
+<h4>Status Badges</h4>
+<div class="row">
+  <span class="badge badge-active"><span class="dot" style="background:#2196F3"></span>Active</span>
+  <span class="badge badge-done"><span class="dot" style="background:#4CAF50"></span>Completed</span>
+  <span class="badge badge-pending"><span class="dot" style="background:#FF9800"></span>Pending</span>
+  <span class="badge badge-error"><span class="dot" style="background:#F44336"></span>Dropout</span>
+  <span class="badge badge-neutral"><span class="dot" style="background:#607D8B"></span>Draft</span>
+</div>
+<h4>Phase Chips</h4>
+<div class="row">
+  <span class="phase" style="background:#EBF4FD;color:#2196F3">― Baseline</span>
+  <span class="phase" style="background:#FFF3E0;color:#FF9800">☕ Willow-Bark tea</span>
+  <span class="phase" style="background:#E8F5E9;color:#4CAF50">🏁 Results available</span>
+</div>
+<h4>Timeline Nodes</h4>
+<div class="row" style="align-items:center;gap:0">
+  <div class="node" style="background:#9E9E9E">-</div>
+  <div style="width:32px;height:3px;background:#2196F3"></div>
+  <div class="node" style="background:#FF9800">☕</div>
+  <div style="width:32px;height:3px;background:#2196F3"></div>
+  <div class="node" style="background:#FF9800">🌿</div>
+  <div style="width:32px;height:3px;background:#2196F3"></div>
+  <div class="node" style="background:#4CAF50">🏁</div>
+</div>
+<h4 style="margin-top:14px">Progress Bar</h4>
+<div class="row" style="gap:0;align-items:center;">
+  <div class="progress-bar" style="width:200px"><div class="progress-fill" style="width:60%"></div></div>
+</div>
+</body></html>

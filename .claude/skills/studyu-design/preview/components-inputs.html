@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  body { margin:0; background:#fff; font-family:var(--font-sans); padding:16px 20px; }
+  h4 { margin:0 0 8px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#999; }
+  .row { display:flex; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  /* Input */
+  .field { display:flex; flex-direction:column; gap:4px; flex:1; min-width:160px; max-width:240px; }
+  .field label { font-size:12px; font-weight:600; color:rgba(0,0,0,.65); }
+  .input { background:#fff; border:1.5px solid rgba(0,0,0,.2); border-radius:5px; padding:10px 12px; font-family:var(--font-sans); font-size:14px; color:rgba(0,0,0,.9); outline:none; width:100%; box-sizing:border-box; }
+  .input:focus { border-color:#2196F3; }
+  .input.error { border-color:#F44336; }
+  .input::placeholder { color:rgba(0,0,0,.35); }
+  .helper { font-size:11px; color:rgba(0,0,0,.55); }
+  .helper.err { color:#F44336; }
+  /* Checkbox / radio */
+  .check-row { display:flex; align-items:center; gap:8px; font-size:14px; color:rgba(0,0,0,.9); }
+  .cb { width:18px; height:18px; border:1.5px solid rgba(0,0,0,.2); border-radius:3px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .cb.checked { background:#2196F3; border-color:#2196F3; }
+  .cb.checked::after { content:''; width:10px; height:6px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg) translateY(-1px); display:block; }
+  /* Switch */
+  .switch { width:40px; height:22px; background:#ccc; border-radius:11px; position:relative; cursor:pointer; transition:background .2s; flex-shrink:0; }
+  .switch.on { background:#2196F3; }
+  .switch::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+  .switch.on::after { left:21px; }
+</style>
+</head><body>
+<h4>Text Inputs</h4>
+<div class="row">
+  <div class="field">
+    <label>Email</label>
+    <input class="input" type="text" placeholder="you@example.com">
+  </div>
+  <div class="field">
+    <label>Study code</label>
+    <input class="input" type="text" value="LOWER-BACK-21">
+  </div>
+  <div class="field">
+    <label>Description</label>
+    <input class="input error" type="text" value="Too short">
+    <span class="helper err">Minimum 20 characters required</span>
+  </div>
+</div>
+<h4>Checkboxes &amp; Switches</h4>
+<div class="row" style="align-items:center;gap:20px;">
+  <div class="check-row"><div class="cb checked"></div> Willow-Bark tea</div>
+  <div class="check-row"><div class="cb checked"></div> Arnika</div>
+  <div class="check-row"><div class="cb"></div> Warming Pad</div>
+  <div class="check-row" style="gap:10px;margin-left:16px;">
+    <div class="switch on"></div><span>Notifications on</span>
+  </div>
+  <div class="check-row" style="gap:10px;">
+    <div class="switch"></div><span>Off</span>
+  </div>
+</div>
+</body></html>

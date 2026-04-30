@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  body { margin:0; background:#fff; font-family:var(--font-sans); padding:14px 16px; }
+  h4 { margin:0 0 8px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:#999; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+  /* M3 button variants */
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:10px 24px; border-radius:9999px; font-family:var(--font-sans); font-size:14px; font-weight:500; cursor:pointer; border:none; transition:opacity .15s; letter-spacing:.01em; }
+  .btn:hover { opacity:.85; }
+  .btn-filled    { background:#0061A4; color:#fff; }
+  .btn-tonal     { background:#D1E4FF; color:#001D36; }
+  .btn-elevated  { background:#F7F9FF; color:#0061A4; box-shadow:0 1px 3px rgba(0,97,164,.12); }
+  .btn-outlined  { background:transparent; color:#0061A4; border:1px solid #73777F; }
+  .btn-text      { background:transparent; color:#0061A4; padding:10px 12px; }
+  .btn-accent    { background:#FF9800; color:#fff; }
+  .btn-disabled  { background:rgba(26,28,30,.12); color:rgba(26,28,30,.38); cursor:not-allowed; }
+  /* M3 icon button */
+  .icon-btn { width:40px; height:40px; border-radius:9999px; display:inline-flex; align-items:center; justify-content:center; border:none; cursor:pointer; }
+  .icon-btn .material-icons { font-size:20px; }
+  .fab { display:inline-flex; align-items:center; gap:8px; padding:16px 20px; border-radius:16px; background:#D1E4FF; color:#001D36; font-size:14px; font-weight:500; border:none; cursor:pointer; }
+  .fab .material-icons { font-size:24px; }
+</style>
+</head><body>
+<h4>Filled ; Tonal ; Elevated ; Outlined ; Text</h4>
+<div class="row">
+  <button class="btn btn-filled"><span class="material-icons" style="font-size:18px">rocket_launch</span> Get started</button>
+  <button class="btn btn-tonal">Accept</button>
+  <button class="btn btn-elevated">Preview</button>
+  <button class="btn btn-outlined"><span class="material-icons" style="font-size:18px">vpn_key</span> Invite code</button>
+  <button class="btn btn-text">‹ Back</button>
+  <button class="btn btn-disabled" disabled>Disabled</button>
+</div>
+<h4>Secondary / Accent &amp; Danger</h4>
+<div class="row">
+  <button class="btn btn-accent">Next ›</button>
+  <button class="btn btn-text" style="color:#BA1A1A">✕ Decline</button>
+  <button class="btn btn-text" style="color:#0061A4">✓ Accept</button>
+</div>
+<h4>Icon Buttons &amp; FAB</h4>
+<div class="row">
+  <button class="icon-btn" style="background:#0061A4;color:#fff"><span class="material-icons">bar_chart</span></button>
+  <button class="icon-btn" style="background:#D1E4FF;color:#001D36"><span class="material-icons">info_outline</span></button>
+  <button class="icon-btn" style="background:transparent;color:#0061A4;border:1px solid #73777F"><span class="material-icons">more_horiz</span></button>
+  <button class="icon-btn" style="background:#D1E4FF;color:#001D36"><span class="material-icons">save</span></button>
+  <button class="fab"><span class="material-icons">add</span> New Study</button>
+</div>
+</body></html>

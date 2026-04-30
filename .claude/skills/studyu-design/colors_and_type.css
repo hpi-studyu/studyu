@@ -1,0 +1,265 @@
+/* ============================================================
+   StudyU Design System - Colors & Typography
+   Source: hpi-studyu/studyu (branch: dev)
+   Font: Work Sans variable
+   ============================================================ */
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* -- M3 Color Roles (seed: #2196F3, SchemeFidelity / light) -- */
+/* Generated from material_color_utilities matching designer_v2/lib/theme.dart */
+:root {
+  /* Primary */
+  --md-primary:                #0061A4;
+  --md-on-primary:             #FFFFFF;
+  --md-primary-container:      #D1E4FF;
+  --md-on-primary-container:   #001D36;
+
+  /* Secondary (Orange accent - app theme) */
+  --md-secondary:              #FF9800;
+  --md-on-secondary:           #FFFFFF;
+  --md-secondary-container:    #FFE0B2;
+  --md-on-secondary-container: #3D1F00;
+
+  /* Tertiary */
+  --md-tertiary:               #006874;
+  --md-on-tertiary:            #FFFFFF;
+  --md-tertiary-container:     #97F0FF;
+  --md-on-tertiary-container:  #001F24;
+
+  /* Error */
+  --md-error:                  #BA1A1A;
+  --md-on-error:               #FFFFFF;
+  --md-error-container:        #FFDAD6;
+  --md-on-error-container:     #410002;
+
+  /* Surface tones */
+  --md-surface:                #FDFCFF;
+  --md-on-surface:             #1A1C1E;
+  --md-surface-variant:        #DFE2EB;
+  --md-on-surface-variant:     #43474E;
+  --md-surface-container-lowest:  #FFFFFF;
+  --md-surface-container-low:     #F7F9FF;  /* scaffold bg (@15% primaryContainer) */
+  --md-surface-container:         #F1F3FA;
+  --md-surface-container-high:    #E9ECF4;
+  --md-surface-container-highest: #E3E5ED;
+
+  /* Outline */
+  --md-outline:                #73777F;
+  --md-outline-variant:        #C3C7CF;
+
+  /* Inverse */
+  --md-inverse-surface:        #2F3033;
+  --md-inverse-on-surface:     #F1F0F4;
+  --md-inverse-primary:        #9ECAFF;
+
+  /* Legacy / brand extras */
+  --color-logo-start:          #00E5CC;
+  --color-logo-end:            #2196F3;
+  --color-link:                #00B0FF;
+  --color-primary-500:         #2196F3;  /* M2 blue - used in app appbar */
+
+  /* State layers (M3 spec) */
+  --md-state-hover-opacity:    0.08;
+  --md-state-focus-opacity:    0.12;
+  --md-state-pressed-opacity:  0.12;
+  --md-state-dragged-opacity:  0.16;
+}
+
+/* -- M3 Shape Scale ------------------------------------------ */
+:root {
+  --md-shape-none:        0px;
+  --md-shape-extra-small: 4px;
+  --md-shape-small:       8px;   /* cards in designer */
+  --md-shape-medium:      12px;
+  --md-shape-large:       16px;
+  --md-shape-extra-large: 28px;
+  --md-shape-full:        9999px;
+
+  /* Aliases used in codebase */
+  --radius-tooltip: 2px;          /* custom - not standard M3 */
+  --radius-input:   5px;          /* custom */
+  --radius-card:    var(--md-shape-small);
+  --radius-button:  var(--md-shape-full);
+}
+
+/* -- M3 Elevation (surface tint, not drop-shadow) ----------- */
+:root {
+  --md-elevation-0: transparent;
+  --md-elevation-1: rgba(0,97,164, 0.05);  /* tinted with primary */
+  --md-elevation-2: rgba(0,97,164, 0.08);
+  --md-elevation-3: rgba(0,97,164, 0.11);
+  --md-elevation-4: rgba(0,97,164, 0.12);
+  --md-elevation-5: rgba(0,97,164, 0.14);
+
+  /* App-specific shadows (non-M3, used in appbar) */
+  --shadow-appbar: 0 2px 6px rgba(187,222,251,0.30);
+  --shadow-card:   none;
+}
+
+/* -- Semantic Role Aliases (M3-aligned) ---------------------- */
+:root {
+  --fg1:      var(--md-on-surface);          /* primary body text */
+  --fg2:      var(--md-on-surface-variant);  /* secondary / captions */
+  --fg3:      var(--md-outline);             /* muted / helper */
+  --fg4:      var(--md-outline-variant);     /* placeholder */
+  --fgHeading: var(--md-on-surface-variant);
+
+  --bgPage:   var(--md-surface-container-low);
+  --bgCard:   var(--md-surface-container-lowest);
+  --bgInput:  var(--md-surface-container-lowest);
+
+  --interactive:       var(--md-primary);
+  --interactiveAccent: var(--md-secondary);
+}
+
+/* -- Typography Base (M3 Type Scale) ------------------------- */
+:root {
+  /* Font families */
+  --font-sans:  'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* M3 standard type scale */
+  --md-display-large-size:   57px;  --md-display-large-lh:   1.12; --md-display-large-weight:  400;
+  --md-display-medium-size:  45px;  --md-display-medium-lh:  1.15; --md-display-medium-weight: 400;
+  --md-display-small-size:   36px;  --md-display-small-lh:   1.22; --md-display-small-weight:  400;
+  --md-headline-large-size:  32px;  --md-headline-large-lh:  1.25; --md-headline-large-weight: 400;
+  --md-headline-medium-size: 28px;  --md-headline-medium-lh: 1.28; --md-headline-medium-weight:400;
+  --md-headline-small-size:  24px;  --md-headline-small-lh:  1.33; --md-headline-small-weight: 400;
+  --md-title-large-size:     22px;  --md-title-large-lh:     1.27; --md-title-large-weight:    400;
+  --md-title-medium-size:    16px;  --md-title-medium-lh:    1.5;  --md-title-medium-weight:   500;
+  --md-title-small-size:     14px;  --md-title-small-lh:     1.43; --md-title-small-weight:    500;
+  --md-body-large-size:      16px;  --md-body-large-lh:      1.5;  --md-body-large-weight:     400;
+  --md-body-medium-size:     14px;  --md-body-medium-lh:     1.43; --md-body-medium-weight:    400;
+  --md-body-small-size:      12px;  --md-body-small-lh:      1.33; --md-body-small-weight:     400;
+  --md-label-large-size:     14px;  --md-label-large-lh:     1.43; --md-label-large-weight:    500;
+  --md-label-medium-size:    12px;  --md-label-medium-lh:    1.33; --md-label-medium-weight:   500;
+  --md-label-small-size:     11px;  --md-label-small-lh:     1.45; --md-label-small-weight:    500;
+
+  /* App-custom overrides (from designer_v2/lib/theme.dart) */
+  --app-body:         14px;  /* all body roles use 14px in app */
+  --app-title-large:  15px;
+  --app-headline-sm:  18px;
+  --app-headline-md:  22px;
+  --app-display-sm:   26px;
+  --app-display-md:   36px;
+  --app-display-lg:   48px;
+
+  /* Line heights */
+  --lh-body:    1.35;
+  --lh-heading: 1.2;
+
+  /* Font weights */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+}
+
+/* -- Semantic Typography Classes ----------------------------- */
+.text-display-lg {
+  font-family: var(--font-sans);
+  font-size: var(--text-display-lg);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--fgHeading);
+}
+.text-display-md {
+  font-family: var(--font-sans);
+  font-size: var(--text-display-md);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--fgHeading);
+}
+.text-display-sm {
+  font-family: var(--font-sans);
+  font-size: var(--text-display-sm);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--fgHeading);
+}
+.text-headline-md {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline-md);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--fgHeading);
+}
+.text-headline-sm {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline-sm);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--fgHeading);
+}
+.text-title-lg {
+  font-family: var(--font-sans);
+  font-size: var(--text-title-lg);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--fgHeading);
+}
+.text-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-sm);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  color: var(--fg1);
+}
+.text-body-muted {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-sm);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  color: var(--fg3);
+}
+.text-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-body);
+  color: var(--fg1);
+}
+.text-link {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-sm);
+  color: var(--color-link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* -- Spacing Tokens ------------------------------------------ */
+:root {
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* M3 shape aliases */
+  --radius-sm:   var(--md-shape-extra-small); /* 4px - tooltips */
+  --radius-md:   5px;                         /* inputs (app custom) */
+  --radius-lg:   var(--md-shape-small);       /* 8px - cards */
+  --radius-full: var(--md-shape-full);        /* buttons, chips */
+
+  --content-min: 600px;
+  --content-max: 1264px;
+
+  /* Elevation / Shadow (M3: surface tint preferred; shadow kept for appbar) */
+  --shadow-none:   none;
+  --shadow-sm:     0 1px 3px rgba(0,97,164,0.10), 0 1px 2px rgba(0,97,164,0.07);
+  --shadow-md:     0 2px 8px rgba(0,97,164,0.12), 0 1px 4px rgba(0,97,164,0.08);
+  --shadow-appbar: 0 2px 6px rgba(209,228,255,0.40);
+}

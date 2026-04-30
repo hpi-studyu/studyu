@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #fff; font-family: var(--font-sans); padding: 16px; }
+  .row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .swatch { flex: 1; height: 52px; border-radius: 6px; display: flex; align-items: flex-end; padding: 6px 8px; }
+  .swatch span { font-size: 11px; font-weight: 600; }
+  .on-light { color: rgba(0,0,0,0.7); }
+  .on-dark  { color: rgba(255,255,255,0.9); }
+  .label-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .label-row span { flex: 1; font-size: 11px; color: #888; }
+  h4 { margin: 0 0 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #999; }
+</style>
+</head><body>
+<h4>Primary - Blue</h4>
+<div class="row">
+  <div class="swatch on-dark"  style="background:#1565C0;flex:1.2"><span>800 #1565C0</span></div>
+  <div class="swatch on-dark"  style="background:#2196F3;flex:1.5"><span>500 #2196F3 ★</span></div>
+  <div class="swatch on-light" style="background:#64B5F6"><span>300 #64B5F6</span></div>
+  <div class="swatch on-light" style="background:#BBDEFB"><span>100 #BBDEFB</span></div>
+  <div class="swatch on-light" style="background:#E3F2FD;border:1px solid #ddd"><span>50 #E3F2FD</span></div>
+</div>
+<h4>Accent - Orange</h4>
+<div class="row">
+  <div class="swatch on-dark"  style="background:#E65100;flex:1.2"><span>900 #E65100</span></div>
+  <div class="swatch on-dark"  style="background:#FF9800;flex:1.5"><span>500 #FF9800 ★</span></div>
+  <div class="swatch on-light" style="background:#FFB74D"><span>300 #FFB74D</span></div>
+  <div class="swatch on-light" style="background:#FFE0B2"><span>100 #FFE0B2</span></div>
+  <div class="swatch on-light" style="background:#FFF3E0;border:1px solid #ddd"><span>50 #FFF3E0</span></div>
+</div>
+<h4>Logo Gradient</h4>
+<div class="row">
+  <div class="swatch on-dark" style="background:linear-gradient(90deg,#00E5CC,#2196F3);flex:1;border-radius:6px"><span>Cyan #00E5CC → Blue #2196F3</span></div>
+</div>
+</body></html>

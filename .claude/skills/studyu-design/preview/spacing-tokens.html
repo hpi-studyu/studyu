@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin:0; background:#fff; font-family:var(--font-sans); padding:16px; }
+  h4 { margin:0 0 10px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#999; }
+  .space-row { display:flex; align-items:center; gap:12px; margin-bottom:7px; }
+  .bar { background:#2196F3; height:18px; border-radius:3px; opacity:.7; }
+  .space-label { font-size:11px; color:#888; min-width:80px; }
+  .radius-row { display:flex; gap:10px; margin-bottom:16px; }
+  .radius-box { width:52px; height:40px; background:#E3F2FD; border:2px solid #2196F3; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#2196F3; }
+  .shadow-row { display:flex; gap:12px; flex-wrap:wrap; }
+  .shadow-box { width:80px; height:44px; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:10px; color:#888; font-weight:600; }
+</style>
+</head><body>
+<h4>Spacing Scale</h4>
+<div class="space-row"><div class="bar" style="width:4px"></div><span class="space-label">4px - space-1</span></div>
+<div class="space-row"><div class="bar" style="width:8px"></div><span class="space-label">8px - space-2</span></div>
+<div class="space-row"><div class="bar" style="width:12px"></div><span class="space-label">12px - space-3</span></div>
+<div class="space-row"><div class="bar" style="width:16px"></div><span class="space-label">16px - space-4</span></div>
+<div class="space-row"><div class="bar" style="width:24px"></div><span class="space-label">24px - space-6</span></div>
+<div class="space-row"><div class="bar" style="width:32px"></div><span class="space-label">32px - space-8</span></div>
+<div class="space-row"><div class="bar" style="width:48px"></div><span class="space-label">48px - space-12</span></div>
+
+<h4 style="margin-top:10px">Border Radius</h4>
+<div class="radius-row">
+  <div class="radius-box" style="border-radius:2px">2px<br><span style="font-weight:400;color:#aaa">tooltip</span></div>
+  <div class="radius-box" style="border-radius:5px">5px<br><span style="font-weight:400;color:#aaa">input</span></div>
+  <div class="radius-box" style="border-radius:8px">8px<br><span style="font-weight:400;color:#aaa">card</span></div>
+  <div class="radius-box" style="border-radius:24px">pill<br><span style="font-weight:400;color:#aaa">badge</span></div>
+</div>
+
+<h4>Elevation / Shadow</h4>
+<div class="shadow-row">
+  <div class="shadow-box" style="box-shadow:none;border:1px solid #eee">none</div>
+  <div class="shadow-box" style="box-shadow:0 1px 3px rgba(33,150,243,.12),0 1px 2px rgba(33,150,243,.08)">sm</div>
+  <div class="shadow-box" style="box-shadow:0 2px 8px rgba(33,150,243,.15),0 1px 4px rgba(33,150,243,.10)">md</div>
+  <div class="shadow-box" style="box-shadow:0 2px 6px rgba(187,222,251,.30),0 1px 3px rgba(33,150,243,.12)">appbar</div>
+</div>
+</body></html>

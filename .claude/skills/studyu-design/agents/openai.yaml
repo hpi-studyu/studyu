@@ -1,0 +1,4 @@
+interface:
+  display_name: "StudyU Design"
+  short_description: "Apply the StudyU design system, tokens, assets, and UI kits."
+  default_prompt: "Use the StudyU design system to create or review a branded interface."

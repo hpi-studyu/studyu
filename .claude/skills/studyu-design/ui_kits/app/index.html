@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyU - Mobile App UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e8f0; font-family: var(--font-sans), sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+  .phone-shell {
+    width: 375px;
+    height: 812px;
+    background: #fff;
+    border-radius: 44px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.25), 0 0 0 10px #1a1a1a, inset 0 0 0 2px #333;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 0;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+  .status-bar.light { background: #f5f5f5; color: #000; }
+  .status-bar.blue  { background: #2196F3; color: #fff; }
+  .status-time { font-size: 15px; font-weight: 700; }
+  .status-icons { display: flex; gap: 5px; align-items: center; font-size: 13px; }
+
+  /* Screens */
+  .screen { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* App bar */
+  .app-bar {
+    height: 56px;
+    background: #2196F3;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .app-bar-title { font-size: 20px; font-weight: 700; flex: 1; }
+  .app-bar .material-icons { font-size: 24px; opacity: 0.9; cursor: pointer; }
+
+  /* Scroll content */
+  .scroll-content { flex: 1; overflow-y: auto; background: #f5f7fa; padding: 16px; }
+  .scroll-content::-webkit-scrollbar { display: none; }
+
+  /* Nav bottom */
+  .bottom-bar {
+    height: 34px; background: #fff; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .home-indicator { width: 134px; height: 5px; background: #000; border-radius: 3px; opacity: 0.2; }
+
+  /* Welcome screen */
+  .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f5f7fa; gap: 20px; padding: 32px; }
+  .welcome-logo { height: 70px; }
+  .welcome-btn { width: 240px; padding: 14px 0; border-radius: 8px; border: 1.5px solid #2196F3; background: transparent; color: #2196F3; font-family: var(--font-sans), sans-serif; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: background .15s; }
+  .welcome-btn:hover { background: #EBF4FD; }
+  .welcome-btn.primary { background: #2196F3; color: #fff; border-color: #2196F3; }
+  .welcome-btn.primary:hover { background: #1976D2; }
+
+  /* Study list */
+  .page-title { font-size: 22px; font-weight: 700; color: #333; text-align: center; padding: 24px 16px 8px; }
+  .page-subtitle { font-size: 13px; color: rgba(0,0,0,.55); text-align: center; padding: 0 24px 20px; line-height: 1.4; }
+  .page-subtitle a { color: #2196F3; text-decoration: underline; }
+  .study-item { display: flex; align-items: flex-start; gap: 14px; background: #fff; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+  .study-icon-circle { width: 40px; height: 40px; border-radius: 50%; background: #2196F3; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .study-icon-circle .material-icons { color: #fff; font-size: 20px; }
+  .study-item-title { font-size: 15px; font-weight: 700; color: #2196F3; margin-bottom: 4px; }
+  .study-item-desc { font-size: 13px; color: rgba(0,0,0,.6); line-height: 1.35; }
+
+  /* Dashboard */
+  .timeline-bar { display: flex; align-items: center; padding: 12px 12px 8px; background: #f5f7fa; gap: 0; overflow-x: auto; }
+  .timeline-bar::-webkit-scrollbar { display: none; }
+  .timeline-node { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .timeline-node .material-icons { font-size: 18px; color: #fff; }
+  .timeline-line { flex: 1; height: 2px; background: #ccc; min-width: 8px; }
+  .timeline-line.active { background: #2196F3; }
+  .section-title { font-size: 15px; font-weight: 700; color: #333; padding: 14px 0 8px; }
+  .intervention-row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .dash-line { width: 24px; height: 3px; background: #FF9800; border-radius: 2px; }
+  .intervention-label { font-size: 15px; color: #333; flex: 1; }
+  .task-time { font-size: 14px; font-weight: 700; color: #2196F3; display: flex; align-items: center; gap: 4px; }
+  .task-time .material-icons { font-size: 16px; }
+  .task-row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .task-label { font-size: 14px; color: #333; flex: 1; }
+  .check-circle { width: 28px; height: 28px; border-radius: 50%; border: 2.5px solid #FF9800; display: flex; align-items: center; justify-content: center; }
+  .check-circle .material-icons { font-size: 18px; color: #FF9800; }
+
+  /* Intervention selection */
+  .int-card { background: #fff; border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .int-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .int-icon-circle { width: 36px; height: 36px; border-radius: 50%; background: #FF9800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .int-icon-circle .material-icons { color: #fff; font-size: 18px; }
+  .int-name { font-size: 15px; font-weight: 700; color: #333; flex: 1; }
+  .info-icon { color: rgba(0,0,0,.3); font-size: 20px; }
+  .checkbox-sq { width: 20px; height: 20px; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .checkbox-sq.checked { background: #2196F3; }
+  .checkbox-sq.unchecked { border: 1.5px solid rgba(0,0,0,.2); }
+  .checkbox-sq .material-icons { color: #fff; font-size: 14px; }
+  .int-task-text { font-size: 12px; color: rgba(0,0,0,.6); line-height: 1.35; padding-top: 6px; border-top: 1px solid rgba(0,0,0,.08); display: flex; justify-content: space-between; align-items: center; }
+  .time-tag { font-size: 12px; color: rgba(0,0,0,.45); display: flex; align-items: center; gap: 3px; white-space: nowrap; }
+  .time-tag .material-icons { font-size: 13px; }
+
+  /* Journey timeline */
+  .journey-row { display: flex; align-items: center; padding: 0 24px; position: relative; }
+  .journey-dot { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; }
+  .journey-dot .material-icons { color: #fff; font-size: 20px; }
+  .journey-label { font-size: 15px; font-weight: 600; color: #2196F3; margin-left: 20px; }
+  .journey-date { font-size: 12px; color: rgba(0,0,0,.5); min-width: 80px; }
+  .journey-connector { width: 3px; height: 30px; background: #2196F3; margin: 0 auto 0 42px; }
+
+  /* Consent */
+  .consent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 0; }
+  .consent-tile { background: #fff; border: 1.5px solid #2196F3; border-radius: 8px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; cursor: pointer; transition: background .15s; }
+  .consent-tile:hover { background: #EBF4FD; }
+  .consent-tile .material-icons { color: #2196F3; font-size: 36px; }
+  .consent-tile-label { font-size: 12px; font-weight: 700; color: #333; line-height: 1.3; }
+
+  /* Nav bottom row */
+  .nav-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; background: #f5f7fa; flex-shrink: 0; border-top: 1px solid rgba(0,0,0,.08); }
+  .nav-back { color: #2196F3; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 2px; }
+  .nav-next { color: #2196F3; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 2px; }
+  .nav-progress { flex: 1; height: 4px; background: #BBDEFB; border-radius: 2px; margin: 0 12px; position: relative; overflow: hidden; }
+  .nav-progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: #2196F3; border-radius: 2px; transition: width .3s; }
+
+  /* Screen nav dots */
+  .screen-tabs { display: flex; gap: 6px; justify-content: center; padding: 8px; flex-shrink: 0; background: #f0f4f8; }
+  .tab-dot { width: 7px; height: 7px; border-radius: 50%; background: #BBDEFB; cursor: pointer; transition: background .2s; }
+  .tab-dot.active { background: #2196F3; }
+</style>
+</head>
+<body>
+<script type="text/babel">
+const { useState } = React;
+
+const SCREENS = ['welcome','studies','consent','interventions','journey','dashboard'];
+
+const StatusBar = ({ theme='light' }) => (
+  <div className={`status-bar ${theme}`}>
+    <span className="status-time">4:29</span>
+    <div className="status-icons">
+      <span>;;;;</span>
+      <span className="material-icons" style={{fontSize:14}}>wifi</span>
+      <span className="material-icons" style={{fontSize:14}}>battery_full</span>
+    </div>
+  </div>
+);
+
+const WelcomeScreen = ({ onNext }) => (
+  <>
+    <StatusBar theme="light" />
+    <div className="welcome">
+      <img src="../../assets/studyulogo.png" className="welcome-logo" alt="StudyU" />
+      <button className="welcome-btn"><span className="material-icons" style={{fontSize:18}}>info</span> What is StudyU?</button>
+      <button className="welcome-btn"><span className="material-icons" style={{fontSize:18}}>person</span> Contact</button>
+      <button className="welcome-btn"><span className="material-icons" style={{fontSize:18}}>quiz</span> FAQ</button>
+      <button className="welcome-btn primary" onClick={onNext}><span className="material-icons" style={{fontSize:18}}>rocket_launch</span> Get started</button>
+    </div>
+    <div className="bottom-bar"><div className="home-indicator"></div></div>
+  </>
+);
+
+const StudiesScreen = ({ onNext }) => (
+  <>
+    <StatusBar theme="light" />
+    <div className="screen">
+      <div className="page-title">Please select a study.</div>
+      <div className="page-subtitle">You can only participate in one study at a time. <a>Why?</a></div>
+      <div className="scroll-content" style={{background:'#f5f7fa'}}>
+        {[
+          {icon:'science', title:'Study Title', desc:'The description of the study will show up here. It can be a longer text.'},
+          {icon:'people', title:'Lower back pain', desc:'This study helps you find out which treatment is more effective for you.'},
+          {icon:'people', title:'Leg Cramps', desc:'This study helps you find out what reduces the frequency of leg cramps most.'},
+          {icon:'people', title:'Rheumatoid Arthritis', desc:'This study helps you find out which treatment is more effective for you.'},
+          {icon:'people', title:'Irritable Bowel Syndrome', desc:'This study helps you find out which diet is more effective for you.'},
+        ].map((s, i) => (
+          <div key={i} className="study-item" onClick={onNext} style={{cursor:'pointer'}}>
+            <div className="study-icon-circle"><span className="material-icons">{s.icon}</span></div>
+            <div><div className="study-item-title">{s.title}</div><div className="study-item-desc">{s.desc}</div></div>
+          </div>
+        ))}
+        <button className="welcome-btn" style={{margin:'8px auto',display:'flex'}}><span className="material-icons" style={{fontSize:18}}>vpn_key</span> I have an invite code</button>
+      </div>
+      <div className="bottom-bar"><div className="home-indicator"></div></div>
+    </div>
+  </>
+);
+
+const ConsentScreen = ({ onNext, onBack }) => (
+  <>
+    <StatusBar theme="blue" />
+    <div className="app-bar">
+      <span className="material-icons">checklist</span>
+      <span className="app-bar-title">Consent</span>
+      <span className="material-icons">save</span>
+    </div>
+    <div className="screen">
+      <div className="scroll-content">
+        <p style={{fontSize:14,color:'rgba(0,0,0,.8)',lineHeight:1.4,marginBottom:4}}>Please give your consent to participate in this study. You are required to read all boxes by clicking on them.</p>
+        <span style={{color:'#2196F3',fontSize:13,fontWeight:700,textDecoration:'underline',cursor:'pointer'}}>Why?</span>
+        <div className="consent-grid">
+          {[
+            {icon:'manage_search', label:'Why Consent Is Needed'},
+            {icon:'safety_divider', label:'Risks & Benefits'},
+            {icon:'storage', label:'Data Handling & Use'},
+            {icon:'schedule', label:'Issues to Consider'},
+            {icon:'gavel', label:'Participant Rights'},
+            {icon:'travel_explore', label:'Future Research'},
+          ].map((t,i) => (
+            <div key={i} className="consent-tile">
+              <span className="material-icons">{t.icon}</span>
+              <span className="consent-tile-label">{t.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="nav-row">
+        <span className="nav-back" onClick={onBack}>✕ Decline</span>
+        <div className="nav-progress"><div className="nav-progress-fill" style={{width:'33%'}}></div></div>
+        <span className="nav-next" onClick={onNext}>Accept ✓</span>
+      </div>
+      <div className="bottom-bar"><div className="home-indicator"></div></div>
+    </div>
+  </>
+);
+
+const InterventionsScreen = ({ onNext, onBack }) => {
+  const [checked, setChecked] = useState({0:true, 1:true, 2:false});
+  const items = [
+    {icon:'local_cafe', name:'Willow-Bark tea', task:'Drink a cup of Willow-Bark tea twice a day.'},
+    {icon:'eco', name:'Arnika', task:'Apply a dime sized amount of Arnica gel to your lower back and massage for 10 mins.'},
+    {icon:'heat', name:'Warming Pad', task:'Apply warming pad to your lower back for 5 minutes.'},
+  ];
+  return <>
+    <StatusBar theme="blue" />
+    <div className="app-bar">
+      <span className="material-icons">tune</span>
+      <span className="app-bar-title">Interventions</span>
+    </div>
+    <div className="screen">
+      <div className="scroll-content">
+        <p style={{fontSize:14,fontWeight:700,color:'#333',marginBottom:4}}>Please select two interventions to apply during the study.</p>
+        <p style={{fontSize:12,color:'rgba(0,0,0,.55)',marginBottom:16,lineHeight:1.35}}>The effects of these two interventions will be measured and compared during the study.</p>
+        {items.map((item, i) => (
+          <div key={i} className="int-card">
+            <div className="int-header">
+              <div className="int-icon-circle"><span className="material-icons">{item.icon}</span></div>
+              <span className="int-name">{item.name}</span>
+              <span className="material-icons info-icon">info</span>
+              <div className={`checkbox-sq ${checked[i]?'checked':'unchecked'}`} onClick={()=>setChecked(c=>({...c,[i]:!c[i]}))}>
+                {checked[i] && <span className="material-icons">check</span>}
+              </div>
+            </div>
+            <div className="int-task-text">
+              <span>Tasks:<br/>{item.task}</span>
+              <span className="time-tag"><span className="material-icons">schedule</span> 18:00</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="nav-row">
+        <span className="nav-back" onClick={onBack}>‹ Back</span>
+        <div className="nav-progress"><div className="nav-progress-fill" style={{width:'66%'}}></div></div>
+        <span className="nav-next" onClick={onNext}>Next ›</span>
+      </div>
+      <div className="bottom-bar"><div className="home-indicator"></div></div>
+    </div>
+  </>;
+};
+
+const JourneyScreen = ({ onNext, onBack }) => {
+  const items = [
+    {date:'14-06-2021', icon:'remove', color:'#9E9E9E', label:'Baseline'},
+    {date:'21-06-2021', icon:'local_cafe', color:'#FF9800', label:'Willow-Bark tea'},
+    {date:'28-06-2021', icon:'eco', color:'#FF9800', label:'Arnika'},
+    {date:'05-07-2021', icon:'local_cafe', color:'#FF9800', label:'Willow-Bark tea'},
+    {date:'12-07-2021', icon:'eco', color:'#FF9800', label:'Arnika'},
+    {date:'19-07-2021', icon:'flag', color:'#4CAF50', label:'Results available'},
+  ];
+  return <>
+    <StatusBar theme="blue" />
+    <div className="app-bar">
+      <span className="material-icons">device_hub</span>
+      <span className="app-bar-title">Your Journey</span>
+    </div>
+    <div className="screen">
+      <div className="scroll-content" style={{paddingTop:20}}>
+        {items.map((item, i) => (
+          <React.Fragment key={i}>
+            <div className="journey-row">
+              <span className="journey-date">{item.date}</span>
+              <div className="journey-dot" style={{background:item.color}}>
+                <span className="material-icons">{item.icon}</span>
+              </div>
+              <span className="journey-label">{item.label}</span>
+            </div>
+            {i < items.length-1 && <div className="journey-connector"></div>}
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="nav-row">
+        <span className="nav-back" onClick={onBack}>‹ Back</span>
+        <div className="nav-progress"><div className="nav-progress-fill" style={{width:'100%'}}></div></div>
+        <span className="nav-next" onClick={onNext}>Next ›</span>
+      </div>
+      <div className="bottom-bar"><div className="home-indicator"></div></div>
+    </div>
+  </>;
+};
+
+const DashboardScreen = ({ onBack }) => {
+  const nodes = [
+    {icon:'directions_run', color:'#9E9E9E', active:false},
+    {icon:'local_cafe', color:'#FF9800', active:true},
+    {icon:'local_cafe', color:'#ccc', active:false},
+    {icon:'eco', color:'#ccc', active:false},
+    {icon:'local_cafe', color:'#ccc', active:false},
+    {icon:'eco', color:'#ccc', active:false},
+    {icon:'flag', color:'#ccc', active:false},
+  ];
+  return <>
+    <StatusBar theme="blue" />
+    <div className="app-bar">
+      <span className="app-bar-title">Dashboard</span>
+      <span className="material-icons">account_circle</span>
+      <span className="material-icons">bar_chart</span>
+      <span className="material-icons">more_horiz</span>
+    </div>
+    <div className="screen">
+      <div className="timeline-bar">
+        <span className="material-icons" style={{color:'#666',fontSize:20,marginRight:4}}>directions_run</span>
+        {nodes.map((n,i) => (
+          <React.Fragment key={i}>
+            <div className="timeline-node" style={{background:n.active?'#FF9800':n.color}}>
+              <span className="material-icons">{n.icon}</span>
+            </div>
+            {i < nodes.length-1 && <div className={`timeline-line ${n.active?'active':''}`}></div>}
+          </React.Fragment>
+        ))}
+        <span className="material-icons" style={{color:'#666',fontSize:20,marginLeft:4}}>flag</span>
+      </div>
+      <div className="scroll-content">
+        <div className="section-title">Current intervention</div>
+        <div className="intervention-row">
+          <div className="dash-line"></div>
+          <span className="intervention-label" style={{fontWeight:700}}>Baseline</span>
+          <span className="material-icons info-icon" style={{fontSize:20}}>info</span>
+        </div>
+        <div className="section-title">Today's tasks</div>
+        <div className="task-time"><span className="material-icons">schedule</span> 19:00</div>
+        <div className="task-row" style={{marginTop:6}}>
+          <span className="material-icons" style={{color:'rgba(0,0,0,.4)',fontSize:20}}>checklist</span>
+          <span className="task-label">Rate your day</span>
+          <div className="check-circle"><span className="material-icons">check</span></div>
+        </div>
+      </div>
+      <div style={{padding:'8px 16px',background:'#f5f7fa',borderTop:'1px solid rgba(0,0,0,.08)'}}>
+        <span style={{color:'#2196F3',fontSize:13,fontWeight:700,cursor:'pointer'}} onClick={onBack}>next day ›</span>
+      </div>
+      <div className="bottom-bar"><div className="home-indicator"></div></div>
+    </div>
+  </>;
+};
+
+function App() {
+  const [screenIdx, setScreenIdx] = useState(0);
+
+  const next = () => setScreenIdx(i => Math.min(i+1, SCREENS.length-1));
+  const back = () => setScreenIdx(i => Math.max(i-1, 0));
+  const goTo = (i) => setScreenIdx(i);
+
+  const current = SCREENS[screenIdx];
+
+  return (
+    <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:16}}>
+      <div className="phone-shell">
+        {current === 'welcome'       && <WelcomeScreen onNext={next} />}
+        {current === 'studies'       && <StudiesScreen onNext={next} />}
+        {current === 'consent'       && <ConsentScreen onNext={next} onBack={back} />}
+        {current === 'interventions' && <InterventionsScreen onNext={next} onBack={back} />}
+        {current === 'journey'       && <JourneyScreen onNext={next} onBack={back} />}
+        {current === 'dashboard'     && <DashboardScreen onBack={back} />}
+      </div>
+      <div className="screen-tabs">
+        {SCREENS.map((s,i) => (
+          <div key={i} className={`tab-dot ${i===screenIdx?'active':''}`} onClick={()=>goTo(i)} title={s}></div>
+        ))}
+      </div>
+      <div style={{color:'rgba(255,255,255,.6)', fontSize:12}}>Tap dots or interact to navigate</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<div id="root"></div>
+</body>
+</html>

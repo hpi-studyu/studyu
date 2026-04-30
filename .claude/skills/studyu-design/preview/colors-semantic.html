@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #fff; font-family: var(--font-sans); padding: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 12px; }
+  .swatch { height: 48px; border-radius: 6px; display: flex; align-items: flex-end; padding: 5px 7px; }
+  .swatch span { font-size: 10px; font-weight: 600; }
+  .on-light { color: rgba(0,0,0,0.65); }
+  .on-dark  { color: rgba(255,255,255,0.9); }
+  h4 { margin: 0 0 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #999; }
+  .text-row { display: flex; gap: 12px; align-items: center; background: #f9f9f9; border-radius:6px; padding: 10px 12px; margin-top:4px; }
+  .text-row div { font-size: 13px; }
+</style>
+</head><body>
+<h4>Surfaces &amp; Background</h4>
+<div class="grid">
+  <div class="swatch on-light" style="background:#EBF4FD;border:1px solid #ddd"><span>Page bg</span></div>
+  <div class="swatch on-light" style="background:#FFFFFF;border:1px solid #ddd"><span>Surface</span></div>
+  <div class="swatch on-light" style="background:#F5F9FE;border:1px solid #ddd"><span>Surface variant</span></div>
+  <div class="swatch on-light" style="background:#E8EDF2;border:1px solid #ddd"><span>Surface high</span></div>
+  <div class="swatch on-light" style="background:#00B0FF"><span>Link #00B0FF</span></div>
+</div>
+<h4>Status</h4>
+<div class="grid">
+  <div class="swatch on-dark"  style="background:#F44336"><span>Error</span></div>
+  <div class="swatch on-light" style="background:#FFEBEE;border:1px solid #ffcdd2"><span>Error bg</span></div>
+  <div class="swatch on-dark"  style="background:#4CAF50"><span>Success</span></div>
+  <div class="swatch on-light" style="background:#E8F5E9;border:1px solid #c8e6c9"><span>Success bg</span></div>
+  <div class="swatch on-dark"  style="background:#FF9800"><span>Warning</span></div>
+</div>
+<h4>Text Ramp</h4>
+<div class="text-row">
+  <div style="color:rgba(0,0,0,.9);font-weight:600">fg1 - 90%</div>
+  <div style="color:rgba(0,0,0,.8)">fg2 - 80%</div>
+  <div style="color:rgba(0,0,0,.65)">fg3 - 65%</div>
+  <div style="color:rgba(0,0,0,.4)">fg4 - 40%</div>
+  <div style="color:#546E7A;font-weight:600">Heading</div>
+</div>
+</body></html>

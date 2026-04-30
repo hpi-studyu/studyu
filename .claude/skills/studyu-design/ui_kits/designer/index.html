@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyU - Designer UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans), sans-serif; background: #f0f4f8; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* App bar */
+.d-appbar {
+  height: 56px; background: #fff; display: flex; align-items: center;
+  padding: 0 20px; gap: 16px; flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(187,222,251,0.30);
+  z-index: 100;
+}
+.d-appbar-logo { display: flex; align-items: center; gap: 8px; }
+.d-appbar-logo img { height: 28px; }
+.d-appbar-sep { width: 1px; height: 24px; background: rgba(0,0,0,.1); }
+.d-appbar-title { font-size: 14px; font-weight: 700; color: #546E7A; }
+.d-appbar-spacer { flex: 1; }
+.d-appbar-btn { display: flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--font-sans), sans-serif; font-size: 13px; font-weight: 700; transition: opacity .15s; }
+.d-appbar-btn:hover { opacity: .75; }
+.d-appbar-btn.primary { background: #2196F3; color: #fff; }
+.d-appbar-btn.ghost { background: transparent; color: #2196F3; }
+.d-appbar-btn .material-icons { font-size: 16px; }
+.d-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2196F3; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+/* Layout */
+.d-layout { display: flex; flex: 1; overflow: hidden; }
+
+/* Sidebar nav */
+.d-sidebar {
+  width: 200px; background: #fff; display: flex; flex-direction: column;
+  border-right: 1px solid rgba(0,0,0,.06); flex-shrink: 0; overflow-y: auto;
+  padding: 12px 0;
+}
+.d-sidebar::-webkit-scrollbar { display: none; }
+.d-nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  cursor: pointer; border-radius: 8px; margin: 1px 8px;
+  font-size: 13px; font-weight: 600; color: rgba(0,0,0,.65);
+  transition: background .12s;
+}
+.d-nav-item:hover { background: #EBF4FD; }
+.d-nav-item.active { background: #EBF4FD; color: #2196F3; }
+.d-nav-item .material-icons { font-size: 18px; opacity: .8; }
+.d-nav-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; padding: 12px 16px 4px; }
+
+/* Main content */
+.d-main { flex: 1; overflow-y: auto; padding: 24px; }
+.d-main::-webkit-scrollbar { width: 6px; }
+.d-main::-webkit-scrollbar-thumb { background: #BBDEFB; border-radius: 3px; }
+
+/* Page heading */
+.d-page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.d-page-title { font-size: 22px; font-weight: 700; color: #546E7A; flex: 1; }
+.d-breadcrumb { font-size: 12px; color: rgba(0,0,0,.4); margin-bottom: 6px; }
+
+/* Study table */
+.d-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(33,150,243,.08); }
+.d-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: rgba(0,0,0,.45); padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(0,0,0,.06); background: #f9fbfd; }
+.d-table td { padding: 12px 14px; font-size: 13px; color: rgba(0,0,0,.85); border-bottom: 1px solid rgba(0,0,0,.04); vertical-align: middle; }
+.d-table tr:last-child td { border-bottom: none; }
+.d-table tr:hover td { background: #f5f9fe; }
+.d-table tr { cursor: pointer; transition: background .1s; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.badge-active  { background:#E3F2FD; color:#2196F3; }
+.badge-draft   { background:#ECEFF1; color:#607D8B; }
+.badge-done    { background:#E8F5E9; color:#4CAF50; }
+.badge-paused  { background:#FFF3E0; color:#FF9800; }
+
+/* Study editor */
+.d-editor { display: flex; gap: 0; height: 100%; }
+.d-editor-nav { width: 180px; flex-shrink: 0; }
+.d-editor-step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 13px; font-weight: 600; color: rgba(0,0,0,.55); cursor: pointer; border-radius: 8px; margin-bottom: 2px; transition: background .12s; }
+.d-editor-step:hover { background: rgba(33,150,243,.06); }
+.d-editor-step.active { color: #2196F3; background: #EBF4FD; }
+.d-editor-step .material-icons { font-size: 17px; }
+.d-step-num { width: 20px; height: 20px; border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.d-step-num.done { background: #2196F3; color: #fff; }
+.d-step-num.curr { background: #2196F3; color: #fff; }
+.d-step-num.todo { background: rgba(0,0,0,.1); color: rgba(0,0,0,.4); }
+
+.d-editor-content { flex: 1; background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(33,150,243,.08); }
+
+/* Form elements */
+.d-form-group { margin-bottom: 16px; }
+.d-form-label { font-size: 12px; font-weight: 700; color: rgba(0,0,0,.6); margin-bottom: 5px; display: block; }
+.d-input { width: 100%; padding: 9px 12px; border: 1.5px solid rgba(0,0,0,.18); border-radius: 5px; font-family: var(--font-sans), sans-serif; font-size: 13px; color: rgba(0,0,0,.9); background: #fff; outline: none; }
+.d-input:focus { border-color: #2196F3; }
+.d-textarea { width: 100%; padding: 9px 12px; border: 1.5px solid rgba(0,0,0,.18); border-radius: 5px; font-family: var(--font-sans), sans-serif; font-size: 13px; color: rgba(0,0,0,.9); background: #fff; outline: none; resize: vertical; min-height: 72px; }
+.d-select { width: 100%; padding: 9px 12px; border: 1.5px solid rgba(0,0,0,.18); border-radius: 5px; font-family: var(--font-sans), sans-serif; font-size: 13px; color: rgba(0,0,0,.9); background: #fff; outline: none; appearance: none; }
+
+/* Cards */
+.d-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(33,150,243,.08); padding: 16px; }
+.d-card + .d-card { margin-top: 12px; }
+.d-card-title { font-size: 14px; font-weight: 700; color: #546E7A; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.d-card-title .material-icons { font-size: 17px; color: #2196F3; }
+
+/* Stats row */
+.d-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+.d-stat { background: #fff; border-radius: 8px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(33,150,243,.08); }
+.d-stat-val { font-size: 28px; font-weight: 800; color: #2196F3; line-height: 1; margin-bottom: 4px; }
+.d-stat-label { font-size: 11px; font-weight: 600; color: rgba(0,0,0,.45); text-transform: uppercase; letter-spacing: .06em; }
+
+/* Tab bar */
+.d-tabs { display: flex; gap: 0; border-bottom: 1px solid rgba(0,0,0,.08); margin-bottom: 16px; }
+.d-tab { padding: 10px 14px; font-size: 13px; font-weight: 600; color: rgba(0,0,0,.5); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.d-tab.active { color: #2196F3; border-bottom-color: #2196F3; }
+
+/* Snackbar */
+.d-snack { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2196F3; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(33,150,243,.4); z-index: 200; animation: slideUp .2s ease; }
+@keyframes slideUp { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+</style>
+</head>
+<body>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const VIEWS = ['studies','editor','monitor','analyze'];
+
+const mockStudies = [
+  {id:1, title:'Lower Back Pain - Arnika vs Tea', status:'active', participants:24, updated:'2024-03-12'},
+  {id:2, title:'Leg Cramp Frequency Study', status:'draft', participants:0, updated:'2024-04-01'},
+  {id:3, title:'IBS Dietary Intervention', status:'done', participants:61, updated:'2023-11-20'},
+  {id:4, title:'Rheumatoid Arthritis QoL', status:'paused', participants:18, updated:'2024-02-15'},
+];
+
+const BadgeComp = ({status}) => {
+  const map = {active:['badge-active','Active'], draft:['badge-draft','Draft'], done:['badge-done','Completed'], paused:['badge-paused','Paused']};
+  const [cls, label] = map[status] || ['badge-draft','Unknown'];
+  return <span className={`badge ${cls}`}><span style={{width:6,height:6,borderRadius:'50%',background:'currentColor',display:'inline-block'}}></span>{label}</span>;
+};
+
+// -- Studies list ---------------------------------------------
+const StudiesView = ({ onEdit }) => (
+  <div>
+    <div className="d-page-header">
+      <div style={{flex:1}}>
+        <div className="d-breadcrumb">Studies</div>
+        <div className="d-page-title">My Studies</div>
+      </div>
+      <button className="d-appbar-btn primary" style={{gap:6}}><span className="material-icons">add</span> New Study</button>
+    </div>
+    <table className="d-table">
+      <thead><tr>
+        <th>Title</th><th>Status</th><th>Participants</th><th>Last updated</th><th></th>
+      </tr></thead>
+      <tbody>
+        {mockStudies.map(s => (
+          <tr key={s.id} onClick={()=>onEdit(s)}>
+            <td style={{fontWeight:700}}>{s.title}</td>
+            <td><BadgeComp status={s.status}/></td>
+            <td>{s.participants}</td>
+            <td style={{color:'rgba(0,0,0,.45)'}}>{s.updated}</td>
+            <td><span className="material-icons" style={{color:'rgba(0,0,0,.3)',fontSize:18}}>chevron_right</span></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+// -- Study editor ---------------------------------------------
+const STEPS = [
+  {icon:'info', label:'Study Info'},
+  {icon:'group_add', label:'Enrollment'},
+  {icon:'tune', label:'Interventions'},
+  {icon:'checklist', label:'Observations'},
+  {icon:'bar_chart', label:'Reports'},
+];
+
+const EditorView = ({ study }) => {
+  const [step, setStep] = useState(0);
+  return (
+    <div>
+      <div className="d-page-header">
+        <div style={{flex:1}}>
+          <div className="d-breadcrumb">Studies &nbsp;/&nbsp; {study.title}</div>
+          <div className="d-page-title" style={{fontSize:18}}>{study.title}</div>
+        </div>
+        <button className="d-appbar-btn ghost"><span className="material-icons">visibility</span> Preview</button>
+        <button className="d-appbar-btn primary"><span className="material-icons">send</span> Publish</button>
+      </div>
+      <div style={{display:'flex',gap:16}}>
+        {/* Step nav */}
+        <div style={{width:180,flexShrink:0}}>
+          {STEPS.map((s,i) => (
+            <div key={i} className={`d-editor-step ${step===i?'active':''}`} onClick={()=>setStep(i)}>
+              <div className={`d-step-num ${i<step?'done':i===step?'curr':'todo'}`}>
+                {i<step ? <span className="material-icons" style={{fontSize:12}}>check</span> : i+1}
+              </div>
+              {s.label}
+            </div>
+          ))}
+        </div>
+        {/* Content panel */}
+        <div className="d-editor-content" style={{flex:1}}>
+          {step===0 && <InfoPanel />}
+          {step===1 && <EnrollmentPanel />}
+          {step===2 && <InterventionsPanel />}
+          {step===3 && <ObservationsPanel />}
+          {step===4 && <ReportsPanel />}
+          <div style={{display:'flex',justifyContent:'space-between',marginTop:20,paddingTop:16,borderTop:'1px solid rgba(0,0,0,.06)'}}>
+            <button className="d-appbar-btn ghost" onClick={()=>setStep(s=>Math.max(0,s-1))} style={{opacity:step===0?.4:1}}>← Back</button>
+            <button className="d-appbar-btn primary" onClick={()=>setStep(s=>Math.min(STEPS.length-1,s+1))}>
+              {step===STEPS.length-1 ? 'Save & Finish' : 'Continue →'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const InfoPanel = () => (
+  <div>
+    <div className="d-card-title"><span className="material-icons">info</span> Study Information</div>
+    <div className="d-form-group">
+      <label className="d-form-label">Study Title</label>
+      <input className="d-input" defaultValue="Lower Back Pain - Arnika vs Tea" />
+    </div>
+    <div className="d-form-group">
+      <label className="d-form-label">Short Description</label>
+      <textarea className="d-textarea" defaultValue="This study helps you find out which treatment is more effective for your lower back pain." />
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+      <div className="d-form-group">
+        <label className="d-form-label">Contact Email</label>
+        <input className="d-input" defaultValue="researcher@hpi.de" />
+      </div>
+      <div className="d-form-group">
+        <label className="d-form-label">Study Duration (weeks)</label>
+        <input className="d-input" type="number" defaultValue="6" />
+      </div>
+    </div>
+  </div>
+);
+
+const EnrollmentPanel = () => (
+  <div>
+    <div className="d-card-title"><span className="material-icons">group_add</span> Enrollment Settings</div>
+    <div className="d-form-group">
+      <label className="d-form-label">Enrollment Type</label>
+      <select className="d-select">
+        <option>Open - anyone can join</option>
+        <option>Invite only</option>
+        <option>Registry-based</option>
+      </select>
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+      <div className="d-form-group">
+        <label className="d-form-label">Min. Age</label>
+        <input className="d-input" type="number" defaultValue="18" />
+      </div>
+      <div className="d-form-group">
+        <label className="d-form-label">Max. Participants</label>
+        <input className="d-input" type="number" defaultValue="100" />
+      </div>
+    </div>
+    <div className="d-form-group">
+      <label className="d-form-label">Eligibility Criteria</label>
+      <textarea className="d-textarea" defaultValue="Participants must experience lower back pain for at least 3 months." />
+    </div>
+  </div>
+);
+
+const InterventionsPanel = () => {
+  const interventions = [
+    {icon:'local_cafe', name:'Willow-Bark Tea', task:'Drink twice daily', color:'#FF9800'},
+    {icon:'eco', name:'Arnika Gel', task:'Apply to affected area', color:'#4CAF50'},
+  ];
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+        <div className="d-card-title" style={{marginBottom:0}}><span className="material-icons">tune</span> Interventions</div>
+        <button className="d-appbar-btn primary" style={{fontSize:12}}><span className="material-icons">add</span> Add</button>
+      </div>
+      {interventions.map((iv,i) => (
+        <div key={i} className="d-card" style={{marginBottom:10,display:'flex',alignItems:'center',gap:12}}>
+          <div style={{width:36,height:36,borderRadius:'50%',background:iv.color,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <span className="material-icons" style={{color:'#fff',fontSize:18}}>{iv.icon}</span>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:700,fontSize:14,color:'#333'}}>{iv.name}</div>
+            <div style={{fontSize:12,color:'rgba(0,0,0,.5)'}}>{iv.task}</div>
+          </div>
+          <span className="material-icons" style={{color:'rgba(0,0,0,.3)',cursor:'pointer'}}>edit</span>
+          <span className="material-icons" style={{color:'rgba(0,0,0,.3)',cursor:'pointer'}}>delete</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ObservationsPanel = () => (
+  <div>
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+      <div className="d-card-title" style={{marginBottom:0}}><span className="material-icons">checklist</span> Observations</div>
+      <button className="d-appbar-btn primary" style={{fontSize:12}}><span className="material-icons">add</span> Add</button>
+    </div>
+    {['Pain level (VAS scale)','Sleep quality','Activity level'].map((obs,i) => (
+      <div key={i} className="d-card" style={{marginBottom:8,display:'flex',alignItems:'center',gap:12}}>
+        <span className="material-icons" style={{color:'#2196F3',fontSize:18}}>query_stats</span>
+        <span style={{flex:1,fontSize:13,fontWeight:600}}>{obs}</span>
+        <span style={{fontSize:11,color:'rgba(0,0,0,.4)'}}>Daily ; 20:00</span>
+        <span className="material-icons" style={{color:'rgba(0,0,0,.3)',cursor:'pointer'}}>edit</span>
+      </div>
+    ))}
+  </div>
+);
+
+const ReportsPanel = () => (
+  <div>
+    <div className="d-card-title"><span className="material-icons">bar_chart</span> Report Configuration</div>
+    <div className="d-form-group">
+      <label className="d-form-label">Primary Outcome</label>
+      <select className="d-select"><option>Pain level (VAS scale)</option><option>Sleep quality</option></select>
+    </div>
+    <div className="d-form-group">
+      <label className="d-form-label">Report Template</label>
+      <select className="d-select"><option>Linear regression</option><option>ANCOVA</option><option>Bayesian</option></select>
+    </div>
+    <div style={{background:'#EBF4FD',borderRadius:8,padding:14,fontSize:13,color:'#2196F3',fontWeight:600}}>
+      <span className="material-icons" style={{fontSize:16,verticalAlign:'middle',marginRight:6}}>info</span>
+      Results will be automatically generated at study completion and shared with participants.
+    </div>
+  </div>
+);
+
+// -- Monitor --------------------------------------------------
+const MonitorView = () => (
+  <div>
+    <div className="d-page-header">
+      <div style={{flex:1}}>
+        <div className="d-breadcrumb">Studies &nbsp;/&nbsp; Lower Back Pain</div>
+        <div className="d-page-title">Monitor</div>
+      </div>
+    </div>
+    <div className="d-stats">
+      {[['24','Enrolled'],['18','Active'],['4','Completed'],['2','Dropped out']].map(([v,l],i)=>(
+        <div key={i} className="d-stat"><div className="d-stat-val">{v}</div><div className="d-stat-label">{l}</div></div>
+      ))}
+    </div>
+    <div className="d-tabs">
+      {['Participants','Timeline','Compliance'].map((t,i)=>(
+        <div key={i} className={`d-tab ${i===0?'active':''}`}>{t}</div>
+      ))}
+    </div>
+    <table className="d-table">
+      <thead><tr><th>#</th><th>Participant</th><th>Phase</th><th>Compliance</th><th>Status</th></tr></thead>
+      <tbody>
+        {[
+          ['P-001','Participant 1','Arnika (Wk 3)','92%','active'],
+          ['P-002','Participant 2','Willow-Bark (Wk 2)','88%','active'],
+          ['P-003','Participant 3','Baseline','100%','active'],
+          ['P-004','Participant 4','Completed','95%','done'],
+          ['P-005','Participant 5','Willow-Bark (Wk 1)','60%','paused'],
+        ].map(([id,name,phase,comp,status],i)=>(
+          <tr key={i}>
+            <td style={{fontFamily:'monospace',fontSize:12,color:'rgba(0,0,0,.4)'}}>{id}</td>
+            <td style={{fontWeight:600}}>{name}</td>
+            <td style={{fontSize:12,color:'rgba(0,0,0,.6)'}}>{phase}</td>
+            <td>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <div style={{width:60,height:4,background:'#BBDEFB',borderRadius:2,overflow:'hidden'}}>
+                  <div style={{height:'100%',background:'#2196F3',width:comp,borderRadius:2}}></div>
+                </div>
+                <span style={{fontSize:12,color:'rgba(0,0,0,.55)'}}>{comp}</span>
+              </div>
+            </td>
+            <td><BadgeComp status={status}/></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+// -- Analyze --------------------------------------------------
+const AnalyzeView = () => (
+  <div>
+    <div className="d-page-header">
+      <div style={{flex:1}}>
+        <div className="d-breadcrumb">Studies &nbsp;/&nbsp; Lower Back Pain</div>
+        <div className="d-page-title">Results</div>
+      </div>
+      <button className="d-appbar-btn primary"><span className="material-icons">download</span> Export</button>
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+      <div className="d-card">
+        <div className="d-card-title"><span className="material-icons">insights</span> Pain Reduction (VAS)</div>
+        {/* Simple bar chart */}
+        <div style={{display:'flex',gap:20,alignItems:'flex-end',padding:'8px 0 4px',height:100}}>
+          {[['Baseline','#9E9E9E',70],['Arnika','#4CAF50',42],['Willow Tea','#FF9800',55]].map(([label,color,h],i)=>(
+            <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,flex:1}}>
+              <div style={{width:'100%',height:h,background:color,borderRadius:'4px 4px 0 0',opacity:.8}}></div>
+              <span style={{fontSize:10,color:'rgba(0,0,0,.5)',fontWeight:600,textAlign:'center'}}>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{fontSize:11,color:'rgba(0,0,0,.4)',marginTop:4}}>Lower = better. Mean VAS score across all participants.</div>
+      </div>
+      <div className="d-card">
+        <div className="d-card-title"><span className="material-icons">thumb_up</span> Participant Preference</div>
+        <div style={{display:'flex',flexDirection:'column',gap:8,padding:'8px 0'}}>
+          {[['Arnika Gel','62%','#4CAF50'],['Willow-Bark Tea','31%','#FF9800'],['No preference','7%','#9E9E9E']].map(([label,pct,color],i)=>(
+            <div key={i} style={{display:'flex',alignItems:'center',gap:8}}>
+              <div style={{width:80,fontSize:12,fontWeight:600,color:'rgba(0,0,0,.7)'}}>{label}</div>
+              <div style={{flex:1,height:16,background:'#f0f4f8',borderRadius:4,overflow:'hidden'}}>
+                <div style={{width:pct,height:'100%',background:color,borderRadius:4,opacity:.8}}></div>
+              </div>
+              <span style={{fontSize:12,fontWeight:700,color,minWidth:32}}>{pct}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div className="d-card" style={{marginTop:14}}>
+      <div className="d-card-title"><span className="material-icons">science</span> Statistical Summary</div>
+      <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+        <thead><tr style={{borderBottom:'1px solid rgba(0,0,0,.06)'}}>
+          {['Metric','Arnika','Willow Tea','p-value'].map(h=><th key={h} style={{padding:'6px 10px',textAlign:'left',color:'rgba(0,0,0,.45)',fontWeight:700,fontSize:11}}>{h}</th>)}
+        </tr></thead>
+        <tbody>
+          {[
+            ['VAS reduction','28.4 pts','15.1 pts','0.031 *'],
+            ['Sleep improvement','1.8/10','0.9/10','0.12'],
+            ['Activity delta','+12%','+6%','0.044 *'],
+          ].map((row,i)=>(
+            <tr key={i} style={{borderBottom:'1px solid rgba(0,0,0,.04)'}}>
+              {row.map((cell,j)=><td key={j} style={{padding:'8px 10px',fontWeight:j===0?700:400,color:j===3&&cell.includes('*')?'#4CAF50':'rgba(0,0,0,.8)'}}>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+// -- Root app -------------------------------------------------
+function App() {
+  const [view, setView] = useState('studies');
+  const [editStudy, setEditStudy] = useState(null);
+  const [snack, setSnack] = useState(null);
+
+  const showSnack = (msg) => {
+    setSnack(msg);
+    setTimeout(()=>setSnack(null), 2500);
+  };
+
+  const navItems = [
+    {id:'studies', icon:'folder_open', label:'My Studies'},
+    {id:'editor',  icon:'edit_note',   label:'Editor'},
+    {id:'monitor', icon:'monitor_heart',label:'Monitor'},
+    {id:'analyze', icon:'bar_chart',   label:'Analyze'},
+  ];
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',height:'100vh'}}>
+      {/* App bar */}
+      <div className="d-appbar">
+        <div className="d-appbar-logo">
+          <img src="../../assets/studyulogo.png" alt="StudyU" />
+        </div>
+        <div className="d-appbar-sep"></div>
+        <span className="d-appbar-title">Designer</span>
+        <div className="d-appbar-spacer"></div>
+        <button className="d-appbar-btn ghost" onClick={()=>showSnack('Documentation opened')}><span className="material-icons">help_outline</span> Docs</button>
+        <div className="d-avatar">R</div>
+      </div>
+
+      <div className="d-layout">
+        {/* Sidebar */}
+        <div className="d-sidebar">
+          <div className="d-nav-section">Workspace</div>
+          {navItems.map(item=>(
+            <div key={item.id} className={`d-nav-item ${view===item.id?'active':''}`} onClick={()=>{setView(item.id);if(item.id==='editor'&&!editStudy)setEditStudy(mockStudies[0]);}}>
+              <span className="material-icons">{item.icon}</span>
+              {item.label}
+            </div>
+          ))}
+          <div className="d-nav-section" style={{marginTop:8}}>Account</div>
+          <div className="d-nav-item" onClick={()=>showSnack('Settings')}>
+            <span className="material-icons">settings</span> Settings
+          </div>
+        </div>
+
+        {/* Main */}
+        <div className="d-main">
+          {view==='studies' && <StudiesView onEdit={s=>{setEditStudy(s);setView('editor');}} />}
+          {view==='editor'  && <EditorView study={editStudy||mockStudies[0]} />}
+          {view==='monitor' && <MonitorView />}
+          {view==='analyze' && <AnalyzeView />}
+        </div>
+      </div>
+
+      {snack && <div className="d-snack"><span className="material-icons">check_circle</span>{snack}</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<div id="root" style="height:100vh"></div>
+</body>
+</html>

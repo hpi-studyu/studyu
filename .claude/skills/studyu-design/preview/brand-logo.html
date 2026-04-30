@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin:0; background:#EBF4FD; font-family:var(--font-sans); padding:24px; display:flex; flex-direction:column; align-items:center; gap:20px; }
+  .logo-container { background:#fff; border-radius:12px; padding:24px 40px; display:flex; align-items:center; justify-content:center; }
+  .logo-container img { height:60px; }
+  .gradient-bar { width:280px; height:12px; border-radius:6px; background:linear-gradient(90deg,#00E5CC,#2196F3); }
+  .usage { display:flex; gap:12px; }
+  .usage-chip { background:#fff; border-radius:8px; padding:10px 16px; font-size:12px; font-weight:600; color:#546E7A; text-align:center; }
+  .color-pair { display:flex; flex-direction:column; gap:3px; align-items:center; }
+  .swatch-sm { width:36px; height:36px; border-radius:6px; }
+  .swatch-label { font-size:10px; color:#888; }
+</style>
+</head><body>
+  <div class="logo-container"><img src="../assets/studyulogo.png" alt="StudyU"></div>
+  <div class="gradient-bar"></div>
+  <div class="usage">
+    <div class="color-pair">
+      <div class="swatch-sm" style="background:linear-gradient(135deg,#00E5CC,#2196F3)"></div>
+      <span class="swatch-label">Logo gradient</span>
+    </div>
+    <div class="color-pair">
+      <div class="swatch-sm" style="background:#2196F3"></div>
+      <span class="swatch-label">Primary</span>
+    </div>
+    <div class="color-pair">
+      <div class="swatch-sm" style="background:#FF9800"></div>
+      <span class="swatch-label">Accent</span>
+    </div>
+    <div class="color-pair">
+      <div class="swatch-sm" style="background:#EBF4FD;border:1px solid #BBDEFB"></div>
+      <span class="swatch-label">Background</span>
+    </div>
+  </div>
+  <div class="usage">
+    <div class="usage-chip">Rounded sans-serif type</div>
+    <div class="usage-chip">Material Icons</div>
+    <div class="usage-chip">Flat cards ; 8px radius</div>
+  </div>
+</body></html>
