@@ -21,6 +21,7 @@ class GaugesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: <Widget>[
         Expanded(
@@ -29,14 +30,15 @@ class GaugesWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey),
+                  color: colorScheme.surface,
+                  border: Border.all(color: colorScheme.outline),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: SizedBox(
                   width: 160,
                   height: 160,
                   child: createGauge(
+                    context,
                     0,
                     10,
                     meanInterventionA,
@@ -53,14 +55,15 @@ class GaugesWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey),
+                  color: colorScheme.surface,
+                  border: Border.all(color: colorScheme.outline),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: SizedBox(
                   width: 160,
                   height: 160,
                   child: createGauge(
+                    context,
                     0,
                     10,
                     meanInterventionB,
@@ -76,12 +79,15 @@ class GaugesWidget extends StatelessWidget {
   }
 
   Widget createGauge(
+    BuildContext context,
     double min,
     double max,
     num value,
     String nameIntervention,
   ) {
-    const Color gaugeBackgroundColor = Color(0xFFDFE2EC);
+    final colorScheme = Theme.of(context).colorScheme;
+    final gaugeBackgroundColor = colorScheme.surfaceContainerHighest;
+    final needleColor = colorScheme.onSurface;
 
     // Create a gauge axis based on whether colors should be shown
     GaugeAxis gaugeAxis;
@@ -91,15 +97,15 @@ class GaugesWidget extends StatelessWidget {
         min: min,
         max: max,
         degrees: 240, // Set to 240 degrees for a 3/4 circular gauge
-        style: const GaugeAxisStyle(
+        style: GaugeAxisStyle(
           background: gaugeBackgroundColor,
           segmentSpacing: 4,
         ),
-        pointer: const GaugePointer.needle(
+        pointer: GaugePointer.needle(
           width: 10,
           height: 50,
           borderRadius: 8,
-          color: Color(0xFF193663),
+          color: needleColor,
         ),
         progressBar: null, // Disable the progress bar
         segments: [
@@ -120,15 +126,15 @@ class GaugesWidget extends StatelessWidget {
         min: min,
         max: max,
         degrees: 240, // Set to 240 degrees for a 3/4 circular gauge
-        style: const GaugeAxisStyle(
+        style: GaugeAxisStyle(
           background: gaugeBackgroundColor,
           segmentSpacing: 4,
         ),
-        pointer: const GaugePointer.needle(
+        pointer: GaugePointer.needle(
           width: 10,
           height: 50,
           borderRadius: 8,
-          color: Color(0xFF193663),
+          color: needleColor,
         ),
       );
     }
@@ -152,15 +158,15 @@ class GaugesWidget extends StatelessWidget {
               children: <TextSpan>[
                 TextSpan(
                   text: value.toStringAsFixed(1),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: colorScheme.onSurface,
                   ),
                 ),
-                const TextSpan(
+                TextSpan(
                   text: '/10',
-                  style: TextStyle(fontSize: 12, color: Colors.black),
+                  style: TextStyle(fontSize: 12, color: colorScheme.onSurface),
                 ),
               ],
             ),
@@ -173,7 +179,7 @@ class GaugesWidget extends StatelessWidget {
               children: <TextSpan>[
                 TextSpan(
                   text: nameIntervention,
-                  style: const TextStyle(fontSize: 15, color: Colors.black),
+                  style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                 ),
               ],
             ),

@@ -115,7 +115,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       for (final entry in data)
         interventionNames[entry.intervention]!: Legend(
           interventionNames[entry.intervention]!,
-          getColor(entry),
+          getColor(context, entry),
         ),
     };
     return LegendsListWidget(legends: legends.values.toList());
@@ -134,6 +134,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
+    final colorScheme = Theme.of(context).colorScheme;
     final barGroups = getBarGroups(context, data);
     final maxY =
         ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ??
@@ -161,12 +162,12 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             return BarTooltipItem(
               rod.toY.toString(),
-              const TextStyle(color: Colors.white),
+              TextStyle(color: colorScheme.surface),
             );
           },
         ),
       ),
-      backgroundColor: getBackgroundColor(data),
+      backgroundColor: getBackgroundColor(context, data),
       maxY: maxY,
     );
   }
@@ -175,6 +176,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     BuildContext context,
     List<DiagramDatum> data,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
     // Sort data by x value to ensure proper line plotting
     data.sort((a, b) => a.x.compareTo(b.x));
 
@@ -191,13 +193,14 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       ];
 
       // Determine the background color based on the intervention
+      final datumColor = getColor(context, datum);
       Color backgroundColor;
-      if (getColor(datum) == Colors.blue) {
-        backgroundColor = Colors.blue.withValues(alpha: 0.6);
-      } else if (getColor(datum) == Colors.orange) {
-        backgroundColor = Colors.orange.withValues(alpha: 0.6);
-      } else if (getColor(datum) == Colors.grey) {
-        backgroundColor = Colors.grey.withValues(alpha: 0.6);
+      if (datumColor == colorScheme.primary) {
+        backgroundColor = colorScheme.primary.withValues(alpha: 0.6);
+      } else if (datumColor == colorScheme.secondary) {
+        backgroundColor = colorScheme.secondary.withValues(alpha: 0.6);
+      } else if (datumColor == colorScheme.outline) {
+        backgroundColor = colorScheme.outline.withValues(alpha: 0.6);
       } else {
         backgroundColor = Colors.transparent;
       }
@@ -215,13 +218,13 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             getDotPainter: (spot, percent, barData, index) {
               return FlDotCirclePainter(
                 radius: 4,
-                color: Colors.black,
+                color: colorScheme.onSurface,
                 strokeWidth: 2,
-                strokeColor: Colors.white,
+                strokeColor: colorScheme.surface,
               );
             },
           ),
-          color: Colors.black, // Line color
+          color: colorScheme.onSurface, // Line color
         ),
       );
     }
@@ -279,7 +282,10 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         topTitles: const AxisTitles(axisNameWidget: SizedBox.shrink()),
         rightTitles: const AxisTitles(axisNameWidget: SizedBox.shrink()),
       ),
-      borderData: FlBorderData(show: true, border: Border.all()),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: colorScheme.outline),
+      ),
       lineBarsData: lineBarsData,
       minX: minX,
       maxX: maxX,
@@ -288,23 +294,29 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     );
   }
 
-  List<Color> getBackgroundColors(List<DiagramDatum> data) {
+  List<Color> getBackgroundColors(
+    BuildContext context,
+    List<DiagramDatum> data,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
     final List<Color> colors = [];
     for (final datum in data) {
-      if (getColor(datum) == Colors.blue) {
-        colors.add(Colors.blue.withValues(alpha: 0.2));
-      } else if (getColor(datum) == Colors.orange) {
-        colors.add(Colors.orange.withValues(alpha: 0.2));
+      final datumColor = getColor(context, datum);
+      if (datumColor == colorScheme.primary) {
+        colors.add(colorScheme.primary.withValues(alpha: 0.2));
+      } else if (datumColor == colorScheme.secondary) {
+        colors.add(colorScheme.secondary.withValues(alpha: 0.2));
       }
     }
     return colors;
   }
 
-  Color getBackgroundColor(List<DiagramDatum> data) {
+  Color getBackgroundColor(BuildContext context, List<DiagramDatum> data) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (data.any((datum) => datum.intervention == 'intervention_a')) {
-      return Colors.lightBlue.withValues(alpha: 0.3);
+      return colorScheme.primaryContainer;
     } else if (data.any((datum) => datum.intervention == 'intervention_b')) {
-      return Colors.orange.withValues(alpha: 0.3);
+      return colorScheme.secondaryContainer;
     }
     return Colors.transparent;
   }
@@ -371,7 +383,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       starter[entry.x.round()] = barGenerator(
         entry.x.round(),
         y: entry.value.toDouble(),
-        color: getColor(entry),
+        color: getColor(context, entry),
       );
     }
     return starter;
@@ -406,10 +418,11 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     );
   }
 
-  MaterialColor getColor(DiagramDatum diagram) {
-    const baselineColor = Colors.grey;
-    final colors = [Colors.blue, Colors.orange];
-    MaterialColor? c = Colors.teal;
+  Color getColor(BuildContext context, DiagramDatum diagram) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final baselineColor = colorScheme.outline;
+    final colors = [colorScheme.primary, colorScheme.secondary];
+    Color c = colorScheme.primary;
 
     switch (widget.section.aggregate) {
       case TemporalAggregation.day:
@@ -439,9 +452,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         if (widget.subject.study.schedule.includeBaseline && diagram.x == 2) {
           c = baselineColor;
         } else if (diagram.x == 0) {
-          c = Colors.blue;
+          c = colorScheme.primary;
         } else if (diagram.x == 1) {
-          c = Colors.orange;
+          c = colorScheme.secondary;
         }
       default:
     }

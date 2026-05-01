@@ -16,6 +16,7 @@ class PerformanceSection extends GenericSection {
 
   @override
   Widget buildContent(BuildContext context) {
+    final theme = Theme.of(context);
     final interventions = subject!.selectedInterventions
         .where((intervention) => intervention.id != Study.baselineID)
         .toList();
@@ -37,7 +38,7 @@ class PerformanceSection extends GenericSection {
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
                   '${AppLocalizations.of(context)!.current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: theme.textTheme.titleLarge,
                 ),
               ),
               ListView.builder(
@@ -141,8 +142,9 @@ class PerformanceBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final rainbow = Rainbow(
-      spectrum: [Colors.red, Colors.yellow, Colors.green],
+      spectrum: [colorScheme.error, colorScheme.tertiary, colorScheme.primary],
       rangeStart: 0,
       rangeEnd: 1,
     );
@@ -187,7 +189,7 @@ class PerformanceBar extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(width: 2, color: Colors.grey[600]),
+                    Container(width: 2, color: colorScheme.onSurfaceVariant),
                   ],
                 ),
               ],

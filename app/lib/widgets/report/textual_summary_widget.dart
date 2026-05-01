@@ -25,6 +25,9 @@ class TextualSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     if (valuesInterventionA.length < 2 || valuesInterventionB.length < 2) {
       return SizedBox(
         width: double.infinity,
@@ -48,7 +51,7 @@ class TextualSummaryWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: colorScheme.outline),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Column(
@@ -81,6 +84,8 @@ class TextualSummaryWidget extends StatelessWidget {
   }
 
   void _showStatisticalInfoDialog(BuildContext context, TTest tTest) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -92,42 +97,38 @@ class TextualSummaryWidget extends StatelessWidget {
             children: [
               Text(
                 AppLocalizations.of(context)!.t_test_outcome_based_on,
-                style: const TextStyle(fontSize: 16),
+                style: theme.textTheme.bodyLarge,
               ),
               const SizedBox(height: 8),
               Text(
                 '${AppLocalizations.of(context)!.level_of_significance} α = 0.05',
-                style: const TextStyle(
-                  fontSize: 15,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 '${AppLocalizations.of(context)!.p_value.toPascalCase()} ${tTest.pValue.toStringAsFixed(4)}',
-                style: const TextStyle(
-                  fontSize: 15,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 '${AppLocalizations.of(context)!.t_statistic} ${tTest.tStatistic.toStringAsFixed(4)}',
-                style: const TextStyle(
-                  fontSize: 15,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 '${AppLocalizations.of(context)!.degrees_of_freedom} ${tTest.degreesOfFreedom.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 15,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ],
@@ -147,6 +148,7 @@ class TextualSummaryWidget extends StatelessWidget {
 
   RichText getTextualSummaryRich(BuildContext context, bool isDifferent) {
     final loc = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     List<TextSpan> spans;
 
     if (isDifferent) {
@@ -197,7 +199,7 @@ class TextualSummaryWidget extends StatelessWidget {
 
     return RichText(
       text: TextSpan(
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: colorScheme.onSurface),
         children: spans,
       ),
     );

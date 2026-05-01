@@ -64,11 +64,10 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Card(
-      elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ExpansionTile(
         title: Text(
           'Descriptive Statistics',
@@ -97,7 +96,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
                       AppLocalizations.of(context)!.missing_observations_note,
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontStyle: FontStyle.italic,
-                        color: Colors.grey[600],
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -111,6 +110,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
 
   Widget _buildSummary(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final headingStyle = theme.textTheme.titleMedium?.copyWith(
       fontWeight: FontWeight.bold,
     );
@@ -118,7 +118,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
+        color: colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -179,7 +179,9 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
         1: FlexColumnWidth(),
         2: FlexColumnWidth(),
       },
-      border: TableBorder.all(color: Colors.grey.shade300),
+      border: TableBorder.all(
+        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+      ),
       children: [
         _buildTableRow(
           [AppLocalizations.of(context)!.statistic, statsA.name, statsB.name],
@@ -226,12 +228,13 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     bool highlight = false,
   }) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return TableRow(
       decoration: BoxDecoration(
         color: isHeader
-            ? Colors.grey.shade200
+            ? colorScheme.surfaceContainerHighest
             : highlight
-            ? Colors.amber.withValues(alpha: 0.1)
+            ? colorScheme.secondaryContainer
             : null,
       ),
       children: cells.map((cell) {

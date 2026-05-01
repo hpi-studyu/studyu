@@ -47,10 +47,11 @@ class ReportHistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final model = context.watch<AppState>();
-    final isActiveStudy = model.activeSubject!.studyId == subject.studyId;
+    final isActiveStudy = model.activeSubject?.studyId == subject.studyId;
     return Card(
-      color: isActiveStudy ? Colors.green[600] : theme.cardColor,
+      color: isActiveStudy ? colorScheme.primary : theme.cardColor,
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -67,14 +68,18 @@ class ReportHistoryItem extends StatelessWidget {
                 Icon(
                   MdiIcons.fromString(subject.study.iconName) ??
                       MdiIcons.accountHeart,
-                  color: isActiveStudy ? Colors.white : Colors.black,
+                  color: isActiveStudy
+                      ? colorScheme.onPrimary
+                      : colorScheme.onSurface,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
                     subject.study.title!,
                     style: theme.textTheme.headlineSmall!.copyWith(
-                      color: isActiveStudy ? Colors.white : Colors.black,
+                      color: isActiveStudy
+                          ? colorScheme.onPrimary
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ),
