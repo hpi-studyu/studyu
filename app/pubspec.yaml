@@ -79,6 +79,10 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/images/onboarding/
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-VariableFont_wdth,wght.ttf
 
 flutter_launcher_icons:
   android: true
