@@ -7,26 +7,22 @@ class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO(Manisha): Transfer strings to translation files
-    if (AppLocalizations.of(context)!.faq_full ==
-        'Frequently Asked Questions') {
-      return Scaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.faq_full)),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(20),
-          itemBuilder: (context, index) => EntryItem(data_en[index]),
-          itemCount: data_en.length,
-        ),
-      );
-    } else {
-      return Scaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.faq_full)),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(20),
-          itemBuilder: (context, index) => EntryItem(data_de[index]),
-          itemCount: data_de.length,
-        ),
-      );
-    }
+    final isEnglish =
+        AppLocalizations.of(context)!.faq_full == 'Frequently Asked Questions';
+    return Scaffold(
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.faq_full)),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemBuilder: (context, index) {
+          final entry = isEnglish ? data_en[index] : data_de[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Card(child: EntryItem(entry)),
+          );
+        },
+        itemCount: isEnglish ? data_en.length : data_de.length,
+      ),
+    );
   }
 }
 
@@ -203,17 +199,43 @@ class EntryItem extends StatelessWidget {
 
   final Entry entry;
 
-  Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-    return ExpansionTile(
-      key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
-      children: root.children.map<Widget>(_buildTiles).toList(),
+  Widget _buildTiles(BuildContext context, Entry root) {
+    if (root.children.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Text(
+          root.title,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            height: 1.35,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+      );
+    }
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        key: PageStorageKey<Entry>(root),
+        title: Text(
+          root.title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        collapsedIconColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        iconColor: Theme.of(context).colorScheme.primary,
+        childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        children: root.children
+            .map<Widget>((e) => _buildTiles(context, e))
+            .toList(),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildTiles(entry);
+    return _buildTiles(context, entry);
   }
 }
