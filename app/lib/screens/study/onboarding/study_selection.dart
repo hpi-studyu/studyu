@@ -93,14 +93,18 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: AppLocalizations.of(context)!.study_selection_single,
+                        text: AppLocalizations.of(
+                          context,
+                        )!.study_selection_single,
                         style: theme.textTheme.titleSmall!.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const TextSpan(text: ' '),
                       TextSpan(
-                        text: AppLocalizations.of(context)!.study_selection_single_why,
+                        text: AppLocalizations.of(
+                          context,
+                        )!.study_selection_single_why,
                         style: theme.textTheme.titleSmall!.copyWith(
                           color: theme.primaryColor,
                           decoration: TextDecoration.underline,
@@ -111,7 +115,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             context: context,
                             builder: (context) => AlertDialog(
                               content: Text(
-                                AppLocalizations.of(context)!.study_selection_single_reason,
+                                AppLocalizations.of(
+                                  context,
+                                )!.study_selection_single_reason,
                               ),
                             ),
                           ),
@@ -129,7 +135,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                     size: 32,
                   ),
                   content: Text(
-                    AppLocalizations.of(context)!.study_selection_hidden_studies,
+                    AppLocalizations.of(
+                      context,
+                    )!.study_selection_hidden_studies,
                     style: theme.textTheme.titleSmall,
                   ),
                   actions: const [SizedBox.shrink()],
@@ -138,62 +146,70 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () => publishedStudies,
-                  successBuilder: (
-                    BuildContext context,
-                    ExtractionResult<Study>? extractionResult,
-                  ) {
-                    final studies = extractionResult!.extracted;
-                    if (extractionResult is ExtractionFailedException<Study>) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (_hiddenStudies) return;
-                        debugPrint(
-                          '${extractionResult.notExtracted.length} studies could not be extracted.',
-                        );
-                        setState(() {
-                          _hiddenStudies = true;
-                        });
-                      });
-                    }
-                    return ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      itemCount: studies.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == studies.length) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            child: Center(
-                              child: WelcomeButton(
-                                icon: Icons.vpn_key,
-                                label: AppLocalizations.of(context)!.invite_code_button,
-                                onPressed: () async {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (_) => const InviteCodeDialog(),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
+                  successBuilder:
+                      (
+                        BuildContext context,
+                        ExtractionResult<Study>? extractionResult,
+                      ) {
+                        final studies = extractionResult!.extracted;
+                        if (extractionResult
+                            is ExtractionFailedException<Study>) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (_hiddenStudies) return;
+                            debugPrint(
+                              '${extractionResult.notExtracted.length} studies could not be extracted.',
+                            );
+                            setState(() {
+                              _hiddenStudies = true;
+                            });
+                          });
                         }
-                        final study = studies[index];
-                        return Hero(
-                          tag: 'study_tile_${studies[index].id}',
-                          child: Material(
-                            color: Colors.transparent,
-                            child: StudyTile.fromStudy(
-                              study: study,
-                              onTap: () async {
-                                await navigateToStudyOverview(context, study);
-                              },
-                            ),
-                          ),
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          itemCount: studies.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == studies.length) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                child: Center(
+                                  child: WelcomeButton(
+                                    icon: Icons.vpn_key,
+                                    label: AppLocalizations.of(
+                                      context,
+                                    )!.invite_code_button,
+                                    onPressed: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const InviteCodeDialog(),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            }
+                            final study = studies[index];
+                            return Hero(
+                              tag: 'study_tile_${studies[index].id}',
+                              child: Material(
+                                color: Colors.transparent,
+                                child: StudyTile.fromStudy(
+                                  study: study,
+                                  onTap: () async {
+                                    await navigateToStudyOverview(
+                                      context,
+                                      study,
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
                 ),
               ),
             ],
