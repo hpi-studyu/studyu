@@ -109,24 +109,24 @@ class _DashboardScreenState extends State<DashboardScreen>
         // Removes back button. We currently keep navigation stack to make developing easier
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.dashboard),
-        forceMaterialTransparency: true,
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context)!.contact,
-            icon: Icon(MdiIcons.faceAgent),
+            icon: const Icon(Icons.account_circle),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: AppLocalizations.of(context)!.current_report,
-            icon: Icon(MdiIcons.chartBar),
+            icon: const Icon(Icons.bar_chart),
             onPressed: () => Navigator.push(
               context,
               ReportDetailsScreen.routeFor(subject: subject!),
             ),
           ),
           PopupMenuButton<OverflowMenuItem>(
+            icon: const Icon(Icons.more_horiz),
             onSelected: (value) {
               if (value.routeName != null) {
                 Navigator.pushNamed(context, value.routeName!);
@@ -280,9 +280,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           Expanded(
             child: Padding(
               padding: showNextDay
-                  ? EdgeInsets.only(
-                      bottom: MediaQuery.of(context).size.height / 10,
-                    )
+                  ? const EdgeInsets.only(bottom: 48)
                   : EdgeInsets.zero,
               child: _buildBody(),
             ),
@@ -291,9 +289,15 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
       bottomSheet: showNextDay
           ? Container(
-              margin: const EdgeInsets.only(left: 16, bottom: 8),
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.fast_forward_rounded),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F7FA),
+                border: Border(
+                  top: BorderSide(color: Colors.black.withValues(alpha: 0.08)),
+                ),
+              ),
+              child: TextButton(
                 onPressed: () async {
                   try {
                     await subject!.setStartDateBackBy(days: 1);
@@ -302,11 +306,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                     });
                   } on SocketException catch (_) {}
                 },
-                label: Text(AppLocalizations.of(context)!.next_day),
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(color: Colors.orange, width: 2.0),
-                  foregroundColor: Theme.of(context).colorScheme.primary,
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF2196F3),
+                  padding: EdgeInsets.zero,
+                  alignment: Alignment.centerLeft,
+                  textStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
+                child: Text('${AppLocalizations.of(context)!.next_day} ›'),
               ),
             )
           : null,

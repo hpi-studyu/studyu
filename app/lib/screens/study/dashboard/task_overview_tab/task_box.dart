@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
-import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
-import 'package:studyu_app/widgets/round_checkbox.dart';
 import 'package:studyu_core/core.dart';
 
 class TaskBox extends StatefulWidget {
@@ -54,31 +52,66 @@ class _TaskBoxState extends State<TaskBox> {
     );
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
-      elevation: 2,
+      margin: const EdgeInsets.only(top: 6, bottom: 8),
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
       child: InkWell(
         onTap: isTaskOpen ? _navigateToTaskScreen : () {},
-        child: Row(
-          children: [
-            Expanded(
-              child: ListTile(
-                leading: widget.icon,
-                title: Text(widget.taskInstance.task.title ?? ''),
-                onTap: isTaskOpen ? _navigateToTaskScreen : () {},
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            children: [
+              widget.icon,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  widget.taskInstance.task.title ?? '',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF333333),
+                  ),
+                ),
               ),
-            ),
-            if (isInsidePeriod || isPreview || completed)
-              RoundCheckbox(
-                value: completed, //_isCompleted,
-                onChanged: (value) =>
-                    isTaskOpen ? _navigateToTaskScreen() : () {},
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: Icon(Icons.lock, color: theme.colorScheme.secondary),
-              ),
-          ],
+              if (isInsidePeriod || isPreview || completed)
+                _CheckCircle(
+                  completed: completed,
+                  onTap: isTaskOpen ? _navigateToTaskScreen : null,
+                )
+              else
+                Icon(
+                  Icons.lock,
+                  color: Theme.of(context).colorScheme.secondary,
+                  size: 20,
+                ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _CheckCircle extends StatelessWidget {
+  final bool completed;
+  final VoidCallback? onTap;
+
+  const _CheckCircle({required this.completed, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: const Color(0xFFFF9800), width: 2.5),
+        ),
+        child: completed
+            ? const Icon(Icons.check, color: Color(0xFFFF9800), size: 18)
+            : const SizedBox.shrink(),
       ),
     );
   }

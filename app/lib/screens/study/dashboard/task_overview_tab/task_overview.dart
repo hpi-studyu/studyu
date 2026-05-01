@@ -4,8 +4,6 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
-import 'package:studyu_app/theme.dart';
-import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
 class TaskOverview extends StatefulWidget {
@@ -39,19 +37,23 @@ class _TaskOverviewState extends State<TaskOverview> {
   List<Widget> buildScheduleToday(BuildContext context) {
     final theme = Theme.of(context);
     final List<Widget> list = [];
+    if (widget.scheduleToday == null || widget.scheduleToday!.isEmpty) {
+      return list;
+    }
     for (final taskInstance in widget.scheduleToday!) {
       list
         ..add(
           Padding(
-            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 8, bottom: 4),
             child: Row(
               children: [
-                Icon(Icons.access_time, color: theme.primaryColor),
-                const SizedBox(width: 8),
+                Icon(Icons.schedule, color: theme.primaryColor, size: 16),
+                const SizedBox(width: 4),
                 Text(
                   taskInstance.completionPeriod.formatted(),
-                  style: theme.textTheme.titleSmall!.copyWith(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                     color: theme.primaryColor,
                   ),
                 ),
@@ -66,7 +68,9 @@ class _TaskOverviewState extends State<TaskOverview> {
             icon: Icon(
               taskInstance.task is Observation
                   ? MdiIcons.orderBoolAscendingVariant
-                  : MdiIcons.fromString(widget.interventionIcon!),
+                  : MdiIcons.fromString(widget.interventionIcon ?? 'help'),
+              color: Colors.black.withValues(alpha: 0.4),
+              size: 20,
             ),
           ),
         );
@@ -76,51 +80,119 @@ class _TaskOverviewState extends State<TaskOverview> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final currentIntervention = widget.subject!.getInterventionForDate(
+      DateTime.now(),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 8),
         ProgressRow(subject: widget.subject),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      AppLocalizations.of(context)!.intervention_current,
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
-                    style: const TextStyle(color: primaryColor),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              InterventionCardTitle(
-                intervention: widget.subject!.getInterventionForDate(
-                  DateTime.now(),
+              Text(
+                AppLocalizations.of(context)!.intervention_current,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF333333),
                 ),
               ),
               const SizedBox(height: 8),
+              _buildInterventionCard(currentIntervention),
+              const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)!.today_tasks,
-                style: theme.textTheme.titleLarge,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF333333),
+                ),
               ),
+              const SizedBox(height: 8),
+              ...buildScheduleToday(context),
+              const SizedBox(height: 16),
             ],
           ),
         ),
-        // Todo: find good way to calculate duration of intervention and display it
-        Expanded(child: ListView(children: [...buildScheduleToday(context)])),
       ],
+    );
+  }
+
+  Widget _buildInterventionCard(Intervention? intervention) {
+    if (intervention == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 24,
+            height: 3,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFF9800),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              intervention.name ?? '',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF333333),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.info, color: Color(0xFF999999), size: 20),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            onPressed: () => _showInterventionInfo(intervention),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showInterventionInfo(Intervention intervention) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final description = intervention.isBaseline()
+            ? AppLocalizations.of(context)!.baseline_description
+            : intervention.description;
+        return AlertDialog(
+          title: ListTile(
+            leading: Icon(
+              MdiIcons.fromString(intervention.icon),
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            dense: true,
+            title: Text(
+              intervention.name ?? '',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          content: SingleChildScrollView(child: Text(description ?? '')),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(AppLocalizations.of(context)!.ok),
+            ),
+          ],
+        );
+      },
     );
   }
 }
