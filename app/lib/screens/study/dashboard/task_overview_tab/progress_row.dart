@@ -1,199 +1,131 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/util/intervention.dart';
-import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
-class ProgressRow extends StatefulWidget {
+class ProgressRow extends StatelessWidget {
   final StudySubject? subject;
 
   const ProgressRow({super.key, this.subject});
 
   @override
-  State<ProgressRow> createState() => _ProgressRowState();
-}
-
-class _ProgressRowState extends State<ProgressRow> {
-  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final currentPhase = subject!.getInterventionIndexForDate(DateTime.now());
+    final interventions = subject!.getInterventionsInOrder();
+    final phaseDuration = subject!.study.schedule.phaseDuration;
+    final phaseDay = DateTime.now()
+        .differenceInDays(subject!.startOfPhase(currentPhase))
+        .clamp(0, phaseDuration - 1);
+    final phaseDayProgress = (phaseDay + 1) / phaseDuration;
 
-    final currentPhase = widget.subject!.getInterventionIndexForDate(
-      DateTime.now(),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Stack(
-        alignment: Alignment.center,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(MdiIcons.run, size: 30),
-              const SizedBox(width: 8),
-              ...intersperseIndexed(
-                (index) => Expanded(
-                  child: Divider(
-                    indent: 5,
-                    endIndent: 5,
-                    thickness: 3,
-                    color: currentPhase > index
-                        ? theme.primaryColor
-                        : theme.disabledColor,
-                  ),
-                ),
-                widget.subject!.getInterventionsInOrder().asMap().entries.map((
-                  entry,
-                ) {
-                  return InterventionSegment(
-                    intervention: entry.value,
-                    isCurrent: currentPhase == entry.key,
-                    isFuture: currentPhase < entry.key,
-                    phaseDuration: widget.subject!.study.schedule.phaseDuration,
-                    percentCompleted: widget.subject!.percentCompletedForPhase(
-                      entry.key,
-                    ),
-                    percentMissed: widget.subject!.percentMissedForPhase(
-                      entry.key,
-                      DateTime.now(),
-                    ),
-                  );
-                }),
-              ),
-              const SizedBox(width: 8),
-              Icon(MdiIcons.flagCheckered, size: 30),
-            ],
-          ),
+          const Icon(Icons.directions_run, color: Color(0xFF666666), size: 20),
+          const SizedBox(width: 4),
+          ..._buildNodesAndLines(interventions, currentPhase, phaseDayProgress),
+          const SizedBox(width: 4),
+          const Icon(Icons.flag, color: Color(0xFF666666), size: 20),
         ],
       ),
     );
   }
-}
 
-class InterventionSegment extends StatelessWidget {
-  final Intervention intervention;
-  final double percentCompleted;
-  final double percentMissed;
-  final bool isCurrent;
-  final bool isFuture;
-  final int phaseDuration;
+  List<Widget> _buildNodesAndLines(
+    List<Intervention> interventions,
+    int currentPhase,
+    double phaseDayProgress,
+  ) {
+    final List<Widget> widgets = [];
+    for (var i = 0; i < interventions.length; i++) {
+      final intervention = interventions[i];
+      final isCurrent = i == currentPhase;
+      final isPast = i < currentPhase;
 
-  const InterventionSegment({
-    required this.intervention,
-    required this.percentCompleted,
-    required this.percentMissed,
-    required this.isCurrent,
-    required this.isFuture,
-    required this.phaseDuration,
-    super.key,
-  });
-
-  List<Widget> buildSeparators(int nbSeparators) {
-    final sep = <Widget>[];
-    for (var i = 0; i < nbSeparators; i++) {
-      sep.add(
-        Transform.rotate(
-          angle: i * 1 / nbSeparators * 2 * pi,
-          child: SizedBox(
-            width: 2,
-            height: 40,
-            child: Column(
-              children: <Widget>[
-                Container(width: 8, height: 10, color: Colors.white),
-              ],
-            ),
-          ),
+      widgets.add(
+        _TimelineNode(
+          intervention: intervention,
+          isCurrent: isCurrent,
+          isPast: isPast,
+          phaseDayProgress: phaseDayProgress,
         ),
       );
+
+      if (i < interventions.length - 1) {
+        widgets.add(
+          Expanded(
+            child: Container(
+              height: 2,
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              color: isCurrent
+                  ? const Color(0xFF2196F3)
+                  : const Color(0xFFCCCCCC),
+            ),
+          ),
+        );
+      }
     }
-    return sep;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = isFuture
-        ? Colors.grey
-        : (isCurrent ? theme.colorScheme.secondary : theme.primaryColor);
-
-    final emptyColor = Color.alphaBlend(theme.dividerColor, Colors.white);
-    final activeColor = Color.alphaBlend(
-      theme.colorScheme.secondary,
-      Colors.white,
-    );
-    final completedColor = Color.alphaBlend(theme.primaryColor, Colors.white);
-
-    return Expanded(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: CircularProgressIndicator(
-              value: 1,
-              valueColor: AlwaysStoppedAnimation<Color>(emptyColor),
-            ),
-          ),
-          if (isCurrent)
-            AspectRatio(
-              aspectRatio: 1,
-              child: CircularProgressIndicator(
-                value: percentMissed + percentCompleted + (1 / phaseDuration),
-                valueColor: AlwaysStoppedAnimation<Color>(activeColor),
-              ),
-            ),
-          AspectRatio(
-            aspectRatio: 1,
-            child: CircularProgressIndicator(
-              value: percentMissed + percentCompleted,
-              valueColor: AlwaysStoppedAnimation<Color>(emptyColor),
-            ),
-          ),
-          AspectRatio(
-            aspectRatio: 1,
-            child: CircularProgressIndicator(
-              value: percentCompleted,
-              valueColor: AlwaysStoppedAnimation<Color>(completedColor),
-            ),
-          ),
-          Stack(children: buildSeparators(phaseDuration)),
-          RawMaterialButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  contentPadding: EdgeInsets.zero,
-                  content: InterventionCard(intervention),
-                ),
-              );
-            },
-            elevation: 0,
-            fillColor: color,
-            shape: const CircleBorder(
-              side: BorderSide(color: Colors.white, width: 2),
-            ),
-            child: interventionIcon(intervention),
-          ),
-        ],
-      ),
-    );
+    return widgets;
   }
 }
 
-Iterable<T> intersperseIndexed<T>(
-  T Function(int) generator,
-  Iterable<T> iterable,
-) sync* {
-  final iterator = iterable.iterator;
-  var index = 0;
-  if (iterator.moveNext()) {
-    yield iterator.current;
-    while (iterator.moveNext()) {
-      yield generator(index++);
-      yield iterator.current;
-    }
+class _TimelineNode extends StatelessWidget {
+  final Intervention intervention;
+  final bool isCurrent;
+  final bool isPast;
+  final double phaseDayProgress;
+
+  const _TimelineNode({
+    required this.intervention,
+    required this.isCurrent,
+    required this.isPast,
+    required this.phaseDayProgress,
+  });
+
+  static const _activeColor = Color(0xFFFF9800);
+  static const _pastColor = Color(0xFF9E9E9E);
+  static const _futureColor = Color(0xFFCCCCCC);
+  static const _progressColor = Color(0xFF2196F3);
+
+  @override
+  Widget build(BuildContext context) {
+    final fillColor = isCurrent
+        ? _activeColor
+        : (isPast ? _pastColor : _futureColor);
+    final node = Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(color: fillColor, shape: BoxShape.circle),
+      child: Center(child: interventionIcon(intervention, color: Colors.white)),
+    );
+
+    if (!isCurrent) return node;
+
+    return SizedBox.square(
+      dimension: 42,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox.square(
+            dimension: 42,
+            child: CircularProgressIndicator(
+              value: 1,
+              strokeWidth: 3,
+              color: _activeColor.withValues(alpha: 0.24),
+            ),
+          ),
+          SizedBox.square(
+            dimension: 42,
+            child: CircularProgressIndicator(
+              value: phaseDayProgress,
+              strokeWidth: 3,
+              strokeCap: StrokeCap.round,
+              color: _progressColor,
+            ),
+          ),
+          node,
+        ],
+      ),
+    );
   }
 }
