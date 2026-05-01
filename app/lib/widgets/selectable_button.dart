@@ -13,9 +13,10 @@ class SelectableButton extends StatelessWidget {
   });
 
   Color _getFillColor(ThemeData theme) =>
-      selected ? theme.primaryColor : theme.cardColor;
+      selected ? theme.colorScheme.primary : theme.colorScheme.surface;
 
-  Color _getTextColor(ThemeData theme) => selected ? Colors.white : Colors.blue;
+  Color _getTextColor(ThemeData theme) =>
+      selected ? theme.colorScheme.onPrimary : theme.colorScheme.primary;
 
   @override
   Widget build(BuildContext context) {

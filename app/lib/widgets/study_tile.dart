@@ -6,24 +6,22 @@ class StudyTile extends StatelessWidget {
   final String? title;
   final String? description;
   final String iconName;
-
   final Future<void> Function()? onTap;
-
-  final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry? contentPadding;
 
   const StudyTile({
     required this.title,
     required this.description,
     required this.iconName,
     this.onTap,
-    this.contentPadding = const EdgeInsets.all(16),
+    this.contentPadding,
     super.key,
   });
 
   StudyTile.fromStudy({
     required Study study,
     this.onTap,
-    this.contentPadding = const EdgeInsets.all(16),
+    this.contentPadding,
     super.key,
   }) : title = study.title,
        description = study.description,
@@ -32,7 +30,7 @@ class StudyTile extends StatelessWidget {
   StudyTile.fromUserStudy({
     required StudySubject subject,
     this.onTap,
-    this.contentPadding = const EdgeInsets.all(16),
+    this.contentPadding,
     super.key,
   }) : title = subject.study.title,
        description = subject.study.description,
@@ -41,27 +39,68 @@ class StudyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ListTile(
-          contentPadding: contentPadding,
-          onTap: onTap,
-          title: Center(
-            child: Text(
-              title!,
-              style: theme.textTheme.titleLarge!.copyWith(
-                color: theme.primaryColor,
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: contentPadding ?? const EdgeInsets.all(14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _StudyIconCircle(iconName: iconName),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title ?? '',
+                      style: theme.textTheme.titleLarge!.copyWith(
+                        color: theme.primaryColor,
+                      ),
+                    ),
+                    if (description != null && description!.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        description!,
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-          ),
-          subtitle: Center(child: Text(description ?? '')),
-          leading: Icon(
-            MdiIcons.fromString(iconName),
-            color: theme.primaryColor,
+            ],
           ),
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class _StudyIconCircle extends StatelessWidget {
+  final String iconName;
+
+  const _StudyIconCircle({required this.iconName});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        MdiIcons.fromString(iconName),
+        color: theme.colorScheme.onPrimary,
+        size: 20,
+      ),
     );
   }
 }

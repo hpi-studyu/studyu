@@ -96,7 +96,7 @@ class Timeline extends StatelessWidget {
             title: intervention.name,
             iconName: intervention.icon,
             color: intervention.isBaseline()
-                ? Colors.grey
+                ? theme.disabledColor
                 : theme.colorScheme.secondary,
             date: now.add(
               Duration(days: index * subject!.study.schedule.phaseDuration),
@@ -182,7 +182,10 @@ class IconIndicator extends StatelessWidget {
         color: color ?? Theme.of(context).colorScheme.secondary,
       ),
       child: Center(
-        child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
+        child: Icon(
+          MdiIcons.fromString(iconName),
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
     );
   }

@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
+import 'package:studyu_app/widgets/welcome_button.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -79,131 +79,121 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.study_selection_description,
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.study_selection_single,
-                            style: theme.textTheme.titleSmall,
-                          ),
-                          TextSpan(
-                            text: ' ',
-                            style: theme.textTheme.titleSmall,
-                          ),
-                          TextSpan(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.study_selection_single_why,
-                            style: theme.textTheme.titleSmall!.copyWith(
-                              color: theme.primaryColor,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  content: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.study_selection_single_reason,
-                                  ),
-                                ),
-                              ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (_hiddenStudies)
-                Column(
-                  children: [
-                    MaterialBanner(
-                      padding: const EdgeInsets.all(8),
-                      leading: Icon(
-                        MdiIcons.exclamationThick,
-                        color: Colors.orange,
-                        size: 32,
-                      ),
-                      content: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.study_selection_hidden_studies,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      actions: const [SizedBox.shrink()],
-                      backgroundColor: Colors.yellow[100],
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                )
-              else
-                const SizedBox.shrink(),
-              Expanded(
-                child: RetryFutureBuilder<ExtractionResult<Study>>(
-                  tryFunction: () => publishedStudies,
-                  successBuilder:
-                      (
-                        BuildContext context,
-                        ExtractionResult<Study>? extractionResult,
-                      ) {
-                        final studies = extractionResult!.extracted;
-                        if (extractionResult
-                            is ExtractionFailedException<Study>) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (_hiddenStudies) return;
-                            debugPrint(
-                              '${extractionResult.notExtracted.length} studies could not be extracted.',
-                            );
-                            setState(() {
-                              _hiddenStudies = true;
-                            });
-                          });
-                        }
-                        return ListView.builder(
-                          itemCount: studies.length,
-                          itemBuilder: (context, index) {
-                            final study = studies[index];
-                            return Hero(
-                              tag: 'study_tile_${studies[index].id}',
-                              child: Material(
-                                child: StudyTile.fromStudy(
-                                  study: study,
-                                  onTap: () async {
-                                    await navigateToStudyOverview(
-                                      context,
-                                      study,
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                child: Text(
+                  AppLocalizations.of(context)!.study_selection_description,
+                  style: theme.textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: OutlinedButton.icon(
-                  icon: Icon(MdiIcons.key),
-                  onPressed: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (_) => const InviteCodeDialog(),
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: AppLocalizations.of(context)!.study_selection_single,
+                        style: theme.textTheme.titleSmall!.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const TextSpan(text: ' '),
+                      TextSpan(
+                        text: AppLocalizations.of(context)!.study_selection_single_why,
+                        style: theme.textTheme.titleSmall!.copyWith(
+                          color: theme.primaryColor,
+                          decoration: TextDecoration.underline,
+                          decorationColor: theme.primaryColor,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Text(
+                                AppLocalizations.of(context)!.study_selection_single_reason,
+                              ),
+                            ),
+                          ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (_hiddenStudies)
+                MaterialBanner(
+                  padding: const EdgeInsets.all(8),
+                  leading: Icon(
+                    Icons.warning,
+                    color: theme.colorScheme.secondary,
+                    size: 32,
+                  ),
+                  content: Text(
+                    AppLocalizations.of(context)!.study_selection_hidden_studies,
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  actions: const [SizedBox.shrink()],
+                  backgroundColor: theme.colorScheme.secondaryContainer,
+                ),
+              Expanded(
+                child: RetryFutureBuilder<ExtractionResult<Study>>(
+                  tryFunction: () => publishedStudies,
+                  successBuilder: (
+                    BuildContext context,
+                    ExtractionResult<Study>? extractionResult,
+                  ) {
+                    final studies = extractionResult!.extracted;
+                    if (extractionResult is ExtractionFailedException<Study>) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_hiddenStudies) return;
+                        debugPrint(
+                          '${extractionResult.notExtracted.length} studies could not be extracted.',
+                        );
+                        setState(() {
+                          _hiddenStudies = true;
+                        });
+                      });
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      itemCount: studies.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == studies.length) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Center(
+                              child: WelcomeButton(
+                                icon: Icons.vpn_key,
+                                label: AppLocalizations.of(context)!.invite_code_button,
+                                onPressed: () async {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (_) => const InviteCodeDialog(),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        }
+                        final study = studies[index];
+                        return Hero(
+                          tag: 'study_tile_${studies[index].id}',
+                          child: Material(
+                            color: Colors.transparent,
+                            child: StudyTile.fromStudy(
+                              study: study,
+                              onTap: () async {
+                                await navigateToStudyOverview(context, study);
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
-                  label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
               ),
             ],
