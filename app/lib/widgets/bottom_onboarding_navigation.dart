@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 
 class BottomOnboardingNavigation extends StatelessWidget {
   final VoidCallback? onBack;
@@ -31,7 +32,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(StudyUSpacing.space2),
         child: Row(
           children: [
             Visibility(
@@ -52,9 +53,9 @@ class BottomOnboardingNavigation extends StatelessWidget {
               ),
             ),
             if (progress != null) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: StudyUSpacing.space2),
               Expanded(child: progress!),
-              const SizedBox(width: 8),
+              const SizedBox(width: StudyUSpacing.space2),
             ] else
               const Spacer(),
             Visibility(

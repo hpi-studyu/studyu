@@ -9,6 +9,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
@@ -118,7 +119,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(StudyUSpacing.space2),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -171,7 +172,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       );
                     },
                     primary: false,
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(StudyUSpacing.space5),
                   ),
                 ),
               ],
@@ -237,7 +238,7 @@ class ConsentCard extends StatelessWidget {
                   else
                     const SizedBox.shrink(),
                   if (consent!.iconName.isNotEmpty)
-                    const SizedBox(width: 8)
+                    const SizedBox(width: StudyUSpacing.space2)
                   else
                     const SizedBox.shrink(),
                   Expanded(child: Text(consent!.title!)),
@@ -253,7 +254,7 @@ class ConsentCard extends StatelessWidget {
           onTapped(index!);
         },
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(StudyUSpacing.space2),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +268,7 @@ class ConsentCard extends StatelessWidget {
               else
                 const SizedBox.shrink(),
               if (consent!.iconName.isNotEmpty)
-                const SizedBox(height: 10)
+                const SizedBox(height: StudyUSpacing.space3)
               else
                 const SizedBox.shrink(),
               Flexible(

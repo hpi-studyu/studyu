@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
@@ -86,13 +87,13 @@ class _AudioRecordingQuestionWidgetState
                 : null,
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 2.0,
+                vertical: StudyUSpacing.space2,
+                horizontal: StudyUSpacing.space1,
               ),
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(StudyUSpacing.space1),
                     child: Icon(
                       _hasRecorded
                           ? MdiIcons.checkCircleOutline
@@ -122,18 +123,18 @@ class _AudioRecordingQuestionWidgetState
             ),
           ),
         ),
-        const SizedBox(width: 16.0),
+        const SizedBox(width: StudyUSpacing.space4),
         Text(
           '${_formatNumber(_recordDurationSeconds ~/ 60)}:${_formatNumber(_recordDurationSeconds % 60)}',
           style: const TextStyle(fontSize: 16),
         ),
-        const SizedBox(width: 8.0),
+        const SizedBox(width: StudyUSpacing.space2),
         if (_isRecording &&
             _recordDurationSeconds > 0 &&
             _recordDurationSeconds < maxRecordingDurationSeconds)
           SizedBox(
-            width: 16,
-            height: 16,
+            width: StudyUSpacing.space4,
+            height: StudyUSpacing.space4,
             child: CircularProgressIndicator(
               value:
                   1.0 - (_recordDurationSeconds / maxRecordingDurationSeconds),

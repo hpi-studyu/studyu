@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/spacing.dart';
 
 class OnboardingProgress extends StatelessWidget {
   final int stage;
@@ -26,14 +27,14 @@ class OnboardingProgress extends StatelessWidget {
             child: LinearProgressIndicator(value: _getProgressForStage(0)),
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: StudyUSpacing.space1),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(value: _getProgressForStage(1)),
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: StudyUSpacing.space1),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/audio_recording_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/question_header.dart';
@@ -107,7 +108,7 @@ class _QuestionContainerState extends State<QuestionContainer>
     return Card(
       key: widget.containerKey,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+        padding: const EdgeInsets.fromLTRB(StudyUSpacing.space4, StudyUSpacing.space4, StudyUSpacing.space4, StudyUSpacing.space2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +118,7 @@ class _QuestionContainerState extends State<QuestionContainer>
               subtitle: questionBody.subtitle,
               rationale: widget.question.rationale,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: StudyUSpacing.space6),
             questionBody,
           ],
         ),

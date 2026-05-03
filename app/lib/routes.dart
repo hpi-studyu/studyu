@@ -19,6 +19,7 @@ import 'package:studyu_app/screens/study/onboarding/kickoff.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_app/screens/study/report/report_history.dart';
+import 'package:studyu_app/spacing.dart';
 
 class Routes {
   static const String loading = '/loading';
@@ -51,7 +52,7 @@ class Routes {
         body: SafeArea(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(StudyUSpacing.space4),
               child: Text(
                 'No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻',
               ),

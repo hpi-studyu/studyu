@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -50,51 +51,51 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 const Image(
                   image: AssetImage('assets/icon/logo.png'),
                   height: 200,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 Text(
                   loc.loading_error_title,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: StudyUSpacing.space4),
                 Text(
                   loc.loading_error_description,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: StudyUSpacing.space6),
                 // Debug information section
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(StudyUSpacing.space4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Icon(MdiIcons.informationOutline),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: StudyUSpacing.space2),
                             Text(
                               'Debug Information',
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: StudyUSpacing.space3),
                         if (isLoadingData)
                           const Center(child: CircularProgressIndicator())
                         else
                           Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(StudyUSpacing.space3),
                             decoration: BoxDecoration(
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(8),
@@ -112,7 +113,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: StudyUSpacing.space6),
                 // Action buttons
                 Row(
                   children: [
@@ -129,7 +130,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                         label: Text(loc.contact_support),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: StudyUSpacing.space4),
                     Expanded(
                       child: TextButton.icon(
                         icon: Icon(MdiIcons.deleteOutline),
@@ -142,7 +143,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
               ],
             ),
           ),

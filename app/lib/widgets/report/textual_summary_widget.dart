@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/sections/t_test.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/string_extensions.dart';
 import 'package:studyu_core/core.dart';
 
@@ -49,14 +50,14 @@ class TextualSummaryWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(StudyUSpacing.space2),
                 decoration: BoxDecoration(
                   border: Border.all(color: colorScheme.outline),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: 4),
+                    const SizedBox(height: StudyUSpacing.space1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -99,7 +100,7 @@ class TextualSummaryWidget extends StatelessWidget {
                 AppLocalizations.of(context)!.t_test_outcome_based_on,
                 style: theme.textTheme.bodyLarge,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: StudyUSpacing.space2),
               Text(
                 '${AppLocalizations.of(context)!.level_of_significance} α = 0.05',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -107,7 +108,7 @@ class TextualSummaryWidget extends StatelessWidget {
                   color: colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: StudyUSpacing.space1),
               Text(
                 '${AppLocalizations.of(context)!.p_value.toPascalCase()} ${tTest.pValue.toStringAsFixed(4)}',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -115,7 +116,7 @@ class TextualSummaryWidget extends StatelessWidget {
                   color: colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: StudyUSpacing.space1),
               Text(
                 '${AppLocalizations.of(context)!.t_statistic} ${tTest.tStatistic.toStringAsFixed(4)}',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -123,7 +124,7 @@ class TextualSummaryWidget extends StatelessWidget {
                   color: colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: StudyUSpacing.space1),
               Text(
                 '${AppLocalizations.of(context)!.degrees_of_freedom} ${tTest.degreesOfFreedom.toStringAsFixed(2)}',
                 style: theme.textTheme.bodyMedium?.copyWith(

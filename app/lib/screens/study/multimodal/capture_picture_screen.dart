@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 
@@ -187,12 +188,12 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                         color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(StudyUSpacing.space5),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const CircularProgressIndicator(),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: StudyUSpacing.space4),
                           Text(AppLocalizations.of(context)!.take_a_photo),
                         ],
                       ),
@@ -205,7 +206,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       floatingActionButton: Wrap(
         children: [
           Container(
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(StudyUSpacing.space3),
             child: FloatingActionButton(
               heroTag: "captureImage",
               onPressed: cameraController != null && !_isTakingPicture
@@ -217,7 +218,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
             ),
           ),
           Container(
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(StudyUSpacing.space3),
             child: FloatingActionButton(
               heroTag: "jumpToNextCamera",
               onPressed: cameraController != null && !_isTakingPicture

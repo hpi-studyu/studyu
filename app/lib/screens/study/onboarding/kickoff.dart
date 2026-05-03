@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -87,16 +88,16 @@ class _KickoffScreen extends State<KickoffScreen> {
           return Center(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(StudyUSpacing.space4),
                 child: Column(
                   children: [
                     _constructStatusIcon(context),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: StudyUSpacing.space8),
                     Text(
                       _getStatusText(context),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: StudyUSpacing.space4),
                     /*OutlinedButton(
                       onPressed: () => _storeUserStudy(context),
                       child: Text(AppLocalizations.of(context)!.start_study),

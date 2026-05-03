@@ -6,6 +6,7 @@ import 'package:studyu_app/screens/study/report/sections/descriptive_stats_secti
 import 'package:studyu_app/screens/study/report/sections/gauge_comparison_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/linear_regression_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/textual_summary_section_widget.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 
 typedef SectionBuilder =
@@ -48,7 +49,7 @@ class ReportSectionContainer extends StatelessWidget {
         color: theme.colorScheme.secondary,
       ),
     ),
-    const SizedBox(height: 4),
+    const SizedBox(height: StudyUSpacing.space1),
   ];
 
   @override
@@ -58,18 +59,18 @@ class ReportSectionContainer extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(StudyUSpacing.space4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (primary) ...buildPrimaryHeader(context, theme),
               Text(section.title ?? '', style: theme.textTheme.headlineSmall),
-              const SizedBox(height: 4),
+              const SizedBox(height: StudyUSpacing.space1),
               Text(
                 section.description ?? '',
                 style: theme.textTheme.bodyMedium,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: StudyUSpacing.space2),
               buildContents(context),
             ],
           ),

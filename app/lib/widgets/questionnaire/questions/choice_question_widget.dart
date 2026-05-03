@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
@@ -93,7 +94,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: choiceWidgets.length,
       itemBuilder: (context, index) => choiceWidgets[index],
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      separatorBuilder: (context, index) => const SizedBox(height: StudyUSpacing.space2),
     );
   }
 }

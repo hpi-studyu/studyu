@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 
 class QuestionHeader extends StatelessWidget {
@@ -11,7 +12,7 @@ class QuestionHeader extends StatelessWidget {
   List<Widget> _buildSubtitle(BuildContext context) {
     if (subtitle == null || subtitle!.isEmpty) return [];
     return [
-      const SizedBox(height: 8),
+      const SizedBox(height: StudyUSpacing.space2),
       Text(subtitle!, style: Theme.of(context).textTheme.bodySmall),
     ];
   }
@@ -19,7 +20,7 @@ class QuestionHeader extends StatelessWidget {
   List<Widget> _buildRationaleButton(BuildContext context) {
     if (rationale == null || rationale!.isEmpty) return [];
     return [
-      const SizedBox(width: 8),
+      const SizedBox(width: StudyUSpacing.space2),
       IconButton(
         icon: const Icon(Icons.info_outline),
         color: Theme.of(context).primaryColor,

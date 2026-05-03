@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 
@@ -129,7 +130,7 @@ class InterventionCardDescription extends StatelessWidget {
     if (description == null) return Container();
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      padding: const EdgeInsets.fromLTRB(StudyUSpacing.space4, StudyUSpacing.space1, StudyUSpacing.space4, StudyUSpacing.space2),
       child: Text(
         description,
         style: theme.textTheme.bodyMedium!.copyWith(
@@ -160,7 +161,7 @@ class _TaskList extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space2),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -178,8 +179,8 @@ class _TaskList extends StatelessWidget {
               .map(
                 (task) => Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                    horizontal: StudyUSpacing.space4,
+                    vertical: StudyUSpacing.space2,
                   ),
                   child: Row(
                     children: [
@@ -196,7 +197,7 @@ class _TaskList extends StatelessWidget {
                             size: 16,
                             color: theme.textTheme.bodySmall!.color,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: StudyUSpacing.space1),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
                             style: theme.textTheme.bodyMedium!.copyWith(

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -71,8 +72,8 @@ class OnboardingScreen extends StatelessWidget {
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         bodyTextStyle: TextStyle(fontSize: 16),
-        imagePadding: EdgeInsets.only(top: 40),
-        contentMargin: EdgeInsets.symmetric(horizontal: 16),
+        imagePadding: EdgeInsets.only(top: StudyUSpacing.space10),
+        contentMargin: EdgeInsets.symmetric(horizontal: StudyUSpacing.space4),
       ),
     );
   }

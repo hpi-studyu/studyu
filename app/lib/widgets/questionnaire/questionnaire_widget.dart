@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/questionnaire/question_container.dart';
 import 'package:studyu_core/core.dart';
@@ -397,7 +398,7 @@ class HtmlTextBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

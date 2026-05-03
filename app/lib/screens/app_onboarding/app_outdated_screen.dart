@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/env.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,9 +34,9 @@ class AppOutdatedScreen extends StatelessWidget {
                 image: AssetImage('assets/icon/logo.png'),
                 height: 200,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: StudyUSpacing.space5),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(StudyUSpacing.space5),
                 child: Text(
                   loc.app_outdated_message,
                   textAlign: TextAlign.center,

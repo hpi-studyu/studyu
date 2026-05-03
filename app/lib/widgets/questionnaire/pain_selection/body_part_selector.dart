@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/pain_selection/svg_service.dart';
 import 'package:studyu_core/core.dart';
 import 'package:touchable/touchable.dart';
@@ -326,8 +327,8 @@ class _PainEditDialogState extends State<PainEditDialog> {
                             duration: const Duration(milliseconds: 150),
                             width: 90,
                             padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 8,
+                              vertical: StudyUSpacing.space3,
+                              horizontal: StudyUSpacing.space2,
                             ),
                             decoration: BoxDecoration(
                               color: selectedLevel == level
@@ -356,7 +357,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                                   style.face,
                                   style: const TextStyle(fontSize: 36),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: StudyUSpacing.space2),
                                 Text(
                                   style.description,
                                   textAlign: TextAlign.center,
@@ -428,7 +429,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                     constraints: const BoxConstraints(),
                     visualDensity: VisualDensity.compact,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: StudyUSpacing.space2),
                   Expanded(child: Text(loc.painTypeLabel)),
                 ],
               ),
@@ -439,7 +440,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: 12),
+                    const SizedBox(height: StudyUSpacing.space3),
                     Flexible(
                       child: SizedBox(
                         width: 320,
@@ -507,7 +508,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: 12),
+                    const SizedBox(height: StudyUSpacing.space3),
                     Flexible(
                       child: SizedBox(
                         width: 320,

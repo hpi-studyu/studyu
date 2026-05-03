@@ -5,6 +5,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
@@ -31,14 +32,14 @@ class _InterventionSelectionScreenState
 
   Widget _buildInterventionSelectionExplanation(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(StudyUSpacing.space2),
       child: Column(
         children: [
           Text(
             AppLocalizations.of(context)!.please_select_interventions,
             style: theme.textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: StudyUSpacing.space2),
           Text(
             AppLocalizations.of(
               context,
@@ -111,13 +112,13 @@ class _InterventionSelectionScreenState
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(StudyUSpacing.space2),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildInterventionSelectionExplanation(theme),
                 _buildInterventionSelectionList(),
-                const SizedBox(height: 16),
+                const SizedBox(height: StudyUSpacing.space4),
               ],
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -140,21 +141,21 @@ class __DebugDialogState extends State<_DebugDialog> {
       content: Column(
         children: [
           _buildVersionInfo(),
-          const SizedBox(height: 16),
+          const SizedBox(height: StudyUSpacing.space4),
           _buildEmailButton(),
-          const SizedBox(height: 8),
+          const SizedBox(height: StudyUSpacing.space2),
           _buildTestNotificationButton(),
-          const SizedBox(height: 8),
+          const SizedBox(height: StudyUSpacing.space2),
           _buildResetAppButton(),
-          const SizedBox(height: 16),
+          const SizedBox(height: StudyUSpacing.space4),
           _buildPreviewModeSwitch(),
-          const SizedBox(height: 16),
+          const SizedBox(height: StudyUSpacing.space4),
           _buildBatteryOptimizationInfo(),
-          const SizedBox(height: 8),
+          const SizedBox(height: StudyUSpacing.space2),
           _buildPendingNotificationsInfo(),
-          const SizedBox(height: 8),
+          const SizedBox(height: StudyUSpacing.space2),
           _buildPendingNotificationsPluginInfo(),
-          const SizedBox(height: 16),
+          const SizedBox(height: StudyUSpacing.space4),
           _buildScheduledNotificationsInfo(),
         ],
       ),

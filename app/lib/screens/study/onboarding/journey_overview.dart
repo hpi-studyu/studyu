@@ -6,6 +6,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -58,7 +59,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               children: [
                 //StudyTile.fromUserStudy(study: study),
@@ -145,7 +146,7 @@ class InterventionTile extends StatelessWidget {
       indicatorStyle: IndicatorStyle(
         width: 40,
         height: 40,
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(StudyUSpacing.space2),
         indicator: IconIndicator(iconName: iconName, color: color),
       ),
       beforeLineStyle: LineStyle(color: theme.primaryColor),
@@ -199,7 +200,7 @@ class TimelineChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(StudyUSpacing.space2),
       constraints: const BoxConstraints(minHeight: 100),
       child: Center(child: child),
     );

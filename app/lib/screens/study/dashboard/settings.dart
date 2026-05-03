@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
@@ -53,7 +54,7 @@ class _SettingsState extends State<Settings> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text('${AppLocalizations.of(context)!.language}:'),
-            const SizedBox(width: 5),
+            const SizedBox(width: StudyUSpacing.space1),
             DropdownButton<Locale>(
               value: _selectedValue,
               items: dropDownItems,
@@ -73,11 +74,11 @@ class _SettingsState extends State<Settings> {
             Tooltip(
               triggerMode: TooltipTriggerMode.tap,
               showDuration: const Duration(milliseconds: 10000),
-              margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+              margin: const EdgeInsets.fromLTRB(StudyUSpacing.space8, 0, StudyUSpacing.space8, 0),
               message: AppLocalizations.of(context)!.allow_analytics_desc,
               child: const Icon(Icons.info),
             ),
-            const SizedBox(width: 5),
+            const SizedBox(width: StudyUSpacing.space1),
             Switch(
               value: _analyticsValue!,
               onChanged: (value) {
@@ -104,12 +105,12 @@ class _SettingsState extends State<Settings> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             getDropdownRow(context),
-            const SizedBox(height: 24),
+            const SizedBox(height: StudyUSpacing.space6),
             Text(
               '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
               style: theme.textTheme.titleLarge,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: StudyUSpacing.space2),
             ElevatedButton.icon(
               icon: Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context)!.opt_out),
@@ -123,7 +124,7 @@ class _SettingsState extends State<Settings> {
                 );
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: StudyUSpacing.space6),
             ElevatedButton.icon(
               icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context)!.delete_data),

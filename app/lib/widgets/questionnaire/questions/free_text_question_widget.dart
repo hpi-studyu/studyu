@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -209,7 +210,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             }
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: StudyUSpacing.space4),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/string_extensions.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -118,7 +119,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
               Text(AppLocalizations.of(context)!.fitbit_data_synced_info),
               for (final type in earliestDates.keys)
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0, left: 10.0),
+                  padding: const EdgeInsets.only(top: StudyUSpacing.space1, left: StudyUSpacing.space3),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -185,7 +186,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
               Icons.check_circle,
               color: Theme.of(context).colorScheme.onSecondary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: StudyUSpacing.space2),
             Expanded(
               child: Text(
                 AppLocalizations.of(context)!.fitbit_data_synced,
@@ -220,7 +221,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
           onPressed: _isLoading ? null : _syncFitbitData,
           child: _isLoading
               ? Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(StudyUSpacing.space2),
                   child: CircularProgressIndicator(
                     color: Theme.of(context).colorScheme.onSecondary,
                   ),

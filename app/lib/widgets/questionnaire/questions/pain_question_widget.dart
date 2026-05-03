@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_selector.dart';
 import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_selector_turnable.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -91,7 +92,7 @@ class _PainQuestionWidgetState extends State<PainQuestionWidget> {
           frontButtonIcon: const Icon(Icons.face_outlined),
           backButtonIcon: const Icon(Icons.accessibility_new_outlined),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: StudyUSpacing.space4),
         OutlinedButton(
           onPressed: _onDone,
           child: Text(AppLocalizations.of(context)!.done),

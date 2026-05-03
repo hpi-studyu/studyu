@@ -6,6 +6,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -75,15 +76,18 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Hero(
-              tag: 'study_tile_${study!.id}',
-              child: Material(child: StudyTile.fromStudy(study: study!)),
-            ),
-            const SizedBox(height: 16),
-            StudyDetailsView(study: study),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(StudyUSpacing.space2),
+          child: Column(
+            children: [
+              Hero(
+                tag: 'study_tile_${study!.id}',
+                child: Material(child: StudyTile.fromStudy(study: study!)),
+              ),
+              const SizedBox(height: StudyUSpacing.space4),
+              StudyDetailsView(study: study),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -130,7 +134,7 @@ class StudyDetailsView extends StatelessWidget {
             size: iconSize,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: StudyUSpacing.space4),
         ContactWidget(
           contact: study!.contact,
           title: AppLocalizations.of(context)!.study_publisher,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:statistics/statistics.dart';
+import 'package:studyu_app/spacing.dart';
 
 class GaugesWidget extends StatelessWidget {
   final String nameInterventionA;
@@ -28,7 +29,7 @@ class GaugesWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(StudyUSpacing.space2),
                 decoration: BoxDecoration(
                   color: colorScheme.surface,
                   border: Border.all(color: colorScheme.outline),
@@ -53,7 +54,7 @@ class GaugesWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(StudyUSpacing.space2),
                 decoration: BoxDecoration(
                   color: colorScheme.surface,
                   border: Border.all(color: colorScheme.outline),

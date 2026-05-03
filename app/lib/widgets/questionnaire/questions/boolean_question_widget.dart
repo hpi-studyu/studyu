@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
@@ -40,7 +41,7 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
           onTap: () => tapped(choice: true),
           child: Text(AppLocalizations.of(context)!.yes),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: StudyUSpacing.space2),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),

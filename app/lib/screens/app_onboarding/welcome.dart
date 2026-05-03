@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_app/widgets/welcome_button.dart';
 
@@ -12,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(StudyUSpacing.space8),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -26,25 +27,25 @@ class WelcomeScreen extends StatelessWidget {
                     height: 70,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 WelcomeButton(
                   icon: Icons.info,
                   label: AppLocalizations.of(context)!.what_is_studyu,
                   onPressed: () => Navigator.pushNamed(context, Routes.about),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 WelcomeButton(
                   icon: Icons.person,
                   label: AppLocalizations.of(context)!.contact,
                   onPressed: () => Navigator.pushNamed(context, Routes.contact),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 WelcomeButton(
                   icon: Icons.quiz,
                   label: AppLocalizations.of(context)!.faq,
                   onPressed: () => Navigator.pushNamed(context, Routes.faq),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 WelcomeButton(
                   icon: Icons.rocket_launch,
                   label: AppLocalizations.of(context)!.get_started,

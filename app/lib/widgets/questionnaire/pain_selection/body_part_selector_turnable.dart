@@ -3,6 +3,7 @@
 // Licensed under the MIT License.
 
 import 'package:flutter/material.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_selector.dart';
 import 'package:studyu_core/core.dart';
 
@@ -17,7 +18,7 @@ class BodyPartSelectorTurnable extends StatefulWidget {
     this.scale = PainScale.english,
     this.unselectedColor,
     this.unselectedOutlineColor,
-    this.padding = const EdgeInsets.all(16),
+    this.padding = const EdgeInsets.all(StudyUSpacing.space4),
     this.frontButtonText = 'Front',
     this.backButtonText = 'Back',
     this.frontButtonIcon = const Icon(Icons.face),
@@ -73,7 +74,7 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space2),
           child: SegmentedButton<BodySide>(
             showSelectedIcon: false,
             segments: [
@@ -96,7 +97,7 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
             },
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: StudyUSpacing.space4),
         Padding(
           padding: widget.padding,
           child: BodyPartSelector(

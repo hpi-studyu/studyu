@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 
 class DescriptiveStats {
@@ -67,7 +68,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      margin: const EdgeInsets.symmetric(vertical: StudyUSpacing.space2, horizontal: StudyUSpacing.space1),
       child: ExpansionTile(
         title: Text(
           'Descriptive Statistics',
@@ -82,16 +83,16 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
         initiallyExpanded: initiallyExpanded,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSummary(context),
-                const SizedBox(height: 16),
+                const SizedBox(height: StudyUSpacing.space4),
                 _buildStatsTable(context),
                 if (statsA.missing > 0 || statsB.missing > 0)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: StudyUSpacing.space2),
                     child: Text(
                       AppLocalizations.of(context)!.missing_observations_note,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -116,7 +117,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(StudyUSpacing.space3),
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(8),
@@ -128,7 +129,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
             AppLocalizations.of(context)!.quick_summary,
             style: headingStyle,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: StudyUSpacing.space2),
           Row(
             children: [
               Expanded(
@@ -142,7 +143,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
               Expanded(child: _valueLabel(statsB.avgString, statsB.name)),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: StudyUSpacing.space1),
           Row(
             children: [
               Expanded(
@@ -239,7 +240,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
       ),
       children: cells.map((cell) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space3, horizontal: StudyUSpacing.space2),
           child: Text(
             cell,
             softWrap: true,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/spacing.dart';
 
 class FAQ extends StatelessWidget {
   const FAQ({super.key});
@@ -12,11 +13,11 @@ class FAQ extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.faq_full)),
       body: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         itemBuilder: (context, index) {
           final entry = isEnglish ? data_en[index] : data_de[index];
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: StudyUSpacing.space3),
             child: Card(child: EntryItem(entry)),
           );
         },
@@ -202,7 +203,7 @@ class EntryItem extends StatelessWidget {
   Widget _buildTiles(BuildContext context, Entry root) {
     if (root.children.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space3),
         child: Text(
           root.title,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -225,7 +226,7 @@ class EntryItem extends StatelessWidget {
         ),
         collapsedIconColor: Theme.of(context).colorScheme.onSurfaceVariant,
         iconColor: Theme.of(context).colorScheme.primary,
-        childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+        childrenPadding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: root.children
             .map<Widget>((e) => _buildTiles(context, e))

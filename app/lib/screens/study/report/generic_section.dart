@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 
 abstract class GenericSection extends StatelessWidget {
@@ -14,7 +15,7 @@ abstract class GenericSection extends StatelessWidget {
     child: InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         child: buildContent(context),
       ),
     ),

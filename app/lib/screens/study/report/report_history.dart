@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -60,7 +61,7 @@ class ReportHistoryItem extends StatelessWidget {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(StudyUSpacing.space5),
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -72,7 +73,7 @@ class ReportHistoryItem extends StatelessWidget {
                       ? colorScheme.onPrimary
                       : colorScheme.onSurface,
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: StudyUSpacing.space4),
                 Expanded(
                   child: Text(
                     subject.study.title!,

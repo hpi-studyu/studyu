@@ -3,6 +3,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,25 +30,25 @@ class _ContactScreenState extends State<ContactScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.contact)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         children: <Widget>[
           const Card(
             child: Padding(
-              padding: EdgeInsets.all(24),
+              padding: EdgeInsets.all(StudyUSpacing.space6),
               child: Image(
                 image: AssetImage('assets/icon/logo.png'),
                 height: 80,
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: StudyUSpacing.space4),
           RetryFutureBuilder<Contact>(
             tryFunction: AppConfig.getAppContact,
             successBuilder: (BuildContext context, Contact? appSupportContact) {
               if (appSupportContact == null) return const SizedBox.shrink();
               return Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(StudyUSpacing.space4),
                   child: ContactWidget(
                     contact: appSupportContact,
                     title: AppLocalizations.of(context)!.app_support,
@@ -59,10 +60,10 @@ class _ContactScreenState extends State<ContactScreen> {
             },
           ),
           if (studyContact != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: StudyUSpacing.space4),
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(StudyUSpacing.space4),
                 child: ContactWidget(
                   contact: studyContact,
                   title: AppLocalizations.of(context)!.study_support,
@@ -103,7 +104,7 @@ class ContactWidget extends StatelessWidget {
       Text(title, style: theme.textTheme.titleLarge!.copyWith(color: color)),
       if (subtitle != null && subtitle!.isNotEmpty)
         Padding(
-          padding: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.only(top: StudyUSpacing.space1),
           child: Text(
             subtitle!,
             style: theme.textTheme.bodyMedium!.copyWith(
@@ -111,7 +112,7 @@ class ContactWidget extends StatelessWidget {
             ),
           ),
         ),
-      const SizedBox(height: 12),
+      const SizedBox(height: StudyUSpacing.space3),
     ];
 
     final items = <Widget>[];
@@ -241,7 +242,7 @@ class ContactItem extends StatelessWidget {
       onTap: type != null ? launchContact : null,
       borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space3),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -250,7 +251,7 @@ class ContactItem extends StatelessWidget {
               color: iconColor ?? theme.colorScheme.onSurfaceVariant,
               size: 24,
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: StudyUSpacing.space4),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +262,7 @@ class ContactItem extends StatelessWidget {
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: StudyUSpacing.space1),
                   SelectableText(
                     itemValue!,
                     style: theme.textTheme.bodyMedium?.copyWith(

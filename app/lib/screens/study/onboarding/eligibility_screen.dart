@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_core/core.dart';
@@ -144,13 +145,13 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           AppLocalizations.of(context)!.eligible_no,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: StudyUSpacing.space1),
         if (activeResult?.firstFailed?.reason != null)
           Text(activeResult!.firstFailed!.reason!)
         else
           const SizedBox.shrink(),
         if (activeResult?.firstFailed?.reason != null)
-          const SizedBox(height: 4)
+          const SizedBox(height: StudyUSpacing.space1)
         else
           const SizedBox.shrink(),
         Text(AppLocalizations.of(context)!.eligible_mistake),
@@ -182,7 +183,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(StudyUSpacing.space2),
             child: Text(
               AppLocalizations.of(context)!.please_answer_eligibility,
               style: theme.textTheme.titleMedium,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -54,7 +55,7 @@ class _TermsScreenState extends State<TermsScreen> {
     final appLocale = Localizations.localeOf(context);
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -68,7 +69,7 @@ class _TermsScreenState extends State<TermsScreen> {
               pdfUrl: appConfig!.appTerms[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: StudyUSpacing.space5),
             LegalSection(
               title: AppLocalizations.of(context)!.privacy,
               description: AppLocalizations.of(context)!.privacy_content,
@@ -79,7 +80,7 @@ class _TermsScreenState extends State<TermsScreen> {
               pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: StudyUSpacing.space8),
             OutlinedButton.icon(
               icon: Icon(MdiIcons.scaleBalance),
               onPressed: () async {
@@ -132,9 +133,9 @@ class LegalSection extends StatelessWidget {
             color: theme.primaryColor,
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: StudyUSpacing.space5),
         Text(description!),
-        const SizedBox(height: 20),
+        const SizedBox(height: StudyUSpacing.space5),
         OutlinedButton.icon(
           icon: icon,
           onPressed: () async {

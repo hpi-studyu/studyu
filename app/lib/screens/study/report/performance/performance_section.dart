@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/generic_section.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 
 class PerformanceSection extends GenericSection {
@@ -35,7 +36,7 @@ class PerformanceSection extends GenericSection {
         : Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.only(bottom: StudyUSpacing.space4),
                 child: Text(
                   '${AppLocalizations.of(context)!.current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
                   style: theme.textTheme.titleLarge,
@@ -49,12 +50,12 @@ class PerformanceSection extends GenericSection {
                   final i = (index / 2).floor();
                   if (index.isEven) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: StudyUSpacing.space2),
                       child: Text(interventions[i].name!),
                     );
                   } else {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: StudyUSpacing.space2),
                       child: PerformanceBar(
                         progress: interventionProgress[i],
                         minimum: minimumRatio,
@@ -163,7 +164,7 @@ class PerformanceBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 20,
+          height: StudyUSpacing.space5,
           width: double.infinity,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),

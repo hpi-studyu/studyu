@@ -12,6 +12,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -197,7 +198,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                             ],
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: StudyUSpacing.space2),
                         Column(
                           children: iconAuthors
                               .map(
@@ -227,7 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   child: Row(
                     children: [
                       Icon(choice.icon, color: Colors.black),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: StudyUSpacing.space2),
                       Text(choice.name),
                     ],
                   ),
@@ -247,8 +248,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                 width: double.infinity,
                 color: Colors.orange.shade100,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
+                  horizontal: StudyUSpacing.space4,
+                  vertical: StudyUSpacing.space2,
                 ),
                 child: Row(
                   children: [
@@ -257,7 +258,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       color: Colors.orange.shade800,
                       size: 20,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: StudyUSpacing.space2),
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.preview_mode_active,
@@ -280,7 +281,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           Expanded(
             child: Padding(
               padding: showNextDay
-                  ? const EdgeInsets.only(bottom: 48)
+                  ? const EdgeInsets.only(bottom: StudyUSpacing.space12)
                   : EdgeInsets.zero,
               child: _buildBody(),
             ),
@@ -290,7 +291,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       bottomSheet: showNextDay
           ? Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space2),
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F7FA),
                 border: Border(
@@ -330,7 +331,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           title: Row(
             children: [
               const Icon(Icons.preview, color: Colors.orange),
-              const SizedBox(width: 8),
+              const SizedBox(width: StudyUSpacing.space2),
               Text(AppLocalizations.of(context)!.preview_mode),
             ],
           ),
@@ -355,7 +356,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       final theme = Theme.of(context);
       return Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+          padding: const EdgeInsets.fromLTRB(StudyUSpacing.space8, StudyUSpacing.space8, StudyUSpacing.space8, StudyUSpacing.space8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -382,7 +383,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 }
 
 class StudyFinishedPlaceholder extends StatelessWidget {
-  static const space = SizedBox(height: 80);
+  static const space = SizedBox(height: StudyUSpacing.space16);
 
   const StudyFinishedPlaceholder({super.key});
 
@@ -391,7 +392,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
     final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
+        padding: const EdgeInsets.fromLTRB(StudyUSpacing.space4, StudyUSpacing.space8, StudyUSpacing.space4, StudyUSpacing.space8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,

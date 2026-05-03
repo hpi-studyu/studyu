@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/spacing.dart';
 
 class SelectableButton extends StatelessWidget {
   final Widget child;
@@ -29,7 +30,7 @@ class SelectableButton extends StatelessWidget {
           foregroundColor: _getTextColor(theme),
           backgroundColor: _getFillColor(theme),
           minimumSize: const Size(double.infinity, 48),
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space4, horizontal: StudyUSpacing.space4),
         ),
         onPressed: onTap,
         child: child,

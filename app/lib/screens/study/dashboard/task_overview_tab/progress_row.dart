@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/intervention.dart';
 import 'package:studyu_core/core.dart';
 
@@ -18,13 +19,13 @@ class ProgressRow extends StatelessWidget {
     final phaseDayProgress = (phaseDay + 1) / phaseDuration;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space3, vertical: StudyUSpacing.space3),
       child: Row(
         children: [
           const Icon(Icons.directions_run, color: Color(0xFF666666), size: 20),
-          const SizedBox(width: 4),
+          const SizedBox(width: StudyUSpacing.space1),
           ..._buildNodesAndLines(interventions, currentPhase, phaseDayProgress),
-          const SizedBox(width: 4),
+          const SizedBox(width: StudyUSpacing.space1),
           const Icon(Icons.flag, color: Color(0xFF666666), size: 20),
         ],
       ),
@@ -56,7 +57,7 @@ class ProgressRow extends StatelessWidget {
           Expanded(
             child: Container(
               height: 2,
-              margin: const EdgeInsets.symmetric(horizontal: 4),
+              margin: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space1),
               color: isCurrent
                   ? const Color(0xFF2196F3)
                   : const Color(0xFFCCCCCC),

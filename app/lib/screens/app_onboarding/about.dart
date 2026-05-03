@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -16,12 +17,12 @@ class AboutScreen extends StatelessWidget {
         scrollDirection: Axis.vertical,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -43,7 +44,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: StudyUSpacing.space16),
                 Text(
                   AppLocalizations.of(context)!.description_part1,
                   textAlign: TextAlign.center,
@@ -53,7 +54,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -66,12 +67,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -83,7 +84,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: StudyUSpacing.space16),
                 Text(
                   AppLocalizations.of(context)!.description_part2,
                   textAlign: TextAlign.center,
@@ -93,7 +94,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -106,12 +107,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -123,7 +124,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part3,
                   textAlign: TextAlign.justify,
@@ -133,7 +134,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -146,12 +147,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -163,7 +164,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part4,
                   textAlign: TextAlign.justify,
@@ -173,7 +174,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -186,12 +187,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -217,7 +218,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part5,
                   textAlign: TextAlign.justify,
@@ -227,7 +228,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -240,12 +241,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -257,7 +258,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part6,
                   textAlign: TextAlign.justify,
@@ -267,7 +268,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -280,12 +281,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -297,7 +298,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part7,
                   textAlign: TextAlign.justify,
@@ -307,7 +308,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -320,12 +321,12 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Row(
                   children: [
                     Expanded(
@@ -337,7 +338,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part8,
                   textAlign: TextAlign.justify,
@@ -347,7 +348,7 @@ class AboutScreen extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: StudyUSpacing.space3),
                       child: Icon(
                         Icons.arrow_drop_down,
                         color: Colors.blue,
@@ -360,7 +361,7 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(StudyUSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -369,13 +370,13 @@ class AboutScreen extends StatelessWidget {
                   image: AssetImage('assets/icon/logo.png'),
                   height: 200,
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: StudyUSpacing.space12),
                 Text(
                   AppLocalizations.of(context)!.description_part9,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 18),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: StudyUSpacing.space10),
                 if (context.read<AppState>().activeSubject == null)
                   OutlinedButton.icon(
                     icon: Icon(MdiIcons.rocket),

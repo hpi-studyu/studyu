@@ -4,6 +4,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_core/core.dart';
 
 class TaskOverview extends StatefulWidget {
@@ -44,11 +45,11 @@ class _TaskOverviewState extends State<TaskOverview> {
       list
         ..add(
           Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 4),
+            padding: const EdgeInsets.only(top: StudyUSpacing.space2, bottom: StudyUSpacing.space1),
             child: Row(
               children: [
                 Icon(Icons.schedule, color: theme.primaryColor, size: 16),
-                const SizedBox(width: 4),
+                const SizedBox(width: StudyUSpacing.space1),
                 Text(
                   taskInstance.completionPeriod.formatted(),
                   style: TextStyle(
@@ -90,9 +91,9 @@ class _TaskOverviewState extends State<TaskOverview> {
         ProgressRow(subject: widget.subject),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4),
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: StudyUSpacing.space4),
               Text(
                 AppLocalizations.of(context)!.intervention_current,
                 style: const TextStyle(
@@ -101,9 +102,9 @@ class _TaskOverviewState extends State<TaskOverview> {
                   color: Color(0xFF333333),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: StudyUSpacing.space2),
               _buildInterventionCard(currentIntervention),
-              const SizedBox(height: 16),
+              const SizedBox(height: StudyUSpacing.space4),
               Text(
                 AppLocalizations.of(context)!.today_tasks,
                 style: const TextStyle(
@@ -112,9 +113,9 @@ class _TaskOverviewState extends State<TaskOverview> {
                   color: Color(0xFF333333),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: StudyUSpacing.space2),
               ...buildScheduleToday(context),
-              const SizedBox(height: 16),
+              const SizedBox(height: StudyUSpacing.space4),
             ],
           ),
         ),
@@ -132,7 +133,7 @@ class _TaskOverviewState extends State<TaskOverview> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space3),
       child: Row(
         children: [
           Container(
@@ -143,7 +144,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: StudyUSpacing.space3),
           Expanded(
             child: Text(
               intervention.name ?? '',

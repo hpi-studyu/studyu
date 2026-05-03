@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
@@ -30,19 +31,19 @@ class PerformanceDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(StudyUSpacing.space2),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(StudyUSpacing.space2),
                   child: Text(
                     AppLocalizations.of(context)!.performance_overview,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(StudyUSpacing.space2),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -65,7 +66,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(StudyUSpacing.space2),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -110,7 +111,7 @@ class InterventionPerformanceBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         child: Column(
           children: [
             InterventionCard(
@@ -118,7 +119,7 @@ class InterventionPerformanceBar extends StatelessWidget {
               showTasks: false,
               showDescription: false,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: StudyUSpacing.space2),
             ...intervention.tasks.map(
               (task) => PerformanceBar(
                 task: task,
@@ -147,7 +148,7 @@ class ObservationPerformanceBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(StudyUSpacing.space4),
         child: PerformanceBar(
           task: observation,
           completed: subject!.completedTasksFor(observation),
@@ -181,7 +182,7 @@ class PerformanceBar extends StatelessWidget {
             Text('$completed/$total'),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: StudyUSpacing.space2),
         Stack(
           alignment: Alignment.center,
           children: [

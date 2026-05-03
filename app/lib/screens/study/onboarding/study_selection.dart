@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_app/widgets/welcome_button.dart';
@@ -79,7 +80,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                padding: const EdgeInsets.fromLTRB(StudyUSpacing.space6, StudyUSpacing.space6, StudyUSpacing.space6, StudyUSpacing.space2),
                 child: Text(
                   AppLocalizations.of(context)!.study_selection_description,
                   style: theme.textTheme.headlineMedium,
@@ -87,7 +88,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                padding: const EdgeInsets.fromLTRB(StudyUSpacing.space6, 0, StudyUSpacing.space6, StudyUSpacing.space5),
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -128,7 +129,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               ),
               if (_hiddenStudies)
                 MaterialBanner(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(StudyUSpacing.space2),
                   leading: Icon(
                     Icons.warning,
                     color: theme.colorScheme.secondary,
@@ -165,14 +166,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           });
                         }
                         return ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.only(bottom: StudyUSpacing.space2),
                           itemCount: studies.length + 1,
                           itemBuilder: (context, index) {
                             if (index == studies.length) {
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
+                                  horizontal: StudyUSpacing.space4,
+                                  vertical: StudyUSpacing.space3,
                                 ),
                                 child: Center(
                                   child: WelcomeButton(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
@@ -52,18 +53,18 @@ class _TaskBoxState extends State<TaskBox> {
     );
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
-      margin: const EdgeInsets.only(top: 6, bottom: 8),
+      margin: const EdgeInsets.only(top: StudyUSpacing.space2, bottom: StudyUSpacing.space2),
       color: Colors.white,
       surfaceTintColor: Colors.transparent,
       child: InkWell(
         onTap: isTaskOpen ? _navigateToTaskScreen : () {},
         borderRadius: BorderRadius.circular(8),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space3),
           child: Row(
             children: [
               widget.icon,
-              const SizedBox(width: 10),
+              const SizedBox(width: StudyUSpacing.space3),
               Expanded(
                 child: Text(
                   widget.taskInstance.task.title ?? '',

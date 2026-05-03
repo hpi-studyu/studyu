@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -49,11 +50,11 @@ class _ImageCapturingQuestionWidgetState
             }
           : null,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2.0),
+        padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space2, horizontal: StudyUSpacing.space1),
         child: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(StudyUSpacing.space1),
               child: Icon(
                 _hasCaptured ? MdiIcons.checkCircleOutline : MdiIcons.camera,
                 color: _hasCaptured

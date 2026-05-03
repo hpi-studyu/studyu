@@ -4,6 +4,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/intervention/checkmark_task_widget.dart';
 import 'package:studyu_app/screens/study/tasks/observation/questionnaire_task_widget.dart';
+import 'package:studyu_app/spacing.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
@@ -45,7 +46,7 @@ class _TaskScreenState extends State<TaskScreen> {
             child: Column(
               children: [
                 HtmlText(taskInstance.task.header, centered: true),
-                const SizedBox(height: 20),
+                const SizedBox(height: StudyUSpacing.space5),
                 CheckmarkTaskWidget(
                   task: checkmarkTask,
                   key: UniqueKey(),
@@ -70,7 +71,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(taskInstance.task.title ?? '')),
-      body: Padding(padding: const EdgeInsets.all(16), child: _buildTask()),
+      body: Padding(padding: const EdgeInsets.all(StudyUSpacing.space4), child: _buildTask()),
     );
   }
 }
