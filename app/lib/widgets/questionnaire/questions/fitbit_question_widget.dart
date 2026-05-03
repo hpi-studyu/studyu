@@ -119,7 +119,10 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
               Text(AppLocalizations.of(context)!.fitbit_data_synced_info),
               for (final type in earliestDates.keys)
                 Padding(
-                  padding: const EdgeInsets.only(top: StudyUSpacing.space1, left: StudyUSpacing.space3),
+                  padding: const EdgeInsets.only(
+                    top: StudyUSpacing.space1,
+                    left: StudyUSpacing.space3,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

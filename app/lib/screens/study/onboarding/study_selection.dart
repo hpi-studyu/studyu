@@ -80,7 +80,12 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(StudyUSpacing.space6, StudyUSpacing.space6, StudyUSpacing.space6, StudyUSpacing.space2),
+                padding: const EdgeInsets.fromLTRB(
+                  StudyUSpacing.space6,
+                  StudyUSpacing.space6,
+                  StudyUSpacing.space6,
+                  StudyUSpacing.space2,
+                ),
                 child: Text(
                   AppLocalizations.of(context)!.study_selection_description,
                   style: theme.textTheme.headlineMedium,
@@ -88,7 +93,12 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(StudyUSpacing.space6, 0, StudyUSpacing.space6, StudyUSpacing.space5),
+                padding: const EdgeInsets.fromLTRB(
+                  StudyUSpacing.space6,
+                  0,
+                  StudyUSpacing.space6,
+                  StudyUSpacing.space5,
+                ),
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -166,7 +176,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           });
                         }
                         return ListView.builder(
-                          padding: const EdgeInsets.only(bottom: StudyUSpacing.space2),
+                          padding: const EdgeInsets.only(
+                            bottom: StudyUSpacing.space2,
+                          ),
                           itemCount: studies.length + 1,
                           itemBuilder: (context, index) {
                             if (index == studies.length) {

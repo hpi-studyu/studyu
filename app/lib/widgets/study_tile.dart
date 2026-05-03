@@ -41,7 +41,10 @@ class StudyTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space2),
+      margin: const EdgeInsets.symmetric(
+        horizontal: StudyUSpacing.space4,
+        vertical: StudyUSpacing.space2,
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),

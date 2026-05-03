@@ -45,7 +45,10 @@ class _TaskOverviewState extends State<TaskOverview> {
       list
         ..add(
           Padding(
-            padding: const EdgeInsets.only(top: StudyUSpacing.space2, bottom: StudyUSpacing.space1),
+            padding: const EdgeInsets.only(
+              top: StudyUSpacing.space2,
+              bottom: StudyUSpacing.space1,
+            ),
             child: Row(
               children: [
                 Icon(Icons.schedule, color: theme.primaryColor, size: 16),
@@ -91,7 +94,9 @@ class _TaskOverviewState extends State<TaskOverview> {
         ProgressRow(subject: widget.subject),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: StudyUSpacing.space4,
+            ),
             children: [
               const SizedBox(height: StudyUSpacing.space4),
               Text(
@@ -133,7 +138,10 @@ class _TaskOverviewState extends State<TaskOverview> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: StudyUSpacing.space4,
+        vertical: StudyUSpacing.space3,
+      ),
       child: Row(
         children: [
           Container(

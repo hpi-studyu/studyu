@@ -108,7 +108,12 @@ class _QuestionContainerState extends State<QuestionContainer>
     return Card(
       key: widget.containerKey,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(StudyUSpacing.space4, StudyUSpacing.space4, StudyUSpacing.space4, StudyUSpacing.space2),
+        padding: const EdgeInsets.fromLTRB(
+          StudyUSpacing.space4,
+          StudyUSpacing.space4,
+          StudyUSpacing.space4,
+          StudyUSpacing.space2,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

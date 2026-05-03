@@ -68,7 +68,10 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: StudyUSpacing.space2, horizontal: StudyUSpacing.space1),
+      margin: const EdgeInsets.symmetric(
+        vertical: StudyUSpacing.space2,
+        horizontal: StudyUSpacing.space1,
+      ),
       child: ExpansionTile(
         title: Text(
           'Descriptive Statistics',
@@ -240,7 +243,10 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
       ),
       children: cells.map((cell) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space3, horizontal: StudyUSpacing.space2),
+          padding: const EdgeInsets.symmetric(
+            vertical: StudyUSpacing.space3,
+            horizontal: StudyUSpacing.space2,
+          ),
           child: Text(
             cell,
             softWrap: true,

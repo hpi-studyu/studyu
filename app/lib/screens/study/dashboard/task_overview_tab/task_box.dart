@@ -53,14 +53,20 @@ class _TaskBoxState extends State<TaskBox> {
     );
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
-      margin: const EdgeInsets.only(top: StudyUSpacing.space2, bottom: StudyUSpacing.space2),
+      margin: const EdgeInsets.only(
+        top: StudyUSpacing.space2,
+        bottom: StudyUSpacing.space2,
+      ),
       color: Colors.white,
       surfaceTintColor: Colors.transparent,
       child: InkWell(
         onTap: isTaskOpen ? _navigateToTaskScreen : () {},
         borderRadius: BorderRadius.circular(8),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space3),
+          padding: const EdgeInsets.symmetric(
+            horizontal: StudyUSpacing.space4,
+            vertical: StudyUSpacing.space3,
+          ),
           child: Row(
             children: [
               widget.icon,

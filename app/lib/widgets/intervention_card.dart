@@ -130,7 +130,12 @@ class InterventionCardDescription extends StatelessWidget {
     if (description == null) return Container();
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(StudyUSpacing.space4, StudyUSpacing.space1, StudyUSpacing.space4, StudyUSpacing.space2),
+      padding: const EdgeInsets.fromLTRB(
+        StudyUSpacing.space4,
+        StudyUSpacing.space1,
+        StudyUSpacing.space4,
+        StudyUSpacing.space2,
+      ),
       child: Text(
         description,
         style: theme.textTheme.bodyMedium!.copyWith(
@@ -161,7 +166,10 @@ class _TaskList extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space2),
+          padding: const EdgeInsets.symmetric(
+            horizontal: StudyUSpacing.space4,
+            vertical: StudyUSpacing.space2,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

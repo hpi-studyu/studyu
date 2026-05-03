@@ -30,7 +30,10 @@ class SelectableButton extends StatelessWidget {
           foregroundColor: _getTextColor(theme),
           backgroundColor: _getFillColor(theme),
           minimumSize: const Size(double.infinity, 48),
-          padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space4, horizontal: StudyUSpacing.space4),
+          padding: const EdgeInsets.symmetric(
+            vertical: StudyUSpacing.space4,
+            horizontal: StudyUSpacing.space4,
+          ),
         ),
         onPressed: onTap,
         child: child,

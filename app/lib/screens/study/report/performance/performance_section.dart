@@ -50,12 +50,16 @@ class PerformanceSection extends GenericSection {
                   final i = (index / 2).floor();
                   if (index.isEven) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: StudyUSpacing.space2),
+                      padding: const EdgeInsets.only(
+                        bottom: StudyUSpacing.space2,
+                      ),
                       child: Text(interventions[i].name!),
                     );
                   } else {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: StudyUSpacing.space2),
+                      padding: const EdgeInsets.only(
+                        bottom: StudyUSpacing.space2,
+                      ),
                       child: PerformanceBar(
                         progress: interventionProgress[i],
                         minimum: minimumRatio,

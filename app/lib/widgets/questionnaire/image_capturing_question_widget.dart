@@ -50,7 +50,10 @@ class _ImageCapturingQuestionWidgetState
             }
           : null,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: StudyUSpacing.space2, horizontal: StudyUSpacing.space1),
+        padding: const EdgeInsets.symmetric(
+          vertical: StudyUSpacing.space2,
+          horizontal: StudyUSpacing.space1,
+        ),
         child: Row(
           children: [
             Padding(

@@ -19,7 +19,10 @@ class ProgressRow extends StatelessWidget {
     final phaseDayProgress = (phaseDay + 1) / phaseDuration;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space3, vertical: StudyUSpacing.space3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: StudyUSpacing.space3,
+        vertical: StudyUSpacing.space3,
+      ),
       child: Row(
         children: [
           const Icon(Icons.directions_run, color: Color(0xFF666666), size: 20),
@@ -57,7 +60,9 @@ class ProgressRow extends StatelessWidget {
           Expanded(
             child: Container(
               height: 2,
-              margin: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space1),
+              margin: const EdgeInsets.symmetric(
+                horizontal: StudyUSpacing.space1,
+              ),
               color: isCurrent
                   ? const Color(0xFF2196F3)
                   : const Color(0xFFCCCCCC),

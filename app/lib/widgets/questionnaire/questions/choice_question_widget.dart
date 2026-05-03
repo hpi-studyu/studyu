@@ -94,7 +94,8 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: choiceWidgets.length,
       itemBuilder: (context, index) => choiceWidgets[index],
-      separatorBuilder: (context, index) => const SizedBox(height: StudyUSpacing.space2),
+      separatorBuilder: (context, index) =>
+          const SizedBox(height: StudyUSpacing.space2),
     );
   }
 }

@@ -74,7 +74,12 @@ class _SettingsState extends State<Settings> {
             Tooltip(
               triggerMode: TooltipTriggerMode.tap,
               showDuration: const Duration(milliseconds: 10000),
-              margin: const EdgeInsets.fromLTRB(StudyUSpacing.space8, 0, StudyUSpacing.space8, 0),
+              margin: const EdgeInsets.fromLTRB(
+                StudyUSpacing.space8,
+                0,
+                StudyUSpacing.space8,
+                0,
+              ),
               message: AppLocalizations.of(context)!.allow_analytics_desc,
               child: const Icon(Icons.info),
             ),

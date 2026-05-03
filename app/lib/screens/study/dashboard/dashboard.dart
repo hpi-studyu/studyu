@@ -291,7 +291,10 @@ class _DashboardScreenState extends State<DashboardScreen>
       bottomSheet: showNextDay
           ? Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space2),
+              padding: const EdgeInsets.symmetric(
+                horizontal: StudyUSpacing.space4,
+                vertical: StudyUSpacing.space2,
+              ),
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F7FA),
                 border: Border(
@@ -356,7 +359,12 @@ class _DashboardScreenState extends State<DashboardScreen>
       final theme = Theme.of(context);
       return Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(StudyUSpacing.space8, StudyUSpacing.space8, StudyUSpacing.space8, StudyUSpacing.space8),
+          padding: const EdgeInsets.fromLTRB(
+            StudyUSpacing.space8,
+            StudyUSpacing.space8,
+            StudyUSpacing.space8,
+            StudyUSpacing.space8,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -392,7 +400,12 @@ class StudyFinishedPlaceholder extends StatelessWidget {
     final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(StudyUSpacing.space4, StudyUSpacing.space8, StudyUSpacing.space4, StudyUSpacing.space8),
+        padding: const EdgeInsets.fromLTRB(
+          StudyUSpacing.space4,
+          StudyUSpacing.space8,
+          StudyUSpacing.space4,
+          StudyUSpacing.space8,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,

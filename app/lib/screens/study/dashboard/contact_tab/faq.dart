@@ -203,7 +203,10 @@ class EntryItem extends StatelessWidget {
   Widget _buildTiles(BuildContext context, Entry root) {
     if (root.children.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4, vertical: StudyUSpacing.space3),
+        padding: const EdgeInsets.symmetric(
+          horizontal: StudyUSpacing.space4,
+          vertical: StudyUSpacing.space3,
+        ),
         child: Text(
           root.title,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -226,7 +229,9 @@ class EntryItem extends StatelessWidget {
         ),
         collapsedIconColor: Theme.of(context).colorScheme.onSurfaceVariant,
         iconColor: Theme.of(context).colorScheme.primary,
-        childrenPadding: const EdgeInsets.symmetric(horizontal: StudyUSpacing.space4),
+        childrenPadding: const EdgeInsets.symmetric(
+          horizontal: StudyUSpacing.space4,
+        ),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: root.children
             .map<Widget>((e) => _buildTiles(context, e))
