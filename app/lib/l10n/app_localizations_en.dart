@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -296,6 +295,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboard => 'Dashboard';
+
+  @override
+  String get dashboard_showcase_progress_title => 'Study progress';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'This shows where you are in the study and how much is left.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Current intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Here you can see which intervention applies today and how many days remain in this phase.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Today\'s tasks';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Complete the tasks listed here to keep your study data up to date.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Contact';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Use this if you need help from the study team.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Report';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Open your current report when results are available.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'More options';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Find settings, FAQs, report history, and more here.';
 
   @override
   String get home => 'Home';
