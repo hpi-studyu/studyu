@@ -22,7 +22,7 @@ class _TestFormData implements IFormData {
 }
 
 class _TestFormViewModel extends ManagedFormViewModel<_TestFormData> {
-  _TestFormViewModel({super.formData, super.delegate, this.duplicate});
+  _TestFormViewModel({super.formData, this.duplicate});
 
   final _TestFormViewModel? duplicate;
   final FormControl<String> valueControl = FormControl<String>(value: '');
