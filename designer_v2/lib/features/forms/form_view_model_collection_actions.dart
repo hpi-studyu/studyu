@@ -35,7 +35,7 @@ extension FormViewModelCollectionActions<
                 final duplicateFormViewModel =
                     formViewModel.createDuplicate() as T;
                 add(duplicateFormViewModel);
-                formViewModel.save();
+                duplicateFormViewModel.save();
               },
         isAvailable: !isReadOnly,
       ),
