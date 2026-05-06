@@ -300,6 +300,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 .from('study_invite')
                 .select('preselected_intervention_ids')
                 .eq('code', _controller.text)
+                .eq('study_id', study.id)
                 .maybeSingle();
             if (!context.mounted) return;
             if (inviteResult != null &&

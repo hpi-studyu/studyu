@@ -212,6 +212,22 @@ $$;
 ALTER FUNCTION "public"."get_study_record_from_invite"("invite_code" "text") OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."is_invite_code_for_study"("study_id" "uuid", "invite_code" "text") RETURNS boolean
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    SET "search_path" TO ''
+    AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.study_invite
+    WHERE study_invite.study_id = is_invite_code_for_study.study_id
+      AND study_invite.code = is_invite_code_for_study.invite_code
+  );
+$$;
+
+
+ALTER FUNCTION "public"."is_invite_code_for_study"("study_id" "uuid", "invite_code" "text") OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
@@ -611,6 +627,11 @@ ALTER TABLE ONLY "public"."study_invite"
 
 
 
+ALTER TABLE ONLY "public"."study_invite"
+    ADD CONSTRAINT "study_invite_study_id_code_unique" UNIQUE ("study_id", "code");
+
+
+
 ALTER TABLE ONLY "public"."study"
     ADD CONSTRAINT "study_pkey" PRIMARY KEY ("id");
 
@@ -660,7 +681,7 @@ ALTER TABLE ONLY "public"."study_invite"
 
 
 ALTER TABLE ONLY "public"."study_subject"
-    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY ("invite_code") REFERENCES "public"."study_invite"("code") ON DELETE CASCADE;
+    ADD CONSTRAINT "study_subject_study_invite_fkey" FOREIGN KEY ("study_id", "invite_code") REFERENCES "public"."study_invite"("study_id", "code") ON DELETE CASCADE;
 
 
 
@@ -738,7 +759,7 @@ CREATE POLICY "Enable read access for study participants for fitbit credential" 
 
 
 
-CREATE POLICY "Invite code must match study_id" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT TO "authenticated" WITH CHECK ((("invite_code" IS NULL) OR ("study_id" IN ( SELECT ("public"."get_study_record_from_invite"("study_subject"."invite_code"))."id" AS "id"))));
+CREATE POLICY "Invite code must match study_id" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT TO "authenticated" WITH CHECK ((("invite_code" IS NULL) OR "public"."is_invite_code_for_study"("study_id", "invite_code")));
 
 
 
@@ -848,6 +869,7 @@ REVOKE EXECUTE ON FUNCTION public.last_completed_task(uuid) FROM public, anon;
 
 -- RPC/API functions
 REVOKE EXECUTE ON FUNCTION public.get_study_record_from_invite(text) FROM public, anon;
+REVOKE EXECUTE ON FUNCTION public.is_invite_code_for_study(uuid, text) FROM public, anon;
 
 -- Trigger functions
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM public, anon;
