@@ -13,6 +13,9 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     required super.studyWithMetadata,
     required this.inviteCodeRepository,
     this.invites = const AsyncValue.loading(),
+    this.inviteCodePageIndex = 0,
+    this.inviteCodePageSize = defaultInviteCodePageSize,
+    this.hasNextInviteCodePage = false,
   });
 
   /// The list of invite codes (if any) for the currently selected study
@@ -23,10 +26,24 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
 
   final InviteCodeRepository inviteCodeRepository;
 
+  final int inviteCodePageIndex;
+
+  final int inviteCodePageSize;
+
+  final bool hasNextInviteCodePage;
+
+  bool get hasPreviousInviteCodePage => inviteCodePageIndex > 0;
+
+  int get inviteCodeFirstRowNumber =>
+      (inviteCodePageIndex * inviteCodePageSize) + 1;
+
   @override
   StudyRecruitControllerState copyWith({
     WrappedModel<Study>? studyWithMetadata,
     AsyncValue<List<StudyInvite>>? invites,
+    int? inviteCodePageIndex,
+    int? inviteCodePageSize,
+    bool? hasNextInviteCodePage,
   }) {
     return StudyRecruitControllerState(
       studyId: studyId,
@@ -36,11 +53,21 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       inviteCodeRepository: inviteCodeRepository,
       invites: invites ?? this.invites,
+      inviteCodePageIndex: inviteCodePageIndex ?? this.inviteCodePageIndex,
+      inviteCodePageSize: inviteCodePageSize ?? this.inviteCodePageSize,
+      hasNextInviteCodePage:
+          hasNextInviteCodePage ?? this.hasNextInviteCodePage,
     );
   }
 
   // - Equatable
 
   @override
-  List<Object?> get props => [...super.props, invites];
+  List<Object?> get props => [
+    ...super.props,
+    invites,
+    inviteCodePageIndex,
+    inviteCodePageSize,
+    hasNextInviteCodePage,
+  ];
 }

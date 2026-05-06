@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -7,7 +5,6 @@ import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_sta
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
-import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -32,26 +29,69 @@ class StudyRecruitController extends _$StudyRecruitController
     );
     ref.onDispose(() {
       print("StudyRecruitController.dispose");
-      _invitesSubscription?.cancel();
     });
-    _subscribeInvites();
+    Future.microtask(() => loadInviteCodePage(0));
     return state;
   }
 
-  StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
+  Future<void> loadInviteCodePage(int pageIndex) async {
+    if (pageIndex < 0) return;
 
-  void _subscribeInvites() {
-    print("StudyRecruitController.subscribe");
-    _invitesSubscription = state.inviteCodeRepository.watchAll().listen((
-      wrappedModels,
-    ) {
-      print("StudyRecruitController.listenUpdate");
-      // Update the controller's state when new invites are available in the repository
-      final invites = wrappedModels.map((invite) => invite.model).toList();
-      // Sort invites alphabetically by code
-      invites.sort((a, b) => a.code.compareTo(b.code));
-      state = state.copyWith(invites: AsyncValue.data(invites));
-    }); // TODO onError
+    state = state.copyWith(
+      invites: const AsyncValue.loading(),
+      inviteCodePageIndex: pageIndex,
+    );
+
+    try {
+      final fetchLimit = state.inviteCodePageSize + 1;
+      final offset = pageIndex * state.inviteCodePageSize;
+      final fetchedInvites = await state.inviteCodeRepository.fetchPage(
+        offset: offset,
+        limit: fetchLimit,
+      );
+      final hasNextPage = fetchedInvites.length > state.inviteCodePageSize;
+      final visibleInvites = fetchedInvites
+          .take(state.inviteCodePageSize)
+          .toList();
+
+      state = state.copyWith(
+        invites: AsyncValue.data(visibleInvites),
+        inviteCodePageIndex: pageIndex,
+        hasNextInviteCodePage: hasNextPage,
+      );
+    } catch (error, stackTrace) {
+      state = state.copyWith(
+        invites: AsyncValue.error(error, stackTrace),
+        inviteCodePageIndex: pageIndex,
+      );
+    }
+  }
+
+  Future<void> loadPreviousInviteCodePage() {
+    return loadInviteCodePage(state.inviteCodePageIndex - 1);
+  }
+
+  Future<void> loadNextInviteCodePage() {
+    if (!state.hasNextInviteCodePage) return Future.value();
+    return loadInviteCodePage(state.inviteCodePageIndex + 1);
+  }
+
+  void upsertInviteOnCurrentPage(StudyInvite invite) {
+    final currentInvites = state.invites.value ?? [];
+    final updatedInvites = [
+      invite,
+      ...currentInvites.where((current) => current.code != invite.code),
+    ]..sort((a, b) => a.code.compareTo(b.code));
+
+    final visibleInvites = updatedInvites
+        .take(state.inviteCodePageSize)
+        .toList();
+    state = state.copyWith(
+      invites: AsyncValue.data(visibleInvites),
+      hasNextInviteCodePage:
+          state.hasNextInviteCodePage ||
+          updatedInvites.length > state.inviteCodePageSize,
+    );
   }
 
   Intervention? getIntervention(String interventionId) {
@@ -69,6 +109,7 @@ class StudyRecruitController extends _$StudyRecruitController
     final actions = state.inviteCodeRepository
         .availableActions(model)
         .where((action) => action.type != ModelActionType.clipboard)
+        .map(_withPageRefresh)
         .toList();
     return withIcons(actions, modelActionIcons);
   }
@@ -79,5 +120,27 @@ class StudyRecruitController extends _$StudyRecruitController
         .where((action) => action.type == ModelActionType.clipboard)
         .toList();
     return withIcons(actions, modelActionIcons);
+  }
+
+  ModelAction _withPageRefresh(ModelAction action) {
+    if (action.type != ModelActionType.delete) {
+      return action;
+    }
+    return ModelAction(
+      type: action.type,
+      label: action.label,
+      tooltip: action.tooltip,
+      isAvailable: action.isAvailable,
+      isDestructive: action.isDestructive,
+      isChecked: action.isChecked,
+      showBadge: action.showBadge,
+      onExecute: () {
+        action.onExecute();
+        Future.delayed(
+          const Duration(milliseconds: 300),
+          () => loadInviteCodePage(state.inviteCodePageIndex),
+        );
+      },
+    );
   }
 }

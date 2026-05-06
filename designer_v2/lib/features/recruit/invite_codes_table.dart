@@ -18,6 +18,7 @@ class StudyInvitesTable extends StatelessWidget {
     required this.getActions,
     required this.getIntervention,
     required this.getParticipantCountForInvite,
+    this.firstRowNumber = 1,
     super.key,
   });
 
@@ -28,6 +29,7 @@ class StudyInvitesTable extends StatelessWidget {
 
   final InterventionProvider getIntervention;
   final ParticipantCountProvider getParticipantCountForInvite;
+  final int firstRowNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +113,7 @@ class StudyInvitesTable extends StatelessWidget {
     final participantCount = getParticipantCountForInvite(item);
 
     return [
-      Text(rowIdx.toString(), style: mutedTextStyle),
+      Text((firstRowNumber + rowIdx).toString(), style: mutedTextStyle),
       SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,

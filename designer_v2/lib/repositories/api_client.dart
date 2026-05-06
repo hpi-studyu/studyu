@@ -24,9 +24,17 @@ abstract class StudyUApi {
 
   Future<StudyInvite> fetchStudyInvite(String code);
 
+  Future<List<StudyInvite>> fetchStudyInvitesPage(
+    StudyID studyId, {
+    required int offset,
+    required int limit,
+  });
+
   Future<Study> fetchStudyFromInvite(String code);
 
   Future<void> deleteStudyInvite(StudyInvite invite);
+
+  Future<void> deleteStudyInvites(StudyID studyId);
 
   Future<List<StudySubject>> deleteParticipants(
     Study study,
@@ -231,6 +239,30 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
+  Future<List<StudyInvite>> fetchStudyInvitesPage(
+    StudyID studyId, {
+    required int offset,
+    required int limit,
+  }) async {
+    await _testDelay();
+    try {
+      final data = await supabaseClient
+          .from(StudyInvite.tableName)
+          .select()
+          .eq('study_id', studyId)
+          .order('code')
+          .range(offset, offset + limit - 1);
+      return deserializeList<StudyInvite>(data);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+        statusCode: error.code,
+        message: error.message,
+        details: error.details,
+      );
+    }
+  }
+
+  @override
   Future<Study> fetchStudyFromInvite(String code) async {
     await _testDelay();
     try {
@@ -257,6 +289,23 @@ class StudyUApiClient extends SupabaseClientDependant
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
     return _awaitGuarded<void>(request);
+  }
+
+  @override
+  Future<void> deleteStudyInvites(StudyID studyId) async {
+    await _testDelay();
+    try {
+      await supabaseClient
+          .from(StudyInvite.tableName)
+          .delete()
+          .eq('study_id', studyId);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+        statusCode: error.code,
+        message: error.message,
+        details: error.details,
+      );
+    }
   }
 
   @override

@@ -15,8 +15,15 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 part 'invite_code_repository.g.dart';
 
+const int defaultInviteCodePageSize = 50;
+
 abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
+
+  Future<List<StudyInvite>> fetchPage({
+    required int offset,
+    required int limit,
+  });
 }
 
 class InviteCodeRepository extends ModelRepository<StudyInvite>
@@ -61,6 +68,23 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       rethrow;
     }
     return true;
+  }
+
+  @override
+  Future<List<StudyInvite>> fetchPage({
+    required int offset,
+    required int limit,
+  }) async {
+    final invites = await apiClient.fetchStudyInvitesPage(
+      studyId,
+      offset: offset,
+      limit: limit,
+    );
+    for (final invite in invites) {
+      upsertLocally(invite);
+    }
+    emitUpdate();
+    return invites;
   }
 
   @override
@@ -128,43 +152,27 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<StudyInvite> fetch(ModelID modelId) {
-    // Read directly from the study instead of fetching from the network
-    return Future.value(study.getInvite(modelId));
+    return apiClient.fetchStudyInvite(modelId);
   }
 
   @override
   Future<List<StudyInvite>> fetchAll() {
-    // Read directly from the study instead of fetching from the network
-    return Future.value(study.invites ?? []);
+    return apiClient.fetchStudyInvitesPage(
+      study.id,
+      offset: 0,
+      limit: defaultInviteCodePageSize,
+    );
   }
 
   @override
   Future<StudyInvite> save(StudyInvite model) {
-    study.invites ??= [];
-    final prevInvites = [...study.invites!];
-
     final saveOperation = OptimisticUpdate(
-      applyOptimistic: () {
-        final inviteIdx = study.invites!.indexWhere(
-          (i) => i.code == model.code,
-        );
-        if (inviteIdx == -1) {
-          // add new code
-          study.invites!.add(model);
-        } else {
-          // replace existing code
-          study.invites![inviteIdx] = model;
-        }
-        studyRepository.upsertLocally(study);
-      },
+      applyOptimistic: () {},
       apply: () async {
         await studyRepository.ensurePersisted(model.studyId);
         await apiClient.saveStudyInvite(model);
       },
-      rollback: () {
-        study.invites = prevInvites;
-        studyRepository.upsertLocally(study);
-      },
+      rollback: () {},
       onUpdate: () {
         print("saveOperation: studyRepository.emitUpdate()");
         studyRepository.emitUpdate();
@@ -177,20 +185,10 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<void> delete(StudyInvite model) {
-    assert(study.invites != null);
-    assert(study.invites!.isNotEmpty);
-
-    final prevInvites = [...study.invites!];
     final deleteOperation = OptimisticUpdate(
-      applyOptimistic: () {
-        study.invites!.remove(model);
-        studyRepository.upsertLocally(study);
-      },
+      applyOptimistic: () {},
       apply: () => apiClient.deleteStudyInvite(model),
-      rollback: () {
-        study.invites = prevInvites;
-        studyRepository.upsertLocally(study);
-      },
+      rollback: () {},
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
     );
