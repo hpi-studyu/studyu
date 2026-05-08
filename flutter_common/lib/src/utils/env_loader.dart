@@ -128,7 +128,7 @@ Future<String> findWorkingSupabaseUrl(
       await client
           .from('app_config')
           .select()
-          .eq('id', 'eq.prod')
+          .eq('id', 'prod')
           .limit(1)
           .maybeSingle()
           .timeout(
