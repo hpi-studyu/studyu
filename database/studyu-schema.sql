@@ -640,7 +640,7 @@ ALTER TABLE ONLY "public"."subject_progress"
 
 
 ALTER TABLE ONLY "public"."repo"
-    ADD CONSTRAINT "repo_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id");
+    ADD CONSTRAINT "repo_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id") ON DELETE CASCADE;
 
 
 
@@ -650,12 +650,12 @@ ALTER TABLE ONLY "public"."repo"
 
 
 ALTER TABLE ONLY "public"."study_fitbit_credentials"
-    ADD CONSTRAINT "study_fitbit_credentials_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id");
+    ADD CONSTRAINT "study_fitbit_credentials_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id") ON DELETE CASCADE;
 
 
 
 ALTER TABLE ONLY "public"."study_invite"
-    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id");
+    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id") ON DELETE CASCADE;
 
 
 
@@ -665,7 +665,7 @@ ALTER TABLE ONLY "public"."study_subject"
 
 
 ALTER TABLE ONLY "public"."study_subject"
-    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id");
+    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."study"("id") ON DELETE CASCADE;
 
 
 
