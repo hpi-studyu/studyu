@@ -706,9 +706,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     final min = dateMinControl.value;
     final max = dateMaxControl.value;
 
-    // Check if min is greater than max
-    if (min != null && max != null && min.isAfter(max)) {
-      return {'minGreaterThanMax': true};
+    if (min != null && max != null) {
+      final minNormalized = DateTime(min.year, min.month, min.day);
+      final maxNormalized = DateTime(max.year, max.month, max.day);
+      if (minNormalized.isAfter(maxNormalized)) {
+        return {'minGreaterThanMax': true};
+      }
     }
 
     return null;

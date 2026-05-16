@@ -46,7 +46,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void _finishQuestionnaire(QuestionnaireState? result) =>
       widget.onComplete?.call(result);
 
-  void _onQuestionCleared() {
+  void _onQuestionCleared(String questionId) {
+    qs.answers.remove(questionId);
     _finishQuestionnaire(null);
   }
 
@@ -59,7 +60,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         containerKey: containerKey,
         question: question,
         onDone: _onQuestionDone,
-        onCleared: _onQuestionCleared,
+        onCleared: () => _onQuestionCleared(question.id),
         index: shownQuestions.length,
         taskId: widget.taskId,
       ),

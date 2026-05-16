@@ -1538,22 +1538,10 @@ abstract class AppLocalizations {
   /// **'The latest time participants can select'**
   String get date_max_time_label_helper;
 
-  /// No description provided for @date_preview_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Preview'**
-  String get date_preview_label;
-
-  /// No description provided for @date_preview_helper.
-  ///
-  /// In en, this message translates to:
-  /// **'This is how the date picker will appear to participants in the app'**
-  String get date_preview_helper;
-
   /// No description provided for @date_validation_min_greater_than_max.
   ///
   /// In en, this message translates to:
-  /// **'Minimum date cannot be greater than maximum date'**
+  /// **'Earliest date cannot be after the latest date'**
   String get date_validation_min_greater_than_max;
 
   /// No description provided for @date_picker_button_label_datetime.

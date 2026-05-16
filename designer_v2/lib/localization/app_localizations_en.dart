@@ -813,15 +813,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'The latest time participants can select';
 
   @override
-  String get date_preview_label => 'Preview';
-
-  @override
-  String get date_preview_helper =>
-      'This is how the date picker will appear to participants in the app';
-
-  @override
   String get date_validation_min_greater_than_max =>
-      'Minimum date cannot be greater than maximum date';
+      'Earliest date cannot be after the latest date';
 
   @override
   String get date_picker_button_label_datetime => 'Select date';

@@ -823,15 +823,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die späteste Zeit, die Teilnehmer auswählen können';
 
   @override
-  String get date_preview_label => 'Vorschau';
-
-  @override
-  String get date_preview_helper =>
-      'So wird der Datumspicker den Teilnehmern in der App angezeigt';
-
-  @override
   String get date_validation_min_greater_than_max =>
-      'Das Mindestdatum darf nicht nach dem Höchstdatum liegen';
+      'Das früheste Datum darf nicht nach dem spätesten Datum liegen';
 
   @override
   String get date_picker_button_label_datetime => 'Datum auswählen';

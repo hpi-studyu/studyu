@@ -126,12 +126,12 @@ class DateQuestion extends Question<DateTime> {
       case DefaultDateOption.none:
         return null;
       case DefaultDateOption.today:
-        if (isDateOnly) {
+        if (isDate) {
           return DateTime.now();
         }
         return null;
       case DefaultDateOption.now:
-        if (isTimeOnly) {
+        if (isDateTime) {
           return DateTime.now();
         }
         return null;
@@ -144,18 +144,17 @@ class DateQuestion extends Question<DateTime> {
   }
 
   String? getInitialTimeValue() {
-    if (!isTimeOnly && !isDateTime) return null;
+    if (!isTime) return null;
 
     switch (defaultOption) {
       case DefaultDateOption.none:
+      case DefaultDateOption.today:
         return null;
       case DefaultDateOption.now:
         final now = DateTime.now();
         return '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
       case DefaultDateOption.specific:
         return defaultSpecificTime;
-      default:
-        return null;
     }
   }
 }

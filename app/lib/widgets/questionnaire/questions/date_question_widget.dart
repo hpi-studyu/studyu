@@ -46,20 +46,17 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         minute: int.parse(parts[1]),
       );
     }
-
-    // For datetime, initialize date to today if time-only default is set
-    if (widget.question.isDateTime &&
-        _selectedDate == null &&
-        widget.question.defaultOption == DefaultDateOption.now) {
-      _selectedDate = DateTime.now();
-    }
   }
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
     final initialDate = _selectedDate ?? now;
     final firstDate = widget.question.minDate ?? DateTime(1900);
-    final lastDate = widget.question.maxDate ?? DateTime(2100);
+    // Use end of day for maxDate to include the full last day
+    final maxDate = widget.question.maxDate;
+    final lastDate = maxDate != null
+        ? DateTime(maxDate.year, maxDate.month, maxDate.day, 23, 59, 59)
+        : DateTime(2100);
 
     final pickedDate = await showDatePicker(
       context: context,
@@ -173,8 +170,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
     setState(() {
       _selectedDate = null;
       _selectedTime = null;
+      _hasInteracted = false;
     });
-    _initializeDefaults();
     widget.onCleared?.call();
   }
 
