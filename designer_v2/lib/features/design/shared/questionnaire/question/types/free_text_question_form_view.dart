@@ -175,17 +175,6 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                 text: tr.free_text_type_custom_explanation,
                 style: ThemeConfig.bodyTextMuted(theme),
               ),
-              const SizedBox(height: 16.0),
-              generateRow(
-                label: tr.free_text_custom_error_message_label,
-                labelHelpText: tr.free_text_custom_error_message_helper,
-                input: ReactiveTextField(
-                  formControl: formViewModel.customErrorMessageControl,
-                  decoration: InputDecoration(
-                    hintText: tr.free_text_custom_error_message_hint,
-                  ),
-                ),
-              ),
             ],
           ),
         const SizedBox(height: 16.0),
@@ -234,15 +223,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                             ValidationMessage.maxLength: (error) =>
                                 tr.free_text_validation_max_length(maxLength),
                             ValidationMessage.pattern: (error) =>
-                                (isCustomType &&
-                                        formViewModel
-                                            .customErrorMessageControl
-                                            .value
-                                            ?.isNotEmpty ==
-                                            true)
-                                    ? formViewModel
-                                          .customErrorMessageControl.value!
-                                    : tr.free_text_validation_pattern,
+                                tr.free_text_validation_pattern,
                             ValidationMessage.number: (error) =>
                                 tr.free_text_validation_number,
                           },

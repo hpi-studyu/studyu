@@ -667,17 +667,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Jede Eingabe, die nicht dem Ausdruck entspricht, wird abgelehnt. Die oben angegebenen Einschränkungen zur Zeichenlänge werden weiterhin angewendet. Ein führendes ^ Zeichen und ein abschließendes \$ Zeichen werden automatisch hinzugefügt.';
 
   @override
-  String get free_text_custom_error_message_label => 'Fehlermeldung';
-
-  @override
-  String get free_text_custom_error_message_helper =>
-      'Benutzerdefinierte Fehlermeldung, die den Teilnehmern angezeigt wird, wenn ihre Eingabe nicht dem Muster entspricht. Leer lassen für eine generische Meldung.';
-
-  @override
-  String get free_text_custom_error_message_hint =>
-      'z.B. Bitte geben Sie einen Code im Format XX-1234 ein';
-
-  @override
   String get free_text_example_label => 'Beispieltextfeld';
 
   @override

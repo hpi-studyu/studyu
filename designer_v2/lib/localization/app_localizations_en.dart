@@ -658,17 +658,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Any input that does not match the expression will be rejected. The input length constraints specified above are still applied. A leading ^ and trailing \$ character will be added automatically.';
 
   @override
-  String get free_text_custom_error_message_label => 'Error message';
-
-  @override
-  String get free_text_custom_error_message_helper =>
-      'Custom error message shown to participants when their input does not match the pattern. Leave empty for a generic message.';
-
-  @override
-  String get free_text_custom_error_message_hint =>
-      'e.g. Please enter a code in format: XX-1234';
-
-  @override
   String get free_text_example_label => 'Example text field';
 
   @override
