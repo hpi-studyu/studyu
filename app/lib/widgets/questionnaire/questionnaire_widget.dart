@@ -156,6 +156,12 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
 
+    // Check if the questionnaire should not continue
+    if (shouldContinue == false) {
+      _finishQuestionnaire(qs);
+      return;
+    }
+
     // Check if there are questions whose visibility depend on this question
     final hasConditionalDependencies = _isConditionalTarget(answer.question);
 

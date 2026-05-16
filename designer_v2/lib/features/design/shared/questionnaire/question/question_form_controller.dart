@@ -360,13 +360,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       FormControl<FreeTextQuestionType>(value: FreeTextQuestionType.any);
 
   final FormControl<String> customRegexControl = FormControl<String>();
-  final FormControl<String> customErrorMessageControl = FormControl<String>();
   late final FormArray freeTextResponseOptionsArray = FormArray([
     freeTextLengthMin,
     freeTextLengthMax,
     freeTextTypeControl,
     customRegexControl,
-    customErrorMessageControl,
   ]);
   late final AbstractControl<int> freeTextLengthMin = FormControl(
     value: freeTextLengthControl.value!.start.toInt(),
@@ -787,7 +785,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );
         freeTextTypeControl.value = data.textType;
         customRegexControl.value = data.textTypeExpression;
-        customErrorMessageControl.value = data.customTypeErrorMessage;
       case SurveyQuestionType.fitbit:
         fitbitQuestionTypesControl.forEach((key, value) {
           value.value = (data as FitbitQuestionFormData).types.contains(key);
@@ -858,7 +855,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           ], // required
           textType: freeTextTypeControl.value!,
           textTypeExpression: customRegexControl.value,
-          customTypeErrorMessage: customErrorMessageControl.value,
         );
       case SurveyQuestionType.image:
         return ImageQuestionFormData(
