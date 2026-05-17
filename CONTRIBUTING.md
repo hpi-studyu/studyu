@@ -84,11 +84,100 @@ and dependencies need to have all files generated, when being imported.
 
 We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
 guidelines for Dart and Flutter. Run `melos format` to format your code and
-`dart analyze` to check for any issues. For commit messages, we use the
-[Conventional Commits](https://www.conventionalcommits.org) format. For any new
-features or bug fixes, create a new branch and open a pull request.
+`dart analyze` to check for any issues.
 
-Please make sure to follow these guidelines when contributing to the project.
+## Commits
+
+We use [Conventional Commits](https://www.conventionalcommits.org) for all
+commit messages. The format is:
+
+```
+<type>(<scope>): <description>
+```
+
+Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`.
+Scopes match the package name: `app`, `designer`, `core`, `flutter_common`, `db`.
+
+Examples from this repo:
+
+- `fix: remove redundant fitbit label`
+- `feat(designer): move fitbit credentials to study-level`
+- `chore: update deps + ios deps`
+
+## Pull Requests
+
+For any new features or bug fixes, create a new branch and open a pull request.
+Every pull request should include the following:
+
+1. **Clear title** using Conventional Commits format (e.g.,
+   `fix(designer): resolve drag-and-drop issue`)
+2. **Description** explaining the change, motivation, and any related issues
+3. **Screenshot or video** demonstrating the changes — this is **required** for
+   all PRs. Use a screen recording for interactive changes and a screenshot for
+   static ones.
+4. **Testing steps** so reviewers can verify the change locally
+
+### PR Checklist
+
+- [ ] Code formatted with `melos format`
+- [ ] No analyzer warnings (`dart analyze`)
+- [ ] Generated files updated if models changed (`melos run generate`)
+- [ ] Screenshot or video of the changes attached
+- [ ] Description links related issues
+
+## Code Reviews — Conventional Comments
+
+We use [Conventional Comments](https://conventionalcomments.org/) for all review
+feedback. This standard makes the intent behind each comment clear and
+actionable.
+
+### Format
+
+```
+<label> [decorations]: <subject>
+
+[discussion]
+```
+
+### Labels
+
+| Label | Purpose |
+| --- | --- |
+| **praise:** | Highlight something positive. Leave at least one per review. |
+| **nitpick:** | Trivial preference-based request. Non-blocking by nature. |
+| **suggestion:** | Propose an improvement. Be explicit about *what* and *why*. |
+| **issue:** | Highlight a specific problem. Pair with a suggestion when possible. |
+| **todo:** | Small, necessary change that must be done before merging. |
+| **question:** | Ask for clarification when you're unsure if something is a problem. |
+| **thought:** | Share an idea that came up during review. Non-blocking. |
+| **chore:** | A process-related task needed before acceptance (e.g., run CI job). |
+| **note:** | Non-blocking observation the reader should be aware of. |
+
+### Decorations
+
+Add decorations in parentheses for extra context:
+
+- **(non-blocking)** — should not prevent merging
+- **(blocking)** — must be resolved before merging
+- **(if-minor)** — resolve only if the fix is trivial
+
+### Examples
+
+```
+suggestion (non-blocking): Consider extracting this into a helper method.
+
+It appears in three places and the logic is identical.
+```
+
+```
+issue (blocking): This query fetches all rows without pagination.
+
+On tables with 10k+ rows this will timeout. Can we add a LIMIT clause?
+```
+
+```
+praise: Great use of the builder pattern here — very readable.
+```
 
 ## Flutter Version Management
 
