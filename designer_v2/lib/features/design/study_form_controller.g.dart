@@ -89,7 +89,7 @@ final class StudyFormViewModelProvider
 }
 
 String _$studyFormViewModelHash() =>
-    r'a01564a7663f92d4351bc24971f769e6f87cf9b2';
+    r'70c7085fd10950d7231c14664a55d0f58f87e891';
 
 /// Provides the [FormViewModel] that is responsible for displaying and
 /// editing the study design form.
