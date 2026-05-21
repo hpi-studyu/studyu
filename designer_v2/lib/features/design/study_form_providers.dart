@@ -20,6 +20,7 @@ import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.da
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
 
 part 'study_form_providers.g.dart';
 
@@ -145,6 +146,7 @@ StudyFormViewModel studyPublishValidator(Ref ref, StudyID studyId) {
     fitbitCredentialsRepository: ref.watch(
       fitbitCredentialsRepositoryProvider(studyId),
     ),
+    notificationService: ref.watch(notificationServiceProvider),
     formData: state.studyValueRequired,
     validationSet: StudyFormValidationSet.publish,
   );
@@ -162,6 +164,7 @@ StudyFormViewModel studyTestValidator(Ref ref, StudyID studyId) {
     fitbitCredentialsRepository: ref.watch(
       fitbitCredentialsRepositoryProvider(studyId),
     ),
+    notificationService: ref.watch(notificationServiceProvider),
     formData: state.studyValueRequired,
   );
 }

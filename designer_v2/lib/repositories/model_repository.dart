@@ -59,6 +59,17 @@ class WrappedModel<T> {
     isLocalOnly = false;
     lastSaved = DateTime.now();
   }
+
+  void copyMetadataFrom(WrappedModel<T> other) {
+    asyncValue = other.asyncValue;
+    isMarkedForRefresh = other.isMarkedForRefresh;
+    isLocalOnly = other.isLocalOnly;
+    isDirty = other.isDirty;
+    isDeleted = other.isDeleted;
+    lastSaved = other.lastSaved;
+    lastFetched = other.lastFetched;
+    lastUpdated = other.lastUpdated;
+  }
 }
 
 class ModelRepositoryException implements Exception {}
@@ -338,12 +349,15 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     if (fetchOnSubscribe) {
       if (!(wrappedModel != null && wrappedModel.isLocalOnly) ||
           wrappedModel.isMarkedForRefresh) {
-        fetch(modelId).catchError((Object e) {
-          if (!modelController.isClosed) {
-            modelController.addError(e);
+        unawaited(() async {
+          try {
+            await fetch(modelId);
+          } catch (e, stackTrace) {
+            if (!modelController.isClosed) {
+              modelController.addError(e, stackTrace);
+            }
           }
-          return e as WrappedModel<T>;
-        });
+        }());
       }
     }
     if (wrappedModel?.isMarkedForRefresh ?? false) {
@@ -429,13 +443,21 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   WrappedModel<T> upsertLocally(T newModel, {bool emitUpdate = false}) {
     final newModelId = getKey(newModel);
     if (_allModels.containsKey(newModelId)) {
-      // print("Upserting existing model $newModelId locally");
-      // Model already exists, replace with the new object
-      final wrapped = _allModels[newModelId]!;
-      wrapped.model = newModel;
+      final existingWrappedModel = _allModels[newModelId]!;
+      final replacementWrappedModel = WrappedModel(newModel)
+        ..asyncValue = AsyncValue<T>.data(newModel)
+        ..isMarkedForRefresh = existingWrappedModel.isMarkedForRefresh
+        ..isLocalOnly = existingWrappedModel.isLocalOnly
+        ..isDirty = existingWrappedModel.isDirty
+        ..isDeleted = existingWrappedModel.isDeleted
+        ..lastSaved = existingWrappedModel.lastSaved
+        ..lastFetched = existingWrappedModel.lastFetched
+        ..lastUpdated = DateTime.now();
+      _allModels[newModelId] = replacementWrappedModel;
     } else {
       // Model does not exist locally yet, add it to the client-side list
-      _allModels[newModelId] = WrappedModel(newModel);
+      _allModels[newModelId] = WrappedModel(newModel)
+        ..lastUpdated = DateTime.now();
     }
     if (emitUpdate) {
       this.emitUpdate();

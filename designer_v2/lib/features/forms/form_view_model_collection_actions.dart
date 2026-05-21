@@ -60,20 +60,24 @@ extension FormViewModelCollectionActions<
 
   List<ModelAction> availablePopupActions(
     T formViewModel, {
+    VoidCallbackOn<T>? onDelete,
     bool isReadOnly = false,
   }) {
     return availableActions(
       formViewModel,
+      onDelete: onDelete,
       isReadOnly: isReadOnly,
     ).where((action) => action.type != ModelActionType.edit).toList();
   }
 
   List<ModelAction> availableInlineActions(
     T formViewModel, {
+    VoidCallbackOn<T>? onDelete,
     bool isReadOnly = false,
   }) {
     return availableActions(
       formViewModel,
+      onDelete: onDelete,
       isReadOnly: isReadOnly,
     ).where((action) => action.type == ModelActionType.edit).toList();
   }

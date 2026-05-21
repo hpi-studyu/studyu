@@ -37,6 +37,9 @@ class Result<T> {
             'bool' => Result<bool>.parseJson(
               json,
             )..result = json[keyResult] as bool,
+            'date' => Result<DateTime>.parseJson(
+              json,
+            )..result = DateTime.parse(json[keyResult] as String),
             _ => throw UnknownJsonTypeError(json[keyType]),
           }
           as Result<T>;
@@ -47,6 +50,7 @@ class Result<T> {
         keyResult: (result as QuestionnaireState).toJson(),
       },
       'bool' => {keyResult: result},
+      'date' => {keyResult: (result as DateTime).toIso8601String()},
       _ => throw ArgumentError('Unknown result type $type'),
     };
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);

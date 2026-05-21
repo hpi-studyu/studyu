@@ -12,6 +12,8 @@ import 'package:studyu_designer_v2/features/monitor/study_monitor_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
 
 class StudyMonitorScreen extends StudyPageWidget {
   const StudyMonitorScreen(super.studyId, {super.key});
@@ -27,7 +29,7 @@ class StudyMonitorScreen extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             if (studyMonitorData.isNotEmpty) ...[
-              _monitorSectionHeader(context, studyMonitorData),
+              _monitorSectionHeader(context, ref, study, studyMonitorData),
               const SizedBox(height: 32.0),
               SelectableText(
                 tr.monitoring_participants_title,
@@ -54,6 +56,8 @@ class StudyMonitorScreen extends StudyPageWidget {
 
   Widget _monitorSectionHeader(
     BuildContext context,
+    WidgetRef ref,
+    Study study,
     List<StudyMonitorItem> monitorData,
   ) {
     final theme = Theme.of(context);
@@ -101,6 +105,12 @@ class StudyMonitorScreen extends StudyPageWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (study.isDraft)
+          OutlinedButton.icon(
+            onPressed: () => _confirmDeleteTestData(context, ref, study),
+            icon: const Icon(Icons.delete_sweep_rounded),
+            label: Text('Purge Test Data'.hardcoded),
+          ),
         const Spacer(),
         SizedBox(
           width: 450,
@@ -175,6 +185,41 @@ class StudyMonitorScreen extends StudyPageWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _confirmDeleteTestData(
+    BuildContext context,
+    WidgetRef ref,
+    Study study,
+  ) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Purge draft test data?'.hardcoded),
+        content: Text(
+          'This removes all enrolled test subjects and their recorded progress '
+                  'from this draft study.'
+              .hardcoded,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(tr.dialog_cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text('Purge Test Data'.hardcoded),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete != true) {
+      return;
+    }
+
+    final studyRepository = ref.read(studyRepositoryProvider);
+    await studyRepository.deleteParticipants(study);
   }
 
   Widget _buildStat({

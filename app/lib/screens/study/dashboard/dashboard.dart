@@ -12,8 +12,11 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -38,6 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     with WidgetsBindingObserver {
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
+  bool _isVerifyingSubject = false;
 
   bool get showNextDay =>
       (kDebugMode || context.read<AppState>().isPreview) &&
@@ -47,15 +51,21 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _verifyActiveSubjectStillExists();
+    });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        setState(() {
-          scheduleToday = subject!.scheduleFor(DateTime.now());
-        });
+        if (subject != null) {
+          setState(() {
+            scheduleToday = subject!.scheduleFor(DateTime.now());
+          });
+        }
+        _verifyActiveSubjectStillExists();
       case AppLifecycleState.inactive:
         break;
       case AppLifecycleState.paused:
@@ -87,6 +97,48 @@ class _DashboardScreenState extends State<DashboardScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> _verifyActiveSubjectStillExists() async {
+    if (!mounted || subject == null || _isVerifyingSubject) {
+      return;
+    }
+
+    _isVerifyingSubject = true;
+    try {
+      final refreshedSubject = await SupabaseQuery.getById<StudySubject>(
+        subject!.id,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*, study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*))',
+          'subject_progress(*)',
+        ],
+      );
+      if (!mounted) return;
+      context.read<AppState>().activeSubject = refreshedSubject;
+      await Cache.storeSubject(refreshedSubject);
+      setState(() {
+        subject = refreshedSubject;
+        scheduleToday = refreshedSubject.scheduleFor(DateTime.now());
+      });
+    } on PostgrestException catch (error) {
+      if (error.code != 'PGRST116') {
+        return;
+      }
+      await deleteActiveStudyReference();
+      await Cache.delete();
+      if (!mounted) return;
+      final appState = context.read<AppState>();
+      appState.activeSubject = null;
+      appState.selectedStudy = null;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.studySelection,
+        (_) => false,
+      );
+    } finally {
+      _isVerifyingSubject = false;
+    }
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
@@ -13,9 +14,13 @@ import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dar
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
@@ -32,6 +37,8 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   InterventionsFormViewModel({
     required this.study,
     required this.router,
+    required this.studyRepository,
+    required this.notificationService,
     super.delegate,
     super.formData,
     super.autosave = true,
@@ -40,6 +47,8 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   final Study study;
   final GoRouter router;
+  final IStudyRepository studyRepository;
+  final INotificationService notificationService;
 
   // - Form fields
 
@@ -124,6 +133,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     final actions = interventionsCollection.availableActions(
       model,
       onEdit: onSelectItem,
+      onDelete: onDeleteItem,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -132,6 +142,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   List<ModelAction> availablePopupActions(InterventionFormViewModel model) {
     final actions = interventionsCollection.availablePopupActions(
       model,
+      onDelete: onDeleteItem,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -140,6 +151,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   List<ModelAction> availableInlineActions(InterventionFormViewModel model) {
     final actions = interventionsCollection.availableInlineActions(
       model,
+      onDelete: onDeleteItem,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -160,6 +172,62 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     router.dispatch(
       RoutingIntents.studyEditIntervention(studyId, Config.newModelId),
     );
+  }
+
+  void onDeleteItem(InterventionFormViewModel item) {
+    final affectedParticipants = (study.participants ?? [])
+        .where(
+          (participant) =>
+              participant.selectedInterventionIds.contains(item.interventionId),
+        )
+        .toList();
+
+    if (!study.isDraft || affectedParticipants.isEmpty) {
+      _deleteIntervention(item);
+      return;
+    }
+
+    final interventionTitle = item.formData?.title ?? 'this intervention';
+    notificationService.show(
+      AlertIntent(
+        title: 'Delete intervention?'.hardcoded,
+        message:
+            'This draft study already has enrolled test subjects connected to '
+                    "'$interventionTitle'. Remove those test subjects before deleting "
+                    'the intervention.'
+                .hardcoded,
+        icon: Icons.warning_rounded,
+        actions: [
+          NotificationAction(
+            label: 'Go Back'.hardcoded,
+            onSelect: () => Future.value(),
+          ),
+          NotificationAction(
+            label:
+                'Delete Affected Test Subjects & Remove Intervention'.hardcoded,
+            isDestructive: true,
+            onSelect: () async {
+              await studyRepository.deleteSpecificParticipants(
+                study,
+                affectedParticipants,
+              );
+              await _deleteIntervention(item);
+              notificationService.showMessage(
+                'Deleted affected test subjects and removed intervention.'
+                    .hardcoded,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteIntervention(InterventionFormViewModel item) {
+    interventionsCollection.removeWhere(
+      (viewModel) => viewModel.interventionId == item.interventionId,
+    );
+    return save();
   }
 
   // - IProviderArgsResolver

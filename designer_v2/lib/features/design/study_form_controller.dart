@@ -25,6 +25,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
 
 part 'study_form_controller.g.dart';
 
@@ -35,6 +36,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     required this.studyRepository,
     required this.authRepository,
     required this.fitbitCredentialsRepository,
+    required this.notificationService,
     required super.formData, // Study
     super.validationSet = StudyFormValidationSet.draft,
   }) {
@@ -49,6 +51,7 @@ class StudyFormViewModel extends FormViewModel<Study>
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
   final IFitbitCredentialsRepository fitbitCredentialsRepository;
+  final INotificationService notificationService;
   final GoRouter router;
 
   bool get isStudyReadonly =>
@@ -94,6 +97,8 @@ class StudyFormViewModel extends FormViewModel<Study>
         delegate: this,
         study: formData!,
         router: router,
+        studyRepository: studyRepository,
+        notificationService: notificationService,
         validationSet: validationSet,
       );
 
@@ -198,6 +203,7 @@ StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
     fitbitCredentialsRepository: ref.watch(
       fitbitCredentialsRepositoryProvider(studyId),
     ),
+    notificationService: ref.watch(notificationServiceProvider),
     formData: state.studyValueRequired,
   );
 }

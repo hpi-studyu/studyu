@@ -40,11 +40,7 @@ Study _$StudyFromJson(
   ..reportSpecification = Study._reportSpecificationFromJson(
     json['report_specification'],
   )
-  ..results =
-      (json['results'] as List<dynamic>?)
-          ?.map((e) => StudyResult.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      []
+  ..results = Study._studyResultsFromJson(json['results'])
   ..collaboratorEmails =
       (json['collaborator_emails'] as List<dynamic>?)
           ?.map((e) => e as String)

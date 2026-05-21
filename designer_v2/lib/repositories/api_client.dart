@@ -137,9 +137,15 @@ class StudyUApiClient extends SupabaseClientDependant
     if (participants.isEmpty) {
       return Future.value([]);
     }
-    final selectionCriteria = participants.first.foreignKey(study);
-    final request = deleteAll<StudySubject>(selectionCriteria);
-    return _awaitGuarded(request);
+    final deletedParticipants = <StudySubject>[];
+    for (final participant in participants) {
+      final request = deleteAll<StudySubject>({
+        ...participant.foreignKey(study),
+        ...participant.primaryKeys,
+      });
+      deletedParticipants.addAll(await _awaitGuarded(request));
+    }
+    return deletedParticipants;
   }
 
   /*

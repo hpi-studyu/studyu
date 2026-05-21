@@ -22,6 +22,10 @@ part 'study_repository.g.dart';
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
+  Future<void> deleteSpecificParticipants(
+    Study study,
+    List<StudySubject> participants,
+  );
   Future<void> close(Study study);
   // Future<void> deleteProgress(Study study);
 }
@@ -64,14 +68,93 @@ class StudyRepository extends ModelRepository<Study>
     }
 
     final List<StudySubject> participants = [...study.participants ?? []];
+    final List<SubjectProgress> participantsProgress = [
+      ...study.participantsProgress ?? [],
+    ];
 
     final deleteParticipantsOperation = OptimisticUpdate(
-      applyOptimistic: () => study.participants = [],
+      applyOptimistic: () {
+        final updatedStudy = study.exactDuplicate()
+          ..participants = []
+          ..participantsProgress = [];
+        upsertLocally(updatedStudy);
+      },
       apply: () async {
         await apiClient.deleteParticipants(study, participants);
-        upsertLocally(study);
+        final updatedStudy = study.exactDuplicate()
+          ..participants = []
+          ..participantsProgress = [];
+        upsertLocally(updatedStudy);
       },
-      rollback: () => study.participants = participants,
+      rollback: () {
+        final rolledBackStudy = study.exactDuplicate()
+          ..participants = participants
+          ..participantsProgress = participantsProgress;
+        upsertLocally(rolledBackStudy);
+      },
+      onUpdate: () => emitUpdate(),
+      onError: (e, stackTrace) {
+        get(study.id)?.markWithError(e);
+        emitError(modelStreamControllers[study.id], e, stackTrace);
+      },
+      rethrowErrors: true,
+    );
+
+    return deleteParticipantsOperation.execute();
+  }
+
+  @override
+  Future<void> deleteSpecificParticipants(
+    Study study,
+    List<StudySubject> participants,
+  ) {
+    final wrappedModel = get(study.id);
+    if (wrappedModel == null) {
+      throw ModelNotFoundException();
+    }
+
+    if (participants.isEmpty) {
+      return Future.value();
+    }
+
+    final List<StudySubject> previousParticipants = [
+      ...study.participants ?? [],
+    ];
+    final List<SubjectProgress> previousProgress = [
+      ...study.participantsProgress ?? [],
+    ];
+    final participantIds = participants
+        .map((participant) => participant.id)
+        .toSet();
+
+    final deleteParticipantsOperation = OptimisticUpdate(
+      applyOptimistic: () {
+        final updatedStudy = study.exactDuplicate()
+          ..participants = previousParticipants
+              .where((participant) => !participantIds.contains(participant.id))
+              .toList()
+          ..participantsProgress = previousProgress
+              .where((progress) => !participantIds.contains(progress.subjectId))
+              .toList();
+        upsertLocally(updatedStudy);
+      },
+      apply: () async {
+        await apiClient.deleteParticipants(study, participants);
+        final updatedStudy = study.exactDuplicate()
+          ..participants = previousParticipants
+              .where((participant) => !participantIds.contains(participant.id))
+              .toList()
+          ..participantsProgress = previousProgress
+              .where((progress) => !participantIds.contains(progress.subjectId))
+              .toList();
+        upsertLocally(updatedStudy);
+      },
+      rollback: () {
+        final rolledBackStudy = study.exactDuplicate()
+          ..participants = previousParticipants
+          ..participantsProgress = previousProgress;
+        upsertLocally(rolledBackStudy);
+      },
       onUpdate: () => emitUpdate(),
       onError: (e, stackTrace) {
         get(study.id)?.markWithError(e);

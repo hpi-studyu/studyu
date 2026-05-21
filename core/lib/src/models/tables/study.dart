@@ -76,7 +76,7 @@ class Study extends SupabaseObjectFunctions<Study>
   late StudySchedule schedule = StudySchedule();
   @JsonKey(name: 'report_specification', fromJson: _reportSpecificationFromJson)
   late ReportSpecification reportSpecification = ReportSpecification();
-  @JsonKey(defaultValue: [])
+  @JsonKey(defaultValue: [], fromJson: _studyResultsFromJson)
   late List<StudyResult> results = [];
   @JsonKey(name: 'collaborator_emails', defaultValue: [])
   late List<String> collaboratorEmails = [];
@@ -149,6 +149,29 @@ class Study extends SupabaseObjectFunctions<Study>
       return ReportSpecification.fromJson(json);
     }
     return ReportSpecification();
+  }
+
+  static List<StudyResult> _studyResultsFromJson(dynamic json) {
+    if (json is! List<dynamic>) {
+      return [];
+    }
+    final parsedResults = <StudyResult>[];
+    const supportedTypes = {
+      InterventionResult.studyResultType,
+      NumericResult.studyResultType,
+    };
+    for (final resultJson in json) {
+      if (resultJson is! Map<String, dynamic>) {
+        continue;
+      }
+      final dynamic type = resultJson[StudyResult.keyType];
+      if (!supportedTypes.contains(type)) {
+        // Keep backwards compatibility with legacy/unknown result types.
+        continue;
+      }
+      parsedResults.add(StudyResult.fromJson(resultJson));
+    }
+    return parsedResults;
   }
 
   factory Study.fromJson(Map<String, dynamic> json) {
