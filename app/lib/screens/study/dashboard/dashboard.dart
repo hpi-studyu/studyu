@@ -112,6 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         forceMaterialTransparency: true,
         actions: [
           IconButton(
+            key: const ValueKey('dashboard_contact'),
             tooltip: AppLocalizations.of(context)!.contact,
             icon: Icon(MdiIcons.faceAgent),
             onPressed: () {
@@ -119,6 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             },
           ),
           IconButton(
+            key: const ValueKey('dashboard_report'),
             tooltip: AppLocalizations.of(context)!.current_report,
             icon: Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(
@@ -127,6 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             ),
           ),
           PopupMenuButton<OverflowMenuItem>(
+            key: const ValueKey('dashboard_menu'),
             onSelected: (value) {
               if (value.routeName != null) {
                 Navigator.pushNamed(context, value.routeName!);

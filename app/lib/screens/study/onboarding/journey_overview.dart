@@ -51,6 +51,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('journey_overview_screen'),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
         leading: Icon(MdiIcons.mapMarkerPath),
@@ -69,6 +70,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('journey_overview_next'),
         onNext: () => getConsentAndNavigateToDashboard(context),
         progress: const OnboardingProgress(stage: 2, progress: 0.5),
       ),
@@ -87,12 +89,14 @@ class Timeline extends StatelessWidget {
     final interventionsInOrder = subject!.getInterventionsInOrder();
     final now = DateTime.now();
     return Column(
+      key: const ValueKey('journey_timeline'),
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ...interventionsInOrder.asMap().entries.map((entry) {
           final index = entry.key;
           final intervention = entry.value;
           return InterventionTile(
+            key: ValueKey('journey_intervention_tile_$index'),
             title: intervention.name,
             iconName: intervention.icon,
             color: intervention.isBaseline()
@@ -105,6 +109,7 @@ class Timeline extends StatelessWidget {
           );
         }),
         InterventionTile(
+          key: const ValueKey('journey_results_tile'),
           title: AppLocalizations.of(context)!.journey_results_available,
           iconName: 'flagCheckered',
           color: Colors.green,

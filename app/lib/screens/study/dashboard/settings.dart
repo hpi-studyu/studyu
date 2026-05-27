@@ -55,6 +55,7 @@ class _SettingsState extends State<Settings> {
             Text('${AppLocalizations.of(context)!.language}:'),
             const SizedBox(width: 5),
             DropdownButton<Locale>(
+              key: const ValueKey('settings_language_dropdown'),
               value: _selectedValue,
               items: dropDownItems,
               onChanged: (value) {
@@ -79,6 +80,7 @@ class _SettingsState extends State<Settings> {
             ),
             const SizedBox(width: 5),
             Switch(
+              key: const ValueKey('settings_analytics_switch'),
               value: _analyticsValue!,
               onChanged: (value) {
                 setState(() {
@@ -97,6 +99,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      key: const ValueKey('settings_screen'),
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: Center(
         child: Column(
@@ -111,6 +114,7 @@ class _SettingsState extends State<Settings> {
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
+              key: const ValueKey('settings_opt_out'),
               icon: Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context)!.opt_out),
               style: ElevatedButton.styleFrom(
@@ -125,6 +129,7 @@ class _SettingsState extends State<Settings> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
+              key: const ValueKey('settings_delete_data'),
               icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context)!.delete_data),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -151,6 +156,7 @@ class OptOutAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
+      key: const ValueKey('opt_out_dialog'),
       title: Text('${AppLocalizations.of(context)!.opt_out}?'),
       content: RichText(
         text: TextSpan(
@@ -171,6 +177,7 @@ class OptOutAlertDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton.icon(
+          key: const ValueKey('opt_out_confirm'),
           icon: Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
@@ -200,10 +207,12 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    key: const ValueKey('delete_data_dialog'),
     title: Text('${AppLocalizations.of(context)!.delete_data}?'),
     content: Text(AppLocalizations.of(context)!.hard_delete_desc),
     actions: [
       ElevatedButton.icon(
+        key: const ValueKey('delete_data_confirm'),
         icon: const Icon(Icons.delete),
         label: Text(AppLocalizations.of(context)!.delete_data),
         style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

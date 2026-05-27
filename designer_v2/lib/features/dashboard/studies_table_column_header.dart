@@ -33,6 +33,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     final theme = Theme.of(context);
 
     return MouseEventsRegion(
+      key: ValueKey('studies_table_column_header_${widget.title}'),
       builder: (context, state) {
         return Row(
           mainAxisAlignment: widget.center
