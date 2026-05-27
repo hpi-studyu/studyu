@@ -106,7 +106,7 @@ class _InterventionSelectionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
-        leading: Icon(MdiIcons.formatListChecks),
+        leading: const Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(
         child: Center(

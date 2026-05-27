@@ -125,7 +125,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-    leading: Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    leading: const Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
     content: Text(
       AppLocalizations.of(context)!.eligible_yes,
       style: Theme.of(context).textTheme.titleMedium,
@@ -136,7 +136,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   );
 
   Widget _constructFailBanner() => MaterialBanner(
-    leading: Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
+    leading: const Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -177,7 +177,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),
-        leading: Icon(MdiIcons.clipboardList),
+        leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [

@@ -22,7 +22,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(MdiIcons.food, size: 80, color: Colors.black),
@@ -72,7 +72,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -112,7 +112,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -152,7 +152,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -192,7 +192,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -201,7 +201,7 @@ class AboutScreen extends StatelessWidget {
                         color: Colors.blue,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'of',
                         textAlign: TextAlign.center,
@@ -246,7 +246,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -286,7 +286,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -326,7 +326,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -378,7 +378,7 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: 40),
                 if (context.read<AppState>().activeSubject == null)
                   OutlinedButton.icon(
-                    icon: Icon(MdiIcons.rocket),
+                    icon: const Icon(MdiIcons.rocket),
                     onPressed: () => Navigator.pushNamed(context, Routes.terms),
                     label: Text(
                       AppLocalizations.of(context)!.get_started,

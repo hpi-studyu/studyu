@@ -32,7 +32,7 @@ class _ProgressRowState extends State<ProgressRow> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(MdiIcons.run, size: 30),
+              const Icon(MdiIcons.run, size: 30),
               const SizedBox(width: 8),
               ...intersperseIndexed(
                 (index) => Expanded(
@@ -64,7 +64,7 @@ class _ProgressRowState extends State<ProgressRow> {
                 }),
               ),
               const SizedBox(width: 8),
-              Icon(MdiIcons.flagCheckered, size: 30),
+              const Icon(MdiIcons.flagCheckered, size: 30),
             ],
           ),
         ],

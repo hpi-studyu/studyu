@@ -113,14 +113,14 @@ class _DashboardScreenState extends State<DashboardScreen>
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context)!.contact,
-            icon: Icon(MdiIcons.faceAgent),
+            icon: const Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: AppLocalizations.of(context)!.current_report,
-            icon: Icon(MdiIcons.chartBar),
+            icon: const Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(
               context,
               ReportDetailsScreen.routeFor(subject: subject!),
@@ -399,7 +399,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.reportHistory),
-              icon: Icon(MdiIcons.history, size: 24),
+              icon: const Icon(MdiIcons.history, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.report_history,
                 style: const TextStyle(fontSize: 16),
@@ -409,7 +409,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.studySelection),
-              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
+              icon: const Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.study_selection,
                 style: const TextStyle(fontSize: 16),

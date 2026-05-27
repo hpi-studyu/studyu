@@ -111,7 +111,7 @@ class _SettingsState extends State<Settings> {
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
-              icon: Icon(MdiIcons.exitToApp),
+              icon: const Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context)!.opt_out),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[800],
@@ -171,7 +171,7 @@ class OptOutAlertDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton.icon(
-          icon: Icon(MdiIcons.exitToApp),
+          icon: const Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
           onPressed: () async {

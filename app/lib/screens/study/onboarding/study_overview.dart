@@ -71,7 +71,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(MdiIcons.textLong),
+        leading: const Icon(MdiIcons.textLong),
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: SingleChildScrollView(

@@ -130,7 +130,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   children: [
                     MaterialBanner(
                       padding: const EdgeInsets.all(8),
-                      leading: Icon(
+                      leading: const Icon(
                         MdiIcons.exclamationThick,
                         color: Colors.orange,
                         size: 32,
@@ -196,7 +196,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
-                  icon: Icon(MdiIcons.key),
+                  icon: const Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(
                       context: context,

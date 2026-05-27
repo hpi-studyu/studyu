@@ -393,9 +393,9 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   void sortAction(int i, {PointerEvent? hover}) {
     if (!widget.inputColumns[i].sortable) return;
 
-    final ascendingIcon = Icon(MdiIcons.arrowUp);
-    final descendingIcon = Icon(MdiIcons.arrowDown);
-    final hoveredIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
+    const ascendingIcon = Icon(MdiIcons.arrowUp);
+    const descendingIcon = Icon(MdiIcons.arrowDown);
+    const hoveredIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
 
     setState(() {
       // Clicked

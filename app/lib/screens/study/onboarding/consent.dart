@@ -74,7 +74,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.consent),
-        leading: Icon(MdiIcons.textBoxCheck),
+        leading: const Icon(MdiIcons.textBoxCheck),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),

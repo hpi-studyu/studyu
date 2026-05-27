@@ -36,7 +36,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
-                icon: Icon(MdiIcons.accountBox),
+                icon: const Icon(MdiIcons.accountBox),
                 onPressed: () => Navigator.pushNamed(context, Routes.contact),
                 label: Text(
                   AppLocalizations.of(context)!.contact,
@@ -45,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
-                icon: Icon(MdiIcons.frequentlyAskedQuestions),
+                icon: const Icon(MdiIcons.frequentlyAskedQuestions),
                 onPressed: () => Navigator.pushNamed(context, Routes.faq),
                 label: Text(
                   AppLocalizations.of(context)!.faq,
@@ -54,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               OutlinedButton.icon(
-                icon: Icon(MdiIcons.rocket, size: 30),
+                icon: const Icon(MdiIcons.rocket, size: 30),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
                 label: Text(
                   AppLocalizations.of(context)!.get_started,

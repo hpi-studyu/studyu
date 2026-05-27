@@ -65,10 +65,10 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   }
 
   Icon? _getIcon() {
-    final ascendingIcon = Icon(MdiIcons.arrowUp);
-    final descendingIcon = Icon(MdiIcons.arrowDown);
-    final hoveredAscendingIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
-    final hoveredDescendingIcon = Icon(MdiIcons.arrowDown, color: Colors.grey);
+    const ascendingIcon = Icon(MdiIcons.arrowUp);
+    const descendingIcon = Icon(MdiIcons.arrowDown);
+    const hoveredAscendingIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
+    const hoveredDescendingIcon = Icon(MdiIcons.arrowDown, color: Colors.grey);
 
     if (!widget.sortable) {
       return null;
