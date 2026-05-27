@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/util/intervention.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
