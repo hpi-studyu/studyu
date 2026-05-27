@@ -69,7 +69,11 @@ class _KickoffScreen extends State<KickoffScreen> {
           width: 64,
           child: CircularProgressIndicator(),
         )
-      : const Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 64);
+      : const Icon(
+          MdiIcons.checkboxMarkedCircle,
+          color: Colors.green,
+          size: 64,
+        );
 
   String _getStatusText(BuildContext context) => !ready
       ? AppLocalizations.of(context)!.setting_up_study

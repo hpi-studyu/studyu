@@ -125,7 +125,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-    leading: const Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    leading: const Icon(
+      MdiIcons.checkboxMarkedCircle,
+      color: Colors.green,
+      size: 32,
+    ),
     content: Text(
       AppLocalizations.of(context)!.eligible_yes,
       style: Theme.of(context).textTheme.titleMedium,
