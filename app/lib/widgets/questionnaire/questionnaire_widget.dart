@@ -46,20 +46,51 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void _finishQuestionnaire(QuestionnaireState? result) =>
       widget.onComplete?.call(result);
 
+  QuestionContainer _buildQuestionContainer({
+    required Question question,
+    required int index,
+    required GlobalKey containerKey,
+    required bool isLastQuestion,
+    Key? key,
+  }) {
+    return QuestionContainer(
+      key: key,
+      containerKey: containerKey,
+      question: question,
+      onDone: _onQuestionDone,
+      onInvalid: _onQuestionInvalid,
+      index: index,
+      taskId: widget.taskId,
+      isLastQuestion: isLastQuestion,
+    );
+  }
+
+  void _refreshLastQuestionFlags() {
+    for (int i = 0; i < shownQuestions.length; i++) {
+      final current = shownQuestions[i];
+      shownQuestions[i] = _buildQuestionContainer(
+        key: current.key,
+        containerKey: current.containerKey!,
+        question: current.question,
+        index: current.index,
+        isLastQuestion: i == shownQuestions.length - 1,
+      );
+    }
+  }
+
   void _addQuestionToList(Question question) {
     final containerKey = GlobalKey();
     questionKeys.add(containerKey);
     shownQuestions.add(
-      QuestionContainer(
+      _buildQuestionContainer(
         key: UniqueKey(),
         containerKey: containerKey,
         question: question,
-        onDone: _onQuestionDone,
-        onInvalid: _onQuestionInvalid,
         index: shownQuestions.length,
-        taskId: widget.taskId,
+        isLastQuestion: true,
       ),
     );
+    _refreshLastQuestionFlags();
   }
 
   bool _isConditionalTarget(String questionIdToCheck) {
@@ -97,6 +128,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       if (widget.questions[i].shouldBeShown(qs)) {
         _addQuestionToList(widget.questions[i]);
         _listKey.currentState?.insertItem(shownQuestions.length - 1);
+        setState(_refreshLastQuestionFlags);
 
         return widget.questions[i];
       } else {
@@ -138,12 +170,14 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               SizeTransition(sizeFactor: animation, child: removedQuestion),
         );
       }
+      setState(_refreshLastQuestionFlags);
     }
   }
 
   void _onQuestionInvalid(int index) {
     final questionId = shownQuestions[index].question.id;
     qs.answers.remove(questionId);
+    _resetQuestionnaireTo(questionId);
     _finishQuestionnaire(null);
   }
 

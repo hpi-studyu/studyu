@@ -11,12 +11,14 @@ class FreeTextQuestionWidget extends QuestionWidget {
   final FreeTextQuestion question;
   final Function(Answer)? onDone;
   final Function()? onInvalid;
+  final bool isLastQuestion;
 
   const FreeTextQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
     this.onInvalid,
+    this.isLastQuestion = true,
   });
 
   @override
@@ -29,7 +31,10 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _focusNode = FocusNode();
   bool _hasInteracted = false;
   bool _hasSubmitted = false;
+  bool _hasPendingNonLastChange = false;
   bool _reactiveValidationArmed = false;
+  bool _requiresExplicitSubmit = false;
+  String? _lastSubmittedValue;
   Timer? _debounceTimer;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
@@ -70,7 +75,10 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   }
 
   void _handleAutoSubmit() {
-    if (_hasInteracted && !_hasSubmitted) {
+    if (widget.isLastQuestion &&
+        _hasInteracted &&
+        !_hasSubmitted &&
+        !_requiresExplicitSubmit) {
       _handleSubmit();
     }
     // Do not reset submitted state on blur — a valid answer remains valid
@@ -81,17 +89,36 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     _debounceTimer?.cancel();
     FocusScope.of(context).unfocus();
     final text = value ?? _textFieldController.text;
-    _validateAndSubmit(text);
+    _validateAndSubmit(text, forceSubmit: true);
   }
 
-  void _validateAndSubmit(String value) {
+  void _validateAndSubmit(String value, {bool forceSubmit = false}) {
     if (_formFieldKey.currentState?.validate() == true) {
-      widget.onDone?.call(widget.question.constructAnswer(value));
-      _hasSubmitted = true;
-      _reactiveValidationArmed = true;
+      if (_hasSubmitted &&
+          value != _lastSubmittedValue &&
+          !widget.isLastQuestion) {
+        if (!_hasPendingNonLastChange) {
+          widget.onInvalid?.call();
+        }
+        _hasSubmitted = false;
+        _hasPendingNonLastChange = true;
+        _requiresExplicitSubmit = true;
+        return;
+      }
+
+      if (widget.isLastQuestion && (forceSubmit || !_requiresExplicitSubmit)) {
+        widget.onDone?.call(widget.question.constructAnswer(value));
+        _hasSubmitted = true;
+        _hasPendingNonLastChange = false;
+        _reactiveValidationArmed = true;
+        _requiresExplicitSubmit = false;
+        _lastSubmittedValue = value;
+      }
     } else if (_hasSubmitted) {
       widget.onInvalid?.call();
       _hasSubmitted = false;
+      _hasPendingNonLastChange = false;
+      _requiresExplicitSubmit = !widget.isLastQuestion;
     }
   }
 
@@ -221,16 +248,18 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             }
           },
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            OutlinedButton(
-              onPressed: _handleSubmit,
-              child: Text(AppLocalizations.of(context)!.submit),
-            ),
-          ],
-        ),
+        if (widget.isLastQuestion) ...[
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OutlinedButton(
+                onPressed: _handleSubmit,
+                child: Text(AppLocalizations.of(context)!.submit),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }

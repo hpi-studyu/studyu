@@ -23,8 +23,91 @@ Widget setup(Widget child) {
 
 void main() {
   testWidgets(
+    'valid edit of completed non-last free text resets flow before resubmit',
+    (tester) async {
+      final q1 = FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.custom,
+        lengthRange: [1, 100],
+        customTypeExpression: r'\d+',
+      )..id = 'q1';
+      final q2 = FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.any,
+        lengthRange: [1, 100],
+      )..id = 'q2';
+
+      final List<Map<String, Object?>?> snapshots = [];
+
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        setup(
+          QuestionnaireWidget(
+            [q1, q2],
+            onComplete: (state) {
+              snapshots.add(_snapshot(state));
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField).first, '2');
+      await tester.pump();
+      await tester.tap(find.text('Submit').first);
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField).last, 'later');
+      await tester.pump();
+      await tester.tap(find.text('Submit').last);
+      await tester.pumpAndSettle();
+
+      final firstCompletion = snapshots.firstWhere((s) => s != null)!;
+      expect(firstCompletion['q1'], '2');
+      expect(firstCompletion['q2'], 'later');
+      final completionCountBeforeEdit = snapshots
+          .where((s) => s != null)
+          .length;
+
+      await tester.enterText(find.byType(TextFormField).first, '23');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pumpAndSettle();
+
+      expect(
+        snapshots.where((s) => s == null).length,
+        equals(1),
+        reason: 'valid non-last edit should invalidate completed questionnaire',
+      );
+      expect(
+        snapshots.where((s) => s != null).length,
+        equals(completionCountBeforeEdit),
+        reason: 'stale q1 answer should not complete again',
+      );
+      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.text('Submit'), findsOneWidget);
+
+      await tester.tap(find.text('Submit'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TextFormField), findsNWidgets(2));
+
+      await tester.enterText(find.byType(TextFormField).last, 'later again');
+      await tester.pump();
+      await tester.tap(find.text('Submit').last);
+      await tester.pumpAndSettle();
+
+      final finalCompletion = snapshots.where((s) => s != null).last!;
+      expect(finalCompletion['q1'], '23');
+      expect(finalCompletion['q2'], 'later again');
+    },
+  );
+
+  testWidgets(
     'invalidating a non-final question fires null callback exactly once, '
-    're-completes after correction',
+    'valid edits wait for explicit submit when question is not last',
     (tester) async {
       final q1 = FreeTextQuestion.withId(
         textType: FreeTextQuestionType.custom,
@@ -132,22 +215,19 @@ void main() {
       await tester.pump(const Duration(milliseconds: 350));
       await tester.pump();
 
-      // Expect a new completion snapshot with updated Q1
+      // Valid edit is not auto-submitted while Q1 is not the last visible
+      // question, so completion stays invalid until explicit Submit is possible.
       final completionsAfterFix = snapshots.where((s) => s != null).toList();
       expect(
         completionsAfterFix.length,
-        equals(nonNullCountBeforeInvalid + 1),
-        reason: 'should have one more completion after fixing Q1',
+        equals(nonNullCountBeforeInvalid),
+        reason: 'non-last valid edit should not re-complete via debounce',
       );
 
-      final reCompletion = completionsAfterFix.last;
-      expect(
-        reCompletion!['q1'],
-        '456',
-        reason: 're-completion should have updated Q1 value',
-      );
-      expect(reCompletion['q2'], 'second');
-      expect(reCompletion['q3'], 'third');
+      final lastCompletion = completionsAfterFix.last;
+      expect(lastCompletion!['q1'], '123');
+      expect(lastCompletion['q2'], 'second');
+      expect(lastCompletion['q3'], 'third');
 
       // Still exactly one null invalidation
       expect(

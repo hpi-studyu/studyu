@@ -101,6 +101,236 @@ void main() {
   });
 
   testWidgets(
+    'non-last submitted answer invalidates once but does not resubmit valid edits',
+    (tester) async {
+      final question = FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.custom,
+        lengthRange: [1, 10],
+        customTypeExpression: r'\d+',
+      );
+
+      int onDoneCount = 0;
+      int onInvalidCount = 0;
+      Answer<String>? lastAnswer;
+
+      Widget build({required bool isLastQuestion}) {
+        return setup(
+          FreeTextQuestionWidget(
+            question: question,
+            isLastQuestion: isLastQuestion,
+            onDone: (answer) {
+              onDoneCount++;
+              lastAnswer = answer as Answer<String>;
+            },
+            onInvalid: () {
+              onInvalidCount++;
+            },
+          ),
+        );
+      }
+
+      await tester.pumpWidget(build(isLastQuestion: true));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField), '123');
+      await tester.pump();
+      await tester.tap(find.text('Submit'));
+      await tester.pumpAndSettle();
+
+      expect(onDoneCount, equals(1));
+      expect(lastAnswer?.response, equals('123'));
+
+      await tester.pumpWidget(build(isLastQuestion: false));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Submit'), findsNothing);
+
+      await tester.enterText(find.byType(TextFormField), 'abc');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(onInvalidCount, equals(1));
+      expect(onDoneCount, equals(1));
+
+      await tester.enterText(find.byType(TextFormField), 'xyz');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(onInvalidCount, equals(1));
+      expect(onDoneCount, equals(1));
+
+      await tester.enterText(find.byType(TextFormField), '456');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(onInvalidCount, equals(1));
+      expect(
+        onDoneCount,
+        equals(1),
+        reason: 'non-last valid edit must wait for explicit submit',
+      );
+      expect(lastAnswer?.response, equals('123'));
+    },
+  );
+
+  testWidgets(
+    'non-last valid edit after submit invalidates once and keeps old answer',
+    (tester) async {
+      final question = FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.custom,
+        lengthRange: [1, 10],
+        customTypeExpression: r'\d+',
+      );
+
+      int onDoneCount = 0;
+      int onInvalidCount = 0;
+      Answer<String>? lastAnswer;
+
+      Widget build({required bool isLastQuestion}) {
+        return setup(
+          FreeTextQuestionWidget(
+            question: question,
+            isLastQuestion: isLastQuestion,
+            onDone: (answer) {
+              onDoneCount++;
+              lastAnswer = answer as Answer<String>;
+            },
+            onInvalid: () {
+              onInvalidCount++;
+            },
+          ),
+        );
+      }
+
+      await tester.pumpWidget(build(isLastQuestion: true));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField), '2');
+      await tester.pump();
+      await tester.tap(find.text('Submit'));
+      await tester.pumpAndSettle();
+
+      expect(onDoneCount, equals(1));
+      expect(lastAnswer?.response, equals('2'));
+      expect(onInvalidCount, equals(0));
+
+      await tester.pumpWidget(build(isLastQuestion: false));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField), '23');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(onInvalidCount, equals(1));
+      expect(onDoneCount, equals(1));
+      expect(lastAnswer?.response, equals('2'));
+
+      await tester.enterText(find.byType(TextFormField), '234');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(
+        onInvalidCount,
+        equals(1),
+        reason:
+            'pending valid non-last edits should not duplicate invalidation',
+      );
+      expect(onDoneCount, equals(1));
+      expect(lastAnswer?.response, equals('2'));
+    },
+  );
+
+  testWidgets('keyboard done does not submit hidden non-last free text field', (
+    tester,
+  ) async {
+    final question = FreeTextQuestion.withId(
+      textType: FreeTextQuestionType.custom,
+      lengthRange: [1, 10],
+      customTypeExpression: r'\d+',
+    );
+
+    int onDoneCount = 0;
+    int onInvalidCount = 0;
+    Answer<String>? lastAnswer;
+
+    Widget build({required bool isLastQuestion}) {
+      return setup(
+        FreeTextQuestionWidget(
+          question: question,
+          isLastQuestion: isLastQuestion,
+          onDone: (answer) {
+            onDoneCount++;
+            lastAnswer = answer as Answer<String>;
+          },
+          onInvalid: () {
+            onInvalidCount++;
+          },
+        ),
+      );
+    }
+
+    await tester.pumpWidget(build(isLastQuestion: true));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextFormField), '123');
+    await tester.pump();
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    expect(onDoneCount, equals(1));
+    expect(lastAnswer?.response, equals('123'));
+    expect(onInvalidCount, equals(0));
+
+    await tester.pumpWidget(build(isLastQuestion: false));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Submit'), findsNothing);
+
+    await tester.enterText(find.byType(TextFormField), '456');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump();
+
+    expect(onInvalidCount, equals(1));
+    expect(onDoneCount, equals(1));
+
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(
+      onDoneCount,
+      equals(1),
+      reason: 'keyboard Done must not submit hidden non-last field',
+    );
+    expect(onInvalidCount, equals(1));
+    expect(lastAnswer?.response, equals('123'));
+  });
+
+  testWidgets('Submit button is hidden when not last question', (tester) async {
+    final question = FreeTextQuestion.withId(
+      textType: FreeTextQuestionType.any,
+      lengthRange: [1, 10],
+    );
+
+    await tester.pumpWidget(setup(FreeTextQuestionWidget(question: question)));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Submit'), findsOneWidget);
+
+    await tester.pumpWidget(
+      setup(FreeTextQuestionWidget(question: question, isLastQuestion: false)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Submit'), findsNothing);
+  });
+
+  testWidgets(
     'initial valid typing does NOT call onDone via debounce before explicit submit',
     (tester) async {
       final question = FreeTextQuestion.withId(
