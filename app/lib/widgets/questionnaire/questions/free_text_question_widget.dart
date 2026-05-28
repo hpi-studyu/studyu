@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -28,6 +29,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _focusNode = FocusNode();
   bool _hasInteracted = false;
   bool _hasSubmitted = false;
+  bool _reactiveValidationArmed = false;
   Timer? _debounceTimer;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
@@ -70,17 +72,13 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   void _handleAutoSubmit() {
     if (_hasInteracted && !_hasSubmitted) {
       _handleSubmit();
-    } else {
-      FocusScope.of(context).unfocus();
-      _hasInteracted = false;
-      _hasSubmitted = false;
-      setState(() {
-        _autovalidateMode = AutovalidateMode.disabled;
-      });
     }
+    // Do not reset submitted state on blur — a valid answer remains valid
+    // even after focus changes.
   }
 
   void _handleSubmit([String? value]) {
+    _debounceTimer?.cancel();
     FocusScope.of(context).unfocus();
     final text = value ?? _textFieldController.text;
     _validateAndSubmit(text);
@@ -90,6 +88,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (_formFieldKey.currentState?.validate() == true) {
       widget.onDone?.call(widget.question.constructAnswer(value));
       _hasSubmitted = true;
+      _reactiveValidationArmed = true;
     } else if (_hasSubmitted) {
       widget.onInvalid?.call();
       _hasSubmitted = false;
@@ -108,11 +107,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   void _debouncedValidation() {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 300), () {
-      if (mounted && _hasInteracted) {
-        _formFieldKey.currentState?.validate();
-        if (_hasSubmitted) {
-          _validateAndSubmit(_textFieldController.text);
-        }
+      if (mounted && _reactiveValidationArmed) {
+        _validateAndSubmit(_textFieldController.text);
       }
     });
   }
@@ -167,31 +163,30 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             _handleSubmit(value);
           },
           validator: (value) {
+            final input = value ?? '';
             final minLength = question.lengthRange.first;
 
-            if (value!.isEmpty && minLength == 0) {
-              return null;
-            }
+            if (question.textType != FreeTextQuestionType.custom) {
+              if (input.isEmpty && minLength == 0) {
+                return null;
+              }
 
-            if (value.length < minLength) {
-              return AppLocalizations.of(
-                context,
-              )!.free_text_min_length_error(minLength);
-            } else if (value.length > question.lengthRange.last) {
-              return AppLocalizations.of(
-                context,
-              )!.free_text_max_length_error(question.lengthRange.last);
-            }
-
-            if (value.isEmpty && minLength == 0) {
-              return null;
+              if (input.length < minLength) {
+                return AppLocalizations.of(
+                  context,
+                )!.free_text_min_length_error(minLength);
+              } else if (input.length > question.lengthRange.last) {
+                return AppLocalizations.of(
+                  context,
+                )!.free_text_max_length_error(question.lengthRange.last);
+              }
             }
 
             switch (question.textType) {
               case FreeTextQuestionType.any:
                 return null;
               case FreeTextQuestionType.alphanumeric:
-                if (RegExp(alphanumericPattern).hasMatch(value)) {
+                if (RegExp(alphanumericPattern).hasMatch(input)) {
                   return null;
                 } else {
                   return AppLocalizations.of(
@@ -199,7 +194,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                   )!.free_text_alphanumeric_error;
                 }
               case FreeTextQuestionType.numeric:
-                if (RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                if (RegExp(r'^-?[0-9]+$').hasMatch(input)) {
                   return null;
                 } else {
                   return AppLocalizations.of(context)!.free_text_numeric_error;
@@ -211,11 +206,16 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                 }
                 try {
                   final regex = RegExp('^(?:$expression)\$');
-                  if (regex.hasMatch(value)) {
+                  if (regex.hasMatch(input)) {
                     return null;
                   }
-                } on FormatException {
-                  // Invalid regex pattern
+                } on FormatException catch (error) {
+                  if (kDebugMode) {
+                    debugPrint(
+                      'Invalid custom regex for free text question '
+                      '${question.id}: $error',
+                    );
+                  }
                 }
                 return AppLocalizations.of(context)!.free_text_custom_error;
             }

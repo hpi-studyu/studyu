@@ -147,6 +147,12 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     _finishQuestionnaire(null);
   }
 
+  bool _allShownQuestionsAnswered() {
+    return shownQuestions.every(
+      (shownQuestion) => qs.answers.containsKey(shownQuestion.question.id),
+    );
+  }
+
   void _onQuestionDone(Answer answer, int index) {
     if (kDebugMode) {
       debugPrint(
@@ -198,6 +204,13 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       if (insertedQuestion != null) {
         _scrollToNewQuestion();
       }
+      return;
+    }
+
+    // A previously shown question was answered again. If every currently
+    // visible question already has a valid answer, restore the completed state.
+    if (_allShownQuestionsAnswered()) {
+      _finishQuestionnaire(qs);
     }
   }
 
