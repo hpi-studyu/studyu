@@ -25,6 +25,7 @@ dependencies:
   flutter_local_notifications: ^21.0.0
   flutter_localizations:
     sdk: flutter
+  flutter_material_design_icons: ^3.1.0+7447
   flutter_native_splash: ^2.4.7
   flutter_svg: ^2.3.0
   flutter_timezone: ^5.0.2
