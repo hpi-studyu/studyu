@@ -21,6 +21,7 @@ class QuestionContainer extends StatefulWidget {
   final int index;
   final String? taskId;
   final GlobalKey? containerKey;
+  final bool isLastQuestion;
 
   const QuestionContainer({
     required this.onDone,
@@ -29,6 +30,7 @@ class QuestionContainer extends StatefulWidget {
     required this.index,
     this.taskId,
     this.containerKey,
+    this.isLastQuestion = true,
     super.key,
   });
 
@@ -90,6 +92,7 @@ class _QuestionContainerState extends State<QuestionContainer>
           question: freeTextQuestion,
           onDone: _onDone,
           onInvalid: _onInvalid,
+          isLastQuestion: widget.isLastQuestion,
         );
       case final FitbitQuestion fitbitQuestion:
         return FitbitQuestionWidget(
