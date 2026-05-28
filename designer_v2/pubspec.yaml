@@ -24,13 +24,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  flutter_material_design_icons: ^3.1.0+7447
   flutter_riverpod: ^3.3.1
   flutter_web_plugins:
     sdk: flutter
   go_router: ^17.1.0
   intl: ^0.20.2
   material_color_utilities: ^0.13.0 # integration_test
-  material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^9.0.0
   pointer_interceptor: ^0.10.1+2
   reactive_color_picker: ^2.2.2

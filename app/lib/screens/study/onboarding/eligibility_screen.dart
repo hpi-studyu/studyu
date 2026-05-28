@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -126,7 +126,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   Widget _constructPassBanner() => MaterialBanner(
     key: const ValueKey('eligibility_pass_banner'),
-    leading: Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    leading: const Icon(
+      MdiIcons.checkboxMarkedCircle,
+      color: Colors.green,
+      size: 32,
+    ),
     content: Text(
       AppLocalizations.of(context)!.eligible_yes,
       style: Theme.of(context).textTheme.titleMedium,
@@ -138,7 +142,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   Widget _constructFailBanner() => MaterialBanner(
     key: const ValueKey('eligibility_fail_banner'),
-    leading: Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
+    leading: const Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -181,7 +185,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),
-        leading: Icon(MdiIcons.clipboardList),
+        leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [

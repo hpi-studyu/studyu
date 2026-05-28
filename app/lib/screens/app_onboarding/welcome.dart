@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/debug_screen.dart';
@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 key: const ValueKey('welcome_contact'),
-                icon: Icon(MdiIcons.accountBox),
+                icon: const Icon(MdiIcons.accountBox),
                 onPressed: () => Navigator.pushNamed(context, Routes.contact),
                 label: Text(
                   AppLocalizations.of(context)!.contact,
@@ -48,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 key: const ValueKey('welcome_faq'),
-                icon: Icon(MdiIcons.frequentlyAskedQuestions),
+                icon: const Icon(MdiIcons.frequentlyAskedQuestions),
                 onPressed: () => Navigator.pushNamed(context, Routes.faq),
                 label: Text(
                   AppLocalizations.of(context)!.faq,
@@ -58,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
               OutlinedButton.icon(
                 key: const ValueKey('welcome_get_started'),
-                icon: Icon(MdiIcons.rocket, size: 30),
+                icon: const Icon(MdiIcons.rocket, size: 30),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
                 label: Text(
                   AppLocalizations.of(context)!.get_started,

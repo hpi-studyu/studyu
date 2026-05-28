@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -65,7 +65,7 @@ class ReportHistoryItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Icon(
-                  MdiIcons.fromString(subject.study.iconName) ??
+                  MdiIconsHelper.fromString(subject.study.iconName) ??
                       MdiIcons.accountHeart,
                   color: isActiveStudy ? Colors.white : Colors.black,
                 ),

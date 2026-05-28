@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -134,7 +134,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   children: [
                     MaterialBanner(
                       padding: const EdgeInsets.all(8),
-                      leading: Icon(
+                      leading: const Icon(
                         MdiIcons.exclamationThick,
                         color: Colors.orange,
                         size: 32,
@@ -202,7 +202,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
                   key: const ValueKey('study_selection_invite_code'),
-                  icon: Icon(MdiIcons.key),
+                  icon: const Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(
                       context: context,

@@ -27,6 +27,7 @@ dependencies:
   flutter_local_notifications: ^21.0.0
   flutter_localizations:
     sdk: flutter
+  flutter_material_design_icons: ^3.1.0+7447
   flutter_native_splash: ^2.4.7
   flutter_svg: ^2.2.4
   flutter_timezone: ^5.0.2
@@ -37,7 +38,6 @@ dependencies:
   intersperse: ^2.0.0
   intl: ^0.20.2
   introduction_screen: ^3.1.14
-  material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^9.0.0
   path: ^1.9.1
   path_drawing: ^1.0.1

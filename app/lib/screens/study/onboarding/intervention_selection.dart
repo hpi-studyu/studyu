@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -109,7 +109,7 @@ class _InterventionSelectionScreenState
       key: const ValueKey('intervention_selection_screen'),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
-        leading: Icon(MdiIcons.formatListChecks),
+        leading: const Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(
         child: Center(

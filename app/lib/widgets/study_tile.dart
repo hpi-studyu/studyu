@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudyTile extends StatelessWidget {
   final String? title;
@@ -57,7 +57,7 @@ class StudyTile extends StatelessWidget {
           ),
           subtitle: Center(child: Text(description ?? '')),
           leading: Icon(
-            MdiIcons.fromString(iconName),
+            MdiIconsHelper.fromString(iconName),
             color: theme.primaryColor,
           ),
         ),
