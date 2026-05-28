@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 enum StudiesTableColumn {
   pin,
@@ -51,6 +52,11 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
+    this.isLoadingMore = false,
+    this.hasMore = false,
+    this.advancedFilterUnsupported = false,
+    this.loadError,
+    this.onRetry,
     this.itemHeight = 60.0,
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
@@ -74,9 +80,20 @@ class StudiesTable extends StatelessWidget {
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
+  final bool isLoadingMore;
+  final bool hasMore;
+  final bool advancedFilterUnsupported;
+  final Object? loadError;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
+    if (advancedFilterUnsupported) {
+      return _AdvancedFilterUnsupportedNotice(onRetry: onRetry);
+    }
+    if (studies.isEmpty && loadError != null) {
+      return _LoadErrorNotice(error: loadError!, onRetry: onRetry);
+    }
     if (studies.isEmpty) {
       return emptyWidget;
     }
@@ -238,6 +255,7 @@ class StudiesTable extends StatelessWidget {
               itemCount: studies.length,
               itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 final item = studies[index];
                 return StudiesTableItem(
@@ -256,6 +274,12 @@ class StudiesTable extends StatelessWidget {
                   onTap: (study) => onSelect.call(study),
                 );
               },
+            ),
+            _StudiesTableFooter(
+              isLoadingMore: isLoadingMore,
+              hasMore: hasMore,
+              loadError: loadError,
+              onRetry: onRetry,
             ),
           ],
         );
@@ -307,6 +331,134 @@ class StudiesTable extends StatelessWidget {
               );
             }
           : null,
+    );
+  }
+}
+
+class _StudiesTableFooter extends StatelessWidget {
+  const _StudiesTableFooter({
+    required this.isLoadingMore,
+    required this.hasMore,
+    required this.loadError,
+    required this.onRetry,
+  });
+
+  final bool isLoadingMore;
+  final bool hasMore;
+  final Object? loadError;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    if (loadError != null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: TextButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text("Retry".hardcoded),
+          ),
+        ),
+      );
+    }
+    if (isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+    if (!hasMore) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: Text(
+            "End of list".hardcoded,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
+  }
+}
+
+class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
+  const _AdvancedFilterUnsupportedNotice({required this.onRetry});
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.filter_alt_off_outlined,
+              color: Theme.of(context).hintColor,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "This filter cannot be applied server-side and is not currently supported."
+                  .hardcoded,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            if (onRetry != null) ...[
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: onRetry,
+                child: Text("Reset filter".hardcoded),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadErrorNotice extends StatelessWidget {
+  const _LoadErrorNotice({required this.error, required this.onRetry});
+  final Object error;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline),
+            const SizedBox(height: 8),
+            Text(
+              "Failed to load studies.".hardcoded,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            if (onRetry != null) ...[
+              const SizedBox(height: 8),
+              TextButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh),
+                label: Text("Retry".hardcoded),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

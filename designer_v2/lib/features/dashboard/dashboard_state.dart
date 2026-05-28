@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -12,23 +11,59 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
+  static const pageSize = 25;
 
   const DashboardState({
-    this.studies = const AsyncValue.loading(),
+    this.loadedStudies = const [],
+    this.pinnedStudiesList = const [],
+    this.totalCount = 0,
+    this.isLoadingInitial = true,
+    this.isLoadingMore = false,
+    this.isLoadingPinned = false,
+    this.hasMore = true,
+    this.loadError,
     this.studiesFilter = defaultFilter,
     this.activeFilter,
+    this.advancedFilterUnsupported = false,
     this.query = '',
-    this.sortByColumn = StudiesTableColumn.title,
-    this.sortAscending = true,
+    this.sortByColumn = StudiesTableColumn.createdAt,
+    this.sortAscending = false,
     this.savedFilters = const [],
     this.selectedSavedFilterId,
     required this.currentUser,
     required this.searchController,
   });
 
-  /// The list of studies that can be accessed by the current user
-  /// Wrapped in an [AsyncValue] to represent loading / error states
-  final AsyncValue<List<Study>> studies;
+  /// Paginated studies fetched so far (excludes pinned, which render above).
+  final List<Study> loadedStudies;
+
+  /// Pinned studies fetched separately, always shown above the paginated list.
+  final List<Study> pinnedStudiesList;
+
+  /// Total number of studies that match the current query (from PostgREST
+  /// exact count). Used to know when [hasMore] should flip to false.
+  final int totalCount;
+
+  /// True while the first page (and pinned set) is loading.
+  final bool isLoadingInitial;
+
+  /// True while a "load more" page is in flight.
+  final bool isLoadingMore;
+
+  /// True while pinned studies are being refreshed.
+  final bool isLoadingPinned;
+
+  /// Whether more pages remain on the server.
+  final bool hasMore;
+
+  /// Last error from a fetch attempt, or null.
+  final Object? loadError;
+
+  /// True if the current [activeFilter] contains a condition that cannot be
+  /// expressed in PostgREST (e.g. [StudyProperty.missedDays]). When true the
+  /// list is empty and the UI should show a "filter not supported" message
+  /// rather than silently dropping rows.
+  final bool advancedFilterUnsupported;
 
   /// Currently selected filter preset (e.g. Owned, Shared, Public)
   /// Used for UI highlighting. If null, a custom filter is active.
@@ -44,12 +79,10 @@ class DashboardState extends Equatable {
   /// List of saved custom filters
   final List<SavedFilter> savedFilters;
 
-  /// Currently selected sort column to be applied to the list of studies
-  /// in order to determine the [displayedStudies]
+  /// Currently selected sort column applied server-side.
   final StudiesTableColumn sortByColumn;
 
-  /// Currently selected sort direction to be applied to the list of studies
-  /// in order to determine the [displayedStudies]
+  /// Currently selected sort direction applied server-side.
   final bool sortAscending;
 
   /// Currently authenticated user (used for filtering studies)
@@ -60,161 +93,29 @@ class DashboardState extends Equatable {
   /// Search controller for managing search functionality
   final SearchController searchController;
 
-  /// The currently displayed list of studies as by the selected filter,
-  /// selected sort column, and selected sort direction
-  ///
-  /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
-  /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> displayedStudies(
-    Set<String> pinnedStudies,
-    String query,
-  ) {
-    return studies.when(
-      data: (studies) {
-        List<Study> updatedStudies = filter(studiesToFilter: studies);
-        updatedStudies = sort(
-          pinnedStudies: pinnedStudies,
-          studiesToSort: updatedStudies,
-        );
-        return AsyncValue.data(updatedStudies);
-      },
-      error: (error, _) => AsyncValue.error(error, StackTrace.current),
-      loading: () => const AsyncValue.loading(),
-    );
-  }
-
-  List<Study> filter({List<Study>? studiesToFilter}) {
-    final studiesList = studiesToFilter ?? studies.value!;
-
-    // 1. Apply Advanced Filter (or fallback to preset logic)
-    // If both are null, default to ALL (empty group)
-    final baseFilter = studiesFilter?.toFilterGroup(currentUser);
-    final FilterGroup filterGroup;
-
-    if (baseFilter != null && activeFilter != null) {
-      filterGroup = FilterGroup(children: [baseFilter, activeFilter!]);
-    } else {
-      filterGroup = activeFilter ?? baseFilter ?? FilterGroup();
+  /// Studies actually rendered: pinned first, then the paginated list.
+  /// Wrapped in [AsyncValue] for backwards-compatible UI scaffolding that
+  /// expects a loading/error/data tri-state for the initial fetch.
+  AsyncValue<List<Study>> get displayedStudies {
+    if (loadError != null && loadedStudies.isEmpty && pinnedStudiesList.isEmpty) {
+      return AsyncValue.error(loadError!, StackTrace.current);
     }
-    final filteredByLogic = studiesList.where(
-      (s) => FilterEvaluator.evaluate(filterGroup, s, currentUser),
-    );
-
-    // 2. Apply Search Query
-    if (query.isNotEmpty) {
-      return filteredByLogic
-          .where((s) => s.title!.toLowerCase().contains(query))
-          .toList();
+    if (isLoadingInitial && loadedStudies.isEmpty && pinnedStudiesList.isEmpty) {
+      return const AsyncValue.loading();
     }
-    return filteredByLogic.toList();
-  }
-
-  List<Study> sort({
-    required Set<String> pinnedStudies,
-    List<Study>? studiesToSort,
-  }) {
-    final sortedStudies = studiesToSort ?? studies.value!;
-    switch (sortByColumn) {
-      case StudiesTableColumn.title:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) => study.title!.compareTo(other.title!),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) => other.title!.compareTo(study.title!),
-          );
-        }
-      case StudiesTableColumn.status:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) => study.status.index.compareTo(other.status.index),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) => other.status.index.compareTo(study.status.index),
-          );
-        }
-      case StudiesTableColumn.participation:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) =>
-                study.participation.index.compareTo(other.participation.index),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) =>
-                other.participation.index.compareTo(study.participation.index),
-          );
-        }
-      case StudiesTableColumn.createdAt:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) => study.createdAt!.compareTo(other.createdAt!),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) => other.createdAt!.compareTo(study.createdAt!),
-          );
-        }
-      case StudiesTableColumn.enrolled:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) =>
-                study.participantCount.compareTo(other.participantCount),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) =>
-                other.participantCount.compareTo(study.participantCount),
-          );
-        }
-      case StudiesTableColumn.active:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) =>
-                study.activeSubjectCount.compareTo(other.activeSubjectCount),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) =>
-                other.activeSubjectCount.compareTo(study.activeSubjectCount),
-          );
-        }
-      case StudiesTableColumn.completed:
-        if (sortAscending) {
-          sortedStudies.sort(
-            (study, other) => study.endedCount.compareTo(other.endedCount),
-          );
-        } else {
-          sortedStudies.sort(
-            (study, other) => other.endedCount.compareTo(study.endedCount),
-          );
-        }
-      case StudiesTableColumn.pin:
-      case StudiesTableColumn.action:
-        break;
-    }
-
-    if (pinnedStudies.isNotEmpty) {
-      // Extract pinned studies and remove them from filteredStudies
-      final List<Study> pinned = [];
-      sortedStudies.removeWhere((study) {
-        if (pinnedStudies.contains(study.id)) {
-          pinned.add(study);
-          return true;
-        }
-        return false;
-      });
-
-      // Insert pinned studies at the beginning of the filteredStudies list
-      sortedStudies.insertAll(0, pinned);
-    }
-    return sortedStudies;
+    return AsyncValue.data([...pinnedStudiesList, ...loadedStudies]);
   }
 
   DashboardState copyWith({
-    AsyncValue<List<Study>> Function()? studies,
+    List<Study> Function()? loadedStudies,
+    List<Study> Function()? pinnedStudiesList,
+    int? totalCount,
+    bool? isLoadingInitial,
+    bool? isLoadingMore,
+    bool? isLoadingPinned,
+    bool? hasMore,
+    Object? Function()? loadError,
+    bool? advancedFilterUnsupported,
     StudiesFilter? Function()? studiesFilter,
     FilterGroup? Function()? activeFilter,
     List<SavedFilter> Function()? savedFilters,
@@ -226,7 +127,20 @@ class DashboardState extends Equatable {
     String? Function()? selectedSavedFilterId,
   }) {
     return DashboardState(
-      studies: studies != null ? studies() : this.studies,
+      loadedStudies: loadedStudies != null
+          ? loadedStudies()
+          : this.loadedStudies,
+      pinnedStudiesList: pinnedStudiesList != null
+          ? pinnedStudiesList()
+          : this.pinnedStudiesList,
+      totalCount: totalCount ?? this.totalCount,
+      isLoadingInitial: isLoadingInitial ?? this.isLoadingInitial,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      isLoadingPinned: isLoadingPinned ?? this.isLoadingPinned,
+      hasMore: hasMore ?? this.hasMore,
+      loadError: loadError != null ? loadError() : this.loadError,
+      advancedFilterUnsupported:
+          advancedFilterUnsupported ?? this.advancedFilterUnsupported,
       studiesFilter: studiesFilter != null
           ? studiesFilter()
           : this.studiesFilter,
@@ -247,7 +161,15 @@ class DashboardState extends Equatable {
 
   @override
   List<Object?> get props => [
-    studies,
+    loadedStudies,
+    pinnedStudiesList,
+    totalCount,
+    isLoadingInitial,
+    isLoadingMore,
+    isLoadingPinned,
+    hasMore,
+    loadError,
+    advancedFilterUnsupported,
     studiesFilter,
     activeFilter,
     savedFilters,

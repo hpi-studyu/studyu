@@ -30,12 +30,38 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  ScrollPosition? _scrollPosition;
 
   @override
   void initState() {
     super.initState();
     final controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final position = Scrollable.maybeOf(context)?.position;
+    if (position != _scrollPosition) {
+      _scrollPosition?.removeListener(_onScroll);
+      _scrollPosition = position;
+      _scrollPosition?.addListener(_onScroll);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollPosition?.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final p = _scrollPosition;
+    if (p == null || !p.hasContentDimensions) return;
+    if (p.pixels >= p.maxScrollExtent - 400) {
+      ref.read(dashboardControllerProvider.notifier).loadMore();
+    }
   }
 
   @override
@@ -523,16 +549,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 return AsyncValueWidget<List<Study>>(
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
-                  value: state.displayedStudies(
-                    snapshot.data!.preferences.pinnedStudies,
-                    state.query,
-                  ),
+                  value: state.displayedStudies,
                   data: (visibleStudies) => StudiesTable(
                     studies: visibleStudies,
                     pinnedStudies: snapshot.data!.preferences.pinnedStudies,
                     dashboardController: ref.watch(
                       dashboardControllerProvider.notifier,
                     ),
+                    isLoadingMore: state.isLoadingMore,
+                    hasMore: state.hasMore,
+                    advancedFilterUnsupported: state.advancedFilterUnsupported,
+                    loadError: state.loadError,
+                    onRetry: controller.retry,
                     onSelect: controller.onSelectStudy,
                     getActions: controller.availableActions,
                     emptyWidget:

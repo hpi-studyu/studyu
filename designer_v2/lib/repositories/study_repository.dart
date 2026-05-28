@@ -5,6 +5,9 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -16,6 +19,7 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'study_repository.g.dart';
 
@@ -24,6 +28,20 @@ abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> deleteParticipants(Study study);
   Future<void> close(Study study);
   // Future<void> deleteProgress(Study study);
+
+  Future<StudiesPage> fetchPage({
+    required int offset,
+    required int limit,
+    required StudiesTableColumn sortBy,
+    required bool ascending,
+    required StudiesFilter preset,
+    required User currentUser,
+    String? searchQuery,
+    FilterGroup? advancedFilter,
+    List<String> excludeIds,
+  });
+
+  Future<List<Study>> fetchPinned(Set<String> pinnedIds);
 }
 
 class StudyRepository extends ModelRepository<Study>
@@ -137,6 +155,40 @@ class StudyRepository extends ModelRepository<Study>
     );
 
     return publishOperation.execute();
+  }
+
+  @override
+  Future<StudiesPage> fetchPage({
+    required int offset,
+    required int limit,
+    required StudiesTableColumn sortBy,
+    required bool ascending,
+    required StudiesFilter preset,
+    required User currentUser,
+    String? searchQuery,
+    FilterGroup? advancedFilter,
+    List<String> excludeIds = const [],
+  }) async {
+    final page = await apiClient.getUserStudiesPage(
+      offset: offset,
+      limit: limit,
+      sortBy: sortBy,
+      ascending: ascending,
+      preset: preset,
+      currentUser: currentUser,
+      searchQuery: searchQuery,
+      advancedFilter: advancedFilter,
+      excludeIds: excludeIds,
+    );
+    upsertAllLocally(page.studies);
+    return page;
+  }
+
+  @override
+  Future<List<Study>> fetchPinned(Set<String> pinnedIds) async {
+    final studies = await apiClient.getPinnedUserStudies(pinnedIds: pinnedIds);
+    upsertAllLocally(studies);
+    return studies;
   }
 
   @override
