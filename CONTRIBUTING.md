@@ -83,8 +83,15 @@ and dependencies need to have all files generated, when being imported.
 ## Code Style
 
 We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
-guidelines for Dart and Flutter. Run `melos format` to format your code and
-`dart analyze` to check for any issues.
+guidelines for Dart and Flutter. Run `fvm exec melos run qualitycheck` to
+format, analyze, and regenerate code.
+
+## Frontend
+
+We use Flutter's Material Design with a custom light theme defined in `app/lib/theme.dart`.
+Prefer `Theme.of(context).colorScheme` over hardcoded colors. For responsive layouts, use
+`LayoutBuilder` and `MediaQuery`. Localization is handled via `flutter_localizations` with
+ARB files in `app/lib/l10n/`.
 
 ## Commits
 
@@ -119,9 +126,7 @@ Every pull request should include the following:
 
 ### PR Checklist
 
-- [ ] Code formatted with `melos format`
-- [ ] No analyzer warnings (`dart analyze`)
-- [ ] Generated files updated if models changed (`melos run generate`)
+- [ ] `fvm exec melos run qualitycheck` passes
 - [ ] Screenshot or video of the changes attached
 - [ ] Description links related issues
 
