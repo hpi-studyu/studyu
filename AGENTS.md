@@ -14,15 +14,19 @@ StudyU is a Melos-managed Dart/Flutter workspace. The root `pubspec.yaml` define
 
 Use FVM and Melos from the repository root. Run `fvm install` if the configured SDK is missing.
 
-- `dart pub get`: installs root dependencies.
-- `melos bootstrap`: links workspace packages and installs package dependencies.
-- `melos run app`: runs the StudyU app on Chrome at port `8080`.
-- `melos run designer_v2`: runs Designer v2 on Chrome at port `8081`.
-- `melos run dev:app` or `melos run dev:designer_v2`: runs against `.env.dev`.
-- `melos run local:app` or `melos run local:designer_v2`: runs against `.env.local`.
-- `melos run generate`: runs `build_runner` for generated Dart files.
-- `melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
-- `melos run build:web`: builds both web apps.
+Prefix `dart`/`flutter` commands with `fvm`, and `melos` commands with `fvm exec`, to use the
+FVM-managed SDK version.
+
+- `fvm dart pub get`: installs root dependencies.
+- `fvm exec melos bootstrap`: links workspace packages and installs package dependencies.
+- `fvm exec melos run app`: runs the StudyU app on Chrome at port `8080`.
+- `fvm exec melos run designer_v2`: runs Designer v2 on Chrome at port `8081`.
+- `fvm exec melos run dev:app` or `fvm exec melos run dev:designer_v2`: runs against `.env.dev`.
+- `fvm exec melos run local:app` or `fvm exec melos run local:designer_v2`: runs against
+  `.env.local`.
+- `fvm exec melos run generate`: runs `build_runner` for generated Dart files.
+- `fvm exec melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
+- `fvm exec melos run build:web`: builds both web apps.
 
 ## Coding Style & Naming Conventions
 

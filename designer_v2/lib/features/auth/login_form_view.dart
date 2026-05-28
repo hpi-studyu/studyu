@@ -24,9 +24,13 @@ class LoginForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(formControl: controller.getEmailControl()),
+        EmailTextField(
+          key: const ValueKey('login_email'),
+          formControl: controller.getEmailControl(),
+        ),
         const SizedBox(height: 4.0),
         PasswordTextField(
+          key: const ValueKey('login_password'),
           formControl: controller.getPasswordControl(),
           onSubmitted: (_) => form.valid
               ? ref.read(authFormControllerProvider(formKey).notifier).signIn()
@@ -37,6 +41,7 @@ class LoginForm extends FormConsumerRefWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Hyperlink(
+              key: const ValueKey('forgot_password_link'),
               text: tr.link_forgot_password,
               style: TextStyle(fontSize: theme.textTheme.bodySmall!.fontSize),
               onClick: () => ref
@@ -50,6 +55,7 @@ class LoginForm extends FormConsumerRefWidget {
           builder: (context, form, child) {
             return Center(
               child: PrimaryButton(
+                key: const ValueKey('login_button'),
                 icon: Icons.login,
                 text: tr.action_button_login,
                 isLoading: state.isLoading,
@@ -75,6 +81,7 @@ class LoginForm extends FormConsumerRefWidget {
             Text(tr.link_signup_description),
             const SizedBox(width: 4.0),
             Hyperlink(
+              key: const ValueKey('signup_link'),
               text: tr.link_signup,
               onClick: () =>
                   ref.read(routerProvider).dispatch(RoutingIntents.signup),

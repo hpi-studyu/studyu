@@ -165,6 +165,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     itemCount: consentList.length,
                     itemBuilder: (context, index) {
                       return ConsentCard(
+                        key: ValueKey('consent_card_$index'),
                         consent: consentList[index],
                         isChecked: boxLogic[index],
                         index: index,
@@ -181,6 +182,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        backButtonKey: const ValueKey('consent_decline'),
+        nextButtonKey: const ValueKey('consent_accept'),
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
         onBack: () => Navigator.popUntil(

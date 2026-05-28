@@ -59,10 +59,12 @@ class _InterventionSelectionScreenState
     }
 
     return ListView.builder(
+      key: const ValueKey('intervention_selection_list'),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: interventions.length,
       itemBuilder: (context, index) => Card(
+        key: ValueKey('intervention_card_${interventions[index].id}'),
         child: InterventionCard(
           interventions[index],
           showCheckbox: true,
@@ -104,6 +106,7 @@ class _InterventionSelectionScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      key: const ValueKey('intervention_selection_screen'),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
         leading: const Icon(MdiIcons.formatListChecks),
@@ -124,6 +127,7 @@ class _InterventionSelectionScreenState
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('intervention_selection_continue'),
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
         progress: OnboardingProgress(
           stage: 1,
