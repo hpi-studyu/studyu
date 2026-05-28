@@ -183,10 +183,7 @@ void main() {
         ],
       );
       expect(
-        buildPostgrestFilterExpression(
-          group,
-          _user(email: 'alice@x.test'),
-        ),
+        buildPostgrestFilterExpression(group, _user(email: 'alice@x.test')),
         'collaborator_emails.cs.{"alice@x.test"}',
       );
     });

@@ -40,9 +40,7 @@ abstract class StudyUApi {
     List<String> excludeIds,
   });
 
-  Future<List<Study>> getPinnedUserStudies({
-    required Set<String> pinnedIds,
-  });
+  Future<List<Study>> getPinnedUserStudies({required Set<String> pinnedIds});
 
   Future<void> deleteStudy(Study study);
 
@@ -241,7 +239,10 @@ class StudyUApiClient extends SupabaseClientDependant
       }
 
       if (advancedFilter != null) {
-        final expr = buildPostgrestFilterExpression(advancedFilter, currentUser);
+        final expr = buildPostgrestFilterExpression(
+          advancedFilter,
+          currentUser,
+        );
         if (expr != null && expr.isNotEmpty) {
           q = q.or(expr);
         }

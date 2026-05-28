@@ -328,33 +328,34 @@ void main() {
       expect(h.state.sortAscending, isTrue);
     });
 
-    test('setStudiesFilter resets pagination and reloads with new preset',
-        () async {
-      final h = _Harness();
-      await h.settle();
-      clearInteractions(h.studyRepo);
+    test(
+      'setStudiesFilter resets pagination and reloads with new preset',
+      () async {
+        final h = _Harness();
+        await h.settle();
+        clearInteractions(h.studyRepo);
 
-      await h.controller.setStudiesFilter(StudiesFilter.public);
-      await h.settle();
+        await h.controller.setStudiesFilter(StudiesFilter.public);
+        await h.settle();
 
-      verify(
-        h.studyRepo.fetchPage(
-          offset: 0,
-          limit: DashboardState.pageSize,
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: StudiesFilter.public,
-          currentUser: anyNamed('currentUser'),
-          searchQuery: anyNamed('searchQuery'),
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
-        ),
-      ).called(1);
-      expect(h.state.studiesFilter, StudiesFilter.public);
-    });
+        verify(
+          h.studyRepo.fetchPage(
+            offset: 0,
+            limit: DashboardState.pageSize,
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: StudiesFilter.public,
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(1);
+        expect(h.state.studiesFilter, StudiesFilter.public);
+      },
+    );
 
-    test('search query change is debounced before triggering reload',
-        () async {
+    test('search query change is debounced before triggering reload', () async {
       final h = _Harness();
       await h.settle();
       clearInteractions(h.studyRepo);
@@ -392,33 +393,35 @@ void main() {
       ).called(1);
     });
 
-    test('rapid keystrokes only trigger one fetch (debounce coalesces)',
-        () async {
-      final h = _Harness();
-      await h.settle();
-      clearInteractions(h.studyRepo);
+    test(
+      'rapid keystrokes only trigger one fetch (debounce coalesces)',
+      () async {
+        final h = _Harness();
+        await h.settle();
+        clearInteractions(h.studyRepo);
 
-      await h.controller.filterStudies('f');
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      await h.controller.filterStudies('fo');
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      await h.controller.filterStudies('foo');
-      await Future<void>.delayed(const Duration(milliseconds: 400));
+        await h.controller.filterStudies('f');
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await h.controller.filterStudies('fo');
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await h.controller.filterStudies('foo');
+        await Future<void>.delayed(const Duration(milliseconds: 400));
 
-      verify(
-        h.studyRepo.fetchPage(
-          offset: anyNamed('offset'),
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: 'foo',
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
-        ),
-      ).called(1);
-    });
+        verify(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: 'foo',
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(1);
+      },
+    );
 
     test('stale fetch responses are discarded by token mechanism', () async {
       final h = _Harness();
@@ -466,113 +469,117 @@ void main() {
 
       // Now resolve the slow first call — its result must NOT overwrite state.
       slowCompleter.complete(
-        StudiesPage(
-          studies: [_study('slow1'), _study('slow2')],
-          totalCount: 2,
-        ),
+        StudiesPage(studies: [_study('slow1'), _study('slow2')], totalCount: 2),
       );
       await h.settle();
       expect(h.state.loadedStudies.map((s) => s.id), ['fast1', 'fast2']);
     });
 
-    test('UnsupportedFilterException flips advancedFilterUnsupported', () async {
-      final h = _Harness();
-      await h.settle();
-      clearInteractions(h.studyRepo);
+    test(
+      'UnsupportedFilterException flips advancedFilterUnsupported',
+      () async {
+        final h = _Harness();
+        await h.settle();
+        clearInteractions(h.studyRepo);
 
-      when(
-        h.studyRepo.fetchPage(
-          offset: anyNamed('offset'),
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: anyNamed('searchQuery'),
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
-        ),
-      ).thenAnswer(
-        (_) async => throw const UnsupportedFilterException('missedDays'),
-      );
+        when(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).thenAnswer(
+          (_) async => throw const UnsupportedFilterException('missedDays'),
+        );
 
-      await h.controller.updateFilter(
-        FilterGroup(
-          children: [
-            FilterCondition(
-              property: StudyProperty.missedDays,
-              operator: FilterOperator.greaterThan,
-              value: 5,
-            ),
-          ],
-        ),
-      );
-      await h.settle();
+        await h.controller.updateFilter(
+          FilterGroup(
+            children: [
+              FilterCondition(
+                property: StudyProperty.missedDays,
+                operator: FilterOperator.greaterThan,
+                value: 5,
+              ),
+            ],
+          ),
+        );
+        await h.settle();
 
-      expect(h.state.advancedFilterUnsupported, isTrue);
-      expect(h.state.loadedStudies, isEmpty);
-      expect(h.state.hasMore, isFalse);
-    });
+        expect(h.state.advancedFilterUnsupported, isTrue);
+        expect(h.state.loadedStudies, isEmpty);
+        expect(h.state.hasMore, isFalse);
+      },
+    );
 
-    test('pinStudy moves a loaded study to pinnedStudiesList without reload',
-        () async {
-      final h = _Harness(
-        initialPage: StudiesPage(
-          studies: [_study('a'), _study('b'), _study('c')],
-          totalCount: 3,
-        ),
-      );
-      // updatePreferences is called by the controller; stub it.
-      when(
-        h.userRepo.updatePreferences(any, any),
-      ).thenAnswer((_) async => h.studyUUser);
-      await h.settle();
-      clearInteractions(h.studyRepo);
+    test(
+      'pinStudy moves a loaded study to pinnedStudiesList without reload',
+      () async {
+        final h = _Harness(
+          initialPage: StudiesPage(
+            studies: [_study('a'), _study('b'), _study('c')],
+            totalCount: 3,
+          ),
+        );
+        // updatePreferences is called by the controller; stub it.
+        when(
+          h.userRepo.updatePreferences(any, any),
+        ).thenAnswer((_) async => h.studyUUser);
+        await h.settle();
+        clearInteractions(h.studyRepo);
 
-      await h.controller.pinStudy('b');
-      await h.settle();
+        await h.controller.pinStudy('b');
+        await h.settle();
 
-      expect(h.state.loadedStudies.map((s) => s.id), ['a', 'c']);
-      expect(h.state.pinnedStudiesList.map((s) => s.id), ['b']);
-      verifyNever(
-        h.studyRepo.fetchPage(
-          offset: anyNamed('offset'),
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: anyNamed('searchQuery'),
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
-        ),
-      );
-    });
+        expect(h.state.loadedStudies.map((s) => s.id), ['a', 'c']);
+        expect(h.state.pinnedStudiesList.map((s) => s.id), ['b']);
+        verifyNever(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        );
+      },
+    );
 
-    test('initial fetch excludes pinned ids from the paginated query',
-        () async {
-      final h = _Harness(
-        pinnedIds: {'pinA', 'pinB'},
-        initialPinned: [_study('pinA'), _study('pinB')],
-      );
-      await h.settle();
+    test(
+      'initial fetch excludes pinned ids from the paginated query',
+      () async {
+        final h = _Harness(
+          pinnedIds: {'pinA', 'pinB'},
+          initialPinned: [_study('pinA'), _study('pinB')],
+        );
+        await h.settle();
 
-      final captured = verify(
-        h.studyRepo.fetchPage(
-          offset: 0,
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: anyNamed('searchQuery'),
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: captureAnyNamed('excludeIds'),
-        ),
-      ).captured;
-      final excludeIds = captured.last as List<String>;
-      expect(excludeIds, containsAll(<String>['pinA', 'pinB']));
-      expect(h.state.pinnedStudiesList.map((s) => s.id), ['pinA', 'pinB']);
-    });
+        final captured = verify(
+          h.studyRepo.fetchPage(
+            offset: 0,
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: captureAnyNamed('excludeIds'),
+          ),
+        ).captured;
+        final excludeIds = captured.last as List<String>;
+        expect(excludeIds, containsAll(<String>['pinA', 'pinB']));
+        expect(h.state.pinnedStudiesList.map((s) => s.id), ['pinA', 'pinB']);
+      },
+    );
   });
 }

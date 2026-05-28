@@ -380,9 +380,9 @@ class _StudiesTableFooter extends StatelessWidget {
         child: Center(
           child: Text(
             "End of list".hardcoded,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).hintColor,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).hintColor),
           ),
         ),
       );

@@ -32,9 +32,10 @@ Future<void> main() async {
         ProviderScope(
           overrides: [
             dashboardDispatchProvider.overrideWith(
-              (ref) => (studyId) => ref
-                  .read(routerProvider)
-                  .dispatch(RoutingIntents.studyEdit(studyId)),
+              (ref) =>
+                  (studyId) => ref
+                      .read(routerProvider)
+                      .dispatch(RoutingIntents.studyEdit(studyId)),
             ),
           ],
           child: const App(),
