@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -64,7 +64,7 @@ class _TermsScreenState extends State<TermsScreen> {
               acknowledgment: AppLocalizations.of(context)!.terms_agree,
               onChange: (val) => setState(() => _acceptedTerms = val!),
               isChecked: _acceptedTerms,
-              icon: Icon(MdiIcons.fileDocumentEdit),
+              icon: const Icon(MdiIcons.fileDocumentEdit),
               pdfUrl: appConfig!.appTerms[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
             ),
@@ -75,13 +75,13 @@ class _TermsScreenState extends State<TermsScreen> {
               acknowledgment: AppLocalizations.of(context)!.privacy_agree,
               onChange: (val) => setState(() => _acceptedPrivacy = val!),
               isChecked: _acceptedPrivacy,
-              icon: Icon(MdiIcons.shieldLock),
+              icon: const Icon(MdiIcons.shieldLock),
               pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
             ),
             const SizedBox(height: 30),
             OutlinedButton.icon(
-              icon: Icon(MdiIcons.scaleBalance),
+              icon: const Icon(MdiIcons.scaleBalance),
               onPressed: () async {
                 final uri = Uri.parse(
                   appConfig.imprint[appLocale.languageCode]!,

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -13,6 +13,7 @@ import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class ConsentScreen extends StatefulWidget {
   const ConsentScreen({super.key});
@@ -73,7 +74,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.consent),
-        leading: Icon(MdiIcons.textBoxCheck),
+        leading: const Icon(MdiIcons.textBoxCheck),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -231,7 +232,7 @@ class ConsentCard extends StatelessWidget {
                 children: [
                   if (consent!.iconName.isNotEmpty)
                     Icon(
-                      MdiIcons.fromString(consent!.iconName),
+                      MdiIconsHelper.fromString(consent!.iconName),
                       color: theme.primaryColor,
                     )
                   else
@@ -260,7 +261,7 @@ class ConsentCard extends StatelessWidget {
             children: [
               if (consent!.iconName.isNotEmpty)
                 Icon(
-                  MdiIcons.fromString(consent!.iconName),
+                  MdiIconsHelper.fromString(consent!.iconName),
                   size: 60,
                   color: Colors.blue,
                 )
