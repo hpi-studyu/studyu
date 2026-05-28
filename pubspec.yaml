@@ -53,7 +53,7 @@ melos:
     generate:
       run: |
         melos exec -c 1 --fail-fast -- \
-          "dart run build_runner build --delete-conflicting-outputs"
+          "dart run build_runner build"
       description: Generate files with build_runner
       packageFilters:
         scope:
