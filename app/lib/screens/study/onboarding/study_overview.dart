@@ -70,6 +70,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('study_overview_screen'),
       appBar: AppBar(
         leading: const Icon(MdiIcons.textLong),
         title: Text(AppLocalizations.of(context)!.study_overview_title),
@@ -87,6 +88,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('study_overview_next'),
         onNext: context.watch<AppState>().selectedStudy!.hasEligibilityCheck
             ? () => navigateToEligibilityCheck(context)
             : () => navigateToJourney(context),
@@ -107,8 +109,10 @@ class StudyDetailsView extends StatelessWidget {
     final theme = Theme.of(context);
     final studyLength = study!.studyLength;
     return Column(
+      key: const ValueKey('study_details'),
       children: [
         ListTile(
+          key: const ValueKey('study_duration_tile'),
           title: Text(
             AppLocalizations.of(context)!.intervention_phase_duration,
           ),
@@ -122,6 +126,7 @@ class StudyDetailsView extends StatelessWidget {
           ),
         ),
         ListTile(
+          key: const ValueKey('study_length_tile'),
           title: Text(AppLocalizations.of(context)!.study_length),
           subtitle: Text('$studyLength ${AppLocalizations.of(context)!.days}'),
           leading: Icon(
@@ -132,6 +137,7 @@ class StudyDetailsView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ContactWidget(
+          key: const ValueKey('study_publisher_contact'),
           contact: study!.contact,
           title: AppLocalizations.of(context)!.study_publisher,
           color: theme.colorScheme.secondary,

@@ -81,6 +81,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               ),
             ),
             child: InkWell(
+              key: ValueKey('study_row_ink_${widget.study.id}'),
               splashColor: Colors.transparent,
               onTap: () => widget.onTap?.call(widget.study),
               onHover: (hover) {
@@ -96,6 +97,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[0].createContainer(
                       height: widget.itemHeight,
                       child: MouseEventsRegion(
+                        key: ValueKey('pin_icon_${widget.study.id}'),
                         onTap: () => widget.onPinnedChanged?.call(
                           widget.study,
                           !widget.isPinned,
@@ -229,6 +231,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
 
     return Align(
       child: ActionPopUpMenuButton(
+        key: ValueKey('study_row_actions_${widget.study.id}'),
         actions: actions,
         triggerIconColor: ThemeConfig.bodyTextMuted(
           theme,
