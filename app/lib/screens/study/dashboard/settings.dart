@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -111,7 +111,7 @@ class _SettingsState extends State<Settings> {
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
-              icon: Icon(MdiIcons.exitToApp),
+              icon: const Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context)!.opt_out),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[800],
@@ -171,7 +171,7 @@ class OptOutAlertDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton.icon(
-          icon: Icon(MdiIcons.exitToApp),
+          icon: const Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
           onPressed: () async {

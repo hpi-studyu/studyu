@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -113,14 +113,14 @@ class _DashboardScreenState extends State<DashboardScreen>
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context)!.contact,
-            icon: Icon(MdiIcons.faceAgent),
+            icon: const Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: AppLocalizations.of(context)!.current_report,
-            icon: Icon(MdiIcons.chartBar),
+            icon: const Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(
               context,
               ReportDetailsScreen.routeFor(subject: subject!),
@@ -399,7 +399,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.reportHistory),
-              icon: Icon(MdiIcons.history, size: 24),
+              icon: const Icon(MdiIcons.history, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.report_history,
                 style: const TextStyle(fontSize: 16),
@@ -409,7 +409,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.studySelection),
-              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
+              icon: const Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.study_selection,
                 style: const TextStyle(fontSize: 16),

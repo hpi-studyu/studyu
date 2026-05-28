@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
@@ -65,10 +65,10 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   }
 
   Icon? _getIcon() {
-    final ascendingIcon = Icon(MdiIcons.arrowUp);
-    final descendingIcon = Icon(MdiIcons.arrowDown);
-    final hoveredAscendingIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
-    final hoveredDescendingIcon = Icon(MdiIcons.arrowDown, color: Colors.grey);
+    const ascendingIcon = Icon(MdiIcons.arrowUp);
+    const descendingIcon = Icon(MdiIcons.arrowDown);
+    const hoveredAscendingIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
+    const hoveredDescendingIcon = Icon(MdiIcons.arrowDown, color: Colors.grey);
 
     if (!widget.sortable) {
       return null;
