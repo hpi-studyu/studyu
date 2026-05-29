@@ -252,6 +252,7 @@ class StudiesTable extends StatelessWidget {
             ),
             SizedBox(height: rowSpacing),
             ListView.builder(
+              key: const ValueKey('studies_table_rows'),
               itemCount: studies.length,
               itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
               shrinkWrap: true,
@@ -259,6 +260,7 @@ class StudiesTable extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = studies[index];
                 return StudiesTableItem(
+                  key: ValueKey('study_row_${item.id}'),
                   study: item,
                   columnSizes: columnDefinitionsMap.values.toList(),
                   actions: getActions(item),

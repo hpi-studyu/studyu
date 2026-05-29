@@ -12,6 +12,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
+  final Key? backButtonKey;
+  final Key? nextButtonKey;
 
   const BottomOnboardingNavigation({
     super.key,
@@ -25,6 +27,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.nextIcon,
     this.backIcon,
     this.progress,
+    this.backButtonKey,
+    this.nextButtonKey,
   });
 
   @override
@@ -40,6 +44,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: TextButton(
+                key: backButtonKey,
                 onPressed: backEnabled
                     ? (onBack ?? () => Navigator.pop(context))
                     : null,
@@ -63,6 +68,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: TextButton(
+                key: nextButtonKey,
                 onPressed: onNext,
                 child: Row(
                   children: [
