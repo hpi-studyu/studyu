@@ -82,6 +82,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         ),
         if (response != null)
           ElevatedButton.icon(
+            key: const ValueKey('questionnaire_complete'),
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
             ),
