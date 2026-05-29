@@ -169,15 +169,15 @@ void main() {
       expect(onInvalidCount, equals(1));
       expect(
         onDoneCount,
-        equals(1),
-        reason: 'non-last valid edit must wait for explicit submit',
+        equals(2),
+        reason: 'non-conditional invalid→valid should resync via debounce',
       );
-      expect(lastAnswer?.response, equals('123'));
+      expect(lastAnswer?.response, equals('456'));
     },
   );
 
   testWidgets(
-    'non-last valid edit after submit invalidates once and keeps old answer',
+    'non-last valid edit after submit syncs via debounce without invalidation',
     (tester) async {
       final question = FreeTextQuestion.withId(
         textType: FreeTextQuestionType.custom,
@@ -225,23 +225,20 @@ void main() {
       await tester.pump(const Duration(milliseconds: 350));
       await tester.pump();
 
-      expect(onInvalidCount, equals(1));
-      expect(onDoneCount, equals(1));
-      expect(lastAnswer?.response, equals('2'));
+      // Non-conditional non-last valid edit: syncs via onDone, not onInvalid.
+      expect(onInvalidCount, equals(0));
+      expect(onDoneCount, equals(2));
+      expect(lastAnswer?.response, equals('23'));
 
       await tester.enterText(find.byType(TextFormField), '234');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 350));
       await tester.pump();
 
-      expect(
-        onInvalidCount,
-        equals(1),
-        reason:
-            'pending valid non-last edits should not duplicate invalidation',
-      );
-      expect(onDoneCount, equals(1));
-      expect(lastAnswer?.response, equals('2'));
+      // Another sync.
+      expect(onInvalidCount, equals(0));
+      expect(onDoneCount, equals(3));
+      expect(lastAnswer?.response, equals('234'));
     },
   );
 
@@ -296,19 +293,21 @@ void main() {
     await tester.pump(const Duration(milliseconds: 350));
     await tester.pump();
 
-    expect(onInvalidCount, equals(1));
-    expect(onDoneCount, equals(1));
+    // Non-conditional non-last valid edit syncs via onDone, not onInvalid.
+    expect(onInvalidCount, equals(0));
+    expect(onDoneCount, equals(2));
+    expect(lastAnswer?.response, equals('456'));
 
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
     expect(
       onDoneCount,
-      equals(1),
+      equals(2),
       reason: 'keyboard Done must not submit hidden non-last field',
     );
-    expect(onInvalidCount, equals(1));
-    expect(lastAnswer?.response, equals('123'));
+    expect(onInvalidCount, equals(0));
+    expect(lastAnswer?.response, equals('456'));
   });
 
   testWidgets('Submit button is hidden when not last question', (tester) async {

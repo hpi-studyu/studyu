@@ -12,6 +12,8 @@ class FreeTextQuestionWidget extends QuestionWidget {
   final Function(Answer)? onDone;
   final Function()? onInvalid;
   final bool isLastQuestion;
+  final bool hasConditionalDependents;
+  final Answer<String>? initialAnswer;
 
   const FreeTextQuestionWidget({
     super.key,
@@ -19,13 +21,15 @@ class FreeTextQuestionWidget extends QuestionWidget {
     this.onDone,
     this.onInvalid,
     this.isLastQuestion = true,
+    this.hasConditionalDependents = false,
+    this.initialAnswer,
   });
 
   @override
-  State<FreeTextQuestionWidget> createState() => _FreeTextQuestionWidgetState();
+  State<FreeTextQuestionWidget> createState() => FreeTextQuestionWidgetState();
 }
 
-class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
+class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _textFieldController = TextEditingController();
   final _formFieldKey = GlobalKey<FormFieldState>();
   final _focusNode = FocusNode();
@@ -41,6 +45,13 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   void initState() {
     super.initState();
+    final initialValue = widget.initialAnswer?.response;
+    if (initialValue != null) {
+      _textFieldController.text = initialValue;
+      _hasSubmitted = true;
+      _reactiveValidationArmed = true;
+      _lastSubmittedValue = initialValue;
+    }
     _focusNode.addListener(_onFocusChange);
   }
 
@@ -97,12 +108,34 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
       if (_hasSubmitted &&
           value != _lastSubmittedValue &&
           !widget.isLastQuestion) {
-        if (!_hasPendingNonLastChange) {
-          widget.onInvalid?.call();
+        if (widget.hasConditionalDependents) {
+          if (!_hasPendingNonLastChange) {
+            widget.onInvalid?.call();
+          }
+          _hasSubmitted = false;
+          _hasPendingNonLastChange = true;
+          _requiresExplicitSubmit = true;
+        } else {
+          // Non-conditional non-last edit: sync via onDone, keep later
+          // questions visible, Submit stays hidden.
+          widget.onDone?.call(widget.question.constructAnswer(value));
+          _hasSubmitted = true;
+          _hasPendingNonLastChange = false;
+          _reactiveValidationArmed = true;
+          _lastSubmittedValue = value;
         }
-        _hasSubmitted = false;
-        _hasPendingNonLastChange = true;
-        _requiresExplicitSubmit = true;
+        return;
+      }
+
+      // Non-conditional, not-yet-submitted after invalidation: sync corrected
+      // valid value via onDone. Required so Complete sync can find the answer.
+      if (!_hasSubmitted &&
+          !widget.isLastQuestion &&
+          !widget.hasConditionalDependents) {
+        widget.onDone?.call(widget.question.constructAnswer(value));
+        _hasSubmitted = true;
+        _reactiveValidationArmed = true;
+        _lastSubmittedValue = value;
         return;
       }
 
@@ -138,6 +171,29 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
         _validateAndSubmit(_textFieldController.text);
       }
     });
+  }
+
+  bool validateForComplete() {
+    _debounceTimer?.cancel();
+    final isValid = _formFieldKey.currentState?.validate() == true;
+    setState(() {
+      _hasInteracted = true;
+      _autovalidateMode = AutovalidateMode.always;
+    });
+    return isValid;
+  }
+
+  Answer<String> buildAnswerForComplete() {
+    return widget.question.constructAnswer(_textFieldController.text);
+  }
+
+  void markSyncedForComplete() {
+    final value = _textFieldController.text;
+    _hasSubmitted = true;
+    _hasPendingNonLastChange = false;
+    _reactiveValidationArmed = true;
+    _requiresExplicitSubmit = false;
+    _lastSubmittedValue = value;
   }
 
   TextInputType _getKeyboardType() {
