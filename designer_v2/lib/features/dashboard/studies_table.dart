@@ -267,24 +267,22 @@ class StudiesTable extends StatelessWidget {
                       // staying in the layout tree.
                       itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
                       builderDelegate: PagedChildBuilderDelegate<Study>(
-                        itemBuilder: (context, item, index) =>
-                            StudiesTableItem(
-                              key: ValueKey('study_row_${item.id}'),
-                              study: item,
-                              columnSizes: columnDefinitionsMap.values
-                                  .toList(),
-                              actions: getActions(item),
-                              isPinned: pinnedStudies.contains(item.id),
-                              itemHeight: itemHeight,
-                              rowSpacing: rowSpacing,
-                              columnSpacing: columnSpacing,
-                              onPinnedChanged: (study, pinned) {
-                                pinnedStudies.contains(item.id)
-                                    ? dashboardController.pinOffStudy(item.id)
-                                    : dashboardController.pinStudy(item.id);
-                              },
-                              onTap: (study) => onSelect.call(study),
-                            ),
+                        itemBuilder: (context, item, index) => StudiesTableItem(
+                          key: ValueKey('study_row_${item.id}'),
+                          study: item,
+                          columnSizes: columnDefinitionsMap.values.toList(),
+                          actions: getActions(item),
+                          isPinned: pinnedStudies.contains(item.id),
+                          itemHeight: itemHeight,
+                          rowSpacing: rowSpacing,
+                          columnSpacing: columnSpacing,
+                          onPinnedChanged: (study, pinned) {
+                            pinnedStudies.contains(item.id)
+                                ? dashboardController.pinOffStudy(item.id)
+                                : dashboardController.pinStudy(item.id);
+                          },
+                          onTap: (study) => onSelect.call(study),
+                        ),
                         newPageProgressIndicatorBuilder: (_) => const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Center(

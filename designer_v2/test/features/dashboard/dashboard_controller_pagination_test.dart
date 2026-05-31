@@ -76,9 +76,7 @@ class _Harness {
     when(
       userRepo.getActiveFilter(any),
     ).thenReturn((presetId: null, filterGroup: null));
-    when(
-      userRepo.getActiveSort(any),
-    ).thenReturn(activeSort);
+    when(userRepo.getActiveSort(any)).thenReturn(activeSort);
 
     final defaultPage =
         initialPage ?? const StudiesPage(studies: [], totalCount: 0);
@@ -658,31 +656,28 @@ void main() {
       expect(h.state.sortAscending, isFalse);
     });
 
-    test(
-      'controller does not double-fetch on first build (no race with '
-      'setStudiesFilter)',
-      () async {
-        // Regression: previously, build() -> _loadInitial -> _resetAndReload
-        // raced against initState's setStudiesFilter(widget.filter), firing
-        // two HTTP fetches per navigation. The fix routes the single load
-        // through setStudiesFilter only.
-        final h = _Harness();
-        await h.settle();
+    test('controller does not double-fetch on first build (no race with '
+        'setStudiesFilter)', () async {
+      // Regression: previously, build() -> _loadInitial -> _resetAndReload
+      // raced against initState's setStudiesFilter(widget.filter), firing
+      // two HTTP fetches per navigation. The fix routes the single load
+      // through setStudiesFilter only.
+      final h = _Harness();
+      await h.settle();
 
-        verify(
-          h.studyRepo.fetchPage(
-            offset: anyNamed('offset'),
-            limit: anyNamed('limit'),
-            sortBy: anyNamed('sortBy'),
-            ascending: anyNamed('ascending'),
-            preset: anyNamed('preset'),
-            currentUser: anyNamed('currentUser'),
-            searchQuery: anyNamed('searchQuery'),
-            advancedFilter: anyNamed('advancedFilter'),
-            excludeIds: anyNamed('excludeIds'),
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).called(1);
+    });
   });
 }

@@ -81,8 +81,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   /// [_syncPagingState] below.
   Future<List<Study>> _fetchPage(int pageKey) async {
     final controller = ref.read(dashboardControllerProvider.notifier);
-    final beforeCount =
-        ref.read(dashboardControllerProvider).loadedStudies.length;
+    final beforeCount = ref
+        .read(dashboardControllerProvider)
+        .loadedStudies
+        .length;
     await controller.loadMore();
     final after = ref.read(dashboardControllerProvider);
     // Slice of the fresh rows just appended.
