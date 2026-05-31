@@ -36,6 +36,7 @@ class DismissButton extends StatelessWidget {
         }
       },
       child: SecondaryButton(
+        key: const ValueKey('form_dismiss_button'),
         text: text ?? tr.dialog_cancel,
         icon: null,
         //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
@@ -58,6 +59,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
       builder: (context, form, child) {
         return retainSizeInAppBar(
           DismissButton(
+            key: const ValueKey('form_cancel_button'),
             onPressed: () => formViewModel.cancel().then((_) {
               if (context.mounted) Navigator.maybePop(context);
             }),
@@ -70,6 +72,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
       builder: (context, form, child) {
         return retainSizeInAppBar(
           PrimaryButton(
+            key: const ValueKey('form_save_button'),
             text: tr.dialog_save,
             tooltipDisabled:
                 "${tr.form_invalid_prompt}\n\n${formViewModel.form.validationErrorSummary}",
@@ -95,6 +98,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
       builder: (context, form, child) {
         return retainSizeInAppBar(
           DismissButton(
+            key: const ValueKey('form_close_button'),
             text: tr.dialog_close,
             onPressed: () => Navigator.maybePop(context),
           ),

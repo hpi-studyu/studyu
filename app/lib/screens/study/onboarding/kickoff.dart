@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -69,7 +69,11 @@ class _KickoffScreen extends State<KickoffScreen> {
           width: 64,
           child: CircularProgressIndicator(),
         )
-      : Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 64);
+      : const Icon(
+          MdiIcons.checkboxMarkedCircle,
+          color: Colors.green,
+          size: 64,
+        );
 
   String _getStatusText(BuildContext context) => !ready
       ? AppLocalizations.of(context)!.setting_up_study
@@ -80,7 +84,7 @@ class _KickoffScreen extends State<KickoffScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(subject!.study.title!),
-        leading: Icon(MdiIcons.fromString(subject!.study.iconName)),
+        leading: Icon(MdiIconsHelper.fromString(subject!.study.iconName)),
       ),
       body: Builder(
         builder: (buildContext) {

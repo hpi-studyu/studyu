@@ -90,10 +90,11 @@ class GaugesWidget extends StatelessWidget {
       gaugeAxis = GaugeAxis(
         min: min,
         max: max,
-        degrees: 240, // Set to 240 degrees for a 3/4 circular gauge
+        sweepDegrees: 240,
+        // Set to 240 degrees for a 3/4 circular gauge
         style: const GaugeAxisStyle(
           background: gaugeBackgroundColor,
-          segmentSpacing: 4,
+          zoneSpacing: 4,
         ),
         pointer: const GaugePointer.needle(
           width: 10,
@@ -102,27 +103,28 @@ class GaugesWidget extends StatelessWidget {
           color: Color(0xFF193663),
         ),
         progressBar: null, // Disable the progress bar
-        segments: [
-          GaugeSegment(from: 0, to: 1, color: Colors.red[900]!),
-          const GaugeSegment(from: 1, to: 2, color: Colors.red),
-          GaugeSegment(from: 2, to: 3, color: Colors.orange[900]!),
-          const GaugeSegment(from: 3, to: 4, color: Colors.orange),
-          const GaugeSegment(from: 4, to: 5, color: Colors.yellow),
-          const GaugeSegment(from: 5, to: 6, color: Colors.lightGreen),
-          GaugeSegment(from: 6, to: 7, color: Colors.green[600]!),
-          GaugeSegment(from: 7, to: 8, color: Colors.green[700]!),
-          GaugeSegment(from: 8, to: 9, color: Colors.green[800]!),
-          GaugeSegment(from: 9, to: 10, color: Colors.green[900]!),
+        zones: [
+          GaugeZone(from: 0, to: 1, color: Colors.red[900]!),
+          const GaugeZone(from: 1, to: 2, color: Colors.red),
+          GaugeZone(from: 2, to: 3, color: Colors.orange[900]!),
+          const GaugeZone(from: 3, to: 4, color: Colors.orange),
+          const GaugeZone(from: 4, to: 5, color: Colors.yellow),
+          const GaugeZone(from: 5, to: 6, color: Colors.lightGreen),
+          GaugeZone(from: 6, to: 7, color: Colors.green[600]!),
+          GaugeZone(from: 7, to: 8, color: Colors.green[700]!),
+          GaugeZone(from: 8, to: 9, color: Colors.green[800]!),
+          GaugeZone(from: 9, to: 10, color: Colors.green[900]!),
         ],
       );
     } else {
       gaugeAxis = GaugeAxis(
         min: min,
         max: max,
-        degrees: 240, // Set to 240 degrees for a 3/4 circular gauge
+        sweepDegrees: 240,
+        // Set to 240 degrees for a 3/4 circular gauge
         style: const GaugeAxisStyle(
           background: gaugeBackgroundColor,
-          segmentSpacing: 4,
+          zoneSpacing: 4,
         ),
         pointer: const GaugePointer.needle(
           width: 10,

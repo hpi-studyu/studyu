@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
@@ -81,6 +81,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               ),
             ),
             child: InkWell(
+              key: ValueKey('study_row_ink_${widget.study.id}'),
               splashColor: Colors.transparent,
               onTap: () => widget.onTap?.call(widget.study),
               onHover: (hover) {
@@ -96,6 +97,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[0].createContainer(
                       height: widget.itemHeight,
                       child: MouseEventsRegion(
+                        key: ValueKey('pin_icon_${widget.study.id}'),
                         onTap: () => widget.onPinnedChanged?.call(
                           widget.study,
                           !widget.isPinned,
@@ -229,6 +231,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
 
     return Align(
       child: ActionPopUpMenuButton(
+        key: ValueKey('study_row_actions_${widget.study.id}'),
         actions: actions,
         triggerIconColor: ThemeConfig.bodyTextMuted(
           theme,

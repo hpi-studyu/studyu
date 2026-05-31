@@ -36,9 +36,7 @@ class SupabaseStorage extends LocalStorage {
 }
 
 class SecureStorage {
-  static const storage = FlutterSecureStorage(
-    // aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+  static const storage = FlutterSecureStorage();
 
   static Future<bool> containsKey(String key) async {
     return await storageLock.synchronized(() async {
