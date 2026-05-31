@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
@@ -30,38 +31,38 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ScrollPosition? _scrollPosition;
+
+  /// Adapter that mirrors [DashboardState] (loadedStudies + hasMore +
+  /// isLoadingMore + loadError) into a [PagingState] consumable by
+  /// `infinite_scroll_pagination`'s [PagedSliverList]. The actual fetching
+  /// still happens through [DashboardController.loadMore]; this controller
+  /// is just a render-state mirror, plus a way for the package to ask us
+  /// for the next page.
+  ///
+  /// We use one big "page" — index 0 holds everything currently loaded —
+  /// because [DashboardController] already merges newly-fetched studies
+  /// into a single growing list; we don't need the package's per-page
+  /// bookkeeping. [PagedSliverList] still recycles rows just fine.
+  late final PagingController<int, Study> _pagingController;
 
   @override
   void initState() {
     super.initState();
+    _pagingController = PagingController<int, Study>(
+      // Asking for page 1 means "load next page" — DashboardController
+      // ignores the key and uses its own internal offset. We return null
+      // when there's no more data to fetch.
+      getNextPageKey: (state) => state.hasNextPage ? 1 : null,
+      fetchPage: _fetchPage,
+    );
     final controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final position = Scrollable.maybeOf(context)?.position;
-    if (position != _scrollPosition) {
-      _scrollPosition?.removeListener(_onScroll);
-      _scrollPosition = position;
-      _scrollPosition?.addListener(_onScroll);
-    }
-  }
-
-  @override
   void dispose() {
-    _scrollPosition?.removeListener(_onScroll);
+    _pagingController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    final p = _scrollPosition;
-    if (p == null || !p.hasContentDimensions) return;
-    if (p.pixels >= p.maxScrollExtent - 400) {
-      ref.read(dashboardControllerProvider.notifier).loadMore();
-    }
   }
 
   @override
@@ -71,6 +72,34 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       final controller = ref.read(dashboardControllerProvider.notifier);
       runAsync(() => controller.setStudiesFilter(widget.filter));
     }
+  }
+
+  /// Called by [PagedSliverList] when it needs the next page. We delegate
+  /// to [DashboardController.loadMore] and then return the now-loaded slice.
+  /// The package only uses our return value to know "did we get more rows"
+  /// for its own progress tracking; the canonical data comes from
+  /// [_syncPagingState] below.
+  Future<List<Study>> _fetchPage(int pageKey) async {
+    final controller = ref.read(dashboardControllerProvider.notifier);
+    final beforeCount =
+        ref.read(dashboardControllerProvider).loadedStudies.length;
+    await controller.loadMore();
+    final after = ref.read(dashboardControllerProvider);
+    // Slice of the fresh rows just appended.
+    return after.loadedStudies.sublist(beforeCount);
+  }
+
+  /// Mirrors current [DashboardState] into the paging controller's value so
+  /// [PagedSliverList] renders the canonical list, hasMore flag, and any
+  /// load error coming out of [DashboardController].
+  void _syncPagingState(DashboardState state) {
+    _pagingController.value = PagingState<int, Study>(
+      pages: state.loadedStudies.isEmpty ? null : [state.loadedStudies],
+      keys: state.loadedStudies.isEmpty ? null : const [0],
+      hasNextPage: state.hasMore,
+      isLoading: state.isLoadingMore || state.isLoadingInitial,
+      error: state.loadError,
+    );
   }
 
   String _getPresetTooltip(String id) {
@@ -228,6 +257,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
+
+    // Mirror current state into the paging controller every build. Cheap
+    // (one PagingState assignment) and keeps the rendered list in lock-step
+    // with DashboardController without a second source of truth.
+    _syncPagingState(state);
 
     return DashboardScaffold(
       scaffoldKey: _scaffoldKey,
@@ -551,55 +585,59 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           ],
           const SizedBox(height: 24.0), // spacing between body elements
-          FutureBuilder<StudyUUser>(
-            future: ref.read(userRepositoryProvider).fetchUser(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return AsyncValueWidget<List<Study>>(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  value: state.displayedStudies,
-                  data: (visibleStudies) => StudiesTable(
-                    studies: visibleStudies,
-                    pinnedStudies: snapshot.data!.preferences.pinnedStudies,
-                    dashboardController: ref.watch(
-                      dashboardControllerProvider.notifier,
+          Expanded(
+            child: FutureBuilder<StudyUUser>(
+              future: ref.read(userRepositoryProvider).fetchUser(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return AsyncValueWidget<List<Study>>(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    value: state.displayedStudies,
+                    data: (visibleStudies) => StudiesTable(
+                      studies: visibleStudies,
+                      pinnedStudies: snapshot.data!.preferences.pinnedStudies,
+                      dashboardController: ref.watch(
+                        dashboardControllerProvider.notifier,
+                      ),
+                      pagingController: _pagingController,
+                      isLoadingMore: state.isLoadingMore,
+                      hasMore: state.hasMore,
+                      advancedFilterUnsupported:
+                          state.advancedFilterUnsupported,
+                      loadError: state.loadError,
+                      onRetry: controller.retry,
+                      onSelect: controller.onSelectStudy,
+                      getActions: controller.availableActions,
+                      emptyWidget:
+                          (widget.filter == null ||
+                              widget.filter == StudiesFilter.owned)
+                          ? (state.query.isNotEmpty)
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 24.0),
+                                    child: EmptyBody(
+                                      icon: Icons.content_paste_search_rounded,
+                                      title: tr.studies_not_found,
+                                      description: tr.modify_query,
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(top: 24.0),
+                                    child: EmptyBody(
+                                      icon: Icons.content_paste_search_rounded,
+                                      title: tr.studies_empty,
+                                      description: tr.studies_empty_description,
+                                      // "...or create a new draft copy from an already published study!",
+                                      /* button: PrimaryButton(text: "From template",); */
+                                    ),
+                                  )
+                          : const SizedBox.shrink(),
                     ),
-                    isLoadingMore: state.isLoadingMore,
-                    hasMore: state.hasMore,
-                    advancedFilterUnsupported: state.advancedFilterUnsupported,
-                    loadError: state.loadError,
-                    onRetry: controller.retry,
-                    onSelect: controller.onSelectStudy,
-                    getActions: controller.availableActions,
-                    emptyWidget:
-                        (widget.filter == null ||
-                            widget.filter == StudiesFilter.owned)
-                        ? (state.query.isNotEmpty)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_not_found,
-                                    description: tr.modify_query,
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_empty,
-                                    description: tr.studies_empty_description,
-                                    // "...or create a new draft copy from an already published study!",
-                                    /* button: PrimaryButton(text: "From template",); */
-                                  ),
-                                )
-                        : const SizedBox.shrink(),
-                  ),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
           ),
         ],
       ),

@@ -51,6 +51,11 @@ class _Harness {
     Set<String> pinnedIds = const {},
     StudiesPage? initialPage,
     List<Study> initialPinned = const [],
+    ({String? sortColumn, bool? sortAscending}) activeSort = (
+      sortColumn: null,
+      sortAscending: null,
+    ),
+    StudiesFilter? initialFilter,
   }) {
     studyRepo = MockStudyRepository();
     authRepo = MockAuthRepository();
@@ -71,6 +76,9 @@ class _Harness {
     when(
       userRepo.getActiveFilter(any),
     ).thenReturn((presetId: null, filterGroup: null));
+    when(
+      userRepo.getActiveSort(any),
+    ).thenReturn(activeSort);
 
     final defaultPage =
         initialPage ?? const StudiesPage(studies: [], totalCount: 0);
@@ -105,6 +113,15 @@ class _Harness {
       (_, _) {},
       fireImmediately: true,
     );
+
+    // Mirror DashboardScreen.initState — the widget always kicks off a
+    // setStudiesFilter call (with widget.filter, possibly null) after build.
+    // The controller itself no longer drives an initial fetch from build();
+    // setStudiesFilter is the single load path.
+    // ignore: unawaited_futures
+    container
+        .read(dashboardControllerProvider.notifier)
+        .setStudiesFilter(initialFilter);
   }
 
   late final MockStudyRepository studyRepo;
@@ -579,6 +596,92 @@ void main() {
         final excludeIds = captured.last as List<String>;
         expect(excludeIds, containsAll(<String>['pinA', 'pinB']));
         expect(h.state.pinnedStudiesList.map((s) => s.id), ['pinA', 'pinB']);
+      },
+    );
+
+    test('setSorting persists sort to user preferences', () async {
+      final h = _Harness();
+      when(
+        h.userRepo.saveActiveSort(
+          page: anyNamed('page'),
+          sortColumn: anyNamed('sortColumn'),
+          sortAscending: anyNamed('sortAscending'),
+        ),
+      ).thenAnswer((_) async => h.studyUUser);
+      await h.settle();
+
+      h.controller.setSorting(StudiesTableColumn.title, true);
+      await h.settle();
+
+      verify(
+        h.userRepo.saveActiveSort(
+          page: 'my_studies',
+          sortColumn: 'title',
+          sortAscending: true,
+        ),
+      ).called(1);
+    });
+
+    test(
+      'initial load restores persisted sort and uses it for fetch',
+      () async {
+        final h = _Harness(
+          activeSort: (sortColumn: 'title', sortAscending: true),
+        );
+        await h.settle();
+
+        expect(h.state.sortByColumn, StudiesTableColumn.title);
+        expect(h.state.sortAscending, isTrue);
+        verify(
+          h.studyRepo.fetchPage(
+            offset: 0,
+            limit: anyNamed('limit'),
+            sortBy: StudiesTableColumn.title,
+            ascending: true,
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(greaterThanOrEqualTo(1));
+      },
+    );
+
+    test('unknown persisted sort column falls back to default', () async {
+      final h = _Harness(
+        activeSort: (sortColumn: 'someRemovedColumn', sortAscending: true),
+      );
+      await h.settle();
+
+      expect(h.state.sortByColumn, StudiesTableColumn.createdAt);
+      expect(h.state.sortAscending, isFalse);
+    });
+
+    test(
+      'controller does not double-fetch on first build (no race with '
+      'setStudiesFilter)',
+      () async {
+        // Regression: previously, build() -> _loadInitial -> _resetAndReload
+        // raced against initState's setStudiesFilter(widget.filter), firing
+        // two HTTP fetches per navigation. The fix routes the single load
+        // through setStudiesFilter only.
+        final h = _Harness();
+        await h.settle();
+
+        verify(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(1);
       },
     );
   });

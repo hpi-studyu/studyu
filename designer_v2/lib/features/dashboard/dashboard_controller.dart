@@ -53,24 +53,22 @@ class DashboardController extends _$DashboardController
   int _fetchToken = 0;
 
   Future<void> _loadInitial() async {
-    await _loadUserPreferences();
-    await _resetAndReload();
+    await _loadSavedFilters();
+    // Note: page-specific active filter / sort and the first list fetch are
+    // driven by setStudiesFilter(widget.filter) from DashboardScreen.initState.
+    // We deliberately do NOT call _resetAndReload here, otherwise we would
+    // race against that path and fire two redundant HTTP fetches per nav.
   }
 
-  Future<void> _loadUserPreferences() async {
+  /// Loads only page-agnostic UI metadata: the user record (so getActiveFilter
+  /// has data to read later) and the saved-preset list (which is shared across
+  /// all dashboard page-keys). Per-page active filter + sort restoration lives
+  /// in [setStudiesFilter] so it always matches the route the widget mounted.
+  Future<void> _loadSavedFilters() async {
     try {
       await _userRepository.fetchUser();
-
       final savedFilters = _userRepository.getCustomPresets();
-      const defaultFilter = DashboardState.defaultFilter;
-      final pageKey = _getPageKey(defaultFilter);
-      final active = _userRepository.getActiveFilter(pageKey);
-
-      state = state.copyWith(
-        savedFilters: () => savedFilters,
-        activeFilter: () => active.filterGroup,
-        selectedSavedFilterId: () => active.presetId,
-      );
+      state = state.copyWith(savedFilters: () => savedFilters);
     } catch (e) {
       // ignore: avoid_print
       print("Failed to load user preferences: $e");
@@ -192,11 +190,14 @@ class DashboardController extends _$DashboardController
     final newFilter = filter ?? DashboardState.defaultFilter;
     final pageKey = _getPageKey(newFilter);
     final active = _userRepository.getActiveFilter(pageKey);
+    final activeSort = _resolveActiveSort(pageKey);
 
     state = state.copyWith(
       studiesFilter: () => newFilter,
       activeFilter: () => active.filterGroup,
       selectedSavedFilterId: () => active.presetId,
+      sortByColumn: activeSort.sortByColumn,
+      sortAscending: activeSort.sortAscending,
     );
     await _resetAndReload();
   }
@@ -297,7 +298,37 @@ class DashboardController extends _$DashboardController
       sortByColumn: sortByColumn,
       sortAscending: ascending,
     );
+    final pageKey = _getPageKey(state.studiesFilter);
+    // Fire-and-forget: persistence failure should not block UI updates.
+    unawaited(
+      _userRepository.saveActiveSort(
+        page: pageKey,
+        sortColumn: sortByColumn.name,
+        sortAscending: ascending,
+      ),
+    );
     unawaited(_resetAndReload());
+  }
+
+  /// Resolves the persisted sort for [pageKey] back to typed values, falling
+  /// back to [DashboardState] defaults when nothing is stored or when the
+  /// stored column name no longer maps to a known [StudiesTableColumn] (e.g.
+  /// after an enum rename). When the column falls back, the direction falls
+  /// back too — a stored direction is meaningless without its column.
+  ({StudiesTableColumn sortByColumn, bool sortAscending}) _resolveActiveSort(
+    String pageKey,
+  ) {
+    const defaultColumn = StudiesTableColumn.createdAt;
+    const defaultAscending = false;
+    final stored = _userRepository.getActiveSort(pageKey);
+    final column = StudiesTableColumn.values.asNameMap()[stored.sortColumn];
+    if (column == null) {
+      return (sortByColumn: defaultColumn, sortAscending: defaultAscending);
+    }
+    return (
+      sortByColumn: column,
+      sortAscending: stored.sortAscending ?? defaultAscending,
+    );
   }
 
   Future<void> filterStudies(String? query) async {

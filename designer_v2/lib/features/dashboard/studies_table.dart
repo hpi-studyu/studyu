@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
@@ -52,6 +53,7 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
+    required this.pagingController,
     this.isLoadingMore = false,
     this.hasMore = false,
     this.advancedFilterUnsupported = false,
@@ -80,6 +82,7 @@ class StudiesTable extends StatelessWidget {
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
+  final PagingController<int, Study> pagingController;
   final bool isLoadingMore;
   final bool hasMore;
   final bool advancedFilterUnsupported;
@@ -251,37 +254,72 @@ class StudiesTable extends StatelessWidget {
               ),
             ),
             SizedBox(height: rowSpacing),
-            ListView.builder(
-              key: const ValueKey('studies_table_rows'),
-              itemCount: studies.length,
-              itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final item = studies[index];
-                return StudiesTableItem(
-                  key: ValueKey('study_row_${item.id}'),
-                  study: item,
-                  columnSizes: columnDefinitionsMap.values.toList(),
-                  actions: getActions(item),
-                  isPinned: pinnedStudies.contains(item.id),
-                  itemHeight: itemHeight,
-                  rowSpacing: rowSpacing,
-                  columnSpacing: columnSpacing,
-                  onPinnedChanged: (study, pinned) {
-                    pinnedStudies.contains(item.id)
-                        ? dashboardController.pinOffStudy(item.id)
-                        : dashboardController.pinStudy(item.id);
-                  },
-                  onTap: (study) => onSelect.call(study),
-                );
-              },
-            ),
-            _StudiesTableFooter(
-              isLoadingMore: isLoadingMore,
-              hasMore: hasMore,
-              loadError: loadError,
-              onRetry: onRetry,
+            Expanded(
+              child: PagingListener<int, Study>(
+                controller: pagingController,
+                builder: (context, state, fetchNextPage) =>
+                    PagedListView<int, Study>(
+                      key: const ValueKey('studies_table_rows'),
+                      state: state,
+                      fetchNextPage: fetchNextPage,
+                      // Constant row height lets the list size and scroll
+                      // efficiently — rows are recycled instead of all
+                      // staying in the layout tree.
+                      itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
+                      builderDelegate: PagedChildBuilderDelegate<Study>(
+                        itemBuilder: (context, item, index) =>
+                            StudiesTableItem(
+                              key: ValueKey('study_row_${item.id}'),
+                              study: item,
+                              columnSizes: columnDefinitionsMap.values
+                                  .toList(),
+                              actions: getActions(item),
+                              isPinned: pinnedStudies.contains(item.id),
+                              itemHeight: itemHeight,
+                              rowSpacing: rowSpacing,
+                              columnSpacing: columnSpacing,
+                              onPinnedChanged: (study, pinned) {
+                                pinnedStudies.contains(item.id)
+                                    ? dashboardController.pinOffStudy(item.id)
+                                    : dashboardController.pinStudy(item.id);
+                              },
+                              onTap: (study) => onSelect.call(study),
+                            ),
+                        newPageProgressIndicatorBuilder: (_) => const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(
+                            child: SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        noMoreItemsIndicatorBuilder: (_) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(
+                            child: Text(
+                              "End of list".hardcoded,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                            ),
+                          ),
+                        ),
+                        newPageErrorIndicatorBuilder: (_) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(
+                            child: TextButton.icon(
+                              onPressed: onRetry,
+                              icon: const Icon(Icons.refresh),
+                              label: Text("Retry".hardcoded),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+              ),
             ),
           ],
         );
@@ -334,62 +372,6 @@ class StudiesTable extends StatelessWidget {
             }
           : null,
     );
-  }
-}
-
-class _StudiesTableFooter extends StatelessWidget {
-  const _StudiesTableFooter({
-    required this.isLoadingMore,
-    required this.hasMore,
-    required this.loadError,
-    required this.onRetry,
-  });
-
-  final bool isLoadingMore;
-  final bool hasMore;
-  final Object? loadError;
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    if (loadError != null) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Center(
-          child: TextButton.icon(
-            onPressed: onRetry,
-            icon: const Icon(Icons.refresh),
-            label: Text("Retry".hardcoded),
-          ),
-        ),
-      );
-    }
-    if (isLoadingMore) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
-        child: Center(
-          child: SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-        ),
-      );
-    }
-    if (!hasMore) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Center(
-          child: Text(
-            "End of list".hardcoded,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).hintColor),
-          ),
-        ),
-      );
-    }
-    return const SizedBox.shrink();
   }
 }
 

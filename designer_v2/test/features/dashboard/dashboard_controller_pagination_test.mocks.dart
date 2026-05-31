@@ -919,6 +919,50 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
             returnValueForMissingStub: (filterGroup: null, presetId: null),
           )
           as ({_i15.FilterGroup? filterGroup, String? presetId}));
+
+  @override
+  ({bool? sortAscending, String? sortColumn}) getActiveSort(String? page) =>
+      (super.noSuchMethod(
+            Invocation.method(#getActiveSort, [page]),
+            returnValue: (sortAscending: null, sortColumn: null),
+            returnValueForMissingStub: (sortAscending: null, sortColumn: null),
+          )
+          as ({bool? sortAscending, String? sortColumn}));
+
+  @override
+  _i12.Future<_i7.StudyUUser> saveActiveSort({
+    required String? page,
+    required String? sortColumn,
+    required bool? sortAscending,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveActiveSort, [], {
+              #page: page,
+              #sortColumn: sortColumn,
+              #sortAscending: sortAscending,
+            }),
+            returnValue: _i12.Future<_i7.StudyUUser>.value(
+              _FakeStudyUUser_10(
+                this,
+                Invocation.method(#saveActiveSort, [], {
+                  #page: page,
+                  #sortColumn: sortColumn,
+                  #sortAscending: sortAscending,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+              _FakeStudyUUser_10(
+                this,
+                Invocation.method(#saveActiveSort, [], {
+                  #page: page,
+                  #sortColumn: sortColumn,
+                  #sortAscending: sortAscending,
+                }),
+              ),
+            ),
+          )
+          as _i12.Future<_i7.StudyUUser>);
 }
 
 /// A class which mocks [User].
