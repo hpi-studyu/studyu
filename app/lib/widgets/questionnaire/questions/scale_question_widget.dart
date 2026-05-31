@@ -8,8 +8,14 @@ import 'package:studyu_core/core.dart';
 class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
   final Function(Answer)? onDone;
+  final Answer<num>? initialAnswer;
 
-  const ScaleQuestionWidget({super.key, required this.question, this.onDone});
+  const ScaleQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+    this.initialAnswer,
+  });
 
   @override
   State<ScaleQuestionWidget> createState() => _ScaleQuestionWidgetState();
@@ -22,8 +28,9 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
   @override
   void initState() {
     super.initState();
-    value = widget.question.initial;
-    sliderTouched = false;
+    value =
+        widget.initialAnswer?.response.toDouble() ?? widget.question.initial;
+    sliderTouched = widget.initialAnswer != null;
   }
 
   @override
