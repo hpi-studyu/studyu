@@ -1238,6 +1238,12 @@ abstract class AppLocalizations {
   /// **'Please enter a value in the required format'**
   String get free_text_custom_error;
 
+  /// No description provided for @free_text_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your answer'**
+  String get free_text_hint;
+
   /// No description provided for @app_outdated_message.
   ///
   /// In en, this message translates to:

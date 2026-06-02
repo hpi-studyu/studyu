@@ -104,6 +104,7 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     final question = widget.question;
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -116,6 +117,7 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           inputFormatters: _getInputFormatters(),
           textInputAction: TextInputAction.done,
           autovalidateMode: _autovalidateMode,
+          decoration: InputDecoration(hintText: l10n.free_text_hint),
           onTap: () {
             _ensureTextFieldVisible();
           },

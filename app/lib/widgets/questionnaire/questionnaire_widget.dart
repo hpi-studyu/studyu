@@ -132,12 +132,18 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _handleGlobalCtaPressed() {
+    // Capture CTA mode before committing — a "Continue" press must never
+    // submit; it only advances and reveals the next step.
+    final modeBefore = _controller.ctaModeFor(
+      shownQuestions.map((c) => c.question),
+    );
+
     final payload = validateSyncAndBuildPayload();
     if (payload == null) return;
 
     setState(() => _rebuildShownQuestionsFromController());
 
-    if (_controller.allVisibleQuestionsAnswered) {
+    if (modeBefore == QuestionnaireCtaMode.complete) {
       _finishQuestionnaire(payload);
     } else {
       _finishQuestionnaire(null);

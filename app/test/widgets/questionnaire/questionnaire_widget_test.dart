@@ -1456,7 +1456,7 @@ void main() {
     final completions = snapshots.where((s) => s != null).toList();
     expect(completions.length, 1);
 
-    // Tap Continue → branch change applies
+    // Tap Continue → branch change applies (no submit yet)
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
@@ -1464,6 +1464,11 @@ void main() {
     expect(find.text('dependent'), findsNothing);
     // Q1 still visible
     expect(find.byType(TextFormField), findsOneWidget);
+
+    // CTA now Complete → press to submit
+    expect(find.text('Complete'), findsOneWidget);
+    await tester.tap(find.text('Complete'));
+    await tester.pumpAndSettle();
 
     // Final completion fires (q1='hide', q2 hidden)
     final finalCompletion = snapshots.where((s) => s != null).last!;

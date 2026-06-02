@@ -642,6 +642,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte geben Sie einen Wert im erforderlichen Format ein';
 
   @override
+  String get free_text_hint => 'Geben Sie Ihre Antwort ein';
+
+  @override
   String get app_outdated_message =>
       'Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!';
 
