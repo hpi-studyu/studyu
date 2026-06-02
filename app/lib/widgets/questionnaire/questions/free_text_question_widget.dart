@@ -36,6 +36,13 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (initialValue != null) {
       _textFieldController.text = initialValue;
       widget.onDraftChanged?.call(widget.question.id, initialValue);
+      // If the restored value is invalid (e.g. after switching question trees
+      // and back), surface the error immediately instead of hiding it until
+      // the next keystroke.
+      if (widget.question.validateResponse(initialValue) != null) {
+        _hasInteracted = true;
+        _autovalidateMode = AutovalidateMode.always;
+      }
     }
     _focusNode.addListener(_onFocusChange);
   }
@@ -89,17 +96,10 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
   }
 
-  List<TextInputFormatter> _getInputFormatters() {
-    switch (widget.question.textType) {
-      case FreeTextQuestionType.numeric:
-        return [FilteringTextInputFormatter.allow(RegExp('^-?[0-9]*'))];
-      case FreeTextQuestionType.alphanumeric:
-        return [FilteringTextInputFormatter.allow(RegExp(alphanumericPattern))];
-      case FreeTextQuestionType.any:
-      case FreeTextQuestionType.custom:
-        return [];
-    }
-  }
+  /// No input formatters. Let the validator provide error feedback when the
+  /// user types characters outside the expected charset, rather than silently
+  /// blocking them.
+  List<TextInputFormatter> _getInputFormatters() => [];
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +117,6 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           textInputAction: TextInputAction.done,
           autovalidateMode: _autovalidateMode,
           onTap: () {
-            _handleInteraction();
             _ensureTextFieldVisible();
           },
           onChanged: (value) {

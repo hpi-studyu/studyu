@@ -127,4 +127,52 @@ void main() {
     expect(onDoneCount, equals(0));
     expect(find.text('Submit'), findsNothing);
   });
+
+  testWidgets(
+    'restored invalid initial answer shows validation error immediately',
+    (tester) async {
+      final question = FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.numeric,
+        lengthRange: [1, 10],
+      );
+
+      // Simulates switching question trees and back: the widget is recreated
+      // with a restored (invalid) value. The error must surface right away.
+      await tester.pumpWidget(
+        setup(
+          FreeTextQuestionWidget(
+            question: question,
+            initialAnswer: question.constructAnswer('abc'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Please enter only numeric characters'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets('restored valid initial answer shows no validation error', (
+    tester,
+  ) async {
+    final question = FreeTextQuestion.withId(
+      textType: FreeTextQuestionType.numeric,
+      lengthRange: [1, 10],
+    );
+
+    await tester.pumpWidget(
+      setup(
+        FreeTextQuestionWidget(
+          question: question,
+          initialAnswer: question.constructAnswer('123'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please enter only numeric characters'), findsNothing);
+  });
 }

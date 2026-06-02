@@ -20,6 +20,10 @@ class QuestionnaireWidget extends StatefulWidget {
   final StateHandler? onComplete;
   final ContinuationPredicate? shouldContinue;
 
+  /// When true, the global CTA shows a loading spinner and is disabled.
+  /// The parent sets this while it processes a completed submission.
+  final bool isSubmitting;
+
   const QuestionnaireWidget(
     this.questions, {
     this.taskId,
@@ -28,6 +32,7 @@ class QuestionnaireWidget extends StatefulWidget {
     this.footer,
     this.onComplete,
     this.shouldContinue,
+    this.isSubmitting = false,
     super.key,
   });
 
@@ -122,8 +127,9 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     return _controller.answerFor(question.id);
   }
 
-  void _finishQuestionnaire(QuestionnaireState? result) =>
-      widget.onComplete?.call(result);
+  void _finishQuestionnaire(QuestionnaireState? result) {
+    widget.onComplete?.call(result);
+  }
 
   void _handleGlobalCtaPressed() {
     final payload = validateSyncAndBuildPayload();
@@ -345,13 +351,19 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final ctaMode = _controller.ctaModeFor(shownQuestions.map((c) => c.question));
+    final showCta = ctaMode != QuestionnaireCtaMode.hidden;
+    
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: shownQuestions.length,
+            itemCount: shownQuestions.length + (showCta ? 1 : 0),
             itemBuilder: (context, index) {
+              if (showCta && index == shownQuestions.length) {
+                return _buildCtaBar(ctaMode);
+              }
               final question = shownQuestions[index];
               return Column(
                 children: [
@@ -376,25 +388,41 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
             },
           ),
         ),
-        _buildCtaBar(),
       ],
     );
   }
 
-  Widget _buildCtaBar() {
-    final mode = _controller.ctaModeFor(shownQuestions.map((c) => c.question));
-    if (mode == QuestionnaireCtaMode.hidden) return const SizedBox.shrink();
-
+  Widget _buildCtaBar(QuestionnaireCtaMode mode) {
     final l10n = AppLocalizations.of(context)!;
-    final label = mode == QuestionnaireCtaMode.continue_
-        ? l10n.continue_label
-        : l10n.complete;
+    final isContinue = mode == QuestionnaireCtaMode.continue_;
+    final label = isContinue ? l10n.continue_label : l10n.complete;
+    final backgroundColor = isContinue ? Colors.orange.shade700 : Colors.green;
+    final isSubmitting = widget.isSubmitting;
 
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: ElevatedButton(
-        onPressed: _handleGlobalCtaPressed,
-        child: Text(label),
+      child: Center(
+        child: ElevatedButton.icon(
+          icon: isSubmitting
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Icon(isContinue ? Icons.arrow_forward : Icons.check),
+          label: Text(label),
+          onPressed: isSubmitting ? null : _handleGlobalCtaPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backgroundColor,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: backgroundColor.withValues(alpha: 0.7),
+            disabledForegroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          ),
+        ),
       ),
     );
   }

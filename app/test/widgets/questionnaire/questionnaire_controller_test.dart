@@ -637,6 +637,50 @@ void main() {
           );
         },
       );
+
+      test(
+        'restored free-text draft equal to committed answer does not force '
+        'continue when a later question is unanswered',
+        () {
+          // q1 bool, q2 free-text (restored), q3 unanswered (e.g. choice).
+          final q1 = boolQuestion('q1', 'Show follow-ups?');
+          final q2 = freeTextQuestion('q2', 'Free text')
+            ..conditional = shownWhenQ1True<String>();
+          final q3 = boolQuestion('q3', 'Choice')
+            ..conditional = shownWhenQ1True<bool>();
+          final controller = QuestionnaireController([q1, q2, q3]);
+
+          controller.submitAnswer(q1.constructAnswer(true));
+          // q2 was previously answered; on re-show its widget restores the
+          // value as BOTH a committed answer and a mirror draft.
+          controller.submitAnswer(q2.constructAnswer('4534'));
+          controller.updateFreeTextDraft('q2', '4534');
+
+          // q3 is unanswered. The mirror draft must not force a Continue CTA.
+          expect(
+            controller.ctaModeFor([q1, q2, q3]),
+            QuestionnaireCtaMode.hidden,
+          );
+        },
+      );
+
+      test('hidden while a shown free-text draft is invalid', () {
+        final q1 = FreeTextQuestion.withId(
+          textType: FreeTextQuestionType.numeric,
+          lengthRange: [1, 100],
+        )..id = 'q1';
+        final controller = QuestionnaireController([q1]);
+
+        // Invalid numeric draft → CTA suppressed.
+        controller.updateFreeTextDraft('q1', 'abc');
+        expect(controller.hasInvalidDraftAmong([q1]), isTrue);
+        expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.hidden);
+
+        // Correcting the draft re-enables the CTA.
+        controller.updateFreeTextDraft('q1', '123');
+        expect(controller.hasInvalidDraftAmong([q1]), isFalse);
+        expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.complete);
+      });
     });
   });
 }

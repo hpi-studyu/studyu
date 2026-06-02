@@ -201,6 +201,18 @@ class QuestionnaireController extends ChangeNotifier {
     return null;
   }
 
+  /// Returns `true` when any [FreeTextQuestion] in [questions] carries a
+  /// non-empty draft that fails validation. Used to suppress the global CTA
+  /// while a visible free-text field has an error.
+  bool hasInvalidDraftAmong(Iterable<Question> questions) {
+    for (final question in questions.whereType<FreeTextQuestion>()) {
+      final draft = _drafts[question.id];
+      if (draft == null || draft.isEmpty) continue;
+      if (question.validateResponse(draft) != null) return true;
+    }
+    return false;
+  }
+
   /// Commits free-text drafts for all currently visible free-text questions.
   ///
   /// Prefer [commitFreeTextDraftsFor] in progressive UI contexts where the
@@ -260,6 +272,9 @@ class QuestionnaireController extends ChangeNotifier {
     final questionList = questions.toList(growable: false);
     if (questionList.isEmpty) return QuestionnaireCtaMode.hidden;
 
+    // Never offer a CTA while a shown free-text field has an invalid draft.
+    if (hasInvalidDraftAmong(questionList)) return QuestionnaireCtaMode.hidden;
+
     final visibleQuestionIds = visibleQuestions
         .map((question) => question.id)
         .toSet();
@@ -277,8 +292,15 @@ class QuestionnaireController extends ChangeNotifier {
       final answer = answerFor(question.id);
       final draft = question is FreeTextQuestion ? draftFor(question.id) : null;
       final hasDraftInput = draft != null && draft.isNotEmpty;
+      // A draft only counts as "pending" (requiring a Continue commit) when it
+      // differs from the committed answer. A restored draft that mirrors the
+      // committed answer is not pending and must not force a Continue CTA.
+      final hasPendingDraft =
+          hasDraftInput &&
+          (answer == null ||
+              (answer is Answer<String> && answer.response != draft));
       final hasInput = answer != null || hasDraftInput;
-      hasVisibleDraft = hasVisibleDraft || hasDraftInput;
+      hasVisibleDraft = hasVisibleDraft || hasPendingDraft;
       hasAnyInput = hasAnyInput || hasInput;
       allShownHaveInput = allShownHaveInput && hasInput;
     }
