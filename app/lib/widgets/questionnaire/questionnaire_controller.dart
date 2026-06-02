@@ -22,7 +22,7 @@ class QuestionnaireController extends ChangeNotifier {
   }
 
   List<Question> get visibleQuestions {
-    return questions.where(_isQuestionVisible).toList();
+    return _deriveVisibleQuestions();
   }
 
   /// Returns visible questions in order, up to (but not including) the first
@@ -77,29 +77,58 @@ class QuestionnaireController extends ChangeNotifier {
     return false;
   }
 
-  /// Returns true if the question should be shown based on current answers.
-  /// Questions without conditional are always visible.
-  /// Questions with conditional are visible only when condition
-  /// evaluates to true (null = hidden).
-  bool _isQuestionVisible(Question question) {
+  QuestionnaireState _evaluationStateWith(Map<String, Answer> answers) {
+    final state = QuestionnaireState();
+    state.answers.addAll(answers);
+    return state;
+  }
+
+  bool _isQuestionVisibleInState(
+    Question question,
+    QuestionnaireState evaluationState,
+  ) {
     final conditional = question.conditional;
     if (conditional == null) return true;
-    return conditional.condition.evaluate(_answers) == true;
+    return conditional.condition.evaluate(evaluationState) == true;
+  }
+
+  Answer? _defaultAnswerForHiddenQuestion(Question question) {
+    return question.getDefaultAnswer();
+  }
+
+  List<Question> _deriveVisibleQuestions({bool applyHiddenDefaults = false}) {
+    final visible = <Question>[];
+    final evaluationAnswers = <String, Answer>{};
+
+    for (final question in questions) {
+      final evaluationState = _evaluationStateWith(evaluationAnswers);
+      final isVisible = _isQuestionVisibleInState(question, evaluationState);
+
+      if (isVisible) {
+        visible.add(question);
+        final answer = _answers.answers[question.id];
+        if (answer != null) evaluationAnswers[question.id] = answer;
+      } else {
+        final defaultAnswer = _defaultAnswerForHiddenQuestion(question);
+        if (defaultAnswer != null) {
+          if (applyHiddenDefaults) {
+            _answers.answers.putIfAbsent(question.id, () => defaultAnswer);
+          }
+          if (applyHiddenDefaults ||
+              _answers.answers.containsKey(question.id)) {
+            evaluationAnswers[question.id] = defaultAnswer;
+          }
+        }
+      }
+    }
+
+    return visible;
   }
 
   /// Applies default answers to hidden questions that have defaults,
   /// so downstream visibility computation can reference them.
   void _applyHiddenDefaults() {
-    for (final question in questions) {
-      if (!_isQuestionVisible(question)) {
-        if (!_answers.answers.containsKey(question.id)) {
-          final defaultAnswer = question.getDefaultAnswer();
-          if (defaultAnswer != null) {
-            _answers.answers[question.id] = defaultAnswer;
-          }
-        }
-      }
-    }
+    _deriveVisibleQuestions(applyHiddenDefaults: true);
   }
 
   Answer? answerFor(String questionId) {
@@ -119,6 +148,10 @@ class QuestionnaireController extends ChangeNotifier {
 
   String draftFor(String questionId) {
     return _drafts[questionId] ?? '';
+  }
+
+  bool hasDraft(String questionId) {
+    return _drafts.containsKey(questionId);
   }
 
   void submitAnswer(Answer answer) {
@@ -195,10 +228,8 @@ class QuestionnaireController extends ChangeNotifier {
   /// This signals that pressing the global CTA will change which follow-up
   /// questions are visible.
   ///
-  /// Uses [progressiveVisibleQuestions] to match what the user sees rather
-  /// than all technically visible questions.
-  bool get hasPendingBranchChange {
-    for (final q in progressiveVisibleQuestions.whereType<FreeTextQuestion>()) {
+  bool _hasPendingBranchChangeFor(Iterable<Question> questions) {
+    for (final q in questions.whereType<FreeTextQuestion>()) {
       if (!hasConditionalDependents(q.id)) continue;
       final draft = _drafts[q.id];
       if (draft == null || draft.isEmpty) continue;
@@ -211,49 +242,59 @@ class QuestionnaireController extends ChangeNotifier {
     return false;
   }
 
+  /// Uses [progressiveVisibleQuestions] to match what the user sees rather
+  /// than all technically visible questions.
+  bool get hasPendingBranchChange {
+    return _hasPendingBranchChangeFor(progressiveVisibleQuestions);
+  }
+
   /// Determines which CTA to show for the given [questions].
   ///
-  /// - [QuestionnaireCtaMode.hidden]: no question has an answer or non-empty
-  ///   free-text draft.
-  /// - [QuestionnaireCtaMode.continue_]: at least one free-text question has
-  ///   a pending branch change.
-  /// - [QuestionnaireCtaMode.complete]: every question has either a committed
-  ///   answer or a non-empty free-text draft, and there is no pending branch
-  ///   change.
+  /// - [QuestionnaireCtaMode.hidden]: no visible question has any input or no
+  ///   CTA action can be taken.
+  /// - [QuestionnaireCtaMode.continue_]: a visible free-text draft can be
+  ///   committed but pressing the CTA should advance rather than complete.
+  /// - [QuestionnaireCtaMode.complete]: pressing the CTA can produce a final
+  ///   visible-answer payload.
   QuestionnaireCtaMode ctaModeFor(Iterable<Question> questions) {
-    if (questions.isEmpty) return QuestionnaireCtaMode.hidden;
+    final questionList = questions.toList(growable: false);
+    if (questionList.isEmpty) return QuestionnaireCtaMode.hidden;
 
-    var hasInput = false;
-    for (final q in questions) {
-      if (_answers.answers.containsKey(q.id)) {
-        hasInput = true;
-        break;
-      }
-      if (q is FreeTextQuestion) {
-        final draft = _drafts[q.id];
-        if (draft != null && draft.isNotEmpty) {
-          hasInput = true;
-          break;
-        }
-      }
+    final visibleQuestionIds = visibleQuestions
+        .map((question) => question.id)
+        .toSet();
+    final shownQuestionIds = questionList
+        .map((question) => question.id)
+        .toSet();
+    final hasUnshownVisibleQuestion = visibleQuestionIds
+        .difference(shownQuestionIds)
+        .isNotEmpty;
+    var hasVisibleDraft = false;
+    var hasAnyInput = false;
+    var allShownHaveInput = true;
+
+    for (final question in questionList) {
+      final answer = answerFor(question.id);
+      final draft = question is FreeTextQuestion ? draftFor(question.id) : null;
+      final hasDraftInput = draft != null && draft.isNotEmpty;
+      final hasInput = answer != null || hasDraftInput;
+      hasVisibleDraft = hasVisibleDraft || hasDraftInput;
+      hasAnyInput = hasAnyInput || hasInput;
+      allShownHaveInput = allShownHaveInput && hasInput;
     }
 
-    if (!hasInput) return QuestionnaireCtaMode.hidden;
+    if (!hasAnyInput) return QuestionnaireCtaMode.hidden;
 
-    if (hasPendingBranchChange) return QuestionnaireCtaMode.continue_;
+    if (_hasPendingBranchChangeFor(questionList)) {
+      return QuestionnaireCtaMode.continue_;
+    }
 
-    final allCovered = questions.every((q) {
-      if (_answers.answers.containsKey(q.id)) return true;
-      if (q is FreeTextQuestion) {
-        final draft = _drafts[q.id];
-        return draft != null && draft.isNotEmpty;
-      }
-      return false;
-    });
+    if (hasVisibleDraft && (!allShownHaveInput || hasUnshownVisibleQuestion)) {
+      return QuestionnaireCtaMode.continue_;
+    }
 
-    return allCovered
-        ? QuestionnaireCtaMode.complete
-        : QuestionnaireCtaMode.hidden;
+    if (allShownHaveInput) return QuestionnaireCtaMode.complete;
+    return QuestionnaireCtaMode.hidden;
   }
 
   /// Convenience getter that computes [ctaModeFor] for

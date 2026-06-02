@@ -109,6 +109,19 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         question is VisualAnalogueQuestion;
   }
 
+  Answer? _initialAnswerForQuestion(Question question) {
+    if (!_supportsInitialAnswerRestore(question)) return null;
+
+    if (question is FreeTextQuestion) {
+      if (_controller.hasDraft(question.id)) {
+        final draft = _controller.draftFor(question.id);
+        return question.constructAnswer(draft);
+      }
+    }
+
+    return _controller.answerFor(question.id);
+  }
+
   void _finishQuestionnaire(QuestionnaireState? result) =>
       widget.onComplete?.call(result);
 
@@ -199,9 +212,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               ),
             )
           : null;
-      final initialAnswer = _supportsInitialAnswerRestore(question)
-          ? _controller.answerFor(question.id)
-          : null;
+      final initialAnswer = _initialAnswerForQuestion(question);
       questionKeys.add(containerKey);
       shownQuestions.add(
         _buildQuestionContainer(

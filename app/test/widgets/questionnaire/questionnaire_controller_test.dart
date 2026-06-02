@@ -82,6 +82,45 @@ void main() {
       expect(a2b.response, equals('cached'));
     });
 
+    test('hidden cached answers do not drive downstream visibility', () {
+      final q1 = boolQuestion('q1', 'Show q2?');
+      final q2 = boolQuestion('q2', 'Show q3?')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [BooleanExpression()..target = 'q1'],
+          ),
+        );
+      final q3 = boolQuestion('q3', 'Downstream question')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [BooleanExpression()..target = 'q2'],
+          ),
+        );
+
+      final controller = QuestionnaireController([q1, q2, q3]);
+
+      controller.submitAnswer(q1.constructAnswer(true));
+      controller.submitAnswer(q2.constructAnswer(true));
+      controller.submitAnswer(q3.constructAnswer(true));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1', 'q2', 'q3']);
+
+      controller.submitAnswer(q1.constructAnswer(false));
+
+      expect(controller.answerFor('q2'), isNotNull);
+      expect(controller.answerFor('q3'), isNotNull);
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+      expect(
+        controller.buildVisiblePayload().answers.containsKey('q2'),
+        isFalse,
+      );
+      expect(
+        controller.buildVisiblePayload().answers.containsKey('q3'),
+        isFalse,
+      );
+    });
+
     // ── Test 3: answers getter is defensive ──
 
     test('answers getter returns defensive copy', () {
@@ -562,6 +601,40 @@ void main() {
           // q2 unanswered → progressiveVisibleQuestions stops at q1.
           // ctaMode (based on progressive) sees all progressive questions answered.
           expect(controller.ctaMode, QuestionnaireCtaMode.complete);
+        },
+      );
+
+      test(
+        'continue_ when shown unanswered free-text draft reveals hidden branch',
+        () {
+          final q1 = boolQuestion('q1', 'Show text?');
+          final q2 = freeTextQuestion('q2', 'Type "show"')
+            ..conditional = shownWhenQ1True<String>();
+          final q3 = boolQuestion('q3', 'Revealed by text')
+            ..conditional = QuestionConditional<bool>.withCondition(
+              CompositeExpression(
+                logicType: LogicType.and,
+                expressions: [
+                  TextExpression(
+                    comparator: TextComparator.equal,
+                    value: 'show',
+                  )..target = 'q2',
+                ],
+              ),
+            );
+          final controller = QuestionnaireController([q1, q2, q3]);
+
+          controller.submitAnswer(q1.constructAnswer(true));
+          expect(controller.progressiveVisibleQuestions.map((q) => q.id), [
+            'q1',
+          ]);
+
+          controller.updateFreeTextDraft('q2', 'show');
+
+          expect(
+            controller.ctaModeFor([q1, q2]),
+            QuestionnaireCtaMode.continue_,
+          );
         },
       );
     });

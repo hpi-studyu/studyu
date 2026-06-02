@@ -724,6 +724,104 @@ void main() {
 
   // ── Free-text + CTA tests ──
 
+  testWidgets('free-text draft restores after hide and reshow before CTA', (
+    tester,
+  ) async {
+    final q1 = _boolQuestion('q1', 'Show free text?');
+    final q2 =
+        FreeTextQuestion.withId(
+            textType: FreeTextQuestionType.any,
+            lengthRange: [1, 100],
+          )
+          ..id = 'q2'
+          ..prompt = 'Draft text'
+          ..conditional = QuestionConditional<String>.withCondition(
+            CompositeExpression(
+              logicType: LogicType.and,
+              expressions: [BooleanExpression()..target = 'q1'],
+            ),
+          );
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(setup(QuestionnaireWidget([q1, q2])));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextFormField), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), 'cached draft');
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('no'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextFormField), findsNothing);
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TextFormField), findsOneWidget);
+    expect(find.text('cached draft'), findsOneWidget);
+    expect(find.text('Submit'), findsNothing);
+  });
+
+  testWidgets('free-text committed answer restores after hide and reshow', (
+    tester,
+  ) async {
+    final q1 = _boolQuestion('q1', 'Show free text?');
+    final q2 =
+        FreeTextQuestion.withId(
+            textType: FreeTextQuestionType.any,
+            lengthRange: [1, 100],
+          )
+          ..id = 'q2'
+          ..prompt = 'Committed text'
+          ..conditional = QuestionConditional<String>.withCondition(
+            CompositeExpression(
+              logicType: LogicType.and,
+              expressions: [BooleanExpression()..target = 'q1'],
+            ),
+          );
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(setup(QuestionnaireWidget([q1, q2])));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextFormField), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), 'committed text');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Complete'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('no'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextFormField), findsNothing);
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TextFormField), findsOneWidget);
+    final controller = tester
+        .widget<TextFormField>(find.byType(TextFormField))
+        .controller;
+    expect(controller?.text, equals('committed text'));
+    expect(find.text('Submit'), findsNothing);
+  });
+
   testWidgets('global CTA commits free-text draft and reveals next question', (
     tester,
   ) async {
@@ -753,15 +851,15 @@ void main() {
     // No Submit button since free-text has no per-field Submit
     expect(find.text('Submit'), findsNothing);
 
-    // Type valid text. CTA shows "Complete" (non-conditional free-text)
+    // Type valid text. CTA shows Continue because pressing it reveals q2.
     await tester.enterText(find.byType(TextFormField), '42');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    expect(find.text('Complete'), findsOneWidget);
+    expect(find.text('Continue'), findsOneWidget);
 
-    // Tap Complete → draft committed, q2 revealed
-    await tester.tap(find.text('Complete'));
+    // Tap Continue → draft committed, q2 revealed
+    await tester.tap(find.text('Continue'));
     await tester.pump();
     expect(key.currentState!.shownQuestions.length, 2);
     await tester.pumpAndSettle();
@@ -772,6 +870,57 @@ void main() {
     expect(find.text('Complete'), findsNothing);
     expect(find.text('Continue'), findsNothing);
   });
+
+  testWidgets(
+    'free-text draft shows Continue when commit should reveal next question',
+    (tester) async {
+      final q1 =
+          FreeTextQuestion.withId(
+              textType: FreeTextQuestionType.any,
+              lengthRange: [1, 100],
+            )
+            ..id = 'q1'
+            ..prompt = 'First text';
+      final q2 = _boolQuestion('q2', 'Second question');
+
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final snapshots = <Map<String, Object?>?>[];
+
+      await tester.pumpWidget(
+        setup(
+          QuestionnaireWidget([
+            q1,
+            q2,
+          ], onComplete: (state) => snapshots.add(_snapshot(state))),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.text('Second question'), findsNothing);
+
+      await tester.enterText(find.byType(TextFormField), 'hello');
+      await tester.pump();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Submit'), findsNothing);
+      expect(find.text('Continue'), findsOneWidget);
+      expect(find.text('Complete'), findsNothing);
+
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      expect(snapshots.where((snapshot) => snapshot == null).length, 1);
+      expect(find.text('yes'), findsOneWidget);
+      expect(find.text('no'), findsOneWidget);
+      expect(find.text('Continue'), findsNothing);
+      expect(find.text('Complete'), findsNothing);
+    },
+  );
 
   testWidgets(
     'global CTA shows Continue for pending branch change, Complete after',
@@ -866,12 +1015,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Type in q1, tap Complete to reveal q2
+      // Type in q1, tap Continue to reveal q2
       await tester.enterText(find.byType(TextFormField).first, '2');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
 
       // Type in q2, tap Complete again
@@ -937,7 +1086,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextFormField).last, 'later');
@@ -1013,12 +1162,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Submit via CTA
+      // Submit q1 via CTA to reveal q2
       await tester.enterText(find.byType(TextFormField).first, '1');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextFormField).last, 'old q2');
@@ -1182,12 +1331,12 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Type in q1, CTA Complete → reveals q2
+    // Type in q1, CTA Continue → reveals q2
     await tester.enterText(find.byType(TextFormField).first, '2');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
     // Type in q2, CTA Complete → finishes
@@ -1402,15 +1551,14 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      // Q2 re-shown. Committed answer '123' is preserved (FreeTextQuestion
-      // supports initial answer restore). No invalidation occurred because
-      // free-text edits are draft-based in the global-CTA model.
+      // Q2 re-shown. Draft 'abc' is restored before the next CTA commit,
+      // because free-text edits are draft-based in the global-CTA model.
       expect(find.byType(QuestionContainer), findsNWidgets(2));
       expect(find.byType(TextFormField), findsOneWidget);
       final controller = tester
           .widget<TextFormField>(find.byType(TextFormField).last)
           .controller;
-      expect(controller?.text, equals('123'));
+      expect(controller?.text, equals('abc'));
     },
   );
 }

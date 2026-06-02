@@ -55,16 +55,18 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   }
 
   Future<void> _ensureTextFieldVisible() async {
-    final keyContext = _formFieldKey.currentContext;
     await Future.delayed(const Duration(milliseconds: 500));
-    if (keyContext != null && context.mounted) {
-      Scrollable.ensureVisible(
-        keyContext,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.decelerate,
-        alignment: 0.5,
-      );
-    }
+    if (!mounted) return;
+
+    final keyContext = _formFieldKey.currentContext;
+    if (keyContext == null || !keyContext.mounted) return;
+
+    Scrollable.ensureVisible(
+      keyContext,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.decelerate,
+      alignment: 0.5,
+    );
   }
 
   void _handleInteraction() {
