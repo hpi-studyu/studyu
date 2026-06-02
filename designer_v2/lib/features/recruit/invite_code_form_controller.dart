@@ -170,9 +170,12 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Future<StudyInvite> save({bool updateState = true}) {
-    return inviteCodeRepository
-        .save(buildFormData())
-        .then((wrapped) => wrapped!.model);
+    return inviteCodeRepository.save(buildFormData()).then((wrapped) {
+      if (updateState) {
+        finalizeInitializationBaseline();
+      }
+      return wrapped!.model;
+    });
   }
 }
 
