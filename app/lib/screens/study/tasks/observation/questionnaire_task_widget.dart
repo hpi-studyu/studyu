@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
@@ -77,7 +78,9 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               header: widget.task.header,
               footer: widget.task.footer,
               onComplete: (qs) => setState(() {
-                print('Questionnaire completed with response: $qs');
+                if (kDebugMode) {
+                  debugPrint('Questionnaire completed with response: $qs');
+                }
                 response = qs;
               }),
             ),

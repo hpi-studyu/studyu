@@ -1200,4 +1200,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get submit => 'Absenden';
+
+  @override
+  String get continue_label => 'Weiter';
 }

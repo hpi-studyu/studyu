@@ -2311,6 +2311,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @continue_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_label;
 }
 
 class _AppLocalizationsDelegate
