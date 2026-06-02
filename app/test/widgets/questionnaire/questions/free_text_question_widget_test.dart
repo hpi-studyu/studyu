@@ -148,10 +148,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('Please enter only numeric characters'),
-        findsOneWidget,
-      );
+      expect(find.text('Please enter only numeric characters'), findsOneWidget);
     },
   );
 

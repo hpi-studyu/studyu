@@ -351,9 +351,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final ctaMode = _controller.ctaModeFor(shownQuestions.map((c) => c.question));
+    final ctaMode = _controller.ctaModeFor(
+      shownQuestions.map((c) => c.question),
+    );
     final showCta = ctaMode != QuestionnaireCtaMode.hidden;
-    
+
     return Column(
       children: [
         Expanded(
