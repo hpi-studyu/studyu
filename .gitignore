@@ -170,3 +170,6 @@ l10n-missing.txt
 
 # Local OpenCode state
 .opencode/
+
+# Local git worktrees
+.worktrees/
