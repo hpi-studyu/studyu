@@ -94,7 +94,7 @@ abstract class QuestionFormData implements IFormData {
   final QuestionConditional? conditional;
 
   /// Mapping from response option => qualifying/disqualifying
-  late final Map<dynamic, bool> responseOptionsValidity;
+  Map<dynamic, bool> responseOptionsValidity = {};
 
   List<dynamic> get responseOptions; // subclass responsibility
 
