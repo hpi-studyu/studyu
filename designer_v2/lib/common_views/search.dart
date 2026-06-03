@@ -56,17 +56,9 @@ class SearchState extends State<Search> {
         child: Icon(Icons.search_rounded, size: 20),
       ),
       elevation: const WidgetStatePropertyAll<double>(0),
-      constraints: const BoxConstraints(
-        minHeight: 35,
-        maxHeight: 35,
-      ),
-      backgroundColor: WidgetStatePropertyAll<Color>(
-        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
-      ),
+      constraints: const BoxConstraints(minHeight: 35, maxHeight: 35),
       side: WidgetStatePropertyAll<BorderSide>(
-        BorderSide(
-          color: theme.colorScheme.outlineVariant,
-        ),
+        BorderSide(color: theme.colorScheme.outlineVariant),
       ),
       padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
