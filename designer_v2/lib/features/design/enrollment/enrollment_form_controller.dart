@@ -142,6 +142,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     final actions = questionFormViewModels.availableActions(
       model,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_screener_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -150,6 +151,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModel model) {
     final actions = questionFormViewModels.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_screener_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -160,6 +162,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   ) {
     final actions = questionFormViewModels.availableInlineActions(
       model,
+      confirmationSubject: tr.dialog_subject_screener_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -317,6 +320,7 @@ class EnrollmentFormConsentItemDelegate
   List<ModelAction> availableActions(ConsentItemFormViewModel model) {
     final actions = formViewModels.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_consent_item,
       isReadOnly: owner.isReadonly,
     );
     return withIcons(actions, modelActionIcons);

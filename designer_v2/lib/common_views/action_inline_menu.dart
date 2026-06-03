@@ -46,7 +46,7 @@ class ActionMenuInline extends StatelessWidget {
             return IconButton(
               padding: EdgeInsets.zero,
               splashRadius: splashRadius,
-              onPressed: () => action.onExecute(),
+              onPressed: () => action.execute(context),
               iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
               icon: Icon(
                 action.icon,

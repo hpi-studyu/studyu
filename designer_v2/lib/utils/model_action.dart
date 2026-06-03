@@ -1,12 +1,61 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+
+typedef ModelActionHandler = FutureOr<void> Function();
+
+class ModelActionConfirmation {
+  const ModelActionConfirmation({
+    required this.title,
+    this.message,
+    this.confirmLabel,
+    this.cancelLabel,
+    this.icon,
+  });
+
+  final String title;
+  final String? message;
+  final String? confirmLabel;
+  final String? cancelLabel;
+  final IconData? icon;
+}
+
+class ModelActionConfirmations {
+  static ModelActionConfirmation delete({
+    required String subject,
+    String? title,
+    String? message,
+    IconData icon = Icons.delete_rounded,
+  }) {
+    return ModelActionConfirmation(
+      title: title ?? tr.dialog_delete_title(subject),
+      message: message ?? tr.dialog_delete_description(subject),
+      icon: icon,
+    );
+  }
+
+  static ModelActionConfirmation remove({
+    required String subject,
+    String? title,
+    String? message,
+    IconData icon = Icons.delete_outline_rounded,
+  }) {
+    return ModelActionConfirmation(
+      title: title ?? tr.dialog_remove_title(subject),
+      message: message ?? tr.dialog_remove_description(subject),
+      icon: icon,
+    );
+  }
+}
 
 class ModelAction<T> {
   final T type;
   final String label;
   IconData? icon;
   final String? tooltip;
-  final void Function() onExecute;
+  final ModelActionHandler onExecute;
+  final ModelActionConfirmation? confirmation;
   final bool isHeader;
   final bool isSeparator;
   final bool isAvailable;
@@ -18,6 +67,7 @@ class ModelAction<T> {
     required this.type,
     required this.label,
     required this.onExecute,
+    this.confirmation,
     this.isSeparator = false,
     this.isHeader = false, // Added default
     this.isAvailable = true,
@@ -44,6 +94,49 @@ class ModelAction<T> {
       onExecute: () {},
       isHeader: true,
     );
+  }
+
+  Future<void> execute(BuildContext context) async {
+    if (confirmation != null) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (confirmation!.icon != null) ...[
+                Icon(confirmation!.icon),
+                const SizedBox(width: 8),
+              ],
+              Flexible(child: Text(confirmation!.title)),
+            ],
+          ),
+          content: (confirmation!.message == null)
+              ? null
+              : Text(confirmation!.message!),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(confirmation!.cancelLabel ?? tr.dialog_cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(
+                confirmation!.confirmLabel ?? label,
+                style: isDestructive
+                    ? const TextStyle(color: Colors.redAccent)
+                    : null,
+              ),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) {
+        return;
+      }
+    }
+
+    await Future.sync(onExecute);
   }
 }
 
