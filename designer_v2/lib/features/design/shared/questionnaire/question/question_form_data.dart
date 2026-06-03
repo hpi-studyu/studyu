@@ -239,7 +239,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
       answerOptions: [...answerOptions],
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -307,7 +307,7 @@ class BoolQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -374,7 +374,7 @@ class ImageQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -448,7 +448,7 @@ class AudioQuestionFormData extends QuestionFormData {
       conditional: conditional?.deepCopy(),
       maxRecordingDurationSeconds: maxRecordingDurationSeconds,
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -585,7 +585,7 @@ class ScaleQuestionFormData extends QuestionFormData {
       midValues: midValues,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -664,7 +664,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textTypeExpression: textTypeExpression,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -733,7 +733,7 @@ class FitbitQuestionFormData extends QuestionFormData {
       types: types,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -814,7 +814,7 @@ class PainQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
