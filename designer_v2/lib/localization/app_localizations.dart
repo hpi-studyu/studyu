@@ -836,6 +836,102 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.'**
   String get dialog_study_delete_description;
 
+  /// No description provided for @dialog_delete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {subject}?'**
+  String dialog_delete_title(Object subject);
+
+  /// No description provided for @dialog_delete_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this {subject}? This action cannot be undone.'**
+  String dialog_delete_description(Object subject);
+
+  /// No description provided for @dialog_remove_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {subject}?'**
+  String dialog_remove_title(Object subject);
+
+  /// No description provided for @dialog_remove_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove this {subject}? This action cannot be undone.'**
+  String dialog_remove_description(Object subject);
+
+  /// No description provided for @dialog_subject_study.
+  ///
+  /// In en, this message translates to:
+  /// **'study'**
+  String get dialog_subject_study;
+
+  /// No description provided for @dialog_subject_item.
+  ///
+  /// In en, this message translates to:
+  /// **'item'**
+  String get dialog_subject_item;
+
+  /// No description provided for @dialog_subject_question.
+  ///
+  /// In en, this message translates to:
+  /// **'question'**
+  String get dialog_subject_question;
+
+  /// No description provided for @dialog_subject_screener_question.
+  ///
+  /// In en, this message translates to:
+  /// **'screener question'**
+  String get dialog_subject_screener_question;
+
+  /// No description provided for @dialog_subject_answer_option.
+  ///
+  /// In en, this message translates to:
+  /// **'answer option'**
+  String get dialog_subject_answer_option;
+
+  /// No description provided for @dialog_subject_intervention.
+  ///
+  /// In en, this message translates to:
+  /// **'intervention'**
+  String get dialog_subject_intervention;
+
+  /// No description provided for @dialog_subject_intervention_task.
+  ///
+  /// In en, this message translates to:
+  /// **'intervention task'**
+  String get dialog_subject_intervention_task;
+
+  /// No description provided for @dialog_subject_survey.
+  ///
+  /// In en, this message translates to:
+  /// **'survey'**
+  String get dialog_subject_survey;
+
+  /// No description provided for @dialog_subject_consent_item.
+  ///
+  /// In en, this message translates to:
+  /// **'consent item'**
+  String get dialog_subject_consent_item;
+
+  /// No description provided for @dialog_subject_report_section.
+  ///
+  /// In en, this message translates to:
+  /// **'report section'**
+  String get dialog_subject_report_section;
+
+  /// No description provided for @dialog_subject_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'invite code'**
+  String get dialog_subject_invite_code;
+
+  /// No description provided for @dialog_subject_fitbit_credentials.
+  ///
+  /// In en, this message translates to:
+  /// **'fitbit credentials'**
+  String get dialog_subject_fitbit_credentials;
+
   /// No description provided for @form_question_create.
   ///
   /// In en, this message translates to:

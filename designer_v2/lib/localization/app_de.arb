@@ -135,6 +135,42 @@
   "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
+  "dialog_delete_title": "{subject} löschen?",
+  "@dialog_delete_title": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_delete_description": "Bist du sicher, dass dieses {subject} gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@dialog_delete_description": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_remove_title": "{subject} entfernen?",
+  "@dialog_remove_title": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_remove_description": "Bist du sicher, dass diese {subject} entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@dialog_remove_description": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_subject_study": "Studie",
+  "dialog_subject_item": "Element",
+  "dialog_subject_question": "Frage",
+  "dialog_subject_screener_question": "Screening-Frage",
+  "dialog_subject_answer_option": "Antwortoption",
+  "dialog_subject_intervention": "Intervention",
+  "dialog_subject_intervention_task": "Interventionsaufgabe",
+  "dialog_subject_survey": "Umfrage",
+  "dialog_subject_consent_item": "Einwilligungspunkt",
+  "dialog_subject_report_section": "Berichtsabschnitt",
+  "dialog_subject_invite_code": "Teilnahmecode",
+  "dialog_subject_fitbit_credentials": "Fitbit-Zugangsdaten",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
   "form_question_create": "Neue Frage",
   "form_question_edit": "Frage bearbeiten",
