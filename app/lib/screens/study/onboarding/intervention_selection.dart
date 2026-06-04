@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -107,7 +107,7 @@ class _InterventionSelectionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
-        leading: Icon(MdiIcons.formatListChecks),
+        leading: const Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(
         child: Center(

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/env.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,12 +19,12 @@ class AppOutdatedScreen extends StatelessWidget {
         storeUrl =
             'https://play.google.com/store/apps/details?id=$androidPackageName';
       }
-      storeIcon = MdiIcons.googlePlay;
+      storeIcon = Icons.shop;
     } else if (!kIsWeb && Platform.isIOS) {
       if (iosAppStoreId != null) {
         storeUrl = 'https://itunes.apple.com/app/id$iosAppStoreId';
       }
-      storeIcon = MdiIcons.apple;
+      storeIcon = Icons.shop;
     }
     return Scaffold(
       body: SafeArea(

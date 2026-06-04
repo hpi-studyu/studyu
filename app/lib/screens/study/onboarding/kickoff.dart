@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -66,7 +66,11 @@ class _KickoffScreen extends State<KickoffScreen> {
           width: 64,
           child: CircularProgressIndicator(),
         )
-      : Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 64);
+      : const Icon(
+          MdiIcons.checkboxMarkedCircle,
+          color: Colors.green,
+          size: 64,
+        );
 
   String _getStatusText(BuildContext context) => !ready
       ? AppLocalizations.of(context)!.setting_up_study

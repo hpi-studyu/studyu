@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -24,7 +24,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(MdiIcons.food, size: 80, color: Colors.black),
@@ -74,7 +74,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -114,7 +114,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -154,7 +154,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -194,7 +194,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -203,7 +203,7 @@ class AboutScreen extends StatelessWidget {
                         color: Colors.blue,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'of',
                         textAlign: TextAlign.center,
@@ -248,7 +248,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -288,7 +288,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -328,7 +328,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -381,7 +381,7 @@ class AboutScreen extends StatelessWidget {
                 Column(
                   children: [
                     OutlinedButton.icon(
-                      icon: Icon(MdiIcons.playCircleOutline),
+                      icon: const Icon(MdiIcons.playCircleOutline),
                       onPressed: () =>
                           context.push('/${RouteNames.onboarding}'),
                       label: Text(
@@ -392,7 +392,7 @@ class AboutScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     if (!hasActiveSubject)
                       OutlinedButton.icon(
-                        icon: Icon(MdiIcons.rocket),
+                        icon: const Icon(MdiIcons.rocket),
                         onPressed: () => context.push('/${RouteNames.terms}'),
                         label: Text(
                           AppLocalizations.of(context)!.get_started,
@@ -401,7 +401,7 @@ class AboutScreen extends StatelessWidget {
                       )
                     else
                       OutlinedButton.icon(
-                        icon: Icon(MdiIcons.rocket),
+                        icon: const Icon(MdiIcons.rocket),
                         onPressed: () =>
                             context.push('/${RouteNames.dashboard}'),
                         label: Text(

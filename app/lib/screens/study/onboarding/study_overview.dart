@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -76,7 +76,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(MdiIcons.textLong),
+        leading: const Icon(MdiIcons.textLong),
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: SingleChildScrollView(

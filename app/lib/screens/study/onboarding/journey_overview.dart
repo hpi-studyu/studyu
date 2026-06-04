@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -10,6 +9,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
@@ -55,7 +55,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
-        leading: Icon(MdiIcons.mapMarkerPath),
+        leading: const Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(

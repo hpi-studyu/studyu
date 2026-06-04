@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
@@ -9,6 +8,7 @@ import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.da
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class TaskOverview extends StatefulWidget {
   final StudySubject? subject;
