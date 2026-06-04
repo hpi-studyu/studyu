@@ -16,10 +16,10 @@ class AppOutdatedScreen extends StatelessWidget {
     IconData? storeIcon;
     if (!kIsWeb && Platform.isAndroid) {
       storeUrl = playStoreUrl;
-      storeIcon = Icons.android;
+      storeIcon = Icons.shop;
     } else if (!kIsWeb && Platform.isIOS) {
       storeUrl = appstoreUrl;
-      storeIcon = Icons.apple;
+      storeIcon = Icons.shop;
     }
     return Scaffold(
       body: SafeArea(
