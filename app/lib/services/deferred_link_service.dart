@@ -61,7 +61,8 @@ class DeferredLinkService {
           }
         }
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final host = Uri.parse(appScheme).host;
+        final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
+        final host = Uri.parse(scheme).host;
         await SecureStorage.write(
           'debug_install_referrer',
           'iOS Check. Host: $host',

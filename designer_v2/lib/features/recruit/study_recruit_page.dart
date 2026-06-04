@@ -148,7 +148,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   }
 
   Widget _publicStudyActionButtons(BuildContext context, WidgetRef ref) {
-    final deepLink = env.generateAppDeepLink('study/$studyId');
+    final deepLink = env.generateAppDeepLink('studyShared/$studyId');
 
     return Row(
       mainAxisSize: MainAxisSize.min,

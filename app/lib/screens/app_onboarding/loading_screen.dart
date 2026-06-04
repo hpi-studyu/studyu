@@ -511,7 +511,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     if (kIsWeb && widget.hasDeepLink) {
       return DeepLinkWebLandingPage(
-        inviteCode: widget.deepLinkInviteCode ?? widget.deepLinkStudyId!,
+        inviteCode: widget.deepLinkInviteCode,
+        studyId: widget.deepLinkStudyId,
       );
     }
     if (_error != null) {
