@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
@@ -63,7 +64,7 @@ class _TaskOverviewState extends State<TaskOverview> {
             icon: Icon(
               taskInstance.task is Observation
                   ? MdiIcons.orderBoolAscendingVariant
-                  : MdiIcons.fromString(widget.interventionIcon!),
+                  : MdiIconsHelper.fromString(widget.interventionIcon!),
             ),
           ),
         );

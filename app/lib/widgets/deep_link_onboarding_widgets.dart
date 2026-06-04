@@ -5,6 +5,15 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/env.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+@visibleForTesting
+String buildAppLaunchLink({String? inviteCode, String? studyId}) {
+  assert(inviteCode != null || studyId != null);
+  if (inviteCode != null) {
+    return generateAppSchemeLink('invite/$inviteCode');
+  }
+  return generateAppDeepLink('studyShared/$studyId');
+}
+
 /// A screen shown to web users who open a deep link (invite or study).
 ///
 /// On desktop web: Prompts the user to open the link on mobile.

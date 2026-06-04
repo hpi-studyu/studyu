@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -183,7 +184,7 @@ class IconIndicator extends StatelessWidget {
         color: color ?? Theme.of(context).colorScheme.secondary,
       ),
       child: Center(
-        child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
+        child: Icon(MdiIconsHelper.fromString(iconName), color: Colors.white),
       ),
     );
   }
