@@ -243,6 +243,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           // enable re-rendering based on form validation status
           builder: (context, form, child) {
             return PrimaryButton(
+              key: const ValueKey('publish_button'),
               text: tr.action_button_study_launch,
               tooltipDisabled:
                   "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
@@ -271,6 +272,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           // enable re-rendering based on form validation status
           builder: (context, form, child) {
             return SecondaryButton(
+              key: const ValueKey('close_study_button'),
               text: tr.action_button_study_close,
               icon: null,
               onPressed: () => showStudyDialog(
@@ -289,6 +291,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     if (state.isSettingsEnabled) {
       actionButtons.add(
         IconButton(
+          key: const ValueKey('study_settings_button'),
           onPressed: controller.onSettingsPressed,
           icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
           tooltip: tr.study_settings,
@@ -300,6 +303,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
 
     actionButtons.add(
       ActionPopUpMenuButton(
+        key: const ValueKey('study_overflow_menu'),
         actions: state.studyActions,
         orientation: Axis.vertical,
         enabled: state.study.hasValue, // disable while study is loading

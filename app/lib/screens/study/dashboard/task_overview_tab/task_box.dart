@@ -50,6 +50,7 @@ class _TaskBoxState extends State<TaskBox> {
     );
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
+      key: ValueKey('task_box_${widget.taskInstance.task.id}'),
       elevation: 2,
       child: InkWell(
         onTap: isTaskOpen ? _navigateToTaskScreen : () {},
@@ -64,6 +65,7 @@ class _TaskBoxState extends State<TaskBox> {
             ),
             if (isInsidePeriod || isPreview || completed)
               RoundCheckbox(
+                key: const ValueKey('task_box_checkbox'),
                 value: completed, //_isCompleted,
                 onChanged: (value) =>
                     isTaskOpen ? _navigateToTaskScreen() : () {},

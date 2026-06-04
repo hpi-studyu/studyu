@@ -35,6 +35,7 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
         TextButton(
+          key: const ValueKey('dialog_ok'),
           onPressed: () => context.pop(),
           child: Text(AppLocalizations.of(context)!.ok),
         ),
@@ -47,10 +48,12 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
+      key: const ValueKey('study_closed_dialog'),
       title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
       content: Text(AppLocalizations.of(context)!.study_selection_closed),
       actions: [
         TextButton(
+          key: const ValueKey('dialog_ok'),
           onPressed: () => context.pop(),
           child: Text(AppLocalizations.of(context)!.ok),
         ),

@@ -699,6 +699,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String free_text_example_explanation_custom(String type) {
+    return 'Inputs of type $type will be accepted based on the regular expression pattern.';
+  }
+
+  @override
   String get free_text_question_type_any_explanation =>
       'Any input will be accepted.';
 
@@ -2253,6 +2258,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get client_secret_hint => 'Client Secret';
+
+  @override
+  String get fitbit_credentials_how_to_obtain =>
+      'How to obtain Fitbit credentials';
+
+  @override
+  String get fitbit_client_id_required => 'Client ID is required';
+
+  @override
+  String get fitbit_client_secret_required => 'Client secret is required';
+
+  @override
+  String get fitbit_question_type_required =>
+      'At least one Fitbit type must be selected.';
 
   @override
   String get screenshots_for_guidance => 'Screenshots for Guidance:';

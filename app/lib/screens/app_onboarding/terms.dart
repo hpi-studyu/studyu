@@ -98,6 +98,7 @@ class _TermsScreenState extends State<TermsScreen> {
             context.go('/${RouteNames.welcome}');
           }
         },
+        nextButtonKey: const ValueKey('terms_continue'),
         onNext: userCanContinue()
             ? () async {
                 final success = await anonymousSignUp();

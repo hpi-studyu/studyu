@@ -77,7 +77,7 @@ final class FitbitCredentialsFormViewModelProvider
 }
 
 String _$fitbitCredentialsFormViewModelHash() =>
-    r'48f5beab67898dea41cacd2ef9dfe297356e4a17';
+    r'dd4d4a74b099d59056da3a49b9d6554603f430ad';
 
 final class FitbitCredentialsFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<FitbitCredentialsFormViewModel, StudyID> {

@@ -220,6 +220,9 @@ class _NotificationDispatcherState
       duration: Duration(
         milliseconds: notification.duration ?? widget.snackbarDefaultDuration,
       ),
+      // Keep actionable snackbars auto-dismissing; Flutter now defaults
+      // `persist` to true when an action is present.
+      persist: false,
       padding: EdgeInsets.fromLTRB(
         2.5 * widget.snackbarInnerPadding,
         widget.snackbarInnerPadding,

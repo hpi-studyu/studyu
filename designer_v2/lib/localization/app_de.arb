@@ -274,6 +274,14 @@
       }
     }
   },
+  "free_text_example_explanation_custom": "Eingaben vom Typ {type} werden basierend auf dem regulären Ausdruck akzeptiert.",
+  "@free_text_example_explanation_custom": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
   "free_text_question_type_alphanumeric_explanation": "Alphanumerische Eingabe umfasst nur Buchstaben und Zahlen.",
   "free_text_question_type_numeric_explanation": "Numerische Eingabe umfasst Zahlen ohne Sonderzeichen.",
@@ -828,6 +836,10 @@
   "client_secret": "Client Secret",
   "client_secret_label_help": "Geben Sie den Client Secret aus dem Fitbit Developer Portal ein.",
   "client_secret_hint": "Client Secret",
+  "fitbit_credentials_how_to_obtain": "So erhalten Sie Fitbit-Zugangsdaten",
+  "fitbit_client_id_required": "Client-ID ist erforderlich",
+  "fitbit_client_secret_required": "Client-Secret ist erforderlich",
+  "fitbit_question_type_required": "Mindestens ein Fitbit-Datentyp muss ausgewählt werden.",
   "screenshots_for_guidance": "Screenshots zur Anleitung:",
   "fitbit_credentials_not_set": "Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum 'Fitbit'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen.",
   "fitbit_question_type_heartrate_description": "Erfasst die Herzfrequenz, gemessen jede Minute über den Tag verteilt.",
@@ -926,4 +938,3 @@
   "filter_button_clear": "Filter entfernen",
   "filter_button_main": "Filtern"
 }
-

@@ -83,7 +83,7 @@ class FormListView<T> extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            onReorder:
+            onReorderItem:
                 onReorder ??
                 (oldIndex, newIndex) {
                   var effectiveNewIndex = newIndex;

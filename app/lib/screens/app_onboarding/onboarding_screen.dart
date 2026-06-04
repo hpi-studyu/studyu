@@ -47,6 +47,7 @@ class OnboardingScreen extends StatelessWidget {
       back: Text(l10n.back),
       next: Text(l10n.next),
       done: Text(
+        key: const ValueKey('onboarding_done'),
         l10n.done,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),

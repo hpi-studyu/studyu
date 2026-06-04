@@ -28,6 +28,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
+                key: const ValueKey('welcome_about'),
                 icon: const Icon(Icons.info),
                 onPressed: () => context.push('/${RouteNames.about}'),
                 label: Text(
@@ -37,6 +38,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
+                key: const ValueKey('welcome_contact'),
                 icon: Icon(MdiIcons.accountBox),
                 onPressed: () => context.push('/${RouteNames.contact}'),
                 label: Text(
@@ -46,6 +48,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
+                key: const ValueKey('welcome_faq'),
                 icon: Icon(MdiIcons.frequentlyAskedQuestions),
                 onPressed: () => context.push('/${RouteNames.faq}'),
                 label: Text(
@@ -55,6 +58,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               OutlinedButton.icon(
+                key: const ValueKey('welcome_get_started'),
                 icon: Icon(MdiIcons.rocket, size: 30),
                 onPressed: () => context.push('/${RouteNames.terms}'),
                 label: Text(

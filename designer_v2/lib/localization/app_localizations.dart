@@ -1334,6 +1334,12 @@ abstract class AppLocalizations {
   /// **'Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.'**
   String free_text_example_explanation(String type, num countMin, num countMax);
 
+  /// No description provided for @free_text_example_explanation_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Inputs of type {type} will be accepted based on the regular expression pattern.'**
+  String free_text_example_explanation_custom(String type);
+
   /// No description provided for @free_text_question_type_any_explanation.
   ///
   /// In en, this message translates to:
@@ -3866,6 +3872,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Client Secret'**
   String get client_secret_hint;
+
+  /// No description provided for @fitbit_credentials_how_to_obtain.
+  ///
+  /// In en, this message translates to:
+  /// **'How to obtain Fitbit credentials'**
+  String get fitbit_credentials_how_to_obtain;
+
+  /// No description provided for @fitbit_client_id_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Client ID is required'**
+  String get fitbit_client_id_required;
+
+  /// No description provided for @fitbit_client_secret_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Client secret is required'**
+  String get fitbit_client_secret_required;
+
+  /// No description provided for @fitbit_question_type_required.
+  ///
+  /// In en, this message translates to:
+  /// **'At least one Fitbit type must be selected.'**
+  String get fitbit_question_type_required;
 
   /// No description provided for @screenshots_for_guidance.
   ///

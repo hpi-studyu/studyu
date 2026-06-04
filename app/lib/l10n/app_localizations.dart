@@ -1241,8 +1241,8 @@ abstract class AppLocalizations {
   /// No description provided for @free_text_custom_error.
   ///
   /// In en, this message translates to:
-  /// **'Please enter only characters matching the pattern {pattern}'**
-  String free_text_custom_error(String pattern);
+  /// **'Please enter a value in the required format'**
+  String get free_text_custom_error;
 
   /// No description provided for @app_outdated_message.
   ///

@@ -276,6 +276,14 @@
       }
     }
   },
+  "free_text_example_explanation_custom": "Inputs of type {type} will be accepted based on the regular expression pattern.",
+  "@free_text_example_explanation_custom": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "free_text_question_type_any_explanation": "Any input will be accepted.",
   "free_text_question_type_alphanumeric_explanation": "Alphanumeric input includes letters and numbers only.",
   "free_text_question_type_numeric_explanation": "Numeric input includes numbers without special characters.",
@@ -828,6 +836,10 @@
   "client_secret": "Client Secret",
   "client_secret_label_help": "Enter the Client Secret from Fitbit Developer Portal.",
   "client_secret_hint": "Client Secret",
+  "fitbit_credentials_how_to_obtain": "How to obtain Fitbit credentials",
+  "fitbit_client_id_required": "Client ID is required",
+  "fitbit_client_secret_required": "Client secret is required",
+  "fitbit_question_type_required": "At least one Fitbit type must be selected.",
   "screenshots_for_guidance": "Screenshots for Guidance:",
   "fitbit_credentials_not_set": "Fitbit credentials are not set. Please navigate to the 'Fitbit' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.",
   "fitbit_question_type_heartrate_description": "Captures heart rate measured every minute throughout the day.",
@@ -926,4 +938,3 @@
   "filter_button_clear": "Clear filter",
   "filter_button_main": "Filter"
 }
-
