@@ -84,20 +84,16 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
         onExecute: () async {
-          return await delete(getKey(model))
-              .then(
-                (value) => ref
-                    .read(routerProvider)
-                    .dispatch(RoutingIntents.studyRecruit(model.studyId)),
-              )
-              .then(
-                (value) => Future.delayed(
-                  const Duration(milliseconds: 200),
-                  () => ref
-                      .read(notificationServiceProvider)
-                      .show(Notifications.inviteCodeDeleted),
-                ),
-              );
+          await delete(getKey(model));
+          ref
+              .read(routerProvider)
+              .dispatch(RoutingIntents.studyRecruit(model.studyId));
+          await Future.delayed(
+            const Duration(milliseconds: 200),
+            () => ref
+                .read(notificationServiceProvider)
+                .show(Notifications.inviteCodeDeleted),
+          );
         },
         isAvailable: study.isOwner(authRepository.currentUser),
         isDestructive: true,
@@ -105,12 +101,6 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     ];
 
     return actions.where((action) => action.isAvailable).toList();
-  }
-
-  @override
-  void emitUpdate() {
-    print("InviteCodeRepository.emitUpdate");
-    super.emitUpdate();
   }
 }
 
@@ -165,10 +155,7 @@ class InviteCodeRepositoryDelegate
         study.invites = prevInvites;
         studyRepository.upsertLocally(study);
       },
-      onUpdate: () {
-        print("saveOperation: studyRepository.emitUpdate()");
-        studyRepository.emitUpdate();
-      },
+      onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
     );
 
