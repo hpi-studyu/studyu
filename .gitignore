@@ -178,3 +178,4 @@ interview/
 
 # Local git worktrees
 .worktrees/
+.vscode/settings.json
