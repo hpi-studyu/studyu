@@ -31,7 +31,6 @@ dependencies:
   go_router: ^17.2.3
   intl: ^0.20.2
   material_color_utilities: ^0.13.0 # integration_test
-  material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^10.1.0
   pointer_interceptor: ^0.10.1+2
   reactive_color_picker: ^2.2.2
