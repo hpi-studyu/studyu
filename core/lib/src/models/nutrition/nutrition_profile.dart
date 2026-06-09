@@ -40,4 +40,3 @@ class NutritionProfile {
   @override
   String toString() => toJson().toString();
 }
-

@@ -428,7 +428,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
               ingredientCount: _ingredients.length,
               theme: theme,
               onAddIngredient: _addIngredient,
-              onToggleQuickAdd: () => setState(() => _showQuickAdd = !_showQuickAdd),
+              onToggleQuickAdd: () =>
+                  setState(() => _showQuickAdd = !_showQuickAdd),
               showQuickAdd: _showQuickAdd,
             ),
 
@@ -460,7 +461,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                   index: index,
                   theme: theme,
                   onRemove: () => _removeIngredient(index),
-                  onUpdateAmount: (amount, unit) => _updateIngredientAmount(index, amount, unit),
+                  onUpdateAmount: (amount, unit) =>
+                      _updateIngredientAmount(index, amount, unit),
                 );
               }),
 
@@ -471,7 +473,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
               _NutritionSummaryCard(
                 nutrition: nutrition,
                 theme: theme,
-                servingsCount: (double.tryParse(_servingsController.text) ?? 1).toInt(),
+                servingsCount: (double.tryParse(_servingsController.text) ?? 1)
+                    .toInt(),
               ),
 
             // Bottom padding for FAB
@@ -517,7 +520,9 @@ class _RecipeInfoCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                    color: theme.colorScheme.primaryContainer.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -538,11 +543,11 @@ class _RecipeInfoCard extends StatelessWidget {
             const SizedBox(height: 16),
             TextFormField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Recipe Name *',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
                 filled: true,
-                prefixIcon: const Icon(Icons.edit),
+                prefixIcon: Icon(Icons.edit),
               ),
               textCapitalization: TextCapitalization.words,
               validator: (value) {
@@ -558,11 +563,11 @@ class _RecipeInfoCard extends StatelessWidget {
                 Expanded(
                   child: TextFormField(
                     controller: servingsController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Servings *',
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                       filled: true,
-                      prefixIcon: const Icon(Icons.people_outline),
+                      prefixIcon: Icon(Icons.people_outline),
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -583,13 +588,12 @@ class _RecipeInfoCard extends StatelessWidget {
                   flex: 2,
                   child: TextFormField(
                     controller: descriptionController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Description',
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                       filled: true,
                       hintText: 'Optional',
                     ),
-                    maxLines: 1,
                   ),
                 ),
               ],
@@ -720,7 +724,10 @@ class _IngredientsSectionHeader extends StatelessWidget {
             FilledButton(
               onPressed: onAddIngredient,
               style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
               ),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
@@ -864,10 +871,7 @@ class _EmptyIngredientsState extends StatelessWidget {
   final ThemeData theme;
   final AppLocalizations l10n;
 
-  const _EmptyIngredientsState({
-    required this.theme,
-    required this.l10n,
-  });
+  const _EmptyIngredientsState({required this.theme, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -877,7 +881,9 @@ class _EmptyIngredientsState extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.3,
+          ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -889,7 +895,9 @@ class _EmptyIngredientsState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -909,7 +917,9 @@ class _EmptyIngredientsState extends StatelessWidget {
             Text(
               'Search or use Quick Add to start',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
               ),
             ),
           ],
@@ -1032,7 +1042,8 @@ class _IngredientCard extends StatelessWidget {
           ),
           FilledButton(
             onPressed: () {
-              final amount = double.tryParse(amountController.text) ?? composition.amount;
+              final amount =
+                  double.tryParse(amountController.text) ?? composition.amount;
               onUpdateAmount(amount, unitController.text);
               Navigator.pop(context);
             },
@@ -1088,7 +1099,9 @@ class _NutritionSummaryCard extends StatelessWidget {
                 Text(
                   '$servingsCount ${servingsCount == 1 ? 'serving' : 'servings'}',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                    color: theme.colorScheme.onPrimaryContainer.withValues(
+                      alpha: 0.7,
+                    ),
                   ),
                 ),
               ],

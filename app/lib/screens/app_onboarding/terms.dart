@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -36,6 +36,8 @@ class _TermsScreenState extends State<TermsScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        hideBack: true,
+        nextButtonKey: const ValueKey('terms_continue'),
         onNext: userCanContinue()
             ? () async {
                 final success = await anonymousSignUp();
@@ -58,29 +60,32 @@ class _TermsScreenState extends State<TermsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             LegalSection(
+              checkboxKey: const ValueKey('terms_checkbox'),
               title: AppLocalizations.of(context)!.terms,
               description: AppLocalizations.of(context)!.terms_content,
               acknowledgment: AppLocalizations.of(context)!.terms_agree,
               onChange: (val) => setState(() => _acceptedTerms = val!),
               isChecked: _acceptedTerms,
-              icon: Icon(MdiIcons.fileDocumentEdit),
+              icon: const Icon(MdiIcons.fileDocumentEdit),
               pdfUrl: appConfig!.appTerms[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
             ),
             const SizedBox(height: 20),
             LegalSection(
+              checkboxKey: const ValueKey('privacy_checkbox'),
               title: AppLocalizations.of(context)!.privacy,
               description: AppLocalizations.of(context)!.privacy_content,
               acknowledgment: AppLocalizations.of(context)!.privacy_agree,
               onChange: (val) => setState(() => _acceptedPrivacy = val!),
               isChecked: _acceptedPrivacy,
-              icon: Icon(MdiIcons.shieldLock),
+              icon: const Icon(MdiIcons.shieldLock),
               pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
             ),
             const SizedBox(height: 30),
             OutlinedButton.icon(
-              icon: Icon(MdiIcons.scaleBalance),
+              key: const ValueKey('imprint_button'),
+              icon: const Icon(MdiIcons.scaleBalance),
               onPressed: () async {
                 final uri = Uri.parse(
                   appConfig.imprint[appLocale.languageCode]!,
@@ -107,6 +112,7 @@ class LegalSection extends StatelessWidget {
   final String? acknowledgment;
   final bool? isChecked;
   final ValueChanged<bool?>? onChange;
+  final Key? checkboxKey;
 
   const LegalSection({
     super.key,
@@ -118,6 +124,7 @@ class LegalSection extends StatelessWidget {
     this.acknowledgment,
     this.isChecked,
     this.onChange,
+    this.checkboxKey,
   });
 
   @override
@@ -145,6 +152,7 @@ class LegalSection extends StatelessWidget {
           label: Text(pdfUrlLabel!),
         ),
         CheckboxListTile(
+          key: checkboxKey,
           title: Text(acknowledgment!),
           value: isChecked,
           onChanged: onChange,

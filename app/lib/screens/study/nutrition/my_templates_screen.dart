@@ -78,9 +78,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     return Consumer<TemplateViewModel>(
       builder: (context, viewModel, _) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(l10n.my_templates),
-          ),
+          appBar: AppBar(title: Text(l10n.my_templates)),
           body: Column(
             children: [
               Padding(
@@ -116,22 +114,21 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                 child: viewModel.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : viewModel.filteredTemplates.isEmpty
-                        ? _buildEmptyState(l10n, theme)
-                        : ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: viewModel.filteredTemplates.length,
-                            itemBuilder: (context, index) {
-                              final template =
-                                  viewModel.filteredTemplates[index];
-                              return _buildTemplateCard(
-                                context,
-                                template,
-                                viewModel,
-                                l10n,
-                                theme,
-                              );
-                            },
-                          ),
+                    ? _buildEmptyState(l10n, theme)
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: viewModel.filteredTemplates.length,
+                        itemBuilder: (context, index) {
+                          final template = viewModel.filteredTemplates[index];
+                          return _buildTemplateCard(
+                            context,
+                            template,
+                            viewModel,
+                            l10n,
+                            theme,
+                          );
+                        },
+                      ),
               ),
             ],
           ),
@@ -151,10 +148,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
             color: theme.colorScheme.primary.withAlpha(128),
           ),
           const SizedBox(height: 16),
-          Text(
-            l10n.no_templates_saved,
-            style: theme.textTheme.titleLarge,
-          ),
+          Text(l10n.no_templates_saved, style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -209,7 +203,10 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                   children: [
                     const Icon(Icons.delete, color: Colors.red),
                     const SizedBox(width: 8),
-                    Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      l10n.delete,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ],
                 ),
               ),
@@ -264,7 +261,10 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                   children: [
                     const Icon(Icons.delete, color: Colors.red),
                     const SizedBox(width: 8),
-                    Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      l10n.delete,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ],
                 ),
               ),

@@ -54,8 +54,8 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     control: titleControl,
     validators: [Validators.required],
     validationMessages: {
-      ValidationMessage.required: (error) => tr
-          .form_field_measurement_survey_title_required,
+      ValidationMessage.required: (error) =>
+          tr.form_field_measurement_survey_title_required,
     },
   );
 

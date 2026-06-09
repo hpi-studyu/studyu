@@ -74,6 +74,41 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
+  String get onboarding_page0_title => 'Willkommen bei StudyU';
+
+  @override
+  String get onboarding_page0_subtitle =>
+      'Ihre Reise zu besserer Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf \'Weiter\', um fortzufahren.';
+
+  @override
+  String get onboarding_page1_title => 'Was funktioniert für SIE?';
+
+  @override
+  String get onboarding_page1_subtitle =>
+      'Eine N-of-1-Studie ist eine wissenschaftliche Studie, in der Sie die einzige Testperson sind. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.';
+
+  @override
+  String get onboarding_page2_title => 'Wissenschaft einfach gemacht';
+
+  @override
+  String get onboarding_page2_subtitle =>
+      'Vergleichen Sie zwei Optionen (z. B. \'Kaffee\' vs. \'Tee\') mit Experten-Plänen. Wir leiten Sie Schritt für Schritt. Ganz ohne Vorwissen.';
+
+  @override
+  String get onboarding_page3_title => 'Ihre persönlichen Ergebnisse';
+
+  @override
+  String get onboarding_page3_subtitle =>
+      'Allgemeine Statistiken passen nicht immer. Verfolgen Sie Ihren Fortschritt täglich und erhalten Sie Ergebnisse, die zeigen, was Ihrem Körper wirklich hilft.';
+
+  @override
+  String get onboarding_page4_title => 'Übernehmen Sie die Kontrolle';
+
+  @override
+  String get onboarding_page4_subtitle =>
+      'Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu besserer Gesundheit.';
+
+  @override
   String get study_selection => 'Studienauswahl';
 
   @override
@@ -603,9 +638,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte geben Sie nur numerische Zeichen ein';
 
   @override
-  String free_text_custom_error(String pattern) {
-    return 'Bitte geben Sie nur Zeichen ein, die dem Muster $pattern entsprechen';
-  }
+  String get free_text_custom_error =>
+      'Bitte geben Sie einen Wert im erforderlichen Format ein';
 
   @override
   String get app_outdated_message =>

@@ -99,11 +99,12 @@ class _TemplateSelectionSheetContentState
         final filteredTemplates = viewModel.searchQuery.isEmpty
             ? templates
             : templates.where((t) {
-                final name =
-                    t is SavedMealTemplate ? t.name : (t as SavedFoodTemplate).name;
-                return name
-                    .toLowerCase()
-                    .contains(viewModel.searchQuery.toLowerCase());
+                final name = t is SavedMealTemplate
+                    ? t.name
+                    : (t as SavedFoodTemplate).name;
+                return name.toLowerCase().contains(
+                  viewModel.searchQuery.toLowerCase(),
+                );
               }).toList();
 
         return Column(
@@ -209,7 +210,9 @@ class _TemplateSelectionSheetContentState
         ),
         title: Text(template.name),
         subtitle: Text(
-          l10n.kcal_value(template.prototype.nutrition.energyKcal.toStringAsFixed(0)),
+          l10n.kcal_value(
+            template.prototype.nutrition.energyKcal.toStringAsFixed(0),
+          ),
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {

@@ -37,4 +37,3 @@ class RecipeComposition {
   @override
   String toString() => toJson().toString();
 }
-

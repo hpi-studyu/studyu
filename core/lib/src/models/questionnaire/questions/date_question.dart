@@ -22,9 +22,9 @@ class DateQuestion extends Question<DateTime> {
   factory DateQuestion.fromJson(Map<String, dynamic> json) =>
       _$DateQuestionFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$DateQuestionToJson(this);
 
-  @override
   Answer<DateTime> constructAnswer(DateTime response) =>
       Answer.forQuestion(this, response);
 }

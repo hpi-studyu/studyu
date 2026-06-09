@@ -20,7 +20,7 @@ class StudyScheduleBanner extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(tr.study_schedule_banner_explanation),
+          SelectableText(tr.study_schedule_banner_explanation),
           const SizedBox(height: 12.0),
         ],
       ),

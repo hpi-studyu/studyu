@@ -79,9 +79,7 @@ class PhotoViewerDialog extends StatelessWidget {
               future: assetEntity.file,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(
-                    color: Colors.white,
-                  );
+                  return const CircularProgressIndicator(color: Colors.white);
                 }
 
                 if (snapshot.hasData && snapshot.data != null) {

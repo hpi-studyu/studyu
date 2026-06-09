@@ -1,6 +1,7 @@
 export 'consent/consent_item.dart';
 export 'contact.dart';
 export 'data/data_reference.dart';
+export 'data/dhq3_questions.dart';
 export 'data/ffq_questions.dart';
 export 'data/survey_template.dart';
 export 'data/survey_template_registry.dart';

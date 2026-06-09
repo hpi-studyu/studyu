@@ -1,5 +1,4 @@
 import 'package:studyu_core/src/models/models.dart';
-import 'package:studyu_core/src/models/tasks/task_schedule_rule.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class Task {

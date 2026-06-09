@@ -116,7 +116,8 @@ class FoodAnalysisService {
       // Check for function errors
       if (response.status != 200) {
         final errorData = response.data as Map<String, dynamic>?;
-        final errorMessage = errorData?['error'] as String? ??
+        final errorMessage =
+            errorData?['error'] as String? ??
             'Analysis failed with status ${response.status}';
         developer.log(
           'Edge function error: $errorMessage',
@@ -130,7 +131,8 @@ class FoodAnalysisService {
       final data = response.data as Map<String, dynamic>;
 
       if (data['success'] != true) {
-        final errorMessage = data['error'] as String? ?? 'Unknown analysis error';
+        final errorMessage =
+            data['error'] as String? ?? 'Unknown analysis error';
         developer.log(
           'Analysis error: $errorMessage',
           name: 'FoodAnalysisService',
@@ -158,7 +160,8 @@ class FoodAnalysisService {
 
       return FoodAnalysisResult(
         items: items,
-        overallConfidence: (analysisData['overallConfidence'] as num?)?.toDouble() ?? 0.5,
+        overallConfidence:
+            (analysisData['overallConfidence'] as num?)?.toDouble() ?? 0.5,
         notes: analysisData['notes'] as String?,
         success: true,
       );

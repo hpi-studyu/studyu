@@ -7,9 +7,13 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final String? backLabel;
   final String? nextLabel;
   final bool hideNext;
+  final bool hideBack;
+  final bool backEnabled;
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
+  final Key? backButtonKey;
+  final Key? nextButtonKey;
 
   const BottomOnboardingNavigation({
     super.key,
@@ -18,9 +22,13 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.backLabel,
     this.nextLabel,
     this.hideNext = false,
+    this.hideBack = false,
+    this.backEnabled = true,
     this.nextIcon,
     this.backIcon,
     this.progress,
+    this.backButtonKey,
+    this.nextButtonKey,
   });
 
   @override
@@ -30,13 +38,22 @@ class BottomOnboardingNavigation extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            TextButton(
-              onPressed: onBack ?? () => Navigator.pop(context),
-              child: Row(
-                children: [
-                  backIcon ?? const Icon(Icons.navigate_before),
-                  Text(backLabel ?? AppLocalizations.of(context)!.back),
-                ],
+            Visibility(
+              visible: !hideBack,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: TextButton(
+                key: backButtonKey,
+                onPressed: backEnabled
+                    ? (onBack ?? () => Navigator.pop(context))
+                    : null,
+                child: Row(
+                  children: [
+                    backIcon ?? const Icon(Icons.navigate_before),
+                    Text(backLabel ?? AppLocalizations.of(context)!.back),
+                  ],
+                ),
               ),
             ),
             if (progress != null) ...[
@@ -51,6 +68,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: TextButton(
+                key: nextButtonKey,
                 onPressed: onNext,
                 child: Row(
                   children: [

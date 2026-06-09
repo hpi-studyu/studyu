@@ -37,8 +37,8 @@ class SavedMealTemplate {
     required this.isPublic,
     this.updatedAt,
     required this.prototypes,
-  })  : id = const Uuid().v4(),
-        createdAt = DateTime.now();
+  }) : id = const Uuid().v4(),
+       createdAt = DateTime.now();
 
   factory SavedMealTemplate.fromJson(Map<String, dynamic> json) =>
       _$SavedMealTemplateFromJson(json);
@@ -48,4 +48,3 @@ class SavedMealTemplate {
   @override
   String toString() => toJson().toString();
 }
-

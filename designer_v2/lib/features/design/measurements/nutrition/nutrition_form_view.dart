@@ -74,9 +74,10 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
                 decoration: InputDecoration(
                   hintText: tr.form_field_nutrition_minimum_meals_hint,
                 ),
-                validationMessages:
-                    widget.formViewModel.minimumMealsRequiredControl
-                        .validationMessages,
+                validationMessages: widget
+                    .formViewModel
+                    .minimumMealsRequiredControl
+                    .validationMessages,
               ),
             ),
           ],
@@ -155,8 +156,9 @@ class _CustomMealTypesSection extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ReactiveTextField<String>(
-                            formControl: formArray.controls[index]
-                                as FormControl<String>,
+                            formControl:
+                                formArray.controls[index]
+                                    as FormControl<String>,
                             decoration: InputDecoration(
                               hintText:
                                   '${tr.form_field_nutrition_custom_meal_types} ${index + 1}',
@@ -167,10 +169,11 @@ class _CustomMealTypesSection extends StatelessWidget {
                         ),
                         if (!isReadonly)
                           IconButton(
-                            icon: const Icon(Icons.remove_circle_outline,
-                                size: 20),
-                            onPressed: () =>
-                                formArray.removeAt(index),
+                            icon: const Icon(
+                              Icons.remove_circle_outline,
+                              size: 20,
+                            ),
+                            onPressed: () => formArray.removeAt(index),
                             tooltip: 'Remove',
                           ),
                       ],

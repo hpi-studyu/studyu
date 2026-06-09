@@ -1,3 +1,8 @@
+## 1.10.2
+
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: new env dev.
+
 ## 1.10.1
 
  - Update a dependency to the latest release.

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/unified_food_result.dart';
 import 'package:studyu_app/models/usda_models.dart';
-import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
@@ -19,10 +19,11 @@ class FoodSearchScreen extends StatelessWidget {
 
   const FoodSearchScreen({this.allowRecipes = true, super.key});
 
-  static MaterialPageRoute<studyu.FoodEntry> route({bool allowRecipes = true}) =>
-      MaterialPageRoute(
-        builder: (_) => FoodSearchScreen(allowRecipes: allowRecipes),
-      );
+  static MaterialPageRoute<studyu.FoodEntry> route({
+    bool allowRecipes = true,
+  }) => MaterialPageRoute(
+    builder: (_) => FoodSearchScreen(allowRecipes: allowRecipes),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +277,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
             id: food.fdcId.toString(),
             name: food.description ?? 'Unknown',
             brand: food.brandOwner ?? food.brandName,
-            imageUrl: null,
             calories: food.energyKcal100g,
             source: studyu.FoodSource.usda,
             originalData: food,
@@ -418,9 +418,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     _navigateToEdit(foodEntry);
   }
 
-  void _selectTemplate(
-    studyu.SavedFoodTemplate template,
-  ) {
+  void _selectTemplate(studyu.SavedFoodTemplate template) {
     Navigator.pop(context, template.prototype);
   }
 
@@ -452,10 +450,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   Future<void> _scanBarcode() async {
-    final result = await Navigator.push(
-      context,
-      BarcodeScannerScreen.route(),
-    );
+    final result = await Navigator.push(context, BarcodeScannerScreen.route());
     if (result != null && mounted) {
       Navigator.pop(context, result);
     }
@@ -468,9 +463,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final templateViewModel = Provider.of<TemplateViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.add_food_title),
-      ),
+      appBar: AppBar(title: Text(l10n.add_food_title)),
       body: Column(
         children: [
           // Search Bar
@@ -562,17 +555,17 @@ class _SearchBarHeader extends StatelessWidget {
           hintText: l10n.search_food_hint,
           prefixIcon: const Icon(Icons.search),
           suffixIcon: controller.text.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: onClear,
-                )
+              ? IconButton(icon: const Icon(Icons.clear), onPressed: onClear)
               : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(28),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)),
           filled: true,
-          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.5,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 14,
+          ),
         ),
         onSubmitted: (_) => focusNode.unfocus(),
         onChanged: onChanged,
@@ -720,8 +713,8 @@ class _FoodResultCard extends StatelessWidget {
                           height: 48,
                           fit: BoxFit.cover,
                           errorBuilder: (_, _, _) {
-                          return _buildFallbackIcon();
-                        },
+                            return _buildFallbackIcon();
+                          },
                         ),
                       )
                     : _buildFallbackIcon(),
@@ -744,7 +737,8 @@ class _FoodResultCard extends StatelessWidget {
                     Row(
                       children: [
                         _SourceBadge(source: result.source),
-                        if (result.brand != null && result.brand!.isNotEmpty) ...[
+                        if (result.brand != null &&
+                            result.brand!.isNotEmpty) ...[
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -884,10 +878,7 @@ class _EmptySectionMessage extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       child: Text(
         message,
-        style: TextStyle(
-          color: Colors.grey.shade600,
-          fontSize: 14,
-        ),
+        style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
         textAlign: TextAlign.center,
       ),
     );
@@ -1028,11 +1019,7 @@ class _QuickActionTile extends StatelessWidget {
                 color: iconColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                size: 22,
-                color: iconColor,
-              ),
+              child: Icon(icon, size: 22, color: iconColor),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -1116,11 +1103,16 @@ class _FoodSearchListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final filteredTemplates = templateViewModel.filteredTemplates
         .whereType<studyu.SavedFoodTemplate>()
-        .where((t) => allowRecipes || t.prototype.entryType != studyu.FoodEntryType.recipe)
+        .where(
+          (t) =>
+              allowRecipes ||
+              t.prototype.entryType != studyu.FoodEntryType.recipe,
+        )
         .toList();
     final hasTemplates = templateViewModel.foodTemplates.isNotEmpty;
     final showTemplates = hasTemplates && filteredTemplates.isNotEmpty;
-    final showNoMatchingTemplates = hasTemplates &&
+    final showNoMatchingTemplates =
+        hasTemplates &&
         filteredTemplates.isEmpty &&
         searchController.text.isNotEmpty;
 
@@ -1130,11 +1122,14 @@ class _FoodSearchListView extends StatelessWidget {
     final int templatesHeaderItems = hasTemplates ? 2 : 0; // header + spacing
     final int templatesListItems = showTemplates ? filteredTemplates.length : 0;
     final int noMatchingTemplateItem = showNoMatchingTemplates ? 1 : 0;
-    final int templatesSpacing = hasTemplates ? 1 : 0; // SizedBox after templates
+    final int templatesSpacing = hasTemplates
+        ? 1
+        : 0; // SizedBox after templates
     const int globalHeaderItems = 2; // header + spacing
     final int contentItems = _getContentItemCount();
     final int loadingMoreItem = isLoadingMore ? 1 : 0;
-    final int endOfResultsItem = (hasSearched &&
+    final int endOfResultsItem =
+        (hasSearched &&
             combinedResults.isNotEmpty &&
             !offHasMore &&
             !usdaHasMore &&
@@ -1145,7 +1140,8 @@ class _FoodSearchListView extends StatelessWidget {
     const int quickActionsItem = 1;
     const int bottomPadding = 1;
 
-    final totalItems = paddingItem +
+    final totalItems =
+        paddingItem +
         templatesHeaderItems +
         templatesListItems +
         noMatchingTemplateItem +

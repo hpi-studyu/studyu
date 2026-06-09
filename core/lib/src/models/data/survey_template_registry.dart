@@ -1,9 +1,5 @@
 import 'package:studyu_core/core.dart';
 
-import 'dhq3_questions.dart';
-import 'ffq_questions.dart';
-import 'survey_template.dart';
-
 /// Static registry of all built-in survey templates.
 ///
 /// This class holds system-provided presets only. User-created templates
@@ -33,8 +29,6 @@ class SurveyTemplateRegistry {
       description:
           'Standardized 26-question dietary assessment covering food groups, '
           'beverages, and eating habits over the past year.',
-      source: SurveyTemplateSource.builtIn,
-      sharing: ResultSharing.public,
       registryPublished: true,
       tags: ['nutrition', 'dietary', 'ffq'],
       createTask: FFQQuestions.createFFQTask,
@@ -48,8 +42,6 @@ class SurveyTemplateRegistry {
       description:
           'Comprehensive diet history questionnaire split across 14 daily '
           'surveys. Each day covers a different food/beverage category.',
-      source: SurveyTemplateSource.builtIn,
-      sharing: ResultSharing.public,
       registryPublished: true,
       tags: ['nutrition', 'dietary', 'dhq3'],
       createTask: () => FFQQuestions.createFFQTaskForDay(0),

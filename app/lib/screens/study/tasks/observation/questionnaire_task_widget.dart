@@ -28,6 +28,8 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   DateTime? _lastClickTime;
   bool _isLoading = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<QuestionnaireWidgetState> questionnaireKey =
+      GlobalKey<QuestionnaireWidgetState>();
 
   Future<void> _addQuestionnaireResult<T>(
     T response,
@@ -70,6 +72,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
             key: formKey,
             child: QuestionnaireWidget(
               widget.task.questions.questions,
+              key: questionnaireKey,
               taskId: widget.task.id,
               header: widget.task.header,
               footer: widget.task.footer,
@@ -82,17 +85,21 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         ),
         if (response != null)
           ElevatedButton.icon(
+            key: const ValueKey('questionnaire_complete'),
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
             ),
             onPressed: () async {
               if (isRedundantClick(_lastClickTime)) return;
+              final syncedResponse = questionnaireKey.currentState!
+                  .validateSyncAndBuildPayload();
+              if (syncedResponse == null) return;
               if (!formKey.currentState!.validate()) return;
               setState(() {
                 _isLoading = true;
                 _lastClickTime = DateTime.now();
               });
-              switch (response) {
+              switch (syncedResponse) {
                 case final QuestionnaireState questionnaireState:
                   // Filter all skipped conditional questions
                   questionnaireState.answers.removeWhere(

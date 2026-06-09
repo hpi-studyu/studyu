@@ -40,34 +40,32 @@ class NutritionTask extends Observation {
     List<SubjectProgress> sourceResults,
   ) {
     return Map.fromEntries(
-      sourceResults.map(
-        (e) {
-          final result = (e.result as Result<DailyRecall>).result;
-          
-          // Extract different properties based on what's requested
-          dynamic value;
-          switch (property) {
-            case 'totalCalories':
-              value = _calculateTotalCalories(result);
-            case 'totalProtein':
-              value = _calculateTotalProtein(result);
-            case 'totalCarbs':
-              value = _calculateTotalCarbs(result);
-            case 'totalFat':
-              value = _calculateTotalFat(result);
-            case 'mealCount':
-              value = result.meals.where((m) => !m.isSkipped).length;
-            case 'completionTime':
-              value = result.entryCompletedAt;
-            default:
-              throw ArgumentError(
-                "Nutrition task does not support property '$property'.",
-              );
-          }
-          
-          return MapEntry(e.completedAt!, value as T);
-        },
-      ),
+      sourceResults.map((e) {
+        final result = (e.result as Result<DailyRecall>).result;
+
+        // Extract different properties based on what's requested
+        dynamic value;
+        switch (property) {
+          case 'totalCalories':
+            value = _calculateTotalCalories(result);
+          case 'totalProtein':
+            value = _calculateTotalProtein(result);
+          case 'totalCarbs':
+            value = _calculateTotalCarbs(result);
+          case 'totalFat':
+            value = _calculateTotalFat(result);
+          case 'mealCount':
+            value = result.meals.where((m) => !m.isSkipped).length;
+          case 'completionTime':
+            value = result.entryCompletedAt;
+          default:
+            throw ArgumentError(
+              "Nutrition task does not support property '$property'.",
+            );
+        }
+
+        return MapEntry(e.completedAt!, value as T);
+      }),
     );
   }
 
@@ -150,4 +148,3 @@ class NutritionTask extends Observation {
     return total;
   }
 }
-

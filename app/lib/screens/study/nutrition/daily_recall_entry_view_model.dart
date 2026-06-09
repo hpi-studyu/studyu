@@ -109,7 +109,6 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     }
   }
 
-
   void updateUsualIntake(bool isUsual) {
     if (isUsual != recall.isUsualIntakeDay) {
       String? specialOccasion = recall.specialOccasion;

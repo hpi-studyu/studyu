@@ -10,7 +10,7 @@ part of 'study_form_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(studyInfoFormViewModel)
-const studyInfoFormViewModelProvider = StudyInfoFormViewModelFamily._();
+final studyInfoFormViewModelProvider = StudyInfoFormViewModelFamily._();
 
 final class StudyInfoFormViewModelProvider
     extends
@@ -20,7 +20,7 @@ final class StudyInfoFormViewModelProvider
           StudyInfoFormViewModel
         >
     with $Provider<StudyInfoFormViewModel> {
-  const StudyInfoFormViewModelProvider._({
+  StudyInfoFormViewModelProvider._({
     required StudyInfoFormViewModelFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -78,7 +78,7 @@ String _$studyInfoFormViewModelHash() =>
 
 final class StudyInfoFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<StudyInfoFormViewModel, StudyID> {
-  const StudyInfoFormViewModelFamily._()
+  StudyInfoFormViewModelFamily._()
     : super(
         retry: null,
         name: r'studyInfoFormViewModelProvider',
@@ -95,7 +95,7 @@ final class StudyInfoFormViewModelFamily extends $Family
 }
 
 @ProviderFor(enrollmentFormViewModel)
-const enrollmentFormViewModelProvider = EnrollmentFormViewModelFamily._();
+final enrollmentFormViewModelProvider = EnrollmentFormViewModelFamily._();
 
 final class EnrollmentFormViewModelProvider
     extends
@@ -105,7 +105,7 @@ final class EnrollmentFormViewModelProvider
           EnrollmentFormViewModel
         >
     with $Provider<EnrollmentFormViewModel> {
-  const EnrollmentFormViewModelProvider._({
+  EnrollmentFormViewModelProvider._({
     required EnrollmentFormViewModelFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -163,7 +163,7 @@ String _$enrollmentFormViewModelHash() =>
 
 final class EnrollmentFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<EnrollmentFormViewModel, StudyID> {
-  const EnrollmentFormViewModelFamily._()
+  EnrollmentFormViewModelFamily._()
     : super(
         retry: null,
         name: r'enrollmentFormViewModelProvider',
@@ -180,7 +180,7 @@ final class EnrollmentFormViewModelFamily extends $Family
 }
 
 @ProviderFor(screenerQuestionFormViewModel)
-const screenerQuestionFormViewModelProvider =
+final screenerQuestionFormViewModelProvider =
     ScreenerQuestionFormViewModelFamily._();
 
 final class ScreenerQuestionFormViewModelProvider
@@ -191,7 +191,7 @@ final class ScreenerQuestionFormViewModelProvider
           ScreenerQuestionFormViewModel
         >
     with $Provider<ScreenerQuestionFormViewModel> {
-  const ScreenerQuestionFormViewModelProvider._({
+  ScreenerQuestionFormViewModelProvider._({
     required ScreenerQuestionFormViewModelFamily super.from,
     required ScreenerQuestionFormRouteArgs super.argument,
   }) : super(
@@ -255,7 +255,7 @@ final class ScreenerQuestionFormViewModelFamily extends $Family
           ScreenerQuestionFormViewModel,
           ScreenerQuestionFormRouteArgs
         > {
-  const ScreenerQuestionFormViewModelFamily._()
+  ScreenerQuestionFormViewModelFamily._()
     : super(
         retry: null,
         name: r'screenerQuestionFormViewModelProvider',
@@ -273,7 +273,7 @@ final class ScreenerQuestionFormViewModelFamily extends $Family
 }
 
 @ProviderFor(consentItemFormViewModel)
-const consentItemFormViewModelProvider = ConsentItemFormViewModelFamily._();
+final consentItemFormViewModelProvider = ConsentItemFormViewModelFamily._();
 
 final class ConsentItemFormViewModelProvider
     extends
@@ -283,7 +283,7 @@ final class ConsentItemFormViewModelProvider
           ConsentItemFormViewModel
         >
     with $Provider<ConsentItemFormViewModel> {
-  const ConsentItemFormViewModelProvider._({
+  ConsentItemFormViewModelProvider._({
     required ConsentItemFormViewModelFamily super.from,
     required ConsentItemFormRouteArgs super.argument,
   }) : super(
@@ -345,7 +345,7 @@ final class ConsentItemFormViewModelFamily extends $Family
           ConsentItemFormViewModel,
           ConsentItemFormRouteArgs
         > {
-  const ConsentItemFormViewModelFamily._()
+  ConsentItemFormViewModelFamily._()
     : super(
         retry: null,
         name: r'consentItemFormViewModelProvider',
@@ -362,7 +362,7 @@ final class ConsentItemFormViewModelFamily extends $Family
 }
 
 @ProviderFor(interventionsFormViewModel)
-const interventionsFormViewModelProvider = InterventionsFormViewModelFamily._();
+final interventionsFormViewModelProvider = InterventionsFormViewModelFamily._();
 
 final class InterventionsFormViewModelProvider
     extends
@@ -372,7 +372,7 @@ final class InterventionsFormViewModelProvider
           InterventionsFormViewModel
         >
     with $Provider<InterventionsFormViewModel> {
-  const InterventionsFormViewModelProvider._({
+  InterventionsFormViewModelProvider._({
     required InterventionsFormViewModelFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -430,7 +430,7 @@ String _$interventionsFormViewModelHash() =>
 
 final class InterventionsFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<InterventionsFormViewModel, StudyID> {
-  const InterventionsFormViewModelFamily._()
+  InterventionsFormViewModelFamily._()
     : super(
         retry: null,
         name: r'interventionsFormViewModelProvider',
@@ -447,7 +447,7 @@ final class InterventionsFormViewModelFamily extends $Family
 }
 
 @ProviderFor(interventionFormViewModel)
-const interventionFormViewModelProvider = InterventionFormViewModelFamily._();
+final interventionFormViewModelProvider = InterventionFormViewModelFamily._();
 
 final class InterventionFormViewModelProvider
     extends
@@ -457,7 +457,7 @@ final class InterventionFormViewModelProvider
           InterventionFormViewModel
         >
     with $Provider<InterventionFormViewModel> {
-  const InterventionFormViewModelProvider._({
+  InterventionFormViewModelProvider._({
     required InterventionFormViewModelFamily super.from,
     required InterventionFormRouteArgs super.argument,
   }) : super(
@@ -519,7 +519,7 @@ final class InterventionFormViewModelFamily extends $Family
           InterventionFormViewModel,
           InterventionFormRouteArgs
         > {
-  const InterventionFormViewModelFamily._()
+  InterventionFormViewModelFamily._()
     : super(
         retry: null,
         name: r'interventionFormViewModelProvider',
@@ -536,7 +536,7 @@ final class InterventionFormViewModelFamily extends $Family
 }
 
 @ProviderFor(interventionTaskFormViewModel)
-const interventionTaskFormViewModelProvider =
+final interventionTaskFormViewModelProvider =
     InterventionTaskFormViewModelFamily._();
 
 final class InterventionTaskFormViewModelProvider
@@ -547,7 +547,7 @@ final class InterventionTaskFormViewModelProvider
           InterventionTaskFormViewModel
         >
     with $Provider<InterventionTaskFormViewModel> {
-  const InterventionTaskFormViewModelProvider._({
+  InterventionTaskFormViewModelProvider._({
     required InterventionTaskFormViewModelFamily super.from,
     required InterventionTaskFormRouteArgs super.argument,
   }) : super(
@@ -611,7 +611,7 @@ final class InterventionTaskFormViewModelFamily extends $Family
           InterventionTaskFormViewModel,
           InterventionTaskFormRouteArgs
         > {
-  const InterventionTaskFormViewModelFamily._()
+  InterventionTaskFormViewModelFamily._()
     : super(
         retry: null,
         name: r'interventionTaskFormViewModelProvider',
@@ -629,7 +629,7 @@ final class InterventionTaskFormViewModelFamily extends $Family
 }
 
 @ProviderFor(measurementsFormViewModel)
-const measurementsFormViewModelProvider = MeasurementsFormViewModelFamily._();
+final measurementsFormViewModelProvider = MeasurementsFormViewModelFamily._();
 
 final class MeasurementsFormViewModelProvider
     extends
@@ -639,7 +639,7 @@ final class MeasurementsFormViewModelProvider
           MeasurementsFormViewModel
         >
     with $Provider<MeasurementsFormViewModel> {
-  const MeasurementsFormViewModelProvider._({
+  MeasurementsFormViewModelProvider._({
     required MeasurementsFormViewModelFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -697,7 +697,7 @@ String _$measurementsFormViewModelHash() =>
 
 final class MeasurementsFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<MeasurementsFormViewModel, StudyID> {
-  const MeasurementsFormViewModelFamily._()
+  MeasurementsFormViewModelFamily._()
     : super(
         retry: null,
         name: r'measurementsFormViewModelProvider',
@@ -714,7 +714,7 @@ final class MeasurementsFormViewModelFamily extends $Family
 }
 
 @ProviderFor(measurementFormViewModel)
-const measurementFormViewModelProvider = MeasurementFormViewModelFamily._();
+final measurementFormViewModelProvider = MeasurementFormViewModelFamily._();
 
 final class MeasurementFormViewModelProvider
     extends
@@ -724,7 +724,7 @@ final class MeasurementFormViewModelProvider
           ManagedFormViewModel<dynamic>
         >
     with $Provider<ManagedFormViewModel<dynamic>> {
-  const MeasurementFormViewModelProvider._({
+  MeasurementFormViewModelProvider._({
     required MeasurementFormViewModelFamily super.from,
     required MeasurementFormRouteArgs super.argument,
   }) : super(
@@ -788,7 +788,7 @@ final class MeasurementFormViewModelFamily extends $Family
           ManagedFormViewModel<dynamic>,
           MeasurementFormRouteArgs
         > {
-  const MeasurementFormViewModelFamily._()
+  MeasurementFormViewModelFamily._()
     : super(
         retry: null,
         name: r'measurementFormViewModelProvider',
@@ -805,7 +805,7 @@ final class MeasurementFormViewModelFamily extends $Family
 }
 
 @ProviderFor(surveyQuestionFormViewModel)
-const surveyQuestionFormViewModelProvider =
+final surveyQuestionFormViewModelProvider =
     SurveyQuestionFormViewModelFamily._();
 
 final class SurveyQuestionFormViewModelProvider
@@ -816,7 +816,7 @@ final class SurveyQuestionFormViewModelProvider
           QuestionFormViewModel
         >
     with $Provider<QuestionFormViewModel> {
-  const SurveyQuestionFormViewModelProvider._({
+  SurveyQuestionFormViewModelProvider._({
     required SurveyQuestionFormViewModelFamily super.from,
     required SurveyQuestionFormRouteArgs super.argument,
   }) : super(
@@ -878,7 +878,7 @@ final class SurveyQuestionFormViewModelFamily extends $Family
           QuestionFormViewModel,
           SurveyQuestionFormRouteArgs
         > {
-  const SurveyQuestionFormViewModelFamily._()
+  SurveyQuestionFormViewModelFamily._()
     : super(
         retry: null,
         name: r'surveyQuestionFormViewModelProvider',
@@ -895,7 +895,7 @@ final class SurveyQuestionFormViewModelFamily extends $Family
 }
 
 @ProviderFor(reportsFormViewModel)
-const reportsFormViewModelProvider = ReportsFormViewModelFamily._();
+final reportsFormViewModelProvider = ReportsFormViewModelFamily._();
 
 final class ReportsFormViewModelProvider
     extends
@@ -905,7 +905,7 @@ final class ReportsFormViewModelProvider
           ReportsFormViewModel
         >
     with $Provider<ReportsFormViewModel> {
-  const ReportsFormViewModelProvider._({
+  ReportsFormViewModelProvider._({
     required ReportsFormViewModelFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -962,7 +962,7 @@ String _$reportsFormViewModelHash() =>
 
 final class ReportsFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<ReportsFormViewModel, StudyID> {
-  const ReportsFormViewModelFamily._()
+  ReportsFormViewModelFamily._()
     : super(
         retry: null,
         name: r'reportsFormViewModelProvider',
@@ -979,7 +979,7 @@ final class ReportsFormViewModelFamily extends $Family
 }
 
 @ProviderFor(reportItemFormViewModel)
-const reportItemFormViewModelProvider = ReportItemFormViewModelFamily._();
+final reportItemFormViewModelProvider = ReportItemFormViewModelFamily._();
 
 final class ReportItemFormViewModelProvider
     extends
@@ -989,7 +989,7 @@ final class ReportItemFormViewModelProvider
           ReportItemFormViewModel
         >
     with $Provider<ReportItemFormViewModel> {
-  const ReportItemFormViewModelProvider._({
+  ReportItemFormViewModelProvider._({
     required ReportItemFormViewModelFamily super.from,
     required ReportItemFormRouteArgs super.argument,
   }) : super(
@@ -1051,7 +1051,7 @@ final class ReportItemFormViewModelFamily extends $Family
           ReportItemFormViewModel,
           ReportItemFormRouteArgs
         > {
-  const ReportItemFormViewModelFamily._()
+  ReportItemFormViewModelFamily._()
     : super(
         retry: null,
         name: r'reportItemFormViewModelProvider',
@@ -1071,7 +1071,7 @@ final class ReportItemFormViewModelFamily extends $Family
 /// a [StudyFormValidationSet.publish]
 
 @ProviderFor(studyPublishValidator)
-const studyPublishValidatorProvider = StudyPublishValidatorFamily._();
+final studyPublishValidatorProvider = StudyPublishValidatorFamily._();
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.publish]
@@ -1086,7 +1086,7 @@ final class StudyPublishValidatorProvider
     with $Provider<StudyFormViewModel> {
   /// Provides the [StudyFormViewModel] for validation purposes with
   /// a [StudyFormValidationSet.publish]
-  const StudyPublishValidatorProvider._({
+  StudyPublishValidatorProvider._({
     required StudyPublishValidatorFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -1146,7 +1146,7 @@ String _$studyPublishValidatorHash() =>
 
 final class StudyPublishValidatorFamily extends $Family
     with $FunctionalFamilyOverride<StudyFormViewModel, StudyID> {
-  const StudyPublishValidatorFamily._()
+  StudyPublishValidatorFamily._()
     : super(
         retry: null,
         name: r'studyPublishValidatorProvider',
@@ -1169,7 +1169,7 @@ final class StudyPublishValidatorFamily extends $Family
 /// a [StudyFormValidationSet.test]
 
 @ProviderFor(studyTestValidator)
-const studyTestValidatorProvider = StudyTestValidatorFamily._();
+final studyTestValidatorProvider = StudyTestValidatorFamily._();
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.test]
@@ -1184,7 +1184,7 @@ final class StudyTestValidatorProvider
     with $Provider<StudyFormViewModel> {
   /// Provides the [StudyFormViewModel] for validation purposes with
   /// a [StudyFormValidationSet.test]
-  const StudyTestValidatorProvider._({
+  StudyTestValidatorProvider._({
     required StudyTestValidatorFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -1244,7 +1244,7 @@ String _$studyTestValidatorHash() =>
 
 final class StudyTestValidatorFamily extends $Family
     with $FunctionalFamilyOverride<StudyFormViewModel, StudyID> {
-  const StudyTestValidatorFamily._()
+  StudyTestValidatorFamily._()
     : super(
         retry: null,
         name: r'studyTestValidatorProvider',

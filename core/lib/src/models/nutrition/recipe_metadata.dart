@@ -26,4 +26,3 @@ class RecipeMetadata {
   @override
   String toString() => toJson().toString();
 }
-

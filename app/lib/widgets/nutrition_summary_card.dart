@@ -6,11 +6,7 @@ class NutritionSummaryCard extends StatelessWidget {
   final NutritionProfile nutrition;
   final String? title;
 
-  const NutritionSummaryCard({
-    required this.nutrition,
-    this.title,
-    super.key,
-  });
+  const NutritionSummaryCard({required this.nutrition, this.title, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -110,8 +106,16 @@ class NutritionSummaryCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: [
-                      _buildDetailedNutrient(l10n.fiber_g, nutrition.fiber, 'g'),
-                      _buildDetailedNutrient(l10n.sugars_g, nutrition.sugars, 'g'),
+                      _buildDetailedNutrient(
+                        l10n.fiber_g,
+                        nutrition.fiber,
+                        'g',
+                      ),
+                      _buildDetailedNutrient(
+                        l10n.sugars_g,
+                        nutrition.sugars,
+                        'g',
+                      ),
                       _buildDetailedNutrient(
                         l10n.saturated_fat_g,
                         nutrition.saturatedFat,
@@ -127,7 +131,11 @@ class NutritionSummaryCard extends StatelessWidget {
                         nutrition.cholesterol,
                         'mg',
                       ),
-                      _buildDetailedNutrient(l10n.sodium_mg, nutrition.sodium, 'mg'),
+                      _buildDetailedNutrient(
+                        l10n.sodium_mg,
+                        nutrition.sodium,
+                        'mg',
+                      ),
                       _buildDetailedNutrient(
                         'Water Content',
                         nutrition.waterContent,
@@ -233,7 +241,9 @@ class NutritionSummaryCard extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.3,
+          ),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -255,7 +265,9 @@ class NutritionSummaryCard extends StatelessWidget {
             Text(
               l10n.start_tracking_nutrition,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
               ),
               textAlign: TextAlign.center,
             ),

@@ -12,4 +12,3 @@ String getEntryTypeLabel(FoodEntryType type) {
       return 'Manual Entry';
   }
 }
-

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:studyu_app/models/usda_models.dart';
-import 'package:studyu_flutter_common/src/utils/env_loader.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 /// Service for interacting with USDA FoodData Central API
 /// Documentation: https://fdc.nal.usda.gov/api-guide.html

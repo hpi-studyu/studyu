@@ -70,9 +70,7 @@ class _FoodItemSelectionDialogState extends State<FoodItemSelectionDialog> {
 
   void _selectAll() {
     setState(() {
-      _selectedIndices.addAll(
-        List.generate(widget.items.length, (i) => i),
-      );
+      _selectedIndices.addAll(List.generate(widget.items.length, (i) => i));
     });
   }
 
@@ -90,7 +88,7 @@ class _FoodItemSelectionDialogState extends State<FoodItemSelectionDialog> {
   }
 
   void _analyzeAgain() {
-    Navigator.of(context).pop(null);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -121,7 +119,9 @@ class _FoodItemSelectionDialogState extends State<FoodItemSelectionDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -168,10 +168,7 @@ class _FoodItemSelectionDialogState extends State<FoodItemSelectionDialog> {
             // Select/Deselect all buttons
             Row(
               children: [
-                TextButton(
-                  onPressed: _selectAll,
-                  child: Text(l10n.select_all),
-                ),
+                TextButton(onPressed: _selectAll, child: Text(l10n.select_all)),
                 TextButton(
                   onPressed: _deselectAll,
                   child: Text(l10n.deselect_all),
@@ -200,13 +197,9 @@ class _FoodItemSelectionDialogState extends State<FoodItemSelectionDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: _analyzeAgain,
-          child: Text(l10n.analyzeAgain),
-        ),
+        TextButton(onPressed: _analyzeAgain, child: Text(l10n.analyzeAgain)),
         FilledButton(
-          onPressed:
-              _selectedIndices.isNotEmpty ? _confirmSelection : null,
+          onPressed: _selectedIndices.isNotEmpty ? _confirmSelection : null,
           child: Text(l10n.addSelected),
         ),
       ],
@@ -243,10 +236,7 @@ class _FoodItemTile extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              Checkbox(
-                value: isSelected,
-                onChanged: (_) => onToggle(),
-              ),
+              Checkbox(value: isSelected, onChanged: (_) => onToggle()),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -298,10 +288,7 @@ class _FoodItemTile extends StatelessWidget {
               const SizedBox(width: 8),
               // Confidence indicator
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: _getConfidenceColor(theme, item.confidenceScore),
                   borderRadius: BorderRadius.circular(12),

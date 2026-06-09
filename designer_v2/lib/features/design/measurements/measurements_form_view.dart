@@ -120,7 +120,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                     Icon(
                                       Icons.chevron_right_rounded,
                                       color: colorScheme.onSurfaceVariant
-                                          .withOpacity(0.5),
+                                          .withValues(alpha: 0.5),
                                     ),
                                     const SizedBox(width: 8),
                                   ],
@@ -198,7 +198,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                   Icon(
                                     Icons.chevron_right_rounded,
                                     color: colorScheme.onSurfaceVariant
-                                        .withOpacity(0.5),
+                                        .withValues(alpha: 0.5),
                                   ),
                                 ],
                               ),
@@ -232,6 +232,35 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                 as String?) ??
                             '',
                         sectionTitle: tr.form_array_measurements_surveys,
+                        // sectionTitleDivider: false,
+                        emptyIcon: Icons.content_paste_off_rounded,
+                        emptyTitle:
+                            tr.form_array_measurements_surveys_empty_title,
+                        emptyDescription: tr
+                            .form_array_measurements_surveys_empty_description,
+                        hideLeadingTrailingWhenEmpty: true,
+                        reorderable: !formViewModel.isReadonly,
+                        onReorder: (oldIndex, newIndex) {
+                          var effectiveNewIndex = newIndex;
+                          if (effectiveNewIndex > oldIndex) {
+                            effectiveNewIndex -= 1;
+                          }
+                          // Reorder the view models
+                          final item = formViewModel.measurementViewModels
+                              .removeAt(oldIndex);
+                          formViewModel.measurementViewModels.insert(
+                            effectiveNewIndex,
+                            item,
+                          );
+                          // Reorder the underlying form array to match
+                          final controlItem = formViewModel.measurementsArray
+                              .removeAt(oldIndex);
+                          formViewModel.measurementsArray.insert(
+                            effectiveNewIndex,
+                            controlItem,
+                          );
+                          formViewModel.save();
+                        },
                       ),
                     ],
                   );

@@ -116,8 +116,7 @@ class SurveyTemplate {
       user != null && collaboratorEmails.contains(user.email);
 
   /// Whether the given [user] can edit this template.
-  bool canEdit(User? user) =>
-      isBuiltIn ? false : (isOwner(user) || isEditor(user));
+  bool canEdit(User? user) => !isBuiltIn && (isOwner(user) || isEditor(user));
 
   // --- Task creation ---
 

@@ -54,12 +54,7 @@ class PhotoGalleryService {
     // Configure filter options for time range
     final filterOption = FilterOptionGroup(
       createTimeCond: DateTimeCond(min: startTime, max: endTime),
-      orders: [
-        const OrderOption(
-          type: OrderOptionType.createDate,
-          asc: false, // Most recent first
-        ),
-      ],
+      orders: [const OrderOption()],
     );
 
     // Query only images
@@ -84,14 +79,13 @@ class PhotoGalleryService {
           (asset) => PhotoReference(
             id: asset.id,
             createDateTime: asset.createDateTime,
-            isSelected: false,
           ),
         )
         .toList();
   }
 
   /// Get an AssetEntity by ID for displaying the photo.
-  Future<AssetEntity?> getAsset(String photoId) async {
+  Future<AssetEntity?> getAsset(String photoId) {
     return AssetEntity.fromId(photoId);
   }
 }

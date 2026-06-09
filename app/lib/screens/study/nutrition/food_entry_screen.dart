@@ -15,22 +15,17 @@ class FoodEntryScreen extends StatefulWidget {
   /// If provided, shows a banner indicating AI-estimated values.
   final double? confidenceScore;
 
-  const FoodEntryScreen({
-    this.existingFood,
-    this.confidenceScore,
-    super.key,
-  });
+  const FoodEntryScreen({this.existingFood, this.confidenceScore, super.key});
 
   static MaterialPageRoute<FoodEntry> route({
     FoodEntry? existingFood,
     double? confidenceScore,
-  }) =>
-      MaterialPageRoute(
-        builder: (_) => FoodEntryScreen(
-          existingFood: existingFood,
-          confidenceScore: confidenceScore,
-        ),
-      );
+  }) => MaterialPageRoute(
+    builder: (_) => FoodEntryScreen(
+      existingFood: existingFood,
+      confidenceScore: confidenceScore,
+    ),
+  );
 
   @override
   State<FoodEntryScreen> createState() => _FoodEntryScreenState();
@@ -217,7 +212,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     }
   }
 
-
   FoodEntry? _buildFoodEntry() {
     if (!_formKey.currentState!.validate()) return null;
 
@@ -349,12 +343,13 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             // ========== AI ESTIMATION BANNER ==========
-            if (_isAiAnalyzed) _AiEstimationBanner(
-              confidenceScore: widget.confidenceScore!,
-              isLowConfidence: _isLowConfidence,
-              l10n: l10n,
-              theme: theme,
-            ),
+            if (_isAiAnalyzed)
+              _AiEstimationBanner(
+                confidenceScore: widget.confidenceScore!,
+                isLowConfidence: _isLowConfidence,
+                l10n: l10n,
+                theme: theme,
+              ),
             if (_isAiAnalyzed) const SizedBox(height: 12),
 
             // ========== ESSENTIAL FIELDS ==========
@@ -477,10 +472,12 @@ class _AiEstimationBanner extends StatelessWidget {
                   l10n.confidenceLabel((confidenceScore * 100).round()),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isLowConfidence
-                        ? theme.colorScheme.onErrorContainer
-                            .withValues(alpha: 0.8)
-                        : theme.colorScheme.onPrimaryContainer
-                            .withValues(alpha: 0.8),
+                        ? theme.colorScheme.onErrorContainer.withValues(
+                            alpha: 0.8,
+                          )
+                        : theme.colorScheme.onPrimaryContainer.withValues(
+                            alpha: 0.8,
+                          ),
                   ),
                 ),
               ],
@@ -533,7 +530,9 @@ class _EssentialFieldsCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                    color: theme.colorScheme.primaryContainer.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -635,9 +634,7 @@ class _EssentialFieldsCard extends StatelessWidget {
               ),
               keyboardType: TextInputType.number,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'^\d+\.?\d{0,2}'),
-                ),
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
               ],
             ),
             const SizedBox(height: 16),
@@ -698,23 +695,23 @@ class _EssentialFieldsCard extends StatelessWidget {
                   child: TextFormField(
                     controller: carbsController,
                     decoration: InputDecoration(
-                    labelText: l10n.carbs_g,
-                    border: const OutlineInputBorder(),
-                    filled: true,
-                    hintText: '0',
-                    suffixText: 'g',
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 12,
+                      labelText: l10n.carbs_g,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      hintText: '0',
+                      suffixText: 'g',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
                     ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
                   ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                      RegExp(r'^\d+\.?\d{0,2}'),
-                    ),
-                  ],
-                ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -819,9 +816,7 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                     ),
                   ),
                   Icon(
-                    _isExpanded
-                        ? Icons.expand_less
-                        : Icons.expand_more,
+                    _isExpanded ? Icons.expand_less : Icons.expand_more,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ],
@@ -1025,9 +1020,7 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     ),
                   ),
                   Icon(
-                    _isExpanded
-                        ? Icons.expand_less
-                        : Icons.expand_more,
+                    _isExpanded ? Icons.expand_less : Icons.expand_more,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ],

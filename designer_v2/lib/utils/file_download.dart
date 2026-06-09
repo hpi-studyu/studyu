@@ -54,7 +54,7 @@ class CSVStringEncoder extends FileFormatEncoder {
     }).toList();
 
     final table = [headerRow, ...dataRows];
-    return const ListToCsvConverter().convert(table);
+    return Csv().encode(table);
   }
 }
 

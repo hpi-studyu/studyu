@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
@@ -33,6 +34,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.validationSet = StudyFormValidationSet.draft,
     Map<FormMode, String Function()>? titles,
   }) : _titles = titles {
+    freeTextTypeControl.onChanged(
+      (_) => _onFreeTextTypeChanged(freeTextTypeControl.value),
+    );
+    customRegexControl.setValidators([
+      Validators.delegate(_validateCustomRegexExpression),
+    ], emitEvent: false);
+    customRegexControl.updateValueAndValidity(emitEvent: false);
+
     // Existing initializations
     boolResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
@@ -369,10 +378,52 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         validators: [Validators.delegate(_validateFreeText)],
       );
 
+  void _onFreeTextTypeChanged(FreeTextQuestionType? _) {
+    customRegexControl.updateValueAndValidity();
+    freeTextExampleTextControl.updateValueAndValidity();
+  }
+
+  String? _buildFullMatchRegexPattern(String? expression) {
+    if (expression == null || expression.isEmpty) {
+      return null;
+    }
+
+    final fullMatchPattern = '^(?:$expression)\$';
+    try {
+      RegExp(fullMatchPattern);
+    } on FormatException {
+      return null;
+    }
+    return fullMatchPattern;
+  }
+
+  Map<String, dynamic>? _validateCustomRegexExpression(
+    AbstractControl<dynamic> control,
+  ) {
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      return null;
+    }
+
+    final expression = control.value as String?;
+    if (expression == null || expression.isEmpty) {
+      return {ValidationMessage.required: true};
+    }
+
+    if (_buildFullMatchRegexPattern(expression) == null) {
+      return {ValidationMessage.pattern: true};
+    }
+
+    return null;
+  }
+
   Map<String, dynamic>? _validateFreeText(AbstractControl<dynamic> control) {
     final List<Validator> validators = [];
-    validators.add(Validators.minLength(freeTextLengthMin.value!));
-    validators.add(Validators.maxLength(freeTextLengthMax.value!));
+
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      validators.add(Validators.minLength(freeTextLengthMin.value!));
+      validators.add(Validators.maxLength(freeTextLengthMax.value!));
+    }
+
     switch (freeTextTypeControl.value) {
       case FreeTextQuestionType.any:
         break;
@@ -381,9 +432,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case FreeTextQuestionType.numeric:
         validators.add(Validators.number(allowNegatives: false));
       case FreeTextQuestionType.custom:
-        if (customRegexControl.value != null) {
-          validators.add(Validators.pattern('^${customRegexControl.value!}\$'));
+        final pattern = _buildFullMatchRegexPattern(customRegexControl.value);
+        if (pattern == null) {
+          return {ValidationMessage.pattern: true};
         }
+        validators.add(Validators.pattern(pattern));
       case null:
         return {'null': "freeTextTypeControl.value is null"};
     }
@@ -423,6 +476,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormArray fitbitResponseOptionsArray = FormArray(
     fitbitQuestionTypesControl.values.toList(),
   );
+
+  FitbitCredentialsFormViewModel? _fitbitCredentialsFormViewModel;
+  FitbitCredentialsFormViewModel? get fitbitCredentialsFormViewModel =>
+      _fitbitCredentialsFormViewModel;
 
   // - Form fields (question type-specific) - end
 
@@ -484,8 +541,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       StudyFormValidationSet.publish: [maxRecordingDurationValid],
     },
     SurveyQuestionType.fitbit: {
-      StudyFormValidationSet.draft: [fitbitTypeRequired],
-      StudyFormValidationSet.publish: [fitbitTypeRequired],
+      StudyFormValidationSet.draft: [
+        fitbitTypeRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientIdRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientSecretRequired,
+      ],
+      StudyFormValidationSet.publish: [
+        fitbitTypeRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientIdRequired,
+        if (_fitbitCredentialsFormViewModel != null) fitbitClientSecretRequired,
+      ],
     },
   };
 
@@ -521,7 +586,23 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     ],
     validationMessages: {
       CountWhereValidator.kValidationMessageMinCount: (error) =>
-          "At least one Fitbit type must be selected.", //TODO: translations
+          tr.fitbit_question_type_required,
+    },
+  );
+
+  FormControlValidation get fitbitClientIdRequired => FormControlValidation(
+    control: _fitbitCredentialsFormViewModel!.clientIdControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (_) => tr.fitbit_client_id_required,
+    },
+  );
+
+  FormControlValidation get fitbitClientSecretRequired => FormControlValidation(
+    control: _fitbitCredentialsFormViewModel!.clientSecretControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (_) => tr.fitbit_client_secret_required,
     },
   );
 
@@ -623,6 +704,21 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     form.addAll(subtypeFormControls);
     markFormGroupChanged();
     onResponseOptionsChanged(answerOptionsControls);
+  }
+
+  void attachFitbitCredentialsFormViewModel(
+    FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel,
+  ) {
+    if (identical(
+      _fitbitCredentialsFormViewModel,
+      fitbitCredentialsFormViewModel,
+    )) {
+      return;
+    }
+    _fitbitCredentialsFormViewModel = fitbitCredentialsFormViewModel;
+    fitbitCredentialsFormViewModel.enableQuestionValidation();
+    revalidate();
+    form.updateValueAndValidity();
   }
 
   @override
@@ -856,7 +952,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
       customRegexControl.value = null;
     }
-    return super.save();
+    if (questionType != SurveyQuestionType.fitbit ||
+        _fitbitCredentialsFormViewModel == null) {
+      return super.save();
+    }
+
+    final fitbitCredentialsFormViewModel = _fitbitCredentialsFormViewModel!;
+    fitbitCredentialsFormViewModel.revalidate();
+    fitbitCredentialsFormViewModel.form.updateValueAndValidity();
+
+    if (!fitbitCredentialsFormViewModel.form.valid) {
+      throw FormInvalidException();
+    }
+
+    return fitbitCredentialsFormViewModel.save().then((_) => super.save());
   }
 
   @override

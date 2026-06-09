@@ -3,6 +3,127 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-03-21
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.5`](#studyu_app---v2125)
+ - [`studyu_core` - `v4.8.0`](#studyu_core---v480)
+ - [`studyu_designer_v2` - `v1.16.0`](#studyu_designer_v2---v1160)
+ - [`studyu_flutter_common` - `v1.10.2`](#studyu_flutter_common---v1102)
+
+---
+
+#### `studyu_app` - `v2.12.5`
+
+ - **FIX**: migrate flutter_local_notifications.
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: upgrade to flutter v3.38.4.
+
+#### `studyu_core` - `v4.8.0`
+
+ - **FIX**: migrate csv.
+ - **FIX**: update to flutter v3.41.5.
+ - **FEAT**: Add persistent user-defined study filters and active filter state to user preferences.
+
+#### `studyu_designer_v2` - `v1.16.0`
+
+ - **REFACTOR**: fix and format.
+ - **REFACTOR**: Update widget constructors to use `super.key` and refine filter UI constants and German localization.
+ - **REFACTOR**: remove "Clear all" filter option from dashboard studies filter.
+ - **REFACTOR**: filter_builder smaller.
+ - **REFACTOR**: Add new filter widgets for enum, boolean, number, text, and date range types for dashboard studies, and update the filter builder to utilize them.
+ - **FIX**: migrate csv.
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: resolve hash conflict in dashboardControllerHash.
+ - **FIX**: filter out exportDefinition action from available study actions.
+ - **FIX**: cast error value to Object for validation message function.
+ - **FIX**: Center studies table content and headers, adjust column sizing, and add DevTools options file.
+ - **FIX**: upgrade to flutter v3.38.4.
+ - **FIX**: Introduce comparator utility for symbol display and enhance filter chip labels and conditional form options.
+ - **FIX**: filter translation.
+ - **FIX**: preset highlighting bug.
+ - **FIX**: make `setStudiesFilter` asynchronous and fetch user data.
+ - **FIX**: improve dashboard responsiveness by adapting UI elements to screen sizes and add a DevTools options file.
+ - **FEAT**: Implement study definition export as JSON and add null check for study import.
+ - **FEAT**: Implement study import functionality, include study definition in export, and add customizable row spacing to form layouts.
+ - **FEAT**: localize dashboard filter UI, preset management, and related enum labels.
+ - **FEAT**: Track expanded filter fields in controller and enhance selected preset UI in filter builder.
+ - **FEAT**: add active state highlighting to filter presets, update filter action button labels and icons, and remove filter match count display.
+ - **FEAT**: Add 6px horizontal spacing to the filter builder UI.
+ - **FEAT**: Add persistent user-defined study filters and active filter state to user preferences.
+ - **FEAT**: Initialize filter builder's active preset from dashboard state or by matching saved filters.
+ - **FEAT**: Overhaul dashboard filter UI with auto-apply on close, enhanced preset management, and expandable filter sections.
+ - **FEAT**: Add dashboard filter presets and a unified filter menu, replacing old filter view components.
+ - **FEAT**: Implement dynamic and hierarchical study filtering on the dashboard, including UI, data models, and evaluation logic.
+
+#### `studyu_flutter_common` - `v1.10.2`
+
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: new env dev.
+
+
+## 2025-12-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_designer_v2` - `v1.15.5`](#studyu_designer_v2---v1155)
+
+---
+
+#### `studyu_designer_v2` - `v1.15.5`
+
+ - **FIX**: update balanced description in study schedule translations and upgrade dependencies.
+
+
+## 2025-11-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.4`](#studyu_app---v2124)
+ - [`studyu_designer_v2` - `v1.15.4`](#studyu_designer_v2---v1154)
+
+---
+
+#### `studyu_app` - `v2.12.4`
+
+ - **FIX**: fix caching.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: null check for study invite.
+ - **FIX**(database): revoke unnecessary EXECUTE privileges and update function access policies.
+ - **FIX**: study length calculation and update localization for study schedule.
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: offline mode was not working.
+
+#### `studyu_designer_v2` - `v1.15.4`
+
+ - **FIX**: update balanced description in study schedule translations.
+
+
 ## 2025-11-17
 
 ### Changes

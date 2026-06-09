@@ -1,3 +1,19 @@
+## 2.12.5
+
+ - **FIX**: migrate flutter_local_notifications.
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: upgrade to flutter v3.38.4.
+
+## 2.12.4
+
+ - **FIX**: fix caching.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: null check for study invite.
+ - **FIX**(database): revoke unnecessary EXECUTE privileges and update function access policies.
+ - **FIX**: study length calculation and update localization for study schedule.
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: offline mode was not working.
+
 ## 2.12.3
 
  - **FIX**: fix caching.

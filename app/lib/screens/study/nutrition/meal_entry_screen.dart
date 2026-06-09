@@ -120,9 +120,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   Future<void> _addFood() async {
     final result = await Navigator.of(context).push(
-      FoodSearchScreen.route(
-        allowRecipes: widget.task?.allowRecipes ?? true,
-      ),
+      FoodSearchScreen.route(allowRecipes: widget.task?.allowRecipes ?? true),
     );
     if (result != null) {
       setState(() {
@@ -286,9 +284,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       final asset = await _photoService.getAsset(photo.id);
       if (asset == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.foodAnalysisError)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
         }
         return;
       }
@@ -297,9 +295,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       final file = await asset.originFile;
       if (file == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.foodAnalysisError)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
         }
         return;
       }
@@ -326,9 +324,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       }
 
       if (result.items.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.foodAnalysisNoItems)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisNoItems)));
         return;
       }
 
@@ -376,9 +374,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.foodAnalysisError)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
       }
     } finally {
       if (mounted) {
@@ -1007,13 +1005,10 @@ class _FoodCard extends StatelessWidget {
                   switch (value) {
                     case 'edit':
                       onEdit();
-                      break;
                     case 'save_template':
                       onSaveTemplate();
-                      break;
                     case 'delete':
                       onDelete();
-                      break;
                   }
                 },
                 itemBuilder: (context) => [
@@ -1033,7 +1028,9 @@ class _FoodCard extends StatelessWidget {
                               const SizedBox(
                                 width: 18,
                                 height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
                               const SizedBox(width: 12),
                               Text(l10n.saving),
@@ -1159,7 +1156,7 @@ class _MealOptionsCard extends StatelessWidget {
               _DropdownField<CompanyContext?>(
                 label: l10n.who_were_you_with,
                 value: companyContext,
-                items: [null, ...CompanyContext.values],
+                items: const [null, ...CompanyContext.values],
                 itemLabel: (context) => context == null
                     ? l10n.not_specified
                     : _getCompanyContextLabel(context, l10n),
@@ -1169,7 +1166,7 @@ class _MealOptionsCard extends StatelessWidget {
               _DropdownField<DistractionContext?>(
                 label: l10n.distractions_during_meal,
                 value: distractionContext,
-                items: [null, ...DistractionContext.values],
+                items: const [null, ...DistractionContext.values],
                 itemLabel: (context) => context == null
                     ? l10n.not_specified
                     : _getDistractionContextLabel(context, l10n),
@@ -1273,7 +1270,7 @@ class _DropdownField<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T?>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

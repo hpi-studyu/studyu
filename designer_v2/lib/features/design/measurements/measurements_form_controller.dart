@@ -309,6 +309,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     ManagedFormViewModel formViewModel,
     FormMode prevFormMode,
   ) async {
+    final isNewMeasurement = prevFormMode == FormMode.create;
     final typedVm =
         formViewModel as ManagedFormViewModel<IFormDataWithSchedule>;
     final isStaged = measurementViewModelsCollection.stagedViewModels.contains(
@@ -318,5 +319,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       measurementViewModelsCollection.commit(typedVm);
     }
     await super.save();
+
+    if (isNewMeasurement) {
+      router.dispatch(
+        RoutingIntents.studyEditMeasurement(
+          study.id,
+          (formViewModel as dynamic).measurementId as MeasurementID,
+        ),
+      );
+    }
   }
 }

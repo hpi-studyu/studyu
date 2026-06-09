@@ -1,7 +1,5 @@
 import 'package:studyu_core/core.dart';
 
-import 'survey_template.dart';
-
 /// Abstract interface for fetching and managing survey templates.
 ///
 /// Implementations can source templates from different backends:

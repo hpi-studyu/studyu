@@ -32,7 +32,7 @@ class FoodEntry {
   DateTime? modifiedAt;
   Map<String, dynamic> originalValues;
   String? parentRecipeId;
-  
+
   // Recipe-specific fields
   RecipeMetadata? recipeMetadata;
   List<RecipeComposition>? recipeIngredients;
@@ -89,8 +89,8 @@ class FoodEntry {
     this.parentRecipeId,
     this.recipeMetadata,
     this.recipeIngredients,
-  })  : id = const Uuid().v4(),
-        createdAt = DateTime.now();
+  }) : id = const Uuid().v4(),
+       createdAt = DateTime.now();
 
   factory FoodEntry.fromJson(Map<String, dynamic> json) =>
       _$FoodEntryFromJson(json);
@@ -100,4 +100,3 @@ class FoodEntry {
   @override
   String toString() => toJson().toString();
 }
-

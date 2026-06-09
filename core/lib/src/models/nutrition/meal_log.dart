@@ -60,4 +60,3 @@ class MealLog {
   @override
   String toString() => toJson().toString();
 }
-

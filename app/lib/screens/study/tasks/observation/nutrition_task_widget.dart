@@ -112,7 +112,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           final recall = model.recall;
 
           return PopScope(
-            canPop: !model.isInTaskMode ||
+            canPop:
+                !model.isInTaskMode ||
                 widget.task?.minimumMealsRequired == null ||
                 model.meetsMinimumMeals,
             onPopInvokedWithResult: (bool didPop, _) async {
@@ -143,49 +144,55 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               }
             },
             child: Scaffold(
-            appBar: _buildAppBar(context, model, l10n, theme),
-            body: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 16),
-                        if (widget.task?.header != null) ...[
-                          HtmlText(widget.task!.header, centered: true),
+              appBar: _buildAppBar(context, model, l10n, theme),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           const SizedBox(height: 16),
+                          if (widget.task?.header != null) ...[
+                            HtmlText(widget.task!.header, centered: true),
+                            const SizedBox(height: 16),
+                          ],
+                          if (model.isInTaskMode &&
+                              (widget.task?.instructions != null ||
+                                  widget.task?.minimumMealsRequired != null))
+                            _buildInstructionsCard(context, theme, l10n),
+                          _buildDateDisplayCard(
+                            context,
+                            model,
+                            recall,
+                            theme,
+                            l10n,
+                          ),
+                          const SizedBox(height: 8),
+                          _buildMealsSection(
+                            context,
+                            model,
+                            recall,
+                            theme,
+                            l10n,
+                          ),
+                          if (recall.meals.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            DailyNutritionSummaryCard(dailyRecall: recall),
+                          ],
+                          if (widget.task?.footer != null) ...[
+                            const SizedBox(height: 16),
+                            HtmlText(widget.task!.footer, centered: true),
+                          ],
+                          const SizedBox(height: 24),
                         ],
-                        if (model.isInTaskMode &&
-                            (widget.task?.instructions != null ||
-                                widget.task?.minimumMealsRequired != null))
-                          _buildInstructionsCard(context, theme, l10n),
-                        _buildDateDisplayCard(
-                          context,
-                          model,
-                          recall,
-                          theme,
-                          l10n,
-                        ),
-                        const SizedBox(height: 8),
-                        _buildMealsSection(context, model, recall, theme, l10n),
-                        if (recall.meals.isNotEmpty) ...[
-                          const SizedBox(height: 16),
-                          DailyNutritionSummaryCard(dailyRecall: recall),
-                        ],
-                        if (widget.task?.footer != null) ...[
-                          const SizedBox(height: 16),
-                          HtmlText(widget.task!.footer, centered: true),
-                        ],
-                        const SizedBox(height: 24),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           );
         },
       ),
@@ -403,9 +410,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 if (widget.task?.minimumMealsRequired != null) ...[
                   const SizedBox(width: 8),
                   _MinMealsProgressChip(
-                    current: recall.meals
-                        .where((m) => !m.isSkipped)
-                        .length,
+                    current: recall.meals.where((m) => !m.isSkipped).length,
                     minimum: widget.task!.minimumMealsRequired!,
                     theme: theme,
                   ),
@@ -478,9 +483,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     BuildContext context,
     DailyRecallEntryViewModel model,
   ) async {
-    final result = await Navigator.of(context).push(
-      MealEntryScreen.route(task: widget.task),
-    );
+    final result = await Navigator.of(
+      context,
+    ).push(MealEntryScreen.route(task: widget.task));
     if (result != null) {
       model.addMeal(result);
     }
@@ -492,9 +497,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     MealLog meal,
     int index,
   ) async {
-    final result = await Navigator.of(context).push(
-      MealEntryScreen.route(existingMeal: meal, task: widget.task),
-    );
+    final result = await Navigator.of(
+      context,
+    ).push(MealEntryScreen.route(existingMeal: meal, task: widget.task));
     if (result != null) {
       model.updateMeal(index, result);
     }
@@ -539,7 +544,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
 
     final result = await SaveTemplateDialog.show(
       context,
-      initialName: meal.customMealLabel ?? _getMealTypeLabel(context, meal.mealType),
+      initialName:
+          meal.customMealLabel ?? _getMealTypeLabel(context, meal.mealType),
       templateType: TemplateType.meal,
     );
 

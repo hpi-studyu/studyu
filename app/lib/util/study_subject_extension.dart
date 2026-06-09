@@ -21,15 +21,20 @@ extension StudySubjectExtension on StudySubject {
     );
 
     String interventionId;
-    final completionDate = completionDateOverride ??
+    final completionDate =
+        completionDateOverride ??
         recall.entryCompletedAt ??
-        recall.entryStartedAt ?? // stable per recall to avoid new PK per autosave
+        recall
+            .entryStartedAt ?? // stable per recall to avoid new PK per autosave
         recall.lastAutoSavedAt ??
         DateTime.now();
 
     if (recall.studyDaySnapshot != null) {
-      final snapshotDate = startedAt!.add(Duration(days: recall.studyDaySnapshot!));
-      interventionId = getInterventionForDate(snapshotDate)?.id ??
+      final snapshotDate = startedAt!.add(
+        Duration(days: recall.studyDaySnapshot!),
+      );
+      interventionId =
+          getInterventionForDate(snapshotDate)?.id ??
           getInterventionForDate(DateTime.now())!.id;
     } else {
       interventionId = getInterventionForDate(DateTime.now())!.id;
@@ -41,8 +46,9 @@ extension StudySubjectExtension on StudySubject {
     );
 
     // Reuse the same completedAt key for updates to avoid duplicate rows
-    final existingCompletedAt =
-        existingIndex >= 0 ? progress[existingIndex].completedAt : null;
+    final existingCompletedAt = existingIndex >= 0
+        ? progress[existingIndex].completedAt
+        : null;
 
     StudyULogger.debug(
       '[upsertNutritionResult] task=$taskId period=$periodId studyDay=${recall.studyDaySnapshot} '
@@ -51,20 +57,22 @@ extension StudySubjectExtension on StudySubject {
       'meals=${recall.meals.length} progressLen=${progress.length}',
     );
 
-    final progressToSave = existingIndex >= 0
-        ? (progress[existingIndex]
-          ..interventionId = interventionId
-          ..taskId = taskId
-          ..result = resultObject
-          ..resultType = resultObject.type
-          ..completedAt = existingCompletedAt ?? completionDate.toUtc())
-        : SubjectProgress(
-            subjectId: id,
-            interventionId: interventionId,
-            taskId: taskId,
-            result: resultObject,
-            resultType: resultObject.type,
-          )..completedAt = (existingCompletedAt ?? completionDate).toUtc();
+    final progressToSave =
+        existingIndex >= 0
+              ? (progress[existingIndex]
+                  ..interventionId = interventionId
+                  ..taskId = taskId
+                  ..result = resultObject
+                  ..resultType = resultObject.type
+                  ..completedAt = existingCompletedAt ?? completionDate.toUtc())
+              : SubjectProgress(
+                  subjectId: id,
+                  interventionId: interventionId,
+                  taskId: taskId,
+                  result: resultObject,
+                  resultType: resultObject.type,
+                )
+          ..completedAt = (existingCompletedAt ?? completionDate).toUtc();
 
     try {
       final saved = await progressToSave.save();
@@ -166,8 +174,11 @@ extension StudySubjectExtension on StudySubject {
     DateTime completionDate;
 
     if (result is DailyRecall && result.studyDaySnapshot != null) {
-      final snapshotDate = startedAt!.add(Duration(days: result.studyDaySnapshot!));
-      interventionId = getInterventionForDate(snapshotDate)?.id ??
+      final snapshotDate = startedAt!.add(
+        Duration(days: result.studyDaySnapshot!),
+      );
+      interventionId =
+          getInterventionForDate(snapshotDate)?.id ??
           getInterventionForDate(DateTime.now())!.id;
       completionDate = result.entryCompletedAt ?? DateTime.now();
     } else {

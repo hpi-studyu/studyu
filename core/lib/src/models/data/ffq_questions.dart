@@ -1,34 +1,23 @@
 import 'package:studyu_core/core.dart';
 
-import 'dhq3_questions.dart';
-
 /// Food Frequency Questionnaire (FFQ) – test/single survey (26 questions).
 /// Use createFFQTask() for the normal one-off FFQ.
 /// Use createFFQTaskForDay(0..13) for 14-day cluster surveys (DHQ3 split into 14).
 class FFQQuestions {
   /// Standard frequency options for FFQ questions
   static List<Choice> get frequencyChoices => [
-        Choice.withText(
-          text: 'Less than once per month',
-          id: 'less_than_once_per_month',
-        ),
-        Choice.withText(
-          text: '2-3 times per month',
-          id: '2_3_times_per_month',
-        ),
-        Choice.withText(
-          text: '1-2 times per week',
-          id: '1_2_times_per_week',
-        ),
-        Choice.withText(
-          text: '3-4 times per week',
-          id: '3_4_times_per_week',
-        ),
-        Choice.withText(
-          text: 'At least 5 times per week',
-          id: 'at_least_5_times_per_week',
-        ),
-      ];
+    Choice.withText(
+      text: 'Less than once per month',
+      id: 'less_than_once_per_month',
+    ),
+    Choice.withText(text: '2-3 times per month', id: '2_3_times_per_month'),
+    Choice.withText(text: '1-2 times per week', id: '1_2_times_per_week'),
+    Choice.withText(text: '3-4 times per week', id: '3_4_times_per_week'),
+    Choice.withText(
+      text: 'At least 5 times per week',
+      id: 'at_least_5_times_per_week',
+    ),
+  ];
 
   static const String introText =
       'Think about what you ate over the last year. Consider breakfast, lunch, dinner, and when you ate out.';
@@ -37,130 +26,171 @@ class FFQQuestions {
   static List<Question> createQuestions() {
     final questions = <Question>[];
 
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_ground_meat',
-      prompt: 'Ground meat, e.g. from beef or lamb, in burgers, Bolognese sauce, etc.',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_pork_beef',
-      prompt:
-          'Pork or beef in the form of steaks, ribs, roasts or as sandwich meat/on sandwiches',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_fried_chicken',
-      prompt: 'Fried chicken (such as in chicken burgers, nuggets, etc.)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_sausages',
-      prompt: 'Sausages, cured meats, e.g. wiener or salami',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_bacon',
-      prompt: 'Bacon/breakfast bacon',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_salad_dressings',
-      prompt: 'Salad dressings (not low-fat)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_butter_margarine',
-      prompt: 'Margarine, butter or oil when cooking',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_eggs',
-      prompt: 'Eggs (not when only egg whites were used)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_pizza',
-      prompt: 'Pizza',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_cheese',
-      prompt: 'Cheese or cheese spread (not low-fat)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_french_fries',
-      prompt: 'French fries, potato pancakes, etc.',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_chips',
-      prompt: 'Corn chips (e.g. nachos/tortilla chips), potato chips',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_pastries',
-      prompt:
-          'Pancakes/donuts, croissants, sweet baked goods (e.g. plum cake, streusel cake, etc.)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_cakes_cookies',
-      prompt: 'Cakes, cookies',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_ice_cream',
-      prompt: 'Ice cream (not low-fat or sorbet)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_chocolate',
-      prompt: 'Chocolate',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_candy',
-      prompt: 'Lollipops/hard candy/bonbons (with sugar)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_spreads',
-      prompt: 'Spreads, such as peanut butter, marmalade, honey, Nutella',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_american_pancakes',
-      prompt: 'American pancakes or French toast',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_sports_drinks',
-      prompt: 'Sports drinks or energy drinks (e.g. Red Bull)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_soft_drinks',
-      prompt: 'Soft drinks, lemonade (not "light" versions)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_whole_milk',
-      prompt:
-          'Whole milk, also in cappuccinos, hot chocolates, shakes, etc.',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_sweetened_beverages',
-      prompt:
-          'Other sweetened beverages (such as juice with added sugar, syrup, iced tea, etc.)',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_white_bread',
-      prompt: 'White bread',
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_fast_food',
-      prompt:
-          'How often have you eaten at a fast food restaurant or had food delivered in the last year? (e.g. McDonalds, Pizza, Asian, etc.)',
-      choices: [
-        Choice.withText(text: 'None', id: 'none'),
-        Choice.withText(text: '1-2', id: '1_2'),
-        Choice.withText(text: '3-4', id: '3_4'),
-        Choice.withText(text: '5-6', id: '5_6'),
-        Choice.withText(text: '7 or more', id: '7_or_more'),
-      ],
-    ));
-    questions.add(_createFrequencyQuestion(
-      id: 'ffq_added_sugar',
-      prompt:
-          'How many teaspoons of sugar have you added to drinks, muesli, or other foods in the last week?',
-      choices: [
-        Choice.withText(text: 'None', id: 'none'),
-        Choice.withText(text: '1-2', id: '1_2'),
-        Choice.withText(text: '3-4', id: '3_4'),
-        Choice.withText(text: '5-6', id: '5_6'),
-        Choice.withText(text: '7 or more', id: '7_or_more'),
-      ],
-    ));
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_ground_meat',
+        prompt:
+            'Ground meat, e.g. from beef or lamb, in burgers, Bolognese sauce, etc.',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_pork_beef',
+        prompt:
+            'Pork or beef in the form of steaks, ribs, roasts or as sandwich meat/on sandwiches',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_fried_chicken',
+        prompt: 'Fried chicken (such as in chicken burgers, nuggets, etc.)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_sausages',
+        prompt: 'Sausages, cured meats, e.g. wiener or salami',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_bacon',
+        prompt: 'Bacon/breakfast bacon',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_salad_dressings',
+        prompt: 'Salad dressings (not low-fat)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_butter_margarine',
+        prompt: 'Margarine, butter or oil when cooking',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_eggs',
+        prompt: 'Eggs (not when only egg whites were used)',
+      ),
+    );
+    questions.add(_createFrequencyQuestion(id: 'ffq_pizza', prompt: 'Pizza'));
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_cheese',
+        prompt: 'Cheese or cheese spread (not low-fat)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_french_fries',
+        prompt: 'French fries, potato pancakes, etc.',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_chips',
+        prompt: 'Corn chips (e.g. nachos/tortilla chips), potato chips',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_pastries',
+        prompt:
+            'Pancakes/donuts, croissants, sweet baked goods (e.g. plum cake, streusel cake, etc.)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_cakes_cookies',
+        prompt: 'Cakes, cookies',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_ice_cream',
+        prompt: 'Ice cream (not low-fat or sorbet)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(id: 'ffq_chocolate', prompt: 'Chocolate'),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_candy',
+        prompt: 'Lollipops/hard candy/bonbons (with sugar)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_spreads',
+        prompt: 'Spreads, such as peanut butter, marmalade, honey, Nutella',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_american_pancakes',
+        prompt: 'American pancakes or French toast',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_sports_drinks',
+        prompt: 'Sports drinks or energy drinks (e.g. Red Bull)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_soft_drinks',
+        prompt: 'Soft drinks, lemonade (not "light" versions)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_whole_milk',
+        prompt: 'Whole milk, also in cappuccinos, hot chocolates, shakes, etc.',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_sweetened_beverages',
+        prompt:
+            'Other sweetened beverages (such as juice with added sugar, syrup, iced tea, etc.)',
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(id: 'ffq_white_bread', prompt: 'White bread'),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_fast_food',
+        prompt:
+            'How often have you eaten at a fast food restaurant or had food delivered in the last year? (e.g. McDonalds, Pizza, Asian, etc.)',
+        choices: [
+          Choice.withText(text: 'None', id: 'none'),
+          Choice.withText(text: '1-2', id: '1_2'),
+          Choice.withText(text: '3-4', id: '3_4'),
+          Choice.withText(text: '5-6', id: '5_6'),
+          Choice.withText(text: '7 or more', id: '7_or_more'),
+        ],
+      ),
+    );
+    questions.add(
+      _createFrequencyQuestion(
+        id: 'ffq_added_sugar',
+        prompt:
+            'How many teaspoons of sugar have you added to drinks, muesli, or other foods in the last week?',
+        choices: [
+          Choice.withText(text: 'None', id: 'none'),
+          Choice.withText(text: '1-2', id: '1_2'),
+          Choice.withText(text: '3-4', id: '3_4'),
+          Choice.withText(text: '5-6', id: '5_6'),
+          Choice.withText(text: '7 or more', id: '7_or_more'),
+        ],
+      ),
+    );
 
     return questions;
   }
@@ -183,20 +213,17 @@ class FFQQuestions {
     final task = QuestionnaireTask.withId()
       ..title = 'Food Frequency Questionnaire (FFQ)'
       ..header = introText
-      ..footer =
-          'Thank you for completing the Food Frequency Questionnaire!'
+      ..footer = 'Thank you for completing the Food Frequency Questionnaire!'
       ..questions.questions = createQuestions();
 
     task.schedule = Schedule()
       ..completionPeriods = [
         CompletionPeriod.noId(
-          unlockTime: StudyUTimeOfDay(hour: 0, minute: 0),
+          unlockTime: StudyUTimeOfDay(),
           lockTime: StudyUTimeOfDay(hour: 23, minute: 59),
         ),
       ]
-      ..reminders = [
-        StudyUTimeOfDay(hour: 9, minute: 0),
-      ];
+      ..reminders = [StudyUTimeOfDay(hour: 9)];
 
     return task;
   }

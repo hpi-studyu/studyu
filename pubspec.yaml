@@ -1,4 +1,4 @@
-name: studyu_workspace
+name: studyu
 description: The root of the StudyU project
 publish_to: none
 environment:
@@ -9,7 +9,7 @@ workspace:
   - app
   - designer_v2
 dev_dependencies:
-  melos: ^7.3.0
+  melos: ^7.4.1
 
 melos:
   repository: https://github.com/hpi-studyu/studyu
@@ -53,7 +53,7 @@ melos:
     generate:
       run: |
         melos exec -c 1 --fail-fast -- \
-          "dart run build_runner build --delete-conflicting-outputs"
+          "dart run build_runner build"
       description: Generate files with build_runner
       packageFilters:
         scope:
@@ -62,10 +62,19 @@ melos:
 
     qualitycheck:
       run: |
+        if [ "$CI" != "true" ]; then
+          fvm install
+        fi
         melos format
         melos generate
-        # dart analyze # fixes error with custom_lint for riverpod_generator
-        flutter analyze
+        if [ "$CI" = "true" ]; then
+          dart analyze
+          flutter analyze
+        else
+          fvm dart analyze
+          fvm flutter analyze
+        fi
+      description: Run format, generate, and analyze checks
 
     reset:
       run: |

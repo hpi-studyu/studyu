@@ -28,8 +28,9 @@ class Answer<V> {
     if (response is DateTime) {
       encodedResponse = (response as DateTime).toIso8601String();
     }
-    return mergeMaps<String, dynamic>(
-        _$AnswerToJson(this), {keyResponse: encodedResponse});
+    return mergeMaps<String, dynamic>(_$AnswerToJson(this), {
+      keyResponse: encodedResponse,
+    });
   }
 
   static Answer fromJson(Map<String, dynamic> data) {

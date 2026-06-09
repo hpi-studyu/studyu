@@ -176,9 +176,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
           // Header with collapse button
           InkWell(
             onTap: () => setState(() => _isExpanded = false),
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(12),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -429,15 +427,11 @@ class _PhotoThumbnail extends StatelessWidget {
           children: [
             // Photo thumbnail
             FutureBuilder<Uint8List?>(
-              future: AssetEntity(
-                id: photo.id,
-                typeInt: 1,
-                width: 0,
-                height: 0,
-              ).thumbnailDataWithSize(
-                const ThumbnailSize(300, 300),
-                quality: 80,
-              ),
+              future: AssetEntity(id: photo.id, typeInt: 1, width: 0, height: 0)
+                  .thumbnailDataWithSize(
+                    const ThumbnailSize(300, 300),
+                    quality: 80,
+                  ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return ColoredBox(

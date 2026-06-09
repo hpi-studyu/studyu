@@ -92,4 +92,3 @@ enum FoodSource {
   String toJson() => name;
   static FoodSource fromJson(String json) => values.byName(json);
 }
-

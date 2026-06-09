@@ -1,6 +1,6 @@
 import 'package:studyu_core/core.dart';
 
-import 'dhq3_choices.dart';
+import 'package:studyu_core/src/models/data/dhq3_choices.dart';
 
 /// 14 named DHQ3 surveys – each is a separate entity with a meaningful title.
 /// Order defines scheduling: survey 1 = day 1, etc.
@@ -39,11 +39,11 @@ class Dhq3Questions {
     task.schedule = Schedule()
       ..completionPeriods = [
         CompletionPeriod.noId(
-          unlockTime: StudyUTimeOfDay(hour: 0, minute: 0),
+          unlockTime: StudyUTimeOfDay(),
           lockTime: StudyUTimeOfDay(hour: 23, minute: 59),
         ),
       ]
-      ..reminders = [StudyUTimeOfDay(hour: 9, minute: 0)];
+      ..reminders = [StudyUTimeOfDay(hour: 9)];
     return task;
   }
 
@@ -159,24 +159,6 @@ class Dhq3Questions {
     q.addAll(_aboutYou());
     q.addAll(_coffeeTeaAdditions());
     return q;
-  }
-
-  static String _month(int m) {
-    const names = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return names[m - 1];
   }
 
   /// Beverage list – exact wording from DHQ3 FFQ (Past Year With Serving Sizes).

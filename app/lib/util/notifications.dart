@@ -179,7 +179,7 @@ class StudyNotifications {
           linux: initializationSettingsLinux,
         );
     flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) {
             switch (notificationResponse.notificationResponseType) {

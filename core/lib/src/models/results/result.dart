@@ -52,9 +52,7 @@ class Result<T> {
       'QuestionnaireState' => {
         keyResult: (result as QuestionnaireState).toJson(),
       },
-      'DailyRecall' => {
-        keyResult: (result as DailyRecall).toJson(),
-      },
+      'DailyRecall' => {keyResult: (result as DailyRecall).toJson()},
       'bool' => {keyResult: result},
       _ => throw ArgumentError('Unknown result type $type'),
     };
