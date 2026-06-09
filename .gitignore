@@ -139,6 +139,9 @@ app.*.symbols
 
 # +++ CUSTOM ADDITIONS +++
 
+# Scratch directory
+.tmp/
+
 # Melos
 !*.lock
 pubspec_overrides.yaml
@@ -169,4 +172,10 @@ megalinter-reports/
 l10n-missing.txt
 
 # Local OpenCode state
+docs/superpowers/
+interview/
 .opencode/
+
+# Local git worktrees
+.worktrees/
+.vscode/settings.json

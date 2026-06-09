@@ -1,3 +1,24 @@
+## 1.17.0
+
+ - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
+ - **FIX**: upgrade deps.
+ - **FIX**(measurements): persist new survey questions.
+ - **FIX**(designer): preserve form dirty guards.
+ - **FIX**(designer): intervention task dismissable warning works.
+ - **FIX**(designer): duplicate unsaved survey questions.
+ - **FIX**: update free text validation messages and regex handling.
+ - **FIX**: align dependencies for Flutter 3.44.
+ - **FIX**: add missing const constructors to satisfy linter.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: update Flutter version to 3.44.0 and clean up unused imports.
+ - **FIX**: remove redundant fitbit label.
+ - **FEAT**: make barrier dismissable with warning check.
+ - **FEAT**: Add custom error message support for free text questions.
+ - **FEAT**: add custom free text validation and localization support.
+ - **FEAT**(test): add stable ValueKeys for MCP automation.
+ - **FEAT**(designer): move fitbit credentials into measurement question editor.
+
 ## 1.16.0
 
  - **REFACTOR**: fix and format.

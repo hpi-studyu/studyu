@@ -70,7 +70,13 @@ When using the GitHub CLI (`gh`) to open a Pull Request:
 3. Keep the checklist interactive (`- [ ]`) but check off the formatting and analyzer items if you successfully ran them in Step 1.
 4. Output a reminder to the user in the chat interface stating that they must manually attach the required screenshot or video before merging.
 
-### 4. Code Reviews (Conventional Comments)
+### 4. Git Worktrees
+
+All git worktrees MUST be created inside `.worktrees/` relative to the project root (e.g.,
+`git worktree add .worktrees/<branch-name> <branch>`). Never create worktrees outside the project
+folder.
+
+### 5. Code Reviews (Conventional Comments)
 
 When asked to evaluate code or review a PR, format every single comment exactly to the Conventional Comments specification:
 

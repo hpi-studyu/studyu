@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.12.5
+version: 2.13.0
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -24,13 +24,13 @@ dependencies:
   flutter_driver:
     sdk: flutter
   flutter_file_dialog: ^3.0.3
-  flutter_local_notifications: ^21.0.0
+  flutter_local_notifications: ^22.0.0
   flutter_localizations:
     sdk: flutter
   flutter_material_design_icons: ^3.1.0+7447
-  flutter_native_splash: ^2.4.7
+  flutter_native_splash: ^2.4.8
   flutter_svg: ^2.3.0
-  flutter_timezone: ^5.0.2
+  flutter_timezone: ^5.1.0
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.17.2
@@ -43,19 +43,19 @@ dependencies:
   path_drawing: ^1.0.1
   path_provider: ^2.1.5
   pdf: ^3.12.0
-  permission_handler: ^12.0.1
+  permission_handler: ^12.0.3
   provider: ^6.1.5+1
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
-  record: ^6.2.0
-  sentry_flutter: ^9.20.0
-  sentry_logging: ^9.20.0
+  record: ^7.0.0
+  sentry_flutter: ^9.21.0
+  sentry_logging: ^9.21.0
   shared_preferences: ^2.5.5
   statistics: ^1.2.1
-  studyu_core: ^4.8.0
-  studyu_flutter_common: ^1.10.2
-  supabase: ^2.10.6
-  supabase_flutter: ^2.12.4
+  studyu_core: ^4.8.1
+  studyu_flutter_common: ^1.10.3
+  supabase: ^2.12.1
+  supabase_flutter: ^2.14.1
   timeline_tile: ^2.0.0
   timezone: ^0.11.0
   touchable: ^1.0.2
