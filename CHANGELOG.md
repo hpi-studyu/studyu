@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-06-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.13.0`](#studyu_app---v2130)
+ - [`studyu_core` - `v4.8.1`](#studyu_core---v481)
+ - [`studyu_designer_v2` - `v1.17.0`](#studyu_designer_v2---v1170)
+ - [`studyu_flutter_common` - `v1.10.3`](#studyu_flutter_common---v1103)
+
+---
+
+#### `studyu_app` - `v2.13.0`
+
+ - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
+ - **REFACTOR**: removed unused shared preferences.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): gate free text submit to active question.
+ - **FIX**(app): restore free text validation invalidation/re-completion and fix custom regex length skip.
+ - **FIX**: update free text validation messages and regex handling.
+ - **FIX**: align dependencies for Flutter 3.44.
+ - **FIX**: add missing const constructors to satisfy linter.
+ - **FIX**: replace deprecated MdiIcons with Flutter's built-in Icons for store links.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: adjust iOS project configurations.
+ - **FIX**: migrate flutter_secure_storage v10.0.0.
+ - **FIX**: Update onboarding subtitles for clarity and fix image paths.
+ - **FIX**: hide back button on terms screen.
+ - **FEAT**(app): cache hidden questionnaire answers, restore UI, validate complete.
+ - **FEAT**: Add custom error message support for free text questions.
+ - **FEAT**: add validation handling for free text questions.
+ - **FEAT**(test): add stable ValueKeys for MCP automation.
+ - **FEAT**: Make onboarding screen shorter.
+ - **FEAT**: Revamp onboarding screen content and structure for improved user guidance.
+ - **FEAT**: add custom_lint dependency for improved code quality checks".
+ - **FEAT**: update custom_lint and add riverpod_lint for enhanced code quality".
+ - **FEAT**: update custom_lint and add riverpod_lint for enhanced code quality.
+ - **FEAT**: add custom_lint dependency for improved code quality checks.
+ - **FEAT**: enhance onboarding flow by redirecting users based on onboarding status.
+ - **FEAT**: replace onboarding skip button with a back button.
+ - **FEAT**: Implement new app onboarding flow with dedicated screen and assets, and refine study schedule localization.
+
+#### `studyu_core` - `v4.8.1`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.17.0`
+
+ - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
+ - **FIX**: upgrade deps.
+ - **FIX**(measurements): persist new survey questions.
+ - **FIX**(designer): preserve form dirty guards.
+ - **FIX**(designer): intervention task dismissable warning works.
+ - **FIX**(designer): duplicate unsaved survey questions.
+ - **FIX**: update free text validation messages and regex handling.
+ - **FIX**: align dependencies for Flutter 3.44.
+ - **FIX**: add missing const constructors to satisfy linter.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: update Flutter version to 3.44.0 and clean up unused imports.
+ - **FIX**: remove redundant fitbit label.
+ - **FEAT**: make barrier dismissable with warning check.
+ - **FEAT**: Add custom error message support for free text questions.
+ - **FEAT**: add custom free text validation and localization support.
+ - **FEAT**(test): add stable ValueKeys for MCP automation.
+ - **FEAT**(designer): move fitbit credentials into measurement question editor.
+
+#### `studyu_flutter_common` - `v1.10.3`
+
+ - **FIX**: upgrade deps.
+ - **FIX**(flutter_common): use supabase publishable key.
+ - **FIX**: add flutter_common mdi package dependency.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: migrate flutter_secure_storage v10.0.0.
+
+
 ## 2026-03-21
 
 ### Changes
