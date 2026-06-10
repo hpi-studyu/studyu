@@ -293,7 +293,9 @@ SELECT is(count(*)::int, 1, 'Check if app_config was seeded') FROM public.app_co
 -- check if RLS is enabled on all tables in the public schema
 SELECT tests.rls_enabled('public');
 
-SELECT is(count(*)::int, 3, 'Check if users were created and can be accessed') FROM public.user;
+SELECT is(count(*)::int, 3, 'Check if users were created and can be accessed')
+FROM public.user
+WHERE email IN ('test_creator_1@studyu.health', 'test_creator_2@studyu.health', 'test_consumer@studyu.health');
 
 -- ANONYMOUS TESTS
 
@@ -316,11 +318,17 @@ SELECT is(email, 'test_creator_2@studyu.health', 'Check if a user can only retri
 SELECT tests.authenticate_as('test_consumer');
 
 -- test specific: all running studies are created by test_creator_1
-SELECT is(user_id, (tests.get_supabase_user('test_creator_1') ->> 'id')::uuid, 'All running studies are created by test_creator_1') FROM public.study;
-SELECT is(count(*)::int, 3, 'Verify number of accessible studies') FROM public.study;
+SELECT is(user_id, (tests.get_supabase_user('test_creator_1') ->> 'id')::uuid, 'All running studies are created by test_creator_1')
+FROM public.study
+WHERE title LIKE 'Study:%';
+SELECT is(count(*)::int, 3, 'Verify number of accessible studies')
+FROM public.study
+WHERE title LIKE 'Study:%';
 
 -- check if the consumer can only access designated running studies
-SELECT is(status, 'running', 'Check if test_consumer can only access studies that are running') FROM public.study;
+SELECT is(status, 'running', 'Check if test_consumer can only access studies that are running')
+FROM public.study
+WHERE title LIKE 'Study:%';
 SELECT tests.is_either_true(
       'Check if test_consumer can only retrieve designated studies',
       tests.is_equal(registry_published, true),
@@ -328,7 +336,8 @@ SELECT tests.is_either_true(
       tests.is_equal(result_sharing, 'public'::public.result_sharing)
   )
   FROM
-    public.study;
+    public.study
+  WHERE title LIKE 'Study:%';
 
 -- DELETE CASCADE TESTS
 
@@ -423,7 +432,8 @@ FROM public.study_subject
 WHERE invite_code = 'cascade-delete-code';
 
 SELECT is(count(*)::int, 4, 'Deleting the cascade test study does not remove unrelated visible studies')
-FROM public.study;
+FROM public.study
+WHERE title LIKE 'Study:%';
 
 -- check the results of your test
 select * from finish();

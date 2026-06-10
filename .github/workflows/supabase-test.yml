@@ -27,19 +27,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Prepare Supabase CI Seed
-        run: |
-          cp supabase/seed-ci.sql supabase/seed.sql
-
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v2
         with:
           version: latest
 
-      - name: Start Supabase database
+      - name: Start Supabase
         run: |
-          supabase db start
+          supabase start
+
+      - name: Reset Supabase test database
+        run: |
+          ./scripts/reset-test-db.sh --yes
 
       - name: Run Supabase Tests
         run: |
-          supabase test db
+          supabase test db supabase/tests
