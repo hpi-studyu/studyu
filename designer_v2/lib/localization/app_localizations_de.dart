@@ -707,6 +707,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String free_text_example_explanation_custom(String type) {
+    return 'Eingaben vom Typ $type werden basierend auf dem regulären Ausdruck akzeptiert.';
+  }
+
+  @override
   String get free_text_question_type_any_explanation =>
       'Jede Eingabe wird akzeptiert.';
 

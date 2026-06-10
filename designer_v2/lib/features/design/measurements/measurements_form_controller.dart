@@ -194,6 +194,8 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     MeasurementSurveyFormViewModel formViewModel,
     FormMode prevFormMode,
   ) async {
+    final isNewMeasurement = prevFormMode == FormMode.create;
+
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       surveyMeasurementFormViewModels.commit(formViewModel);
@@ -201,5 +203,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       // nothing to do here
     }
     await super.save();
+
+    if (isNewMeasurement) {
+      router.dispatch(
+        RoutingIntents.studyEditMeasurement(
+          study.id,
+          formViewModel.measurementId,
+        ),
+      );
+    }
   }
 }

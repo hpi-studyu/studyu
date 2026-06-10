@@ -335,6 +335,14 @@
       }
     }
   },
+  "free_text_example_explanation_custom": "Eingaben vom Typ {type} werden basierend auf dem regulären Ausdruck akzeptiert.",
+  "@free_text_example_explanation_custom": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
   "free_text_question_type_alphanumeric_explanation": "Alphanumerische Eingabe umfasst nur Buchstaben und Zahlen.",
   "free_text_question_type_numeric_explanation": "Numerische Eingabe umfasst Zahlen ohne Sonderzeichen.",

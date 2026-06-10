@@ -698,6 +698,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String free_text_example_explanation_custom(String type) {
+    return 'Inputs of type $type will be accepted based on the regular expression pattern.';
+  }
+
+  @override
   String get free_text_question_type_any_explanation =>
       'Any input will be accepted.';
 

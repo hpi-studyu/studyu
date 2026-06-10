@@ -284,7 +284,7 @@ INSERT INTO public.study (
 --
 
 -- plan tests in advance, this ensures the proper number of tests have been run.
-SELECT plan(17);
+SELECT plan(23);
 
 -- UNRESTRICTED TESTS
 
@@ -329,6 +329,101 @@ SELECT tests.is_either_true(
   )
   FROM
     public.study;
+
+-- DELETE CASCADE TESTS
+
+SELECT tests.authenticate_as('test_creator_1');
+
+INSERT INTO public.study (
+  contact,
+  title,
+  description,
+  icon_name,
+  status,
+  registry_published,
+  questionnaire,
+  eligibility_criteria,
+  observations,
+  interventions,
+  consent,
+  schedule,
+  report_specification,
+  results,
+  user_id,
+  participation,
+  result_sharing,
+  collaborator_emails
+) VALUES (
+  '{"email":"cascade@example.com","phone":"0123456789","website":"https://studyu.health","researchers":"StudyU Researcher","organization":"StudyU","institutionalReviewBoard":"N/A","institutionalReviewBoardNumber":"N/A"}',
+  'Study: delete cascade regression',
+  'Verifies dependent rows are removed when a study is deleted.',
+  'accountHeart',
+  'draft',
+  false,
+  '[]',
+  '[]',
+  '[]',
+  '[]',
+  '[]',
+  '{"sequence":"alternating","phaseDuration":1,"numberOfCycles":1,"sequenceCustom":"AB","includeBaseline":false}',
+  '{"primary":{"id":"average","type":"average","title":"Average","aggregate":"day","description":"Average","resultProperty":{"task":"task","property":"value"}},"secondary":[]}',
+  '[]',
+  (tests.get_supabase_user('test_creator_1') ->> 'id')::uuid,
+  'invite',
+  'private',
+  '{}'
+);
+
+INSERT INTO public.study_invite (code, study_id, preselected_intervention_ids)
+VALUES ('cascade-delete-code', (SELECT id FROM public.study WHERE title = 'Study: delete cascade regression'), ARRAY['intervention-a']);
+
+INSERT INTO public.study_subject (study_id, user_id, selected_intervention_ids, invite_code)
+VALUES (
+  (SELECT id FROM public.study WHERE title = 'Study: delete cascade regression'),
+  (tests.get_supabase_user('test_consumer') ->> 'id')::uuid,
+  ARRAY['intervention-a'],
+  'cascade-delete-code'
+);
+
+INSERT INTO public.study_fitbit_credentials (study_id, fitbit_credentials)
+VALUES (
+  (SELECT id FROM public.study WHERE title = 'Study: delete cascade regression'),
+  '{"clientId":"test-client","clientSecret":"test-secret"}'
+);
+
+INSERT INTO public.repo (project_id, user_id, study_id, provider)
+VALUES (
+  'cascade-delete-project',
+  (tests.get_supabase_user('test_creator_1') ->> 'id')::uuid,
+  (SELECT id FROM public.study WHERE title = 'Study: delete cascade regression'),
+  'gitlab'
+);
+
+SELECT is(count(*)::int, 1, 'Cascade test setup inserts one repo row for the target study')
+FROM public.repo
+WHERE study_id = (SELECT id FROM public.study WHERE title = 'Study: delete cascade regression');
+
+DELETE FROM public.study
+WHERE title = 'Study: delete cascade regression';
+
+SELECT is(count(*)::int, 0, 'Deleting a study cascades to repo')
+FROM public.repo
+WHERE project_id = 'cascade-delete-project';
+
+SELECT is(count(*)::int, 0, 'Deleting a study cascades to fitbit credentials')
+FROM public.study_fitbit_credentials
+WHERE fitbit_credentials = '{"clientId":"test-client","clientSecret":"test-secret"}';
+
+SELECT is(count(*)::int, 0, 'Deleting a study cascades to invite codes')
+FROM public.study_invite
+WHERE code = 'cascade-delete-code';
+
+SELECT is(count(*)::int, 0, 'Deleting a study cascades to study subjects')
+FROM public.study_subject
+WHERE invite_code = 'cascade-delete-code';
+
+SELECT is(count(*)::int, 4, 'Deleting the cascade test study does not remove unrelated visible studies')
+FROM public.study;
 
 -- check the results of your test
 select * from finish();

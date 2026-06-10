@@ -321,14 +321,7 @@ class _MeasurementSurveyFormViewState
 
   List<Widget> _buildQuestionFormButtons(QuestionFormViewModel formViewModel) {
     return [
-      DismissButton(
-        onPressed: () {
-          final navigator = Navigator.of(context);
-          formViewModel.cancel().then((_) {
-            if (mounted) navigator.maybePop();
-          });
-        },
-      ),
+      const DismissButton(),
       ReactiveFormConsumer(
         builder: (context, form, child) {
           final fitbitCredentialsFormViewModel =

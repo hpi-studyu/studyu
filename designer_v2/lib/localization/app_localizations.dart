@@ -1334,6 +1334,12 @@ abstract class AppLocalizations {
   /// **'Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.'**
   String free_text_example_explanation(String type, num countMin, num countMax);
 
+  /// No description provided for @free_text_example_explanation_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Inputs of type {type} will be accepted based on the regular expression pattern.'**
+  String free_text_example_explanation_custom(String type);
+
   /// No description provided for @free_text_question_type_any_explanation.
   ///
   /// In en, this message translates to:
