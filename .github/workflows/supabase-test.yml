@@ -32,9 +32,9 @@ jobs:
         with:
           version: latest
 
-      - name: Start Supabase
+      - name: Start Supabase database
         run: |
-          supabase start
+          supabase db start
 
       - name: Reset Supabase test database
         run: |
