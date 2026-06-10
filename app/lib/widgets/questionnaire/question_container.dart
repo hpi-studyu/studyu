@@ -143,6 +143,7 @@ class QuestionContainerState extends State<QuestionContainer>
           question: dateQuestion,
           onDone: _onDone,
           onCleared: widget.onCleared,
+          initialAnswer: widget.initialAnswer as Answer<DateTime>?,
         );
       default:
         throw ArgumentError(

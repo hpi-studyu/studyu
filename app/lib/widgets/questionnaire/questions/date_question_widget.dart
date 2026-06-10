@@ -8,12 +8,14 @@ class DateQuestionWidget extends QuestionWidget {
   final DateQuestion question;
   final Function(Answer)? onDone;
   final VoidCallback? onCleared;
+  final Answer<DateTime>? initialAnswer;
 
   const DateQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
     this.onCleared,
+    this.initialAnswer,
   });
 
   @override
@@ -32,10 +34,24 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   }
 
   void _initializeDefaults() {
+    final initialValue = widget.initialAnswer?.response;
     final defaultValue = widget.question.getDefaultValue();
     final defaultTime = widget.question.getInitialTimeValue();
 
-    if (defaultValue != null) {
+    if (initialValue != null) {
+      if (widget.question.isDate) {
+        _selectedDate = initialValue;
+      }
+      if (widget.question.isTime) {
+        _selectedTime = TimeOfDay(
+          hour: initialValue.hour,
+          minute: initialValue.minute,
+        );
+      }
+      return;
+    }
+
+    if (defaultValue != null && widget.question.isDate) {
       _selectedDate = defaultValue;
     }
 
@@ -46,6 +62,10 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         minute: int.parse(parts[1]),
       );
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _checkCompleteAndSubmit();
+    });
   }
 
   Future<void> _pickDate() async {

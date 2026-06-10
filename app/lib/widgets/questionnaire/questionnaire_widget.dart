@@ -119,6 +119,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         question is ChoiceQuestion ||
         question is ScaleQuestion ||
         question is FreeTextQuestion ||
+        question is DateQuestion ||
         question is AnnotatedScaleQuestion ||
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
@@ -126,7 +127,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   Answer? _restoreCachedAnswerFor(Question question) {
-    // Supported restore: Boolean, Choice, Scale, FreeText, AnnotatedScale,
+    // Supported restore: Boolean, Choice, Scale, FreeText, Date, AnnotatedScale,
     // VisualAnalogue. Unsupported restore: Image, Audio, Pain, Fitbit.
     // Unsupported answers stay cached while hidden, but are not restored into
     // qs.answers when shown again because those widgets cannot show restored
