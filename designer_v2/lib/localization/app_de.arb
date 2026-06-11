@@ -141,7 +141,7 @@
       "subject": {}
     }
   },
-  "dialog_delete_description": "Bist du sicher, dass dieses {subject} gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "dialog_delete_description": "Bist du sicher, dass {subject} gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
   "@dialog_delete_description": {
     "placeholders": {
       "subject": {}
