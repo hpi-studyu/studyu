@@ -6,12 +6,11 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
-  static const pageSize = 25;
+  static const pageSize = 20;
 
   const DashboardState({
     this.loadedStudies = const [],
@@ -97,14 +96,14 @@ class DashboardState extends Equatable {
   /// Wrapped in [AsyncValue] for backwards-compatible UI scaffolding that
   /// expects a loading/error/data tri-state for the initial fetch.
   AsyncValue<List<Study>> get displayedStudies {
-    if (loadError != null &&
+    if (!isLoadingInitial &&
+        !isLoadingMore &&
+        loadError != null &&
         loadedStudies.isEmpty &&
         pinnedStudiesList.isEmpty) {
       return AsyncValue.error(loadError!, StackTrace.current);
     }
-    if (isLoadingInitial &&
-        loadedStudies.isEmpty &&
-        pinnedStudiesList.isEmpty) {
+    if (isLoadingInitial && loadedStudies.isEmpty && pinnedStudiesList.isEmpty) {
       return const AsyncValue.loading();
     }
     return AsyncValue.data([...pinnedStudiesList, ...loadedStudies]);
@@ -194,7 +193,7 @@ extension DashboardStateSafeViewProps on DashboardState {
       case StudiesFilter.shared:
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
-        return "All Studies".hardcoded;
+        return tr.all_studies;
       case null:
         return tr.navlink_my_studies;
     }

@@ -931,5 +931,11 @@
   "filter_section_custom_presets": "Benutzerdefinierte Vorlagen",
   "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
-  "filter_button_main": "Filtern"
+  "filter_button_main": "Filtern",
+  "dashboard_end_of_list": "Das war's — Ende der Liste.",
+  "dashboard_retry": "Erneut versuchen",
+  "dashboard_filter_unsupported": "Dieser Filter ist mit der serverseitigen Suche nicht kompatibel. Bitte Filter zurücksetzen.",
+  "dashboard_reset_filter": "Filter zurücksetzen",
+  "dashboard_load_error": "Studien konnten nicht geladen werden.",
+  "all_studies": "Alle Studien"
 }

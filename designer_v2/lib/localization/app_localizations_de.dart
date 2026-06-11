@@ -2566,4 +2566,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filtern';
+
+  @override
+  String get dashboard_end_of_list => 'Das war\'s — Ende der Liste.';
+
+  @override
+  String get dashboard_retry => 'Erneut versuchen';
+
+  @override
+  String get dashboard_filter_unsupported =>
+      'Dieser Filter ist mit der serverseitigen Suche nicht kompatibel. Bitte Filter zurücksetzen.';
+
+  @override
+  String get dashboard_reset_filter => 'Filter zurücksetzen';
+
+  @override
+  String get dashboard_load_error => 'Studien konnten nicht geladen werden.';
+
+  @override
+  String get all_studies => 'Alle Studien';
 }

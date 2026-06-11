@@ -9,7 +9,6 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 enum StudiesTableColumn {
   pin,
@@ -297,7 +296,7 @@ class StudiesTable extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: Center(
                             child: Text(
-                              "End of list".hardcoded,
+                              tr.dashboard_end_of_list,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: Theme.of(context).hintColor,
@@ -311,7 +310,7 @@ class StudiesTable extends StatelessWidget {
                             child: TextButton.icon(
                               onPressed: onRetry,
                               icon: const Icon(Icons.refresh),
-                              label: Text("Retry".hardcoded),
+                              label: Text(tr.dashboard_retry),
                             ),
                           ),
                         ),
@@ -391,8 +390,7 @@ class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "This filter cannot be applied server-side and is not currently supported."
-                  .hardcoded,
+              tr.dashboard_filter_unsupported,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -400,7 +398,7 @@ class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
               const SizedBox(height: 8),
               TextButton(
                 onPressed: onRetry,
-                child: Text("Reset filter".hardcoded),
+                child: Text(tr.dashboard_reset_filter),
               ),
             ],
           ],
@@ -426,7 +424,7 @@ class _LoadErrorNotice extends StatelessWidget {
             const Icon(Icons.error_outline),
             const SizedBox(height: 8),
             Text(
-              "Failed to load studies.".hardcoded,
+              tr.dashboard_load_error,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -435,7 +433,7 @@ class _LoadErrorNotice extends StatelessWidget {
               TextButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: Text("Retry".hardcoded),
+                label: Text(tr.dashboard_retry),
               ),
             ],
           ],

@@ -931,5 +931,11 @@
   "filter_section_custom_presets": "Custom Presets",
   "filter_button_advanced": "Configure Filters...",
   "filter_button_clear": "Clear filter",
-  "filter_button_main": "Filter"
+  "filter_button_main": "Filter",
+  "dashboard_end_of_list": "You've reached the end.",
+  "dashboard_retry": "Retry",
+  "dashboard_filter_unsupported": "This filter is not compatible with server-side search. Please reset the filter.",
+  "dashboard_reset_filter": "Reset filter",
+  "dashboard_load_error": "Failed to load studies.",
+  "all_studies": "All Studies"
 }

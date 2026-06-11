@@ -2532,4 +2532,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filter';
+
+  @override
+  String get dashboard_end_of_list => 'You\'ve reached the end.';
+
+  @override
+  String get dashboard_retry => 'Retry';
+
+  @override
+  String get dashboard_filter_unsupported =>
+      'This filter is not compatible with server-side search. Please reset the filter.';
+
+  @override
+  String get dashboard_reset_filter => 'Reset filter';
+
+  @override
+  String get dashboard_load_error => 'Failed to load studies.';
+
+  @override
+  String get all_studies => 'All Studies';
 }

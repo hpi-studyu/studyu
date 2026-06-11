@@ -4382,6 +4382,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter'**
   String get filter_button_main;
+
+  /// No description provided for @dashboard_end_of_list.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the end.'**
+  String get dashboard_end_of_list;
+
+  /// No description provided for @dashboard_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get dashboard_retry;
+
+  /// No description provided for @dashboard_filter_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This filter is not compatible with server-side search. Please reset the filter.'**
+  String get dashboard_filter_unsupported;
+
+  /// No description provided for @dashboard_reset_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset filter'**
+  String get dashboard_reset_filter;
+
+  /// No description provided for @dashboard_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load studies.'**
+  String get dashboard_load_error;
+
+  /// No description provided for @all_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Studies'**
+  String get all_studies;
 }
 
 class _AppLocalizationsDelegate
