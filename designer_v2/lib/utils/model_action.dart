@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 typedef ModelActionHandler = FutureOr<void> Function();
@@ -26,7 +27,7 @@ class ModelActionConfirmations {
     required String subject,
     String? title,
     String? message,
-    IconData icon = Icons.delete_rounded,
+    IconData? icon,
   }) {
     return ModelActionConfirmation(
       title: title ?? tr.dialog_delete_title(subject),
@@ -39,7 +40,7 @@ class ModelActionConfirmations {
     required String subject,
     String? title,
     String? message,
-    IconData icon = Icons.delete_outline_rounded,
+    IconData? icon,
   }) {
     return ModelActionConfirmation(
       title: title ?? tr.dialog_remove_title(subject),
@@ -100,33 +101,19 @@ class ModelAction<T> {
     if (confirmation != null) {
       final confirmed = await showDialog<bool>(
         context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (confirmation!.icon != null) ...[
-                Icon(confirmation!.icon),
-                const SizedBox(width: 8),
-              ],
-              Flexible(child: Text(confirmation!.title)),
-            ],
-          ),
-          content: (confirmation!.message == null)
-              ? null
-              : Text(confirmation!.message!),
+        builder: (dialogContext) => StandardConfirmationDialog(
+          title: confirmation!.title,
+          message: confirmation!.message,
+          icon: confirmation!.icon,
           actions: [
-            TextButton(
+            ConfirmationDialogAction(
+              label: confirmation!.cancelLabel ?? tr.dialog_cancel,
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(confirmation!.cancelLabel ?? tr.dialog_cancel),
             ),
-            TextButton(
+            ConfirmationDialogAction(
+              label: confirmation!.confirmLabel ?? label,
+              isDestructive: isDestructive,
               onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: Text(
-                confirmation!.confirmLabel ?? label,
-                style: isDestructive
-                    ? const TextStyle(color: Colors.redAccent)
-                    : null,
-              ),
             ),
           ],
         ),
