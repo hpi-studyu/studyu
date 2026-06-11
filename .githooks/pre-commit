@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+# Add fvm-managed dart and pub-cache bins to PATH for this hook context.
+FVM_VERSION_FILE="$(git rev-parse --show-toplevel)/.fvm/version"
+if [ -f "$FVM_VERSION_FILE" ]; then
+  FVM_VERSION="$(cat "$FVM_VERSION_FILE")"
+  export PATH="$HOME/fvm/versions/$FVM_VERSION/bin:$HOME/.pub-cache/bin:$PATH"
+fi
+
+echo "Running qualitycheck before commit..."
+melos run qualitycheck
