@@ -588,8 +588,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const SizedBox(height: 24.0), // spacing between body elements
           Expanded(
             child: AsyncValueWidget<List<Study>>(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
               value: state.displayedStudies,
               data: (visibleStudies) => StudiesTable(
                 studies: visibleStudies,
@@ -600,8 +599,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 pagingController: _pagingController,
                 isLoadingMore: state.isLoadingMore,
                 hasMore: state.hasMore,
-                advancedFilterUnsupported:
-                    state.advancedFilterUnsupported,
+                advancedFilterUnsupported: state.advancedFilterUnsupported,
                 loadError: state.loadError,
                 onRetry: controller.retry,
                 onSelect: controller.onSelectStudy,

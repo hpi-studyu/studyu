@@ -103,7 +103,9 @@ class DashboardState extends Equatable {
         pinnedStudiesList.isEmpty) {
       return AsyncValue.error(loadError!, StackTrace.current);
     }
-    if (isLoadingInitial && loadedStudies.isEmpty && pinnedStudiesList.isEmpty) {
+    if (isLoadingInitial &&
+        loadedStudies.isEmpty &&
+        pinnedStudiesList.isEmpty) {
       return const AsyncValue.loading();
     }
     return AsyncValue.data([...pinnedStudiesList, ...loadedStudies]);
