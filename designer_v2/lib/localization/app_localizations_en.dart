@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2140,11 +2141,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconpicker_dialog_title => 'Pick an icon';
 
   @override
-  String get dialog_unsaved_changes_title => 'Go back and discard changes?';
+  String get dialog_unsaved_changes_title => 'Discard unsaved changes?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'There are unsaved changes that will be lost when you go back. If you want to keep your changes, you need to save your work before going back.';
+      'If you leave now, your recent changes will be permanently lost.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Stay';

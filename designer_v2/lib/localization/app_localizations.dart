@@ -3678,13 +3678,13 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_unsaved_changes_title.
   ///
   /// In en, this message translates to:
-  /// **'Go back and discard changes?'**
+  /// **'Discard unsaved changes?'**
   String get dialog_unsaved_changes_title;
 
   /// No description provided for @dialog_unsaved_changes_description.
   ///
   /// In en, this message translates to:
-  /// **'There are unsaved changes that will be lost when you go back. If you want to keep your changes, you need to save your work before going back.'**
+  /// **'If you leave now, your recent changes will be permanently lost.'**
   String get dialog_unsaved_changes_description;
 
   /// No description provided for @dialog_action_unsaved_changes_stay.
