@@ -427,7 +427,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String dialog_remove_description(Object subject) {
-    return 'Bist du sicher, dass diese $subject entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+    return 'Bist du sicher, dass $subject entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
   }
 
   @override
