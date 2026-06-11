@@ -153,7 +153,7 @@
       "subject": {}
     }
   },
-  "dialog_remove_description": "Bist du sicher, dass diese {subject} entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "dialog_remove_description": "Bist du sicher, dass {subject} entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
   "@dialog_remove_description": {
     "placeholders": {
       "subject": {}
