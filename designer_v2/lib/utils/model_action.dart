@@ -27,7 +27,7 @@ class ModelActionConfirmations {
     required String subject,
     String? title,
     String? message,
-    IconData icon = Icons.delete_rounded,
+    IconData? icon,
   }) {
     return ModelActionConfirmation(
       title: title ?? tr.dialog_delete_title(subject),
@@ -40,7 +40,7 @@ class ModelActionConfirmations {
     required String subject,
     String? title,
     String? message,
-    IconData icon = Icons.delete_outline_rounded,
+    IconData? icon,
   }) {
     return ModelActionConfirmation(
       title: title ?? tr.dialog_remove_title(subject),
