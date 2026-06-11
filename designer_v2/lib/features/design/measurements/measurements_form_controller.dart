@@ -112,6 +112,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     final actions = surveyMeasurementFormViewModels.availableActions(
       model,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -122,6 +123,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   ) {
     final actions = surveyMeasurementFormViewModels.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -132,6 +134,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   ) {
     final actions = surveyMeasurementFormViewModels.availableInlineActions(
       model,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
