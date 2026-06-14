@@ -36,7 +36,7 @@ final class AppControllerProvider
   AppController create() => AppController();
 }
 
-String _$appControllerHash() => r'3212e0628c19a68ca92f2c55f4016d585d0031bd';
+String _$appControllerHash() => r'4ece292fc998deb62caccfa3e5684cc14d5e86a7';
 
 /// Main controller that's bound to the top-level application widget's state
 

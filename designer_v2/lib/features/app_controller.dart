@@ -37,9 +37,9 @@ class AppController extends _$AppController {
       (delegate) => delegate.onAppStart(),
       withMinDelay: true,
     );
-    const initializedState = AppControllerState(status: AppStatus.initialized);
-    state = const AsyncValue.data(initializedState);
-    _stateController.add(initializedState);
+    _stateController.add(
+      const AppControllerState(status: AppStatus.initialized),
+    );
   }
 
   Stream getStream() {
