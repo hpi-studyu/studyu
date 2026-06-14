@@ -141,7 +141,7 @@
       "subject": {}
     }
   },
-  "dialog_delete_description": "Diese Aktion kann nicht rückgängig gemacht werden und löscht dieses {subject} dauerhaft.",
+  "dialog_delete_description": "Bist du sicher, dass {subject} gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
   "@dialog_delete_description": {
     "placeholders": {
       "subject": {}
@@ -153,7 +153,7 @@
       "subject": {}
     }
   },
-  "dialog_remove_description": "Bist du sicher, dass diese {subject} entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "dialog_remove_description": "Bist du sicher, dass {subject} entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
   "@dialog_remove_description": {
     "placeholders": {
       "subject": {}

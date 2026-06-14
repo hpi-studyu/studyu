@@ -411,7 +411,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String dialog_delete_description(Object subject) {
-    return 'This action cannot be undone and will permanently remove this $subject.';
+    return 'Are you sure you want to delete this $subject? This action cannot be undone.';
   }
 
   @override

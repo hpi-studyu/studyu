@@ -845,7 +845,7 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_delete_description.
   ///
   /// In en, this message translates to:
-  /// **'This action cannot be undone and will permanently remove this {subject}.'**
+  /// **'Are you sure you want to delete this {subject}? This action cannot be undone.'**
   String dialog_delete_description(Object subject);
 
   /// No description provided for @dialog_remove_title.
