@@ -119,7 +119,11 @@ class ActionPopUpMenuButton extends StatelessWidget {
           popupList.add(
             PopupMenuItem<ModelAction>(
               value: action,
-              onTap: action.onExecute,
+              onTap: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  action.onExecute();
+                });
+              },
               child: (action.tooltip != null)
                   ? Tooltip(
                       message: action.tooltip,
