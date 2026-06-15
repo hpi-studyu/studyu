@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -121,7 +123,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
               value: action,
               onTap: () {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  action.onExecute();
+                  unawaited(action.execute(context));
                 });
               },
               child: (action.tooltip != null)
