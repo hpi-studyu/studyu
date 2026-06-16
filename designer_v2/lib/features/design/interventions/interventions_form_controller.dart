@@ -134,6 +134,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       model,
       onEdit: onSelectItem,
       onDelete: onDeleteItem,
+      confirmationSubject: tr.dialog_subject_intervention,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -143,6 +144,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     final actions = interventionsCollection.availablePopupActions(
       model,
       onDelete: onDeleteItem,
+      confirmationSubject: tr.dialog_subject_intervention,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -152,6 +154,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     final actions = interventionsCollection.availableInlineActions(
       model,
       onDelete: onDeleteItem,
+      confirmationSubject: tr.dialog_subject_intervention,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);

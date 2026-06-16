@@ -14,15 +14,19 @@ StudyU is a Melos-managed Dart/Flutter workspace. The root `pubspec.yaml` define
 
 Use FVM and Melos from the repository root. Run `fvm install` if the configured SDK is missing.
 
-- `dart pub get`: installs root dependencies.
-- `melos bootstrap`: links workspace packages and installs package dependencies.
-- `melos run app`: runs the StudyU app on Chrome at port `8080`.
-- `melos run designer_v2`: runs Designer v2 on Chrome at port `8081`.
-- `melos run dev:app` or `melos run dev:designer_v2`: runs against `.env.dev`.
-- `melos run local:app` or `melos run local:designer_v2`: runs against `.env.local`.
-- `melos run generate`: runs `build_runner` for generated Dart files.
-- `melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
-- `melos run build:web`: builds both web apps.
+Prefix `dart`/`flutter` commands with `fvm`, and `melos` commands with `fvm exec`, to use the
+FVM-managed SDK version.
+
+- `fvm dart pub get`: installs root dependencies.
+- `fvm exec melos bootstrap`: links workspace packages and installs package dependencies.
+- `fvm exec melos run app`: runs the StudyU app on Chrome at port `8080`.
+- `fvm exec melos run designer_v2`: runs Designer v2 on Chrome at port `8081`.
+- `fvm exec melos run dev:app` or `fvm exec melos run dev:designer_v2`: runs against `.env.dev`.
+- `fvm exec melos run local:app` or `fvm exec melos run local:designer_v2`: runs against
+  `.env.local`.
+- `fvm exec melos run generate`: runs `build_runner` for generated Dart files.
+- `fvm exec melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
+- `fvm exec melos run build:web`: builds both web apps.
 
 ## Coding Style & Naming Conventions
 
@@ -39,3 +43,43 @@ Use Conventional Commits, as seen in history: `fix: remove redundant fitbit labe
 ## Security & Configuration Tips
 
 Do not commit secrets. Environment templates live in `flutter_common/lib/envs/`; select them with `--dart-define=STUDYU_ENV=.env.dev` or `.env.local`. Use development or local Supabase instances for routine work; see `supabase/README.md` for local backend setup.
+
+## AI Agent Behavioral Constraints & Execution Rules
+
+You must strictly adhere to the following workspace rules for all file modifications, terminal command executions, commit generations, and pull request actions.
+
+### 1. Code Quality & Pre-Commit Checks
+
+Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos run qualitycheck`.
+
+### 2. Commit Message Enforcement
+
+You must use the Conventional Commits format for all commits. Never generate a generic commit message.
+
+- **Format**: `<type>(<scope>): <description>`
+- **Allowed Types**: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`
+- **Allowed Scopes**: `app`, `designer`, `core`, `flutter_common`, `db`
+- **Case**: The description must be lowercase. Do not end with a period.
+
+### 3. Pull Request Automation
+
+When using the GitHub CLI (`gh`) to open a Pull Request:
+
+1. Parse `.github/pull_request_template.md` to use as the base schema for the PR body.
+2. Complete the `Description` and `Testing Steps` sections with high-density, accurate summaries derived from the git diff.
+3. Keep the checklist interactive (`- [ ]`) but check off the formatting and analyzer items if you successfully ran them in Step 1.
+4. Output a reminder to the user in the chat interface stating that they must manually attach the required screenshot or video before merging.
+
+### 4. Git Worktrees
+
+All git worktrees MUST be created inside `.worktrees/` relative to the project root (e.g.,
+`git worktree add .worktrees/<branch-name> <branch>`). Never create worktrees outside the project
+folder.
+
+### 5. Code Reviews (Conventional Comments)
+
+When asked to evaluate code or review a PR, format every single comment exactly to the Conventional Comments specification:
+
+- **Format**: `<label> [decorations]: <subject>\n\n[discussion]`
+- **Valid Labels**: `praise:`, `nitpick:`, `suggestion:`, `issue:`, `todo:`, `question:`, `thought:`, `chore:`, `note:`
+- **Valid Decorations**: `(blocking)`, `(non-blocking)`, `(if-minor)`

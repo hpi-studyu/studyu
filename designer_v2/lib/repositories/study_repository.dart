@@ -5,13 +5,13 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
@@ -309,21 +309,12 @@ class StudyRepository extends ModelRepository<Study>
       ModelAction(
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
-        onExecute: () {
-          return ref
-              .read(notificationServiceProvider)
-              .show(
-                Notifications
-                    .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-                actions: [
-                  NotificationAction(
-                    label: StudyActionType.delete.string,
-                    onSelect: onDeleteCallback,
-                    isDestructive: true,
-                  ),
-                ],
-              );
-        },
+        onExecute: onDeleteCallback,
+        confirmation: ModelActionConfirmations.delete(
+          subject: tr.dialog_subject_study,
+          title: tr.dialog_study_delete_title,
+          message: tr.dialog_study_delete_description,
+        ),
         isAvailable: model.canDelete(currentUser),
         isDestructive: true,
       ),

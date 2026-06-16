@@ -7,11 +7,13 @@ import 'package:studyu_core/core.dart';
 class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
   final Function(Answer)? onDone;
+  final Answer<num>? initialAnswer;
 
   const AnnotatedScaleQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
+    this.initialAnswer,
   });
 
   @override
@@ -27,8 +29,9 @@ class _AnnotatedScaleQuestionWidgetState
   @override
   void initState() {
     super.initState();
-    value = widget.question.initial;
-    sliderTouched = false;
+    value =
+        widget.initialAnswer?.response.toDouble() ?? widget.question.initial;
+    sliderTouched = widget.initialAnswer != null;
   }
 
   @override
