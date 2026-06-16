@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -409,6 +410,62 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get dialog_study_delete_description =>
       'Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.';
+
+  @override
+  String dialog_delete_title(Object subject) {
+    return '$subject löschen?';
+  }
+
+  @override
+  String dialog_delete_description(Object subject) {
+    return 'Bist du sicher, dass $subject gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String dialog_remove_title(Object subject) {
+    return '$subject entfernen?';
+  }
+
+  @override
+  String dialog_remove_description(Object subject) {
+    return 'Bist du sicher, dass $subject entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String get dialog_subject_study => 'Studie';
+
+  @override
+  String get dialog_subject_item => 'Element';
+
+  @override
+  String get dialog_subject_question => 'Frage';
+
+  @override
+  String get dialog_subject_screener_question => 'Screening-Frage';
+
+  @override
+  String get dialog_subject_answer_option => 'Antwortoption';
+
+  @override
+  String get dialog_subject_intervention => 'Intervention';
+
+  @override
+  String get dialog_subject_intervention_task => 'Interventionsaufgabe';
+
+  @override
+  String get dialog_subject_survey => 'Umfrage';
+
+  @override
+  String get dialog_subject_consent_item => 'Einwilligungspunkt';
+
+  @override
+  String get dialog_subject_report_section => 'Berichtsabschnitt';
+
+  @override
+  String get dialog_subject_invite_code => 'Teilnahmecode';
+
+  @override
+  String get dialog_subject_fitbit_credentials => 'Fitbit-Zugangsdaten';
 
   @override
   String get form_question_create => 'Neue Frage';
@@ -2269,11 +2326,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get iconpicker_dialog_title => 'Icon auswählen';
 
   @override
-  String get dialog_unsaved_changes_title => 'Zurück und Änderungen verwerfen?';
+  String get dialog_unsaved_changes_title =>
+      'Ungespeicherte Änderungen verwerfen?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'Du hast Änderungen vorgenommen, die noch nicht gespeichert wurden & verloren gehen, wenn du zurückgehst. Wenn du die Änderungen beibehalten möchtest, musst du sie vorher speichern.';
+      'Wenn du jetzt gehst, werden deine letzten Änderungen dauerhaft gelöscht.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Hier bleiben';

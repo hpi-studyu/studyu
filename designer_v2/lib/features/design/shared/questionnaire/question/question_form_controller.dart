@@ -1144,10 +1144,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       ModelAction(
         type: ModelActionType.remove,
         label: ModelActionType.remove.string,
+        confirmation: ModelActionConfirmations.remove(
+          subject: tr.dialog_subject_answer_option,
+        ),
         onExecute: () {
           final controlIdx = answerOptionsArray.controls.indexOf(model);
           answerOptionsArray.removeAt(controlIdx);
         },
+        isDestructive: true,
         isAvailable: isNotReadonly,
       ),
     ].where((action) => action.isAvailable).toList();

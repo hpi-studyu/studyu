@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -402,6 +403,62 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dialog_study_delete_description =>
       'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.';
+
+  @override
+  String dialog_delete_title(Object subject) {
+    return 'Delete $subject?';
+  }
+
+  @override
+  String dialog_delete_description(Object subject) {
+    return 'Are you sure you want to delete this $subject? This action cannot be undone.';
+  }
+
+  @override
+  String dialog_remove_title(Object subject) {
+    return 'Remove $subject?';
+  }
+
+  @override
+  String dialog_remove_description(Object subject) {
+    return 'Are you sure you want to remove this $subject? This action cannot be undone.';
+  }
+
+  @override
+  String get dialog_subject_study => 'study';
+
+  @override
+  String get dialog_subject_item => 'item';
+
+  @override
+  String get dialog_subject_question => 'question';
+
+  @override
+  String get dialog_subject_screener_question => 'screener question';
+
+  @override
+  String get dialog_subject_answer_option => 'answer option';
+
+  @override
+  String get dialog_subject_intervention => 'intervention';
+
+  @override
+  String get dialog_subject_intervention_task => 'intervention task';
+
+  @override
+  String get dialog_subject_survey => 'survey';
+
+  @override
+  String get dialog_subject_consent_item => 'consent item';
+
+  @override
+  String get dialog_subject_report_section => 'report section';
+
+  @override
+  String get dialog_subject_invite_code => 'invite code';
+
+  @override
+  String get dialog_subject_fitbit_credentials => 'fitbit credentials';
 
   @override
   String get form_question_create => 'New Question';
@@ -2241,11 +2298,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconpicker_dialog_title => 'Pick an icon';
 
   @override
-  String get dialog_unsaved_changes_title => 'Go back and discard changes?';
+  String get dialog_unsaved_changes_title => 'Discard unsaved changes?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'There are unsaved changes that will be lost when you go back. If you want to keep your changes, you need to save your work before going back.';
+      'If you leave now, your recent changes will be permanently lost.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Stay';
