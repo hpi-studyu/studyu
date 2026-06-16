@@ -141,7 +141,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Some studies could not be displayed right now. You can still join the studies shown below.';
+      'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.';
 
   @override
   String get study_overview_title => 'Overview';
