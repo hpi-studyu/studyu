@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -639,9 +638,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte geben Sie nur numerische Zeichen ein';
 
   @override
-  String free_text_custom_error(String pattern) {
-    return 'Bitte geben Sie nur Zeichen ein, die dem Muster $pattern entsprechen';
-  }
+  String get free_text_custom_error =>
+      'Bitte geben Sie einen Wert im erforderlichen Format ein';
 
   @override
   String get app_outdated_message =>

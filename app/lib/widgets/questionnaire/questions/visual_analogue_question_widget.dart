@@ -7,12 +7,14 @@ import 'package:studyu_core/core.dart';
 class VisualAnalogueQuestionWidget extends QuestionWidget {
   final VisualAnalogueQuestion question;
   final Function(Answer)? onDone;
+  final Answer<num>? initialAnswer;
 
   @Deprecated('Use [AnnotatedScaleQuestionWidget]')
   const VisualAnalogueQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
+    this.initialAnswer,
   });
 
   @override
@@ -28,7 +30,8 @@ class _VisualAnalogueQuestionWidgetState
   @override
   void initState() {
     super.initState();
-    value = widget.question.initial;
+    value =
+        widget.initialAnswer?.response.toDouble() ?? widget.question.initial;
   }
 
   void changed(double value) {

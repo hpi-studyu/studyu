@@ -215,11 +215,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 height: 36.0, // Fixed height for alignment
                 child: MediaQuery.of(context).size.width < 500
                     ? IconButton.filled(
+                        key: const ValueKey('new_study_compact_button'),
                         icon: const Icon(Icons.add),
                         onPressed: controller.onClickNewStudy,
                         tooltip: tr.action_button_new_study,
                       )
                     : PrimaryButton(
+                        key: const ValueKey('new_study_button'),
                         text: tr.action_button_new_study,
                         onPressed: controller.onClickNewStudy,
                       ),
@@ -253,6 +255,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             isLabelVisible: isActive,
                             child: MediaQuery.of(context).size.width < 600
                                 ? IconButton.outlined(
+                                    key: const ValueKey('filter_toggle_button'),
                                     onPressed: () {
                                       if (controller.isOpen) {
                                         controller.close();
@@ -278,6 +281,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                   )
                                 : OutlinedButton.icon(
+                                    key: const ValueKey(
+                                      'filter_toggle_button_labeled',
+                                    ),
                                     onPressed: () {
                                       if (controller.isOpen) {
                                         controller.close();
@@ -455,6 +461,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       const SizedBox(width: 12),
                       if (MediaQuery.of(context).size.width < 900)
                         IconButton(
+                          key: const ValueKey('search_button'),
                           icon: const Icon(Icons.search),
                           onPressed: () {
                             showDialog(
@@ -463,6 +470,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 content: SizedBox(
                                   width: 400,
                                   child: Search(
+                                    key: const ValueKey('search_field'),
                                     searchController: state.searchController,
                                     hintText: tr.search,
                                     onQueryChanged: (query) =>
@@ -478,6 +486,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Container(
                             constraints: const BoxConstraints(maxWidth: 300),
                             child: Search(
+                              key: const ValueKey('search_field'),
                               searchController: state.searchController,
                               hintText: tr.search,
                               onQueryChanged: (query) =>

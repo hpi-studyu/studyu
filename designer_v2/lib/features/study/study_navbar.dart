@@ -61,7 +61,6 @@ class StudyDesignNav {
     interventions(studyId),
     measurements(studyId),
     reports(studyId),
-    fitbitCredentials(studyId),
   ];
 
   static NavbarTab info(StudyID studyId) => NavbarTab(
@@ -88,10 +87,5 @@ class StudyDesignNav {
     index: 4,
     title: "Reports",
     intent: RoutingIntents.studyEditReports(studyId),
-  );
-  static NavbarTab fitbitCredentials(StudyID studyId) => NavbarTab(
-    index: 5,
-    title: "Fitbit",
-    intent: RoutingIntents.studyEditFitbitCredentials(studyId),
   );
 }
