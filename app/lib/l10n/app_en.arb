@@ -242,14 +242,7 @@
   },
   "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
   "free_text_numeric_error": "Please enter only numeric characters",
-  "free_text_custom_error": "Please enter only characters matching the pattern {pattern}",
-  "@free_text_custom_error": {
-    "placeholders": {
-      "pattern": {
-        "type": "String"
-      }
-    }
-  },
+  "free_text_custom_error": "Please enter a value in the required format",
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
   "update_now": "Update now",
 

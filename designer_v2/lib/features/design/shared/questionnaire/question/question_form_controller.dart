@@ -34,6 +34,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.validationSet = StudyFormValidationSet.draft,
     Map<FormMode, String Function()>? titles,
   }) : _titles = titles {
+    freeTextTypeControl.onChanged(
+      (_) => _onFreeTextTypeChanged(freeTextTypeControl.value),
+    );
+    customRegexControl.setValidators([
+      Validators.delegate(_validateCustomRegexExpression),
+    ], emitEvent: false);
+    customRegexControl.updateValueAndValidity(emitEvent: false);
+
     // Existing initializations
     boolResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
@@ -370,10 +378,52 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         validators: [Validators.delegate(_validateFreeText)],
       );
 
+  void _onFreeTextTypeChanged(FreeTextQuestionType? _) {
+    customRegexControl.updateValueAndValidity();
+    freeTextExampleTextControl.updateValueAndValidity();
+  }
+
+  String? _buildFullMatchRegexPattern(String? expression) {
+    if (expression == null || expression.isEmpty) {
+      return null;
+    }
+
+    final fullMatchPattern = '^(?:$expression)\$';
+    try {
+      RegExp(fullMatchPattern);
+    } on FormatException {
+      return null;
+    }
+    return fullMatchPattern;
+  }
+
+  Map<String, dynamic>? _validateCustomRegexExpression(
+    AbstractControl<dynamic> control,
+  ) {
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      return null;
+    }
+
+    final expression = control.value as String?;
+    if (expression == null || expression.isEmpty) {
+      return {ValidationMessage.required: true};
+    }
+
+    if (_buildFullMatchRegexPattern(expression) == null) {
+      return {ValidationMessage.pattern: true};
+    }
+
+    return null;
+  }
+
   Map<String, dynamic>? _validateFreeText(AbstractControl<dynamic> control) {
     final List<Validator> validators = [];
-    validators.add(Validators.minLength(freeTextLengthMin.value!));
-    validators.add(Validators.maxLength(freeTextLengthMax.value!));
+
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      validators.add(Validators.minLength(freeTextLengthMin.value!));
+      validators.add(Validators.maxLength(freeTextLengthMax.value!));
+    }
+
     switch (freeTextTypeControl.value) {
       case FreeTextQuestionType.any:
         break;
@@ -382,9 +432,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case FreeTextQuestionType.numeric:
         validators.add(Validators.number(allowNegatives: false));
       case FreeTextQuestionType.custom:
-        if (customRegexControl.value != null) {
-          validators.add(Validators.pattern('^${customRegexControl.value!}\$'));
+        final pattern = _buildFullMatchRegexPattern(customRegexControl.value);
+        if (pattern == null) {
+          return {ValidationMessage.pattern: true};
         }
+        validators.add(Validators.pattern(pattern));
       case null:
         return {'null': "freeTextTypeControl.value is null"};
     }
@@ -862,10 +914,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       ModelAction(
         type: ModelActionType.remove,
         label: ModelActionType.remove.string,
+        confirmation: ModelActionConfirmations.remove(
+          subject: tr.dialog_subject_answer_option,
+        ),
         onExecute: () {
           final controlIdx = answerOptionsArray.controls.indexOf(model);
           answerOptionsArray.removeAt(controlIdx);
         },
+        isDestructive: true,
         isAvailable: isNotReadonly,
       ),
     ].where((action) => action.isAvailable).toList();
