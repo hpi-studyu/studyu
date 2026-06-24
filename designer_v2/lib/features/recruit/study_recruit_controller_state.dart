@@ -15,6 +15,8 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     this.invites = const AsyncValue.loading(),
     this.inviteCodePageIndex = 0,
     this.inviteCodePageSize = defaultInviteCodePageSize,
+    this.inviteCodeSearchQuery = '',
+    this.inviteCodeCount = 0,
     this.hasNextInviteCodePage = false,
   });
 
@@ -30,6 +32,10 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
 
   final int inviteCodePageSize;
 
+  final String inviteCodeSearchQuery;
+
+  final int inviteCodeCount;
+
   final bool hasNextInviteCodePage;
 
   bool get hasPreviousInviteCodePage => inviteCodePageIndex > 0;
@@ -43,6 +49,8 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     AsyncValue<List<StudyInvite>>? invites,
     int? inviteCodePageIndex,
     int? inviteCodePageSize,
+    String? inviteCodeSearchQuery,
+    int? inviteCodeCount,
     bool? hasNextInviteCodePage,
   }) {
     return StudyRecruitControllerState(
@@ -55,6 +63,9 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       invites: invites ?? this.invites,
       inviteCodePageIndex: inviteCodePageIndex ?? this.inviteCodePageIndex,
       inviteCodePageSize: inviteCodePageSize ?? this.inviteCodePageSize,
+      inviteCodeSearchQuery:
+          inviteCodeSearchQuery ?? this.inviteCodeSearchQuery,
+      inviteCodeCount: inviteCodeCount ?? this.inviteCodeCount,
       hasNextInviteCodePage:
           hasNextInviteCodePage ?? this.hasNextInviteCodePage,
     );
@@ -68,6 +79,8 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     invites,
     inviteCodePageIndex,
     inviteCodePageSize,
+    inviteCodeSearchQuery,
+    inviteCodeCount,
     hasNextInviteCodePage,
   ];
 }

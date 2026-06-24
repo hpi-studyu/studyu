@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2589,4 +2588,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filter';
+
+  @override
+  String get code_list_search_hint => 'Search invite codes';
+
+  @override
+  String code_list_active_count(int count) {
+    return '$count active invite codes';
+  }
+
+  @override
+  String get code_list_page_size => 'Rows';
+
+  @override
+  String code_list_page(int page) {
+    return 'Page $page';
+  }
+
+  @override
+  String get code_list_previous_page => 'Previous page';
+
+  @override
+  String get code_list_next_page => 'Next page';
 }

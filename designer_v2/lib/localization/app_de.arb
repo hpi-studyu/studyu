@@ -967,5 +967,25 @@
   "filter_section_custom_presets": "Benutzerdefinierte Vorlagen",
   "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
-  "filter_button_main": "Filtern"
+  "filter_button_main": "Filtern",
+  "code_list_search_hint": "Einladungscodes suchen",
+  "code_list_active_count": "{count} aktive Einladungscodes",
+  "@code_list_active_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_size": "Zeilen",
+  "code_list_page": "Seite {page}",
+  "@code_list_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_previous_page": "Vorherige Seite",
+  "code_list_next_page": "Nächste Seite"
 }

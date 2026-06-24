@@ -28,7 +28,10 @@ abstract class StudyUApi {
     StudyID studyId, {
     required int offset,
     required int limit,
+    String? query,
   });
+
+  Future<int> countStudyInvites(StudyID studyId, {String? query});
 
   Future<Study> fetchStudyFromInvite(String code);
 
@@ -243,16 +246,42 @@ class StudyUApiClient extends SupabaseClientDependant
     StudyID studyId, {
     required int offset,
     required int limit,
+    String? query,
   }) async {
     await _testDelay();
     try {
-      final data = await supabaseClient
+      var request = supabaseClient
           .from(StudyInvite.tableName)
           .select()
-          .eq('study_id', studyId)
+          .eq('study_id', studyId);
+      if (query != null && query.trim().isNotEmpty) {
+        request = request.ilike('code', '%${query.trim()}%');
+      }
+      final data = await request
           .order('code')
           .range(offset, offset + limit - 1);
       return deserializeList<StudyInvite>(data);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+        statusCode: error.code,
+        message: error.message,
+        details: error.details,
+      );
+    }
+  }
+
+  @override
+  Future<int> countStudyInvites(StudyID studyId, {String? query}) async {
+    await _testDelay();
+    try {
+      var request = supabaseClient
+          .from(StudyInvite.tableName)
+          .count()
+          .eq('study_id', studyId);
+      if (query != null && query.trim().isNotEmpty) {
+        request = request.ilike('code', '%${query.trim()}%');
+      }
+      return request;
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(
         statusCode: error.code,

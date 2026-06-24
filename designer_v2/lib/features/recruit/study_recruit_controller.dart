@@ -48,6 +48,10 @@ class StudyRecruitController extends _$StudyRecruitController
       final fetchedInvites = await state.inviteCodeRepository.fetchPage(
         offset: offset,
         limit: fetchLimit,
+        query: state.inviteCodeSearchQuery,
+      );
+      final inviteCount = await state.inviteCodeRepository.count(
+        query: state.inviteCodeSearchQuery,
       );
       final hasNextPage = fetchedInvites.length > state.inviteCodePageSize;
       final visibleInvites = fetchedInvites
@@ -57,6 +61,7 @@ class StudyRecruitController extends _$StudyRecruitController
       state = state.copyWith(
         invites: AsyncValue.data(visibleInvites),
         inviteCodePageIndex: pageIndex,
+        inviteCodeCount: inviteCount,
         hasNextInviteCodePage: hasNextPage,
       );
     } catch (error, stackTrace) {
@@ -74,6 +79,16 @@ class StudyRecruitController extends _$StudyRecruitController
   Future<void> loadNextInviteCodePage() {
     if (!state.hasNextInviteCodePage) return Future.value();
     return loadInviteCodePage(state.inviteCodePageIndex + 1);
+  }
+
+  Future<void> setInviteCodeSearchQuery(String query) {
+    state = state.copyWith(inviteCodeSearchQuery: query);
+    return loadInviteCodePage(0);
+  }
+
+  Future<void> setInviteCodePageSize(int pageSize) {
+    state = state.copyWith(inviteCodePageSize: pageSize);
+    return loadInviteCodePage(0);
   }
 
   void upsertInviteOnCurrentPage(StudyInvite invite) {

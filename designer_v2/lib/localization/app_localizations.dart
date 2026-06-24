@@ -4478,6 +4478,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter'**
   String get filter_button_main;
+
+  /// No description provided for @code_list_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search invite codes'**
+  String get code_list_search_hint;
+
+  /// No description provided for @code_list_active_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active invite codes'**
+  String code_list_active_count(int count);
+
+  /// No description provided for @code_list_page_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows'**
+  String get code_list_page_size;
+
+  /// No description provided for @code_list_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page}'**
+  String code_list_page(int page);
+
+  /// No description provided for @code_list_previous_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous page'**
+  String get code_list_previous_page;
+
+  /// No description provided for @code_list_next_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Next page'**
+  String get code_list_next_page;
 }
 
 class _AppLocalizationsDelegate

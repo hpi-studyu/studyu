@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
@@ -16,7 +17,6 @@ import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dar
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 typedef InterventionProvider = Intervention? Function(String id);
 
@@ -102,6 +102,10 @@ class StudyRecruitScreen extends StudyPageWidget {
   }
 
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final controller = ref.watch(
+      studyRecruitControllerProvider(studyId).notifier,
+    );
     return Row(
       children: [
         SelectableText(
@@ -110,7 +114,15 @@ class StudyRecruitScreen extends StudyPageWidget {
         ),
         Container(width: 32.0),
         _newInviteCodeButton(context, ref),
-        Container(width: 32.0),
+        const Spacer(),
+        SizedBox(
+          width: 280,
+          child: Search(
+            hintText: tr.code_list_search_hint,
+            initialText: state.inviteCodeSearchQuery,
+            onQueryChanged: controller.setInviteCodeSearchQuery,
+          ),
+        ),
       ],
     );
   }
@@ -187,12 +199,34 @@ class StudyRecruitScreen extends StudyPageWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
-          'Page ${state.inviteCodePageIndex + 1}'.hardcoded,
+          tr.code_list_active_count(state.inviteCodeCount),
+          style: theme.textTheme.bodySmall,
+        ),
+        const SizedBox(width: 16),
+        Text(tr.code_list_page_size, style: theme.textTheme.bodySmall),
+        const SizedBox(width: 8),
+        DropdownButton<int>(
+          value: state.inviteCodePageSize,
+          items: const [15, 25, 50, 100]
+              .map(
+                (pageSize) => DropdownMenuItem<int>(
+                  value: pageSize,
+                  child: Text(pageSize.toString()),
+                ),
+              )
+              .toList(),
+          onChanged: (pageSize) {
+            if (pageSize != null) controller.setInviteCodePageSize(pageSize);
+          },
+        ),
+        const SizedBox(width: 16),
+        Text(
+          tr.code_list_page(state.inviteCodePageIndex + 1),
           style: theme.textTheme.bodySmall,
         ),
         const SizedBox(width: 12),
         IconButton.outlined(
-          tooltip: 'Previous page'.hardcoded,
+          tooltip: tr.code_list_previous_page,
           onPressed: state.hasPreviousInviteCodePage
               ? controller.loadPreviousInviteCodePage
               : null,
@@ -200,7 +234,7 @@ class StudyRecruitScreen extends StudyPageWidget {
         ),
         const SizedBox(width: 8),
         IconButton.outlined(
-          tooltip: 'Next page'.hardcoded,
+          tooltip: tr.code_list_next_page,
           onPressed: state.hasNextInviteCodePage
               ? controller.loadNextInviteCodePage
               : null,

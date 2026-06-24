@@ -24,7 +24,10 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<List<StudyInvite>> fetchPage({
     required int offset,
     required int limit,
+    String? query,
   });
+
+  Future<int> count({String? query});
 }
 
 class InviteCodeRepository extends ModelRepository<StudyInvite>
@@ -75,17 +78,24 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Future<List<StudyInvite>> fetchPage({
     required int offset,
     required int limit,
+    String? query,
   }) async {
     final invites = await apiClient.fetchStudyInvitesPage(
       studyId,
       offset: offset,
       limit: limit,
+      query: query,
     );
     for (final invite in invites) {
       upsertLocally(invite);
     }
     emitUpdate();
     return invites;
+  }
+
+  @override
+  Future<int> count({String? query}) {
+    return apiClient.countStudyInvites(studyId, query: query);
   }
 
   @override
