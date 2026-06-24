@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -29,12 +29,14 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
+      key: const ValueKey('app_outdated_dialog'),
       title: Text(
         AppLocalizations.of(context)!.study_selection_unsupported_title,
       ),
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
         TextButton(
+          key: const ValueKey('dialog_ok'),
           onPressed: () => Navigator.pop(context),
           child: const Text("OK"),
         ),
@@ -47,10 +49,12 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
+      key: const ValueKey('study_closed_dialog'),
       title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
       content: Text(AppLocalizations.of(context)!.study_selection_closed),
       actions: [
         TextButton(
+          key: const ValueKey('dialog_ok'),
           onPressed: () => Navigator.pop(context),
           child: const Text("OK"),
         ),
@@ -130,7 +134,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   children: [
                     MaterialBanner(
                       padding: const EdgeInsets.all(8),
-                      leading: Icon(
+                      leading: const Icon(
                         MdiIcons.exclamationThick,
                         color: Colors.orange,
                         size: 32,
@@ -171,6 +175,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           });
                         }
                         return ListView.builder(
+                          key: const ValueKey('study_selection_list'),
                           itemCount: studies.length,
                           itemBuilder: (context, index) {
                             final study = studies[index];
@@ -196,7 +201,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
-                  icon: Icon(MdiIcons.key),
+                  key: const ValueKey('study_selection_invite_code'),
+                  icon: const Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(
                       context: context,
@@ -236,8 +242,10 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    key: const ValueKey('invite_code_dialog'),
     title: Text(AppLocalizations.of(context)!.private_study_invite_code),
     content: TextFormField(
+      key: const ValueKey('invite_code_field'),
       controller: _controller,
       validator: (_) => _errorMessage,
       autovalidateMode: AutovalidateMode.always,
@@ -247,6 +255,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
     ),
     actions: [
       OutlinedButton.icon(
+        key: const ValueKey('invite_code_submit'),
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {

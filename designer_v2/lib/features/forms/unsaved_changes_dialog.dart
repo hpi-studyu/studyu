@@ -14,23 +14,25 @@ class UnsavedChangesDialog extends StatelessWidget {
       titleText: tr.dialog_unsaved_changes_title,
       body: TextParagraph(text: tr.dialog_unsaved_changes_description),
       actionButtons: [
-        PrimaryButton(
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
-          text: tr.dialog_action_unsaved_changes_stay,
-          icon: null,
-        ),
         SecondaryButton(
           onPressed: () {
             Navigator.pop(context, true);
           },
           text: tr.dialog_action_unsaved_changes_discard,
           icon: null,
+          minimumSize: const Size(120, 40),
+        ),
+        PrimaryButton(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          text: tr.dialog_action_unsaved_changes_stay,
+          icon: null,
+          minimumSize: const Size(120, 40),
         ),
       ],
       maxWidth: 500,
-      minHeight: 225,
+      minHeight: 0,
     );
   }
 }

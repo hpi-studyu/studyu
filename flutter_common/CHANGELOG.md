@@ -1,3 +1,12 @@
+## 1.10.3
+
+ - **FIX**: upgrade deps.
+ - **FIX**(flutter_common): use supabase publishable key.
+ - **FIX**: add flutter_common mdi package dependency.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: migrate flutter_secure_storage v10.0.0.
+
 ## 1.10.2
 
  - **FIX**: update to flutter v3.41.5.

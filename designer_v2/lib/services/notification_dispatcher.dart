@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
@@ -122,17 +121,17 @@ class _NotificationDispatcherState
     }
   }
 
-  AlertDialog _buildAlertDialog(
+  Widget _buildAlertDialog(
     AlertIntent notification,
     NavigatorState navigatorState,
   ) {
-    final textTheme = Theme.of(context).textTheme;
-
-    final List<Widget> actions = [];
+    final List<ConfirmationDialogAction> actions = [];
     if (notification.actions != null) {
       for (final action in notification.actions!) {
         actions.add(
-          TextButton(
+          ConfirmationDialogAction(
+            label: action.label,
+            isDestructive: action.isDestructive,
             onPressed: () {
               if (notification.dismissOnAction) {
                 // always pop & don't wait for [action.onSelect]
@@ -140,51 +139,18 @@ class _NotificationDispatcherState
               }
               action.onSelect();
             },
-            child: Text(
-              action.label,
-              style: (action.isDestructive)
-                  ? textTheme.labelLarge!.copyWith(color: Colors.redAccent)
-                  : textTheme.labelLarge!,
-            ),
           ),
         );
       }
     }
 
-    return AlertDialog(
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(notification.icon),
-          Text("️ ${notification.title}", style: textTheme.displaySmall),
-        ],
-      ),
-      content: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 300,
-          maxWidth: math.max(300, MediaQuery.of(context).size.width * 0.33),
-        ),
-        child: Row(
-          children: [
-            Flexible(
-              child: notificationContent(
-                notification.message,
-                notification.customContent,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return StandardConfirmationDialog(
+      title: notification.title,
+      message: notification.message,
+      customContent: notification.customContent,
+      icon: notification.icon,
       actions: actions,
     );
-  }
-
-  Widget notificationContent(String? message, Widget? customContent) {
-    if (customContent != null) {
-      return customContent;
-    } else {
-      return Text(message!);
-    }
   }
 
   SnackBar _buildSnackbar(
@@ -221,6 +187,9 @@ class _NotificationDispatcherState
       duration: Duration(
         milliseconds: notification.duration ?? widget.snackbarDefaultDuration,
       ),
+      // Keep actionable snackbars auto-dismissing; Flutter now defaults
+      // `persist` to true when an action is present.
+      persist: false,
       padding: EdgeInsets.fromLTRB(
         2.5 * widget.snackbarInnerPadding,
         widget.snackbarInnerPadding,

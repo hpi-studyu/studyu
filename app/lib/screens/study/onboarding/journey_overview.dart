@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -8,6 +8,7 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
@@ -51,9 +52,10 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('journey_overview_screen'),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
-        leading: Icon(MdiIcons.mapMarkerPath),
+        leading: const Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -69,6 +71,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('journey_overview_next'),
         onNext: () => getConsentAndNavigateToDashboard(context),
         progress: const OnboardingProgress(stage: 2, progress: 0.5),
       ),
@@ -87,12 +90,14 @@ class Timeline extends StatelessWidget {
     final interventionsInOrder = subject!.getInterventionsInOrder();
     final now = DateTime.now();
     return Column(
+      key: const ValueKey('journey_timeline'),
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ...interventionsInOrder.asMap().entries.map((entry) {
           final index = entry.key;
           final intervention = entry.value;
           return InterventionTile(
+            key: ValueKey('journey_intervention_tile_$index'),
             title: intervention.name,
             iconName: intervention.icon,
             color: intervention.isBaseline()
@@ -105,6 +110,7 @@ class Timeline extends StatelessWidget {
           );
         }),
         InterventionTile(
+          key: const ValueKey('journey_results_tile'),
           title: AppLocalizations.of(context)!.journey_results_available,
           iconName: 'flagCheckered',
           color: Colors.green,
@@ -182,7 +188,7 @@ class IconIndicator extends StatelessWidget {
         color: color ?? Theme.of(context).colorScheme.secondary,
       ),
       child: Center(
-        child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
+        child: Icon(MdiIconsHelper.fromString(iconName), color: Colors.white),
       ),
     );
   }
