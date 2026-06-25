@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/date_question_widget.dart';
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
 
@@ -1294,6 +1295,134 @@ void main() {
         equals(1),
         reason: 'total invalidation count should remain 1',
       );
+    },
+  );
+
+  testWidgets('date question default today auto-completes questionnaire', (
+    tester,
+  ) async {
+    final dateQ = DateQuestion.withId()
+      ..id = 'dq'
+      ..prompt = 'Pick date'
+      ..defaultOption = DefaultDateOption.today;
+
+    final List<Map<String, Object?>?> snapshots = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(
+        QuestionnaireWidget(
+          [dateQ],
+          onComplete: (state) {
+            snapshots.add(_snapshot(state));
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final completion = snapshots.where((s) => s != null).last;
+    expect(completion!['dq'], isA<DateTime>());
+  });
+
+  testWidgets('clearing a date answer invalidates questionnaire completion', (
+    tester,
+  ) async {
+    final questionnaireKey = GlobalKey<QuestionnaireWidgetState>();
+    final dateQ = DateQuestion.withId()
+      ..id = 'dq'
+      ..prompt = 'Pick date';
+
+    final List<Map<String, Object?>?> snapshots = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(
+        QuestionnaireWidget(
+          [dateQ],
+          key: questionnaireKey,
+          onComplete: (state) {
+            snapshots.add(_snapshot(state));
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final dateWidget = tester.widget<DateQuestionWidget>(
+      find.byType(DateQuestionWidget),
+    );
+    dateWidget.onDone!(dateQ.constructAnswer(DateTime(2025, 6)));
+    await tester.pumpAndSettle();
+
+    final beforeClear = snapshots.where((s) => s != null).length;
+
+    final updatedDateWidget = tester.widget<DateQuestionWidget>(
+      find.byType(DateQuestionWidget),
+    );
+    updatedDateWidget.onCleared!();
+    await tester.pumpAndSettle();
+
+    expect(snapshots.last, isNull);
+    expect(snapshots.where((s) => s != null).length, beforeClear);
+    expect(
+      questionnaireKey.currentState!.validateSyncAndBuildPayload(),
+      isNull,
+    );
+  });
+
+  testWidgets(
+    'conditional date question restores previous answer when re-shown',
+    (tester) async {
+      final q1 = _boolQuestion('q1', 'Show date picker?');
+      final dateQ = DateQuestion.withId()
+        ..id = 'dq'
+        ..prompt = 'Pick date'
+        ..conditional = QuestionConditional.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [BooleanExpression()..target = 'q1'],
+          ),
+        );
+
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(setup(QuestionnaireWidget([q1, dateQ])));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('yes'));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      final dateWidget = tester.widget<DateQuestionWidget>(
+        find.byType(DateQuestionWidget),
+      );
+      dateWidget.onDone!(dateQ.constructAnswer(DateTime(2025, 6, 15)));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('no').first);
+      await tester.pumpAndSettle();
+      expect(find.byType(DateQuestionWidget), findsNothing);
+
+      await tester.tap(find.text('yes'));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DateQuestionWidget), findsOneWidget);
+      expect(find.textContaining('2025-06-15'), findsOneWidget);
     },
   );
 }

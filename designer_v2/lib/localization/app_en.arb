@@ -324,6 +324,67 @@
   "free_text_question_type_alphanumeric_explanation": "Alphanumeric input includes letters and numbers only.",
   "free_text_question_type_numeric_explanation": "Numeric input includes numbers without special characters.",
   "free_text_question_type_custom_explanation": "The input must match the specified regular expression.",
+  "question_type_date": "Date/Time",
+  "date_min_date_label": "Earliest date",
+  "date_min_date_label_helper": "The earliest date participants can select",
+  "date_max_date_label": "Latest date",
+  "date_max_date_label_helper": "The latest date participants can select",
+  "date_format_preset_label": "Date format preset",
+  "date_format_preset_label_helper": "Select how dates are displayed to participants",
+  "date_picker_hint": "Select a date",
+  "time_picker_hint": "Select a time",
+  "date_input_type_label": "Input type",
+  "date_input_type_label_helper": "Select what information to collect",
+  "date_input_type_date": "Date only",
+  "date_input_type_time": "Time only",
+  "date_input_type_datetime": "Date and time",
+  "time_format_preset_label": "Time format",
+  "time_format_preset_label_helper": "Select how time is displayed",
+  "date_default_option_label": "Default value",
+  "date_default_option_label_helper": "Select the initial value shown to participants",
+  "date_default_option_none": "No default",
+  "date_default_option_today": "Today",
+  "date_default_option_now": "Current time",
+  "date_default_option_specific": "Specific date/time",
+  "date_default_specific_date_label": "Default date",
+  "date_default_specific_date_label_helper": "The date that will be pre-selected",
+  "date_default_specific_time_label": "Default time",
+  "date_default_specific_time_label_helper": "The time that will be pre-selected",
+  "date_min_time_label": "Earliest time",
+  "date_min_time_label_helper": "The earliest time participants can select",
+  "date_max_time_label": "Latest time",
+  "date_max_time_label_helper": "The latest time participants can select",
+  "date_validation_min_greater_than_max": "Earliest date cannot be after the latest date",
+  "date_picker_button_label_datetime": "Select date",
+  "time_picker_button_label_datetime": "Select time",
+  "time_picker_button_label": "Select a time",
+  "date_picker_validation_required": "Please select a date",
+  "time_picker_validation_required": "Please select a time",
+  "datetime_picker_validation_required": "Please select both date and time",
+  "time_picker_validation_range": "Please select a time within the allowed range",
+  "time_picker_range_hint": "Select a time between {min} and {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Earliest allowed time: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Latest allowed time: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "date_validation_default_today_before_min": "'Today' is before the earliest allowed date",
+  "date_validation_default_today_after_max": "'Today' is after the latest allowed date",
+  "date_validation_default_specific_before_min": "Default date is before the earliest allowed date",
+  "date_validation_default_specific_after_max": "Default date is after the latest allowed date",
   "fitbit_question_title": "Fitbit",
   "fitbit_question_type_empty": "No Fitbit data available",
   "navlink_question_visibility_logic": "Visibility",
