@@ -116,6 +116,18 @@ abstract class AppLocalizations {
   /// **'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.'**
   String get loading_error_description;
 
+  /// No description provided for @deleted_study_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study unavailable'**
+  String get deleted_study_error_title;
+
+  /// No description provided for @deleted_study_error_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.'**
+  String get deleted_study_error_description;
+
   /// No description provided for @try_again.
   ///
   /// In en, this message translates to:
@@ -638,11 +650,29 @@ abstract class AppLocalizations {
   /// **'Contact Support'**
   String get contact_support;
 
+  /// No description provided for @support_email_subject_loading_error.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Support Request - Loading Error'**
+  String get support_email_subject_loading_error;
+
+  /// No description provided for @support_email_subject_deleted_study.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Support Request - Study Unavailable'**
+  String get support_email_subject_deleted_study;
+
   /// Body of the support email, includes the subject ID
   ///
   /// In en, this message translates to:
   /// **'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.'**
   String support_email_body(String subjectId);
+
+  /// Body of the support email for deleted study errors, includes the Subject ID
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.'**
+  String deleted_study_support_email_body(String subjectId);
 
   /// No description provided for @about.
   ///

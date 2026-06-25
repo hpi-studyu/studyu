@@ -8,10 +8,27 @@ import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+enum AppErrorReason { loading, deletedStudy }
+
+class AppErrorScreenArguments {
+  final String? selectedSubjectId;
+  final AppErrorReason reason;
+
+  const AppErrorScreenArguments({
+    this.selectedSubjectId,
+    this.reason = AppErrorReason.loading,
+  });
+}
+
 class AppErrorScreen extends StatefulWidget {
   final String? selectedSubjectId;
+  final AppErrorReason reason;
 
-  const AppErrorScreen({super.key, this.selectedSubjectId});
+  const AppErrorScreen({
+    super.key,
+    this.selectedSubjectId,
+    this.reason = AppErrorReason.loading,
+  });
 
   @override
   State<AppErrorScreen> createState() => _AppErrorScreenState();
@@ -60,13 +77,21 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  loc.loading_error_title,
+                  switch (widget.reason) {
+                    AppErrorReason.loading => loc.loading_error_title,
+                    AppErrorReason.deletedStudy =>
+                      loc.deleted_study_error_title,
+                  },
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  loc.loading_error_description,
+                  switch (widget.reason) {
+                    AppErrorReason.loading => loc.loading_error_description,
+                    AppErrorReason.deletedStudy =>
+                      loc.deleted_study_error_description,
+                  },
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16),
                 ),
@@ -153,13 +178,22 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
 
   Future<void> _contactSupport(BuildContext context) async {
     StudyULogger.info("User chose to contact support from AppErrorScreen");
+    final loc = AppLocalizations.of(context)!;
 
-    const emailSubject = 'StudyU Support Request - Loading Error';
+    final emailSubject = switch (widget.reason) {
+      AppErrorReason.loading => loc.support_email_subject_loading_error,
+      AppErrorReason.deletedStudy => loc.support_email_subject_deleted_study,
+    };
 
     // Get the base email body from localization
-    String emailBody = AppLocalizations.of(
-      context,
-    )!.support_email_body(widget.selectedSubjectId ?? '');
+    String emailBody = switch (widget.reason) {
+      AppErrorReason.loading => loc.support_email_body(
+        widget.selectedSubjectId ?? '',
+      ),
+      AppErrorReason.deletedStudy => loc.deleted_study_support_email_body(
+        widget.selectedSubjectId ?? '',
+      ),
+    };
 
     // Append cached user data to the email body
     if (cachedUserData != null && cachedUserData!.isNotEmpty) {

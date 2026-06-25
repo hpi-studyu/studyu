@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
@@ -57,11 +58,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
       subject = await _retrieveSubject(selectedSubjectId);
     } on SubjectDeletedException {
       StudyULogger.warning(
-        "Subject $selectedSubjectId was deleted from backend. Clearing local data.",
+        "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
       );
-      await deleteLocalData();
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, Routes.welcome);
+      Navigator.pushReplacementNamed(
+        context,
+        Routes.appErrorScreen,
+        arguments: AppErrorScreenArguments(
+          selectedSubjectId: selectedSubjectId,
+          reason: AppErrorReason.deletedStudy,
+        ),
+      );
       return;
     }
     if (!mounted) return;

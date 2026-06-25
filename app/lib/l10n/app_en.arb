@@ -4,6 +4,8 @@
   "loading": "Loading",
   "loading_error_title": "Loading Error",
   "loading_error_description": "The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.",
+  "deleted_study_error_title": "Study unavailable",
+  "deleted_study_error_description": "This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use 'Delete all data' if they tell you to reset the app.",
   "try_again": "Try again",
   "delete_all_data": "Delete all data",
   "delete_all_data_description": "Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.",
@@ -104,9 +106,20 @@
   "help": "Help",
   "contact": "Contact",
   "contact_support": "Contact Support",
+  "support_email_subject_loading_error": "StudyU Support Request - Loading Error",
+  "support_email_subject_deleted_study": "StudyU Support Request - Study Unavailable",
   "support_email_body": "Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.",
   "@support_email_body": {
     "description": "Body of the support email, includes the subject ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
+  "deleted_study_support_email_body": "Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.",
+  "@deleted_study_support_email_body": {
+    "description": "Body of the support email for deleted study errors, includes the Subject ID",
     "placeholders": {
       "subjectId": {
         "type": "String"

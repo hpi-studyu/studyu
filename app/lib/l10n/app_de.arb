@@ -4,6 +4,8 @@
   "loading": "Laden",
   "loading_error_title": "Ladefehler",
   "loading_error_description": "Die Studiendaten konnten nicht abgerufen werden. Wenn Sie aktuell an einer Studie teilnehmen, wenden Sie sich bitte zuerst an Ihre Studienleitung. Kontaktieren Sie den Support nur, wenn Sie nicht an einer Studie teilnehmen oder Ihre Studienleitung Sie dazu auffordert. Löschen Sie Ihre Daten nur, wenn Sie von der Studienleitung oder dem Support dazu aufgefordert werden. Das Löschen entfernt alle Ihre Studiendaten und Sie müssen der Studie erneut beitreten.",
+  "deleted_study_error_title": "Studie nicht verfügbar",
+  "deleted_study_error_description": "Diese Studie ist auf dem Server nicht mehr verfügbar. Ihre Daten bleiben vorerst auf diesem Gerät. Bitte kontaktieren Sie Ihre Studienleitung oder den Support, bevor Sie etwas löschen. Nutzen Sie 'Alle Daten löschen' nur, wenn Sie zum Zurücksetzen der App aufgefordert werden.",
   "try_again": "Erneut versuchen",
   "delete_all_data": "Alle Daten löschen",
   "delete_all_data_description": "Möchten Sie wirklich alle Daten löschen? Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.",
@@ -106,9 +108,20 @@
   "about": "Über StudyU",
   "contact": "Kontakt",
   "contact_support": "Support kontaktieren",
+  "support_email_subject_loading_error": "StudyU Support-Anfrage - Ladefehler",
+  "support_email_subject_deleted_study": "StudyU Support-Anfrage - Studie nicht verfügbar",
   "support_email_body": "Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: {subjectId}\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.",
   "@support_email_body": {
     "description": "Text für Support-E-Mail, enthält die Subject-ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
+  "deleted_study_support_email_body": "Hallo,\n\ndie StudyU App zeigt an, dass meine Studie auf dem Server nicht mehr verfügbar ist. Meine Subject-ID ist: {subjectId}\n\nBitte teilen Sie mir mit, ob ich meine lokalen Daten behalten oder die App zurücksetzen soll.\n\nVielen Dank.",
+  "@deleted_study_support_email_body": {
+    "description": "Text für Support-E-Mail bei gelöschter Studie, enthält die Subject-ID",
     "placeholders": {
       "subjectId": {
         "type": "String"
