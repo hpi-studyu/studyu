@@ -17,6 +17,7 @@ import 'package:studyu_core/core.dart';
 
 class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
+  final VoidCallback? onCleared;
   final Function(int)? onInvalid;
   final Question question;
   final int index;
@@ -31,6 +32,7 @@ class QuestionContainer extends StatefulWidget {
     this.onInvalid,
     required this.question,
     required this.index,
+    this.onCleared,
     this.taskId,
     this.containerKey,
     this.isLastQuestion = true,
@@ -137,7 +139,12 @@ class QuestionContainerState extends State<QuestionContainer>
         // No initialAnswer until pain widget can render restored values.
         return PainQuestionWidget(question: painQuestion, onDone: _onDone);
       case final DateQuestion dateQuestion:
-        return DateQuestionWidget(question: dateQuestion, onDone: _onDone);
+        return DateQuestionWidget(
+          question: dateQuestion,
+          onDone: _onDone,
+          onCleared: widget.onCleared,
+          initialAnswer: widget.initialAnswer as Answer<DateTime>?,
+        );
       default:
         throw ArgumentError(
           'Question type ${widget.question.type} not supported',

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -404,6 +405,62 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.';
 
   @override
+  String dialog_delete_title(Object subject) {
+    return 'Delete $subject?';
+  }
+
+  @override
+  String dialog_delete_description(Object subject) {
+    return 'Are you sure you want to delete this $subject? This action cannot be undone.';
+  }
+
+  @override
+  String dialog_remove_title(Object subject) {
+    return 'Remove $subject?';
+  }
+
+  @override
+  String dialog_remove_description(Object subject) {
+    return 'Are you sure you want to remove this $subject? This action cannot be undone.';
+  }
+
+  @override
+  String get dialog_subject_study => 'study';
+
+  @override
+  String get dialog_subject_item => 'item';
+
+  @override
+  String get dialog_subject_question => 'question';
+
+  @override
+  String get dialog_subject_screener_question => 'screener question';
+
+  @override
+  String get dialog_subject_answer_option => 'answer option';
+
+  @override
+  String get dialog_subject_intervention => 'intervention';
+
+  @override
+  String get dialog_subject_intervention_task => 'intervention task';
+
+  @override
+  String get dialog_subject_survey => 'survey';
+
+  @override
+  String get dialog_subject_consent_item => 'consent item';
+
+  @override
+  String get dialog_subject_report_section => 'report section';
+
+  @override
+  String get dialog_subject_invite_code => 'invite code';
+
+  @override
+  String get dialog_subject_fitbit_credentials => 'fitbit credentials';
+
+  @override
   String get form_question_create => 'New Question';
 
   @override
@@ -717,6 +774,163 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'The input must match the specified regular expression.';
+
+  @override
+  String get question_type_date => 'Date/Time';
+
+  @override
+  String get date_min_date_label => 'Earliest date';
+
+  @override
+  String get date_min_date_label_helper =>
+      'The earliest date participants can select';
+
+  @override
+  String get date_max_date_label => 'Latest date';
+
+  @override
+  String get date_max_date_label_helper =>
+      'The latest date participants can select';
+
+  @override
+  String get date_format_preset_label => 'Date format preset';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Select how dates are displayed to participants';
+
+  @override
+  String get date_picker_hint => 'Select a date';
+
+  @override
+  String get time_picker_hint => 'Select a time';
+
+  @override
+  String get date_input_type_label => 'Input type';
+
+  @override
+  String get date_input_type_label_helper =>
+      'Select what information to collect';
+
+  @override
+  String get date_input_type_date => 'Date only';
+
+  @override
+  String get date_input_type_time => 'Time only';
+
+  @override
+  String get date_input_type_datetime => 'Date and time';
+
+  @override
+  String get time_format_preset_label => 'Time format';
+
+  @override
+  String get time_format_preset_label_helper => 'Select how time is displayed';
+
+  @override
+  String get date_default_option_label => 'Default value';
+
+  @override
+  String get date_default_option_label_helper =>
+      'Select the initial value shown to participants';
+
+  @override
+  String get date_default_option_none => 'No default';
+
+  @override
+  String get date_default_option_today => 'Today';
+
+  @override
+  String get date_default_option_now => 'Current time';
+
+  @override
+  String get date_default_option_specific => 'Specific date/time';
+
+  @override
+  String get date_default_specific_date_label => 'Default date';
+
+  @override
+  String get date_default_specific_date_label_helper =>
+      'The date that will be pre-selected';
+
+  @override
+  String get date_default_specific_time_label => 'Default time';
+
+  @override
+  String get date_default_specific_time_label_helper =>
+      'The time that will be pre-selected';
+
+  @override
+  String get date_min_time_label => 'Earliest time';
+
+  @override
+  String get date_min_time_label_helper =>
+      'The earliest time participants can select';
+
+  @override
+  String get date_max_time_label => 'Latest time';
+
+  @override
+  String get date_max_time_label_helper =>
+      'The latest time participants can select';
+
+  @override
+  String get date_validation_min_greater_than_max =>
+      'Earliest date cannot be after the latest date';
+
+  @override
+  String get date_picker_button_label_datetime => 'Select date';
+
+  @override
+  String get time_picker_button_label_datetime => 'Select time';
+
+  @override
+  String get time_picker_button_label => 'Select a time';
+
+  @override
+  String get date_picker_validation_required => 'Please select a date';
+
+  @override
+  String get time_picker_validation_required => 'Please select a time';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Please select both date and time';
+
+  @override
+  String get time_picker_validation_range =>
+      'Please select a time within the allowed range';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Select a time between $min and $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Earliest allowed time: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Latest allowed time: $max';
+  }
+
+  @override
+  String get date_validation_default_today_before_min =>
+      '\'Today\' is before the earliest allowed date';
+
+  @override
+  String get date_validation_default_today_after_max =>
+      '\'Today\' is after the latest allowed date';
+
+  @override
+  String get date_validation_default_specific_before_min =>
+      'Default date is before the earliest allowed date';
+
+  @override
+  String get date_validation_default_specific_after_max =>
+      'Default date is after the latest allowed date';
 
   @override
   String get fitbit_question_title => 'Fitbit';
@@ -2084,11 +2298,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconpicker_dialog_title => 'Pick an icon';
 
   @override
-  String get dialog_unsaved_changes_title => 'Go back and discard changes?';
+  String get dialog_unsaved_changes_title => 'Discard unsaved changes?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'There are unsaved changes that will be lost when you go back. If you want to keep your changes, you need to save your work before going back.';
+      'If you leave now, your recent changes will be permanently lost.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Stay';

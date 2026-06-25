@@ -224,6 +224,7 @@ class MeasurementSurveyFormViewModel
     final actions = questionFormViewModels.availableActions(
       model,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -232,6 +233,7 @@ class MeasurementSurveyFormViewModel
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
     final actions = questionFormViewModels.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -240,6 +242,7 @@ class MeasurementSurveyFormViewModel
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
     final actions = questionFormViewModels.availableInlineActions(
       model,
+      confirmationSubject: tr.dialog_subject_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);

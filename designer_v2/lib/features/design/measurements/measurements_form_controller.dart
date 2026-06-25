@@ -142,6 +142,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     final actions = measurementViewModelsCollection.availableActions(
       model as ManagedFormViewModel<IFormDataWithSchedule>,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);

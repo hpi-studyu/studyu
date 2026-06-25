@@ -54,7 +54,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.pain:
         return tr.question_type_pain;
       case SurveyQuestionType.date:
-        return 'Date';
+        return tr.question_type_date;
     }
   }
 
@@ -77,7 +77,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.pain:
         return Icons.accessibility;
       case SurveyQuestionType.date:
-        return Icons.calendar_today_rounded;
+        return Icons.calendar_today;
     }
   }
 
