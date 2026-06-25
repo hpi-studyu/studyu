@@ -31,34 +31,190 @@ class QuestionnaireWidget extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _QuestionnaireWidgetState();
+  State<StatefulWidget> createState() => QuestionnaireWidgetState();
 }
 
-class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
+class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
   final List<GlobalKey> questionKeys = <GlobalKey>[];
+  final List<GlobalKey<QuestionContainerState>> questionStateKeys =
+      <GlobalKey<QuestionContainerState>>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final _scrollController = ScrollController();
   bool _isProgrammaticScroll = false;
 
   final QuestionnaireState qs = QuestionnaireState();
+  final Map<String, Answer> _hiddenAnswersByQuestionId = <String, Answer>{};
+  final Set<String> _hiddenDefaultAnswerIds = <String>{};
+
+  Set<String> get _visibleQuestionIds =>
+      shownQuestions.map((shownQuestion) => shownQuestion.question.id).toSet();
+
+  QuestionnaireState _buildVisibleQuestionnaireState() {
+    return _buildQuestionnaireStateFor(_visibleQuestionIds);
+  }
+
+  QuestionnaireState _buildQuestionnaireStateFor(Set<String> questionIds) {
+    final result = QuestionnaireState();
+    for (final entry in qs.answers.entries) {
+      if (questionIds.contains(entry.key)) {
+        result.answers[entry.key] = entry.value;
+      }
+    }
+    return result;
+  }
+
+  QuestionnaireState? validateSyncAndBuildPayload() {
+    final visibleQuestionIdsAtClick = _visibleQuestionIds;
+    final containersAtClick = List<QuestionContainer>.of(shownQuestions);
+    final stateKeysAtClick = List<GlobalKey<QuestionContainerState>>.of(
+      questionStateKeys,
+    );
+    final renderKeysAtClick = List<GlobalKey>.of(questionKeys);
+
+    int? firstInvalidIndex;
+    BuildContext? firstInvalidContext;
+
+    for (int i = 0; i < containersAtClick.length; i++) {
+      final result =
+          stateKeysAtClick[i].currentState?.validateForComplete() ??
+          const QuestionValidationResult.valid();
+      final questionId = containersAtClick[i].question.id;
+      if (!result.isValid || !qs.answers.containsKey(questionId)) {
+        firstInvalidIndex ??= i;
+        firstInvalidContext ??= result.invalidContext;
+      }
+    }
+
+    if (firstInvalidIndex != null) {
+      final renderKey = renderKeysAtClick[firstInvalidIndex];
+      _scrollToQuestion(renderKey, firstInvalidContext);
+      return null;
+    }
+
+    for (int i = 0; i < containersAtClick.length; i++) {
+      final answer = stateKeysAtClick[i].currentState?.syncForComplete();
+      if (answer != null) {
+        qs.answers[answer.question] = answer;
+      }
+    }
+
+    return _buildQuestionnaireStateFor(visibleQuestionIdsAtClick);
+  }
+
+  void _cacheAnswerFor(String questionId) {
+    final answer = qs.answers.remove(questionId);
+    if (answer != null) {
+      if (_hiddenDefaultAnswerIds.remove(questionId)) {
+        return;
+      }
+      _hiddenAnswersByQuestionId[questionId] = answer;
+    }
+  }
+
+  bool _supportsInitialAnswerRestore(Question question) {
+    // Only question widgets that can render an initial answer may restore
+    // cached hidden answers into UI and questionnaire state.
+    return question is BooleanQuestion ||
+        question is ChoiceQuestion ||
+        question is ScaleQuestion ||
+        question is FreeTextQuestion ||
+        question is DateQuestion ||
+        question is AnnotatedScaleQuestion ||
+        // todo remove this when older studies are finished
+        // ignore: deprecated_member_use_from_same_package
+        question is VisualAnalogueQuestion;
+  }
+
+  Answer? _restoreCachedAnswerFor(Question question) {
+    // Supported restore: Boolean, Choice, Scale, FreeText, Date, AnnotatedScale,
+    // VisualAnalogue. Unsupported restore: Image, Audio, Pain, Fitbit.
+    // Unsupported answers stay cached while hidden, but are not restored into
+    // qs.answers when shown again because those widgets cannot show restored
+    // captured/uploaded/pain/fitbit values yet. This avoids marking a visible
+    // question complete when UI does not reflect the restored value.
+    if (!_supportsInitialAnswerRestore(question)) return null;
+
+    final answer = _hiddenAnswersByQuestionId.remove(question.id);
+    if (answer != null) {
+      qs.answers[question.id] = answer;
+    }
+    _hiddenDefaultAnswerIds.remove(question.id);
+    return answer;
+  }
+
+  void _applyDefaultAnswerForHiddenQuestion(Question question) {
+    final defaultAnswer = question.getDefaultAnswer();
+    if (defaultAnswer == null) return;
+
+    qs.answers[question.id] = defaultAnswer;
+    _hiddenDefaultAnswerIds.add(question.id);
+  }
 
   void _finishQuestionnaire(QuestionnaireState? result) =>
       widget.onComplete?.call(result);
 
+  void _onQuestionCleared(String questionId) {
+    qs.answers.remove(questionId);
+    _finishQuestionnaire(null);
+  }
+
+  QuestionContainer _buildQuestionContainer({
+    required Question question,
+    required int index,
+    required GlobalKey containerKey,
+    required GlobalKey<QuestionContainerState> stateKey,
+    required bool isLastQuestion,
+    Answer? initialAnswer,
+  }) {
+    return QuestionContainer(
+      key: stateKey,
+      containerKey: containerKey,
+      question: question,
+      onDone: _onQuestionDone,
+      onCleared: () => _onQuestionCleared(question.id),
+      onInvalid: _onQuestionInvalid,
+      index: index,
+      taskId: widget.taskId,
+      isLastQuestion: isLastQuestion,
+      hasConditionalDependents: _isConditionalTarget(question.id),
+      initialAnswer: initialAnswer,
+    );
+  }
+
+  void _refreshLastQuestionFlags() {
+    for (int i = 0; i < shownQuestions.length; i++) {
+      final current = shownQuestions[i];
+      shownQuestions[i] = _buildQuestionContainer(
+        containerKey: current.containerKey!,
+        stateKey: questionStateKeys[i],
+        question: current.question,
+        index: current.index,
+        isLastQuestion: i == shownQuestions.length - 1,
+        initialAnswer: current.initialAnswer,
+      );
+    }
+  }
+
   void _addQuestionToList(Question question) {
     final containerKey = GlobalKey();
+    final stateKey = GlobalKey<QuestionContainerState>();
+    final initialAnswer = _supportsInitialAnswerRestore(question)
+        ? _restoreCachedAnswerFor(question) ?? qs.answers[question.id]
+        : null;
     questionKeys.add(containerKey);
+    questionStateKeys.add(stateKey);
     shownQuestions.add(
-      QuestionContainer(
-        key: UniqueKey(),
+      _buildQuestionContainer(
         containerKey: containerKey,
+        stateKey: stateKey,
         question: question,
-        onDone: _onQuestionDone,
         index: shownQuestions.length,
-        taskId: widget.taskId,
+        isLastQuestion: true,
+        initialAnswer: initialAnswer,
       ),
     );
+    _refreshLastQuestionFlags();
   }
 
   bool _isConditionalTarget(String questionIdToCheck) {
@@ -67,6 +223,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         return expression.target == target;
       } else if (expression is NotExpression) {
         return hasExpressionTarget(target, expression.expression);
+      } else if (expression is CompositeExpression) {
+        return expression.expressions.any(
+          (expression) => hasExpressionTarget(target, expression),
+        );
       } else {
         // Handle other expression types if necessary
         return false;
@@ -91,36 +251,43 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   Question? _insertQuestion(int index) {
+    Question? firstInsertedQuestion;
+
     // Find the next question in the list that should be shown.
     for (int i = index + 1; i < widget.questions.length; i++) {
       if (widget.questions[i].shouldBeShown(qs)) {
         _addQuestionToList(widget.questions[i]);
         _listKey.currentState?.insertItem(shownQuestions.length - 1);
+        setState(_refreshLastQuestionFlags);
 
-        return widget.questions[i];
+        firstInsertedQuestion ??= widget.questions[i];
+
+        if (!qs.answers.containsKey(widget.questions[i].id)) {
+          return firstInsertedQuestion;
+        }
       } else {
-        // If the next question should not be shown, add default answer or skip it.
-        final questionToSkip = widget.questions[i];
-        if (questionToSkip.getDefaultAnswer() != null) {
-          final defaultAnswer = questionToSkip.getDefaultAnswer()!;
-          qs.answers[defaultAnswer.question] = defaultAnswer;
-        } else {}
+        // If the next question should not be shown, skip it.
+        _applyDefaultAnswerForHiddenQuestion(widget.questions[i]);
       }
     }
-    return null;
+    return firstInsertedQuestion;
   }
 
   void _resetQuestionnaireTo(String resetToQuestionId) {
-    // Remove all answers that were given after the resetToQuestionId
-    qs.answers.removeWhere(
-      (key, value) =>
-          widget.questions.indexOf(
-            widget.questions.firstWhere((q) => q.id == key),
-          ) >
-          widget.questions.indexOf(
-            widget.questions.firstWhere((q) => q.id == resetToQuestionId),
-          ),
+    final resetQuestionIndex = widget.questions.indexOf(
+      widget.questions.firstWhere((q) => q.id == resetToQuestionId),
     );
+
+    // Cache all answers that were given after the resetToQuestionId.
+    final answerIdsToCache = qs.answers.keys.where((questionId) {
+      final questionIndex = widget.questions.indexOf(
+        widget.questions.firstWhere((q) => q.id == questionId),
+      );
+      return questionIndex > resetQuestionIndex;
+    }).toList();
+    for (final questionId in answerIdsToCache) {
+      _cacheAnswerFor(questionId);
+    }
 
     // Remove all shown questions that were added after the resetToQuestionId
     final resetIndex = shownQuestions.indexWhere(
@@ -131,100 +298,117 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       for (int i = shownQuestions.length - 1; i > resetIndex; i--) {
         final removedQuestion = shownQuestions.removeAt(i);
         questionKeys.removeAt(i);
+        questionStateKeys.removeAt(i);
         _listKey.currentState?.removeItem(
           i,
           (context, animation) =>
               SizeTransition(sizeFactor: animation, child: removedQuestion),
         );
       }
+      setState(_refreshLastQuestionFlags);
     }
   }
 
-  void _onQuestionDone(Answer answer, int index) {
+  void _onQuestionInvalid(int index) {
+    final questionId = shownQuestions[index].question.id;
+    qs.answers.remove(questionId);
+    // Only remove later visible questions when the invalidated question has
+    // conditional dependents that may hide/change downstream questions.
+    if (_isConditionalTarget(questionId)) {
+      _resetQuestionnaireTo(questionId);
+    }
+    _finishQuestionnaire(null);
+  }
+
+  bool _allShownQuestionsAnswered() {
+    return shownQuestions.every(
+      (shownQuestion) => qs.answers.containsKey(shownQuestion.question.id),
+    );
+  }
+
+  void _onQuestionDone(Answer answer, int _) {
     if (kDebugMode) {
       debugPrint(
         "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
       );
     }
     qs.answers[answer.question] = answer;
-    final shouldContinue = widget.shouldContinue?.call(qs);
+
+    // Check if there are questions whose visibility depend on this question.
+    // Remove no-longer-visible questions before continuation predicates run, but
+    // do not add newly visible questions until the predicate allows progression.
+    final hasConditionalDependencies = _isConditionalTarget(answer.question);
+    if (hasConditionalDependencies) {
+      _resetQuestionnaireTo(answer.question);
+    }
+
+    final shouldContinue = widget.shouldContinue?.call(
+      _buildVisibleQuestionnaireState(),
+    );
 
     // Check if the questionnaire should not continue
     if (shouldContinue == false) {
-      _finishQuestionnaire(qs);
+      _finishQuestionnaire(_buildVisibleQuestionnaireState());
       return;
     }
 
-    // Check if there are questions whose visibility depend on this question
-    final hasConditionalDependencies = _isConditionalTarget(answer.question);
-
-    // If this question has conditional dependencies, always process them first
     if (hasConditionalDependencies) {
-      _handleConditionalQuestionChange(answer, index);
+      final insertedQuestion = _insertAfterQuestion(answer.question);
+      _finishAfterConditionalQuestionChange(insertedQuestion);
       return;
     }
 
-    // Check if there are any more questions that should be shown
     final currentQuestionIndex = widget.questions.indexWhere(
       (q) => q.id == answer.question,
     );
 
-    bool hasMoreQuestions = false;
-    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
-      if (widget.questions[i].shouldBeShown(qs)) {
-        hasMoreQuestions = true;
-        break;
+    // Try to insert the next question for normal progression. Hidden questions
+    // may contribute default answers that make later questions visible, so this
+    // must happen before deciding that the questionnaire is complete.
+    if (answer.question == shownQuestions.last.question.id) {
+      final insertedQuestion = _insertQuestion(currentQuestionIndex);
+      if (insertedQuestion != null) {
+        if (_allShownQuestionsAnswered()) {
+          _finishQuestionnaire(_buildVisibleQuestionnaireState());
+        } else {
+          _scrollToNewQuestion();
+        }
+      } else {
+        _finishQuestionnaire(_buildVisibleQuestionnaireState());
       }
-    }
-
-    // If no more questions, finish the questionnaire
-    if (!hasMoreQuestions) {
-      _finishQuestionnaire(qs);
       return;
     }
 
-    // Try to insert the next question for normal progression
-    if (answer.question == shownQuestions.last.question.id) {
-      final insertedQuestion = _insertQuestion(
-        widget.questions.indexOf(shownQuestions.last.question),
-      );
-      if (insertedQuestion != null) {
-        _scrollToNewQuestion();
-      }
+    // A previously shown question was answered again. If every currently
+    // visible question already has a valid answer, restore the completed state.
+    if (_allShownQuestionsAnswered()) {
+      _finishQuestionnaire(_buildVisibleQuestionnaireState());
     }
   }
 
-  void _handleConditionalQuestionChange(Answer answer, int index) {
-    // Reset questionnaire to remove any questions that should no longer be shown
-    _resetQuestionnaireTo(answer.question);
-
-    // Check if there are any questions that should now be shown
+  Question? _insertAfterQuestion(String questionId) {
     final currentQuestionIndex = widget.questions.indexWhere(
-      (q) => q.id == answer.question,
+      (q) => q.id == questionId,
     );
 
-    bool hasQuestionsToShow = false;
-    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
-      if (widget.questions[i].shouldBeShown(qs)) {
-        hasQuestionsToShow = true;
-        break;
-      }
-    }
+    // Try to insert the next question that should be shown. Hidden questions
+    // may contribute default answers that make later questions visible.
+    return _insertQuestion(currentQuestionIndex);
+  }
 
-    if (hasQuestionsToShow) {
-      // Try to insert the next question that should be shown
-      final insertedQuestion = _insertQuestion(currentQuestionIndex);
-      if (insertedQuestion != null) {
-        // A new question was inserted, reset completion state
+  void _finishAfterConditionalQuestionChange(Question? insertedQuestion) {
+    if (insertedQuestion != null) {
+      // A new question was inserted; restore completion only if it already
+      // has cached answers for all visible questions.
+      if (_allShownQuestionsAnswered()) {
+        _finishQuestionnaire(_buildVisibleQuestionnaireState());
+      } else {
         _finishQuestionnaire(null);
         _scrollToNewQuestion();
-      } else {
-        // No question was inserted but should have been - finish questionnaire
-        _finishQuestionnaire(qs);
       }
     } else {
       // No more questions to show - finish questionnaire
-      _finishQuestionnaire(qs);
+      _finishQuestionnaire(_buildVisibleQuestionnaireState());
     }
   }
 
@@ -330,6 +514,20 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+  }
+
+  void _scrollToQuestion(GlobalKey targetKey, BuildContext? targetContext) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final contextToShow = targetContext ?? targetKey.currentContext;
+      if (contextToShow != null && context.mounted) {
+        Scrollable.ensureVisible(
+          contextToShow,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          alignment: 0.2,
+        );
+      }
+    });
   }
 
   @override

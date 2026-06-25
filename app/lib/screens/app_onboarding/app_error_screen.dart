@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -80,7 +80,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(MdiIcons.informationOutline),
+                            const Icon(MdiIcons.informationOutline),
                             const SizedBox(width: 8),
                             Text(
                               'Debug Information',
@@ -118,7 +118,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        icon: Icon(MdiIcons.emailOutline),
+                        icon: const Icon(MdiIcons.emailOutline),
                         onPressed: () => _contactSupport(context),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -132,7 +132,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextButton.icon(
-                        icon: Icon(MdiIcons.deleteOutline),
+                        icon: const Icon(MdiIcons.deleteOutline),
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.red,
                         ),

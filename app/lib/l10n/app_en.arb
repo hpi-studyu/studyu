@@ -242,14 +242,7 @@
   },
   "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
   "free_text_numeric_error": "Please enter only numeric characters",
-  "free_text_custom_error": "Please enter only characters matching the pattern {pattern}",
-  "@free_text_custom_error": {
-    "placeholders": {
-      "pattern": {
-        "type": "String"
-      }
-    }
-  },
+  "free_text_custom_error": "Please enter a value in the required format",
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
   "update_now": "Update now",
 
@@ -470,6 +463,53 @@
   "@error_occurred_with_message": {
     "placeholders": {
       "message": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_hint": "Select a date",
+  "time_picker_hint": "Select a time",
+  "date_picker_button_label": "Choose date",
+  "date_time_picker_button_label": "Choose date and time",
+  "date_picker_button_label_datetime": "Select date",
+  "time_picker_button_label_datetime": "Select time",
+  "time_picker_button_label": "Select a time",
+  "date_picker_clear": "Clear",
+  "date_picker_validation_required": "Please select a date",
+  "time_picker_validation_required": "Please select a time",
+  "datetime_picker_validation_required": "Please select both date and time",
+  "time_picker_validation_range": "Please select a time within the allowed range",
+  "time_picker_range_hint": "Select a time between {min} and {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Earliest allowed time: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Latest allowed time: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "date_picker_validation_min_date": "Date must be after {minDate}",
+  "@date_picker_validation_min_date": {
+    "placeholders": {
+      "minDate": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_validation_max_date": "Date must be before {maxDate}",
+  "@date_picker_validation_max_date": {
+    "placeholders": {
+      "maxDate": {
         "type": "String"
       }
     }

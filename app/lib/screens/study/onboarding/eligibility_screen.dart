@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -125,7 +125,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-    leading: Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    key: const ValueKey('eligibility_pass_banner'),
+    leading: const Icon(
+      MdiIcons.checkboxMarkedCircle,
+      color: Colors.green,
+      size: 32,
+    ),
     content: Text(
       AppLocalizations.of(context)!.eligible_yes,
       style: Theme.of(context).textTheme.titleMedium,
@@ -136,7 +141,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   );
 
   Widget _constructFailBanner() => MaterialBanner(
-    leading: Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
+    key: const ValueKey('eligibility_fail_banner'),
+    leading: const Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -158,6 +164,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     ),
     actions: [
       TextButton(
+        key: const ValueKey('eligibility_back'),
         onPressed: _finish,
         child: Text(AppLocalizations.of(context)!.eligible_back),
       ),
@@ -173,11 +180,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      key: const ValueKey('eligibility_screen'),
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),
-        leading: Icon(MdiIcons.clipboardList),
+        leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [
@@ -200,6 +208,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         ],
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('eligibility_continue'),
         onNext: activeResult?.eligible ?? false ? _finish : null,
         progress: const OnboardingProgress(stage: 0, progress: 0.5),
       ),

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -411,6 +412,62 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.';
 
   @override
+  String dialog_delete_title(Object subject) {
+    return '$subject löschen?';
+  }
+
+  @override
+  String dialog_delete_description(Object subject) {
+    return 'Bist du sicher, dass $subject gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String dialog_remove_title(Object subject) {
+    return '$subject entfernen?';
+  }
+
+  @override
+  String dialog_remove_description(Object subject) {
+    return 'Bist du sicher, dass $subject entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String get dialog_subject_study => 'Studie';
+
+  @override
+  String get dialog_subject_item => 'Element';
+
+  @override
+  String get dialog_subject_question => 'Frage';
+
+  @override
+  String get dialog_subject_screener_question => 'Screening-Frage';
+
+  @override
+  String get dialog_subject_answer_option => 'Antwortoption';
+
+  @override
+  String get dialog_subject_intervention => 'Intervention';
+
+  @override
+  String get dialog_subject_intervention_task => 'Interventionsaufgabe';
+
+  @override
+  String get dialog_subject_survey => 'Umfrage';
+
+  @override
+  String get dialog_subject_consent_item => 'Einwilligungspunkt';
+
+  @override
+  String get dialog_subject_report_section => 'Berichtsabschnitt';
+
+  @override
+  String get dialog_subject_invite_code => 'Teilnahmecode';
+
+  @override
+  String get dialog_subject_fitbit_credentials => 'Fitbit-Zugangsdaten';
+
+  @override
   String get form_question_create => 'Neue Frage';
 
   @override
@@ -707,6 +764,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String free_text_example_explanation_custom(String type) {
+    return 'Eingaben vom Typ $type werden basierend auf dem regulären Ausdruck akzeptiert.';
+  }
+
+  @override
   String get free_text_question_type_any_explanation =>
       'Jede Eingabe wird akzeptiert.';
 
@@ -721,6 +783,164 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.';
+
+  @override
+  String get question_type_date => 'Datum/Zeit';
+
+  @override
+  String get date_min_date_label => 'Frühestes Datum';
+
+  @override
+  String get date_min_date_label_helper =>
+      'Das früheste Datum, das Teilnehmer auswählen können';
+
+  @override
+  String get date_max_date_label => 'Spätestes Datum';
+
+  @override
+  String get date_max_date_label_helper =>
+      'Das späteste Datum, das Teilnehmer auswählen können';
+
+  @override
+  String get date_format_preset_label => 'Datumsformat-Voreinstellung';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden';
+
+  @override
+  String get date_picker_hint => 'Datum auswählen';
+
+  @override
+  String get time_picker_hint => 'Zeit auswählen';
+
+  @override
+  String get date_input_type_label => 'Eingabetyp';
+
+  @override
+  String get date_input_type_label_helper =>
+      'Wähle aus, welche Informationen erfasst werden sollen';
+
+  @override
+  String get date_input_type_date => 'Nur Datum';
+
+  @override
+  String get date_input_type_time => 'Nur Zeit';
+
+  @override
+  String get date_input_type_datetime => 'Datum und Zeit';
+
+  @override
+  String get time_format_preset_label => 'Zeitformat';
+
+  @override
+  String get time_format_preset_label_helper =>
+      'Wähle aus, wie die Zeit angezeigt wird';
+
+  @override
+  String get date_default_option_label => 'Standardwert';
+
+  @override
+  String get date_default_option_label_helper =>
+      'Wähle den anfänglich angezeigten Wert';
+
+  @override
+  String get date_default_option_none => 'Kein Standard';
+
+  @override
+  String get date_default_option_today => 'Heute';
+
+  @override
+  String get date_default_option_now => 'Aktuelle Zeit';
+
+  @override
+  String get date_default_option_specific => 'Bestimmtes Datum/Zeit';
+
+  @override
+  String get date_default_specific_date_label => 'Standarddatum';
+
+  @override
+  String get date_default_specific_date_label_helper =>
+      'Das vorausgewählte Datum';
+
+  @override
+  String get date_default_specific_time_label => 'Standardzeit';
+
+  @override
+  String get date_default_specific_time_label_helper =>
+      'Die vorausgewählte Zeit';
+
+  @override
+  String get date_min_time_label => 'Früheste Zeit';
+
+  @override
+  String get date_min_time_label_helper =>
+      'Die früheste Zeit, die Teilnehmer auswählen können';
+
+  @override
+  String get date_max_time_label => 'Späteste Zeit';
+
+  @override
+  String get date_max_time_label_helper =>
+      'Die späteste Zeit, die Teilnehmer auswählen können';
+
+  @override
+  String get date_validation_min_greater_than_max =>
+      'Das früheste Datum darf nicht nach dem spätesten Datum liegen';
+
+  @override
+  String get date_picker_button_label_datetime => 'Datum auswählen';
+
+  @override
+  String get time_picker_button_label_datetime => 'Zeit auswählen';
+
+  @override
+  String get time_picker_button_label => 'Zeit auswählen';
+
+  @override
+  String get date_picker_validation_required => 'Bitte wähle ein Datum';
+
+  @override
+  String get time_picker_validation_required => 'Bitte wähle eine Zeit';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Bitte wähle Datum und Zeit';
+
+  @override
+  String get time_picker_validation_range =>
+      'Bitte wähle eine Zeit innerhalb des erlaubten Bereichs';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Wähle eine Zeit zwischen $min und $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Früheste erlaubte Zeit: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Späteste erlaubte Zeit: $max';
+  }
+
+  @override
+  String get date_validation_default_today_before_min =>
+      '\'Heute\' liegt vor dem frühesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_today_after_max =>
+      '\'Heute\' liegt nach dem spätesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_specific_before_min =>
+      'Das Standarddatum liegt vor dem frühesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_specific_after_max =>
+      'Das Standarddatum liegt nach dem spätesten erlaubten Datum';
 
   @override
   String get fitbit_question_title => 'Fitbit';
@@ -2106,11 +2326,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get iconpicker_dialog_title => 'Icon auswählen';
 
   @override
-  String get dialog_unsaved_changes_title => 'Zurück und Änderungen verwerfen?';
+  String get dialog_unsaved_changes_title =>
+      'Ungespeicherte Änderungen verwerfen?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'Du hast Änderungen vorgenommen, die noch nicht gespeichert wurden & verloren gehen, wenn du zurückgehst. Wenn du die Änderungen beibehalten möchtest, musst du sie vorher speichern.';
+      'Wenn du jetzt gehst, werden deine letzten Änderungen dauerhaft gelöscht.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Hier bleiben';
@@ -2269,6 +2490,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get client_secret_hint => 'Client Secret';
+
+  @override
+  String get fitbit_credentials_how_to_obtain =>
+      'So erhalten Sie Fitbit-Zugangsdaten';
+
+  @override
+  String get fitbit_client_id_required => 'Client-ID ist erforderlich';
+
+  @override
+  String get fitbit_client_secret_required => 'Client-Secret ist erforderlich';
+
+  @override
+  String get fitbit_question_type_required =>
+      'Mindestens ein Fitbit-Datentyp muss ausgewählt werden.';
 
   @override
   String get screenshots_for_guidance => 'Screenshots zur Anleitung:';
