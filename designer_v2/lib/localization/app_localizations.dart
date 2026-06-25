@@ -1460,6 +1460,276 @@ abstract class AppLocalizations {
   /// **'The input must match the specified regular expression.'**
   String get free_text_question_type_custom_explanation;
 
+  /// No description provided for @question_type_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date/Time'**
+  String get question_type_date;
+
+  /// No description provided for @date_min_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date'**
+  String get date_min_date_label;
+
+  /// No description provided for @date_min_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The earliest date participants can select'**
+  String get date_min_date_label_helper;
+
+  /// No description provided for @date_max_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest date'**
+  String get date_max_date_label;
+
+  /// No description provided for @date_max_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest date participants can select'**
+  String get date_max_date_label_helper;
+
+  /// No description provided for @date_format_preset_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Date format preset'**
+  String get date_format_preset_label;
+
+  /// No description provided for @date_format_preset_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how dates are displayed to participants'**
+  String get date_format_preset_label_helper;
+
+  /// No description provided for @date_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get date_picker_hint;
+
+  /// No description provided for @time_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get time_picker_hint;
+
+  /// No description provided for @date_input_type_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Input type'**
+  String get date_input_type_label;
+
+  /// No description provided for @date_input_type_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select what information to collect'**
+  String get date_input_type_label_helper;
+
+  /// No description provided for @date_input_type_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date only'**
+  String get date_input_type_date;
+
+  /// No description provided for @date_input_type_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time only'**
+  String get date_input_type_time;
+
+  /// No description provided for @date_input_type_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date and time'**
+  String get date_input_type_datetime;
+
+  /// No description provided for @time_format_preset_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Time format'**
+  String get time_format_preset_label;
+
+  /// No description provided for @time_format_preset_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how time is displayed'**
+  String get time_format_preset_label_helper;
+
+  /// No description provided for @date_default_option_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default value'**
+  String get date_default_option_label;
+
+  /// No description provided for @date_default_option_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the initial value shown to participants'**
+  String get date_default_option_label_helper;
+
+  /// No description provided for @date_default_option_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No default'**
+  String get date_default_option_none;
+
+  /// No description provided for @date_default_option_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get date_default_option_today;
+
+  /// No description provided for @date_default_option_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Current time'**
+  String get date_default_option_now;
+
+  /// No description provided for @date_default_option_specific.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific date/time'**
+  String get date_default_option_specific;
+
+  /// No description provided for @date_default_specific_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date'**
+  String get date_default_specific_date_label;
+
+  /// No description provided for @date_default_specific_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The date that will be pre-selected'**
+  String get date_default_specific_date_label_helper;
+
+  /// No description provided for @date_default_specific_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default time'**
+  String get date_default_specific_time_label;
+
+  /// No description provided for @date_default_specific_time_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The time that will be pre-selected'**
+  String get date_default_specific_time_label_helper;
+
+  /// No description provided for @date_min_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest time'**
+  String get date_min_time_label;
+
+  /// No description provided for @date_min_time_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The earliest time participants can select'**
+  String get date_min_time_label_helper;
+
+  /// No description provided for @date_max_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest time'**
+  String get date_max_time_label;
+
+  /// No description provided for @date_max_time_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest time participants can select'**
+  String get date_max_time_label_helper;
+
+  /// No description provided for @date_validation_min_greater_than_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date cannot be after the latest date'**
+  String get date_validation_min_greater_than_max;
+
+  /// No description provided for @date_picker_button_label_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get date_picker_button_label_datetime;
+
+  /// No description provided for @time_picker_button_label_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get time_picker_button_label_datetime;
+
+  /// No description provided for @time_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get time_picker_button_label;
+
+  /// No description provided for @date_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date'**
+  String get date_picker_validation_required;
+
+  /// No description provided for @time_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time'**
+  String get time_picker_validation_required;
+
+  /// No description provided for @datetime_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both date and time'**
+  String get datetime_picker_validation_required;
+
+  /// No description provided for @time_picker_validation_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time within the allowed range'**
+  String get time_picker_validation_range;
+
+  /// No description provided for @time_picker_range_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time between {min} and {max}'**
+  String time_picker_range_hint(Object min, Object max);
+
+  /// No description provided for @time_picker_min_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest allowed time: {min}'**
+  String time_picker_min_hint(Object min);
+
+  /// No description provided for @time_picker_max_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest allowed time: {max}'**
+  String time_picker_max_hint(Object max);
+
+  /// No description provided for @date_validation_default_today_before_min.
+  ///
+  /// In en, this message translates to:
+  /// **'\'Today\' is before the earliest allowed date'**
+  String get date_validation_default_today_before_min;
+
+  /// No description provided for @date_validation_default_today_after_max.
+  ///
+  /// In en, this message translates to:
+  /// **'\'Today\' is after the latest allowed date'**
+  String get date_validation_default_today_after_max;
+
+  /// No description provided for @date_validation_default_specific_before_min.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date is before the earliest allowed date'**
+  String get date_validation_default_specific_before_min;
+
+  /// No description provided for @date_validation_default_specific_after_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date is after the latest allowed date'**
+  String get date_validation_default_specific_after_max;
+
   /// No description provided for @fitbit_question_title.
   ///
   /// In en, this message translates to:

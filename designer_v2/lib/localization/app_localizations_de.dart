@@ -785,6 +785,164 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.';
 
   @override
+  String get question_type_date => 'Datum/Zeit';
+
+  @override
+  String get date_min_date_label => 'Frühestes Datum';
+
+  @override
+  String get date_min_date_label_helper =>
+      'Das früheste Datum, das Teilnehmer auswählen können';
+
+  @override
+  String get date_max_date_label => 'Spätestes Datum';
+
+  @override
+  String get date_max_date_label_helper =>
+      'Das späteste Datum, das Teilnehmer auswählen können';
+
+  @override
+  String get date_format_preset_label => 'Datumsformat-Voreinstellung';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden';
+
+  @override
+  String get date_picker_hint => 'Datum auswählen';
+
+  @override
+  String get time_picker_hint => 'Zeit auswählen';
+
+  @override
+  String get date_input_type_label => 'Eingabetyp';
+
+  @override
+  String get date_input_type_label_helper =>
+      'Wähle aus, welche Informationen erfasst werden sollen';
+
+  @override
+  String get date_input_type_date => 'Nur Datum';
+
+  @override
+  String get date_input_type_time => 'Nur Zeit';
+
+  @override
+  String get date_input_type_datetime => 'Datum und Zeit';
+
+  @override
+  String get time_format_preset_label => 'Zeitformat';
+
+  @override
+  String get time_format_preset_label_helper =>
+      'Wähle aus, wie die Zeit angezeigt wird';
+
+  @override
+  String get date_default_option_label => 'Standardwert';
+
+  @override
+  String get date_default_option_label_helper =>
+      'Wähle den anfänglich angezeigten Wert';
+
+  @override
+  String get date_default_option_none => 'Kein Standard';
+
+  @override
+  String get date_default_option_today => 'Heute';
+
+  @override
+  String get date_default_option_now => 'Aktuelle Zeit';
+
+  @override
+  String get date_default_option_specific => 'Bestimmtes Datum/Zeit';
+
+  @override
+  String get date_default_specific_date_label => 'Standarddatum';
+
+  @override
+  String get date_default_specific_date_label_helper =>
+      'Das vorausgewählte Datum';
+
+  @override
+  String get date_default_specific_time_label => 'Standardzeit';
+
+  @override
+  String get date_default_specific_time_label_helper =>
+      'Die vorausgewählte Zeit';
+
+  @override
+  String get date_min_time_label => 'Früheste Zeit';
+
+  @override
+  String get date_min_time_label_helper =>
+      'Die früheste Zeit, die Teilnehmer auswählen können';
+
+  @override
+  String get date_max_time_label => 'Späteste Zeit';
+
+  @override
+  String get date_max_time_label_helper =>
+      'Die späteste Zeit, die Teilnehmer auswählen können';
+
+  @override
+  String get date_validation_min_greater_than_max =>
+      'Das früheste Datum darf nicht nach dem spätesten Datum liegen';
+
+  @override
+  String get date_picker_button_label_datetime => 'Datum auswählen';
+
+  @override
+  String get time_picker_button_label_datetime => 'Zeit auswählen';
+
+  @override
+  String get time_picker_button_label => 'Zeit auswählen';
+
+  @override
+  String get date_picker_validation_required => 'Bitte wähle ein Datum';
+
+  @override
+  String get time_picker_validation_required => 'Bitte wähle eine Zeit';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Bitte wähle Datum und Zeit';
+
+  @override
+  String get time_picker_validation_range =>
+      'Bitte wähle eine Zeit innerhalb des erlaubten Bereichs';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Wähle eine Zeit zwischen $min und $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Früheste erlaubte Zeit: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Späteste erlaubte Zeit: $max';
+  }
+
+  @override
+  String get date_validation_default_today_before_min =>
+      '\'Heute\' liegt vor dem frühesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_today_after_max =>
+      '\'Heute\' liegt nach dem spätesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_specific_before_min =>
+      'Das Standarddatum liegt vor dem frühesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_specific_after_max =>
+      'Das Standarddatum liegt nach dem spätesten erlaubten Datum';
+
+  @override
   String get fitbit_question_title => 'Fitbit';
 
   @override
