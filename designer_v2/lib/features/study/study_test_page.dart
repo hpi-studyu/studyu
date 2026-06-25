@@ -79,7 +79,9 @@ class StudyTestScreen extends StudyPageWidget {
                         onPressed: (!navigationEnabled)
                             ? null
                             : () {
-                                frameController.navigate();
+                                frameController.navigate(
+                                  route: TestAppRoutes.studyOverview,
+                                );
                               },
                       ),
                       TextButton.icon(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 
@@ -54,8 +54,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
         };
         if (previousRoute != null) {
           Navigator.pushReplacementNamed(context, previousRoute);
-          return;
         }
+        return;
       }
 
       Navigator.pop(context);

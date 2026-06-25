@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
+import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
@@ -90,7 +91,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
         );
         try {
           frameController!.send(formJson);
-        } catch (e) {}
+        } catch (_) {
+          // The preview iframe may reload while form changes are emitted.
+        }
       }
     });
   }
@@ -116,7 +119,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
           extra: (widget.routeArgs! as MeasurementFormRouteArgs).measurementId,
         );
       } else {
-        _activeFrameController!.generateUrl();
+        _activeFrameController!.generateUrl(route: TestAppRoutes.studyOverview);
       }
     }
   }
@@ -201,10 +204,10 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     }
 
     try {
-      await web.window.fetch(
-        origin.toJS,
-        web.RequestInit(method: 'GET', mode: 'no-cors'),
-      ).toDart.timeout(_healthCheckTimeout);
+      await web.window
+          .fetch(origin.toJS, web.RequestInit(method: 'GET', mode: 'no-cors'))
+          .toDart
+          .timeout(_healthCheckTimeout);
 
       if (!mounted || requestId != _appHealthRequestId) return;
       setState(() {
@@ -301,8 +304,8 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                               if (_frameActivated)
                                 _activeFrameController!.frameWidget
                               else
-                                PhoneContainer(
-                                  innerContent: const SizedBox.expand(),
+                                const PhoneContainer(
+                                  innerContent: SizedBox.expand(),
                                 ),
                               if (_overlayStage == PreviewOverlayStage.error)
                                 Positioned.fill(
@@ -333,7 +336,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                           FrameControlsWidget(
                             onRefresh: () {
                               unawaited(
-                                _runHealthCheckAndLoad(frameController!.previewSrc),
+                                _runHealthCheckAndLoad(
+                                  frameController!.previewSrc,
+                                ),
                               );
                             },
                             onOpenNewTab: () => frameController!.openNewPage(),

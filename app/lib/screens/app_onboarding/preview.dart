@@ -117,6 +117,8 @@ class Preview {
             return Routes.questionnaire;
           case 'dashboard':
             return Routes.dashboard;
+          case 'studyOverview':
+            return Routes.studyOverview;
           case 'intervention':
             return '/intervention';
           case 'observation':
