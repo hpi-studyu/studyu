@@ -1196,4 +1196,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continue_label => 'Continue';
+
+  @override
+  String get date_picker_hint => 'Select a date';
+
+  @override
+  String get time_picker_hint => 'Select a time';
+
+  @override
+  String get date_picker_button_label => 'Choose date';
+
+  @override
+  String get date_time_picker_button_label => 'Choose date and time';
+
+  @override
+  String get date_picker_button_label_datetime => 'Select date';
+
+  @override
+  String get time_picker_button_label_datetime => 'Select time';
+
+  @override
+  String get time_picker_button_label => 'Select a time';
+
+  @override
+  String get date_picker_clear => 'Clear';
+
+  @override
+  String get date_picker_validation_required => 'Please select a date';
+
+  @override
+  String get time_picker_validation_required => 'Please select a time';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Please select both date and time';
+
+  @override
+  String get time_picker_validation_range =>
+      'Please select a time within the allowed range';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Select a time between $min and $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Earliest allowed time: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Latest allowed time: $max';
+  }
+
+  @override
+  String date_picker_validation_min_date(String minDate) {
+    return 'Date must be after $minDate';
+  }
+
+  @override
+  String date_picker_validation_max_date(String maxDate) {
+    return 'Date must be before $maxDate';
+  }
 }

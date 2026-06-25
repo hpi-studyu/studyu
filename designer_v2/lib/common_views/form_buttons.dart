@@ -60,9 +60,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         return retainSizeInAppBar(
           DismissButton(
             key: const ValueKey('form_cancel_button'),
-            onPressed: () => formViewModel.cancel().then((_) {
-              if (context.mounted) Navigator.maybePop(context);
-            }),
+            onPressed: () => Navigator.maybePop(context),
           ),
         );
       },

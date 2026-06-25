@@ -108,6 +108,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         question is ChoiceQuestion ||
         question is ScaleQuestion ||
         question is FreeTextQuestion ||
+        question is DateQuestion ||
         question is AnnotatedScaleQuestion ||
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
@@ -151,6 +152,12 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     }
   }
 
+  void _onQuestionCleared(String questionId) {
+    _controller.removeAnswer(questionId);
+    setState(() => _rebuildShownQuestionsFromController(revealNext: false));
+    _finishQuestionnaire(null);
+  }
+
   QuestionContainer _buildQuestionContainer({
     required Question question,
     required int index,
@@ -163,6 +170,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       containerKey: containerKey,
       question: question,
       onDone: _onQuestionDone,
+      onCleared: () => _onQuestionCleared(question.id),
       index: index,
       taskId: widget.taskId,
       initialAnswer: initialAnswer,

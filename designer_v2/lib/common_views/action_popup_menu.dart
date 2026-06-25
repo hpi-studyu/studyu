@@ -91,7 +91,8 @@ class ActionPopUpMenuButton extends StatelessWidget {
       elevation: elevation,
       splashRadius: splashRadius,
       position: position,
-      onSelected: (action) => action is ModelAction ? action.onExecute() : null,
+      onSelected: (action) =>
+          action is ModelAction ? action.execute(context) : null,
       itemBuilder: (BuildContext context) {
         final textTheme = theme.textTheme.labelMedium!;
         final List<PopupMenuEntry> popupList = [];
