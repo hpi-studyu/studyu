@@ -39,7 +39,6 @@ class OverflowMenuItem {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with WidgetsBindingObserver {
-  static const _dashboardShowcaseScope = 'dashboard';
   static const _dashboardShowcaseCompletedKey = 'dashboard_showcase_completed';
 
   final GlobalKey _progressShowcaseKey = GlobalKey();
@@ -63,7 +62,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _dashboardShowcase = ShowcaseView.register(
-      scope: _dashboardShowcaseScope,
       blurValue: 1,
       globalTooltipActionConfig: const TooltipActionConfig(actionGap: 12),
       globalTooltipActions: [
@@ -153,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             targetShapeBorder: const CircleBorder(),
             child: IconButton(
               tooltip: l10n.contact,
-              icon: Icon(MdiIcons.faceAgent),
+              icon: const Icon(MdiIcons.faceAgent),
               onPressed: () {
                 Navigator.pushNamed(context, Routes.contact);
               },
@@ -166,7 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             targetShapeBorder: const CircleBorder(),
             child: IconButton(
               tooltip: l10n.current_report,
-              icon: Icon(MdiIcons.chartBar),
+              icon: const Icon(MdiIcons.chartBar),
               onPressed: () => Navigator.push(
                 context,
                 ReportDetailsScreen.routeFor(subject: subject!),
@@ -439,7 +437,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ShowcaseView.getNamed(_dashboardShowcaseScope).startShowCase([
+      _dashboardShowcase.startShowCase([
         _progressShowcaseKey,
         _currentInterventionShowcaseKey,
         _todayTasksShowcaseKey,

@@ -51,6 +51,7 @@ dependencies:
   sentry_flutter: ^9.21.0
   sentry_logging: ^9.21.0
   shared_preferences: ^2.5.5
+  showcaseview: 5.0.1
   statistics: ^1.2.1
   studyu_core: ^4.8.1
   studyu_flutter_common: ^1.10.3
