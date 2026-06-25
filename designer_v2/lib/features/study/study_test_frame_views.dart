@@ -122,15 +122,18 @@ class LoadingFrame extends StatelessWidget {
     final description =
         message ??
         switch (stage) {
-          PreviewOverlayStage.healthChecking => isLocalDevelopment
-              ? 'Checking whether the StudyU app is running at $configuredUrl.'
-              : 'Checking whether the participant app is reachable at $configuredUrl.',
-          PreviewOverlayStage.connecting => isLocalDevelopment
-              ? 'The local StudyU app is reachable. Establishing the iframe connection now.'
-              : 'The participant app is reachable. Establishing the preview connection now.',
-          PreviewOverlayStage.appLoading => isLocalDevelopment
-              ? 'The app preview is connected. The app is now loading inside the phone frame.'
-              : 'The app preview is connected. The participant app is now loading.',
+          PreviewOverlayStage.healthChecking =>
+            isLocalDevelopment
+                ? 'Checking whether the StudyU app is running at $configuredUrl.'
+                : 'Checking whether the participant app is reachable at $configuredUrl.',
+          PreviewOverlayStage.connecting =>
+            isLocalDevelopment
+                ? 'The local StudyU app is reachable. Establishing the iframe connection now.'
+                : 'The participant app is reachable. Establishing the preview connection now.',
+          PreviewOverlayStage.appLoading =>
+            isLocalDevelopment
+                ? 'The app preview is connected. The app is now loading inside the phone frame.'
+                : 'The app preview is connected. The participant app is now loading.',
           PreviewOverlayStage.error || PreviewOverlayStage.none => '',
         };
 
@@ -152,11 +155,7 @@ class LoadingFrame extends StatelessWidget {
 }
 
 class ErrorFrame extends StatelessWidget {
-  const ErrorFrame({
-    required this.title,
-    required this.message,
-    super.key,
-  });
+  const ErrorFrame({required this.title, required this.message, super.key});
 
   final String title;
   final String message;
@@ -173,8 +172,9 @@ class ErrorFrame extends StatelessWidget {
 }
 
 class PhoneContainer extends StatelessWidget {
-  static const double defaultWidth = 300.0;
-  static const double defaultHeight = 600.0;
+  static const double minWidth = 260.0;
+  static const double defaultWidth = 360.0;
+  static const double defaultHeight = 720.0;
 
   const PhoneContainer({
     required this.innerContent,

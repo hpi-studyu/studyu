@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:js_interop';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -280,10 +281,21 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < PhoneContainer.defaultWidth) {
+        if (constraints.maxWidth < PhoneContainer.minWidth) {
           // Not enough space to render app preview
           return Container();
         }
+
+        final previewWidth = math.min(
+          constraints.maxWidth,
+          PhoneContainer.defaultWidth,
+        );
+        final previewHeight = constraints.hasBoundedHeight
+            ? math.min(
+                constraints.maxHeight,
+                PhoneContainer.defaultHeight + 56.0,
+              )
+            : PhoneContainer.defaultHeight + 56.0;
 
         return Stack(
           children: <Widget>[
@@ -297,54 +309,66 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                       if (formViewModel.form.hasErrors) {
                         return const DisabledFrame();
                       }
-                      return Column(
-                        children: [
-                          Stack(
+                      return SizedBox(
+                        width: previewWidth,
+                        height: previewHeight,
+                        child: FittedBox(
+                          alignment: Alignment.topCenter,
+                          fit: BoxFit.scaleDown,
+                          child: Column(
                             children: [
-                              if (_frameActivated)
-                                _activeFrameController!.frameWidget
-                              else
-                                const PhoneContainer(
-                                  innerContent: SizedBox.expand(),
-                                ),
-                              if (_overlayStage == PreviewOverlayStage.error)
-                                Positioned.fill(
-                                  child: ErrorFrame(
-                                    title: isLocalDevelopment
-                                        ? 'Local app preview unavailable'
-                                        : 'App under maintenance',
-                                    message:
-                                        _overlayMessage ??
-                                        (isLocalDevelopment
-                                            ? 'The local StudyU app could not be reached.'
-                                            : 'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.'),
-                                  ),
-                                ),
-                              if (_overlayStage != PreviewOverlayStage.none &&
-                                  _overlayStage != PreviewOverlayStage.error)
-                                Positioned.fill(
-                                  child: LoadingFrame(
-                                    configuredUrl: configuredPreviewOrigin,
-                                    isLocalDevelopment: isLocalDevelopment,
-                                    stage: _overlayStage,
-                                    message: _overlayMessage,
-                                  ),
-                                ),
+                              Stack(
+                                children: [
+                                  if (_frameActivated)
+                                    _activeFrameController!.frameWidget
+                                  else
+                                    const PhoneContainer(
+                                      innerContent: SizedBox.expand(),
+                                    ),
+                                  if (_overlayStage ==
+                                      PreviewOverlayStage.error)
+                                    Positioned.fill(
+                                      child: ErrorFrame(
+                                        title: isLocalDevelopment
+                                            ? 'Local app preview unavailable'
+                                            : 'App under maintenance',
+                                        message:
+                                            _overlayMessage ??
+                                            (isLocalDevelopment
+                                                ? 'The local StudyU app could not be reached.'
+                                                : 'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.'),
+                                      ),
+                                    ),
+                                  if (_overlayStage !=
+                                          PreviewOverlayStage.none &&
+                                      _overlayStage !=
+                                          PreviewOverlayStage.error)
+                                    Positioned.fill(
+                                      child: LoadingFrame(
+                                        configuredUrl: configuredPreviewOrigin,
+                                        isLocalDevelopment: isLocalDevelopment,
+                                        stage: _overlayStage,
+                                        message: _overlayMessage,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 8.0),
+                              FrameControlsWidget(
+                                onRefresh: () {
+                                  unawaited(
+                                    _runHealthCheckAndLoad(
+                                      frameController!.previewSrc,
+                                    ),
+                                  );
+                                },
+                                onOpenNewTab: () =>
+                                    frameController!.openNewPage(),
+                                enabled: state.canTest,
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 8.0),
-                          FrameControlsWidget(
-                            onRefresh: () {
-                              unawaited(
-                                _runHealthCheckAndLoad(
-                                  frameController!.previewSrc,
-                                ),
-                              );
-                            },
-                            onOpenNewTab: () => frameController!.openNewPage(),
-                            enabled: state.canTest,
-                          ),
-                        ],
+                        ),
                       );
                     },
                   ),
