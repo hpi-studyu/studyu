@@ -8,8 +8,14 @@ import 'package:studyu_core/core.dart';
 class BooleanQuestionWidget extends QuestionWidget {
   final BooleanQuestion question;
   final Function(Answer)? onDone;
+  final Answer<bool>? initialAnswer;
 
-  const BooleanQuestionWidget({super.key, required this.question, this.onDone});
+  const BooleanQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+    this.initialAnswer,
+  });
 
   @override
   State<BooleanQuestionWidget> createState() => _BooleanQuestionWidgetState();
@@ -21,7 +27,7 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
   @override
   void initState() {
     super.initState();
-    selected = null;
+    selected = widget.initialAnswer?.response;
   }
 
   void tapped({bool? choice}) {

@@ -258,14 +258,7 @@
   },
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
   "free_text_numeric_error": "Bitte geben Sie nur numerische Zeichen ein",
-  "free_text_custom_error": "Bitte geben Sie nur Zeichen ein, die dem Muster {pattern} entsprechen",
-  "@free_text_custom_error": {
-    "placeholders": {
-      "pattern": {
-        "type": "String"
-      }
-    }
-  },
+  "free_text_custom_error": "Bitte geben Sie einen Wert im erforderlichen Format ein",
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
   "update_now": "Jetzt aktualisieren",
 
@@ -479,5 +472,53 @@
   "preview_mode_description": "Sie befinden sich derzeit im Vorschau-Modus. Dies ermöglicht Ihnen:\n\n• Schneller Vorlauf durch Studientage mit der \"Nächster Tag\" Schaltfläche\n• Mehrfaches Abschließen von Aufgaben ohne Einschränkungen\n• Erleben des vollständigen Studienablaufs ohne Beeinflussung echter Daten\n\nWichtig: Ergebnisse und Daten aus dem Vorschau-Modus werden nicht gespeichert oder mit tatsächlichen Teilnehmerergebnissen aus laufenden Studien vermischt.",
   "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
   "ok": "OK",
-  "submit" : "Absenden"
+  "submit" : "Absenden",
+
+  "date_picker_hint": "Wählen Sie ein Datum",
+  "time_picker_hint": "Wählen Sie eine Zeit",
+  "date_picker_button_label": "Datum wählen",
+  "date_time_picker_button_label": "Datum und Uhrzeit wählen",
+  "date_picker_button_label_datetime": "Datum auswählen",
+  "time_picker_button_label_datetime": "Zeit auswählen",
+  "time_picker_button_label": "Zeit auswählen",
+  "date_picker_clear": "Löschen",
+  "date_picker_validation_required": "Bitte wählen Sie ein Datum",
+  "time_picker_validation_required": "Bitte wählen Sie eine Zeit",
+  "datetime_picker_validation_required": "Bitte wählen Sie Datum und Zeit",
+  "time_picker_validation_range": "Bitte wählen Sie eine Zeit innerhalb des erlaubten Bereichs",
+  "time_picker_range_hint": "Wähle eine Zeit zwischen {min} und {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Früheste erlaubte Zeit: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Späteste erlaubte Zeit: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "date_picker_validation_min_date": "Das Datum muss nach {minDate} liegen",
+  "@date_picker_validation_min_date": {
+    "placeholders": {
+      "minDate": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_validation_max_date": "Das Datum muss vor {maxDate} liegen",
+  "@date_picker_validation_max_date": {
+    "placeholders": {
+      "maxDate": {
+        "type": "String"
+      }
+    }
+  }
 }

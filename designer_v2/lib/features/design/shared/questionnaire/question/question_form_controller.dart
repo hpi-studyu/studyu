@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:math';
 
@@ -34,6 +35,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.validationSet = StudyFormValidationSet.draft,
     Map<FormMode, String Function()>? titles,
   }) : _titles = titles {
+    freeTextTypeControl.onChanged(
+      (_) => _onFreeTextTypeChanged(freeTextTypeControl.value),
+    );
+    customRegexControl.setValidators([
+      Validators.delegate(_validateCustomRegexExpression),
+    ], emitEvent: false);
+    customRegexControl.updateValueAndValidity(emitEvent: false);
+
     // Existing initializations
     boolResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
@@ -57,6 +66,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       (control) => onResponseOptionsChanged(control.controls),
     );
     painResponseOptionsArray.onChanged(
+      (control) => onResponseOptionsChanged(control.controls),
+    );
+    dateResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
   }
@@ -180,6 +192,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.freeText: freeTextResponseOptionsArray,
     SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
     SurveyQuestionType.pain: painResponseOptionsArray,
+    SurveyQuestionType.date: dateResponseOptionsArray,
   }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -225,6 +238,46 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormArray<String> painResponseOptionsArray = FormArray(
     painOptions,
   );
+
+  // Date
+  final FormControl<DateInputType> dateInputTypeControl =
+      FormControl<DateInputType>(value: DateInputType.date);
+  late final FormControl<DateTime?> dateMinControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) => _onDateRangeChanged('dateMin'),
+      );
+  late final FormControl<DateTime?> dateMaxControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) => _onDateRangeChanged('dateMax'),
+      );
+  final FormControl<String?> dateMinTimeControl = FormControl<String?>();
+  final FormControl<String?> dateMaxTimeControl = FormControl<String?>();
+  final FormControl<DateFormatPreset> dateFormatPresetControl =
+      FormControl<DateFormatPreset>(value: DateFormatPreset.iso);
+  final FormControl<TimeFormatPreset> timeFormatPresetControl =
+      FormControl<TimeFormatPreset>(value: TimeFormatPreset.h24);
+  final FormControl<DefaultDateOption> dateDefaultOptionControl =
+      FormControl<DefaultDateOption>(value: DefaultDateOption.none);
+  late final FormControl<DateTime?> dateDefaultSpecificDateControl =
+      CustomFormControl<DateTime?>(
+        onValueChanged: (_) =>
+            dateDefaultOptionControl.updateValueAndValidity(),
+      );
+  final FormControl<String?> dateDefaultSpecificTimeControl =
+      FormControl<String?>();
+
+  late final FormArray dateResponseOptionsArray = FormArray([
+    dateInputTypeControl,
+    dateMinControl,
+    dateMaxControl,
+    dateMinTimeControl,
+    dateMaxTimeControl,
+    dateFormatPresetControl,
+    timeFormatPresetControl,
+    dateDefaultOptionControl,
+    dateDefaultSpecificDateControl,
+    dateDefaultSpecificTimeControl,
+  ]);
 
   // Audio
   static const int kDefaultMaxRecordingDurationSeconds = 60;
@@ -370,10 +423,52 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         validators: [Validators.delegate(_validateFreeText)],
       );
 
+  void _onFreeTextTypeChanged(FreeTextQuestionType? _) {
+    customRegexControl.updateValueAndValidity();
+    freeTextExampleTextControl.updateValueAndValidity();
+  }
+
+  String? _buildFullMatchRegexPattern(String? expression) {
+    if (expression == null || expression.isEmpty) {
+      return null;
+    }
+
+    final fullMatchPattern = '^(?:$expression)\$';
+    try {
+      RegExp(fullMatchPattern);
+    } on FormatException {
+      return null;
+    }
+    return fullMatchPattern;
+  }
+
+  Map<String, dynamic>? _validateCustomRegexExpression(
+    AbstractControl<dynamic> control,
+  ) {
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      return null;
+    }
+
+    final expression = control.value as String?;
+    if (expression == null || expression.isEmpty) {
+      return {ValidationMessage.required: true};
+    }
+
+    if (_buildFullMatchRegexPattern(expression) == null) {
+      return {ValidationMessage.pattern: true};
+    }
+
+    return null;
+  }
+
   Map<String, dynamic>? _validateFreeText(AbstractControl<dynamic> control) {
     final List<Validator> validators = [];
-    validators.add(Validators.minLength(freeTextLengthMin.value!));
-    validators.add(Validators.maxLength(freeTextLengthMax.value!));
+
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      validators.add(Validators.minLength(freeTextLengthMin.value!));
+      validators.add(Validators.maxLength(freeTextLengthMax.value!));
+    }
+
     switch (freeTextTypeControl.value) {
       case FreeTextQuestionType.any:
         break;
@@ -382,9 +477,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case FreeTextQuestionType.numeric:
         validators.add(Validators.number(allowNegatives: false));
       case FreeTextQuestionType.custom:
-        if (customRegexControl.value != null) {
-          validators.add(Validators.pattern('^${customRegexControl.value!}\$'));
+        final pattern = _buildFullMatchRegexPattern(customRegexControl.value);
+        if (pattern == null) {
+          return {ValidationMessage.pattern: true};
         }
+        validators.add(Validators.pattern(pattern));
       case null:
         return {'null': "freeTextTypeControl.value is null"};
     }
@@ -410,6 +507,24 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     }
     freeTextLengthMin.value = freeTextLengthControl.value!.start.toInt();
     freeTextLengthMax.value = freeTextLengthControl.value!.end.toInt();
+  }
+
+  // Date validation helpers
+  bool _isRevalidatingDateRange = false;
+
+  void _onDateRangeChanged([String? source]) {
+    if (formMode == FormMode.readonly) return;
+    if (_isRevalidatingDateRange) {
+      return;
+    }
+    _isRevalidatingDateRange = true;
+    Future.microtask(() {
+      // emitEvent: false prevents valueChanges emissions that would trigger
+      // downstream CustomFormControl.onValueChanged callbacks, breaking the loop
+      dateMaxControl.updateValueAndValidity(emitEvent: false);
+      dateDefaultOptionControl.updateValueAndValidity(emitEvent: false);
+      _isRevalidatingDateRange = false;
+    });
   }
 
   // Fitbit
@@ -466,6 +581,18 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.pain: FormGroup({
       'painOptionsArray': painResponseOptionsArray,
     }),
+    SurveyQuestionType.date: FormGroup({
+      'dateInputType': dateInputTypeControl,
+      'dateMin': dateMinControl,
+      'dateMax': dateMaxControl,
+      'dateMinTime': dateMinTimeControl,
+      'dateMaxTime': dateMaxTimeControl,
+      'dateFormatPreset': dateFormatPresetControl,
+      'timeFormatPreset': timeFormatPresetControl,
+      'dateDefaultOption': dateDefaultOptionControl,
+      'dateDefaultSpecificDate': dateDefaultSpecificDateControl,
+      'dateDefaultSpecificTime': dateDefaultSpecificTimeControl,
+    }),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -498,6 +625,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         if (_fitbitCredentialsFormViewModel != null) fitbitClientIdRequired,
         if (_fitbitCredentialsFormViewModel != null) fitbitClientSecretRequired,
       ],
+    },
+    SurveyQuestionType.date: {
+      StudyFormValidationSet.draft: [dateRangeValid, dateDefaultValid],
+      StudyFormValidationSet.publish: [dateRangeValid, dateDefaultValid],
     },
   };
 
@@ -611,6 +742,125 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         ValidationMessage.number: (error) => tr.free_text_validation_number,
       },
     );
+  }
+
+  FormControlValidation get dateRangeValid {
+    return FormControlValidation(
+      control: dateMaxControl,
+      validators: [Validators.delegate(_validateDateRange)],
+      validationMessages: {
+        'minGreaterThanMax': (error) => tr.date_validation_min_greater_than_max,
+      },
+    );
+  }
+
+  Map<String, dynamic>? _validateDateRange(AbstractControl<dynamic> control) {
+    final min = dateMinControl.value;
+    final max = dateMaxControl.value;
+
+    if (min != null && max != null) {
+      final minNormalized = DateTime(min.year, min.month, min.day);
+      final maxNormalized = DateTime(max.year, max.month, max.day);
+      if (minNormalized.isAfter(maxNormalized)) {
+        return {'minGreaterThanMax': true};
+      }
+    }
+
+    return null;
+  }
+
+  FormControlValidation get dateDefaultValid {
+    return FormControlValidation(
+      control: dateDefaultOptionControl,
+      validators: [Validators.delegate(_validateDateDefault)],
+      validationMessages: {
+        'todayBeforeMinDate': (error) =>
+            tr.date_validation_default_today_before_min,
+        'todayAfterMaxDate': (error) =>
+            tr.date_validation_default_today_after_max,
+        'specificBeforeMinDate': (error) =>
+            tr.date_validation_default_specific_before_min,
+        'specificAfterMaxDate': (error) =>
+            tr.date_validation_default_specific_after_max,
+      },
+    );
+  }
+
+  Map<String, dynamic>? _validateDateDefault(AbstractControl<dynamic> control) {
+    final defaultOption = dateDefaultOptionControl.value;
+    final minDate = dateMinControl.value;
+    final maxDate = dateMaxControl.value;
+    final today = DateTime.now();
+
+    if (defaultOption == null) return null;
+
+    switch (defaultOption) {
+      case DefaultDateOption.today:
+        // Check if "today" is within the allowed date range
+        if (minDate != null) {
+          // Normalize to date only (ignore time)
+          final todayDate = DateTime(today.year, today.month, today.day);
+          final minDateNormalized = DateTime(
+            minDate.year,
+            minDate.month,
+            minDate.day,
+          );
+          if (todayDate.isBefore(minDateNormalized)) {
+            return {'todayBeforeMinDate': true};
+          }
+        }
+        if (maxDate != null) {
+          final todayDate = DateTime(today.year, today.month, today.day);
+          final maxDateNormalized = DateTime(
+            maxDate.year,
+            maxDate.month,
+            maxDate.day,
+          );
+          if (todayDate.isAfter(maxDateNormalized)) {
+            return {'todayAfterMaxDate': true};
+          }
+        }
+      case DefaultDateOption.specific:
+        // Check if specific default date is within range
+        final specificDate = dateDefaultSpecificDateControl.value;
+        if (specificDate != null) {
+          if (minDate != null) {
+            final specificDateNormalized = DateTime(
+              specificDate.year,
+              specificDate.month,
+              specificDate.day,
+            );
+            final minDateNormalized = DateTime(
+              minDate.year,
+              minDate.month,
+              minDate.day,
+            );
+            if (specificDateNormalized.isBefore(minDateNormalized)) {
+              return {'specificBeforeMinDate': true};
+            }
+          }
+          if (maxDate != null) {
+            final specificDateNormalized = DateTime(
+              specificDate.year,
+              specificDate.month,
+              specificDate.day,
+            );
+            final maxDateNormalized = DateTime(
+              maxDate.year,
+              maxDate.month,
+              maxDate.day,
+            );
+            if (specificDateNormalized.isAfter(maxDateNormalized)) {
+              return {'specificAfterMaxDate': true};
+            }
+          }
+        }
+      default:
+        // "now" for time and "none" don't need date validation
+        break;
+    }
+
+    return null;
   }
 
   /// The form containing the controls for the currently selected
@@ -739,6 +989,17 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         });
       case SurveyQuestionType.pain:
         break;
+      case SurveyQuestionType.date:
+        dateInputTypeControl.value = (data as DateQuestionFormData).inputType;
+        dateMinControl.value = data.minDate;
+        dateMaxControl.value = data.maxDate;
+        dateMinTimeControl.value = data.minTime;
+        dateMaxTimeControl.value = data.maxTime;
+        dateFormatPresetControl.value = data.dateFormatPreset;
+        timeFormatPresetControl.value = data.timeFormatPreset;
+        dateDefaultOptionControl.value = data.defaultOption;
+        dateDefaultSpecificDateControl.value = data.defaultSpecificDate;
+        dateDefaultSpecificTimeControl.value = data.defaultSpecificTime;
     }
   }
 
@@ -842,6 +1103,27 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
         );
+      case SurveyQuestionType.date:
+        return DateQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
+          inputType: dateInputTypeControl.value ?? DateInputType.date,
+          minDate: dateMinControl.value,
+          maxDate: dateMaxControl.value,
+          minTime: dateMinTimeControl.value,
+          maxTime: dateMaxTimeControl.value,
+          dateFormatPreset:
+              dateFormatPresetControl.value ?? DateFormatPreset.iso,
+          timeFormatPreset:
+              timeFormatPresetControl.value ?? TimeFormatPreset.h24,
+          defaultOption:
+              dateDefaultOptionControl.value ?? DefaultDateOption.none,
+          defaultSpecificDate: dateDefaultSpecificDateControl.value,
+          defaultSpecificTime: dateDefaultSpecificTimeControl.value,
+        );
     }
   }
 
@@ -862,10 +1144,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       ModelAction(
         type: ModelActionType.remove,
         label: ModelActionType.remove.string,
+        confirmation: ModelActionConfirmations.remove(
+          subject: tr.dialog_subject_answer_option,
+        ),
         onExecute: () {
           final controlIdx = answerOptionsArray.controls.indexOf(model);
           answerOptionsArray.removeAt(controlIdx);
         },
+        isDestructive: true,
         isAvailable: isNotReadonly,
       ),
     ].where((action) => action.isAvailable).toList();
@@ -903,6 +1189,60 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     }
 
     return fitbitCredentialsFormViewModel.save().then((_) => super.save());
+  }
+
+  @override
+  bool get isDirty {
+    // For date questions, we need to handle DateTime serialization
+    if (questionType == SurveyQuestionType.date) {
+      // Convert form values to JSON-serializable format
+      final currentFormValue = _convertFormValueToJsonSerializable(form.value);
+      final prevFormValueSerializable = _convertFormValueToJsonSerializable(
+        prevFormValue,
+      );
+      final isEqual =
+          jsonEncode(prevFormValueSerializable) == jsonEncode(currentFormValue);
+      return !isEqual;
+    }
+    return super.isDirty;
+  }
+
+  /// Converts form values containing DateTime objects to JSON-serializable format
+  Map<String, dynamic> _convertFormValueToJsonSerializable(
+    Map<String, dynamic>? formValue,
+  ) {
+    if (formValue == null) return {};
+
+    final result = <String, dynamic>{};
+    for (final entry in formValue.entries) {
+      final value = entry.value;
+      if (value == null) {
+        result[entry.key] = null;
+      } else if (value is DateTime) {
+        result[entry.key] = value.toIso8601String();
+      } else if (value is Map) {
+        result[entry.key] = _convertFormValueToJsonSerializable(
+          Map<String, dynamic>.from(value),
+        );
+      } else if (value is List) {
+        // Handle lists/arrays that might contain DateTime objects
+        result[entry.key] = value.map((item) {
+          if (item == null) {
+            return null;
+          } else if (item is DateTime) {
+            return item.toIso8601String();
+          } else if (item is Map) {
+            return _convertFormValueToJsonSerializable(
+              Map<String, dynamic>.from(item),
+            );
+          }
+          return item;
+        }).toList();
+      } else {
+        result[entry.key] = value;
+      }
+    }
+    return result;
   }
 
   @override

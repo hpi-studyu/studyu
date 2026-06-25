@@ -135,6 +135,42 @@
   "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
+  "dialog_delete_title": "{subject} löschen?",
+  "@dialog_delete_title": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_delete_description": "Bist du sicher, dass {subject} gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@dialog_delete_description": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_remove_title": "{subject} entfernen?",
+  "@dialog_remove_title": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_remove_description": "Bist du sicher, dass {subject} entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@dialog_remove_description": {
+    "placeholders": {
+      "subject": {}
+    }
+  },
+  "dialog_subject_study": "Studie",
+  "dialog_subject_item": "Element",
+  "dialog_subject_question": "Frage",
+  "dialog_subject_screener_question": "Screening-Frage",
+  "dialog_subject_answer_option": "Antwortoption",
+  "dialog_subject_intervention": "Intervention",
+  "dialog_subject_intervention_task": "Interventionsaufgabe",
+  "dialog_subject_survey": "Umfrage",
+  "dialog_subject_consent_item": "Einwilligungspunkt",
+  "dialog_subject_report_section": "Berichtsabschnitt",
+  "dialog_subject_invite_code": "Teilnahmecode",
+  "dialog_subject_fitbit_credentials": "Fitbit-Zugangsdaten",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
   "form_question_create": "Neue Frage",
   "form_question_edit": "Frage bearbeiten",
@@ -162,9 +198,70 @@
   "question_type_pain_functionality_description": "Wenn ein Teilnehmer auf ein Körperteil tippt, erscheint ein Dialog, in dem er eine Schmerzstufe auswählen kann. Jedes ausgewählte Körperteil kann eine andere Schmerzstufe haben. Die gesammelten Daten umfassen die identifizierten Körperteile und ihre entsprechenden Schmerzwerte.",
   "question_type_bool": "Ja/Nein",
   "question_type_scale": "Skala",
+  "question_type_date": "Datum/Zeit",
   "question_type_image": "Bild",
   "question_type_audio": "Audio",
   "question_type_fitbit": "Fitbit",
+  "date_min_date_label": "Frühestes Datum",
+  "date_min_date_label_helper": "Das früheste Datum, das Teilnehmer auswählen können",
+  "date_max_date_label": "Spätestes Datum",
+  "date_max_date_label_helper": "Das späteste Datum, das Teilnehmer auswählen können",
+  "date_format_preset_label": "Datumsformat-Voreinstellung",
+  "date_format_preset_label_helper": "Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden",
+  "date_picker_hint": "Datum auswählen",
+  "time_picker_hint": "Zeit auswählen",
+  "date_input_type_label": "Eingabetyp",
+  "date_input_type_label_helper": "Wähle aus, welche Informationen erfasst werden sollen",
+  "date_input_type_date": "Nur Datum",
+  "date_input_type_time": "Nur Zeit",
+  "date_input_type_datetime": "Datum und Zeit",
+  "time_format_preset_label": "Zeitformat",
+  "time_format_preset_label_helper": "Wähle aus, wie die Zeit angezeigt wird",
+  "date_default_option_label": "Standardwert",
+  "date_default_option_label_helper": "Wähle den anfänglich angezeigten Wert",
+  "date_default_option_none": "Kein Standard",
+  "date_default_option_today": "Heute",
+  "date_default_option_now": "Aktuelle Zeit",
+  "date_default_option_specific": "Bestimmtes Datum/Zeit",
+  "date_default_specific_date_label": "Standarddatum",
+  "date_default_specific_date_label_helper": "Das vorausgewählte Datum",
+  "date_default_specific_time_label": "Standardzeit",
+  "date_default_specific_time_label_helper": "Die vorausgewählte Zeit",
+  "date_min_time_label": "Früheste Zeit",
+  "date_min_time_label_helper": "Die früheste Zeit, die Teilnehmer auswählen können",
+  "date_max_time_label": "Späteste Zeit",
+  "date_max_time_label_helper": "Die späteste Zeit, die Teilnehmer auswählen können",
+  "date_validation_min_greater_than_max": "Das früheste Datum darf nicht nach dem spätesten Datum liegen",
+  "date_picker_button_label_datetime": "Datum auswählen",
+  "time_picker_button_label_datetime": "Zeit auswählen",
+  "time_picker_button_label": "Zeit auswählen",
+  "date_picker_validation_required": "Bitte wähle ein Datum",
+  "time_picker_validation_required": "Bitte wähle eine Zeit",
+  "datetime_picker_validation_required": "Bitte wähle Datum und Zeit",
+  "time_picker_validation_range": "Bitte wähle eine Zeit innerhalb des erlaubten Bereichs",
+  "time_picker_range_hint": "Wähle eine Zeit zwischen {min} und {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Früheste erlaubte Zeit: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Späteste erlaubte Zeit: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "date_validation_default_today_before_min": "'Heute' liegt vor dem frühesten erlaubten Datum",
+  "date_validation_default_today_after_max": "'Heute' liegt nach dem spätesten erlaubten Datum",
+  "date_validation_default_specific_before_min": "Das Standarddatum liegt vor dem frühesten erlaubten Datum",
+  "date_validation_default_specific_after_max": "Das Standarddatum liegt nach dem spätesten erlaubten Datum",
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
   "form_field_response_pain": "Schmerz-Tracker",
@@ -271,6 +368,14 @@
       },
       "countMax": {
         "type": "num"
+      }
+    }
+  },
+  "free_text_example_explanation_custom": "Eingaben vom Typ {type} werden basierend auf dem regulären Ausdruck akzeptiert.",
+  "@free_text_example_explanation_custom": {
+    "placeholders": {
+      "type": {
+        "type": "String"
       }
     }
   },
@@ -772,8 +877,8 @@
   "iconpicker_nonempty_prompt": "Icon auswählen",
   "iconpicker_empty_prompt": "Icon auswählen",
   "iconpicker_dialog_title": "Icon auswählen",
-  "dialog_unsaved_changes_title": "Zurück und Änderungen verwerfen?",
-  "dialog_unsaved_changes_description": "Du hast Änderungen vorgenommen, die noch nicht gespeichert wurden & verloren gehen, wenn du zurückgehst. Wenn du die Änderungen beibehalten möchtest, musst du sie vorher speichern.",
+  "dialog_unsaved_changes_title": "Ungespeicherte Änderungen verwerfen?",
+  "dialog_unsaved_changes_description": "Wenn du jetzt gehst, werden deine letzten Änderungen dauerhaft gelöscht.",
   "dialog_action_unsaved_changes_stay": "Hier bleiben",
   "dialog_action_unsaved_changes_discard": "Änderungen verwerfen",
   "under_construction": "Noch in Arbeit",
