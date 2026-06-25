@@ -61,6 +61,12 @@ class StudyTestScreen extends StudyPageWidget {
                 valueListenable: frameController.navigationEnabled,
                 builder: (context, previewReady, child) {
                   final navigationEnabled = canTest && previewReady;
+                  final screenerDisabled =
+                      !navigationEnabled ||
+                      formViewModel
+                          .enrollmentFormViewModel
+                          .questionModels
+                          .isEmpty;
                   final interventionSelectionDisabled =
                       !navigationEnabled ||
                       formViewModel
@@ -87,7 +93,7 @@ class StudyTestScreen extends StudyPageWidget {
                       TextButton.icon(
                         icon: const Icon(Icons.arrow_forward),
                         label: Text(tr.navlink_study_test_app_eligibility),
-                        onPressed: (!navigationEnabled)
+                        onPressed: screenerDisabled
                             ? null
                             : () {
                                 frameController.navigate(
