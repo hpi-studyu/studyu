@@ -323,7 +323,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_selection_hidden_studies.
   ///
   /// In en, this message translates to:
-  /// **'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.'**
+  /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
 
   /// No description provided for @study_overview_title.
