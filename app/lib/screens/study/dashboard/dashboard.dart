@@ -52,6 +52,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
   bool _showcaseCheckStarted = false;
+  bool _redirectingToLoading = false;
+  bool _isDisposing = false;
 
   bool get showNextDay =>
       (kDebugMode || context.read<AppState>().isPreview) &&
@@ -116,21 +118,22 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   void dispose() {
+    _isDisposing = true;
     WidgetsBinding.instance.removeObserver(this);
-    _dashboardShowcase.unregister();
+    _dashboardShowcase.dismiss();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (subject == null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          Routes.loading,
-          (_) => false,
-        );
-      });
+      if (!_redirectingToLoading) {
+        _redirectingToLoading = true;
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, Routes.loading);
+        });
+      }
       return const SizedBox.shrink();
     }
 
@@ -449,6 +452,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _markDashboardShowcaseCompleted() {
+    if (_isDisposing) return;
     unawaited(SecureStorage.write(_dashboardShowcaseCompletedKey, 'true'));
   }
 }
