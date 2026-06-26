@@ -96,7 +96,7 @@ abstract class _$StudyRecruitController
   StudyRecruitControllerState build(StudyID studyId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<StudyRecruitControllerState, StudyRecruitControllerState>;
@@ -111,6 +111,6 @@ abstract class _$StudyRecruitController
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

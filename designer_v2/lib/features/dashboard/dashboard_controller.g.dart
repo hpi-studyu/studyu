@@ -48,7 +48,7 @@ abstract class _$DashboardController extends $Notifier<DashboardState> {
   DashboardState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<DashboardState, DashboardState>;
     final element =
         ref.element
@@ -58,6 +58,6 @@ abstract class _$DashboardController extends $Notifier<DashboardState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
