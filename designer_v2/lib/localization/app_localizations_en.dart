@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1860,7 +1861,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get preview_overlay_remote_unavailable_message =>
-      'The StudyU app is temporarily unavailable or under maintenance. Please try again in a little while.';
+      'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.';
 
   @override
   String get preview_overlay_could_not_load =>

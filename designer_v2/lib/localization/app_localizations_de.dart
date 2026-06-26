@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1835,7 +1836,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get preview_overlay_connecting_title =>
-      'Mit der App-Vorschau wird verbunden';
+      'Verbindung zur App-Vorschau wird hergestellt';
 
   @override
   String get preview_overlay_loading_title => 'App-Vorschau wird geladen';
@@ -1883,11 +1884,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get preview_overlay_could_not_load =>
-      'Die StudyU-App-Vorschau konnte nicht geladen werden.';
+      'Die App-Vorschau konnte nicht geladen werden.';
 
   @override
   String get preview_overlay_preview_not_opened =>
-      'Die StudyU-App-Vorschau konnte gerade nicht geöffnet werden.';
+      'Die App-Vorschau konnte gerade nicht geöffnet werden.';
 
   @override
   String get banner_study_test_unavailable =>
