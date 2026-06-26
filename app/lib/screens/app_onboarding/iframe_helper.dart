@@ -12,8 +12,9 @@ class IFrameHelper {
   static StreamSubscription<html.MessageEvent>? _messageSubscription;
 
   String _designerOrigin() {
-    final referrer = html.document.referrer;
-    if (referrer.isNotEmpty) {
+    final referrerObject = html.document.referrer as Object?;
+    final referrer = referrerObject is String ? referrerObject : null;
+    if (referrer != null && referrer.isNotEmpty) {
       final uri = Uri.tryParse(referrer);
       if (uri != null && uri.hasScheme && uri.host.isNotEmpty) {
         return uri.origin;
