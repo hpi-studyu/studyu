@@ -13,11 +13,13 @@ class IFrameHelper {
 
   String _designerOrigin() {
     final referrer = html.document.referrer;
-    if (referrer.isNotEmpty) {
-      final uri = Uri.tryParse(referrer);
-      if (uri != null && uri.hasScheme && uri.host.isNotEmpty) {
-        return uri.origin;
-      }
+    // ignore: unnecessary_null_comparison
+    if (referrer == null || referrer.isEmpty) {
+      return env.designerUrl!;
+    }
+    final uri = Uri.tryParse(referrer);
+    if (uri != null && uri.hasScheme && uri.host.isNotEmpty) {
+      return uri.origin;
     }
     return env.designerUrl!;
   }
