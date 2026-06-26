@@ -102,7 +102,7 @@
   "dashboard_showcase_progress_title": "Study progress",
   "dashboard_showcase_progress_description": "This shows where you are in the study and how much is left.",
   "dashboard_showcase_current_intervention_title": "Current intervention",
-  "dashboard_showcase_current_intervention_description": "Here you can see which intervention applies today and how many days remain in this phase.",
+  "dashboard_showcase_current_intervention_description": "Here you can see your current intervention and how many days remain in this phase.",
   "dashboard_showcase_today_tasks_title": "Today's tasks",
   "dashboard_showcase_today_tasks_description": "Here you can find the tasks you need to complete today as part of the study.",
   "dashboard_showcase_contact_title": "Contact",
