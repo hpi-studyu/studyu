@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1175,6 +1176,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get painTypeStiffness => 'Steifheit';
 
   @override
+  String get preview_failed_to_initialize =>
+      'Die Vorschau konnte nicht initialisiert werden.';
+
+  @override
   String get preview_overlay_reset_hint =>
       'Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
 
@@ -1185,10 +1190,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get preview_overlay_route_open_failed =>
       'Die Vorschau-Route konnte gerade nicht geöffnet werden.';
-
-  @override
-  String get preview_failed_to_initialize =>
-      'Die Vorschau konnte nicht initialisiert werden.';
 
   @override
   String get preview_mode => 'Vorschau-Modus';
