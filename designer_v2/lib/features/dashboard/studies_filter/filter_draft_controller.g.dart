@@ -48,7 +48,7 @@ abstract class _$FilterDraftController extends $Notifier<FilterDraft> {
   FilterDraft build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<FilterDraft, FilterDraft>;
     final element =
         ref.element
@@ -58,6 +58,6 @@ abstract class _$FilterDraftController extends $Notifier<FilterDraft> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
