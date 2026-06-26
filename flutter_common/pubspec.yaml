@@ -17,7 +17,7 @@ dependencies:
   lint: ^2.8.0
   shared_preferences: ^2.5.5
   studyu_core: ^4.8.1
-  supabase_flutter: ^2.14.1
+  supabase_flutter: ^2.15.0
   synchronized: ^3.4.1
   uuid: ^4.5.3
 
