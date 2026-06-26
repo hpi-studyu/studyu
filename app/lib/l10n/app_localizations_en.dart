@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -310,14 +309,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboard_showcase_current_intervention_description =>
-      'Here you can see which intervention applies today and how many days remain in this phase.';
+      'Here you can see your current intervention and how many days remain in this phase.';
 
   @override
   String get dashboard_showcase_today_tasks_title => 'Today\'s tasks';
 
   @override
   String get dashboard_showcase_today_tasks_description =>
-      'Complete the tasks listed here to keep your study data up to date.';
+      'Here you can find the tasks you need to complete today as part of the study.';
 
   @override
   String get dashboard_showcase_contact_title => 'Contact';

@@ -101,11 +101,11 @@
 
   "dashboard": "Dashboard",
   "dashboard_showcase_progress_title": "Studienfortschritt",
-  "dashboard_showcase_progress_description": "Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.,
+  "dashboard_showcase_progress_description": "Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.",
   "dashboard_showcase_current_intervention_title": "Aktuelle Intervention",
   "dashboard_showcase_current_intervention_description": "Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.",
   "dashboard_showcase_today_tasks_title": "Heutige Aufgaben",
-"dashboard_showcase_today_tasks_description": "Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen."
+  "dashboard_showcase_today_tasks_description": "Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.",
   "dashboard_showcase_contact_title": "Kontakt",
   "dashboard_showcase_contact_description": "Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.",
   "dashboard_showcase_report_title": "Bericht",

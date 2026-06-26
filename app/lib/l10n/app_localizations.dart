@@ -629,7 +629,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboard_showcase_current_intervention_description.
   ///
   /// In en, this message translates to:
-  /// **'Here you can see which intervention applies today and how many days remain in this phase.'**
+  /// **'Here you can see your current intervention and how many days remain in this phase.'**
   String get dashboard_showcase_current_intervention_description;
 
   /// No description provided for @dashboard_showcase_today_tasks_title.
@@ -641,7 +641,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboard_showcase_today_tasks_description.
   ///
   /// In en, this message translates to:
-  /// **'Complete the tasks listed here to keep your study data up to date.'**
+  /// **'Here you can find the tasks you need to complete today as part of the study.'**
   String get dashboard_showcase_today_tasks_description;
 
   /// No description provided for @dashboard_showcase_contact_title.
