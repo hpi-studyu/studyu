@@ -323,7 +323,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_selection_hidden_studies.
   ///
   /// In en, this message translates to:
-  /// **'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.'**
+  /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
 
   /// No description provided for @study_overview_title.
@@ -2335,6 +2335,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stiffness'**
   String get painTypeStiffness;
+
+  /// No description provided for @preview_failed_to_initialize.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview failed to initialize.'**
+  String get preview_failed_to_initialize;
+
+  /// No description provided for @preview_overlay_reset_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened right now. Please try resetting the preview.'**
+  String get preview_overlay_reset_hint;
+
+  /// No description provided for @preview_overlay_study_not_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened for this study yet. Please try resetting the preview.'**
+  String get preview_overlay_study_not_ready;
+
+  /// No description provided for @preview_overlay_route_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview route could not be opened right now.'**
+  String get preview_overlay_route_open_failed;
 
   /// No description provided for @preview_mode.
   ///

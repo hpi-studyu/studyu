@@ -42,7 +42,7 @@
   "study_selection_unsupported": "The study you are trying to join is not compatible with your app version. Please update the app to the latest version.",
   "study_selection_closed_title": "Study closed",
   "study_selection_closed": "This study is currently closed for new participants.",
-  "study_selection_hidden_studies": "Some studies couldn't be shown, because your app version is outdated. Please update your app to see all available studies.",
+  "study_selection_hidden_studies": "Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.",
   "study_overview_title": "Overview",
   "eligibility_questionnaire_title": "Questionnaire",
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
@@ -460,6 +460,12 @@
   "painTypeTightness": "Tightness",
   "painTypeSoreness": "Soreness",
   "painTypeStiffness": "Stiffness",
+
+  "preview_failed_to_initialize": "Preview failed to initialize.",
+
+  "preview_overlay_reset_hint": "The preview could not be opened right now. Please try resetting the preview.",
+  "preview_overlay_study_not_ready": "The preview could not be opened for this study yet. Please try resetting the preview.",
+  "preview_overlay_route_open_failed": "The preview route could not be opened right now.",
 
   "preview_mode": "Preview Mode",
   "preview_mode_active": "Preview Mode Active",

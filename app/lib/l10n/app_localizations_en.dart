@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -141,7 +142,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.';
+      'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.';
 
   @override
   String get study_overview_title => 'Overview';
@@ -1207,6 +1208,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get painTypeStiffness => 'Stiffness';
+
+  @override
+  String get preview_failed_to_initialize => 'Preview failed to initialize.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'The preview could not be opened right now. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'The preview could not be opened for this study yet. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'The preview route could not be opened right now.';
 
   @override
   String get preview_mode => 'Preview Mode';

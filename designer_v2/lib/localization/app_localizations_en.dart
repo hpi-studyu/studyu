@@ -1811,6 +1811,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_study_test_open_new_tab => 'Open in new tab';
 
   @override
+  String get preview_overlay_health_checking_title =>
+      'Checking app availability';
+
+  @override
+  String get preview_overlay_connecting_title => 'Connecting to app preview';
+
+  @override
+  String get preview_overlay_loading_title => 'Loading app preview';
+
+  @override
+  String preview_overlay_health_checking_description_local(String url) {
+    return 'Checking whether the StudyU app is running at $url.';
+  }
+
+  @override
+  String preview_overlay_health_checking_description_remote(String url) {
+    return 'Checking whether the participant app is reachable at $url.';
+  }
+
+  @override
+  String get preview_overlay_connecting_description_local =>
+      'The local StudyU app is reachable. Establishing the connection now.';
+
+  @override
+  String get preview_overlay_connecting_description_remote =>
+      'The participant app is reachable. Establishing the connection now.';
+
+  @override
+  String get preview_overlay_loading_description_local =>
+      'The app preview is connected. The app is now loading inside the phone frame.';
+
+  @override
+  String get preview_overlay_loading_description_remote =>
+      'The app preview is connected. The participant app is now loading.';
+
+  @override
+  String get preview_overlay_local_unavailable_title =>
+      'Local app preview unavailable';
+
+  @override
+  String get preview_overlay_remote_unavailable_title =>
+      'App under maintenance';
+
+  @override
+  String get preview_overlay_local_unavailable_message =>
+      'The local StudyU app could not be reached.';
+
+  @override
+  String get preview_overlay_remote_unavailable_message =>
+      'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.';
+
+  @override
+  String get preview_overlay_could_not_load =>
+      'The StudyU app preview could not be loaded.';
+
+  @override
+  String get preview_overlay_preview_not_opened =>
+      'The StudyU app preview could not be opened right now.';
+
+  @override
   String get banner_study_test_unavailable =>
       'The test mode is unavailable until you update the following information:';
 

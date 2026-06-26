@@ -33,6 +33,17 @@ class BottomOnboardingNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canNavigateBack = backEnabled && Navigator.canPop(context);
+
+    void handleBack() {
+      if (onBack != null) {
+        onBack!.call();
+        return;
+      }
+
+      Navigator.pop(context);
+    }
+
     return BottomAppBar(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -44,10 +55,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: TextButton(
-                key: backButtonKey,
-                onPressed: backEnabled
-                    ? (onBack ?? () => Navigator.pop(context))
-                    : null,
+                onPressed: canNavigateBack ? handleBack : null,
                 child: Row(
                   children: [
                     backIcon ?? const Icon(Icons.navigate_before),
