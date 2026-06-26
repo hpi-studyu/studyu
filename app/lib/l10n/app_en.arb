@@ -449,6 +449,12 @@
   "painTypeSoreness": "Soreness",
   "painTypeStiffness": "Stiffness",
 
+  "preview_failed_to_initialize": "Preview failed to initialize.",
+
+  "preview_overlay_reset_hint": "The preview could not be opened right now. Please try resetting the preview.",
+  "preview_overlay_study_not_ready": "The preview could not be opened for this study yet. Please try resetting the preview.",
+  "preview_overlay_route_open_failed": "The preview route could not be opened right now.",
+
   "preview_mode": "Preview Mode",
   "preview_mode_active": "Preview Mode Active",
   "preview_mode_active_state": "Preview mode is now active.",

@@ -1166,6 +1166,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get painTypeStiffness => 'Stiffness';
 
   @override
+  String get preview_overlay_reset_hint =>
+      'The preview could not be opened right now. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'The preview could not be opened for this study yet. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'The preview route could not be opened right now.';
+
+  @override
+  String get preview_failed_to_initialize => 'Preview failed to initialize.';
+
+  @override
   String get preview_mode => 'Preview Mode';
 
   @override

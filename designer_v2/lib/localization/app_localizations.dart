@@ -3189,6 +3189,96 @@ abstract class AppLocalizations {
   /// **'Open in new tab'**
   String get action_button_study_test_open_new_tab;
 
+  /// No description provided for @preview_overlay_health_checking_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking app availability'**
+  String get preview_overlay_health_checking_title;
+
+  /// No description provided for @preview_overlay_connecting_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to app preview'**
+  String get preview_overlay_connecting_title;
+
+  /// No description provided for @preview_overlay_loading_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading app preview'**
+  String get preview_overlay_loading_title;
+
+  /// No description provided for @preview_overlay_health_checking_description_local.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking whether the StudyU app is running at {url}.'**
+  String preview_overlay_health_checking_description_local(String url);
+
+  /// No description provided for @preview_overlay_health_checking_description_remote.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking whether the participant app is reachable at {url}.'**
+  String preview_overlay_health_checking_description_remote(String url);
+
+  /// No description provided for @preview_overlay_connecting_description_local.
+  ///
+  /// In en, this message translates to:
+  /// **'The local StudyU app is reachable. Establishing the connection now.'**
+  String get preview_overlay_connecting_description_local;
+
+  /// No description provided for @preview_overlay_connecting_description_remote.
+  ///
+  /// In en, this message translates to:
+  /// **'The participant app is reachable. Establishing the connection now.'**
+  String get preview_overlay_connecting_description_remote;
+
+  /// No description provided for @preview_overlay_loading_description_local.
+  ///
+  /// In en, this message translates to:
+  /// **'The app preview is connected. The app is now loading inside the phone frame.'**
+  String get preview_overlay_loading_description_local;
+
+  /// No description provided for @preview_overlay_loading_description_remote.
+  ///
+  /// In en, this message translates to:
+  /// **'The app preview is connected. The participant app is now loading.'**
+  String get preview_overlay_loading_description_remote;
+
+  /// No description provided for @preview_overlay_local_unavailable_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Local app preview unavailable'**
+  String get preview_overlay_local_unavailable_title;
+
+  /// No description provided for @preview_overlay_remote_unavailable_title.
+  ///
+  /// In en, this message translates to:
+  /// **'App under maintenance'**
+  String get preview_overlay_remote_unavailable_title;
+
+  /// No description provided for @preview_overlay_local_unavailable_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The local StudyU app could not be reached.'**
+  String get preview_overlay_local_unavailable_message;
+
+  /// No description provided for @preview_overlay_remote_unavailable_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.'**
+  String get preview_overlay_remote_unavailable_message;
+
+  /// No description provided for @preview_overlay_could_not_load.
+  ///
+  /// In en, this message translates to:
+  /// **'The StudyU app preview could not be loaded.'**
+  String get preview_overlay_could_not_load;
+
+  /// No description provided for @preview_overlay_preview_not_opened.
+  ///
+  /// In en, this message translates to:
+  /// **'The StudyU app preview could not be opened right now.'**
+  String get preview_overlay_preview_not_opened;
+
   /// No description provided for @banner_study_test_unavailable.
   ///
   /// In en, this message translates to:
