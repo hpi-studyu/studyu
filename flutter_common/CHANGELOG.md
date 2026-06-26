@@ -1,3 +1,10 @@
+## 1.10.4
+
+ - **FIX**: upgrade deps.
+ - **FIX**(flutter_common): use supabase publishable key.
+ - **FIX**: upgrade deps.
+ - **FIX**(flutter_common): use supabase publishable key.
+
 ## 1.10.3
 
  - **FIX**: upgrade deps.
