@@ -141,6 +141,9 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           onChanged: (value) {
             widget.onDraftChanged?.call(widget.question.id, value);
             _handleInteraction();
+            if (_donePressed) {
+              setState(() => _donePressed = false);
+            }
           },
           onFieldSubmitted: (_) {
             FocusScope.of(context).unfocus();

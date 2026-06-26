@@ -117,6 +117,38 @@ void main() {
     expect(answer?.response, equals('123'));
   });
 
+  testWidgets('Done button reappears after editing submitted last free text', (
+    tester,
+  ) async {
+    final question = FreeTextQuestion.withId(
+      textType: FreeTextQuestionType.any,
+      lengthRange: [1, 100],
+    );
+
+    await tester.pumpWidget(
+      setup(
+        FreeTextQuestionWidget(
+          question: question,
+          onDone: (_) {},
+          isLastQuestion: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextFormField), 'pasta');
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Done'), findsNothing);
+
+    await tester.enterText(find.byType(TextFormField), 'pasta and salad');
+    await tester.pump();
+
+    expect(find.text('Done'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 600));
+  });
+
   testWidgets('typing updates onDraftChanged but does not call onDone', (
     tester,
   ) async {
