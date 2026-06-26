@@ -132,6 +132,9 @@ void main() {
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final firstCompletion = snapshots.where((s) => s != null).last!;
       expect(firstCompletion['q1'], isTrue);
       expect(firstCompletion['q2'], [q2ChoiceAId]);
@@ -141,6 +144,9 @@ void main() {
 
       _expectSelectableButtonSelected(find.text('no'));
       expect(find.text('A'), findsNothing);
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
       expect(hiddenCompletion['q1'], isFalse);
       expect(hiddenCompletion.containsKey('q2'), isFalse);
@@ -148,6 +154,9 @@ void main() {
       await tester.tap(find.text('yes'));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -203,6 +212,9 @@ void main() {
       widget.onDone!(q2.constructAnswer(imageFile));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final firstCompletion = snapshots.where((s) => s != null).last!;
       expect(firstCompletion['q1'], isTrue);
       expect(firstCompletion['q2'], same(imageFile));
@@ -211,6 +223,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(ImageCapturingQuestionWidget), findsNothing);
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
       expect(hiddenCompletion['q1'], isFalse);
       expect(hiddenCompletion.containsKey('q2'), isFalse);
@@ -275,6 +290,9 @@ void main() {
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final firstCompletion = snapshots.where((s) => s != null).last!;
       expect(firstCompletion['q1'], isTrue);
       expect(firstCompletion['q2'], [q2ChoiceAId]);
@@ -283,6 +301,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('A'), findsNothing);
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final stoppedCompletion = snapshots.where((s) => s != null).last!;
       expect(stoppedCompletion['q1'], isFalse);
       expect(stoppedCompletion.containsKey('q2'), isFalse);
@@ -329,6 +350,9 @@ void main() {
       await tester.tap(find.text('Confirm selection'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final firstCompletion = snapshots.where((s) => s != null).last!;
       expect(firstCompletion['q1'], isTrue);
       expect(firstCompletion['q2'], isEmpty);
@@ -340,6 +364,9 @@ void main() {
       await tester.tap(find.text('yes'));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -396,12 +423,18 @@ void main() {
       await tester.tap(find.text('B').last);
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final firstCompletion = snapshots.where((s) => s != null).last!;
       expect(firstCompletion['q1'], isTrue);
       expect(firstCompletion['q2'], [q2ChoiceAId]);
       expect(firstCompletion['q3'], [q3ChoiceBId]);
 
       await tester.tap(find.text('no'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
 
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
@@ -412,6 +445,9 @@ void main() {
       await tester.tap(find.text('yes'));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -472,6 +508,9 @@ void main() {
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final completion = snapshots.where((s) => s != null).last!;
       expect(completion['q1'], isFalse);
       expect(completion.containsKey('q2'), isFalse);
@@ -480,7 +519,7 @@ void main() {
   );
 
   testWidgets(
-    'hidden default false finishes when no later questions stay visible',
+    'hidden default false submits manually when no later questions stay visible',
     (tester) async {
       final q0 = _boolQuestion('q0', 'Show skipped question?');
       final q1 = _boolQuestion('q1', 'Last visible question');
@@ -528,6 +567,9 @@ void main() {
 
       expect(find.text('Skipped default source'), findsNothing);
       expect(find.text('Hidden by q2 default'), findsNothing);
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final completion = snapshots.where((s) => s != null).lastOrNull;
       expect(completion, isNotNull);
       expect(completion!['q0'], isFalse);
@@ -603,6 +645,9 @@ void main() {
       await tester.tap(find.text('Follow B'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final completion = snapshots.where((s) => s != null).last!;
       expect(completion['q0'], isFalse);
       expect(completion['q1'], [q1ChoiceAId]);
@@ -648,8 +693,7 @@ void main() {
 
       expect(find.text('Should stay hidden'), findsNothing);
       expect(find.text('A'), findsNothing);
-      expect(snapshots.where((s) => s != null), isNotEmpty);
-      expect(snapshots.where((s) => s != null).last!['q1'], isTrue);
+      expect(snapshots.last, isNull);
     },
   );
 
@@ -700,6 +744,9 @@ void main() {
       await tester.tap(find.text('yes').last);
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final firstCompletion = snapshots.where((s) => s != null).last!;
       expect(firstCompletion['q1'], isTrue);
       expect(firstCompletion['q2'], isTrue);
@@ -712,6 +759,9 @@ void main() {
       expect(find.byType(QuestionContainer), findsOneWidget);
       expect(find.text('yes'), findsOneWidget);
       expect(find.text('no'), findsOneWidget);
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
       expect(hiddenCompletion['q1'], isFalse);
       expect(hiddenCompletion.containsKey('q2'), isFalse);
@@ -720,6 +770,9 @@ void main() {
       await tester.tap(find.text('yes'));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -995,8 +1048,11 @@ void main() {
       expect(find.text('Continue'), findsNothing);
       expect(find.text('Complete'), findsNothing);
 
-      // Answer q2 → button question commits immediately → complete fires
+      // Answer q2 → button question commits; Complete submits manually.
       await tester.tap(find.text('yes'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
 
       final completion = snapshots.where((s) => s != null).last!;
@@ -1560,6 +1616,9 @@ void main() {
       // Q2 hidden
       expect(find.byType(QuestionContainer), findsOneWidget);
       expect(find.byType(TextFormField), findsNothing);
+      await tester.tap(find.text('Complete'));
+      await tester.pumpAndSettle();
+
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
       expect(hiddenCompletion['q1'], isFalse);
       expect(hiddenCompletion.containsKey('q2'), isFalse);
@@ -1581,9 +1640,7 @@ void main() {
     },
   );
 
-  testWidgets('date question default today auto-completes questionnaire', (
-    tester,
-  ) async {
+  testWidgets('date question default today submits manually', (tester) async {
     final dateQ = DateQuestion.withId()
       ..id = 'dq'
       ..prompt = 'Pick date'
@@ -1606,6 +1663,9 @@ void main() {
         ),
       ),
     );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Complete'));
     await tester.pumpAndSettle();
 
     final completion = snapshots.where((s) => s != null).last;
@@ -1748,4 +1808,219 @@ void main() {
       expect(find.textContaining('2025-06-15'), findsOneWidget);
     },
   );
+
+  testWidgets('dependent visible answer blocks submit until reviewed', (
+    tester,
+  ) async {
+    final q0 = _boolQuestion('q0', 'Keep follow-up visible?');
+    final q1 = _boolQuestion('q1', 'Meal context?');
+    final q2 = _singleChoiceQuestion('q2', 'What did you eat?')
+      ..conditional = QuestionConditional.withCondition(
+        CompositeExpression(
+          logicType: LogicType.or,
+          expressions: [
+            BooleanExpression()..target = 'q0',
+            BooleanExpression()..target = 'q1',
+          ],
+        ),
+      );
+    final q2ChoiceAId = q2.choices.first.id;
+
+    final List<QuestionnaireState?> completions = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(QuestionnaireWidget([q0, q1, q2], onComplete: completions.add)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('yes').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('no').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(completions.last, isNull);
+
+    final completionCountBeforeBlockedSubmit = completions
+        .whereType<QuestionnaireState>()
+        .length;
+    await tester.tap(find.text('Complete'));
+    await tester.pumpAndSettle();
+
+    expect(
+      completions.whereType<QuestionnaireState>().length,
+      completionCountBeforeBlockedSubmit,
+    );
+    expect(find.text('Please review this restored answer.'), findsOneWidget);
+
+    await tester.tap(find.text('Mark as reviewed'));
+    await tester.pumpAndSettle();
+    expect(find.text('Please review this restored answer.'), findsNothing);
+
+    await tester.tap(find.text('Complete'));
+    await tester.pumpAndSettle();
+
+    final reviewedCompletion = completions.whereType<QuestionnaireState>().last;
+    expect(reviewedCompletion.answers['q2']?.response, [q2ChoiceAId]);
+    expect(reviewedCompletion.answerMetadata['q2']?.needsReview, isFalse);
+  });
+
+  testWidgets('manual completion is blocked by visible review flag', (
+    tester,
+  ) async {
+    final q0 = _boolQuestion('q0', 'Keep follow-up visible?');
+    final q1 = _boolQuestion('q1', 'Meal context?');
+    final q2 = _singleChoiceQuestion('q2', 'Context dependent answer')
+      ..conditional = QuestionConditional.withCondition(
+        CompositeExpression(
+          logicType: LogicType.or,
+          expressions: [
+            BooleanExpression()..target = 'q0',
+            BooleanExpression()..target = 'q1',
+          ],
+        ),
+      );
+
+    final List<QuestionnaireState?> completions = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(QuestionnaireWidget([q0, q1, q2], onComplete: completions.add)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('yes').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
+    final completedBeforeContextChange = completions
+        .whereType<QuestionnaireState>()
+        .length;
+
+    await tester.tap(find.text('no').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(
+      completions.whereType<QuestionnaireState>().length,
+      completedBeforeContextChange,
+    );
+    expect(completions.last, isNull);
+  });
+
+  testWidgets('shouldContinue stop is blocked by visible review flag', (
+    tester,
+  ) async {
+    final q0 = _boolQuestion('q0', 'Keep follow-up visible?');
+    final q1 = _boolQuestion('q1', 'Meal context?');
+    final q2 = _singleChoiceQuestion('q2', 'Context dependent answer')
+      ..conditional = QuestionConditional.withCondition(
+        CompositeExpression(
+          logicType: LogicType.or,
+          expressions: [
+            BooleanExpression()..target = 'q0',
+            BooleanExpression()..target = 'q1',
+          ],
+        ),
+      );
+
+    final List<QuestionnaireState?> completions = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(
+        QuestionnaireWidget(
+          [q0, q1, q2],
+          shouldContinue: (state) => state.answers['q1']?.response != false,
+          onComplete: completions.add,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('yes').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
+    final completedBeforeContextChange = completions
+        .whereType<QuestionnaireState>()
+        .length;
+
+    await tester.tap(find.text('no').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(
+      completions.whereType<QuestionnaireState>().length,
+      completedBeforeContextChange,
+    );
+    expect(completions.last, isNull);
+  });
+
+  testWidgets('hidden restored answer needing review does not block submit', (
+    tester,
+  ) async {
+    final q1 = _boolQuestion('q1', 'Show meal answer?');
+    final q2 = _singleChoiceQuestion('q2', 'What did you eat?')
+      ..conditional = QuestionConditional.withCondition(
+        CompositeExpression(
+          logicType: LogicType.and,
+          expressions: [BooleanExpression()..target = 'q1'],
+        ),
+      );
+    final q3 = _boolQuestion('q3', 'Independent visible question');
+
+    final List<QuestionnaireState?> completions = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(QuestionnaireWidget([q1, q2, q3], onComplete: completions.add)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('yes').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('no').first);
+    await tester.pumpAndSettle();
+    expect(find.text('What did you eat?'), findsNothing);
+
+    await tester.tap(find.text('Complete'));
+    await tester.pumpAndSettle();
+
+    final completion = completions.whereType<QuestionnaireState>().last;
+    expect(completion.answers['q1']?.response, isFalse);
+    expect(completion.answers['q3']?.response, isTrue);
+    expect(completion.answers.containsKey('q2'), isFalse);
+  });
 }

@@ -1198,6 +1198,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continue_label => 'Continue';
 
   @override
+  String get restored_answer_needs_review =>
+      'Please review this restored answer.';
+
+  @override
+  String get mark_answer_reviewed => 'Mark as reviewed';
+
+  @override
   String get date_picker_hint => 'Select a date';
 
   @override

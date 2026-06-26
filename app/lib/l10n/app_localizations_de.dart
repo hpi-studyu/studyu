@@ -1208,6 +1208,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get continue_label => 'Weiter';
 
   @override
+  String get restored_answer_needs_review =>
+      'Bitte die wiederhergestellte Antwort überprüfen.';
+
+  @override
+  String get mark_answer_reviewed => 'Als überprüft markieren';
+
+  @override
   String get date_picker_hint => 'Wählen Sie ein Datum';
 
   @override

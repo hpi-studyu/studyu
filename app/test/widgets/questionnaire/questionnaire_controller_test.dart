@@ -678,6 +678,206 @@ void main() {
         expect(controller.hasInvalidDraftAmong([q1]), isFalse);
         expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.complete);
       });
+
+      group('restored answer review metadata', () {
+        test(
+          'independent cached answer stays valid after unrelated answer changes',
+          () {
+            final q1 = boolQuestion('q1', 'Did you take medication?');
+            final q2 = boolQuestion('q2', 'Which medications?')
+              ..conditional = shownWhenQ1True<bool>();
+            final q3 = freeTextQuestion('q3', 'What did you eat?');
+            final controller = QuestionnaireController([q1, q2, q3]);
+
+            controller.submitAnswer(q1.constructAnswer(true));
+            controller.submitAnswer(q2.constructAnswer(true));
+            controller.submitAnswer(q3.constructAnswer('toast'));
+            final visibleBefore = controller.visibleQuestions
+                .map((question) => question.id)
+                .toSet();
+
+            controller.submitAnswer(q1.constructAnswer(false));
+            controller.markRestoredVisibleAnswersNeedingReview(visibleBefore);
+
+            expect(controller.answerFor('q3'), isNotNull);
+            expect(controller.needsReview('q3'), isFalse);
+            expect(
+              controller
+                  .buildVisiblePayload()
+                  .answerMetadata['q3']
+                  ?.needsReview,
+              isFalse,
+            );
+          },
+        );
+
+        test('dependent visible answer needs review after context changes', () {
+          final q0 = boolQuestion('q0', 'Keep follow-up visible?');
+          final q1 = boolQuestion('q1', 'Breakfast?');
+          final q2 = freeTextQuestion('q2', 'What did you eat?')
+            ..conditional = QuestionConditional<String>.withCondition(
+              CompositeExpression(
+                logicType: LogicType.or,
+                expressions: [
+                  BooleanExpression()..target = 'q0',
+                  BooleanExpression()..target = 'q1',
+                ],
+              ),
+            );
+          final controller = QuestionnaireController([q0, q1, q2]);
+
+          controller.submitAnswer(q0.constructAnswer(true));
+          controller.submitAnswer(q1.constructAnswer(true));
+          controller.submitAnswer(q2.constructAnswer('toast and eggs'));
+
+          controller.submitAnswer(q1.constructAnswer(false));
+          controller.submitAnswer(q1.constructAnswer(true));
+          controller.submitAnswer(q1.constructAnswer(false));
+
+          final metadata = controller.metadataFor('q2');
+          expect(metadata?.restoredFromCache, isTrue);
+          expect(metadata?.needsReview, isTrue);
+          expect(controller.visibleAnswersNeedReview(), isTrue);
+        });
+
+        test('dependent answer is valid when restored under same context', () {
+          final q1 = ScaleQuestion.withId()
+            ..id = 'q1'
+            ..prompt = 'Rate your pain'
+            ..minimum = 0
+            ..maximum = 10
+            ..step = 1;
+          final q2 = boolQuestion('q2', 'Have you taken painkillers?')
+            ..conditional = QuestionConditional<bool>.withCondition(
+              CompositeExpression(
+                logicType: LogicType.and,
+                expressions: [
+                  NumericExpression(
+                    comparator: NumericComparator.greaterThan,
+                    value: 5,
+                  )..target = 'q1',
+                ],
+              ),
+            );
+          final controller = QuestionnaireController([q1, q2]);
+
+          controller.submitAnswer(q1.constructAnswer(6));
+          controller.submitAnswer(q2.constructAnswer(true));
+          controller.submitAnswer(q1.constructAnswer(2));
+          final visibleBeforeRestore = controller.visibleQuestions
+              .map((question) => question.id)
+              .toSet();
+          controller.submitAnswer(q1.constructAnswer(6));
+          controller.markRestoredVisibleAnswersNeedingReview(
+            visibleBeforeRestore,
+          );
+
+          expect(controller.answerFor('q2')?.response, isTrue);
+          expect(controller.needsReview('q2'), isFalse);
+        });
+
+        test('dependent answer needs review when visible context changes', () {
+          final q1 = ScaleQuestion.withId()
+            ..id = 'q1'
+            ..prompt = 'Rate your pain'
+            ..minimum = 0
+            ..maximum = 10
+            ..step = 1;
+          final q2 = boolQuestion('q2', 'Have you taken painkillers?')
+            ..conditional = QuestionConditional<bool>.withCondition(
+              CompositeExpression(
+                logicType: LogicType.and,
+                expressions: [
+                  NumericExpression(
+                    comparator: NumericComparator.greaterThan,
+                    value: 5,
+                  )..target = 'q1',
+                ],
+              ),
+            );
+          final controller = QuestionnaireController([q1, q2]);
+
+          controller.submitAnswer(q1.constructAnswer(6));
+          controller.submitAnswer(q2.constructAnswer(true));
+          controller.submitAnswer(q1.constructAnswer(7));
+
+          expect(controller.answerFor('q2')?.response, isTrue);
+          expect(controller.needsReview('q2'), isTrue);
+        });
+
+        test(
+          'dependent review clears when context returns to original value',
+          () {
+            final q1 = ScaleQuestion.withId()
+              ..id = 'q1'
+              ..prompt = 'Rate your pain'
+              ..minimum = 0
+              ..maximum = 10
+              ..step = 1;
+            final q2 = boolQuestion('q2', 'Have you taken painkillers?')
+              ..conditional = QuestionConditional<bool>.withCondition(
+                CompositeExpression(
+                  logicType: LogicType.and,
+                  expressions: [
+                    NumericExpression(
+                      comparator: NumericComparator.greaterThan,
+                      value: 5,
+                    )..target = 'q1',
+                  ],
+                ),
+              );
+            final controller = QuestionnaireController([q1, q2]);
+
+            controller.submitAnswer(q1.constructAnswer(6));
+            controller.submitAnswer(q2.constructAnswer(true));
+            controller.submitAnswer(q1.constructAnswer(7));
+            expect(controller.needsReview('q2'), isTrue);
+
+            controller.submitAnswer(q1.constructAnswer(6));
+
+            expect(controller.answerFor('q2')?.response, isTrue);
+            expect(controller.needsReview('q2'), isFalse);
+          },
+        );
+
+        test('reviewing restored answer clears needsReview', () {
+          final q1 = boolQuestion('q1', 'Breakfast?');
+          final q2 = freeTextQuestion('q2', 'What did you eat?')
+            ..conditional = shownWhenQ1True<String>();
+          final controller = QuestionnaireController([q1, q2]);
+
+          controller.submitAnswer(q1.constructAnswer(true));
+          controller.submitAnswer(q2.constructAnswer('toast'));
+          controller.submitAnswer(q1.constructAnswer(false));
+          final visibleBefore = controller.visibleQuestions
+              .map((question) => question.id)
+              .toSet();
+          controller.submitAnswer(q1.constructAnswer(true));
+          controller.markRestoredVisibleAnswersNeedingReview(visibleBefore);
+
+          controller.markReviewed('q2');
+
+          expect(controller.needsReview('q2'), isFalse);
+          expect(controller.visibleAnswersNeedReview(), isFalse);
+        });
+
+        test('hidden answers needing review do not block visible payload', () {
+          final q1 = boolQuestion('q1', 'Breakfast?');
+          final q2 = freeTextQuestion('q2', 'What did you eat?')
+            ..conditional = shownWhenQ1True<String>();
+          final controller = QuestionnaireController([q1, q2]);
+
+          controller.submitAnswer(q1.constructAnswer(true));
+          controller.submitAnswer(q2.constructAnswer('toast'));
+          controller.submitAnswer(q1.constructAnswer(false));
+
+          expect(controller.visibleAnswersNeedReview(), isFalse);
+          expect(
+            controller.buildVisiblePayload().answers.containsKey('q2'),
+            isFalse,
+          );
+        });
+      });
     });
   });
 }

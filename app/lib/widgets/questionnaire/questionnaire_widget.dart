@@ -50,6 +50,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   // Stable keys reused across rebuilds to preserve widget state.
   final Map<String, GlobalKey> _containerKeys = {};
   final Map<String, GlobalKey<FreeTextQuestionWidgetState>> _freeTextKeys = {};
+  final Set<String> _shownReviewErrors = {};
 
   QuestionnaireState? validateSyncAndBuildPayload() {
     final containersAtClick = List<QuestionContainer>.of(shownQuestions);
@@ -98,6 +99,13 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       return null;
     }
 
+    if (_blockCompletionForReview(
+      containers: containersAtClick,
+      renderKeys: renderKeysAtClick,
+    )) {
+      return null;
+    }
+
     return _controller.buildVisiblePayload();
   }
 
@@ -128,6 +136,33 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     return _controller.answerFor(question.id);
   }
 
+  bool _blockCompletionForReview({
+    List<QuestionContainer>? containers,
+    List<GlobalKey>? renderKeys,
+  }) {
+    final reviewQuestionId = _controller.firstVisibleAnswerNeedingReview();
+    if (reviewQuestionId == null) return false;
+
+    setState(() => _shownReviewErrors.add(reviewQuestionId));
+    final reviewIndex = containers?.indexWhere(
+      (container) => container.question.id == reviewQuestionId,
+    );
+    if (reviewIndex != null &&
+        reviewIndex >= 0 &&
+        renderKeys != null &&
+        reviewIndex < renderKeys.length) {
+      _scrollToQuestion(renderKeys[reviewIndex]);
+    }
+    return true;
+  }
+
+  void _finishQuestionnaireIfReviewed(QuestionnaireState payload) {
+    if (_blockCompletionForReview()) {
+      return;
+    }
+    _finishQuestionnaire(payload);
+  }
+
   void _finishQuestionnaire(QuestionnaireState? result) {
     widget.onComplete?.call(result);
   }
@@ -142,10 +177,14 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     final payload = validateSyncAndBuildPayload();
     if (payload == null) return;
 
+    final visibleBeforeRebuild = _controller.visibleQuestions
+        .map((question) => question.id)
+        .toSet();
     setState(() => _rebuildShownQuestionsFromController());
+    _controller.markRestoredVisibleAnswersNeedingReview(visibleBeforeRebuild);
 
     if (modeBefore == QuestionnaireCtaMode.complete) {
-      _finishQuestionnaire(payload);
+      _finishQuestionnaireIfReviewed(_controller.buildVisiblePayload());
     } else {
       _finishQuestionnaire(null);
       _scrollToNewQuestion();
@@ -264,14 +303,18 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
     if (shouldContinue == false) {
       setState(() => _rebuildShownQuestionsFromController(revealNext: false));
-      _finishQuestionnaire(_controller.buildVisiblePayload());
+      _finishQuestionnaire(null);
       return;
     }
 
+    final visibleBeforeRebuild = _controller.visibleQuestions
+        .map((question) => question.id)
+        .toSet();
     setState(() => _rebuildShownQuestionsFromController());
+    _controller.markRestoredVisibleAnswersNeedingReview(visibleBeforeRebuild);
 
     if (_controller.allVisibleQuestionsAnswered) {
-      _finishQuestionnaire(_controller.buildVisiblePayload());
+      _scrollToNewQuestion();
     } else {
       if (_controller.hasConditionalDependents(answer.question)) {
         _finishQuestionnaire(null);
@@ -390,9 +433,13 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                   AnimatedSize(
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeInOut,
-                    child: KeyedSubtree(
-                      key: ValueKey(question.question.id),
-                      child: question,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        question,
+                        if (_controller.needsReview(question.question.id))
+                          _buildReviewRequiredBanner(question.question.id),
+                      ],
                     ),
                   ),
                   if (index == shownQuestions.length - 1 &&
@@ -405,6 +452,61 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildReviewRequiredBanner(String questionId) {
+    final l10n = AppLocalizations.of(context)!;
+    final showError = _shownReviewErrors.contains(questionId);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Card(
+        color: showError ? Colors.red.shade50 : Colors.amber.shade50,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    showError ? Icons.error_outline : Icons.info_outline,
+                    color: showError
+                        ? Colors.red.shade700
+                        : const Color(0xFF92400E),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      l10n.restored_answer_needs_review,
+                      style: TextStyle(
+                        color: showError
+                            ? Colors.red.shade900
+                            : const Color(0xFF92400E),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () {
+                    setState(() => _shownReviewErrors.remove(questionId));
+                    _controller.markReviewed(questionId);
+                  },
+                  icon: const Icon(Icons.check),
+                  label: Text(l10n.mark_answer_reviewed),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

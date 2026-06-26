@@ -463,6 +463,8 @@
   "ok": "OK",
   "submit" : "Absenden",
   "continue_label" : "Weiter",
+  "restored_answer_needs_review": "Bitte die wiederhergestellte Antwort überprüfen.",
+  "mark_answer_reviewed": "Als überprüft markieren",
 
   "date_picker_hint": "Wählen Sie ein Datum",
   "time_picker_hint": "Wählen Sie eine Zeit",

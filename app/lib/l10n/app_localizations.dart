@@ -2324,6 +2324,18 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get continue_label;
 
+  /// No description provided for @restored_answer_needs_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review this restored answer.'**
+  String get restored_answer_needs_review;
+
+  /// No description provided for @mark_answer_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as reviewed'**
+  String get mark_answer_reviewed;
+
   /// No description provided for @date_picker_hint.
   ///
   /// In en, this message translates to:

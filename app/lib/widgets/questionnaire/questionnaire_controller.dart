@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 
@@ -18,6 +19,11 @@ class QuestionnaireController extends ChangeNotifier {
   QuestionnaireState get answers {
     final copy = QuestionnaireState();
     copy.answers.addAll(_answers.answers);
+    copy.answerMetadata.addAll(
+      _answers.answerMetadata.map(
+        (questionId, metadata) => MapEntry(questionId, metadata.copy()),
+      ),
+    );
     return copy;
   }
 
@@ -75,6 +81,136 @@ class QuestionnaireController extends ChangeNotifier {
       return expression.expressions.any((e) => _hasExpressionTarget(target, e));
     }
     return false;
+  }
+
+  Set<String> _expressionTargets(Expression expression) {
+    if (expression is ValueExpression) {
+      return expression.target == null
+          ? <String>{}
+          : <String>{expression.target!};
+    } else if (expression is NotExpression) {
+      return _expressionTargets(expression.expression);
+    } else if (expression is CompositeExpression) {
+      return expression.expressions.expand(_expressionTargets).toSet();
+    }
+    return <String>{};
+  }
+
+  Set<String> _contextDependencyIds(Question question) {
+    final conditional = question.conditional;
+    if (conditional == null) return <String>{};
+    return conditional.condition.expressions.expand(_expressionTargets).toSet();
+  }
+
+  Map<String, Object?> _cacheContextFor(Question question) {
+    final context = <String, Object?>{};
+    for (final dependencyId in _contextDependencyIds(question)) {
+      final answer = _answers.answers[dependencyId];
+      context[dependencyId] = answer?.response;
+    }
+    return context;
+  }
+
+  bool _contextsDiffer(Map<String, Object?>? a, Map<String, Object?> b) {
+    if (a == null) return b.isNotEmpty;
+    return !const DeepCollectionEquality().equals(a, b);
+  }
+
+  void _storeCurrentContext(
+    Question question, {
+    bool preserveNeedsReview = false,
+  }) {
+    final existingMetadata = _answers.answerMetadata[question.id];
+    _answers.answerMetadata[question.id] = QuestionnaireAnswerMetadata(
+      restoredFromCache: existingMetadata?.restoredFromCache ?? false,
+      needsReview:
+          preserveNeedsReview && (existingMetadata?.needsReview ?? false),
+      cacheContext: _cacheContextFor(question),
+    );
+  }
+
+  bool _hasAnswerOrDraft(String questionId) {
+    return _answers.answers.containsKey(questionId) ||
+        (_drafts[questionId]?.isNotEmpty ?? false);
+  }
+
+  void _markAnsweredDependentsForReview(String changedQuestionId) {
+    final explicitDependents = visibleQuestions
+        .where((question) {
+          if (question.id == changedQuestionId) return false;
+          if (!_hasAnswerOrDraft(question.id)) return false;
+          return _contextDependencyIds(question).contains(changedQuestionId);
+        })
+        .toList(growable: false);
+
+    for (final question in explicitDependents) {
+      _markAnsweredQuestionForReviewIfContextChanged(question);
+    }
+  }
+
+  void _markAnsweredQuestionForReviewIfContextChanged(Question question) {
+    final currentContext = _cacheContextFor(question);
+    final metadata = _answers.answerMetadata[question.id];
+    final storedContext = metadata?.cacheContext;
+    final needsReview = _contextsDiffer(storedContext, currentContext);
+
+    _answers.answerMetadata[question.id] = QuestionnaireAnswerMetadata(
+      restoredFromCache: needsReview || (metadata?.restoredFromCache ?? false),
+      needsReview: needsReview,
+      cacheContext: storedContext ?? currentContext,
+    );
+  }
+
+  void markRestoredVisibleAnswersNeedingReview(
+    Set<String> previouslyVisibleIds,
+  ) {
+    var changed = false;
+    for (final question in visibleQuestions) {
+      if (previouslyVisibleIds.contains(question.id)) continue;
+      final answer = _answers.answers[question.id];
+      if (answer == null) continue;
+      final dependencyIds = _contextDependencyIds(question);
+      if (dependencyIds.isEmpty) continue;
+
+      final currentContext = _cacheContextFor(question);
+      final existingMetadata = _answers.answerMetadata[question.id];
+      final storedContext = existingMetadata?.cacheContext;
+      final nextMetadata = QuestionnaireAnswerMetadata(
+        restoredFromCache: true,
+        needsReview: _contextsDiffer(storedContext, currentContext),
+        cacheContext: storedContext ?? currentContext,
+      );
+      _answers.answerMetadata[question.id] = nextMetadata;
+      changed = true;
+    }
+    if (changed) notifyListeners();
+  }
+
+  QuestionnaireAnswerMetadata? metadataFor(String questionId) {
+    return _answers.answerMetadata[questionId];
+  }
+
+  bool needsReview(String questionId) {
+    return _answers.answerMetadata[questionId]?.needsReview ?? false;
+  }
+
+  void markReviewed(String questionId) {
+    final metadata = _answers.answerMetadata[questionId];
+    if (metadata == null || !metadata.needsReview) return;
+    metadata.needsReview = false;
+    notifyListeners();
+  }
+
+  bool visibleAnswersNeedReview() {
+    final visibleIds = visibleQuestions.map((q) => q.id).toSet();
+    return visibleIds.any((id) => needsReview(id));
+  }
+
+  String? firstVisibleAnswerNeedingReview() {
+    for (final question in visibleQuestions) {
+      if (needsReview(question.id)) return question.id;
+    }
+    return null;
   }
 
   QuestionnaireState _evaluationStateWith(Map<String, Answer> answers) {
@@ -141,7 +277,9 @@ class QuestionnaireController extends ChangeNotifier {
   /// editing after invalidation. Notifies listeners only when an answer was
   /// actually removed.
   void removeAnswer(String questionId) {
-    if (_answers.answers.remove(questionId) != null) {
+    final removed = _answers.answers.remove(questionId) != null;
+    _answers.answerMetadata.remove(questionId);
+    if (removed) {
       notifyListeners();
     }
   }
@@ -156,7 +294,10 @@ class QuestionnaireController extends ChangeNotifier {
 
   void submitAnswer(Answer answer) {
     _answers.answers[answer.question] = answer;
+    final question = questions.firstWhere((q) => q.id == answer.question);
+    _storeCurrentContext(question);
     _applyHiddenDefaults();
+    _markAnsweredDependentsForReview(answer.question);
     notifyListeners();
   }
 
@@ -190,6 +331,7 @@ class QuestionnaireController extends ChangeNotifier {
       final existingAnswer = _answers.answers[question.id];
       if (existingAnswer == null || existingAnswer.response != draft) {
         _answers.answers[question.id] = question.constructAnswer(draft);
+        _storeCurrentContext(question, preserveNeedsReview: true);
         _drafts.remove(question.id);
         changed = true;
       }
@@ -228,6 +370,10 @@ class QuestionnaireController extends ChangeNotifier {
     for (final entry in _answers.answers.entries) {
       if (visibleIds.contains(entry.key)) {
         result.answers[entry.key] = entry.value;
+        final metadata = _answers.answerMetadata[entry.key];
+        if (metadata != null) {
+          result.answerMetadata[entry.key] = metadata.copy();
+        }
       }
     }
     return result;
