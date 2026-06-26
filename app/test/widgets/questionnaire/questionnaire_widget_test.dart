@@ -871,7 +871,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('no'));
@@ -918,15 +918,16 @@ void main() {
     // No Submit button since free-text has no per-field Submit
     expect(find.text('Submit'), findsNothing);
 
-    // Type valid text. CTA shows Continue because pressing it reveals q2.
+    // Type valid text. Free-text uses its inline Done button to commit.
     await tester.enterText(find.byType(TextFormField), '42');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Done'), findsOneWidget);
+    expect(find.text('Continue'), findsNothing);
 
-    // Tap Continue → draft committed, q2 revealed
-    await tester.tap(find.text('Continue'));
+    // Tap Done → draft committed, q2 revealed
+    await tester.tap(find.text('Done'));
     await tester.pump();
     expect(key.currentState!.shownQuestions.length, 2);
     await tester.pumpAndSettle();
@@ -975,13 +976,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Submit'), findsNothing);
-      expect(find.text('Continue'), findsOneWidget);
+      expect(find.text('Continue'), findsNothing);
       expect(find.text('Complete'), findsNothing);
 
-      await tester.tap(find.text('Continue'));
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
 
-      expect(snapshots.where((snapshot) => snapshot == null).length, 1);
+      expect(snapshots.where((snapshot) => snapshot == null).length, 0);
       expect(find.text('yes'), findsOneWidget);
       expect(find.text('no'), findsOneWidget);
       expect(find.text('Continue'), findsNothing);
@@ -1029,15 +1030,16 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Type 'show' → pending branch change → Continue
+      // Type 'show' → pending branch change, then inline Done commits it.
       await tester.enterText(find.byType(TextFormField), 'show');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      expect(find.text('Continue'), findsOneWidget);
+      expect(find.text('Done'), findsOneWidget);
+      expect(find.text('Continue'), findsNothing);
 
-      // Tap Continue → q2 revealed, no completion yet
-      await tester.tap(find.text('Continue'));
+      // Tap Done → q2 revealed, no completion yet
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
 
       expect(snapshots.where((s) => s == null).length, 1);
@@ -1085,18 +1087,20 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Type in q1, tap Continue to reveal q2
+      // Type in q1, tap Done to reveal q2
       await tester.enterText(find.byType(TextFormField).first, '2');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Continue'));
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
 
-      // Type in q2, tap Complete again
+      // Type in q2, tap Done, then Complete.
       await tester.enterText(find.byType(TextFormField).last, 'later');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
@@ -1151,17 +1155,19 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Submit q1 and q2 via CTA
+      // Submit q1 and q2 via inline Done buttons.
       await tester.enterText(find.byType(TextFormField).first, '2');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Continue'));
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextFormField).last, 'later');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
@@ -1232,17 +1238,19 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Submit q1 via CTA to reveal q2
+      // Submit q1 via inline Done to reveal q2
       await tester.enterText(find.byType(TextFormField).first, '1');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Continue'));
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextFormField).last, 'old q2');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();
@@ -1321,28 +1329,32 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Type 'show' → CTA says Continue (pending branch change)
+    // Type 'show' → inline Done commits the pending branch change.
     await tester.enterText(find.byType(TextFormField), 'show');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Done'), findsOneWidget);
+    expect(find.text('Continue'), findsNothing);
 
-    // Tap Continue → q2 revealed, null callback emitted
-    await tester.tap(find.text('Continue'));
+    // Tap Done → q2 revealed, null callback emitted
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
 
     expect(snapshots.where((s) => s == null).length, 1);
     expect(find.byType(TextFormField), findsNWidgets(2));
 
-    // Fill q2, CTA shows Complete
+    // Fill q2, inline Done commits it, then Complete submits.
     await tester.enterText(find.byType(TextFormField).last, 'dependent');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
+    expect(find.text('Complete'), findsNothing);
+
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
     expect(find.text('Complete'), findsOneWidget);
 
-    // Tap Complete → both committed
     await tester.tap(find.text('Complete'));
     await tester.pumpAndSettle();
 
@@ -1350,12 +1362,17 @@ void main() {
     expect(validCompletion['q1'], 'show');
     expect(validCompletion['q2'], 'dependent');
 
-    // Now edit q1 to 'hide' → branch change pending, Continue shows
+    // Now edit q1 to 'hide' → draft pending, Continue shown to commit & rebuild.
     await tester.enterText(find.byType(TextFormField).first, 'hide');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
     expect(find.text('Continue'), findsOneWidget);
+
+    // Tap Continue → commits all drafts & rebuilds visibility.
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.text('Continue'), findsNothing);
 
     // validateSyncAndBuildPayload commits all drafts (including conditional edits)
     final payload = questionnaireKey.currentState!
@@ -1401,18 +1418,20 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Type in q1, CTA Continue → reveals q2
+    // Type in q1, inline Done reveals q2.
     await tester.enterText(find.byType(TextFormField).first, '2');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
 
-    // Type in q2, CTA Complete → finishes
+    // Type in q2, inline Done commits it, then Complete finishes.
     await tester.enterText(find.byType(TextFormField).last, 'later');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done').last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Complete'));
     await tester.pumpAndSettle();
@@ -1427,8 +1446,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 350));
     await tester.pumpAndSettle();
 
-    // One null snapshot from the reveal step, no new nulls from typing
-    expect(snapshots.where((s) => s == null).length, 1);
+    // No null snapshot from free-text reveal; no new callbacks from typing.
+    expect(snapshots.where((s) => s == null).length, 0);
     // Still only one completion (the first full completion)
     expect(snapshots.where((s) => s != null).length, 1);
 
@@ -1437,14 +1456,21 @@ void main() {
 
     // No Submit button anywhere
     expect(find.text('Submit'), findsNothing);
-
-    // Tap CTA → commits both, new completion fires
-    await tester.tap(find.text('Complete'));
+    // q1 has a pending draft and is not the last → Continue shown to commit.
+    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Complete'), findsNothing);
+    // Tap Continue → commits q1 edit and advances.
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
+    expect(find.text('Continue'), findsNothing);
 
-    final syncedCompletion = snapshots.where((s) => s != null).last!;
-    expect(syncedCompletion['q1'], '23');
-    expect(syncedCompletion['q2'], 'later');
+    final syncedPayload = _snapshot(
+      tester
+          .state<QuestionnaireWidgetState>(find.byType(QuestionnaireWidget))
+          .validateSyncAndBuildPayload(),
+    );
+    expect(syncedPayload!['q1'], '23');
+    expect(syncedPayload['q2'], 'later');
 
     await tester.pump(const Duration(milliseconds: 600));
   });
@@ -1491,18 +1517,20 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Submit 'show' → CTA Continue, reveal q2
+    // Submit 'show' via inline Done, reveal q2.
     await tester.enterText(find.byType(TextFormField), 'show');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
 
-    // Submit q2
+    // Submit q2.
     await tester.enterText(find.byType(TextFormField).last, 'dependent');
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done').last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Complete'));
     await tester.pumpAndSettle();
@@ -1516,17 +1544,17 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
     await tester.pumpAndSettle();
-
     // Q2 still visible (branch not churned)
     expect(find.text('dependent'), findsOneWidget);
-    // CTA shows Continue (pending branch change)
+    // q1 not last → Continue shown to commit (not inline Done).
     expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Complete'), findsNothing);
 
     // No auto-complete
     final completions = snapshots.where((s) => s != null).toList();
     expect(completions.length, 1);
 
-    // Tap Continue → branch change applies (no submit yet)
+    // Tap Continue → branch change applies.
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
@@ -1590,10 +1618,12 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      // Type '123' in q2, tap CTA Complete
+      // Type '123' in q2, tap inline Done, then Complete.
       await tester.enterText(find.byType(TextFormField), '123');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Complete'));
       await tester.pumpAndSettle();

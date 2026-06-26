@@ -400,10 +400,11 @@ class QuestionnaireController extends ChangeNotifier {
 
   /// Determines which CTA to show for the given [questions].
   ///
-  /// - [QuestionnaireCtaMode.hidden]: no visible question has any input or no
-  ///   CTA action can be taken.
-  /// - [QuestionnaireCtaMode.continue_]: a visible free-text draft can be
-  ///   committed but pressing the CTA should advance rather than complete.
+  /// - [QuestionnaireCtaMode.hidden]: no visible question has a submit-ready
+  ///   answer, a visible free-text field still has a draft, or no CTA action
+  ///   can be taken.
+  /// - [QuestionnaireCtaMode.continue_]: retained for non-free-text branch
+  ///   progression compatibility.
   /// - [QuestionnaireCtaMode.complete]: pressing the CTA can produce a final
   ///   visible-answer payload.
   QuestionnaireCtaMode ctaModeFor(Iterable<Question> questions) {
@@ -413,15 +414,6 @@ class QuestionnaireController extends ChangeNotifier {
     // Never offer a CTA while a shown free-text field has an invalid draft.
     if (hasInvalidDraftAmong(questionList)) return QuestionnaireCtaMode.hidden;
 
-    final visibleQuestionIds = visibleQuestions
-        .map((question) => question.id)
-        .toSet();
-    final shownQuestionIds = questionList
-        .map((question) => question.id)
-        .toSet();
-    final hasUnshownVisibleQuestion = visibleQuestionIds
-        .difference(shownQuestionIds)
-        .isNotEmpty;
     var hasVisibleDraft = false;
     var hasAnyInput = false;
     var allShownHaveInput = true;
@@ -430,9 +422,9 @@ class QuestionnaireController extends ChangeNotifier {
       final answer = answerFor(question.id);
       final draft = question is FreeTextQuestion ? draftFor(question.id) : null;
       final hasDraftInput = draft != null && draft.isNotEmpty;
-      // A draft only counts as "pending" (requiring a Continue commit) when it
-      // differs from the committed answer. A restored draft that mirrors the
-      // committed answer is not pending and must not force a Continue CTA.
+      // A draft only counts as "pending" when it differs from the committed
+      // answer. A restored draft that mirrors the committed answer is not
+      // pending and must not force a Continue CTA.
       final hasPendingDraft =
           hasDraftInput &&
           (answer == null ||
@@ -445,16 +437,32 @@ class QuestionnaireController extends ChangeNotifier {
 
     if (!hasAnyInput) return QuestionnaireCtaMode.hidden;
 
-    if (_hasPendingBranchChangeFor(questionList)) {
-      return QuestionnaireCtaMode.continue_;
+    // Only suppress the global CTA when the last question is a free text
+    // with a pending draft — the inline Done button handles it.
+    if (_isLastFreeTextWithDraft(questionList)) {
+      return QuestionnaireCtaMode.hidden;
     }
 
-    if (hasVisibleDraft && (!allShownHaveInput || hasUnshownVisibleQuestion)) {
-      return QuestionnaireCtaMode.continue_;
-    }
+    // Non-last free text with a pending draft: show Continue so the user can
+    // commit the draft and advance to the next question.
+    if (hasVisibleDraft) return QuestionnaireCtaMode.continue_;
 
     if (allShownHaveInput) return QuestionnaireCtaMode.complete;
     return QuestionnaireCtaMode.hidden;
+  }
+
+  /// Returns true when the last question in [questionList] is a free text
+  /// question with a pending draft that differs from its committed answer.
+  /// In this case the per‑question Done button handles committing, so the
+  /// global CTA stays hidden to avoid a conflict.
+  bool _isLastFreeTextWithDraft(List<Question> questionList) {
+    final lastQuestion = questionList.last;
+    if (lastQuestion is! FreeTextQuestion) return false;
+    final draft = _drafts[lastQuestion.id];
+    if (draft == null || draft.isEmpty) return false;
+    final answer = answerFor(lastQuestion.id);
+    return answer == null ||
+        (answer is Answer<String> && answer.response != draft);
   }
 
   /// Convenience getter that computes [ctaModeFor] for

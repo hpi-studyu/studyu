@@ -9,6 +9,7 @@ class FreeTextQuestionWidget extends QuestionWidget {
   final Function(Answer)? onDone;
   final Answer<String>? initialAnswer;
   final void Function(String questionId, String value)? onDraftChanged;
+  final bool isLastQuestion;
 
   const FreeTextQuestionWidget({
     super.key,
@@ -16,6 +17,7 @@ class FreeTextQuestionWidget extends QuestionWidget {
     this.onDone,
     this.initialAnswer,
     this.onDraftChanged,
+    this.isLastQuestion = false,
   });
 
   @override
@@ -26,9 +28,9 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _textFieldController = TextEditingController();
   final _formFieldKey = GlobalKey<FormFieldState>();
   final _focusNode = FocusNode();
-  bool _hasInteracted = false;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
-
+  bool _hasInteracted = false;
+  bool _donePressed = false;
   @override
   void initState() {
     super.initState();
@@ -76,13 +78,28 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     );
   }
 
+  void _enableValidation() {
+    if (_hasInteracted) return;
+    _hasInteracted = true;
+    setState(() {
+      _autovalidateMode = AutovalidateMode.always;
+    });
+  }
+
   void _handleInteraction() {
-    if (!_hasInteracted) {
-      _hasInteracted = true;
-      setState(() {
-        _autovalidateMode = AutovalidateMode.always;
-      });
+    _enableValidation();
+  }
+
+  void _handleDone() {
+    _enableValidation();
+    final value = _textFieldController.text;
+    if (widget.question.validateResponse(value) != null) {
+      _formFieldKey.currentState?.validate();
+      return;
     }
+    FocusScope.of(context).unfocus();
+    widget.onDone?.call(widget.question.constructAnswer(value));
+    setState(() => _donePressed = true);
   }
 
   TextInputType _getKeyboardType() {
@@ -152,6 +169,15 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             };
           },
         ),
+        const SizedBox(height: 12),
+        if (widget.isLastQuestion && !_donePressed)
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: _handleDone,
+              child: Text(l10n.done),
+            ),
+          ),
       ],
     );
   }

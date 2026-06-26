@@ -201,6 +201,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     required Question question,
     required int index,
     required GlobalKey containerKey,
+    bool isLastQuestion = false,
     GlobalKey<FreeTextQuestionWidgetState>? freeTextKey,
     Answer? initialAnswer,
     void Function(String questionId, String value)? onFreeTextDraftChanged,
@@ -215,6 +216,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       initialAnswer: initialAnswer,
       onFreeTextDraftChanged: onFreeTextDraftChanged,
       freeTextKey: freeTextKey,
+      isLastQuestion: isLastQuestion,
     );
   }
 
@@ -272,12 +274,14 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
             )
           : null;
       final initialAnswer = _initialAnswerForQuestion(question);
+      final isLast = i == questionsToShow.length - 1;
       questionKeys.add(containerKey);
       shownQuestions.add(
         _buildQuestionContainer(
           containerKey: containerKey,
           question: question,
           index: i,
+          isLastQuestion: isLast,
           initialAnswer: initialAnswer,
           onFreeTextDraftChanged: _controller.updateFreeTextDraft,
           freeTextKey: freeTextKey,

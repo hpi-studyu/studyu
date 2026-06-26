@@ -24,6 +24,7 @@ class QuestionContainer extends StatelessWidget {
   final GlobalKey? containerKey;
   final Answer? initialAnswer;
   final void Function(String questionId, String value)? onFreeTextDraftChanged;
+  final bool isLastQuestion;
   final GlobalKey<FreeTextQuestionWidgetState>? freeTextKey;
 
   const QuestionContainer({
@@ -35,6 +36,7 @@ class QuestionContainer extends StatelessWidget {
     this.containerKey,
     this.initialAnswer,
     this.onFreeTextDraftChanged,
+    this.isLastQuestion = false,
     this.freeTextKey,
     super.key,
   });
@@ -95,6 +97,7 @@ class QuestionContainer extends StatelessWidget {
           onDone: (answer) => onDone(answer, index),
           initialAnswer: initialAnswer as Answer<String>?,
           onDraftChanged: onFreeTextDraftChanged,
+          isLastQuestion: isLastQuestion,
         );
       case final FitbitQuestion fitbitQuestion:
         // No initialAnswer until Fitbit widget can render restored values.

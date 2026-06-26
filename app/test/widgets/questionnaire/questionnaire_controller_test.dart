@@ -518,41 +518,33 @@ void main() {
         expect(controller.ctaMode, QuestionnaireCtaMode.complete);
       });
 
-      test(
-        'continue_ when visible free-text draft has pending branch change',
-        () {
-          final q1 = freeTextQuestion('q1', 'Branch text');
-          final q2 = boolQuestion('q2', 'Follow-up')
-            ..conditional = QuestionConditional<bool>.withCondition(
-              CompositeExpression(
-                logicType: LogicType.and,
-                expressions: [
-                  TextExpression(
-                    comparator: TextComparator.equal,
-                    value: 'show',
-                  )..target = 'q1',
-                ],
-              ),
-            );
-          final controller = QuestionnaireController([q1, q2]);
-          controller.updateFreeTextDraft('q1', 'show');
-          expect(controller.ctaMode, QuestionnaireCtaMode.continue_);
-          expect(controller.hasPendingBranchChange, isTrue);
-        },
-      );
+      test('hidden when visible free-text draft has pending branch change', () {
+        final q1 = freeTextQuestion('q1', 'Branch text');
+        final q2 = boolQuestion('q2', 'Follow-up')
+          ..conditional = QuestionConditional<bool>.withCondition(
+            CompositeExpression(
+              logicType: LogicType.and,
+              expressions: [
+                TextExpression(comparator: TextComparator.equal, value: 'show')
+                  ..target = 'q1',
+              ],
+            ),
+          );
+        final controller = QuestionnaireController([q1, q2]);
+        controller.updateFreeTextDraft('q1', 'show');
+        expect(controller.ctaMode, QuestionnaireCtaMode.hidden);
+        expect(controller.hasPendingBranchChange, isTrue);
+      });
 
-      test(
-        'complete when free-text has draft but no conditional dependents',
-        () {
-          final q1 = freeTextQuestion('q1', 'Final text');
-          final controller = QuestionnaireController([q1]);
-          controller.updateFreeTextDraft('q1', 'done');
-          expect(controller.ctaMode, QuestionnaireCtaMode.complete);
-          expect(controller.hasPendingBranchChange, isFalse);
-        },
-      );
+      test('hidden when free-text has draft but no conditional dependents', () {
+        final q1 = freeTextQuestion('q1', 'Final text');
+        final controller = QuestionnaireController([q1]);
+        controller.updateFreeTextDraft('q1', 'done');
+        expect(controller.ctaMode, QuestionnaireCtaMode.hidden);
+        expect(controller.hasPendingBranchChange, isFalse);
+      });
 
-      test('continue_ when draft differs from committed answer', () {
+      test('hidden when free-text draft differs from committed answer', () {
         final q1 = freeTextQuestion('q1', 'Branch text');
         final q2 = boolQuestion('q2', 'Follow-up')
           ..conditional = QuestionConditional<bool>.withCondition(
@@ -567,7 +559,7 @@ void main() {
         final controller = QuestionnaireController([q1, q2]);
         controller.submitAnswer(q1.constructAnswer('hide'));
         controller.updateFreeTextDraft('q1', 'show');
-        expect(controller.ctaMode, QuestionnaireCtaMode.continue_);
+        expect(controller.ctaMode, QuestionnaireCtaMode.hidden);
         expect(controller.hasPendingBranchChange, isTrue);
       });
 
@@ -604,39 +596,29 @@ void main() {
         },
       );
 
-      test(
-        'continue_ when shown unanswered free-text draft reveals hidden branch',
-        () {
-          final q1 = boolQuestion('q1', 'Show text?');
-          final q2 = freeTextQuestion('q2', 'Type "show"')
-            ..conditional = shownWhenQ1True<String>();
-          final q3 = boolQuestion('q3', 'Revealed by text')
-            ..conditional = QuestionConditional<bool>.withCondition(
-              CompositeExpression(
-                logicType: LogicType.and,
-                expressions: [
-                  TextExpression(
-                    comparator: TextComparator.equal,
-                    value: 'show',
-                  )..target = 'q2',
-                ],
-              ),
-            );
-          final controller = QuestionnaireController([q1, q2, q3]);
-
-          controller.submitAnswer(q1.constructAnswer(true));
-          expect(controller.progressiveVisibleQuestions.map((q) => q.id), [
-            'q1',
-          ]);
-
-          controller.updateFreeTextDraft('q2', 'show');
-
-          expect(
-            controller.ctaModeFor([q1, q2]),
-            QuestionnaireCtaMode.continue_,
+      test('hidden when shown free-text draft would reveal hidden branch', () {
+        final q1 = boolQuestion('q1', 'Show text?');
+        final q2 = freeTextQuestion('q2', 'Type "show"')
+          ..conditional = shownWhenQ1True<String>();
+        final q3 = boolQuestion('q3', 'Revealed by text')
+          ..conditional = QuestionConditional<bool>.withCondition(
+            CompositeExpression(
+              logicType: LogicType.and,
+              expressions: [
+                TextExpression(comparator: TextComparator.equal, value: 'show')
+                  ..target = 'q2',
+              ],
+            ),
           );
-        },
-      );
+        final controller = QuestionnaireController([q1, q2, q3]);
+
+        controller.submitAnswer(q1.constructAnswer(true));
+        expect(controller.progressiveVisibleQuestions.map((q) => q.id), ['q1']);
+
+        controller.updateFreeTextDraft('q2', 'show');
+
+        expect(controller.ctaModeFor([q1, q2]), QuestionnaireCtaMode.hidden);
+      });
 
       test('restored free-text draft equal to committed answer does not force '
           'continue when a later question is unanswered', () {
@@ -673,10 +655,11 @@ void main() {
         expect(controller.hasInvalidDraftAmong([q1]), isTrue);
         expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.hidden);
 
-        // Correcting the draft re-enables the CTA.
+        // Correcting the draft removes the validation error, but the inline
+        // Done button still owns free-text commits.
         controller.updateFreeTextDraft('q1', '123');
         expect(controller.hasInvalidDraftAmong([q1]), isFalse);
-        expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.complete);
+        expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.hidden);
       });
 
       group('restored answer review metadata', () {

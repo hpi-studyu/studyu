@@ -15,18 +15,18 @@ Widget setup(Widget child) {
 }
 
 void main() {
-  testWidgets('Submit button is never shown', (tester) async {
+  testWidgets('Done button is shown before text entry', (tester) async {
     final question = FreeTextQuestion.withId(
       textType: FreeTextQuestionType.any,
       lengthRange: [1, 10],
     );
 
-    await tester.pumpWidget(setup(FreeTextQuestionWidget(question: question)));
+    await tester.pumpWidget(
+      setup(FreeTextQuestionWidget(question: question, isLastQuestion: true)),
+    );
     await tester.pumpAndSettle();
-    expect(find.text('Submit'), findsNothing);
 
-    await tester.pumpWidget(setup(FreeTextQuestionWidget(question: question)));
-    await tester.pumpAndSettle();
+    expect(find.text('Done'), findsOneWidget);
     expect(find.text('Submit'), findsNothing);
   });
 
@@ -60,6 +60,61 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
 
     expect(onDoneCount, equals(0));
+  });
+
+  testWidgets('Done validates empty text before calling onDone', (
+    tester,
+  ) async {
+    final question = FreeTextQuestion.withId(
+      textType: FreeTextQuestionType.any,
+      lengthRange: [1, 10],
+    );
+
+    int onDoneCount = 0;
+
+    await tester.pumpWidget(
+      setup(
+        FreeTextQuestionWidget(
+          question: question,
+          onDone: (_) => onDoneCount++,
+          isLastQuestion: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+
+    expect(onDoneCount, equals(0));
+    expect(find.text('Please enter at least 1 characters'), findsOneWidget);
+  });
+
+  testWidgets('Done submits valid text', (tester) async {
+    final question = FreeTextQuestion.withId(
+      textType: FreeTextQuestionType.custom,
+      lengthRange: [1, 10],
+      customTypeExpression: r'\d+',
+    );
+
+    Answer<String>? answer;
+
+    await tester.pumpWidget(
+      setup(
+        FreeTextQuestionWidget(
+          question: question,
+          onDone: (value) => answer = value as Answer<String>,
+          isLastQuestion: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextFormField), '123');
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(answer?.response, equals('123'));
   });
 
   testWidgets('typing updates onDraftChanged but does not call onDone', (
