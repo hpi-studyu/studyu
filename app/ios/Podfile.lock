@@ -1,34 +1,22 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_file_dialog (0.0.1):
-    - Flutter
   - flutter_web_auth_2 (3.0.0):
-    - Flutter
-  - permission_handler_apple (9.3.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - flutter_file_dialog (from `.symlinks/plugins/flutter_file_dialog/ios`)
   - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
-  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  flutter_file_dialog:
-    :path: ".symlinks/plugins/flutter_file_dialog/ios"
   flutter_web_auth_2:
     :path: ".symlinks/plugins/flutter_web_auth_2/ios"
-  permission_handler_apple:
-    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_file_dialog: ca8d7fbd1772d4f0c2777b4ab20a7787ef4e7dd8
   flutter_web_auth_2: 5c8d9dcd7848b5a9efb086d24e7a9adcae979c80
-  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
 
-PODFILE CHECKSUM: b00a565d52284bcdd04d643f399531a35b02c2c4
+PODFILE CHECKSUM: 7f07ebef3a0a0adf5e89297b9e35e16dccabab6a
 
 COCOAPODS: 1.16.2
