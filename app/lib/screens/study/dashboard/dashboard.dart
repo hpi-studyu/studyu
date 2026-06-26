@@ -14,9 +14,10 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
+import 'package:studyu_app/theme.dart' as app_theme;
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -32,15 +33,13 @@ class OverflowMenuItem {
   final String name;
   final IconData icon;
   final String? routeName;
-  final Function()? onTap;
+  final Future<void> Function()? onTap;
 
   OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
 }
 
 class _DashboardScreenState extends State<DashboardScreen>
     with WidgetsBindingObserver {
-  static const _dashboardShowcaseCompletedKey = 'dashboard_showcase_completed';
-
   final GlobalKey _progressShowcaseKey = GlobalKey();
   final GlobalKey _currentInterventionShowcaseKey = GlobalKey();
   final GlobalKey _todayTasksShowcaseKey = GlobalKey();
@@ -63,16 +62,24 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    final showcaseActionTextStyle = TextStyle(
+      color: app_theme.theme.colorScheme.onPrimary,
+      fontWeight: FontWeight.w600,
+    );
     _dashboardShowcase = ShowcaseView.register(
       blurValue: 1,
       globalTooltipActionConfig: const TooltipActionConfig(actionGap: 12),
       globalTooltipActions: [
         TooltipActionButton(
           type: TooltipDefaultActionType.skip,
+          backgroundColor: app_theme.theme.colorScheme.primary,
+          textStyle: showcaseActionTextStyle,
           hideActionWidgetForShowcase: [_menuShowcaseKey],
         ),
         TooltipActionButton(
           type: TooltipDefaultActionType.next,
+          backgroundColor: app_theme.theme.colorScheme.primary,
+          textStyle: showcaseActionTextStyle,
           hideActionWidgetForShowcase: [_menuShowcaseKey],
         ),
       ],
@@ -139,6 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     final isPreviewMode = context.read<AppState>().isPreview;
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -151,6 +159,8 @@ class _DashboardScreenState extends State<DashboardScreen>
             key: _contactShowcaseKey,
             title: l10n.dashboard_showcase_contact_title,
             description: l10n.dashboard_showcase_contact_description,
+            tooltipBackgroundColor: theme.colorScheme.surface,
+            textColor: theme.colorScheme.onSurface,
             targetShapeBorder: const CircleBorder(),
             child: IconButton(
               tooltip: l10n.contact,
@@ -164,6 +174,8 @@ class _DashboardScreenState extends State<DashboardScreen>
             key: _reportShowcaseKey,
             title: l10n.dashboard_showcase_report_title,
             description: l10n.dashboard_showcase_report_description,
+            tooltipBackgroundColor: theme.colorScheme.surface,
+            textColor: theme.colorScheme.onSurface,
             targetShapeBorder: const CircleBorder(),
             child: IconButton(
               tooltip: l10n.current_report,
@@ -178,13 +190,41 @@ class _DashboardScreenState extends State<DashboardScreen>
             key: _menuShowcaseKey,
             title: l10n.dashboard_showcase_menu_title,
             description: l10n.dashboard_showcase_menu_description,
+            tooltipBackgroundColor: theme.colorScheme.surface,
+            textColor: theme.colorScheme.onSurface,
+            tooltipActions: [
+              TooltipActionButton(
+                type: TooltipDefaultActionType.skip,
+                backgroundColor: theme.colorScheme.primary,
+                textStyle: TextStyle(
+                  color: theme.colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              TooltipActionButton(
+                type: TooltipDefaultActionType.next,
+                name: l10n.dashboard_showcase_finish,
+                backgroundColor: theme.colorScheme.primary,
+                textStyle: TextStyle(
+                  color: theme.colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
             targetShapeBorder: const CircleBorder(),
             child: PopupMenuButton<OverflowMenuItem>(
-              onSelected: (value) {
+              onSelected: (value) async {
                 if (value.routeName != null) {
-                  Navigator.pushNamed(context, value.routeName!);
+                  final result = await Navigator.pushNamed(
+                    context,
+                    value.routeName!,
+                  );
+                  if (!mounted) return;
+                  if (value.routeName == Routes.appSettings && result == true) {
+                    await _restartDashboardShowcase();
+                  }
                 } else {
-                  value.onTap?.call();
+                  await value.onTap?.call();
                 }
               },
               itemBuilder: (context) {
@@ -434,8 +474,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     if (_showcaseCheckStarted || context.read<AppState>().isPreview) return;
     _showcaseCheckStarted = true;
 
-    final completed =
-        await SecureStorage.readBool(_dashboardShowcaseCompletedKey) ?? false;
+    final completed = await DashboardShowcaseStorage.isCompleted();
     if (completed || !mounted || subject == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -451,9 +490,14 @@ class _DashboardScreenState extends State<DashboardScreen>
     });
   }
 
+  Future<void> _restartDashboardShowcase() async {
+    _showcaseCheckStarted = false;
+    await _startDashboardShowcaseIfNeeded();
+  }
+
   void _markDashboardShowcaseCompleted() {
     if (_isDisposing) return;
-    unawaited(SecureStorage.write(_dashboardShowcaseCompletedKey, 'true'));
+    unawaited(DashboardShowcaseStorage.markCompleted());
   }
 }
 

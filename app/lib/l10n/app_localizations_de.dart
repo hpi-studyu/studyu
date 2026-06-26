@@ -343,6 +343,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.';
 
   @override
+  String get dashboard_showcase_finish => 'Fertig';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -367,6 +370,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settings => 'Einstellungen';
+
+  @override
+  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
 
   @override
   String get yes => 'Ja';

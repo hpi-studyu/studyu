@@ -680,6 +680,12 @@ abstract class AppLocalizations {
   /// **'Find settings, FAQs, report history, and more here.'**
   String get dashboard_showcase_menu_description;
 
+  /// No description provided for @dashboard_showcase_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get dashboard_showcase_finish;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:
@@ -727,6 +733,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @show_dashboard_showcase_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show dashboard tour again'**
+  String get show_dashboard_showcase_again;
 
   /// No description provided for @yes.
   ///

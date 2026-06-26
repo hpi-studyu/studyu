@@ -156,10 +156,13 @@ class _TaskOverviewState extends State<TaskOverview> {
     required Widget child,
   }) {
     if (key == null) return child;
+    final theme = Theme.of(context);
     return Showcase(
       key: key,
       title: title,
       description: description,
+      tooltipBackgroundColor: theme.colorScheme.surface,
+      textColor: theme.colorScheme.onSurface,
       child: child,
     );
   }

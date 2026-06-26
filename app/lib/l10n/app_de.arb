@@ -112,6 +112,7 @@
   "dashboard_showcase_report_description": "Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.",
   "dashboard_showcase_menu_title": "Weitere Optionen",
   "dashboard_showcase_menu_description": "Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.",
+  "dashboard_showcase_finish": "Fertig",
   "home": "Home",
   "profile": "Profil",
   "help": "Hilfe",
@@ -128,6 +129,7 @@
     }
   },
   "settings": "Einstellungen",
+  "show_dashboard_showcase_again": "Dashboard-Tour erneut anzeigen",
 
   "survey": "Umfrage",
 

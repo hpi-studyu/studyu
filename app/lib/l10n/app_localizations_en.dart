@@ -341,6 +341,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Find settings, FAQs, report history, and more here.';
 
   @override
+  String get dashboard_showcase_finish => 'Finish';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -365,6 +368,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
+
+  @override
+  String get show_dashboard_showcase_again => 'Show dashboard tour again';
 
   @override
   String get yes => 'yes';
