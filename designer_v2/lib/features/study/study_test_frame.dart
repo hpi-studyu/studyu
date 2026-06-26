@@ -16,6 +16,7 @@ import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:web/web.dart' as web;
 
@@ -330,13 +331,13 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                                     Positioned.fill(
                                       child: ErrorFrame(
                                         title: isLocalDevelopment
-                                            ? 'Local app preview unavailable'
-                                            : 'App under maintenance',
+                                            ? tr.preview_overlay_local_unavailable_title
+                                            : tr.preview_overlay_remote_unavailable_title,
                                         message:
                                             _overlayMessage ??
                                             (isLocalDevelopment
-                                                ? 'The local StudyU app could not be reached.'
-                                                : 'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.'),
+                                                ? tr.preview_overlay_local_unavailable_message
+                                                : tr.preview_overlay_remote_unavailable_message),
                                       ),
                                     ),
                                   if (_overlayStage !=

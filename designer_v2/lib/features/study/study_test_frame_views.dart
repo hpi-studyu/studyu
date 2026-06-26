@@ -7,7 +7,6 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 enum PreviewOverlayStage { healthChecking, connecting, appLoading, error, none }
 
@@ -113,10 +112,12 @@ class LoadingFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = tr;
     final title = switch (stage) {
-      PreviewOverlayStage.healthChecking => 'Checking app availability',
-      PreviewOverlayStage.connecting => 'Connecting to app preview',
-      PreviewOverlayStage.appLoading => 'Loading app preview',
+      PreviewOverlayStage.healthChecking =>
+        l10n.preview_overlay_health_checking_title,
+      PreviewOverlayStage.connecting => l10n.preview_overlay_connecting_title,
+      PreviewOverlayStage.appLoading => l10n.preview_overlay_loading_title,
       PreviewOverlayStage.error || PreviewOverlayStage.none => '',
     };
     final description =
@@ -124,23 +125,27 @@ class LoadingFrame extends StatelessWidget {
         switch (stage) {
           PreviewOverlayStage.healthChecking =>
             isLocalDevelopment
-                ? 'Checking whether the StudyU app is running at $configuredUrl.'
-                : 'Checking whether the participant app is reachable at $configuredUrl.',
+                ? l10n.preview_overlay_health_checking_description_local(
+                    configuredUrl,
+                  )
+                : l10n.preview_overlay_health_checking_description_remote(
+                    configuredUrl,
+                  ),
           PreviewOverlayStage.connecting =>
             isLocalDevelopment
-                ? 'The local StudyU app is reachable. Establishing the iframe connection now.'
-                : 'The participant app is reachable. Establishing the preview connection now.',
+                ? l10n.preview_overlay_connecting_description_local
+                : l10n.preview_overlay_connecting_description_remote,
           PreviewOverlayStage.appLoading =>
             isLocalDevelopment
-                ? 'The app preview is connected. The app is now loading inside the phone frame.'
-                : 'The app preview is connected. The participant app is now loading.',
+                ? l10n.preview_overlay_loading_description_local
+                : l10n.preview_overlay_loading_description_remote,
           PreviewOverlayStage.error || PreviewOverlayStage.none => '',
         };
 
     return PreviewStatusFrame(
       icon: Icons.sync_rounded,
-      title: title.hardcoded,
-      description: description.hardcoded,
+      title: title,
+      description: description,
       action: const Padding(
         padding: EdgeInsets.only(top: 8.0),
         child: SizedBox(

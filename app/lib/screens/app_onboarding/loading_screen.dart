@@ -37,19 +37,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
+    final l10n = AppLocalizations.of(context)!;
     try {
-      final previewHandledNavigation = await _initPreview(state);
+      final previewHandledNavigation = await _initPreview(state, l10n);
       if (previewHandledNavigation) return;
     } catch (error, stackTrace) {
       StudyULogger.error(
-        'Preview failed to initialize.',
+        l10n.preview_failed_to_initialize,
         error: error,
         stackTrace: stackTrace,
       );
       _iFrameHelper.postPreviewStatus(
         status: 'error',
-        message:
-            'The preview could not be opened for this study yet. Please try resetting the preview.',
+        message: l10n.preview_overlay_study_not_ready,
       );
       rethrow;
     }
@@ -138,7 +138,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return subject;
   }
 
-  Future<bool> _initPreview(AppState state) async {
+  Future<bool> _initPreview(AppState state, AppLocalizations l10n) async {
     if (state.isPreview) previewSubjectIdKey();
     if (widget.queryParameters == null || widget.queryParameters!.isEmpty) {
       return false;
@@ -153,13 +153,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     _iFrameHelper.postPreviewStatus(status: 'loading');
     await preview.init();
 
-    // Authorize
     final isAuthorized = await preview.handleAuthorization();
     if (!isAuthorized) {
       _iFrameHelper.postPreviewStatus(
         status: 'error',
-        message:
-            'The preview could not be opened right now. Please try resetting the preview.',
+        message: l10n.preview_overlay_reset_hint,
       );
       return true;
     }
@@ -169,7 +167,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     _iFrameHelper.listen(
       state,
-      onNavigate: (route) => _navigatePreviewRoute(state, route),
+      onNavigate: (route) => _navigatePreviewRoute(state, route, l10n),
     );
 
     if (preview.hasRoute()) {
@@ -297,7 +295,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return true;
   }
 
-  Future<void> _navigatePreviewRoute(AppState state, String? route) async {
+  Future<void> _navigatePreviewRoute(
+    AppState state,
+    String? route,
+    AppLocalizations l10n,
+  ) async {
     if (_previewNavigationInProgress) {
       _pendingPreviewRoute = route;
       return;
@@ -366,7 +368,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (!await ensureSubject()) {
         _iFrameHelper.postPreviewStatus(
           status: 'error',
-          message: 'The preview route could not be opened right now.',
+          message: l10n.preview_overlay_route_open_failed,
         );
         return;
       }
@@ -383,7 +385,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       final pendingRoute = _pendingPreviewRoute;
       _pendingPreviewRoute = null;
       if (pendingRoute != null && pendingRoute != route) {
-        await _navigatePreviewRoute(state, pendingRoute);
+        await _navigatePreviewRoute(state, pendingRoute, l10n);
       } else {
         _iFrameHelper.postPreviewStatus(status: 'loaded');
       }
@@ -398,10 +400,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '${AppLocalizations.of(context)!.loading}...',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              Text('${AppLocalizations.of(context)!.loading}...'),
               const CircularProgressIndicator(),
             ],
           ),
@@ -409,8 +408,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       ),
     );
   }
+}
 
-  /*if (!signInRes) {
+/*if (!signInRes) {
         final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
         if (migrateRes) {
           print("Successfully migrated to the new database");
@@ -423,7 +423,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }*/
 
-  /*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
     if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
       try {
         // create new account
@@ -451,4 +451,3 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     return false;
   }*/
-}

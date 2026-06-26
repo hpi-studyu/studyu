@@ -680,6 +680,36 @@
   "navlink_study_test_app_dashboard": "Tagesübersicht",
   "action_button_study_test_reset": "Zurücksetzen",
   "action_button_study_test_open_new_tab": "In neuem Fenster öffnen",
+  "preview_overlay_health_checking_title": "App-Verfügbarkeit wird geprüft",
+  "preview_overlay_connecting_title": "Verbindung zur App-Vorschau wird hergestellt",
+  "preview_overlay_loading_title": "App-Vorschau wird geladen",
+  "preview_overlay_health_checking_description_local": "Es wird geprüft, ob die StudyU-App unter {url} läuft.",
+  "@preview_overlay_health_checking_description_local": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "preview_overlay_health_checking_description_remote": "Es wird geprüft, ob die Teilnehmer-App unter {url} erreichbar ist.",
+  "@preview_overlay_health_checking_description_remote": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "preview_overlay_connecting_description_local": "Die lokale StudyU-App ist erreichbar. Die Verbindung wird jetzt hergestellt.",
+  "preview_overlay_connecting_description_remote": "Die Teilnehmer-App ist erreichbar. Die Verbindung wird jetzt hergestellt.",
+  "preview_overlay_loading_description_local": "Die App-Vorschau ist verbunden. Die App wird jetzt innerhalb des Smartphone-Rahmens geladen.",
+  "preview_overlay_loading_description_remote": "Die App-Vorschau ist verbunden. Die Teilnehmer-App wird jetzt geladen.",
+  "preview_overlay_local_unavailable_title": "Lokale App-Vorschau nicht verfügbar",
+  "preview_overlay_remote_unavailable_title": "App wird gewartet",
+  "preview_overlay_local_unavailable_message": "Die lokale StudyU-App konnte nicht erreicht werden.",
+  "preview_overlay_remote_unavailable_message": "Die StudyU-App ist vorübergehend nicht verfügbar oder wird gewartet. Bitte versuche es später noch einmal.",
+  "preview_overlay_could_not_load": "Die App-Vorschau konnte nicht geladen werden.",
+  "preview_overlay_preview_not_opened": "Die App-Vorschau konnte gerade nicht geöffnet werden.",
+
   "banner_study_test_unavailable": "Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
   "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt und vollständig ein:",
   "dialog_study_test_help_title": "Teste deine Studie!",

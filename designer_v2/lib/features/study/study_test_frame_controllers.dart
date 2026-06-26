@@ -6,6 +6,7 @@ import 'dart:ui_web' as ui;
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:web/web.dart' as web;
 
 /// Style element ID for the preview iframe styles
@@ -138,7 +139,7 @@ class WebController extends PlatformController {
     });
 
     iFrameElement.onError.listen((_) {
-      onError?.call('The StudyU app preview could not be loaded.');
+      onError?.call(tr.preview_overlay_could_not_load);
     });
 
     ui.platformViewRegistry.registerViewFactory(
@@ -193,17 +194,9 @@ class WebController extends PlatformController {
     }
 
     generateUrl(route: route, extra: extra, cmd: cmd, data: data);
-
-    //html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
-    //if (frame != null) {
-    // iFrameElement = frame;
     if (iFrameElement.src != previewSrc) {
       iFrameElement.src = previewSrc;
-      //iFrameElement.src = newPrev;
-    } /* else {
-       print("Same link detected");
-      } */
-    // }
+    }
   }
 
   @override
@@ -242,7 +235,6 @@ class WebController extends PlatformController {
           if (parsed is Map<String, dynamic> &&
               parsed['type'] == 'previewStatus') {
             final status = parsed['status'] as String?;
-            final message = parsed['message'] as String?;
             switch (status) {
               case 'loading':
                 onLoading?.call();
@@ -253,10 +245,7 @@ class WebController extends PlatformController {
                 return;
               case 'error':
                 navigationEnabled.value = false;
-                onError?.call(
-                  message ??
-                      'The StudyU app preview could not be opened right now.',
-                );
+                onError?.call(tr.preview_overlay_preview_not_opened);
                 return;
             }
           }

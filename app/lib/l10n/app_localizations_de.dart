@@ -1175,6 +1175,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get painTypeStiffness => 'Steifheit';
 
   @override
+  String get preview_overlay_reset_hint =>
+      'Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'Die Vorschau-Route konnte gerade nicht geöffnet werden.';
+
+  @override
+  String get preview_failed_to_initialize =>
+      'Die Vorschau konnte nicht initialisiert werden.';
+
+  @override
   String get preview_mode => 'Vorschau-Modus';
 
   @override
