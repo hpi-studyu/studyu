@@ -2000,18 +2000,18 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      setup(QuestionnaireWidget([q1, q2, q3], onComplete: completions.add)),
+      setup(QuestionnaireWidget([q3, q1, q2], onComplete: completions.add)),
     );
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('yes'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('A'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('yes').last);
     await tester.pumpAndSettle();
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
 
-    await tester.tap(find.text('no').first);
+    await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
     expect(find.text('What did you eat?'), findsNothing);
 

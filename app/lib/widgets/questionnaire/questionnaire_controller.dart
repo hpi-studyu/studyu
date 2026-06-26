@@ -83,23 +83,10 @@ class QuestionnaireController extends ChangeNotifier {
     return false;
   }
 
-  Set<String> _expressionTargets(Expression expression) {
-    if (expression is ValueExpression) {
-      return expression.target == null
-          ? <String>{}
-          : <String>{expression.target!};
-    } else if (expression is NotExpression) {
-      return _expressionTargets(expression.expression);
-    } else if (expression is CompositeExpression) {
-      return expression.expressions.expand(_expressionTargets).toSet();
-    }
-    return <String>{};
-  }
-
   Set<String> _contextDependencyIds(Question question) {
-    final conditional = question.conditional;
-    if (conditional == null) return <String>{};
-    return conditional.condition.expressions.expand(_expressionTargets).toSet();
+    final questionIndex = questions.indexWhere((q) => q.id == question.id);
+    if (questionIndex <= 0) return <String>{};
+    return questions.take(questionIndex).map((question) => question.id).toSet();
   }
 
   Map<String, Object?> _cacheContextFor(Question question) {
@@ -135,15 +122,20 @@ class QuestionnaireController extends ChangeNotifier {
   }
 
   void _markAnsweredDependentsForReview(String changedQuestionId) {
-    final explicitDependents = visibleQuestions
+    final changedIndex = questions.indexWhere((q) => q.id == changedQuestionId);
+    if (changedIndex < 0) return;
+
+    final lowerQuestions = visibleQuestions
         .where((question) {
-          if (question.id == changedQuestionId) return false;
           if (!_hasAnswerOrDraft(question.id)) return false;
-          return _contextDependencyIds(question).contains(changedQuestionId);
+          final questionIndex = questions.indexWhere(
+            (q) => q.id == question.id,
+          );
+          return questionIndex > changedIndex;
         })
         .toList(growable: false);
 
-    for (final question in explicitDependents) {
+    for (final question in lowerQuestions) {
       _markAnsweredQuestionForReviewIfContextChanged(question);
     }
   }

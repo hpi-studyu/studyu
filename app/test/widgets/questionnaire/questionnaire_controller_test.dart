@@ -681,7 +681,7 @@ void main() {
 
       group('restored answer review metadata', () {
         test(
-          'independent cached answer stays valid after unrelated answer changes',
+          'later cached answer needs review after earlier answer changes',
           () {
             final q1 = boolQuestion('q1', 'Did you take medication?');
             final q2 = boolQuestion('q2', 'Which medications?')
@@ -700,16 +700,37 @@ void main() {
             controller.markRestoredVisibleAnswersNeedingReview(visibleBefore);
 
             expect(controller.answerFor('q3'), isNotNull);
-            expect(controller.needsReview('q3'), isFalse);
+            expect(controller.needsReview('q3'), isTrue);
             expect(
               controller
                   .buildVisiblePayload()
                   .answerMetadata['q3']
                   ?.needsReview,
-              isFalse,
+              isTrue,
             );
           },
         );
+
+        test('later free text answer needs review after meal changes', () {
+          final q1 = ChoiceQuestion.withId()
+            ..id = 'q1'
+            ..prompt = 'Which meal are you reporting?'
+            ..multiple = false
+            ..choices = [
+              Choice.withText(text: 'Breakfast'),
+              Choice.withText(text: 'Lunch'),
+              Choice.withText(text: 'Dinner'),
+            ];
+          final q2 = freeTextQuestion('q2', 'What did you eat?');
+          final controller = QuestionnaireController([q1, q2]);
+
+          controller.submitAnswer(q1.constructAnswer([q1.choices.first]));
+          controller.submitAnswer(q2.constructAnswer('toast and eggs'));
+          controller.submitAnswer(q1.constructAnswer([q1.choices.last]));
+
+          expect(controller.answerFor('q2')?.response, 'toast and eggs');
+          expect(controller.needsReview('q2'), isTrue);
+        });
 
         test('dependent visible answer needs review after context changes', () {
           final q0 = boolQuestion('q0', 'Keep follow-up visible?');
