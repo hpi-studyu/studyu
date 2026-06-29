@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -10,19 +7,17 @@ import 'package:studyu_core/core.dart';
 class FreeTextQuestionWidget extends QuestionWidget {
   final FreeTextQuestion question;
   final Function(Answer)? onDone;
-  final Function()? onInvalid;
-  final bool isLastQuestion;
-  final bool hasConditionalDependents;
   final Answer<String>? initialAnswer;
+  final void Function(String questionId, String value)? onDraftChanged;
+  final bool isLastQuestion;
 
   const FreeTextQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
-    this.onInvalid,
-    this.isLastQuestion = true,
-    this.hasConditionalDependents = false,
     this.initialAnswer,
+    this.onDraftChanged,
+    this.isLastQuestion = false,
   });
 
   @override
@@ -33,24 +28,23 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _textFieldController = TextEditingController();
   final _formFieldKey = GlobalKey<FormFieldState>();
   final _focusNode = FocusNode();
-  bool _hasInteracted = false;
-  bool _hasSubmitted = false;
-  bool _hasPendingNonLastChange = false;
-  bool _reactiveValidationArmed = false;
-  bool _requiresExplicitSubmit = false;
-  String? _lastSubmittedValue;
-  Timer? _debounceTimer;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
-
+  bool _hasInteracted = false;
+  bool _donePressed = false;
   @override
   void initState() {
     super.initState();
     final initialValue = widget.initialAnswer?.response;
     if (initialValue != null) {
       _textFieldController.text = initialValue;
-      _hasSubmitted = true;
-      _reactiveValidationArmed = true;
-      _lastSubmittedValue = initialValue;
+      widget.onDraftChanged?.call(widget.question.id, initialValue);
+      // If the restored value is invalid (e.g. after switching question trees
+      // and back), surface the error immediately instead of hiding it until
+      // the next keystroke.
+      if (widget.question.validateResponse(initialValue) != null) {
+        _hasInteracted = true;
+        _autovalidateMode = AutovalidateMode.always;
+      }
     }
     _focusNode.addListener(_onFocusChange);
   }
@@ -60,140 +54,52 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     _textFieldController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
-    _debounceTimer?.cancel();
     super.dispose();
   }
 
   void _onFocusChange() {
     if (_focusNode.hasFocus) {
       _ensureTextFieldVisible();
-    } else {
-      _handleAutoSubmit();
     }
   }
 
   Future<void> _ensureTextFieldVisible() async {
-    final keyContext = _formFieldKey.currentContext;
     await Future.delayed(const Duration(milliseconds: 500));
-    if (keyContext != null && context.mounted) {
-      Scrollable.ensureVisible(
-        keyContext,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.decelerate,
-        alignment: 0.5,
-      );
-    }
+    if (!mounted) return;
+
+    final keyContext = _formFieldKey.currentContext;
+    if (keyContext == null || !keyContext.mounted) return;
+
+    Scrollable.ensureVisible(
+      keyContext,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.decelerate,
+      alignment: 0.5,
+    );
   }
 
-  void _handleAutoSubmit() {
-    if (widget.isLastQuestion &&
-        _hasInteracted &&
-        !_hasSubmitted &&
-        !_requiresExplicitSubmit) {
-      _handleSubmit();
-    }
-    // Do not reset submitted state on blur — a valid answer remains valid
-    // even after focus changes.
-  }
-
-  void _handleSubmit([String? value]) {
-    _debounceTimer?.cancel();
-    FocusScope.of(context).unfocus();
-    final text = value ?? _textFieldController.text;
-    _validateAndSubmit(text, forceSubmit: true);
-  }
-
-  void _validateAndSubmit(String value, {bool forceSubmit = false}) {
-    if (_formFieldKey.currentState?.validate() == true) {
-      if (_hasSubmitted &&
-          value != _lastSubmittedValue &&
-          !widget.isLastQuestion) {
-        if (widget.hasConditionalDependents) {
-          if (!_hasPendingNonLastChange) {
-            widget.onInvalid?.call();
-          }
-          _hasSubmitted = false;
-          _hasPendingNonLastChange = true;
-          _requiresExplicitSubmit = true;
-        } else {
-          // Non-conditional non-last edit: sync via onDone, keep later
-          // questions visible, Submit stays hidden.
-          widget.onDone?.call(widget.question.constructAnswer(value));
-          _hasSubmitted = true;
-          _hasPendingNonLastChange = false;
-          _reactiveValidationArmed = true;
-          _lastSubmittedValue = value;
-        }
-        return;
-      }
-
-      // Non-conditional, not-yet-submitted after invalidation: sync corrected
-      // valid value via onDone. Required so Complete sync can find the answer.
-      if (!_hasSubmitted &&
-          !widget.isLastQuestion &&
-          !widget.hasConditionalDependents) {
-        widget.onDone?.call(widget.question.constructAnswer(value));
-        _hasSubmitted = true;
-        _reactiveValidationArmed = true;
-        _lastSubmittedValue = value;
-        return;
-      }
-
-      if (widget.isLastQuestion && (forceSubmit || !_requiresExplicitSubmit)) {
-        widget.onDone?.call(widget.question.constructAnswer(value));
-        _hasSubmitted = true;
-        _hasPendingNonLastChange = false;
-        _reactiveValidationArmed = true;
-        _requiresExplicitSubmit = false;
-        _lastSubmittedValue = value;
-      }
-    } else if (_hasSubmitted) {
-      widget.onInvalid?.call();
-      _hasSubmitted = false;
-      _hasPendingNonLastChange = false;
-      _requiresExplicitSubmit = !widget.isLastQuestion;
-    }
+  void _enableValidation() {
+    if (_hasInteracted) return;
+    _hasInteracted = true;
+    setState(() {
+      _autovalidateMode = AutovalidateMode.always;
+    });
   }
 
   void _handleInteraction() {
-    if (!_hasInteracted) {
-      _hasInteracted = true;
-      setState(() {
-        _autovalidateMode = AutovalidateMode.always;
-      });
-    }
+    _enableValidation();
   }
 
-  void _debouncedValidation() {
-    _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
-      if (mounted && _reactiveValidationArmed) {
-        _validateAndSubmit(_textFieldController.text);
-      }
-    });
-  }
-
-  bool validateForComplete() {
-    _debounceTimer?.cancel();
-    final isValid = _formFieldKey.currentState?.validate() == true;
-    setState(() {
-      _hasInteracted = true;
-      _autovalidateMode = AutovalidateMode.always;
-    });
-    return isValid;
-  }
-
-  Answer<String> buildAnswerForComplete() {
-    return widget.question.constructAnswer(_textFieldController.text);
-  }
-
-  void markSyncedForComplete() {
+  void _handleDone() {
+    _enableValidation();
     final value = _textFieldController.text;
-    _hasSubmitted = true;
-    _hasPendingNonLastChange = false;
-    _reactiveValidationArmed = true;
-    _requiresExplicitSubmit = false;
-    _lastSubmittedValue = value;
+    if (widget.question.validateResponse(value) != null) {
+      _formFieldKey.currentState?.validate();
+      return;
+    }
+    FocusScope.of(context).unfocus();
+    widget.onDone?.call(widget.question.constructAnswer(value));
+    setState(() => _donePressed = true);
   }
 
   TextInputType _getKeyboardType() {
@@ -207,21 +113,15 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
   }
 
-  List<TextInputFormatter> _getInputFormatters() {
-    switch (widget.question.textType) {
-      case FreeTextQuestionType.numeric:
-        return [FilteringTextInputFormatter.allow(RegExp('^-?[0-9]*'))];
-      case FreeTextQuestionType.alphanumeric:
-        return [FilteringTextInputFormatter.allow(RegExp(alphanumericPattern))];
-      case FreeTextQuestionType.any:
-      case FreeTextQuestionType.custom:
-        return [];
-    }
-  }
+  /// No input formatters. Let the validator provide error feedback when the
+  /// user types characters outside the expected charset, rather than silently
+  /// blocking them.
+  List<TextInputFormatter> _getInputFormatters() => [];
 
   @override
   Widget build(BuildContext context) {
     final question = widget.question;
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -234,88 +134,53 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           inputFormatters: _getInputFormatters(),
           textInputAction: TextInputAction.done,
           autovalidateMode: _autovalidateMode,
+          decoration: InputDecoration(hintText: l10n.free_text_hint),
           onTap: () {
-            _handleInteraction();
             _ensureTextFieldVisible();
           },
           onChanged: (value) {
+            widget.onDraftChanged?.call(widget.question.id, value);
             _handleInteraction();
-            _debouncedValidation();
+            if (_donePressed) {
+              setState(() => _donePressed = false);
+            }
           },
-          onFieldSubmitted: (value) {
-            _handleSubmit(value);
+          onFieldSubmitted: (_) {
+            FocusScope.of(context).unfocus();
           },
           validator: (value) {
-            final input = value ?? '';
-            final minLength = question.lengthRange.first;
-
-            if (question.textType != FreeTextQuestionType.custom) {
-              if (input.isEmpty && minLength == 0) {
-                return null;
-              }
-
-              if (input.length < minLength) {
-                return AppLocalizations.of(
-                  context,
-                )!.free_text_min_length_error(minLength);
-              } else if (input.length > question.lengthRange.last) {
-                return AppLocalizations.of(
-                  context,
-                )!.free_text_max_length_error(question.lengthRange.last);
-              }
-            }
-
-            switch (question.textType) {
-              case FreeTextQuestionType.any:
-                return null;
-              case FreeTextQuestionType.alphanumeric:
-                if (RegExp(alphanumericPattern).hasMatch(input)) {
-                  return null;
-                } else {
-                  return AppLocalizations.of(
-                    context,
-                  )!.free_text_alphanumeric_error;
-                }
-              case FreeTextQuestionType.numeric:
-                if (RegExp(r'^-?[0-9]+$').hasMatch(input)) {
-                  return null;
-                } else {
-                  return AppLocalizations.of(context)!.free_text_numeric_error;
-                }
-              case FreeTextQuestionType.custom:
-                final expression = question.customTypeExpression;
-                if (expression == null || expression.isEmpty) {
-                  return AppLocalizations.of(context)!.free_text_custom_error;
-                }
-                try {
-                  final regex = RegExp('^(?:$expression)\$');
-                  if (regex.hasMatch(input)) {
-                    return null;
-                  }
-                } on FormatException catch (error) {
-                  if (kDebugMode) {
-                    debugPrint(
-                      'Invalid custom regex for free text question '
-                      '${question.id}: $error',
-                    );
-                  }
-                }
-                return AppLocalizations.of(context)!.free_text_custom_error;
-            }
+            final error = question.validateResponse(value ?? '');
+            return switch (error) {
+              FreeTextValidationError.tooShort => AppLocalizations.of(
+                context,
+              )!.free_text_min_length_error(question.lengthRange.first),
+              FreeTextValidationError.tooLong => AppLocalizations.of(
+                context,
+              )!.free_text_max_length_error(question.lengthRange.last),
+              FreeTextValidationError.notAlphanumeric => AppLocalizations.of(
+                context,
+              )!.free_text_alphanumeric_error,
+              FreeTextValidationError.notNumeric => AppLocalizations.of(
+                context,
+              )!.free_text_numeric_error,
+              FreeTextValidationError.customMismatch => AppLocalizations.of(
+                context,
+              )!.free_text_custom_error,
+              FreeTextValidationError.invalidCustomExpression =>
+                AppLocalizations.of(context)!.free_text_custom_error,
+              null => null,
+            };
           },
         ),
-        if (widget.isLastQuestion) ...[
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              OutlinedButton(
-                onPressed: _handleSubmit,
-                child: Text(AppLocalizations.of(context)!.submit),
-              ),
-            ],
+        const SizedBox(height: 12),
+        if (widget.isLastQuestion && !_donePressed)
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: _handleDone,
+              child: Text(l10n.done),
+            ),
           ),
-        ],
       ],
     );
   }

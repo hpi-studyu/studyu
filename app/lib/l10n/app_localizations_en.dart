@@ -636,6 +636,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please enter a value in the required format';
 
   @override
+  String get free_text_hint => 'Enter your answer';
+
+  @override
   String get app_outdated_message =>
       'A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!';
 
@@ -1206,6 +1209,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get continue_label => 'Continue';
+
+  @override
+  String get restored_answer_needs_review =>
+      'Please review this restored answer.';
+
+  @override
+  String get mark_answer_reviewed => 'Mark as reviewed';
 
   @override
   String get date_picker_hint => 'Select a date';

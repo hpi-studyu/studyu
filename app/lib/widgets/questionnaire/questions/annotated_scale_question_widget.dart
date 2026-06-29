@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/custom_slider.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
@@ -24,14 +23,12 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
 class _AnnotatedScaleQuestionWidgetState
     extends State<AnnotatedScaleQuestionWidget> {
   double? value;
-  late bool sliderTouched;
 
   @override
   void initState() {
     super.initState();
     value =
         widget.initialAnswer?.response.toDouble() ?? widget.question.initial;
-    sliderTouched = widget.initialAnswer != null;
   }
 
   @override
@@ -53,7 +50,6 @@ class _AnnotatedScaleQuestionWidgetState
             //widget.onDone(widget.question.constructAnswer(value));
           }),
           onChangeEnd: (val) => setState(() {
-            sliderTouched = true;
             value = val;
             widget.onDone!(widget.question.constructAnswer(value!));
           }),
@@ -61,19 +57,6 @@ class _AnnotatedScaleQuestionWidgetState
           linearStep: false,
           steps: widget.question,
         ),
-        if (!sliderTouched)
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  sliderTouched = true;
-                });
-                widget.onDone!(widget.question.constructAnswer(value!));
-              },
-              child: Text(AppLocalizations.of(context)!.done),
-            ),
-          ),
       ],
     );
   }
