@@ -36,7 +36,7 @@ class _TermsScreenState extends State<TermsScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        hideBack: true,
+        backButtonKey: const ValueKey('terms_back'),
         nextButtonKey: const ValueKey('terms_continue'),
         onNext: userCanContinue()
             ? () async {

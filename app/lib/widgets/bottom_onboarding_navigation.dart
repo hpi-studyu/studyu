@@ -55,6 +55,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: TextButton(
+                key: backButtonKey,
                 onPressed: canNavigateBack ? handleBack : null,
                 child: Row(
                   children: [
