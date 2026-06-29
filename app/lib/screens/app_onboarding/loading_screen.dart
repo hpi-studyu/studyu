@@ -27,11 +27,14 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   final IFrameHelper _iFrameHelper = IFrameHelper();
   bool _previewNavigationInProgress = false;
+  bool _studyInitializationStarted = false;
   String? _pendingPreviewRoute;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_studyInitializationStarted) return;
+    _studyInitializationStarted = true;
     initStudy();
   }
 
