@@ -48,6 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   final GlobalKey _menuShowcaseKey = GlobalKey();
 
   late final ShowcaseView _dashboardShowcase;
+  late final TextStyle showcaseActionTextStyle;
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
   bool _showcaseCheckStarted = false;
@@ -62,9 +63,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    final showcaseActionTextStyle = TextStyle(
+    showcaseActionTextStyle = TextStyle(
       color: app_theme.theme.colorScheme.onPrimary,
-      fontWeight: FontWeight.w600,
     );
     _dashboardShowcase = ShowcaseView.register(
       blurValue: 1,
@@ -196,19 +196,13 @@ class _DashboardScreenState extends State<DashboardScreen>
               TooltipActionButton(
                 type: TooltipDefaultActionType.skip,
                 backgroundColor: theme.colorScheme.primary,
-                textStyle: TextStyle(
-                  color: theme.colorScheme.onPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
+                textStyle: showcaseActionTextStyle,
               ),
               TooltipActionButton(
                 type: TooltipDefaultActionType.next,
                 name: l10n.dashboard_showcase_finish,
                 backgroundColor: theme.colorScheme.primary,
-                textStyle: TextStyle(
-                  color: theme.colorScheme.onPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
+                textStyle: showcaseActionTextStyle,
               ),
             ],
             targetShapeBorder: const CircleBorder(),

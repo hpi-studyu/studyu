@@ -110,21 +110,15 @@ class _SettingsState extends State<Settings> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               getDropdownRow(context),
-              const SizedBox(height: 24),
-              Text(
-                '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
-                style: theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
                 key: const ValueKey('settings_show_dashboard_showcase_again'),
                 icon: const Icon(Icons.help_outline),
                 label: Text(
                   AppLocalizations.of(context)!.show_dashboard_showcase_again,
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: theme.colorScheme.primary,
                 ),
                 onPressed: () async {
                   await DashboardShowcaseStorage.reset();
@@ -132,7 +126,12 @@ class _SettingsState extends State<Settings> {
                   Navigator.pop(context, true);
                 },
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 24),
+              Text(
+                '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
+                style: theme.textTheme.titleLarge,
+              ),
+              const SizedBox(height: 24),
               ElevatedButton.icon(
                 key: const ValueKey('settings_opt_out'),
                 icon: const Icon(MdiIcons.exitToApp),
