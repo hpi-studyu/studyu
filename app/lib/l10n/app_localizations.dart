@@ -1322,6 +1322,12 @@ abstract class AppLocalizations {
   /// **'Please enter a value in the required format'**
   String get free_text_custom_error;
 
+  /// No description provided for @free_text_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your answer'**
+  String get free_text_hint;
+
   /// No description provided for @app_outdated_message.
   ///
   /// In en, this message translates to:
@@ -2419,6 +2425,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @continue_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_label;
+
+  /// No description provided for @restored_answer_needs_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review this restored answer.'**
+  String get restored_answer_needs_review;
+
+  /// No description provided for @mark_answer_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as reviewed'**
+  String get mark_answer_reviewed;
 
   /// No description provided for @date_picker_hint.
   ///

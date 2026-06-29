@@ -257,6 +257,7 @@
   "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
   "free_text_numeric_error": "Please enter only numeric characters",
   "free_text_custom_error": "Please enter a value in the required format",
+  "free_text_hint": "Enter your answer",
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
   "update_now": "Update now",
 
@@ -477,6 +478,9 @@
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
   "submit" : "Submit",
+  "continue_label" : "Continue",
+  "restored_answer_needs_review": "Please review this restored answer.",
+  "mark_answer_reviewed": "Mark as reviewed",
 
   "date_picker_hint": "Select a date",
   "time_picker_hint": "Select a time",
