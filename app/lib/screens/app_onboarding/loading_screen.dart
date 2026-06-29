@@ -25,6 +25,15 @@ class SubjectDeletedException implements Exception {
       'SubjectDeletedException: subject no longer exists in the backend';
 }
 
+@visibleForTesting
+String initialRouteForMissingSubjectRoute({
+  required bool isPreview,
+  required bool onBoarded,
+}) {
+  if (isPreview) return Routes.terms;
+  return onBoarded ? Routes.welcome : Routes.onboarding;
+}
+
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
@@ -115,12 +124,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> noSubjectFound(AppState state) async {
     await cancelNotifications(context);
 
-    final bool onBoarded = await SecureStorage.readBool('onboarded') ?? false;
-    // Designer previews should skip the generic app introduction and go straight
-    // to the participant study flow.
-    final route = state.isPreview || onBoarded
-        ? Routes.terms
-        : Routes.onboarding;
+    final route = initialRouteForMissingSubjectRoute(
+      isPreview: state.isPreview,
+      onBoarded: await SecureStorage.readBool('onboarded') ?? false,
+    );
 
     if (!mounted) return;
     _iFrameHelper.postPreviewStatus(status: 'loaded');
