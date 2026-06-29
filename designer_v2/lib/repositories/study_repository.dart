@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/study_delete_confirmation_dialog.dart';
+import 'package:studyu_designer_v2/common_views/study_title_confirmation_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -225,6 +228,38 @@ class StudyRepository extends ModelRepository<Study>
       ),
       if (model.canDelete(currentUser)) ModelAction.addSeparator(),
       ModelAction(
+        type: StudyActionType.close,
+        label: StudyActionType.close.string,
+        onExecute: () => close(model),
+        confirmation: ModelActionConfirmation(
+          title: tr.dialog_study_close_title,
+          message: tr.dialog_study_close_description,
+          dialogBuilder: (dialogContext, action) =>
+              StudyTitleConfirmationDialog(
+                study: model,
+                title: tr.dialog_study_close_title,
+                description: tr.dialog_study_close_description,
+                instruction: tr.dialog_study_close_type_name_instruction(
+                  model.title ?? '',
+                ),
+                textFieldLabel: tr.dialog_study_close_type_name_label,
+                confirmLabel: action.label,
+                confirmationCheckboxes: [
+                  StudyConfirmationCheckbox(
+                    key: const ValueKey('study_close_irreversible_checkbox'),
+                    label: Text(
+                      tr.dialog_study_close_irreversible_confirmation,
+                    ),
+                  ),
+                ],
+                destructive: true,
+                onConfirmed: () async => Navigator.of(dialogContext).pop(true),
+              ),
+        ),
+        isAvailable:
+            model.status == StudyStatus.running && model.canClose(currentUser),
+      ),
+      ModelAction(
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
         onExecute: onDeleteCallback,
@@ -235,6 +270,21 @@ class StudyRepository extends ModelRepository<Study>
               StudyDeleteConfirmationDialog(
                 study: model,
                 confirmLabel: action.label,
+                onDownloadBackup: () async {
+                  model.downloadDefinition();
+                  await model.exportData.downloadAsZip();
+                },
+                onCloseInstead: () async {
+                  Navigator.of(dialogContext).pop(false);
+                  await Future<void>.delayed(Duration.zero);
+                  if (dialogContext.mounted) {
+                    await showStudyDialog(
+                      dialogContext,
+                      model.id,
+                      StudyDialogType.close,
+                    );
+                  }
+                },
               ),
         ),
         isAvailable: model.canDelete(currentUser),

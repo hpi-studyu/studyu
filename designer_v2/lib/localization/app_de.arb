@@ -135,18 +135,19 @@
   "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Das Löschen dieser Studie entfernt die Studienkonfiguration und alle gespeicherten Studiendaten dauerhaft.",
-  "dialog_study_delete_warning_heading": "Dadurch werden Studiendaten dauerhaft gelöscht",
-  "dialog_study_delete_warning_intro": "Eine Studie zu löschen ist nicht dasselbe wie die Teilnahme zu schließen. Die folgenden Daten werden vom Server entfernt:",
-  "dialog_study_delete_warning_study_title": "Studienkonfiguration",
-  "dialog_study_delete_warning_study_body": "Studiendefinition, Zeitplan, Fragebögen, Beobachtungen, Berichte, Einladungscodes, verknüpfte Repository-Daten und Fitbit-Zugangsdaten werden gelöscht.",
-  "dialog_study_delete_warning_participants_title": "Aktuelle Teilnehmende",
-  "dialog_study_delete_warning_participants_body": "Aktuell eingeschriebene Teilnehmende verlieren den Zugriff auf die Studie. Ihre Apps behandeln die Studie als nicht verfügbar und sie können keine weiteren Daten dafür übermitteln.",
-  "dialog_study_delete_warning_data_title": "Gesammelte Teilnehmendendaten",
-  "dialog_study_delete_warning_data_body": "Subject-Datensätze und übermittelte Fortschritts- bzw. Ergebnisdaten dieser Studie werden vom Server gelöscht und können danach nicht mehr aus dem Designer exportiert werden.",
-  "dialog_study_delete_warning_past_participants_title": "Frühere Teilnehmende",
-  "dialog_study_delete_warning_past_participants_body": "Teilnehmende, die früher eingeschrieben waren, sind genauso betroffen: ihre serverseitig gespeicherten Subject- und Ergebnisdaten dieser Studie werden entfernt.",
-  "dialog_study_delete_warning_irreversible": "Diese Aktion kann nicht rückgängig gemacht werden. Wenn nur neue Einschreibungen gestoppt werden sollen, schließe stattdessen die Studie.",
-  "dialog_study_delete_read_confirmation": "Ich habe gelesen und verstanden, was gelöscht wird.",
+  "dialog_study_delete_warning_intro": "Speichere vor dem Löschen ein Backup und prüfe, ob das Schließen der Studie ausreicht.",
+  "dialog_study_delete_backup_step": "Speichere die Studiendefinition und gesammelte Daten vor dem Löschen als Backup.",
+  "dialog_study_delete_close_step": "Stoppe neue Einschreibungen, während die Studie und vorhandene Daten erhalten bleiben.",
+  "dialog_study_delete_download_backup": "Backup herunterladen",
+  "dialog_study_delete_data_confirmation": "Ich verstehe, dass die Studie und alle zugehörigen Daten dauerhaft gelöscht werden und nicht wieder abgerufen werden können.",
+  "dialog_study_delete_participant_confirmation": "Ich verstehe, dass aktuelle Teilnehmende ihre Studie nicht fortsetzen können und dass alle Daten aktueller und früherer Teilnehmender für sie und für mich gelöscht werden.",
+  "dialog_study_delete_irreversible_confirmation": "Ich verstehe, dass meine Entscheidung endgültig und unwiderruflich ist und dass alle Daten vollständig gelöscht werden und nicht wiederhergestellt werden können.",
+  "dialog_study_delete_data_confirmation_emphasis_1": "dauerhaft gelöscht",
+  "dialog_study_delete_data_confirmation_emphasis_2": "nicht wieder abgerufen werden können",
+  "dialog_study_delete_participant_confirmation_emphasis_1": "aktuelle Teilnehmende ihre Studie nicht fortsetzen können",
+  "dialog_study_delete_participant_confirmation_emphasis_2": "alle Daten aktueller und früherer Teilnehmender",
+  "dialog_study_delete_irreversible_confirmation_emphasis_1": "endgültig und unwiderruflich",
+  "dialog_study_delete_irreversible_confirmation_emphasis_2": "nicht wiederhergestellt werden können",
   "dialog_study_delete_type_name_instruction": "Gib den Studiennamen \"{studyName}\" ein, um das Löschen zu bestätigen.",
   "@dialog_study_delete_type_name_instruction": {
     "placeholders": {
@@ -154,6 +155,16 @@
     }
   },
   "dialog_study_delete_type_name_label": "Studienname",
+  "dialog_study_close_type_name_instruction": "Gib den Titel der Studie \"{studyName}\" ein, um zu bestätigen, dass du sie schließen möchtest:",
+  "@dialog_study_close_type_name_instruction": {
+    "placeholders": {
+      "studyName": {}
+    }
+  },
+  "dialog_study_close_type_name_label": "Titel der zu schließenden Studie",
+  "dialog_study_close_irreversible_confirmation": "Ich verstehe, dass das Schließen der Teilnahme endgültig ist und nicht rückgängig gemacht werden kann.",
+  "dialog_study_delete_close_instead": "Schließen statt Löschen prüfen",
+  "dialog_study_title_mismatch": "Der Studientitel stimmt nicht überein",
   "dialog_delete_title": "{subject} löschen?",
   "@dialog_delete_title": {
     "placeholders": {

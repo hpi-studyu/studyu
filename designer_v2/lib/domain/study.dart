@@ -15,6 +15,7 @@ enum StudyActionType {
   addCollaborator,
   export,
   exportDefinition,
+  close,
   delete,
 }
 
@@ -28,6 +29,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return tr.action_unpin;
       case StudyActionType.edit:
         return tr.action_edit;
+      case StudyActionType.close:
+        return tr.action_button_study_close;
       case StudyActionType.delete:
         return tr.action_delete;
       case StudyActionType.duplicate:

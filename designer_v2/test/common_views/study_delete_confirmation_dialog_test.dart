@@ -20,6 +20,8 @@ void main() {
         home: StudyDeleteConfirmationDialog(
           study: study,
           confirmLabel: 'Delete',
+          onDownloadBackup: () async {},
+          onCloseInstead: () async {},
         ),
       ),
     );
@@ -29,42 +31,47 @@ void main() {
       matching: find.byType(ElevatedButton),
     );
 
-    expect(find.text('This permanently deletes study data'), findsOneWidget);
+    expect(find.text('Permanently delete?'), findsOneWidget);
     expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is RichText &&
-            widget.text.toPlainText().contains('Current participants'),
-      ),
+      find.textContaining('Before deleting, save a backup'),
+      findsOneWidget,
+    );
+    expect(find.text('Download backup'), findsOneWidget);
+    expect(find.byIcon(Icons.download_rounded), findsOneWidget);
+    expect(find.text('Review closing instead'), findsOneWidget);
+    expect(find.byIcon(Icons.lock_rounded), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('study_delete_data_checkbox')),
       findsOneWidget,
     );
     expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is RichText &&
-            widget.text.toPlainText().contains('Past participants'),
-      ),
+      find.byKey(const ValueKey('study_delete_participant_checkbox')),
       findsOneWidget,
     );
     expect(
-      find.byKey(const ValueKey('study_delete_read_warning_checkbox')),
+      find.byKey(const ValueKey('study_delete_irreversible_checkbox')),
       findsOneWidget,
     );
     expect(
       find.byKey(const ValueKey('study_delete_name_confirmation_field')),
       findsOneWidget,
     );
+    expect(deleteButtonFinder, findsOneWidget);
     expect(tester.widget<ElevatedButton>(deleteButtonFinder).onPressed, isNull);
 
-    await tester.ensureVisible(
-      find.byKey(const ValueKey('study_delete_read_warning_checkbox')),
-    );
-    await tester.tap(
-      find.byKey(const ValueKey('study_delete_read_warning_checkbox')),
-      warnIfMissed: false,
-    );
-    await tester.pump();
-    expect(tester.widget<ElevatedButton>(deleteButtonFinder).onPressed, isNull);
+    for (final key in [
+      const ValueKey('study_delete_data_checkbox'),
+      const ValueKey('study_delete_participant_checkbox'),
+      const ValueKey('study_delete_irreversible_checkbox'),
+    ]) {
+      await tester.ensureVisible(find.byKey(key));
+      await tester.tap(find.byKey(key), warnIfMissed: false);
+      await tester.pump();
+      expect(
+        tester.widget<ElevatedButton>(deleteButtonFinder).onPressed,
+        isNull,
+      );
+    }
 
     await tester.ensureVisible(
       find.byKey(const ValueKey('study_delete_name_confirmation_field')),
