@@ -100,6 +100,19 @@
   "good_to_go": "Es kann losgehen!",
 
   "dashboard": "Dashboard",
+  "dashboard_showcase_progress_title": "Studienfortschritt",
+  "dashboard_showcase_progress_description": "Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.",
+  "dashboard_showcase_current_intervention_title": "Aktuelle Intervention",
+  "dashboard_showcase_current_intervention_description": "Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.",
+  "dashboard_showcase_today_tasks_title": "Heutige Aufgaben",
+  "dashboard_showcase_today_tasks_description": "Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.",
+  "dashboard_showcase_contact_title": "Kontakt",
+  "dashboard_showcase_contact_description": "Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.",
+  "dashboard_showcase_report_title": "Bericht",
+  "dashboard_showcase_report_description": "Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.",
+  "dashboard_showcase_menu_title": "Weitere Optionen",
+  "dashboard_showcase_menu_description": "Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.",
+  "dashboard_showcase_finish": "Fertig",
   "home": "Home",
   "profile": "Profil",
   "help": "Hilfe",
@@ -116,6 +129,7 @@
     }
   },
   "settings": "Einstellungen",
+  "show_dashboard_showcase_again": "Dashboard-Tour erneut anzeigen",
 
   "survey": "Umfrage",
 

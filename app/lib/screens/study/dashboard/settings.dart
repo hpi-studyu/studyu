@@ -7,6 +7,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -102,45 +103,64 @@ class _SettingsState extends State<Settings> {
       key: const ValueKey('settings_screen'),
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            getDropdownRow(context),
-            const SizedBox(height: 24),
-            Text(
-              '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
-              style: theme.textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton.icon(
-              key: const ValueKey('settings_opt_out'),
-              icon: const Icon(MdiIcons.exitToApp),
-              label: Text(AppLocalizations.of(context)!.opt_out),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange[800],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              getDropdownRow(context),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                key: const ValueKey('settings_show_dashboard_showcase_again'),
+                icon: const Icon(Icons.help_outline),
+                label: Text(
+                  AppLocalizations.of(context)!.show_dashboard_showcase_again,
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: theme.colorScheme.primary,
+                ),
+                onPressed: () async {
+                  await DashboardShowcaseStorage.reset();
+                  if (!context.mounted) return;
+                  Navigator.pop(context, true);
+                },
               ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => OptOutAlertDialog(subject: subject),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              key: const ValueKey('settings_delete_data'),
-              icon: const Icon(Icons.delete),
-              label: Text(AppLocalizations.of(context)!.delete_data),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => DeleteAlertDialog(subject: subject),
-                );
-              },
-            ),
-          ],
+              const SizedBox(height: 24),
+              Text(
+                '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
+                style: theme.textTheme.titleLarge,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                key: const ValueKey('settings_opt_out'),
+                icon: const Icon(MdiIcons.exitToApp),
+                label: Text(AppLocalizations.of(context)!.opt_out),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange[800],
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => OptOutAlertDialog(subject: subject),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                key: const ValueKey('settings_delete_data'),
+                icon: const Icon(Icons.delete),
+                label: Text(AppLocalizations.of(context)!.delete_data),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => DeleteAlertDialog(subject: subject),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

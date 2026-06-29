@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -300,6 +299,52 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
+  String get dashboard_showcase_progress_title => 'Studienfortschritt';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Aktuelle Intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Heutige Aufgaben';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Kontakt';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Bericht';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'Weitere Optionen';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.';
+
+  @override
+  String get dashboard_showcase_finish => 'Fertig';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -324,6 +369,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settings => 'Einstellungen';
+
+  @override
+  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
 
   @override
   String get yes => 'Ja';

@@ -608,6 +608,84 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get dashboard;
 
+  /// No description provided for @dashboard_showcase_progress_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study progress'**
+  String get dashboard_showcase_progress_title;
+
+  /// No description provided for @dashboard_showcase_progress_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This shows where you are in the study and how much is left.'**
+  String get dashboard_showcase_progress_description;
+
+  /// No description provided for @dashboard_showcase_current_intervention_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Current intervention'**
+  String get dashboard_showcase_current_intervention_title;
+
+  /// No description provided for @dashboard_showcase_current_intervention_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can see your current intervention and how many days remain in this phase.'**
+  String get dashboard_showcase_current_intervention_description;
+
+  /// No description provided for @dashboard_showcase_today_tasks_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s tasks'**
+  String get dashboard_showcase_today_tasks_title;
+
+  /// No description provided for @dashboard_showcase_today_tasks_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can find the tasks you need to complete today as part of the study.'**
+  String get dashboard_showcase_today_tasks_description;
+
+  /// No description provided for @dashboard_showcase_contact_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get dashboard_showcase_contact_title;
+
+  /// No description provided for @dashboard_showcase_contact_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this if you need help from the study team.'**
+  String get dashboard_showcase_contact_description;
+
+  /// No description provided for @dashboard_showcase_report_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get dashboard_showcase_report_title;
+
+  /// No description provided for @dashboard_showcase_report_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your current report when results are available.'**
+  String get dashboard_showcase_report_description;
+
+  /// No description provided for @dashboard_showcase_menu_title.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dashboard_showcase_menu_title;
+
+  /// No description provided for @dashboard_showcase_menu_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Find settings, FAQs, report history, and more here.'**
+  String get dashboard_showcase_menu_description;
+
+  /// No description provided for @dashboard_showcase_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get dashboard_showcase_finish;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:
@@ -655,6 +733,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @show_dashboard_showcase_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show dashboard tour again'**
+  String get show_dashboard_showcase_again;
 
   /// No description provided for @yes.
   ///
