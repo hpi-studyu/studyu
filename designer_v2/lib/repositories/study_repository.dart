@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/study_delete_confirmation_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
@@ -227,10 +228,14 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
         onExecute: onDeleteCallback,
-        confirmation: ModelActionConfirmations.delete(
-          subject: tr.dialog_subject_study,
+        confirmation: ModelActionConfirmation(
           title: tr.dialog_study_delete_title,
           message: tr.dialog_study_delete_description,
+          dialogBuilder: (dialogContext, action) =>
+              StudyDeleteConfirmationDialog(
+                study: model,
+                confirmLabel: action.label,
+              ),
         ),
         isAvailable: model.canDelete(currentUser),
         isDestructive: true,

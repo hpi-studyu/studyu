@@ -134,7 +134,26 @@
   "dialog_study_close_title": "Teilnahme schließen?",
   "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
-  "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
+  "dialog_study_delete_description": "Das Löschen dieser Studie entfernt die Studienkonfiguration und alle gespeicherten Studiendaten dauerhaft.",
+  "dialog_study_delete_warning_heading": "Dadurch werden Studiendaten dauerhaft gelöscht",
+  "dialog_study_delete_warning_intro": "Eine Studie zu löschen ist nicht dasselbe wie die Teilnahme zu schließen. Die folgenden Daten werden vom Server entfernt:",
+  "dialog_study_delete_warning_study_title": "Studienkonfiguration",
+  "dialog_study_delete_warning_study_body": "Studiendefinition, Zeitplan, Fragebögen, Beobachtungen, Berichte, Einladungscodes, verknüpfte Repository-Daten und Fitbit-Zugangsdaten werden gelöscht.",
+  "dialog_study_delete_warning_participants_title": "Aktuelle Teilnehmende",
+  "dialog_study_delete_warning_participants_body": "Aktuell eingeschriebene Teilnehmende verlieren den Zugriff auf die Studie. Ihre Apps behandeln die Studie als nicht verfügbar und sie können keine weiteren Daten dafür übermitteln.",
+  "dialog_study_delete_warning_data_title": "Gesammelte Teilnehmendendaten",
+  "dialog_study_delete_warning_data_body": "Subject-Datensätze und übermittelte Fortschritts- bzw. Ergebnisdaten dieser Studie werden vom Server gelöscht und können danach nicht mehr aus dem Designer exportiert werden.",
+  "dialog_study_delete_warning_past_participants_title": "Frühere Teilnehmende",
+  "dialog_study_delete_warning_past_participants_body": "Teilnehmende, die früher eingeschrieben waren, sind genauso betroffen: ihre serverseitig gespeicherten Subject- und Ergebnisdaten dieser Studie werden entfernt.",
+  "dialog_study_delete_warning_irreversible": "Diese Aktion kann nicht rückgängig gemacht werden. Wenn nur neue Einschreibungen gestoppt werden sollen, schließe stattdessen die Studie.",
+  "dialog_study_delete_read_confirmation": "Ich habe gelesen und verstanden, was gelöscht wird.",
+  "dialog_study_delete_type_name_instruction": "Gib den Studiennamen \"{studyName}\" ein, um das Löschen zu bestätigen.",
+  "@dialog_study_delete_type_name_instruction": {
+    "placeholders": {
+      "studyName": {}
+    }
+  },
+  "dialog_study_delete_type_name_label": "Studienname",
   "dialog_delete_title": "{subject} löschen?",
   "@dialog_delete_title": {
     "placeholders": {

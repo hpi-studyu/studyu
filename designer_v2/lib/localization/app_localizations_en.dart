@@ -401,7 +401,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialog_study_delete_description =>
-      'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.';
+      'Deleting this study permanently removes the study setup and all stored study data.';
+
+  @override
+  String get dialog_study_delete_warning_heading =>
+      'This permanently deletes study data';
+
+  @override
+  String get dialog_study_delete_warning_intro =>
+      'Deleting a study is not the same as closing participation. The following data will be removed from the server:';
+
+  @override
+  String get dialog_study_delete_warning_study_title => 'Study setup';
+
+  @override
+  String get dialog_study_delete_warning_study_body =>
+      'The study definition, schedule, questionnaires, observations, report setup, invite codes, linked repository data, and Fitbit credentials are deleted.';
+
+  @override
+  String get dialog_study_delete_warning_participants_title =>
+      'Current participants';
+
+  @override
+  String get dialog_study_delete_warning_participants_body =>
+      'Participants who are currently subscribed lose access to the study. Their apps will treat the study as unavailable and they cannot continue submitting data for it.';
+
+  @override
+  String get dialog_study_delete_warning_data_title =>
+      'Collected participant data';
+
+  @override
+  String get dialog_study_delete_warning_data_body =>
+      'Subject records and submitted progress/result data for this study are deleted from the server and cannot be exported from Designer afterwards.';
+
+  @override
+  String get dialog_study_delete_warning_past_participants_title =>
+      'Past participants';
+
+  @override
+  String get dialog_study_delete_warning_past_participants_body =>
+      'Participants who had subscribed in the past are affected the same way: their stored server-side subject and result data for this study is removed.';
+
+  @override
+  String get dialog_study_delete_warning_irreversible =>
+      'This cannot be undone. If you only want to stop new enrollments, close the study instead.';
+
+  @override
+  String get dialog_study_delete_read_confirmation =>
+      'I have read and understood what will be deleted.';
+
+  @override
+  String dialog_study_delete_type_name_instruction(Object studyName) {
+    return 'Type the study name \"$studyName\" to confirm deletion.';
+  }
+
+  @override
+  String get dialog_study_delete_type_name_label => 'Study name';
 
   @override
   String dialog_delete_title(Object subject) {
