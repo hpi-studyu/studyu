@@ -106,14 +106,30 @@ class QuestionnaireController extends ChangeNotifier {
   void _storeCurrentContext(
     Question question, {
     bool preserveNeedsReview = false,
+    bool preserveCacheContext = false,
   }) {
     final existingMetadata = _answers.answerMetadata[question.id];
     _answers.answerMetadata[question.id] = QuestionnaireAnswerMetadata(
       restoredFromCache: existingMetadata?.restoredFromCache ?? false,
       needsReview:
           preserveNeedsReview && (existingMetadata?.needsReview ?? false),
+      cacheContext: preserveCacheContext
+          ? existingMetadata?.cacheContext ?? _cacheContextFor(question)
+          : _cacheContextFor(question),
+    );
+  }
+
+  void _storeDraftContextIfAbsent(String questionId) {
+    if (_answers.answerMetadata.containsKey(questionId)) return;
+    final question = questions.firstWhere((q) => q.id == questionId);
+    _answers.answerMetadata[questionId] = QuestionnaireAnswerMetadata(
       cacheContext: _cacheContextFor(question),
     );
+  }
+
+  void _clearDraftContextIfUnanswered(String questionId) {
+    if (_answers.answers.containsKey(questionId)) return;
+    _answers.answerMetadata.remove(questionId);
   }
 
   bool _hasAnswerOrDraft(String questionId) {
@@ -285,9 +301,12 @@ class QuestionnaireController extends ChangeNotifier {
   }
 
   void submitAnswer(Answer answer) {
-    _answers.answers[answer.question] = answer;
     final question = questions.firstWhere((q) => q.id == answer.question);
-    _storeCurrentContext(question);
+    final preserveDraftContext =
+        question is FreeTextQuestion && _drafts.containsKey(answer.question);
+    _answers.answers[answer.question] = answer;
+    _storeCurrentContext(question, preserveCacheContext: preserveDraftContext);
+    _drafts.remove(answer.question);
     _applyHiddenDefaults();
     _markAnsweredDependentsForReview(answer.question);
     notifyListeners();
@@ -295,14 +314,19 @@ class QuestionnaireController extends ChangeNotifier {
 
   void updateFreeTextDraft(String questionId, String value) {
     if (_drafts[questionId] == value) return;
-    _drafts[questionId] = value;
+    if (value.isEmpty) {
+      _drafts.remove(questionId);
+      _clearDraftContextIfUnanswered(questionId);
+    } else {
+      _drafts[questionId] = value;
+      _storeDraftContextIfAbsent(questionId);
+    }
     notifyListeners();
   }
 
   void commitFreeTextDraft(FreeTextQuestion question) {
     final draft = _drafts[question.id];
     if (draft == null) return;
-    _drafts.remove(question.id);
     submitAnswer(question.constructAnswer(draft));
   }
 
@@ -323,7 +347,11 @@ class QuestionnaireController extends ChangeNotifier {
       final existingAnswer = _answers.answers[question.id];
       if (existingAnswer == null || existingAnswer.response != draft) {
         _answers.answers[question.id] = question.constructAnswer(draft);
-        _storeCurrentContext(question, preserveNeedsReview: true);
+        _storeCurrentContext(
+          question,
+          preserveNeedsReview: true,
+          preserveCacheContext: true,
+        );
         _drafts.remove(question.id);
         changed = true;
       }
