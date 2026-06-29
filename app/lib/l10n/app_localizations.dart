@@ -2456,18 +2456,6 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submit;
 
-  /// No description provided for @no_internet_connection.
-  ///
-  /// In en, this message translates to:
-  /// **'No internet connection. Please try again when online.'**
-  String get no_internet_connection;
-
-  /// No description provided for @error_occurred_with_message.
-  ///
-  /// In en, this message translates to:
-  /// **'An error occurred: {message}'**
-  String error_occurred_with_message(String message);
-
   /// No description provided for @continue_label.
   ///
   /// In en, this message translates to:
@@ -2485,6 +2473,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark as reviewed'**
   String get mark_answer_reviewed;
+
+  /// No description provided for @no_internet_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please try again when online.'**
+  String get no_internet_connection;
+
+  /// No description provided for @error_occurred_with_message.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred: {message}'**
+  String error_occurred_with_message(String message);
 
   /// No description provided for @date_picker_hint.
   ///
