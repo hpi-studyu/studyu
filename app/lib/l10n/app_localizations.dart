@@ -2270,6 +2270,30 @@ abstract class AppLocalizations {
   /// **'Stiffness'**
   String get painTypeStiffness;
 
+  /// No description provided for @preview_failed_to_initialize.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview failed to initialize.'**
+  String get preview_failed_to_initialize;
+
+  /// No description provided for @preview_overlay_reset_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened right now. Please try resetting the preview.'**
+  String get preview_overlay_reset_hint;
+
+  /// No description provided for @preview_overlay_study_not_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened for this study yet. Please try resetting the preview.'**
+  String get preview_overlay_study_not_ready;
+
+  /// No description provided for @preview_overlay_route_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview route could not be opened right now.'**
+  String get preview_overlay_route_open_failed;
+
   /// No description provided for @preview_mode.
   ///
   /// In en, this message translates to:
