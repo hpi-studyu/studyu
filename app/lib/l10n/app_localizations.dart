@@ -620,6 +620,84 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get dashboard;
 
+  /// No description provided for @dashboard_showcase_progress_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study progress'**
+  String get dashboard_showcase_progress_title;
+
+  /// No description provided for @dashboard_showcase_progress_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This shows where you are in the study and how much is left.'**
+  String get dashboard_showcase_progress_description;
+
+  /// No description provided for @dashboard_showcase_current_intervention_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Current intervention'**
+  String get dashboard_showcase_current_intervention_title;
+
+  /// No description provided for @dashboard_showcase_current_intervention_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can see your current intervention and how many days remain in this phase.'**
+  String get dashboard_showcase_current_intervention_description;
+
+  /// No description provided for @dashboard_showcase_today_tasks_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s tasks'**
+  String get dashboard_showcase_today_tasks_title;
+
+  /// No description provided for @dashboard_showcase_today_tasks_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can find the tasks you need to complete today as part of the study.'**
+  String get dashboard_showcase_today_tasks_description;
+
+  /// No description provided for @dashboard_showcase_contact_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get dashboard_showcase_contact_title;
+
+  /// No description provided for @dashboard_showcase_contact_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this if you need help from the study team.'**
+  String get dashboard_showcase_contact_description;
+
+  /// No description provided for @dashboard_showcase_report_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get dashboard_showcase_report_title;
+
+  /// No description provided for @dashboard_showcase_report_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your current report when results are available.'**
+  String get dashboard_showcase_report_description;
+
+  /// No description provided for @dashboard_showcase_menu_title.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dashboard_showcase_menu_title;
+
+  /// No description provided for @dashboard_showcase_menu_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Find settings, FAQs, report history, and more here.'**
+  String get dashboard_showcase_menu_description;
+
+  /// No description provided for @dashboard_showcase_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get dashboard_showcase_finish;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:
@@ -685,6 +763,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @show_dashboard_showcase_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show dashboard tour again'**
+  String get show_dashboard_showcase_again;
 
   /// No description provided for @yes.
   ///
@@ -1267,6 +1351,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a value in the required format'**
   String get free_text_custom_error;
+
+  /// No description provided for @free_text_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your answer'**
+  String get free_text_hint;
 
   /// No description provided for @app_outdated_message.
   ///
@@ -2294,6 +2384,30 @@ abstract class AppLocalizations {
   /// **'Stiffness'**
   String get painTypeStiffness;
 
+  /// No description provided for @preview_failed_to_initialize.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview failed to initialize.'**
+  String get preview_failed_to_initialize;
+
+  /// No description provided for @preview_overlay_reset_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened right now. Please try resetting the preview.'**
+  String get preview_overlay_reset_hint;
+
+  /// No description provided for @preview_overlay_study_not_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened for this study yet. Please try resetting the preview.'**
+  String get preview_overlay_study_not_ready;
+
+  /// No description provided for @preview_overlay_route_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview route could not be opened right now.'**
+  String get preview_overlay_route_open_failed;
+
   /// No description provided for @preview_mode.
   ///
   /// In en, this message translates to:
@@ -2353,6 +2467,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error occurred: {message}'**
   String error_occurred_with_message(String message);
+
+  /// No description provided for @continue_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_label;
+
+  /// No description provided for @restored_answer_needs_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review this restored answer.'**
+  String get restored_answer_needs_review;
+
+  /// No description provided for @mark_answer_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as reviewed'**
+  String get mark_answer_reviewed;
 
   /// No description provided for @date_picker_hint.
   ///

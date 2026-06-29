@@ -306,6 +306,52 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
+  String get dashboard_showcase_progress_title => 'Studienfortschritt';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Aktuelle Intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Heutige Aufgaben';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Kontakt';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Bericht';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'Weitere Optionen';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.';
+
+  @override
+  String get dashboard_showcase_finish => 'Fertig';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -343,6 +389,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settings => 'Einstellungen';
+
+  @override
+  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
 
   @override
   String get yes => 'Ja';
@@ -660,6 +709,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get free_text_custom_error =>
       'Bitte geben Sie einen Wert im erforderlichen Format ein';
+
+  @override
+  String get free_text_hint => 'Geben Sie Ihre Antwort ein';
 
   @override
   String get app_outdated_message =>
@@ -1195,6 +1247,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get painTypeStiffness => 'Steifheit';
 
   @override
+  String get preview_failed_to_initialize =>
+      'Die Vorschau konnte nicht initialisiert werden.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'Die Vorschau-Route konnte gerade nicht geöffnet werden.';
+
+  @override
   String get preview_mode => 'Vorschau-Modus';
 
   @override
@@ -1229,6 +1297,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String error_occurred_with_message(String message) {
     return 'Ein Fehler ist aufgetreten: $message';
   }
+
+  String get continue_label => 'Weiter';
+
+  @override
+  String get restored_answer_needs_review =>
+      'Bitte die wiederhergestellte Antwort überprüfen.';
+
+  @override
+  String get mark_answer_reviewed => 'Als überprüft markieren';
 
   @override
   String get date_picker_hint => 'Wählen Sie ein Datum';

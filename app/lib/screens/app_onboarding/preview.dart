@@ -31,7 +31,13 @@ class Preview {
 
   Future init() async {
     previewSubjectIdKey();
-    selectedStudyObjectId = await getActiveSubjectId();
+    try {
+      selectedStudyObjectId = await getActiveSubjectId().timeout(
+        const Duration(seconds: 5),
+      );
+    } catch (_) {
+      selectedStudyObjectId = null;
+    }
 
     if (containsQuery('languageCode')) {
       final locale = Locale(queryParameters!['languageCode']!);
@@ -111,6 +117,8 @@ class Preview {
             return Routes.questionnaire;
           case 'dashboard':
             return Routes.dashboard;
+          case 'studyOverview':
+            return Routes.studyOverview;
           case 'intervention':
             return '/intervention';
           case 'observation':
@@ -183,6 +191,8 @@ class Preview {
         print(
           '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e',
         );
+        await deleteActiveStudyReference();
+        selectedStudyObjectId = null;
         // todo try sign in again if token expired see loading screen
       }
     }
@@ -228,17 +238,32 @@ class Preview {
 
   List<String> getInterventionIds() {
     final interventionList = study!.interventions.map((i) => i.id).toList();
+    if (interventionList.isEmpty) {
+      return const [];
+    }
+
     List<String> newInterventionList = [];
     // If we have a specific intervention we want to show, select that and another one
     if (selectedRoute == '/intervention' && extra != null) {
-      final String intId = interventionList.firstWhere((id) => id == extra);
-      newInterventionList
-        ..add(intId)
-        ..add(interventionList.firstWhere((id) => id != intId));
-      assert(newInterventionList.length == 2);
+      final String? selectedInterventionId = interventionList
+          .cast<String?>()
+          .firstWhere((id) => id == extra, orElse: () => null);
+
+      if (selectedInterventionId != null) {
+        newInterventionList.add(selectedInterventionId);
+      }
+
+      final String? alternativeInterventionId = interventionList
+          .cast<String?>()
+          .firstWhere(
+            (id) => id != null && id != selectedInterventionId,
+            orElse: () => null,
+          );
+      if (alternativeInterventionId != null) {
+        newInterventionList.add(alternativeInterventionId);
+      }
     } else {
-      // just take the first two
-      newInterventionList = interventionList.sublist(0, 2);
+      newInterventionList = interventionList.take(2).toList();
     }
     return newInterventionList;
   }

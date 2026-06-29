@@ -102,6 +102,19 @@
   "good_to_go": "Es kann losgehen!",
 
   "dashboard": "Dashboard",
+  "dashboard_showcase_progress_title": "Studienfortschritt",
+  "dashboard_showcase_progress_description": "Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.",
+  "dashboard_showcase_current_intervention_title": "Aktuelle Intervention",
+  "dashboard_showcase_current_intervention_description": "Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.",
+  "dashboard_showcase_today_tasks_title": "Heutige Aufgaben",
+  "dashboard_showcase_today_tasks_description": "Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.",
+  "dashboard_showcase_contact_title": "Kontakt",
+  "dashboard_showcase_contact_description": "Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.",
+  "dashboard_showcase_report_title": "Bericht",
+  "dashboard_showcase_report_description": "Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.",
+  "dashboard_showcase_menu_title": "Weitere Optionen",
+  "dashboard_showcase_menu_description": "Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.",
+  "dashboard_showcase_finish": "Fertig",
   "home": "Home",
   "profile": "Profil",
   "help": "Hilfe",
@@ -129,6 +142,7 @@
     }
   },
   "settings": "Einstellungen",
+  "show_dashboard_showcase_again": "Dashboard-Tour erneut anzeigen",
 
   "survey": "Umfrage",
 
@@ -260,6 +274,7 @@
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
   "free_text_numeric_error": "Bitte geben Sie nur numerische Zeichen ein",
   "free_text_custom_error": "Bitte geben Sie einen Wert im erforderlichen Format ein",
+  "free_text_hint": "Geben Sie Ihre Antwort ein",
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
   "update_now": "Jetzt aktualisieren",
 
@@ -466,6 +481,12 @@
   "painTypeSoreness": "Wund",
   "painTypeStiffness": "Steifheit",
 
+  "preview_failed_to_initialize": "Die Vorschau konnte nicht initialisiert werden.",
+
+  "preview_overlay_reset_hint": "Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",
+  "preview_overlay_study_not_ready": "Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",
+  "preview_overlay_route_open_failed": "Die Vorschau-Route konnte gerade nicht geöffnet werden.",
+
   "preview_mode": "Vorschau-Modus",
   "preview_mode_active": "Vorschau-Modus aktiv",
   "preview_mode_active_state": "Der Vorschau-Modus ist jetzt aktiv.",
@@ -474,6 +495,9 @@
   "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
   "ok": "OK",
   "submit" : "Absenden",
+  "continue_label" : "Weiter",
+  "restored_answer_needs_review": "Bitte die wiederhergestellte Antwort überprüfen.",
+  "mark_answer_reviewed": "Als überprüft markieren",
 
   "no_internet_connection": "Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.",
   "error_occurred_with_message": "Ein Fehler ist aufgetreten: {message}",
