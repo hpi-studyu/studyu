@@ -18,15 +18,16 @@ ConsentItem _item({String? title, String? description}) {
 }
 
 void main() {
-  test('empty consent at publish -> consent.no_items', () {
+  test('empty consent at publish -> consent.no_items warning (not error)', () {
     final r = validateConsent(_studyWithConsent([]), ValidationLevel.publish);
-    expect(r.valid, isFalse);
-    expect(r.errors.any((e) => e.code == 'consent.no_items'), isTrue);
+    expect(r.valid, isTrue);
+    expect(r.warnings.any((w) => w.code == 'consent.no_items'), isTrue);
   });
 
-  test('empty consent at draft -> passes', () {
+  test('empty consent at draft -> no warning', () {
     final r = validateConsent(_studyWithConsent([]), ValidationLevel.draft);
     expect(r.valid, isTrue);
+    expect(r.warnings.where((w) => w.code == 'consent.no_items'), isEmpty);
   });
 
   test('consent item with null title -> consent.item_title_required', () {
