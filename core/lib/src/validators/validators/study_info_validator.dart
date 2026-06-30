@@ -22,14 +22,6 @@ ValidationResult validateStudyInfo(Study study, ValidationLevel level) {
         fixHint: 'Add a description',
       ));
     }
-    if (study.iconName.trim().isEmpty) {
-      errors.add(const ValidationError(
-        code: 'study_info.icon_required',
-        path: r'$.icon_name',
-        message: 'Study icon is required for publishing',
-        fixHint: 'Select an icon',
-      ));
-    }
     if (study.contact.organization.trim().isEmpty) {
       errors.add(const ValidationError(
         code: 'study_info.organization_required',
@@ -70,6 +62,15 @@ ValidationResult validateStudyInfo(Study study, ValidationLevel level) {
         path: r'$.contact.email',
         message: 'Contact email is required for publishing',
         fixHint: 'Set a contact email',
+      ));
+    } else if (!study.contact.email.contains('@')) {
+      // Fact 29 — basic email format check
+      errors.add(ValidationError(
+        code: 'study_info.email_invalid_format',
+        path: r'$.contact.email',
+        message:
+            'Contact email "${study.contact.email}" does not contain "@"',
+        fixHint: 'Set a valid email address containing "@".',
       ));
     }
     if (study.contact.phone.trim().isEmpty) {

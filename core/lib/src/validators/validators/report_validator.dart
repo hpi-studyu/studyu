@@ -18,41 +18,70 @@ DataReference<dynamic>? _extractResultProperty(ReportSection section) {
   return null;
 }
 
+bool _sectionHasResultPropertyField(ReportSection section) {
+  return section is AverageSection ||
+      section is LinearRegressionSection ||
+      section is DescriptiveStatsSection ||
+      section is GaugeComparisonSection ||
+      section is TextualSummarySection;
+}
+
 ValidationResult _validateSection(
   ReportSection section,
   String path,
   Study study,
 ) {
   final errors = <ValidationError>[];
-  final ref = _extractResultProperty(section);
-  if (ref == null) return ValidationResult.empty();
 
-  final observation = study.observations
-      .cast<dynamic>()
-      .firstWhere((o) => o.id == ref.task, orElse: () => null);
-
-  if (observation == null) {
-    errors.add(ValidationError(
-      code: 'report.task_reference_missing',
-      path: '$path.resultProperty.task',
-      message: 'Report section references observation "${ref.task}" which does not exist',
-      fixHint: 'Set resultProperty.task to an existing observation id',
-    ));
-    return ValidationResult(errors: errors, warnings: []);
-  }
-
-  if (observation is QuestionnaireTask) {
-    final questionExists =
-        observation.questions.questions.any((q) => q.id == ref.property);
-    if (!questionExists) {
+  // Fact 25 — section types that carry resultProperty must have it set
+  if (_sectionHasResultPropertyField(section)) {
+    final ref = _extractResultProperty(section);
+    if (ref == null) {
       errors.add(ValidationError(
-        code: 'report.property_reference_missing',
-        path: '$path.resultProperty.property',
-        message:
-            'Report section references question "${ref.property}" which does not exist in observation "${ref.task}"',
-        fixHint:
-            'Set resultProperty.property to a question id within that observation',
+        code: 'report.missing_result_property',
+        path: '$path.resultProperty',
+        message: 'Report section has no resultProperty set',
+        fixHint: 'Set resultProperty in the report section configuration.',
       ));
+      return ValidationResult(errors: errors, warnings: []);
+    }
+
+    // Fact 26 — resolve ref.task against observations AND intervention tasks
+    final allTaskIds = {
+      ...study.observations.map((o) => o.id),
+      ...study.interventions.expand((iv) => iv.tasks.map((t) => t.id)),
+    };
+
+    if (!allTaskIds.contains(ref.task)) {
+      errors.add(ValidationError(
+        code: 'report.task_reference_missing',
+        path: '$path.resultProperty.task',
+        message:
+            'Report section references task "${ref.task}" which does not exist in observations or intervention tasks',
+        fixHint:
+            'Set resultProperty.task to an existing observation or intervention task id.',
+      ));
+      return ValidationResult(errors: errors, warnings: []);
+    }
+
+    // Check property reference within QuestionnaireTask observations
+    final observation = study.observations
+        .cast<dynamic>()
+        .firstWhere((o) => o.id == ref.task, orElse: () => null);
+
+    if (observation is QuestionnaireTask) {
+      final questionExists =
+          observation.questions.questions.any((q) => q.id == ref.property);
+      if (!questionExists) {
+        errors.add(ValidationError(
+          code: 'report.property_reference_missing',
+          path: '$path.resultProperty.property',
+          message:
+              'Report section references question "${ref.property}" which does not exist in observation "${ref.task}"',
+          fixHint:
+              'Set resultProperty.property to a question id within that observation',
+        ));
+      }
     }
   }
 

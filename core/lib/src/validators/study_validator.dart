@@ -1,8 +1,10 @@
 import 'package:studyu_core/src/models/observations/tasks/questionnaire_task.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/validators/validation_result.dart';
+import 'package:studyu_core/src/validators/validators/consent_validator.dart';
 import 'package:studyu_core/src/validators/validators/eligibility_consent_validator.dart';
 import 'package:studyu_core/src/validators/validators/interventions_validator.dart';
+import 'package:studyu_core/src/validators/validators/observations_validator.dart';
 import 'package:studyu_core/src/validators/validators/questionnaire_validator.dart';
 import 'package:studyu_core/src/validators/validators/report_validator.dart';
 import 'package:studyu_core/src/validators/validators/schedule_validator.dart';
@@ -11,6 +13,10 @@ import 'package:studyu_core/src/validators/validators/study_info_validator.dart'
 export 'validation_result.dart';
 
 ValidationResult validateStudy(Study study, ValidationLevel level) {
+  // Collect screener IDs for cross-context duplicate check (fact 14)
+  final screenerIds =
+      study.questionnaire.questions.map((q) => q.id).toSet();
+
   // Validate the screener questionnaire
   final screenerResult = validateQuestionnaire(
     study.questionnaire,
@@ -27,6 +33,7 @@ ValidationResult validateStudy(Study study, ValidationLevel level) {
         obs.questions,
         r'$.observations[' + i.toString() + r'].questions',
         level,
+        knownIds: screenerIds,
       ));
     }
   }
@@ -37,6 +44,8 @@ ValidationResult validateStudy(Study study, ValidationLevel level) {
     screenerResult,
     ...obsResults,
     validateSchedule(study, level),
+    validateConsent(study, level),
+    validateObservations(study, level),
     validateReport(study, level),
     validateEligibilityConsent(study, level),
   ]);
