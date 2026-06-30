@@ -1,9 +1,9 @@
-import 'package:studyu_core/src/models/study_schedule/study_schedule.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/validators/validation_result.dart';
 
 ValidationResult validateInterventions(Study study, ValidationLevel level) {
   final errors = <ValidationError>[];
+  final warnings = <ValidationError>[];
 
   if (level == ValidationLevel.publish && study.interventions.isEmpty) {
     errors.add(const ValidationError(
@@ -66,33 +66,20 @@ ValidationResult validateInterventions(Study study, ValidationLevel level) {
   }
 
   if (level == ValidationLevel.publish) {
-    // Fact 16 — count-must-be-two for non-customized sequence
-    final seq = study.schedule.sequence;
-    final isCustom = seq == PhaseSequence.customized;
-    if (!isCustom && study.interventions.length != 2) {
-      errors.add(ValidationError(
-        code: 'interventions.count_must_be_two_for_sequence',
-        path: r'$.interventions',
-        message:
-            'Sequence type "${seq.name}" requires exactly 2 interventions; found ${study.interventions.length}',
-        fixHint:
-            'Add or remove interventions to reach exactly 2, or switch to a customized sequence.',
-      ));
-    }
-
-    // Fact 18 — no tasks in an intervention
+    // Fact 18 — no tasks in an intervention (warning: control arms intentionally have no tasks)
     for (var i = 0; i < study.interventions.length; i++) {
       if (study.interventions[i].tasks.isEmpty) {
-        errors.add(ValidationError(
+        warnings.add(ValidationError(
           code: 'interventions.no_tasks',
           path: r'$.interventions[' + i.toString() + r'].tasks',
           message: 'Intervention at index $i has no tasks',
           fixHint:
-              'Add at least one task. In the Designer, the "Add Task" button is in the intervention detail view.',
+              'Add at least one task, or leave empty if this is an intentional control arm.',
         ));
       }
     }
   }
 
-  return ValidationResult(errors: errors, warnings: []);
+  return ValidationResult(errors: errors, warnings: warnings);
 }
+

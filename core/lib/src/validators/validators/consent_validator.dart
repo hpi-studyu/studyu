@@ -3,15 +3,17 @@ import 'package:studyu_core/src/validators/validation_result.dart';
 
 ValidationResult validateConsent(Study study, ValidationLevel level) {
   final errors = <ValidationError>[];
+  final warnings = <ValidationError>[];
 
-  // Fact 21 — at least one consent item required for publishing
+  // Fact 21 — empty consent is a warning, not an error: some studies obtain
+  // consent outside the app
   if (level == ValidationLevel.publish && study.consent.isEmpty) {
-    errors.add(const ValidationError(
+    warnings.add(const ValidationError(
       code: 'consent.no_items',
       path: r'$.consent',
-      message: 'At least one consent item is required for publishing',
+      message: 'No consent items defined — participants will not be shown consent terms in the app',
       fixHint:
-          'Add a consent item in the Enrollment section of the Designer.',
+          'Add a consent item in the Enrollment section of the Designer, or leave empty if consent is obtained externally.',
     ));
   }
 
@@ -39,5 +41,5 @@ ValidationResult validateConsent(Study study, ValidationLevel level) {
     }
   }
 
-  return ValidationResult(errors: errors, warnings: []);
+  return ValidationResult(errors: errors, warnings: warnings);
 }

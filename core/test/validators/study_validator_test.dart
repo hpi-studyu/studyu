@@ -45,21 +45,21 @@ void main() {
     });
 
     test(
-        'StudyFixtures.invalidNoConsentItems() fails with consent.no_items at publish',
+        'StudyFixtures.invalidNoConsentItems() passes with consent.no_items as warning',
         () {
       final r = validateStudy(
           StudyFixtures.invalidNoConsentItems(), ValidationLevel.publish);
-      expect(r.valid, isFalse);
-      expect(r.errors.any((e) => e.code == 'consent.no_items'), isTrue);
+      expect(r.valid, isTrue);
+      expect(r.warnings.any((w) => w.code == 'consent.no_items'), isTrue);
     });
 
     test(
-        'StudyFixtures.invalidInterventionNoTasks() fails with interventions.no_tasks at publish',
+        'StudyFixtures.invalidInterventionNoTasks() passes with interventions.no_tasks as warning',
         () {
       final r = validateStudy(
           StudyFixtures.invalidInterventionNoTasks(), ValidationLevel.publish);
-      expect(r.valid, isFalse);
-      expect(r.errors.any((e) => e.code == 'interventions.no_tasks'), isTrue);
+      expect(r.valid, isTrue);
+      expect(r.warnings.any((w) => w.code == 'interventions.no_tasks'), isTrue);
     });
 
     test(
@@ -89,16 +89,15 @@ void main() {
     });
 
     test(
-        'StudyFixtures.invalidThreeInterventionsAlternating() fails with count_must_be_two',
+        'StudyFixtures.invalidThreeInterventionsAlternating() passes (count enforced at enrolment)',
         () {
       final r = validateStudy(
           StudyFixtures.invalidThreeInterventionsAlternating(),
           ValidationLevel.publish);
-      expect(r.valid, isFalse);
       expect(
-          r.errors.any((e) =>
+          r.errors.where((e) =>
               e.code == 'interventions.count_must_be_two_for_sequence'),
-          isTrue);
+          isEmpty);
     });
 
     test(

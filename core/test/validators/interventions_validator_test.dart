@@ -100,21 +100,20 @@ void main() {
     });
 
     test(
-        'one intervention, alternating sequence at publish -> interventions.count_must_be_two_for_sequence',
+        'one intervention, alternating sequence at publish -> no count error (count enforced at enrolment)',
         () {
       final r = validateInterventions(
         _studyWith([_namedIntervention('A', withTask: true)]),
         ValidationLevel.publish,
       );
-      expect(r.valid, isFalse);
       expect(
-          r.errors.any((e) =>
+          r.errors.where((e) =>
               e.code == 'interventions.count_must_be_two_for_sequence'),
-          isTrue);
+          isEmpty);
     });
 
     test(
-        'three interventions, customized sequence at publish -> no count error',
+        'three interventions, customized sequence at publish -> passes',
         () {
       final r = validateInterventions(
         _studyWith(
@@ -133,15 +132,15 @@ void main() {
           isEmpty);
     });
 
-    test('intervention with empty tasks at publish -> interventions.no_tasks',
+    test('intervention with empty tasks at publish -> interventions.no_tasks warning',
         () {
       final iA = _namedIntervention('A'); // no tasks
       final iB = _namedIntervention('B', withTask: true);
       final r = validateInterventions(
           _studyWith([iA, iB]), ValidationLevel.publish);
-      expect(r.valid, isFalse);
+      expect(r.valid, isTrue);
       expect(
-          r.errors.any((e) => e.code == 'interventions.no_tasks'), isTrue);
+          r.warnings.any((w) => w.code == 'interventions.no_tasks'), isTrue);
     });
 
     test('intervention with empty tasks at draft -> passes', () {
