@@ -1,7 +1,11 @@
+import 'package:studyu_core/src/models/consent/consent_item.dart';
 import 'package:studyu_core/src/models/eligibility/eligibility_criterion.dart';
+import 'package:studyu_core/src/models/expressions/types/boolean_expression.dart';
 import 'package:studyu_core/src/models/expressions/types/choice_expression.dart';
 import 'package:studyu_core/src/models/interventions/intervention.dart';
+import 'package:studyu_core/src/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/boolean_question.dart';
+import 'package:studyu_core/src/models/study_schedule/study_schedule.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 
 class StudyFixtures {
@@ -28,12 +32,26 @@ class StudyFixtures {
     s.contact.phone = '+1234567890';
     s.contact.website = 'https://studyu.health';
 
-    final intervention = Intervention.withId();
-    intervention.name = 'Treatment A';
-    s.interventions = [intervention];
+    final taskA = CheckmarkTask.withId();
+    final interventionA = Intervention.withId();
+    interventionA.name = 'Treatment A';
+    interventionA.tasks = [taskA];
+
+    final taskB = CheckmarkTask.withId();
+    final interventionB = Intervention.withId();
+    interventionB.name = 'Treatment B';
+    interventionB.tasks = [taskB];
+
+    s.interventions = [interventionA, interventionB];
 
     s.schedule.phaseDuration = 7;
     s.schedule.numberOfCycles = 2;
+    s.schedule.sequence = PhaseSequence.alternating;
+
+    final consent = ConsentItem.withId();
+    consent.title = 'Data Privacy';
+    consent.description = 'Your data will be anonymised.';
+    s.consent = [consent];
 
     return s;
   }
@@ -61,6 +79,62 @@ class StudyFixtures {
     criterion.condition = expr;
     s.eligibilityCriteria = [criterion];
 
+    return s;
+  }
+
+  /// Triggers: consent.no_items
+  static Study invalidNoConsentItems() {
+    final s = fullValid();
+    s.consent = [];
+    return s;
+  }
+
+  /// Triggers: interventions.no_tasks
+  static Study invalidInterventionNoTasks() {
+    final s = fullValid();
+    s.interventions.first.tasks = [];
+    return s;
+  }
+
+  /// Triggers: interventions.duplicate_intervention_id
+  static Study invalidDuplicateInterventionId() {
+    final s = fullValid();
+    s.interventions[1].id = s.interventions[0].id;
+    return s;
+  }
+
+  /// Triggers: interventions.count_must_be_two_for_sequence
+  static Study invalidThreeInterventionsAlternating() {
+    final s = fullValid();
+    final extra = Intervention.withId();
+    extra.name = 'Treatment C';
+    extra.tasks = [CheckmarkTask.withId()];
+    s.interventions = [...s.interventions, extra];
+    return s;
+  }
+
+  /// Triggers: schedule.custom_sequence_invalid_chars
+  static Study invalidCustomSequenceBadChars() {
+    final s = fullValid();
+    s.schedule.sequence = PhaseSequence.customized;
+    s.schedule.sequenceCustom = 'ABXYZ';
+    return s;
+  }
+
+  /// Triggers: study_info.email_invalid_format
+  static Study invalidBadEmailFormat() {
+    final s = fullValid();
+    s.contact.email = 'not-an-email';
+    return s;
+  }
+
+  /// Triggers: eligibility.condition_always_true (warning)
+  static Study warningAlwaysTrueEligibility() {
+    final s = fullValid();
+    final criterion = EligibilityCriterion.withId();
+    // Default BooleanExpression has no target -> always true
+    criterion.condition = BooleanExpression();
+    s.eligibilityCriteria = [criterion];
     return s;
   }
 }
