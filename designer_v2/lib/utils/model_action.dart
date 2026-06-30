@@ -105,6 +105,7 @@ class ModelAction<T> {
 
   Future<void> execute(BuildContext context) async {
     if (confirmation != null) {
+      if (!context.mounted) return;
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) {

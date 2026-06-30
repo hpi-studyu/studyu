@@ -33,7 +33,12 @@ class BottomOnboardingNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final canNavigateBack = backEnabled && Navigator.canPop(context);
+    // A custom onBack handler may perform its own navigation regardless of
+    // whether the navigator stack has entries, so we only gate pop-based
+    // navigation on canPop; custom handlers are always enabled when
+    // backEnabled is true.
+    final canNavigateBack =
+        backEnabled && (onBack != null || Navigator.canPop(context));
 
     void handleBack() {
       if (onBack != null) {
