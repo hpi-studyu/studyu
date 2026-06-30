@@ -112,10 +112,7 @@ mixin StudyScheduleControls {
 
   FormControlValidation get customSequenceRequired => FormControlValidation(
     control: sequenceTypeCustomControl,
-    validators: [
-      Validators.required,
-      Validators.pattern(customSequencePattern),
-    ],
+    validators: [Validators.delegate(_validateCustomSequence)],
     validationMessages: {
       ValidationMessage.required: (error) =>
           'Custom sequence needs to be specified.',
@@ -123,6 +120,23 @@ mixin StudyScheduleControls {
           'Custom sequence can only contain A and B.',
     },
   );
+
+  Map<String, dynamic>? _validateCustomSequence(
+    AbstractControl<dynamic> control,
+  ) {
+    if (!isSequencingCustom()) return null;
+
+    final value = control.value as String?;
+    if (value == null || value.isEmpty) {
+      return {ValidationMessage.required: true};
+    }
+
+    if (!customSequencePattern.hasMatch(value)) {
+      return {ValidationMessage.pattern: true};
+    }
+
+    return null;
+  }
 
   void setStudyScheduleControlsFrom(StudyScheduleFormData data) {
     sequenceTypeControl.value = data.sequenceType;

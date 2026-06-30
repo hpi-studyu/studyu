@@ -48,8 +48,8 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
           keyboardType: TextInputType.text,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.singleLineFormatter,
-            LengthLimitingTextInputFormatter(10),
             StudySequenceFormatter(),
+            LengthLimitingTextInputFormatter(10),
           ],
           //validationMessages: widget.formViewModel.sequenceTypeCustomControl.validationMessages,
         ),
