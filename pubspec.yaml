@@ -8,6 +8,7 @@ workspace:
   - flutter_common
   - app
   - designer_v2
+  - studyu_validator
 dev_dependencies:
   melos: ^8.0.0
 
