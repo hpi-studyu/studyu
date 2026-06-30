@@ -5,6 +5,8 @@ publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
+default-flavor: production
+
 environment:
   sdk: ">=3.8.0 <4.0.0"
 resolution: workspace

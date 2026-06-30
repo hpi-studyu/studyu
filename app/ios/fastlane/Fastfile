@@ -47,21 +47,36 @@ platform :ios do
       key_content: ENV['FASTLANE_APP_IOS_KEY_CONTENT']
     )
 
+    scheme = ENV['SCHEME']
+    app_identifier = "health.studyu.app"
+    if scheme == "stg"
+      app_identifier = "health.studyu.app.stg"
+    elsif scheme == "dev"
+      app_identifier = "health.studyu.app.dev"
+    end
+
     match(
       type: "appstore",
+      app_identifier: app_identifier,
       git_url: ENV['FASTLANE_APP_IOS_MATCH_GIT_URL'],
       git_private_key: ENV['FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY'],
-      readonly: true,
+      readonly: false,
       keychain_name: keychain_name,
       keychain_password: keychain_password
     )
 
     build_app(
+      scheme: scheme,
       export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          app_identifier => "match AppStore #{app_identifier}"
+        }
+      }
     )
 
     upload_to_testflight(
-        app_identifier: "health.studyu.app",
+        app_identifier: app_identifier,
         team_id: "PG566C9XUK",
         skip_waiting_for_build_processing: false
     )

@@ -5,8 +5,7 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-import java . util . Properties
-        import java . io . FileInputStream
+import java.util.Properties
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -56,7 +55,7 @@ android {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
+            storeFile = keystoreProperties["storeFile"]?.let { rootProject.file(it as String) }
             storePassword = keystoreProperties["storePassword"] as String?
         }
     }
@@ -83,6 +82,32 @@ android {
                 if (keystorePropertiesFile.exists())
                     signingConfigs.getByName("release")
                 else signingConfigs.getByName("debug")
+        }
+    }
+    flavorDimensions += "env"
+    productFlavors {
+        create("prod") {
+            dimension = "env"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "StudyU")
+        }
+        create("stg") {
+            dimension = "env"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "StudyU Staging")
+            applicationIdSuffix = ".stg"
+        }
+        create("dev") {
+            dimension = "env"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "StudyU Dev")
+            applicationIdSuffix = ".dev"
         }
     }
 }

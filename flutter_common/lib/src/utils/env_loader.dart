@@ -11,7 +11,16 @@ const envsAssetPath = 'packages/studyu_flutter_common/lib/envs';
 // load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
 String envFilePath() {
   const env = String.fromEnvironment('STUDYU_ENV');
-  return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
+  if (env.isNotEmpty) {
+    return '$envsAssetPath/$env';
+  }
+
+  const flavor = String.fromEnvironment('FLUTTER_APP_FLAVOR');
+  if (flavor == 'development') {
+    return '$envsAssetPath/.env.dev';
+  }
+
+  return '$envsAssetPath/.env';
 }
 
 String? getEnv(String name, {bool optional = false}) {
