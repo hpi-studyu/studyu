@@ -78,6 +78,8 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                         setState(() {
                           widget.formViewModel.sequenceTypeControl.value =
                               value;
+                          widget.formViewModel.sequenceTypeCustomControl
+                              .updateValueAndValidity();
                         });
                       },
                 initialValue: widget.formViewModel.sequenceTypeControl.value,
