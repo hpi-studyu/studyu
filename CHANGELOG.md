@@ -3,6 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-06-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.14.0`](#studyu_app---v2140)
+ - [`studyu_core` - `v4.9.0`](#studyu_core---v490)
+ - [`studyu_designer_v2` - `v1.18.0`](#studyu_designer_v2---v1180)
+ - [`studyu_flutter_common` - `v1.10.4`](#studyu_flutter_common---v1104)
+
+---
+
+#### `studyu_app` - `v2.14.0`
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**(app): disable back without route history.
+ - **FIX**(app): open preview on study overview.
+ - **FIX**(app): restore date question answers.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FIX**: replace deprecated mdi store icons with material icons.
+ - **FIX**: remove deprecated material_design_icons_flutter dependency.
+ - **FIX**(app): clarify study selection banner message.
+ - **FIX**(preview): avoid reloading test app page navigation.
+ - **FIX**(preview): skip app onboarding in designer preview.
+ - **FEAT**(designer): localize hardcoded preview overlay strings.
+ - **FEAT**: Add onCleared callback to DateQuestionWidget and QuestionContainer.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: add date picker localization strings in German.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+#### `studyu_core` - `v4.9.0`
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: enhance Answer class to support DateTime serialization in JSON.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+#### `studyu_designer_v2` - `v1.18.0`
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**(designer): enlarge test preview frame.
+ - **FIX**(designer): disable screener without questions.
+ - **FIX**(app): open preview on study overview.
+ - **FIX**(designer): revert unintended app controller change.
+ - **FIX**(designer): restore default search bar background.
+ - **FIX**(designer): resolve splash screen initialization loop.
+ - **FIX**(dashboard): restore localized search placeholder.
+ - **FIX**(designer): use outer context for popup actions.
+ - **FIX**(designer): defer popup menu action execution.
+ - **FIX**(designer): remove default confirmation icons.
+ - **FIX**(designer): resolve confirmation merge conflicts.
+ - **FIX**(designer): centralize destructive action confirmations.
+ - **FIX**(designer): style actions in destructive confirmation dialog.
+ - **FIX**(designer): update unsaved changes dialog copy and button weights.
+ - **FIX**(designer): centralize destructive action confirmations.
+ - **FIX**(designer): handle recruit popup menu delete action.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FIX**: remove deprecated material_design_icons_flutter dependency.
+ - **FIX**(preview): avoid reloading test app page navigation.
+ - **FEAT**(designer): localize hardcoded preview overlay strings.
+ - **FEAT**: Add onCleared callback to DateQuestionWidget and QuestionContainer.
+ - **FEAT**: Refactor preview iframe style injection and cleanup logic.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: simplify date question form by removing unused preview section and related logic.
+ - **FEAT**: update date label translations for clarity in German and English.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: add localization for date format preset labels in English and German.
+ - **FEAT**: implement date range validation and localization for date questions.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+#### `studyu_flutter_common` - `v1.10.4`
+
+ - **FIX**: upgrade deps.
+ - **FIX**(flutter_common): use supabase publishable key.
+ - **FIX**: upgrade deps.
+ - **FIX**(flutter_common): use supabase publishable key.
+
+
 ## 2026-06-09
 
 ### Changes

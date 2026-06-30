@@ -11,7 +11,7 @@ typedef PreviewNavigationHandler = Future<void> Function(String? route);
 class IFrameHelper {
   static StreamSubscription<html.MessageEvent>? _messageSubscription;
 
-  String _designerOrigin() {
+  String? _designerOrigin() {
     final referrerObject = html.document.referrer as Object?;
     final referrer = referrerObject is String ? referrerObject : null;
     if (referrer != null && referrer.isNotEmpty) {
@@ -20,23 +20,37 @@ class IFrameHelper {
         return uri.origin;
       }
     }
-    return env.designerUrl!;
+    return env.designerUrl;
   }
 
   void postPreviewStatus({required String status, String? message}) {
-    html.window.parent!.postMessage(
+    _postMessage(
       jsonEncode({
         'type': 'previewStatus',
         'status': status,
         if (message != null) 'message': message,
       }),
-      _designerOrigin(),
     );
   }
 
   void postRouteFinished() {
     // Go back to the selected origin route
-    html.window.parent!.postMessage('routeFinished', _designerOrigin());
+    _postMessage('routeFinished');
+  }
+
+  void _postMessage(Object message) {
+    final html.WindowBase? parent;
+    try {
+      parent = html.window.parent;
+    } catch (_) {
+      return;
+    }
+    if (parent == null) return;
+
+    final designerOrigin = _designerOrigin();
+    if (designerOrigin == null) return;
+
+    parent.postMessage(message, designerOrigin);
   }
 
   void listen(AppState state, {PreviewNavigationHandler? onNavigate}) {
