@@ -1,3 +1,23 @@
+## 2.14.0
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**(app): disable back without route history.
+ - **FIX**(app): open preview on study overview.
+ - **FIX**(app): restore date question answers.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FIX**: replace deprecated mdi store icons with material icons.
+ - **FIX**: remove deprecated material_design_icons_flutter dependency.
+ - **FIX**(app): clarify study selection banner message.
+ - **FIX**(preview): avoid reloading test app page navigation.
+ - **FIX**(preview): skip app onboarding in designer preview.
+ - **FEAT**(designer): localize hardcoded preview overlay strings.
+ - **FEAT**: Add onCleared callback to DateQuestionWidget and QuestionContainer.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: add date picker localization strings in German.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
 ## 2.13.0
 
  - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
