@@ -16,7 +16,20 @@ void main(List<String> args) {
     ..addOption('level',
         defaultsTo: 'draft',
         allowed: ['draft', 'publish'],
-        help: 'Validation level: draft or publish');
+        help: 'Validation level: draft or publish')
+    ..addOption('section',
+        allowed: [
+          'study_info',
+          'interventions',
+          'questionnaire',
+          'schedule',
+          'consent',
+          'observations',
+          'report',
+          'eligibility',
+        ],
+        help:
+            'Run only one section validator instead of the full study check');
 
   parser.commands['normalize']!
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
@@ -78,8 +91,27 @@ void _runValidate(ArgResults command) {
   final levelStr = command['level'] as String;
   final level =
       levelStr == 'publish' ? ValidationLevel.publish : ValidationLevel.draft;
+  final section = command['section'] as String?;
 
-  final result = validateJson(json, level);
+  ValidationResult result;
+  if (section != null) {
+    result = validateSection(json, section, level) ??
+        ValidationResult(
+          errors: [
+            ValidationError(
+              code: 'UNKNOWN_SECTION',
+              path: r'$',
+              message: 'Unknown section: $section',
+              fixHint:
+                  'Use one of: study_info, interventions, questionnaire, schedule, consent, observations, report, eligibility',
+            ),
+          ],
+          warnings: [],
+        );
+  } else {
+    result = validateJson(json, level);
+  }
+
   stdout.writeln(const JsonEncoder.withIndent('  ').convert(result.toJson()));
   exit(result.valid ? 0 : 1);
 }
