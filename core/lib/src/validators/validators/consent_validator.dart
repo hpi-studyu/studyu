@@ -5,10 +5,9 @@ ValidationResult validateConsent(Study study, ValidationLevel level) {
   final errors = <ValidationError>[];
   final warnings = <ValidationError>[];
 
-  // Fact 21 — empty consent is a warning, not an error: some studies obtain
-  // consent outside the app
+  // Fact 21 — empty consent at publish is an error
   if (level == ValidationLevel.publish && study.consent.isEmpty) {
-    warnings.add(const ValidationError(
+    errors.add(const ValidationError(
       code: 'consent.no_items',
       path: r'$.consent',
       message: 'No consent items defined — participants will not be shown consent terms in the app',
