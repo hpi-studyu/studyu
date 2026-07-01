@@ -1092,6 +1092,23 @@ class AppLocalizationsEn extends AppLocalizations {
       'does not contain';
 
   @override
+  String get form_array_question_visibility_logic_length_greater_than =>
+      'length >';
+
+  @override
+  String get form_array_question_visibility_logic_length_less_than =>
+      'length <';
+
+  @override
+  String
+  get form_array_question_visibility_logic_length_greater_than_or_equal =>
+      'length >=';
+
+  @override
+  String get form_array_question_visibility_logic_length_less_than_or_equal =>
+      'length <=';
+
+  @override
   String get form_array_question_visibility_logic_not => 'NOT';
 
   @override

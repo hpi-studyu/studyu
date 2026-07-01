@@ -102,6 +102,12 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     setState(() => _donePressed = true);
   }
 
+  bool get _hasEditedCommittedAnswer {
+    final committedValue = widget.initialAnswer?.response;
+    return committedValue != null &&
+        _textFieldController.text != committedValue;
+  }
+
   TextInputType _getKeyboardType() {
     switch (widget.question.textType) {
       case FreeTextQuestionType.numeric:
@@ -122,6 +128,8 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   Widget build(BuildContext context) {
     final question = widget.question;
     final l10n = AppLocalizations.of(context)!;
+    final showDoneButton =
+        !_donePressed && (widget.isLastQuestion || _hasEditedCommittedAnswer);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -173,7 +181,7 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
         ),
         const SizedBox(height: 12),
-        if (widget.isLastQuestion && !_donePressed)
+        if (showDoneButton)
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(

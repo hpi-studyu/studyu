@@ -87,6 +87,13 @@ class ConditionRowFormViewModel
 
     // Listen for comparator changes
     comparatorControl.valueChanges.listen((_) {
+      if (selectedQuestion?.type == FreeTextQuestion.questionType &&
+          selectedComparatorUsesTextLength) {
+        final currentValue = valueControl.value?.toString();
+        if (currentValue != null && int.tryParse(currentValue) == null) {
+          valueControl.value = null;
+        }
+      }
       form.markAsDirty();
     });
 
@@ -178,10 +185,27 @@ class ConditionRowFormViewModel
             TextComparator.doesNotContain,
             tr.form_array_question_visibility_logic_does_not_contain,
           ),
+          const FormControlOption(TextComparator.lengthGreaterThan, '>'),
+          const FormControlOption(TextComparator.lengthLessThan, '<'),
+          const FormControlOption(
+            TextComparator.lengthGreaterThanOrEqual,
+            '>=',
+          ),
+          const FormControlOption(TextComparator.lengthLessThanOrEqual, '<='),
         ];
       default:
         return [];
     }
+  }
+
+  bool get selectedComparatorUsesTextLength {
+    return switch (comparatorControl.value) {
+      TextComparator.lengthGreaterThan ||
+      TextComparator.lengthLessThan ||
+      TextComparator.lengthGreaterThanOrEqual ||
+      TextComparator.lengthLessThanOrEqual => true,
+      _ => false,
+    };
   }
 
   // --- Get available values for a 'choice' question ---
@@ -313,6 +337,10 @@ class ConditionRowFormViewModel
           ..target = questionId;
       case FreeTextQuestion.questionType:
         if (comparator is! TextComparator || value == null) return null;
+        if (selectedComparatorUsesTextLength &&
+            int.tryParse(value as String) == null) {
+          return null;
+        }
         return TextExpression(comparator: comparator, value: value as String)
           ..target = questionId;
       default:

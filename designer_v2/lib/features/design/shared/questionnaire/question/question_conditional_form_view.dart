@@ -377,6 +377,12 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case FreeTextQuestion.questionType:
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
+          keyboardType: conditionVm.selectedComparatorUsesTextLength
+              ? TextInputType.number
+              : TextInputType.text,
+          inputFormatters: conditionVm.selectedComparatorUsesTextLength
+              ? [FilteringTextInputFormatter.digitsOnly]
+              : null,
           decoration: InputDecoration(
             labelText: tr.form_array_question_visibility_logic_value_title,
             border: const OutlineInputBorder(),

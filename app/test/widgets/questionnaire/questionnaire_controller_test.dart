@@ -196,6 +196,32 @@ void main() {
       expect(controller.visibleQuestions.map((q) => q.id), contains('q2'));
     });
 
+    test('free text length conditional detects entered text', () {
+      final q1 = freeTextQuestion('q1', 'Enter text');
+      final q2 = boolQuestion('q2', 'Shown when text entered')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [
+              TextExpression(
+                comparator: TextComparator.lengthGreaterThan,
+                value: '0',
+              )..target = 'q1',
+            ],
+          ),
+        );
+
+      final controller = QuestionnaireController([q1, q2]);
+
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+      controller.submitAnswer(q1.constructAnswer(''));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+      controller.submitAnswer(q1.constructAnswer('x'));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1', 'q2']);
+    });
+
     // ── Test 6: no-op draft update does not notify listeners ──
 
     test('no-op draft update does not notify listeners', () {

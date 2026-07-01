@@ -67,6 +67,18 @@ class LiveConditionPreview extends StatelessWidget {
         case TextComparator.doesNotContain:
           comparatorText =
               tr.form_array_question_visibility_logic_does_not_contain;
+        case TextComparator.lengthGreaterThan:
+          comparatorText =
+              tr.form_array_question_visibility_logic_length_greater_than;
+        case TextComparator.lengthLessThan:
+          comparatorText =
+              tr.form_array_question_visibility_logic_length_less_than;
+        case TextComparator.lengthGreaterThanOrEqual:
+          comparatorText = tr
+              .form_array_question_visibility_logic_length_greater_than_or_equal;
+        case TextComparator.lengthLessThanOrEqual:
+          comparatorText =
+              tr.form_array_question_visibility_logic_length_less_than_or_equal;
       }
       return "${_getQuestionPreviewText(expression.target!)} $comparatorText '${expression.value}'";
     } else if (expression is CompositeExpression) {

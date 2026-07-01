@@ -12,6 +12,14 @@ enum TextComparator {
   contains,
   @JsonValue('does_not_contain')
   doesNotContain,
+  @JsonValue('length_greater_than')
+  lengthGreaterThan,
+  @JsonValue('length_less_than')
+  lengthLessThan,
+  @JsonValue('length_greater_than_or_equal')
+  lengthGreaterThanOrEqual,
+  @JsonValue('length_less_than_or_equal')
+  lengthLessThanOrEqual,
 }
 
 @JsonSerializable()
@@ -32,6 +40,8 @@ class TextExpression extends ValueExpression<String> {
 
   @override
   bool checkValue(String targetValue) {
+    final lengthValue = int.tryParse(value);
+
     switch (comparator) {
       case TextComparator.equal:
         return targetValue == value;
@@ -41,6 +51,14 @@ class TextExpression extends ValueExpression<String> {
         return targetValue.contains(value);
       case TextComparator.doesNotContain:
         return !targetValue.contains(value);
+      case TextComparator.lengthGreaterThan:
+        return lengthValue != null && targetValue.length > lengthValue;
+      case TextComparator.lengthLessThan:
+        return lengthValue != null && targetValue.length < lengthValue;
+      case TextComparator.lengthGreaterThanOrEqual:
+        return lengthValue != null && targetValue.length >= lengthValue;
+      case TextComparator.lengthLessThanOrEqual:
+        return lengthValue != null && targetValue.length <= lengthValue;
     }
   }
 }

@@ -1995,6 +1995,30 @@ abstract class AppLocalizations {
   /// **'does not contain'**
   String get form_array_question_visibility_logic_does_not_contain;
 
+  /// No description provided for @form_array_question_visibility_logic_length_greater_than.
+  ///
+  /// In en, this message translates to:
+  /// **'length >'**
+  String get form_array_question_visibility_logic_length_greater_than;
+
+  /// No description provided for @form_array_question_visibility_logic_length_less_than.
+  ///
+  /// In en, this message translates to:
+  /// **'length <'**
+  String get form_array_question_visibility_logic_length_less_than;
+
+  /// No description provided for @form_array_question_visibility_logic_length_greater_than_or_equal.
+  ///
+  /// In en, this message translates to:
+  /// **'length >='**
+  String get form_array_question_visibility_logic_length_greater_than_or_equal;
+
+  /// No description provided for @form_array_question_visibility_logic_length_less_than_or_equal.
+  ///
+  /// In en, this message translates to:
+  /// **'length <='**
+  String get form_array_question_visibility_logic_length_less_than_or_equal;
+
   /// No description provided for @form_array_question_visibility_logic_not.
   ///
   /// In en, this message translates to:
