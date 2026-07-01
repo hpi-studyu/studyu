@@ -833,8 +833,128 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_study_delete_description.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.'**
+  /// **'Deleting this study permanently removes the study setup and all stored study data.'**
   String get dialog_study_delete_description;
+
+  /// No description provided for @dialog_study_delete_warning_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Before deleting, save a backup and consider whether closing the study is enough.'**
+  String get dialog_study_delete_warning_intro;
+
+  /// No description provided for @dialog_study_delete_backup_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the study definition and collected data as a backup before deleting.'**
+  String get dialog_study_delete_backup_step;
+
+  /// No description provided for @dialog_study_delete_close_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop new enrollments while keeping the study and existing data available.'**
+  String get dialog_study_delete_close_step;
+
+  /// No description provided for @dialog_study_delete_download_backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Download backup'**
+  String get dialog_study_delete_download_backup;
+
+  /// No description provided for @dialog_study_delete_data_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that the study and all associated data will be deleted forever and cannot be retrieved again.'**
+  String get dialog_study_delete_data_confirmation;
+
+  /// No description provided for @dialog_study_delete_participant_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that current participants will not be able to continue their study and that all data from current and past participants will be deleted for them and for me.'**
+  String get dialog_study_delete_participant_confirmation;
+
+  /// No description provided for @dialog_study_delete_irreversible_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that my decision is final and irreversible and that all data is completely deleted and cannot be restored again.'**
+  String get dialog_study_delete_irreversible_confirmation;
+
+  /// No description provided for @dialog_study_delete_data_confirmation_emphasis_1.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted forever'**
+  String get dialog_study_delete_data_confirmation_emphasis_1;
+
+  /// No description provided for @dialog_study_delete_data_confirmation_emphasis_2.
+  ///
+  /// In en, this message translates to:
+  /// **'cannot be retrieved again'**
+  String get dialog_study_delete_data_confirmation_emphasis_2;
+
+  /// No description provided for @dialog_study_delete_participant_confirmation_emphasis_1.
+  ///
+  /// In en, this message translates to:
+  /// **'current participants will not be able to continue'**
+  String get dialog_study_delete_participant_confirmation_emphasis_1;
+
+  /// No description provided for @dialog_study_delete_participant_confirmation_emphasis_2.
+  ///
+  /// In en, this message translates to:
+  /// **'all data from current and past participants'**
+  String get dialog_study_delete_participant_confirmation_emphasis_2;
+
+  /// No description provided for @dialog_study_delete_irreversible_confirmation_emphasis_1.
+  ///
+  /// In en, this message translates to:
+  /// **'final and irreversible'**
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1;
+
+  /// No description provided for @dialog_study_delete_irreversible_confirmation_emphasis_2.
+  ///
+  /// In en, this message translates to:
+  /// **'cannot be restored again'**
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2;
+
+  /// No description provided for @dialog_study_delete_type_name_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the study name \"{studyName}\" to confirm deletion.'**
+  String dialog_study_delete_type_name_instruction(Object studyName);
+
+  /// No description provided for @dialog_study_delete_type_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Study name'**
+  String get dialog_study_delete_type_name_label;
+
+  /// No description provided for @dialog_study_close_type_name_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the title of the study \"{studyName}\" to confirm that you want to close it:'**
+  String dialog_study_close_type_name_instruction(Object studyName);
+
+  /// No description provided for @dialog_study_close_type_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Title of the study to close'**
+  String get dialog_study_close_type_name_label;
+
+  /// No description provided for @dialog_study_close_irreversible_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that closing participation is final and cannot be reversed.'**
+  String get dialog_study_close_irreversible_confirmation;
+
+  /// No description provided for @dialog_study_delete_close_instead.
+  ///
+  /// In en, this message translates to:
+  /// **'Review closing instead'**
+  String get dialog_study_delete_close_instead;
+
+  /// No description provided for @dialog_study_title_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Study title does not match'**
+  String get dialog_study_title_mismatch;
 
   /// No description provided for @dialog_delete_title.
   ///

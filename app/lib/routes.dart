@@ -92,9 +92,18 @@ class Routes {
           settings: settings,
         );
       case appErrorScreen:
-        final selectedSubjectId = settings.arguments as String?;
+        final arguments = switch (settings.arguments) {
+          final AppErrorScreenArguments args => args,
+          final String selectedSubjectId => AppErrorScreenArguments(
+            selectedSubjectId: selectedSubjectId,
+          ),
+          _ => const AppErrorScreenArguments(),
+        };
         return MaterialPageRoute(
-          builder: (_) => AppErrorScreen(selectedSubjectId: selectedSubjectId),
+          builder: (_) => AppErrorScreen(
+            selectedSubjectId: arguments.selectedSubjectId,
+            reason: arguments.reason,
+          ),
           settings: settings,
         );
       case dashboard:

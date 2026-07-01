@@ -5,6 +5,8 @@ import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 typedef ModelActionHandler = FutureOr<void> Function();
+typedef ModelActionConfirmationDialogBuilder =
+    Widget Function(BuildContext dialogContext, ModelAction action);
 
 class ModelActionConfirmation {
   const ModelActionConfirmation({
@@ -13,6 +15,8 @@ class ModelActionConfirmation {
     this.confirmLabel,
     this.cancelLabel,
     this.icon,
+    this.customContent,
+    this.dialogBuilder,
   });
 
   final String title;
@@ -20,6 +24,8 @@ class ModelActionConfirmation {
   final String? confirmLabel;
   final String? cancelLabel;
   final IconData? icon;
+  final Widget? customContent;
+  final ModelActionConfirmationDialogBuilder? dialogBuilder;
 }
 
 class ModelActionConfirmations {
@@ -101,22 +107,30 @@ class ModelAction<T> {
     if (confirmation != null) {
       final confirmed = await showDialog<bool>(
         context: context,
-        builder: (dialogContext) => StandardConfirmationDialog(
-          title: confirmation!.title,
-          message: confirmation!.message,
-          icon: confirmation!.icon,
-          actions: [
-            ConfirmationDialogAction(
-              label: confirmation!.cancelLabel ?? tr.dialog_cancel,
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-            ),
-            ConfirmationDialogAction(
-              label: confirmation!.confirmLabel ?? label,
-              isDestructive: isDestructive,
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-            ),
-          ],
-        ),
+        builder: (dialogContext) {
+          final dialogBuilder = confirmation!.dialogBuilder;
+          if (dialogBuilder != null) {
+            return dialogBuilder(dialogContext, this);
+          }
+
+          return StandardConfirmationDialog(
+            title: confirmation!.title,
+            message: confirmation!.message,
+            customContent: confirmation!.customContent,
+            icon: confirmation!.icon,
+            actions: [
+              ConfirmationDialogAction(
+                label: confirmation!.cancelLabel ?? tr.dialog_cancel,
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+              ConfirmationDialogAction(
+                label: confirmation!.confirmLabel ?? label,
+                isDestructive: isDestructive,
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+            ],
+          );
+        },
       );
       if (confirmed != true) {
         return;
