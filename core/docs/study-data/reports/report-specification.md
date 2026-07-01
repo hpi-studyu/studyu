@@ -4,7 +4,7 @@
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `primary` | `ReportSection?` | No |  | The main highlighted report section shown at the top. |
+| `primary` | `ReportSection?` | No | - | The main highlighted report section shown at the top. |
 | `secondary` | `List<ReportSection>` | No | `[]` | Additional report sections shown below the primary section. |
 <!-- GENERATED:FIELDS END -->
 

@@ -11,5 +11,5 @@
 | `email` | `String` | No | `''` | Contact email address. |
 | `website` | `String` | No | `''` | Optional website URL for the study or research group. |
 | `phone` | `String` | No | `''` | Optional phone number. |
-| `additionalInfo` | `String?` | No |  | Any other contact details or notes. |
+| `additionalInfo` | `String?` | No | - | Any other contact details or notes. |
 <!-- GENERATED:FIELDS END -->

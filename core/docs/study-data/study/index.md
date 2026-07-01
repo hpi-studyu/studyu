@@ -4,10 +4,10 @@
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `id` | `String` | Yes |  | Unique study identifier (UUID). |
-| `title` | `String?` | No |  | Display title shown to participants. |
+| `id` | `String` | Yes | - | Unique study identifier (UUID). |
+| `title` | `String?` | No | - | Display title shown to participants. |
 | `description` | `String?` | No | `''` | Long-form description of the study. |
-| `userId (user_id)` | `String` | Yes |  | ID of the researcher who owns this study. |
+| `userId (user_id)` | `String` | Yes | - | ID of the researcher who owns this study. |
 | `participation` | `Participation` | No | `Participation.invite` | Whether the study is open or invite-only. One of `open`, `invite`. |
 | `resultSharing (result_sharing)` | `ResultSharing` | No | `ResultSharing.private` | Who can see results. One of `public`, `private`, `organization`. |
 | `contact` | `Contact` | No | `Contact()` | Contact information for the lead researcher. |

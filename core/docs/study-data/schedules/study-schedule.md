@@ -8,5 +8,5 @@
 | `phaseDuration` | `int` | No | `7` | Length of each intervention phase in days. |
 | `includeBaseline` | `bool` | No | `true` | Whether a baseline phase precedes the first intervention. |
 | `sequence` | `PhaseSequence` | No | `PhaseSequence.alternating` | Phase ordering strategy. One of `alternating`, `counterBalanced`, `randomized`, `customized`. |
-| `sequenceCustom` | `String` | Yes |  | Custom phase sequence string (e.g. `AABB`). Only used when `sequence` is `customized`. |
+| `sequenceCustom` | `String` | Yes | - | Custom phase sequence string (e.g. `AABB`). Only used when `sequence` is `customized`. |
 <!-- GENERATED:FIELDS END -->
