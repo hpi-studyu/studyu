@@ -25,6 +25,15 @@ class SubjectDeletedException implements Exception {
       'SubjectDeletedException: subject no longer exists in the backend';
 }
 
+@visibleForTesting
+String initialRouteForMissingSubjectRoute({
+  required bool isPreview,
+  required bool onBoarded,
+}) {
+  if (isPreview) return Routes.terms;
+  return onBoarded ? Routes.welcome : Routes.onboarding;
+}
+
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
@@ -65,7 +74,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         status: 'error',
         message: l10n.preview_overlay_study_not_ready,
       );
-      rethrow;
+      // Do not rethrow: the call site is unawaited; an unhandled async
+      // exception would crash the app rather than showing a graceful error.
+      return;
     }
 
     final selectedSubjectId = await getActiveSubjectId();
@@ -115,12 +126,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> noSubjectFound(AppState state) async {
     await cancelNotifications(context);
 
-    final bool onBoarded = await SecureStorage.readBool('onboarded') ?? false;
-    // Designer previews should skip the generic app introduction and go straight
-    // to the participant study flow.
-    final route = state.isPreview || onBoarded
-        ? Routes.terms
-        : Routes.onboarding;
+    final route = initialRouteForMissingSubjectRoute(
+      isPreview: state.isPreview,
+      onBoarded: await SecureStorage.readBool('onboarded') ?? false,
+    );
 
     if (!mounted) return;
     _iFrameHelper.postPreviewStatus(status: 'loaded');
@@ -351,6 +360,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
     _previewNavigationInProgress = true;
+    bool navigationPerformed = false;
 
     try {
       final navigator = navigatorKey.currentState;
@@ -365,7 +375,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
           if (route != null) 'route': route,
         }, AppLanguage(AppLocalizations.supportedLocales));
         await preview.init();
-        preview.study = state.selectedStudy;
+        // Recover the Supabase session before making authenticated calls.
+        if (!await preview.handleAuthorization()) return false;
+        // Prefer the already-fetched study from state over the one from
+        // handleAuthorization so the designer's latest edits are used.
+        if (state.selectedStudy != null) preview.study = state.selectedStudy;
         state.activeSubject = await preview.getStudySubject(
           state,
           createSubject: true,
@@ -396,18 +410,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
           route == 'studyOverview' ||
           route == Routes.studyOverview) {
         await replaceNamed(Routes.studyOverview);
+        navigationPerformed = true;
         return;
       }
 
       if (route == 'eligibilityCheck') {
         if (state.selectedStudy == null) return;
         await replaceWithEligibility();
+        navigationPerformed = true;
         return;
       }
 
       if (route == Routes.interventionSelection ||
           route == 'interventionSelection') {
         await replaceNamed(Routes.interventionSelection);
+        navigationPerformed = true;
         return;
       }
 
@@ -421,10 +438,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       if (route == 'consent') {
         await replaceNamed(Routes.consent);
+        navigationPerformed = true;
       } else if (route == 'journey') {
         await replaceNamed(Routes.journey);
+        navigationPerformed = true;
       } else if (route == 'dashboard') {
         await replaceNamed(Routes.dashboard);
+        navigationPerformed = true;
       }
     } finally {
       _previewNavigationInProgress = false;
@@ -432,10 +452,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
       _pendingPreviewRoute = null;
       if (pendingRoute != null && pendingRoute != route) {
         await _navigatePreviewRoute(state, pendingRoute, l10n);
-      } else {
+      } else if (navigationPerformed) {
         _iFrameHelper.postPreviewStatus(status: 'loaded');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    IFrameHelper.cancelSubscription();
+    super.dispose();
   }
 
   @override

@@ -46,6 +46,18 @@ class Answer<V> {
       )..response = DateTime.parse(value as String);
     }
 
+    // Fallback: a String value that parses as ISO 8601 was likely written by
+    // an older version that serialised DateTime without the responseType key.
+    if (value is String) {
+      final parsed = DateTime.tryParse(value);
+      if (parsed != null) {
+        return Answer<DateTime>(
+          data['question'] as String,
+          DateTime.parse(data['timestamp'] as String),
+        )..response = parsed;
+      }
+    }
+
     switch (value) {
       case bool():
         return Answer<bool>.parseJson(data);
