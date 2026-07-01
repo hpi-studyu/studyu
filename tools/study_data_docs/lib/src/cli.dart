@@ -30,10 +30,8 @@ Future<void> runWrite({
   String? metadataPathOverride,
   String? docsDirOverride,
 }) async {
-  final metadataPath = p.join(
-    repoRoot,
-    metadataPathOverride ?? _kDefaultMetadataFile,
-  );
+  final metadataPath =
+      p.join(repoRoot, metadataPathOverride ?? _kDefaultMetadataFile);
   final docsDir = p.join(repoRoot, docsDirOverride ?? _kDefaultDocsDir);
   final modelsDir = p.join(repoRoot, _kModelsDir);
 
@@ -66,12 +64,12 @@ Future<void> runWrite({
       pagePath: pagePath,
       meta: pageMeta,
       classes: classes,
+      allClasses: scannedClasses,
     );
     written++;
   }
 
   _writeIndexPage(docsDir: docsDir, meta: meta);
-
   stdout.writeln('[write] Done — $written pages written.');
 }
 
@@ -81,10 +79,8 @@ Future<void> runCheck({
   String? metadataPathOverride,
   String? docsDirOverride,
 }) async {
-  final metadataPath = p.join(
-    repoRoot,
-    metadataPathOverride ?? _kDefaultMetadataFile,
-  );
+  final metadataPath =
+      p.join(repoRoot, metadataPathOverride ?? _kDefaultMetadataFile);
   final docsDir = p.join(repoRoot, docsDirOverride ?? _kDefaultDocsDir);
   final modelsDir = p.join(repoRoot, _kModelsDir);
 
@@ -110,17 +106,24 @@ Future<void> runCheck({
     }
   }
 
-  // 2. Every metadata page must be in the canonical scope.
+  // 2. Every metadata page must exist in the canonical scope.
   for (final pagePath in meta.allPagePaths) {
     if (!allPagePaths.contains(pagePath)) {
       errors.add(
-        'Metadata has page "$pagePath" not in canonical scope. '
-        'Remove it or add it to page_scope.dart.',
+        'Metadata has page "$pagePath" not in canonical scope — '
+        'remove it or add it to page_scope.dart.',
       );
     }
   }
 
-  // 3. Check drift in generated blocks.
+  // 3. Every metadata entry must list at least a title.
+  for (final pageMeta in meta.allPages) {
+    if (pageMeta.title.isEmpty) {
+      errors.add('${pageMeta.path}: metadata is missing a title.');
+    }
+  }
+
+  // 4. Per-page checks.
   for (final pagePath in allPagePaths) {
     final pageMeta = meta.page(pagePath);
     if (pageMeta == null) continue;
@@ -140,9 +143,24 @@ Future<void> runCheck({
         .whereType<ScannedClass>()
         .toList();
 
-    // Check FIELDS block drift.
+    // 4a. Page title must match metadata.
+    final firstHeadingMatch =
+        RegExp(r'^#\s+(.+)$', multiLine: true).firstMatch(existing);
+    if (firstHeadingMatch != null) {
+      final heading = firstHeadingMatch.group(1)!.trim();
+      if (heading != pageMeta.title) {
+        errors.add(
+          '$pagePath: first heading "$heading" does not match '
+          'metadata title "${pageMeta.title}".',
+        );
+      }
+    } else {
+      errors.add('$pagePath: no H1 heading found.');
+    }
+
+    // 4b. FIELDS block drift.
     if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
-      final expectedRows = _buildExpectedFieldRows(classes, pageMeta);
+      final expectedRows = buildExpectedFieldRows(classes, pageMeta);
       final expectedContent = buildFieldsTable(expectedRows);
       final currentContent = extractBlock(existing, 'FIELDS');
 
@@ -154,7 +172,7 @@ Future<void> runCheck({
         );
       }
 
-      // Check that every serialisable field has a description.
+      // 4c. Every serialisable field must have a description or be ignored.
       for (final cls in classes) {
         for (final field in cls.fields) {
           if (!field.includeInJson) continue;
@@ -162,8 +180,7 @@ Future<void> runCheck({
               pageMeta.ignoredFields.contains(field.jsonKey)) {
             continue;
           }
-          final hasMeta =
-              pageMeta.fields.containsKey(field.name) ||
+          final hasMeta = pageMeta.fields.containsKey(field.name) ||
               pageMeta.fields.containsKey(field.jsonKey);
           if (!hasMeta) {
             errors.add(
@@ -173,15 +190,31 @@ Future<void> runCheck({
           }
         }
       }
+
+      // 4d. Metadata must not describe fields absent from source (unless virtual).
+      final sourceFieldNames = {
+        for (final cls in classes)
+          for (final f in cls.fields) ...{f.name, f.jsonKey},
+      };
+      for (final fieldMeta in pageMeta.fields.values) {
+        if (fieldMeta.virtual) continue;
+        if (!sourceFieldNames.contains(fieldMeta.name)) {
+          errors.add(
+            '$pagePath: _metadata.yaml describes field "${fieldMeta.name}" '
+            'which does not exist in source. Add virtual: true or remove it.',
+          );
+        }
+      }
     }
 
-    // Check DISCRIMINATORS block drift.
-    final discriminators = <String, String>{};
-    for (final cls in classes) {
-      discriminators.addAll(cls.discriminatorValues);
-    }
-    if (discriminators.isNotEmpty) {
-      final expectedContent = buildDiscriminatorsBlock(discriminators);
+    // 4e. DISCRIMINATORS block drift.
+    final discriminatorEntries = buildExpectedDiscriminatorEntries(
+      scopeEntries: entries,
+      classes: classes,
+      allClasses: scannedClasses,
+    );
+    if (discriminatorEntries.isNotEmpty) {
+      final expectedContent = buildDiscriminatorsBlock(discriminatorEntries);
       final currentContent = extractBlock(existing, 'DISCRIMINATORS');
       if (currentContent == null) {
         errors.add('$pagePath: missing GENERATED:DISCRIMINATORS block.');
@@ -192,22 +225,7 @@ Future<void> runCheck({
       }
     }
 
-    // Check page title matches metadata.
-    final firstHeadingMatch = RegExp(
-      r'^#\s+(.+)$',
-      multiLine: true,
-    ).firstMatch(existing);
-    if (firstHeadingMatch != null) {
-      final heading = firstHeadingMatch.group(1)!.trim();
-      if (heading != pageMeta.title) {
-        errors.add(
-          '$pagePath: first heading "$heading" does not match '
-          'metadata title "${pageMeta.title}".',
-        );
-      }
-    }
-
-    // Check LINKS block drift.
+    // 4f. LINKS block drift.
     if (pageMeta.links.isNotEmpty) {
       final linkEntries = _buildExpectedLinkEntries(pageMeta.links, pagePath);
       final expectedContent = buildLinksBlock(linkEntries);
@@ -222,7 +240,7 @@ Future<void> runCheck({
     }
   }
 
-  // 4. Check no orphaned pages exist in the docs tree.
+  // 5. No orphaned pages in the docs tree.
   final docsDirectory = Directory(docsDir);
   if (docsDirectory.existsSync()) {
     for (final entity in docsDirectory.listSync(recursive: true)) {
@@ -238,7 +256,7 @@ Future<void> runCheck({
     }
   }
 
-  // 5. Check relative links.
+  // 6. Broken relative links.
   final brokenLinks = checkLinks(docsDir);
   for (final link in brokenLinks) {
     errors.add(link.toString());
@@ -289,53 +307,6 @@ void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   }
 
   file.writeAsStringSync(buf.toString());
-}
-
-List<FieldRow> _buildExpectedFieldRows(
-  List<ScannedClass> classes,
-  PageMeta meta,
-) {
-  final rows = <FieldRow>[];
-  final seen = <String>{};
-
-  for (final cls in classes) {
-    for (final field in cls.fields) {
-      if (!field.includeInJson) continue;
-      if (seen.contains(field.jsonKey)) continue;
-      if (meta.ignoredFields.contains(field.name) ||
-          meta.ignoredFields.contains(field.jsonKey)) {
-        continue;
-      }
-      seen.add(field.jsonKey);
-
-      final fieldMeta = meta.fields[field.name] ?? meta.fields[field.jsonKey];
-      final description = fieldMeta?.description ?? '';
-
-      rows.add(
-        FieldRow(
-          jsonKey: field.jsonKey,
-          dartType: field.dartType,
-          required: field.required,
-          description: description,
-        ),
-      );
-    }
-  }
-
-  for (final fieldMeta in meta.fields.values) {
-    if (fieldMeta.virtual && !seen.contains(fieldMeta.name)) {
-      rows.add(
-        FieldRow(
-          jsonKey: fieldMeta.name,
-          dartType: fieldMeta.type ?? 'unknown',
-          required: fieldMeta.required,
-          description: fieldMeta.description,
-        ),
-      );
-    }
-  }
-
-  return rows;
 }
 
 List<LinkEntry> _buildExpectedLinkEntries(

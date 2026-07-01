@@ -16,11 +16,17 @@ class PageScopeEntry {
   /// Note text appended inside a generated comment block at the top of the page.
   final String? note;
 
+  /// When set, this class is an abstract dispatcher. The GENERATED:DISCRIMINATORS
+  /// block will list all concrete subtype wire values for this JSON field,
+  /// collected from every in-scope class that declares a matching discriminator.
+  final String? dispatcherField;
+
   const PageScopeEntry({
     required this.className,
     required this.pagePath,
     this.generatedFields = true,
     this.note,
+    this.dispatcherField,
   });
 }
 
@@ -47,6 +53,7 @@ const List<PageScopeEntry> kPageScope = [
     className: 'Question',
     pagePath: 'questionnaire/question.md',
     generatedFields: false,
+    dispatcherField: 'type',
   ),
   PageScopeEntry(
     className: 'BooleanQuestion',
@@ -196,6 +203,7 @@ const List<PageScopeEntry> kPageScope = [
     className: 'Expression',
     pagePath: 'shared/expressions.md',
     generatedFields: false,
+    dispatcherField: 'type',
   ),
   PageScopeEntry(
     className: 'BooleanExpression',

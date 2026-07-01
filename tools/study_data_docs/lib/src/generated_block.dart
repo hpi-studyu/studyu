@@ -31,7 +31,6 @@ String replaceBlock({
   final endIdx = existing.indexOf(end);
 
   if (startIdx != -1 && endIdx != -1 && endIdx > startIdx) {
-    // Replace content between markers.
     final before = existing.substring(0, startIdx + start.length);
     final after = existing.substring(endIdx);
     return '$before\n$newContent\n$after';
@@ -58,49 +57,77 @@ String? extractBlock(String markdown, String kind) {
 
 /// Checks that [markdown] contains all required generated blocks for a page
 /// that expects [kinds].
-List<String> missingBlocks(String markdown, Iterable<String> kinds) {
-  return kinds.where((k) => !markdown.contains(startMarker(k))).toList();
-}
+List<String> missingBlocks(String markdown, Iterable<String> kinds) =>
+    kinds.where((k) => !markdown.contains(startMarker(k))).toList();
 
-/// Builds a GENERATED:FIELDS block body for the given field rows.
+/// Builds a GENERATED:FIELDS block body.
 ///
-/// [rows] is a list of `(jsonKey, dartType, required, description)` tuples.
+/// The Field column shows `field` when the Dart name and JSON key are the same,
+/// or `field (json_key)` when they differ — making the wire contract visible
+/// without a separate column.
+///
+/// A Default column is included only when at least one row has a default value.
 String buildFieldsTable(List<FieldRow> rows) {
   if (rows.isEmpty) {
     return '_No JSON-serialisable fields._';
   }
 
+  final hasDefaults = rows.any((r) => r.defaultValue != null);
+
   final buf = StringBuffer();
-  buf.writeln('| Field | Type | Required | Description |');
-  buf.writeln('|-------|------|----------|-------------|');
+  if (hasDefaults) {
+    buf.writeln('| Field | Type | Required | Default | Description |');
+    buf.writeln('|-------|------|----------|---------|-------------|');
+  } else {
+    buf.writeln('| Field | Type | Required | Description |');
+    buf.writeln('|-------|------|----------|-------------|');
+  }
+
   for (final row in rows) {
+    final fieldLabel = row.fieldLabel;
     final req = row.required ? 'Yes' : 'No';
-    buf.write('| `${row.jsonKey}` ');
-    buf.write('| `${_escapeType(row.dartType)}` ');
-    buf.write('| $req ');
-    buf.writeln('| ${row.description} |');
+    if (hasDefaults) {
+      final def =
+          row.defaultValue != null ? '`${row.defaultValue}`' : '';
+      buf.writeln(
+        '| `$fieldLabel` | `${_escapeType(row.dartType)}` | $req | $def | ${row.description} |',
+      );
+    } else {
+      buf.writeln(
+        '| `$fieldLabel` | `${_escapeType(row.dartType)}` | $req | ${row.description} |',
+      );
+    }
   }
   return buf.toString().trimRight();
 }
 
 /// Builds a GENERATED:DISCRIMINATORS block body.
 ///
-/// [entries] maps discriminator field name → wire value.
-String buildDiscriminatorsBlock(Map<String, String> entries) {
-  if (entries.isEmpty) return '_No discriminator fields._';
+/// For concrete classes: maps discriminator field → single wire value.
+/// For abstract dispatcher pages: maps discriminator field → sorted set of
+/// all known wire values from concrete subclasses.
+String buildDiscriminatorsBlock(Map<String, Object> entries) {
+  if (entries.isEmpty) return '_No discriminator values._';
 
   final buf = StringBuffer();
-  buf.writeln('| Field | Value |');
-  buf.writeln('|-------|-------|');
+  buf.writeln('| Field | Value(s) |');
+  buf.writeln('|-------|---------|');
+
   for (final entry in entries.entries) {
-    buf.writeln('| `${entry.key}` | `${entry.value}` |');
+    final value = entry.value;
+    if (value is String) {
+      buf.writeln('| `${entry.key}` | `$value` |');
+    } else if (value is Set<String>) {
+      final sorted = value.toList()..sort();
+      buf.writeln(
+        '| `${entry.key}` | ${sorted.map((v) => '`$v`').join(', ')} |',
+      );
+    }
   }
   return buf.toString().trimRight();
 }
 
 /// Builds a GENERATED:LINKS block body.
-///
-/// [links] maps link label → relative markdown href.
 String buildLinksBlock(List<LinkEntry> links) {
   if (links.isEmpty) return '_No cross-references._';
 
@@ -112,17 +139,25 @@ String buildLinksBlock(List<LinkEntry> links) {
 }
 
 class FieldRow {
-  final String jsonKey;
+  final String dartName; // Dart field name
+  final String jsonKey; // wire JSON key
   final String dartType;
   final bool required;
   final String description;
+  final String? defaultValue;
 
   const FieldRow({
+    required this.dartName,
     required this.jsonKey,
     required this.dartType,
     required this.required,
     required this.description,
+    this.defaultValue,
   });
+
+  /// Display label: `field` when names match, `field (json_key)` when they differ.
+  String get fieldLabel =>
+      dartName == jsonKey ? dartName : '$dartName ($jsonKey)';
 }
 
 class LinkEntry {
