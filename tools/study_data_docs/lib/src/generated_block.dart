@@ -87,8 +87,7 @@ String buildFieldsTable(List<FieldRow> rows) {
     final fieldLabel = row.fieldLabel;
     final req = row.required ? 'Yes' : 'No';
     if (hasDefaults) {
-      final def =
-          row.defaultValue != null ? '`${row.defaultValue}`' : '';
+      final def = row.defaultValue != null ? '`${row.defaultValue}`' : '';
       buf.writeln(
         '| `$fieldLabel` | `${_escapeType(row.dartType)}` | $req | $def | ${row.description} |',
       );

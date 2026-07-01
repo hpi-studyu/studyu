@@ -87,10 +87,7 @@ pages:
     fields: {}
 ''');
       final meta = DocMetadata.load(path);
-      expect(
-        meta.page('study/index.md')!.links,
-        contains('study/contact.md'),
-      );
+      expect(meta.page('study/index.md')!.links, contains('study/contact.md'));
     });
 
     test('parses virtual fields', () {

@@ -170,8 +170,7 @@ Map<String, Object> _buildDiscriminatorEntries({
             .firstOrNull;
         if (clsEntry == null) continue;
         final clsDir = p.posix.dirname(clsEntry.pagePath);
-        if (clsDir == dispatcherDir ||
-            clsDir.startsWith('$dispatcherDir/')) {
+        if (clsDir == dispatcherDir || clsDir.startsWith('$dispatcherDir/')) {
           values.add(wire);
         }
       }

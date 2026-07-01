@@ -30,8 +30,10 @@ Future<void> runWrite({
   String? metadataPathOverride,
   String? docsDirOverride,
 }) async {
-  final metadataPath =
-      p.join(repoRoot, metadataPathOverride ?? _kDefaultMetadataFile);
+  final metadataPath = p.join(
+    repoRoot,
+    metadataPathOverride ?? _kDefaultMetadataFile,
+  );
   final docsDir = p.join(repoRoot, docsDirOverride ?? _kDefaultDocsDir);
   final modelsDir = p.join(repoRoot, _kModelsDir);
 
@@ -79,8 +81,10 @@ Future<void> runCheck({
   String? metadataPathOverride,
   String? docsDirOverride,
 }) async {
-  final metadataPath =
-      p.join(repoRoot, metadataPathOverride ?? _kDefaultMetadataFile);
+  final metadataPath = p.join(
+    repoRoot,
+    metadataPathOverride ?? _kDefaultMetadataFile,
+  );
   final docsDir = p.join(repoRoot, docsDirOverride ?? _kDefaultDocsDir);
   final modelsDir = p.join(repoRoot, _kModelsDir);
 
@@ -144,8 +148,10 @@ Future<void> runCheck({
         .toList();
 
     // 4a. Page title must match metadata.
-    final firstHeadingMatch =
-        RegExp(r'^#\s+(.+)$', multiLine: true).firstMatch(existing);
+    final firstHeadingMatch = RegExp(
+      r'^#\s+(.+)$',
+      multiLine: true,
+    ).firstMatch(existing);
     if (firstHeadingMatch != null) {
       final heading = firstHeadingMatch.group(1)!.trim();
       if (heading != pageMeta.title) {
@@ -180,7 +186,8 @@ Future<void> runCheck({
               pageMeta.ignoredFields.contains(field.jsonKey)) {
             continue;
           }
-          final hasMeta = pageMeta.fields.containsKey(field.name) ||
+          final hasMeta =
+              pageMeta.fields.containsKey(field.name) ||
               pageMeta.fields.containsKey(field.jsonKey);
           if (!hasMeta) {
             errors.add(

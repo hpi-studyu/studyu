@@ -155,10 +155,7 @@ List<String> _findDartSources(String dir) {
 ///
 /// Fields are returned in declaration order: superclass fields first,
 /// then subclass fields. [unit] is used to extract initializer source text.
-List<ScannedField> _extractFields(
-  ClassElement element,
-  CompilationUnit unit,
-) {
+List<ScannedField> _extractFields(ClassElement element, CompilationUnit unit) {
   // Build inheritance chain (subclass → superclass), reverse to superclass-first.
   final chain = <ClassElement>[];
   ClassElement? current = element;
@@ -185,8 +182,7 @@ List<ScannedField> _extractFields(
           for (final variable in member.fields.variables) {
             final init = variable.initializer;
             if (init != null) {
-              initializerText[variable.name.lexeme] =
-                  init.toSource().trim();
+              initializerText[variable.name.lexeme] = init.toSource().trim();
             }
           }
         }
@@ -225,8 +221,7 @@ List<ScannedField> _extractFields(
 
       // Extract default value: prefer @JsonKey(defaultValue:), fall back to
       // source-level initializer text.
-      final jsonDefaultObj =
-          jsonKeyAnnotation?.getField('defaultValue');
+      final jsonDefaultObj = jsonKeyAnnotation?.getField('defaultValue');
       String? defaultVal;
       if (jsonDefaultObj != null && !jsonDefaultObj.isNull) {
         defaultVal = _dartObjectToSource(jsonDefaultObj);
