@@ -401,7 +401,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialog_study_delete_description =>
-      'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.';
+      'Deleting this study permanently removes the study setup and all stored study data.';
+
+  @override
+  String get dialog_study_delete_warning_intro =>
+      'Before deleting, save a backup and consider whether closing the study is enough.';
+
+  @override
+  String get dialog_study_delete_backup_step =>
+      'Save the study definition and collected data as a backup before deleting.';
+
+  @override
+  String get dialog_study_delete_close_step =>
+      'Stop new enrollments while keeping the study and existing data available.';
+
+  @override
+  String get dialog_study_delete_download_backup => 'Download backup';
+
+  @override
+  String get dialog_study_delete_data_confirmation =>
+      'I understand that the study and all associated data will be deleted forever and cannot be retrieved again.';
+
+  @override
+  String get dialog_study_delete_participant_confirmation =>
+      'I understand that current participants will not be able to continue their study and that all data from current and past participants will be deleted for them and for me.';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation =>
+      'I understand that my decision is final and irreversible and that all data is completely deleted and cannot be restored again.';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_1 =>
+      'deleted forever';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_2 =>
+      'cannot be retrieved again';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_1 =>
+      'current participants will not be able to continue';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_2 =>
+      'all data from current and past participants';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1 =>
+      'final and irreversible';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2 =>
+      'cannot be restored again';
+
+  @override
+  String dialog_study_delete_type_name_instruction(Object studyName) {
+    return 'Type the study name \"$studyName\" to confirm deletion.';
+  }
+
+  @override
+  String get dialog_study_delete_type_name_label => 'Study name';
+
+  @override
+  String dialog_study_close_type_name_instruction(Object studyName) {
+    return 'Enter the title of the study \"$studyName\" to confirm that you want to close it:';
+  }
+
+  @override
+  String get dialog_study_close_type_name_label =>
+      'Title of the study to close';
+
+  @override
+  String get dialog_study_close_irreversible_confirmation =>
+      'I understand that closing participation is final and cannot be reversed.';
+
+  @override
+  String get dialog_study_delete_close_instead => 'Review closing instead';
+
+  @override
+  String get dialog_study_title_mismatch => 'Study title does not match';
 
   @override
   String dialog_delete_title(Object subject) {

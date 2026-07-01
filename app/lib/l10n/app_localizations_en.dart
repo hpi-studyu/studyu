@@ -19,6 +19,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.';
 
   @override
+  String get deleted_study_error_title => 'Study unavailable';
+
+  @override
+  String get deleted_study_error_description =>
+      'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.';
+
+  @override
   String get try_again => 'Try again';
 
   @override
@@ -358,8 +365,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contact_support => 'Contact Support';
 
   @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support Request - Loading Error';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support Request - Study Unavailable';
+
+  @override
   String support_email_body(String subjectId) {
     return 'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: $subjectId\n\nPlease assist me with this issue.\n\nThank you.';
+  }
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: $subjectId\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.';
   }
 
   @override
@@ -1259,6 +1279,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
+  String get no_internet_connection =>
+      'No internet connection. Please try again when online.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'An error occurred: $message';
+  }
+
   String get continue_label => 'Continue';
 
   @override

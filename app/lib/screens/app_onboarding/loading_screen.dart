@@ -4,6 +4,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart' show navigatorKey;
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
@@ -13,6 +14,16 @@ import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase/supabase.dart'
+    show AuthApiException, PostgrestException;
+
+class SubjectDeletedException implements Exception {
+  const SubjectDeletedException();
+
+  @override
+  String toString() =>
+      'SubjectDeletedException: subject no longer exists in the backend';
+}
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -65,7 +76,24 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
     StudyULogger.info("Retrieving subject with ID: $selectedSubjectId");
-    StudySubject? subject = await _retrieveSubject(selectedSubjectId);
+    StudySubject? subject;
+    try {
+      subject = await _retrieveSubject(selectedSubjectId);
+    } on SubjectDeletedException {
+      StudyULogger.warning(
+        "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
+      );
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(
+        context,
+        Routes.appErrorScreen,
+        arguments: AppErrorScreenArguments(
+          selectedSubjectId: selectedSubjectId,
+          reason: AppErrorReason.deletedStudy,
+        ),
+      );
+      return;
+    }
     if (!mounted) return;
     if (subject != null) {
       subject = await Cache.synchronize(subject);
@@ -112,33 +140,48 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<StudySubject?> _retrieveSubject(String selectedStudyObjectId) async {
-    StudySubject? subject;
     try {
-      subject = await _fetchRemoteSubject(selectedStudyObjectId);
+      return await _fetchRemoteSubject(selectedStudyObjectId);
+    } on PostgrestException catch (e) {
+      if (e.code == 'PGRST116') {
+        // Row does not exist — subject was deleted from the database.
+        // Do not retry or fall back to cache, as that would show stale data.
+        StudyULogger.warning("Subject not found in DB (deleted): $e");
+        throw const SubjectDeletedException();
+      }
+      StudyULogger.warning(
+        "Could not retrieve subject, maybe JWT is expired, try logging in: $e",
+      );
     } catch (exception) {
       StudyULogger.warning(
         "Could not retrieve subject, maybe JWT is expired, try logging in: $exception",
       );
+    }
+
+    // JWT/network error path — retry with login
+    try {
+      if (await signInParticipant()) {
+        return await _fetchRemoteSubject(selectedStudyObjectId);
+      }
+    } on AuthApiException catch (e) {
+      // Credentials were rejected — the auth account no longer exists.
+      StudyULogger.warning("Invalid credentials during re-login: $e");
+      throw const SubjectDeletedException();
+    } catch (exception) {
+      StudyULogger.warning(
+        "Could not login and retrieve the study subject: $exception",
+      );
+      StudyULogger.fatal('Could not login and retrieve the study subject.');
+      // Only fall back to cache for network errors (device offline)
       try {
-        // Try signing in again. Needed if JWT is expired
-        if (await signInParticipant()) {
-          subject = await _fetchRemoteSubject(selectedStudyObjectId);
-        }
-      } catch (exception) {
-        StudyULogger.warning(
-          "Could not login and retrieve the study subject: $exception",
-        );
-        StudyULogger.fatal('Could not login and retrieve the study subject.');
-        // Try to reload the subject from cache
-        try {
-          subject = await Cache.loadSubject();
-          StudyULogger.info("Loaded subject from cache: $subject");
-        } catch (e) {
-          StudyULogger.warning("No subject found in cache");
-        }
+        final cached = await Cache.loadSubject();
+        StudyULogger.info("Loaded subject from cache: $cached");
+        return cached;
+      } catch (e) {
+        StudyULogger.warning("No subject found in cache");
       }
     }
-    return subject;
+    return null;
   }
 
   Future<bool> _initPreview(AppState state, AppLocalizations l10n) async {

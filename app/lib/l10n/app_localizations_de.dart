@@ -19,6 +19,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Studiendaten konnten nicht abgerufen werden. Wenn Sie aktuell an einer Studie teilnehmen, wenden Sie sich bitte zuerst an Ihre Studienleitung. Kontaktieren Sie den Support nur, wenn Sie nicht an einer Studie teilnehmen oder Ihre Studienleitung Sie dazu auffordert. Löschen Sie Ihre Daten nur, wenn Sie von der Studienleitung oder dem Support dazu aufgefordert werden. Das Löschen entfernt alle Ihre Studiendaten und Sie müssen der Studie erneut beitreten.';
 
   @override
+  String get deleted_study_error_title => 'Studie nicht verfügbar';
+
+  @override
+  String get deleted_study_error_description =>
+      'Diese Studie ist auf dem Server nicht mehr verfügbar. Ihre Daten bleiben vorerst auf diesem Gerät. Bitte kontaktieren Sie Ihre Studienleitung oder den Support, bevor Sie etwas löschen. Nutzen Sie \'Alle Daten löschen\' nur, wenn Sie zum Zurücksetzen der App aufgefordert werden.';
+
+  @override
   String get try_again => 'Erneut versuchen';
 
   @override
@@ -360,8 +367,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get contact_support => 'Support kontaktieren';
 
   @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support-Anfrage - Ladefehler';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support-Anfrage - Studie nicht verfügbar';
+
+  @override
   String support_email_body(String subjectId) {
     return 'Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: $subjectId\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.';
+  }
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hallo,\n\ndie StudyU App zeigt an, dass meine Studie auf dem Server nicht mehr verfügbar ist. Meine Subject-ID ist: $subjectId\n\nBitte teilen Sie mir mit, ob ich meine lokalen Daten behalten oder die App zurücksetzen soll.\n\nVielen Dank.';
   }
 
   @override
@@ -1270,6 +1290,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
+  String get no_internet_connection =>
+      'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'Ein Fehler ist aufgetreten: $message';
+  }
+
   String get continue_label => 'Weiter';
 
   @override

@@ -408,7 +408,87 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get dialog_study_delete_description =>
-      'Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.';
+      'Das Löschen dieser Studie entfernt die Studienkonfiguration und alle gespeicherten Studiendaten dauerhaft.';
+
+  @override
+  String get dialog_study_delete_warning_intro =>
+      'Speichere vor dem Löschen ein Backup und prüfe, ob das Schließen der Studie ausreicht.';
+
+  @override
+  String get dialog_study_delete_backup_step =>
+      'Speichere die Studiendefinition und gesammelte Daten vor dem Löschen als Backup.';
+
+  @override
+  String get dialog_study_delete_close_step =>
+      'Stoppe neue Einschreibungen, während die Studie und vorhandene Daten erhalten bleiben.';
+
+  @override
+  String get dialog_study_delete_download_backup => 'Backup herunterladen';
+
+  @override
+  String get dialog_study_delete_data_confirmation =>
+      'Ich verstehe, dass die Studie und alle zugehörigen Daten dauerhaft gelöscht werden und nicht wieder abgerufen werden können.';
+
+  @override
+  String get dialog_study_delete_participant_confirmation =>
+      'Ich verstehe, dass aktuelle Teilnehmende ihre Studie nicht fortsetzen können und dass alle Daten aktueller und früherer Teilnehmender für sie und für mich gelöscht werden.';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation =>
+      'Ich verstehe, dass meine Entscheidung endgültig und unwiderruflich ist und dass alle Daten vollständig gelöscht werden und nicht wiederhergestellt werden können.';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_1 =>
+      'dauerhaft gelöscht';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_2 =>
+      'nicht wieder abgerufen werden können';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_1 =>
+      'aktuelle Teilnehmende ihre Studie nicht fortsetzen können';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_2 =>
+      'alle Daten aktueller und früherer Teilnehmender';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1 =>
+      'endgültig und unwiderruflich';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2 =>
+      'nicht wiederhergestellt werden können';
+
+  @override
+  String dialog_study_delete_type_name_instruction(Object studyName) {
+    return 'Gib den Studiennamen \"$studyName\" ein, um das Löschen zu bestätigen.';
+  }
+
+  @override
+  String get dialog_study_delete_type_name_label => 'Studienname';
+
+  @override
+  String dialog_study_close_type_name_instruction(Object studyName) {
+    return 'Gib den Titel der Studie \"$studyName\" ein, um zu bestätigen, dass du sie schließen möchtest:';
+  }
+
+  @override
+  String get dialog_study_close_type_name_label =>
+      'Titel der zu schließenden Studie';
+
+  @override
+  String get dialog_study_close_irreversible_confirmation =>
+      'Ich verstehe, dass das Schließen der Teilnahme endgültig ist und nicht rückgängig gemacht werden kann.';
+
+  @override
+  String get dialog_study_delete_close_instead =>
+      'Schließen statt Löschen prüfen';
+
+  @override
+  String get dialog_study_title_mismatch =>
+      'Der Studientitel stimmt nicht überein';
 
   @override
   String dialog_delete_title(Object subject) {
