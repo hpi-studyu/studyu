@@ -40,7 +40,7 @@ class _TermsScreenState extends State<TermsScreen> {
         nextButtonKey: const ValueKey('terms_continue'),
         onNext: userCanContinue()
             ? () async {
-                final success = await anonymousSignUp();
+                final success = await ensureParticipantSignedIn();
                 if (success) {
                   if (!context.mounted) return;
                   Navigator.pushNamed(context, Routes.studySelection);
