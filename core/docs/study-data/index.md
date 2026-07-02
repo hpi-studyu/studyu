@@ -22,7 +22,6 @@ Study data docs describe the JSON-serialisable models used to define, schedule, 
 
 ### questionnaire
 - [Index](questionnaire/index.md)
-- [Question](questionnaire/question.md)
 
 ### questionnaire/question-types
 - [Annotated Scale](questionnaire/question-types/annotated-scale.md)

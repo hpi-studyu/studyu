@@ -71,20 +71,9 @@ pages:
 
   questionnaire/index.md:
     title: StudyUQuestionnaire
-    classes: [StudyUQuestionnaire]
+    classes: [StudyUQuestionnaire, Question]
     generated_fields: false
     fields: {}
-
-  questionnaire/question.md:
-    title: Question
-    classes: [Question]
-    generated_fields: false
-    fields:
-      type: Discriminator string used to dispatch to the correct subclass.
-      id: Unique question identifier (UUID).
-      prompt: The question text shown to the participant.
-      rationale: Optional explanation of why this question is asked.
-      conditional: Optional display condition — question is hidden when condition evaluates to false.
 
   questionnaire/question-types/boolean.md:
     title: Boolean Question

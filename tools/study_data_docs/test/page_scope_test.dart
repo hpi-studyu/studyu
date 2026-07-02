@@ -29,6 +29,13 @@ void main() {
       expect(names, contains('CompositeExpression'));
     });
 
+    test('questionnaire index includes container and dispatcher entries', () {
+      final entries = entriesForPage('questionnaire/index.md');
+      final names = entries.map((e) => e.className).toSet();
+      expect(names, contains('StudyUQuestionnaire'));
+      expect(names, contains('Question'));
+    });
+
     test('returns single entry for single-class page', () {
       final entries = entriesForPage('study/index.md');
       expect(entries.length, equals(1));
@@ -43,6 +50,7 @@ void main() {
       expect(paths, contains('questionnaire/question-types/scale.md'));
       expect(paths, contains('reports/sections/average.md'));
       expect(paths, contains('shared/expressions.md'));
+      expect(paths, isNot(contains('questionnaire/question.md')));
     });
 
     test('does not contain excluded class pages', () {

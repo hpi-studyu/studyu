@@ -47,7 +47,7 @@ const List<PageScopeEntry> kPageScope = [
   ),
   PageScopeEntry(
     className: 'Question',
-    pagePath: 'questionnaire/question.md',
+    pagePath: 'questionnaire/index.md',
     generatedFields: false,
     dispatcherField: 'type',
   ),
