@@ -18,15 +18,13 @@ section.
   "user_id": "researcher-user-id",
   "participation": "invite",
   "result_sharing": "private",
-  "contact": {
-    "email": "researcher@example.org"
-  },
+  "contact": {"email": "researcher@example.org"},
   "status": "draft",
   "consent": [
     {
       "id": "consent-main",
       "title": "Consent",
-      "text": "I agree to participate."
+      "description": "I agree to participate."
     }
   ],
   "interventions": [
@@ -43,15 +41,9 @@ section.
           "title": "Complete reflection",
           "schedule": {
             "completionPeriods": [
-              {
-                "id": "evening",
-                "unlockTime": "18:00",
-                "lockTime": "22:00"
-              }
+              {"id": "evening", "unlockTime": "18:00", "lockTime": "22:00"}
             ],
-            "reminders": [
-              "19:00"
-            ]
+            "reminders": ["19:00"]
           }
         }
       ]
@@ -64,22 +56,12 @@ section.
       "title": "Daily mood",
       "schedule": {
         "completionPeriods": [
-          {
-            "id": "evening",
-            "unlockTime": "18:00",
-            "lockTime": "22:00"
-          }
+          {"id": "evening", "unlockTime": "18:00", "lockTime": "22:00"}
         ],
-        "reminders": [
-          "19:00"
-        ]
+        "reminders": ["19:00"]
       },
       "questions": [
-        {
-          "type": "boolean",
-          "id": "had-good-day",
-          "prompt": "Did you have a good day?"
-        },
+        {"type": "boolean", "id": "had-good-day", "prompt": "Did you have a good day?"},
         {
           "type": "scale",
           "id": "mood-score",
@@ -91,12 +73,7 @@ section.
             "condition": {
               "type": "composite",
               "logicType": "and",
-              "expressions": [
-                {
-                  "type": "boolean",
-                  "target": "had-good-day"
-                }
-              ]
+              "expressions": [{"type": "boolean", "target": "had-good-day"}]
             }
           }
         }
@@ -115,10 +92,7 @@ section.
       "type": "numeric",
       "id": "mood-result",
       "filename": "mood.csv",
-      "resultProperty": {
-        "task": "daily-mood-task",
-        "property": "mood-score"
-      }
+      "resultProperty": {"task": "daily-mood-task", "property": "mood-score"}
     }
   ],
   "report_specification": {
@@ -128,10 +102,7 @@ section.
       "title": "Average mood",
       "description": "Average mood by study day.",
       "aggregate": "day",
-      "resultProperty": {
-        "task": "daily-mood-task",
-        "property": "mood-score"
-      }
+      "resultProperty": {"task": "daily-mood-task", "property": "mood-score"}
     },
     "secondary": []
   }
