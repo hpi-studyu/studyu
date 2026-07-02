@@ -269,7 +269,16 @@ Future<void> runCheck({
     }
   }
 
-  // 6. Broken relative links.
+  // 6. Generated root index must match the canonical page scope.
+  final indexFile = File(p.join(docsDir, 'index.md'));
+  final expectedIndex = _buildIndexPage();
+  if (!indexFile.existsSync()) {
+    errors.add('Docs index missing: index.md — run --write to generate it.');
+  } else if (indexFile.readAsStringSync().trim() != expectedIndex.trim()) {
+    errors.add('index.md is out of date. Run --write.');
+  }
+
+  // 7. Broken relative links.
   final brokenLinks = checkLinks(docsDir);
   for (final link in brokenLinks) {
     errors.add(link.toString());
@@ -317,9 +326,10 @@ String? _validateDescriptionSection(String markdown, String pagePath) {
 
 void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   final absPath = p.join(docsDir, 'index.md');
-  final file = File(absPath);
-  if (file.existsSync()) return;
+  File(absPath).writeAsStringSync(_buildIndexPage());
+}
 
+String _buildIndexPage() {
   final buf = StringBuffer();
   buf.writeln('# Study Data Reference');
   buf.writeln();
@@ -341,14 +351,14 @@ void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
 
   for (final section in sections.keys.toList()..sort()) {
     buf.writeln('### $section');
-    for (final path in sections[section]!) {
+    for (final path in sections[section]!..sort()) {
       final label = _pageLabelFromPath(path);
       buf.writeln('- [$label]($path)');
     }
     buf.writeln();
   }
 
-  file.writeAsStringSync(buf.toString());
+  return buf.toString();
 }
 
 List<LinkEntry> _buildExpectedLinkEntries(
