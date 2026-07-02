@@ -13,12 +13,15 @@ Study _study({String? title, String? description}) {
 void main() {
   group('validateStudyInfo - draft', () {
     test('passes when title is present', () {
-      final r = validateStudyInfo(_study(title: 'My Study'), ValidationLevel.draft);
+      final r = validateStudyInfo(
+        _study(title: 'My Study'),
+        ValidationLevel.draft,
+      );
       expect(r.valid, isTrue);
     });
 
     test('fails when title is null', () {
-      final r = validateStudyInfo(_study(title: null), ValidationLevel.draft);
+      final r = validateStudyInfo(_study(), ValidationLevel.draft);
       expect(r.valid, isFalse);
       expect(r.errors.first.code, 'study_info.title_required');
       expect(r.errors.first.path, r'$.title');
@@ -28,12 +31,14 @@ void main() {
   group('validateStudyInfo - publish', () {
     test('fails when description is null', () {
       final r = validateStudyInfo(
-        _study(title: 'My Study', description: null),
+        _study(title: 'My Study'),
         ValidationLevel.publish,
       );
       expect(r.valid, isFalse);
-      expect(r.errors.any((e) => e.code == 'study_info.description_required'),
-          isTrue);
+      expect(
+        r.errors.any((e) => e.code == 'study_info.description_required'),
+        isTrue,
+      );
     });
 
     test('passes with all fields set', () {
@@ -61,8 +66,9 @@ void main() {
       final r = validateStudyInfo(s, ValidationLevel.publish);
       expect(r.valid, isFalse);
       expect(
-          r.errors.any((e) => e.code == 'study_info.email_invalid_format'),
-          isTrue);
+        r.errors.any((e) => e.code == 'study_info.email_invalid_format'),
+        isTrue,
+      );
     });
 
     test('email with "@" at publish -> passes format check', () {
@@ -76,39 +82,43 @@ void main() {
       s.iconName = 'accountHeart';
       final r = validateStudyInfo(s, ValidationLevel.publish);
       expect(
-          r.errors
-              .where((e) => e.code == 'study_info.email_invalid_format'),
-          isEmpty);
+        r.errors.where((e) => e.code == 'study_info.email_invalid_format'),
+        isEmpty,
+      );
     });
 
-    test('empty email at publish -> email_required, not email_invalid_format',
-        () {
-      final s = _study(title: 'My Study', description: 'Desc');
-      s.contact.email = '';
-      s.contact.organization = 'Org';
-      s.contact.institutionalReviewBoard = 'IRB';
-      s.contact.institutionalReviewBoardNumber = '123';
-      s.contact.researchers = 'Alice';
-      s.contact.phone = '+1234';
-      s.iconName = 'accountHeart';
-      final r = validateStudyInfo(s, ValidationLevel.publish);
-      expect(r.valid, isFalse);
-      expect(r.errors.any((e) => e.code == 'study_info.email_required'),
-          isTrue);
-      expect(
-          r.errors
-              .where((e) => e.code == 'study_info.email_invalid_format'),
-          isEmpty);
-    });
+    test(
+      'empty email at publish -> email_required, not email_invalid_format',
+      () {
+        final s = _study(title: 'My Study', description: 'Desc');
+        s.contact.email = '';
+        s.contact.organization = 'Org';
+        s.contact.institutionalReviewBoard = 'IRB';
+        s.contact.institutionalReviewBoardNumber = '123';
+        s.contact.researchers = 'Alice';
+        s.contact.phone = '+1234';
+        s.iconName = 'accountHeart';
+        final r = validateStudyInfo(s, ValidationLevel.publish);
+        expect(r.valid, isFalse);
+        expect(
+          r.errors.any((e) => e.code == 'study_info.email_required'),
+          isTrue,
+        );
+        expect(
+          r.errors.where((e) => e.code == 'study_info.email_invalid_format'),
+          isEmpty,
+        );
+      },
+    );
 
     test('email check does not run at draft level', () {
       final s = _study(title: 'My Study');
       s.contact.email = 'not-valid';
       final r = validateStudyInfo(s, ValidationLevel.draft);
       expect(
-          r.errors
-              .where((e) => e.code == 'study_info.email_invalid_format'),
-          isEmpty);
+        r.errors.where((e) => e.code == 'study_info.email_invalid_format'),
+        isEmpty,
+      );
     });
   });
 }

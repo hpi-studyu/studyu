@@ -55,7 +55,10 @@ ValidationResult validateJson(String json, ValidationLevel level) {
 /// schedule, consent, observations, report, eligibility.
 /// Returns null if [section] is not recognised.
 ValidationResult? validateSection(
-    String json, String section, ValidationLevel level) {
+  String json,
+  String section,
+  ValidationLevel level,
+) {
   final Map<String, dynamic> data;
   try {
     data = jsonDecode(json) as Map<String, dynamic>;
@@ -97,7 +100,10 @@ ValidationResult? validateSection(
       return validateInterventions(study, level);
     case 'questionnaire':
       return validateQuestionnaire(
-          study.questionnaire, r'$.questionnaire', level);
+        study.questionnaire,
+        r'$.questionnaire',
+        level,
+      );
     case 'schedule':
       return validateSchedule(study, level);
     case 'consent':

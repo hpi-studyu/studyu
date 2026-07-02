@@ -25,10 +25,7 @@ class ValidationResult {
   final List<ValidationError> errors;
   final List<ValidationError> warnings;
 
-  const ValidationResult({
-    required this.errors,
-    required this.warnings,
-  });
+  const ValidationResult({required this.errors, required this.warnings});
 
   bool get valid => errors.isEmpty;
 

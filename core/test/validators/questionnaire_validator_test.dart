@@ -1,5 +1,5 @@
-import 'package:studyu_core/src/models/questionnaire/questionnaire.dart';
 import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/src/models/questionnaire/questionnaire.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/boolean_question.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/choice_question.dart';
 import 'package:studyu_core/src/validators/validation_result.dart';
@@ -59,8 +59,7 @@ void main() {
         ValidationLevel.publish,
       );
       expect(r.valid, isFalse);
-      expect(r.errors.any((e) => e.code == 'question.prompt_required'),
-          isTrue);
+      expect(r.errors.any((e) => e.code == 'question.prompt_required'), isTrue);
     });
 
     test('ChoiceQuestion with empty choices fails', () {
@@ -74,47 +73,53 @@ void main() {
         ValidationLevel.draft,
       );
       expect(r.valid, isFalse);
-      expect(r.errors.any((e) => e.code == 'choice_question.no_choices'),
-          isTrue);
-    });
-
-    test(
-        'cross-context duplicate ID produces questionnaire.duplicate_question_id_cross_context',
-        () {
-      final obsQ = _boolQ('shared-id'); // same ID as screener
-
-      final obsQuestionnaire = _questionnaire([obsQ]);
-      final screenerIds = {'shared-id'};
-
-      final r = validateQuestionnaire(
-        obsQuestionnaire,
-        r'$.observations[0].questions',
-        ValidationLevel.draft,
-        knownIds: screenerIds,
-      );
-      expect(r.valid, isFalse);
       expect(
-          r.errors.any((e) =>
-              e.code ==
-              'questionnaire.duplicate_question_id_cross_context'),
-          isTrue);
+        r.errors.any((e) => e.code == 'choice_question.no_choices'),
+        isTrue,
+      );
     });
 
     test(
-        'same ID in two observation questionnaires does NOT produce cross-context error',
-        () {
-      // knownIds contains only screener IDs, not observation IDs
-      final obsQ = _boolQ('obs-unique-id');
-      final obsQuestionnaire = _questionnaire([obsQ]);
-      final screenerIds = <String>{}; // no screener questions
+      'cross-context duplicate ID produces questionnaire.duplicate_question_id_cross_context',
+      () {
+        final obsQ = _boolQ('shared-id'); // same ID as screener
 
-      final r = validateQuestionnaire(
-        obsQuestionnaire,
-        r'$.observations[0].questions',
-        ValidationLevel.draft,
-        knownIds: screenerIds,
-      );
-      expect(r.valid, isTrue);
-    });
+        final obsQuestionnaire = _questionnaire([obsQ]);
+        final screenerIds = {'shared-id'};
+
+        final r = validateQuestionnaire(
+          obsQuestionnaire,
+          r'$.observations[0].questions',
+          ValidationLevel.draft,
+          knownIds: screenerIds,
+        );
+        expect(r.valid, isFalse);
+        expect(
+          r.errors.any(
+            (e) =>
+                e.code == 'questionnaire.duplicate_question_id_cross_context',
+          ),
+          isTrue,
+        );
+      },
+    );
+
+    test(
+      'same ID in two observation questionnaires does NOT produce cross-context error',
+      () {
+        // knownIds contains only screener IDs, not observation IDs
+        final obsQ = _boolQ('obs-unique-id');
+        final obsQuestionnaire = _questionnaire([obsQ]);
+        final screenerIds = <String>{}; // no screener questions
+
+        final r = validateQuestionnaire(
+          obsQuestionnaire,
+          r'$.observations[0].questions',
+          ValidationLevel.draft,
+          knownIds: screenerIds,
+        );
+        expect(r.valid, isTrue);
+      },
+    );
   });
 }

@@ -13,23 +13,26 @@ void main(List<String> args) {
   parser.commands['validate']!
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
     ..addFlag('stdin', help: 'Read study JSON from stdin')
-    ..addOption('level',
-        defaultsTo: 'draft',
-        allowed: ['draft', 'publish'],
-        help: 'Validation level: draft or publish')
-    ..addOption('section',
-        allowed: [
-          'study_info',
-          'interventions',
-          'questionnaire',
-          'schedule',
-          'consent',
-          'observations',
-          'report',
-          'eligibility',
-        ],
-        help:
-            'Run only one section validator instead of the full study check');
+    ..addOption(
+      'level',
+      defaultsTo: 'draft',
+      allowed: ['draft', 'publish'],
+      help: 'Validation level: draft or publish',
+    )
+    ..addOption(
+      'section',
+      allowed: [
+        'study_info',
+        'interventions',
+        'questionnaire',
+        'schedule',
+        'consent',
+        'observations',
+        'report',
+        'eligibility',
+      ],
+      help: 'Run only one section validator instead of the full study check',
+    );
 
   parser.commands['normalize']!
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
@@ -37,9 +40,11 @@ void main(List<String> args) {
 
   parser.commands['schema']!
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
-    ..addOption('entity',
-        defaultsTo: 'Study',
-        help: 'Entity name: Study, Intervention, Question');
+    ..addOption(
+      'entity',
+      defaultsTo: 'Study',
+      help: 'Entity name: Study, Intervention, Question',
+    );
 
   late ArgResults results;
   try {
@@ -82,20 +87,24 @@ void main(List<String> args) {
 }
 
 void _printUsage(ArgParser parser) {
-  stdout.writeln('Usage: studyu_validator <validate|normalize|schema> [options]');
+  stdout.writeln(
+    'Usage: studyu_validator <validate|normalize|schema> [options]',
+  );
   stdout.writeln(parser.usage);
 }
 
 void _runValidate(ArgResults command) {
   final json = _readInput(command);
   final levelStr = command['level'] as String;
-  final level =
-      levelStr == 'publish' ? ValidationLevel.publish : ValidationLevel.draft;
+  final level = levelStr == 'publish'
+      ? ValidationLevel.publish
+      : ValidationLevel.draft;
   final section = command['section'] as String?;
 
   ValidationResult result;
   if (section != null) {
-    result = validateSection(json, section, level) ??
+    result =
+        validateSection(json, section, level) ??
         ValidationResult(
           errors: [
             ValidationError(

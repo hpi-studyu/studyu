@@ -25,11 +25,12 @@ bool _isAlwaysTrue(Expression expr) {
 }
 
 ValidationResult validateEligibilityConsent(
-    Study study, ValidationLevel level) {
+  Study study,
+  ValidationLevel level,
+) {
   final errors = <ValidationError>[];
   final warnings = <ValidationError>[];
-  final screenerIds =
-      study.questionnaire.questions.map((q) => q.id).toSet();
+  final screenerIds = study.questionnaire.questions.map((q) => q.id).toSet();
 
   for (var i = 0; i < study.eligibilityCriteria.length; i++) {
     final criterion = study.eligibilityCriteria[i];
@@ -38,26 +39,31 @@ ValidationResult validateEligibilityConsent(
     final targets = _extractTargets(criterion.condition);
     for (final target in targets) {
       if (!screenerIds.contains(target)) {
-        errors.add(ValidationError(
-          code: 'eligibility.target_question_missing',
-          path: r'$.eligibility_criteria' + '[$i].condition.target',
-          message:
-              "Criterion references question '$target' which does not exist in questionnaire",
-          fixHint: 'Add the screener question first, or remove this criterion',
-        ));
+        errors.add(
+          ValidationError(
+            code: 'eligibility.target_question_missing',
+            path: r'$.eligibility_criteria' + '[$i].condition.target',
+            message:
+                "Criterion references question '$target' which does not exist in questionnaire",
+            fixHint:
+                'Add the screener question first, or remove this criterion',
+          ),
+        );
       }
     }
 
     // Facts 27-28 — always-true condition warning
     if (_isAlwaysTrue(criterion.condition)) {
-      warnings.add(ValidationError(
-        code: 'eligibility.condition_always_true',
-        path: r'$.eligibility_criteria' + '[$i].condition',
-        message:
-            'Eligibility criterion at index $i will always pass (condition is unconditionally true)',
-        fixHint:
-            'Replace the condition with a specific expression that checks a screener question answer.',
-      ));
+      warnings.add(
+        ValidationError(
+          code: 'eligibility.condition_always_true',
+          path: r'$.eligibility_criteria' + '[$i].condition',
+          message:
+              'Eligibility criterion at index $i will always pass (condition is unconditionally true)',
+          fixHint:
+              'Replace the condition with a specific expression that checks a screener question answer.',
+        ),
+      );
     }
   }
 

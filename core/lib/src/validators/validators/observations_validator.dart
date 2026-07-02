@@ -8,13 +8,15 @@ ValidationResult validateObservations(Study study, ValidationLevel level) {
   for (var i = 0; i < study.observations.length; i++) {
     final id = study.observations[i].id;
     if (seenIds.contains(id)) {
-      errors.add(ValidationError(
-        code: 'observations.duplicate_observation_id',
-        path: r'$.observations[' + i.toString() + r'].id',
-        message: 'Observation id "$id" appears more than once',
-        fixHint:
-            'Regenerate a unique UUID for each observation. This cannot happen via the Designer UI; it indicates a manual JSON edit.',
-      ));
+      errors.add(
+        ValidationError(
+          code: 'observations.duplicate_observation_id',
+          path: '\$.observations[$i].id',
+          message: 'Observation id "$id" appears more than once',
+          fixHint:
+              'Regenerate a unique UUID for each observation. This cannot happen via the Designer UI; it indicates a manual JSON edit.',
+        ),
+      );
     }
     seenIds.add(id);
   }

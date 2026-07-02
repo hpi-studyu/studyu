@@ -14,18 +14,19 @@ ValidationResult validateQuestionnaire(
   for (var i = 0; i < questionnaire.questions.length; i++) {
     final q = questionnaire.questions[i];
     if (seenIds.contains(q.id)) {
-      errors.add(ValidationError(
-        code: 'questionnaire.duplicate_question_id',
-        path: '$context[$i].id',
-        message: 'Question id "${q.id}" appears more than once in $context',
-        fixHint: 'Generate a unique UUID for each question',
-      ));
+      errors.add(
+        ValidationError(
+          code: 'questionnaire.duplicate_question_id',
+          path: '$context[$i].id',
+          message: 'Question id "${q.id}" appears more than once in $context',
+          fixHint: 'Generate a unique UUID for each question',
+        ),
+      );
     }
     seenIds.add(q.id);
 
     // Per-type validation
-    final questionResult =
-        validateQuestion(q, '$context[$i]', level, seenIds);
+    final questionResult = validateQuestion(q, '$context[$i]', level, seenIds);
     errors.addAll(questionResult.errors);
   }
 
@@ -33,14 +34,16 @@ ValidationResult validateQuestionnaire(
   if (knownIds != null) {
     for (final id in seenIds) {
       if (knownIds.contains(id)) {
-        errors.add(ValidationError(
-          code: 'questionnaire.duplicate_question_id_cross_context',
-          path: '$context.questions',
-          message:
-              'Question id "$id" appears in both the screener and an observation questionnaire',
-          fixHint:
-              'Assign unique IDs across all questionnaires in the study. This cannot happen via the Designer UI; it indicates a manual JSON edit.',
-        ));
+        errors.add(
+          ValidationError(
+            code: 'questionnaire.duplicate_question_id_cross_context',
+            path: '$context.questions',
+            message:
+                'Question id "$id" appears in both the screener and an observation questionnaire',
+            fixHint:
+                'Assign unique IDs across all questionnaires in the study. This cannot happen via the Designer UI; it indicates a manual JSON edit.',
+          ),
+        );
       }
     }
   }

@@ -30,28 +30,32 @@ void main() {
     expect(r.valid, isTrue);
   });
 
-  test('two observations with same ID -> observations.duplicate_observation_id',
-      () {
-    final r = validateObservations(
-      _studyWithObs([_obs('dup-id'), _obs('dup-id')]),
-      ValidationLevel.draft,
-    );
-    expect(r.valid, isFalse);
-    expect(
-        r.errors.any(
-            (e) => e.code == 'observations.duplicate_observation_id'),
-        isTrue);
-  });
+  test(
+    'two observations with same ID -> observations.duplicate_observation_id',
+    () {
+      final r = validateObservations(
+        _studyWithObs([_obs('dup-id'), _obs('dup-id')]),
+        ValidationLevel.draft,
+      );
+      expect(r.valid, isFalse);
+      expect(
+        r.errors.any((e) => e.code == 'observations.duplicate_observation_id'),
+        isTrue,
+      );
+    },
+  );
 
-  test('three observations: first and third share ID -> one error at index 2',
-      () {
-    final r = validateObservations(
-      _studyWithObs([_obs('id-a'), _obs('id-b'), _obs('id-a')]),
-      ValidationLevel.draft,
-    );
-    expect(r.valid, isFalse);
-    expect(r.errors.length, 1);
-    expect(r.errors.first.code, 'observations.duplicate_observation_id');
-    expect(r.errors.first.path, contains('[2]'));
-  });
+  test(
+    'three observations: first and third share ID -> one error at index 2',
+    () {
+      final r = validateObservations(
+        _studyWithObs([_obs('id-a'), _obs('id-b'), _obs('id-a')]),
+        ValidationLevel.draft,
+      );
+      expect(r.valid, isFalse);
+      expect(r.errors.length, 1);
+      expect(r.errors.first.code, 'observations.duplicate_observation_id');
+      expect(r.errors.first.path, contains('[2]'));
+    },
+  );
 }

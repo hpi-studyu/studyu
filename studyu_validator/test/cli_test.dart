@@ -52,16 +52,16 @@ void main() {
     final tmp = await File('/tmp/test_study_valid.json').create();
     await tmp.writeAsString(validStudyJson);
 
-    final workdir =
-        Directory.current.path.endsWith('studyu_validator')
-            ? Directory.current.path
-            : '${Directory.current.path}/studyu_validator';
+    final workdir = Directory.current.path.endsWith('studyu_validator')
+        ? Directory.current.path
+        : '${Directory.current.path}/studyu_validator';
 
-    final result = await Process.run(
-      'dart',
-      ['run', 'bin/studyu_validator.dart', 'validate', tmp.path],
-      workingDirectory: workdir,
-    );
+    final result = await Process.run('dart', [
+      'run',
+      'bin/studyu_validator.dart',
+      'validate',
+      tmp.path,
+    ], workingDirectory: workdir);
 
     expect(result.exitCode, 0, reason: 'stderr: ${result.stderr}');
     final output = jsonDecode(result.stdout as String) as Map;
@@ -72,16 +72,16 @@ void main() {
     final tmp = await File('/tmp/test_study_invalid.json').create();
     await tmp.writeAsString(invalidStudyJson);
 
-    final workdir =
-        Directory.current.path.endsWith('studyu_validator')
-            ? Directory.current.path
-            : '${Directory.current.path}/studyu_validator';
+    final workdir = Directory.current.path.endsWith('studyu_validator')
+        ? Directory.current.path
+        : '${Directory.current.path}/studyu_validator';
 
-    final result = await Process.run(
-      'dart',
-      ['run', 'bin/studyu_validator.dart', 'validate', tmp.path],
-      workingDirectory: workdir,
-    );
+    final result = await Process.run('dart', [
+      'run',
+      'bin/studyu_validator.dart',
+      'validate',
+      tmp.path,
+    ], workingDirectory: workdir);
 
     expect(result.exitCode, 1, reason: 'stderr: ${result.stderr}');
     final output = jsonDecode(result.stdout as String) as Map;

@@ -14,8 +14,7 @@ export 'validation_result.dart';
 
 ValidationResult validateStudy(Study study, ValidationLevel level) {
   // Collect screener IDs for cross-context duplicate check (fact 14)
-  final screenerIds =
-      study.questionnaire.questions.map((q) => q.id).toSet();
+  final screenerIds = study.questionnaire.questions.map((q) => q.id).toSet();
 
   // Validate the screener questionnaire
   final screenerResult = validateQuestionnaire(
@@ -29,12 +28,14 @@ ValidationResult validateStudy(Study study, ValidationLevel level) {
   for (var i = 0; i < study.observations.length; i++) {
     final obs = study.observations[i];
     if (obs is QuestionnaireTask) {
-      obsResults.add(validateQuestionnaire(
-        obs.questions,
-        r'$.observations[' + i.toString() + r'].questions',
-        level,
-        knownIds: screenerIds,
-      ));
+      obsResults.add(
+        validateQuestionnaire(
+          obs.questions,
+          '\$.observations[$i].questions',
+          level,
+          knownIds: screenerIds,
+        ),
+      );
     }
   }
 

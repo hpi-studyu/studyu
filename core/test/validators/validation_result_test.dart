@@ -11,7 +11,7 @@ void main() {
     });
 
     test('is invalid when errors list is non-empty', () {
-      final r = ValidationResult(
+      const r = ValidationResult(
         errors: [
           ValidationError(
             code: 'test.error',
@@ -26,12 +26,16 @@ void main() {
     });
 
     test('merge() combines errors and warnings from both results', () {
-      final a = ValidationResult(
-        errors: [ValidationError(code: 'a', path: '', message: 'A', fixHint: '')],
+      const a = ValidationResult(
+        errors: [
+          ValidationError(code: 'a', path: '', message: 'A', fixHint: ''),
+        ],
         warnings: [],
       );
-      final b = ValidationResult(
-        errors: [ValidationError(code: 'b', path: '', message: 'B', fixHint: '')],
+      const b = ValidationResult(
+        errors: [
+          ValidationError(code: 'b', path: '', message: 'B', fixHint: ''),
+        ],
         warnings: [],
       );
       final merged = ValidationResult.merge([a, b]);

@@ -18,10 +18,10 @@ ConsentItem _item({String? title, String? description}) {
 }
 
 void main() {
-  test('empty consent at publish -> consent.no_items warning (not error)', () {
+  test('empty consent at publish -> consent.no_items error', () {
     final r = validateConsent(_studyWithConsent([]), ValidationLevel.publish);
-    expect(r.valid, isTrue);
-    expect(r.warnings.any((w) => w.code == 'consent.no_items'), isTrue);
+    expect(r.valid, isFalse);
+    expect(r.errors.any((e) => e.code == 'consent.no_items'), isTrue);
   });
 
   test('empty consent at draft -> no warning', () {
@@ -32,12 +32,14 @@ void main() {
 
   test('consent item with null title -> consent.item_title_required', () {
     final r = validateConsent(
-      _studyWithConsent([_item(title: null, description: 'desc')]),
+      _studyWithConsent([_item(description: 'desc')]),
       ValidationLevel.draft,
     );
     expect(r.valid, isFalse);
-    expect(r.errors.any((e) => e.code == 'consent.item_title_required'),
-        isTrue);
+    expect(
+      r.errors.any((e) => e.code == 'consent.item_title_required'),
+      isTrue,
+    );
   });
 
   test('consent item with empty title -> consent.item_title_required', () {
@@ -46,23 +48,26 @@ void main() {
       ValidationLevel.draft,
     );
     expect(r.valid, isFalse);
-    expect(r.errors.any((e) => e.code == 'consent.item_title_required'),
-        isTrue);
+    expect(
+      r.errors.any((e) => e.code == 'consent.item_title_required'),
+      isTrue,
+    );
   });
 
   test(
-      'consent item with null description -> consent.item_description_required',
-      () {
-    final r = validateConsent(
-      _studyWithConsent([_item(title: 'title', description: null)]),
-      ValidationLevel.draft,
-    );
-    expect(r.valid, isFalse);
-    expect(
-        r.errors
-            .any((e) => e.code == 'consent.item_description_required'),
-        isTrue);
-  });
+    'consent item with null description -> consent.item_description_required',
+    () {
+      final r = validateConsent(
+        _studyWithConsent([_item(title: 'title')]),
+        ValidationLevel.draft,
+      );
+      expect(r.valid, isFalse);
+      expect(
+        r.errors.any((e) => e.code == 'consent.item_description_required'),
+        isTrue,
+      );
+    },
+  );
 
   test('consent item with title and description -> passes', () {
     final r = validateConsent(
@@ -76,13 +81,12 @@ void main() {
     final r = validateConsent(
       _studyWithConsent([
         _item(title: 'title1', description: 'desc1'),
-        _item(title: 'title2', description: null),
+        _item(title: 'title2'),
       ]),
       ValidationLevel.draft,
     );
     expect(r.valid, isFalse);
     expect(r.errors.length, 1);
-    expect(
-        r.errors.first.code, 'consent.item_description_required');
+    expect(r.errors.first.code, 'consent.item_description_required');
   });
 }
