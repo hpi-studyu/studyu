@@ -51,11 +51,43 @@ void main() {
     expect(broken, isEmpty);
   });
 
-  test('strips anchors before resolving', () {
+  test('validates relative links with heading anchors', () {
     File(
       p.join(tmp.path, 'a.md'),
-    ).writeAsStringSync('# A\n\n[B](b.md#section)\n');
-    File(p.join(tmp.path, 'b.md')).writeAsStringSync('# B\n');
+    ).writeAsStringSync('# A\n\n[B](b.md#section-two)\n');
+    File(p.join(tmp.path, 'b.md')).writeAsStringSync('# B\n\n## Section Two\n');
+
+    final broken = checkLinks(tmp.path);
+    expect(broken, isEmpty);
+  });
+
+  test('validates relative links with explicit html anchors', () {
+    File(
+      p.join(tmp.path, 'a.md'),
+    ).writeAsStringSync('# A\n\n[B](b.md#custom-anchor)\n');
+    File(
+      p.join(tmp.path, 'b.md'),
+    ).writeAsStringSync('# B\n\n<a id="custom-anchor"></a>\n');
+
+    final broken = checkLinks(tmp.path);
+    expect(broken, isEmpty);
+  });
+
+  test('finds broken relative heading anchors', () {
+    File(
+      p.join(tmp.path, 'a.md'),
+    ).writeAsStringSync('# A\n\n[B](b.md#missing-section)\n');
+    File(p.join(tmp.path, 'b.md')).writeAsStringSync('# B\n\n## Section Two\n');
+
+    final broken = checkLinks(tmp.path);
+    expect(broken.length, equals(1));
+    expect(broken.first.href, equals('b.md#missing-section'));
+  });
+
+  test('ignores anchors on external urls', () {
+    File(
+      p.join(tmp.path, 'a.md'),
+    ).writeAsStringSync('# A\n\n[External](https://example.com#missing)\n');
 
     final broken = checkLinks(tmp.path);
     expect(broken, isEmpty);

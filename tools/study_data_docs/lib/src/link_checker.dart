@@ -43,13 +43,21 @@ List<BrokenLink> checkLinks(String docsDir) {
         continue;
       }
 
-      // Strip anchor fragments.
-      final bareHref = href.contains('#') ? href.split('#').first : href;
+      final parts = href.split('#');
+      final bareHref = parts.first;
+      final anchor = parts.length > 1 ? parts.sublist(1).join('#') : null;
       if (bareHref.isEmpty) continue;
 
       final resolved = p.normalize(p.join(p.dirname(entity.path), bareHref));
+      final targetFile = File(resolved);
+      final targetExists =
+          targetFile.existsSync() || Directory(resolved).existsSync();
 
-      if (!File(resolved).existsSync() && !Directory(resolved).existsSync()) {
+      if (!targetExists ||
+          (anchor != null &&
+              anchor.isNotEmpty &&
+              targetFile.existsSync() &&
+              !targetFile.readAsStringSync().containsMarkdownAnchor(anchor))) {
         brokenLinks.add(
           BrokenLink(
             sourceFile: entity.path,
@@ -68,4 +76,41 @@ List<BrokenLink> checkLinks(String docsDir) {
 List<String> _extractMarkdownLinks(String markdown) {
   final pattern = RegExp(r'\[(?:[^\]]*)\]\(([^)]+)\)');
   return pattern.allMatches(markdown).map((m) => m.group(1)!).toList();
+}
+
+extension on String {
+  bool containsMarkdownAnchor(String anchor) {
+    final anchors = <String>{};
+    final headingCounts = <String, int>{};
+
+    for (final line in split('\n')) {
+      final heading = RegExp(r'^#{1,6}\s+(.+?)\s*#*\s*$').firstMatch(line);
+      if (heading != null) {
+        final baseSlug = _githubHeadingSlug(heading.group(1)!);
+        final count = headingCounts[baseSlug] ?? 0;
+        headingCounts[baseSlug] = count + 1;
+        anchors.add(count == 0 ? baseSlug : '$baseSlug-$count');
+      }
+
+      anchors.addAll(
+        RegExp(
+          r'''<[^>]+\s(?:id|name)=["']([^"']+)["'][^>]*>''',
+          caseSensitive: false,
+        ).allMatches(line).map((match) => match.group(1)!),
+      );
+    }
+
+    return anchors.contains(Uri.decodeComponent(anchor));
+  }
+}
+
+String _githubHeadingSlug(String heading) {
+  return heading
+      .trim()
+      .toLowerCase()
+      .replaceAll(RegExp('<[^>]*>'), '')
+      .replaceAll(RegExp('[`*_~\\[\\](){}:;,.!?/\\\\"\']'), '')
+      .replaceAll(RegExp(r'[^\p{L}\p{N}\s-]', unicode: true), '')
+      .replaceAll(RegExp(r'\s+'), '-')
+      .replaceAll(RegExp('-+'), '-');
 }

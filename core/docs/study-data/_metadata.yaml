@@ -17,6 +17,7 @@ type_links:
   FitbitQuestionType: shared/enums.md#fitbitquestiontype
   PhaseSequence: shared/enums.md#phasesequence
   DateTime: shared/scalars.md#datetime
+  CompletionPeriod: schedules/task-schedule.md#completionperiod
 
 
 pages:
@@ -250,7 +251,7 @@ pages:
       type: Pain type identifier string.
       id: Unique identifier.
       name: Display name of the body part or pain type.
-      pain: List of pain records associated with a body region.
+      pain: Pain record associated with a body region.
       children: Child body parts nested within this body region.
       parts: List of body parts making up this body model.
 
@@ -289,10 +290,13 @@ pages:
 
   schedules/task-schedule.md:
     title: Schedule
-    classes: [Schedule]
+    classes: [ Schedule, CompletionPeriod ]
     fields:
       completionPeriods: Time windows within a day during which the task can be completed.
       reminders: Optional reminder times for this task.
+      id: Unique completion-period identifier used to track completion for this daily task window.
+      unlockTime: Local time when this completion period opens.
+      lockTime: Local time when this completion period closes.
 
   schedules/study-schedule.md:
     title: Study Schedule

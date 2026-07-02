@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:study_data_docs/src/model_scanner.dart';
 import 'package:test/test.dart';
 
@@ -9,18 +11,29 @@ void main() {
         sourceFile: 'core/lib/src/models/questionnaire/boolean_question.dart',
         fields: [],
         discriminatorValues: {'type': 'boolean'},
+        superTypes: {'Question'},
       ),
       'ChoiceQuestion': const ScannedClass(
         name: 'ChoiceQuestion',
         sourceFile: 'core/lib/src/models/questionnaire/choice_question.dart',
         fields: [],
         discriminatorValues: {'type': 'choice'},
+        superTypes: {'Question'},
       ),
       'ScaleQuestion': const ScannedClass(
         name: 'ScaleQuestion',
         sourceFile: 'core/lib/src/models/questionnaire/scale_question.dart',
         fields: [],
         discriminatorValues: {'type': 'scale'},
+        superTypes: {'Question'},
+      ),
+      'CheckmarkTask': const ScannedClass(
+        name: 'CheckmarkTask',
+        sourceFile:
+            'core/lib/src/models/interventions/tasks/checkmark_task.dart',
+        fields: [],
+        discriminatorValues: {'type': 'checkmark'},
+        superTypes: {'Task', 'InterventionTask'},
       ),
       'Unrelated': const ScannedClass(
         name: 'Unrelated',
@@ -48,6 +61,16 @@ void main() {
       expect(result['type'], hasLength(3));
     });
 
+    test('filters discriminator values to the requested dispatcher family', () {
+      final result = buildDispatcherDiscriminators(
+        dispatcherClass: 'Question',
+        fieldName: 'type',
+        allClasses: allClasses,
+      );
+      expect(result['type'], containsAll(['boolean', 'choice', 'scale']));
+      expect(result['type'], isNot(contains('checkmark')));
+    });
+
     test('returns empty map when no classes have the field', () {
       final result = buildDispatcherDiscriminators(
         dispatcherClass: 'Question',
@@ -65,6 +88,47 @@ void main() {
       );
       expect(result, isEmpty);
     });
+  });
+
+  group('scanModels', () {
+    test(
+      'uses generated serializer keys and defaults for wire contract',
+      () async {
+        final temp = await Directory.systemTemp.createTemp(
+          'study_data_docs_test_',
+        );
+        addTearDown(() => temp.deleteSync(recursive: true));
+
+        final modelsDir = Directory('${temp.path}/models')..createSync();
+        File('${modelsDir.path}/wire_model.dart').writeAsStringSync('''
+class WireModel {
+  String dartName = '';
+  int count = 0;
+}
+''');
+        File('${modelsDir.path}/wire_model.g.dart').writeAsStringSync('''
+WireModel _\$WireModelFromJson(Map<String, dynamic> json) => WireModel()
+  ..dartName = json['wire_name'] as String
+  ..count = (json['count'] as num?)?.toInt() ?? 7;
+
+Map<String, dynamic> _\$WireModelToJson(WireModel instance) => <String, dynamic>{
+  'wire_name': instance.dartName,
+  'count': instance.count,
+};
+''');
+
+        final scanned = await scanModels(
+          modelsDir: modelsDir.path,
+          repoRoot: temp.path,
+        );
+
+        final fields = {
+          for (final field in scanned['WireModel']!.fields) field.name: field,
+        };
+        expect(fields['dartName']!.jsonKey, 'wire_name');
+        expect(fields['count']!.defaultValue, '7');
+      },
+    );
   });
 
   group('ScannedField', () {

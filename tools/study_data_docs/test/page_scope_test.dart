@@ -1,3 +1,6 @@
+import 'package:study_data_docs/src/generated_block.dart';
+import 'package:study_data_docs/src/markdown_writer.dart';
+import 'package:study_data_docs/src/model_scanner.dart';
 import 'package:study_data_docs/src/page_scope.dart';
 import 'package:test/test.dart';
 
@@ -94,10 +97,51 @@ void main() {
       expect(entry!.dispatcherField, 'type');
     });
 
+    test('Expression excludes composite from dispatcher docs', () {
+      final entry = scopeFor('Expression');
+      expect(entry, isNotNull);
+      expect(entry!.excludedDispatcherValues, contains('composite'));
+    });
+
+    test('Expression dispatcher docs omit excluded composite value', () {
+      final block = buildDiscriminatorsBlock(
+        buildExpectedDiscriminatorEntries(
+          scopeEntries: entriesForPage('shared/expressions.md'),
+          classes: const [],
+          allClasses: const {
+            'BooleanExpression': ScannedClass(
+              name: 'BooleanExpression',
+              sourceFile:
+                  'core/lib/src/models/expressions/types/boolean_expression.dart',
+              fields: [],
+              discriminatorValues: {'type': 'boolean'},
+            ),
+            'CompositeExpression': ScannedClass(
+              name: 'CompositeExpression',
+              sourceFile:
+                  'core/lib/src/models/expressions/types/composite_expression.dart',
+              fields: [],
+              discriminatorValues: {'type': 'composite'},
+            ),
+          },
+        ),
+      );
+
+      expect(block, contains('`boolean`'));
+      expect(block, isNot(contains('`composite`')));
+    });
+
     test('BooleanQuestion has no dispatcherField', () {
       final entry = scopeFor('BooleanQuestion');
       expect(entry, isNotNull);
       expect(entry!.dispatcherField, isNull);
+    });
+
+    test('CompletionPeriod uses a class-specific fields block', () {
+      final entry = scopeFor('CompletionPeriod');
+      expect(entry, isNotNull);
+      expect(entry!.pagePath, 'schedules/task-schedule.md');
+      expect(entry.fieldsBlock, 'FIELDS:CompletionPeriod');
     });
   });
 }

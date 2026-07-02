@@ -1,4 +1,8 @@
+import 'package:study_data_docs/src/doc_metadata.dart';
 import 'package:study_data_docs/src/generated_block.dart';
+import 'package:study_data_docs/src/markdown_writer.dart';
+import 'package:study_data_docs/src/model_scanner.dart';
+import 'package:study_data_docs/src/page_scope.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -169,6 +173,108 @@ void main() {
       ];
       final table = buildFieldsTable(rows);
       expect(table, isNot(contains('Default')));
+    });
+  });
+
+  group('buildExpectedFieldBlocks', () {
+    test('keeps nested class fields in a class-specific block', () {
+      const meta = PageMeta(
+        path: 'schedules/task-schedule.md',
+        title: 'Schedule',
+        classes: ['Schedule', 'CompletionPeriod'],
+        fields: {
+          'completionPeriods': FieldMeta(
+            name: 'completionPeriods',
+            description: 'Completion windows.',
+          ),
+          'reminders': FieldMeta(
+            name: 'reminders',
+            description: 'Reminder times.',
+          ),
+          'id': FieldMeta(name: 'id', description: 'Period ID.'),
+          'unlockTime': FieldMeta(
+            name: 'unlockTime',
+            description: 'Opening time.',
+          ),
+          'lockTime': FieldMeta(name: 'lockTime', description: 'Closing time.'),
+        },
+      );
+
+      final blocks = buildExpectedFieldBlocks(
+        scopeEntries: const [
+          PageScopeEntry(
+            className: 'Schedule',
+            pagePath: 'schedules/task-schedule.md',
+          ),
+          PageScopeEntry(
+            className: 'CompletionPeriod',
+            pagePath: 'schedules/task-schedule.md',
+            fieldsBlock: 'FIELDS:CompletionPeriod',
+          ),
+        ],
+        classes: const [
+          ScannedClass(
+            name: 'Schedule',
+            sourceFile: 'core/lib/src/models/tasks/schedule.dart',
+            fields: [
+              ScannedField(
+                name: 'completionPeriods',
+                dartType: 'List<CompletionPeriod>',
+                jsonKey: 'completionPeriods',
+                required: false,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'reminders',
+                dartType: 'List<StudyUTimeOfDay>',
+                jsonKey: 'reminders',
+                required: false,
+                nullable: false,
+              ),
+            ],
+          ),
+          ScannedClass(
+            name: 'CompletionPeriod',
+            sourceFile: 'core/lib/src/models/tasks/schedule.dart',
+            fields: [
+              ScannedField(
+                name: 'id',
+                dartType: 'String',
+                jsonKey: 'id',
+                required: true,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'unlockTime',
+                dartType: 'StudyUTimeOfDay',
+                jsonKey: 'unlockTime',
+                required: true,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'lockTime',
+                dartType: 'StudyUTimeOfDay',
+                jsonKey: 'lockTime',
+                required: true,
+                nullable: false,
+              ),
+            ],
+          ),
+        ],
+        meta: meta,
+        typeLinks: const {},
+        currentPagePath: 'schedules/task-schedule.md',
+      );
+
+      expect(blocks['FIELDS']!.map((row) => row.dartName), [
+        'completionPeriods',
+        'reminders',
+      ]);
+      expect(blocks['FIELDS:CompletionPeriod']!.map((row) => row.dartName), [
+        'id',
+        'unlockTime',
+        'lockTime',
+      ]);
     });
   });
 

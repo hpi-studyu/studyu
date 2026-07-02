@@ -178,21 +178,24 @@ Future<void> runCheck({
 
     // 4b. FIELDS block drift.
     if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
-      final expectedRows = buildExpectedFieldRows(
-        classes,
-        pageMeta,
-        meta.typeLinks,
-        pagePath,
+      final expectedBlocks = buildExpectedFieldBlocks(
+        scopeEntries: entries,
+        classes: classes,
+        meta: pageMeta,
+        typeLinks: meta.typeLinks,
+        currentPagePath: pagePath,
       );
-      final expectedContent = buildFieldsTable(expectedRows);
-      final currentContent = extractBlock(existing, 'FIELDS');
+      for (final entry in expectedBlocks.entries) {
+        final expectedContent = buildFieldsTable(entry.value);
+        final currentContent = extractBlock(existing, entry.key);
 
-      if (currentContent == null) {
-        errors.add('$pagePath: missing GENERATED:FIELDS block.');
-      } else if (currentContent.trim() != expectedContent.trim()) {
-        errors.add(
-          '$pagePath: GENERATED:FIELDS block is out of date. Run --write.',
-        );
+        if (currentContent == null) {
+          errors.add('$pagePath: missing GENERATED:${entry.key} block.');
+        } else if (currentContent.trim() != expectedContent.trim()) {
+          errors.add(
+            '$pagePath: GENERATED:${entry.key} block is out of date. Run --write.',
+          );
+        }
       }
 
       // 4c. Every serialisable field must have a description or be ignored.
@@ -412,7 +415,7 @@ void _writeMinimalStudyExample(StringBuffer buf) {
     {
       "id": "consent-main",
       "title": "Consent",
-      "text": "I agree to participate."
+      "description": "I agree to participate."
     }
   ],
   "interventions": [

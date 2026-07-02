@@ -1,7 +1,7 @@
 /// Canonical scope rules mapping Dart classes to their documentation page paths.
 ///
 /// Each entry specifies: the class name, the output markdown path relative to
-/// `core/docs/study-data/`, and optional flags like `generatedFields`.
+/// `core/docs/study-data/`, and optional flags like `generatedFields` and block names.
 library;
 
 /// A single entry in the page scope map.
@@ -13,16 +13,27 @@ class PageScopeEntry {
   /// hand-written fromJson (e.g. StudyUQuestionnaire).
   final bool generatedFields;
 
+  /// Generated block name for this class's field table. Use class-specific
+  /// names for nested helper classes that share a page with an aggregate.
+  final String fieldsBlock;
+
   /// When set, this class is an abstract dispatcher. The GENERATED:DISCRIMINATORS
   /// block will list all concrete subtype wire values for this JSON field,
   /// collected from every in-scope class that declares a matching discriminator.
   final String? dispatcherField;
 
+  /// Wire discriminator values that this dispatcher must not advertise.
+  /// Use when a class is documented on the same page but is not accepted by
+  /// the abstract dispatcher's fromJson implementation.
+  final Set<String> excludedDispatcherValues;
+
   const PageScopeEntry({
     required this.className,
     required this.pagePath,
     this.generatedFields = true,
+    this.fieldsBlock = 'FIELDS',
     this.dispatcherField,
+    this.excludedDispatcherValues = const {},
   });
 }
 
@@ -131,6 +142,11 @@ const List<PageScopeEntry> kPageScope = [
   // ── Schedules ─────────────────────────────────────────────────────────────
   PageScopeEntry(className: 'Schedule', pagePath: 'schedules/task-schedule.md'),
   PageScopeEntry(
+    className: 'CompletionPeriod',
+    pagePath: 'schedules/task-schedule.md',
+    fieldsBlock: 'FIELDS:CompletionPeriod',
+  ),
+  PageScopeEntry(
     className: 'StudySchedule',
     pagePath: 'schedules/study-schedule.md',
   ),
@@ -207,6 +223,7 @@ const List<PageScopeEntry> kPageScope = [
     pagePath: 'shared/expressions.md',
     generatedFields: false,
     dispatcherField: 'type',
+    excludedDispatcherValues: {'composite'},
   ),
   PageScopeEntry(
     className: 'BooleanExpression',

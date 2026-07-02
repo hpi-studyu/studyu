@@ -38,15 +38,18 @@ void writePage({
   existing = existing.replaceAll('<!-- Human prose goes here. -->\n', '');
 
   final scopeEntries = entriesForPage(pagePath);
-  final anyGeneratedFields =
-      scopeEntries.any((e) => e.generatedFields) && meta.generatedFields;
-
-  if (anyGeneratedFields) {
-    final rows = _buildFieldRows(classes, meta, typeLinks, pagePath);
+  final generatedFieldBlocks = buildExpectedFieldBlocks(
+    scopeEntries: scopeEntries,
+    classes: classes,
+    meta: meta,
+    typeLinks: typeLinks,
+    currentPagePath: pagePath,
+  );
+  for (final entry in generatedFieldBlocks.entries) {
     existing = replaceBlock(
       existing: existing,
-      kind: 'FIELDS',
-      newContent: buildFieldsTable(rows),
+      kind: entry.key,
+      newContent: buildFieldsTable(entry.value),
     );
   }
 
@@ -89,44 +92,72 @@ String _skeleton(PageMeta meta) {
   return buf.toString();
 }
 
+Map<String, List<FieldRow>> _buildFieldBlocks({
+  required List<PageScopeEntry> scopeEntries,
+  required List<ScannedClass> classes,
+  required PageMeta meta,
+  required Map<String, String> typeLinks,
+  required String currentPagePath,
+}) {
+  if (!meta.generatedFields) return const {};
+
+  final classesByName = {for (final cls in classes) cls.name: cls};
+  final result = <String, List<FieldRow>>{};
+
+  for (final entry in scopeEntries.where((entry) => entry.generatedFields)) {
+    final cls = classesByName[entry.className];
+    if (cls == null) continue;
+    final rows = _buildFieldRows(
+      cls,
+      meta,
+      typeLinks,
+      currentPagePath,
+      includeVirtualFields: entry.fieldsBlock == 'FIELDS',
+    );
+    result.putIfAbsent(entry.fieldsBlock, () => <FieldRow>[]).addAll(rows);
+  }
+
+  return result;
+}
+
 List<FieldRow> _buildFieldRows(
-  List<ScannedClass> classes,
+  ScannedClass cls,
   PageMeta meta,
   Map<String, String> typeLinks,
-  String currentPagePath,
-) {
+  String currentPagePath, {
+  required bool includeVirtualFields,
+}) {
   final rows = <FieldRow>[];
   final seen = <String>{};
 
-  for (final cls in classes) {
-    for (final field in cls.fields) {
-      if (!field.includeInJson) continue;
-      if (seen.contains(field.jsonKey)) continue;
-      if (meta.ignoredFields.contains(field.name) ||
-          meta.ignoredFields.contains(field.jsonKey)) {
-        continue;
-      }
-      seen.add(field.jsonKey);
-
-      final fieldMeta = meta.fields[field.name] ?? meta.fields[field.jsonKey];
-      final description = fieldMeta?.description ?? '';
-
-      rows.add(
-        FieldRow(
-          dartName: field.name,
-          jsonKey: field.jsonKey,
-          dartType: field.dartType,
-          required: field.required,
-          description: description,
-          defaultValue: field.defaultValue,
-          typeHref: _typeHref(field.dartType, typeLinks, currentPagePath),
-        ),
-      );
+  for (final field in cls.fields) {
+    if (!field.includeInJson) continue;
+    if (seen.contains(field.jsonKey)) continue;
+    if (meta.ignoredFields.contains(field.name) ||
+        meta.ignoredFields.contains(field.jsonKey)) {
+      continue;
     }
+    seen.add(field.jsonKey);
+
+    final fieldMeta = meta.fields[field.name] ?? meta.fields[field.jsonKey];
+    final description = fieldMeta?.description ?? '';
+
+    rows.add(
+      FieldRow(
+        dartName: field.name,
+        jsonKey: field.jsonKey,
+        dartType: field.dartType,
+        required: field.required,
+        description: description,
+        defaultValue: field.defaultValue,
+        typeHref: _typeHref(field.dartType, typeLinks, currentPagePath),
+      ),
+    );
   }
 
-  for (final fieldMeta in meta.fields.values) {
-    if (fieldMeta.virtual && !seen.contains(fieldMeta.name)) {
+  if (includeVirtualFields) {
+    for (final fieldMeta in meta.fields.values) {
+      if (!fieldMeta.virtual || seen.contains(fieldMeta.name)) continue;
       rows.add(
         FieldRow(
           dartName: fieldMeta.name,
@@ -202,6 +233,8 @@ Map<String, Object> _buildDiscriminatorEntries({
         final wire = cls.discriminatorValues[field];
         if (wire == null || wire.isEmpty) continue;
 
+        if (entry.excludedDispatcherValues.contains(wire)) continue;
+
         // Only include concrete classes whose doc page is under the same
         // directory (or any subdir) as the dispatcher page.
         final clsEntry = kPageScope
@@ -262,12 +295,19 @@ String _pageLabelFromPath(String pagePath) {
 }
 
 /// Helpers reused by [cli.dart] for drift checking.
-List<FieldRow> buildExpectedFieldRows(
-  List<ScannedClass> classes,
-  PageMeta meta,
-  Map<String, String> typeLinks,
-  String currentPagePath,
-) => _buildFieldRows(classes, meta, typeLinks, currentPagePath);
+Map<String, List<FieldRow>> buildExpectedFieldBlocks({
+  required List<PageScopeEntry> scopeEntries,
+  required List<ScannedClass> classes,
+  required PageMeta meta,
+  required Map<String, String> typeLinks,
+  required String currentPagePath,
+}) => _buildFieldBlocks(
+  scopeEntries: scopeEntries,
+  classes: classes,
+  meta: meta,
+  typeLinks: typeLinks,
+  currentPagePath: currentPagePath,
+);
 
 Map<String, Object> buildExpectedDiscriminatorEntries({
   required List<PageScopeEntry> scopeEntries,
