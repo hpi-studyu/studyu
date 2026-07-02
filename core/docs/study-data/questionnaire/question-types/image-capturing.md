@@ -6,13 +6,13 @@
 
 
 <!-- GENERATED:FIELDS START -->
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `type` | `String` | Yes | Fixed value `image_capturing`. |
-| `id` | `String` | Yes | Unique question identifier (UUID). |
-| `prompt` | `String?` | No | The question text. |
-| `rationale` | `String?` | No | Optional explanation. |
-| `conditional` | `QuestionConditional<V>?` | No | Optional display condition. |
+| Field         | Type                                                              | Required | Description                                              |
+|---------------|-------------------------------------------------------------------|----------|----------------------------------------------------------|
+| `type`        | `String`                                                          | Yes      | Fixed value `ImageCapturingQuestion`.                    |
+| `id`          | `String`                                                          | Yes      | Unique question identifier (UUID).                       |
+| `prompt`      | `String?`                                                         | No       | The question text.                                       |
+| `rationale`   | `String?`                                                         | No       | Optional explanation.                                    |
+| `conditional` | [`QuestionConditional<V>?`](../../shared/question-conditional.md) | No       | Optional display condition using a question conditional. |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

@@ -22,6 +22,7 @@ Study data docs describe the JSON-serialisable models used to define, schedule, 
 
 ### questionnaire
 - [Index](questionnaire/index.md)
+- [Nested Objects](questionnaire/nested-objects.md)
 
 ### questionnaire/question-types
 - [Annotated Scale](questionnaire/question-types/annotated-scale.md)
@@ -57,7 +58,10 @@ Study data docs describe the JSON-serialisable models used to define, schedule, 
 
 ### shared
 - [Data Reference](shared/data-reference.md)
+- [Enums](shared/enums.md)
 - [Expressions](shared/expressions.md)
+- [Question Conditional](shared/question-conditional.md)
+- [Scalars](shared/scalars.md)
 
 ### study
 - [Consent](study/consent.md)

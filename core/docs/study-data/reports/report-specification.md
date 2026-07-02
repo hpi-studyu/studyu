@@ -6,10 +6,10 @@
 
 
 <!-- GENERATED:FIELDS START -->
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `primary` | `ReportSection?` | No | - | The main highlighted report section shown at the top. |
-| `secondary` | `List<ReportSection>` | No | `[]` | Additional report sections shown below the primary section. |
+| Field       | Type                                             | Required | Default | Description                                                 |
+|-------------|--------------------------------------------------|----------|---------|-------------------------------------------------------------|
+| `primary`   | [`ReportSection?`](report-specification.md)      | No       | -       | The main highlighted report section shown at the top.       |
+| `secondary` | [`List<ReportSection>`](report-specification.md) | No       | `[]`    | Additional report sections shown below the primary section. |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:LINKS START -->

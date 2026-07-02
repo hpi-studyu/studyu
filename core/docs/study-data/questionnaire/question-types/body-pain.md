@@ -6,13 +6,13 @@ Body pain models describe pain locations and intensity values used by pain quest
 
 
 <!-- GENERATED:FIELDS START -->
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `painLevel` | `int` | Yes | Numeric pain intensity value for a body part. |
-| `type` | `PainType?` | No | Pain type identifier string. |
-| `id` | `String` | Yes | Unique identifier. |
-| `name` | `String` | Yes | Display name of the body part or pain type. |
-| `pain` | `BodyPain` | Yes | List of pain records associated with a body region. |
-| `children` | `List<BodyPart>` | Yes | Child body parts nested within this body region. |
-| `parts` | `List<BodyPart>` | Yes | List of body parts making up this body model. |
+| Field       | Type                             | Required | Description                                         |
+|-------------|----------------------------------|----------|-----------------------------------------------------|
+| `painLevel` | `int`                            | Yes      | Numeric pain intensity value for a body part.       |
+| `type`      | [`PainType?`](body-pain.md)      | No       | Pain type identifier string.                        |
+| `id`        | `String`                         | Yes      | Unique identifier.                                  |
+| `name`      | `String`                         | Yes      | Display name of the body part or pain type.         |
+| `pain`      | [`BodyPain`](body-pain.md)       | Yes      | List of pain records associated with a body region. |
+| `children`  | [`List<BodyPart>`](body-pain.md) | Yes      | Child body parts nested within this body region.    |
+| `parts`     | [`List<BodyPart>`](body-pain.md) | Yes      | List of body parts making up this body model.       |
 <!-- GENERATED:FIELDS END -->

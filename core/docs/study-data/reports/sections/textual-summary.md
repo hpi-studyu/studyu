@@ -6,13 +6,13 @@
 
 
 <!-- GENERATED:FIELDS START -->
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `type` | `String` | Yes | Fixed value `textual_summary`. |
-| `id` | `String` | Yes | Unique section identifier (UUID). |
-| `title` | `String?` | No | Display title of this report section. |
-| `description` | `String?` | No | Optional description. |
-| `resultProperty` | `DataReference<num>?` | No | Reference to the result property summarized in text. |
+| Field            | Type                                                    | Required | Description                                          |
+|------------------|---------------------------------------------------------|----------|------------------------------------------------------|
+| `type`           | `String`                                                | Yes      | Fixed value `textual_summary`.                       |
+| `id`             | `String`                                                | Yes      | Unique section identifier (UUID).                    |
+| `title`          | `String?`                                               | No       | Display title of this report section.                |
+| `description`    | `String?`                                               | No       | Optional description.                                |
+| `resultProperty` | [`DataReference<num>?`](../../shared/data-reference.md) | No       | Reference to the result property summarized in text. |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->
