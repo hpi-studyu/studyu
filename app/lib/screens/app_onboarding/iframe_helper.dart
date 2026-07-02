@@ -53,6 +53,11 @@ class IFrameHelper {
     parent.postMessage(message, designerOrigin);
   }
 
+  static void cancelSubscription() {
+    _messageSubscription?.cancel();
+    _messageSubscription = null;
+  }
+
   void listen(AppState state, {PreviewNavigationHandler? onNavigate}) {
     _messageSubscription?.cancel();
     _messageSubscription = html.window.onMessage.listen((event) async {

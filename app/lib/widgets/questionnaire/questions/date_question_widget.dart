@@ -126,11 +126,20 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         _selectedTime = pickedTime;
       });
 
-      // For datetime, if no date selected yet, default to today
+      // For datetime, if no date selected yet, default to today — but only
+      // when today falls within any configured date range.
       if (widget.question.isDateTime && _selectedDate == null) {
-        setState(() {
-          _selectedDate = DateTime.now();
-        });
+        final today = DateTime.now();
+        final minDate = widget.question.minDate;
+        final maxDate = widget.question.maxDate;
+        final todayIsInRange =
+            (minDate == null || !today.isBefore(minDate)) &&
+            (maxDate == null || !today.isAfter(maxDate));
+        if (todayIsInRange) {
+          setState(() {
+            _selectedDate = today;
+          });
+        }
       }
 
       _checkCompleteAndSubmit();
@@ -190,7 +199,9 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
     setState(() {
       _selectedDate = null;
       _selectedTime = null;
-      _hasInteracted = false;
+      // Keep _hasInteracted true so validation errors surface immediately
+      // if the user tries to submit after clearing a required field.
+      _hasInteracted = true;
     });
     widget.onCleared?.call();
   }

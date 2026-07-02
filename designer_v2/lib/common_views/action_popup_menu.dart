@@ -123,6 +123,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
               value: action,
               onTap: () {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!context.mounted) return;
                   unawaited(action.execute(context));
                 });
               },

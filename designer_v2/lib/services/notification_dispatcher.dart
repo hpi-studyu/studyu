@@ -108,7 +108,14 @@ class _NotificationDispatcherState
           _buildSnackbar(notification as SnackbarIntent, messengerState),
         );
       case NotificationType.alert:
-        final navigatorState = _getNavigatorState()!;
+        final navigatorState = _getNavigatorState();
+        if (navigatorState == null) {
+          throw Exception(
+            "NotificationDispatcher could not obtain reference to NavigatorState "
+            "for alert notification. Make sure the widget is placed below a Navigator "
+            "in the widget tree, or provide a reference via the navigatorKey global key.",
+          );
+        }
         showDialog(
           context: navigatorState.context,
           builder: (BuildContext context) =>

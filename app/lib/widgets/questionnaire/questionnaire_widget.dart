@@ -184,7 +184,10 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     _controller.markRestoredVisibleAnswersNeedingReview(visibleBeforeRebuild);
 
     if (modeBefore == QuestionnaireCtaMode.complete) {
-      _finishQuestionnaireIfReviewed(_controller.buildVisiblePayload());
+      // Use the payload validated above rather than calling buildVisiblePayload()
+      // a second time after setState, which can produce a different snapshot if
+      // the rebuild changed which questions are visible.
+      _finishQuestionnaireIfReviewed(payload);
     } else {
       _finishQuestionnaire(null);
       _scrollToNewQuestion();
