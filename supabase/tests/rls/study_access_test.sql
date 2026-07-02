@@ -284,7 +284,7 @@ INSERT INTO public.study (
 --
 
 -- plan tests in advance, this ensures the proper number of tests have been run.
-SELECT plan(23);
+SELECT plan(27);
 
 -- UNRESTRICTED TESTS
 
@@ -338,6 +338,46 @@ SELECT tests.is_either_true(
   FROM
     public.study
   WHERE title LIKE 'Study:%';
+
+-- COMPUTED FIELD PERMISSIONS TESTS
+
+-- Regression for https://github.com/hpi-studyu/studyu/pull/856: the Designer
+-- dashboard studies fetch selects the study_participant_count, study_ended_count,
+-- active_subject_count, and study_missed_days computed columns. The canonical
+-- schema revokes EXECUTE FROM public on these helpers (which also drops the
+-- inherited grant for authenticated); the Data API grants migration must grant
+-- EXECUTE to authenticated explicitly. Without it, PostgREST returns 403
+-- permission denied for the function and the dashboard throws APIException.
+SELECT tests.authenticate_as('test_creator_1');
+
+-- A study owned by test_creator_1, against which the computed fields are called.
+-- study_subject is empty in this seed, so counts are zero and arrays are empty,
+-- but the assertions prove the functions are callable rather than raising
+-- permission denied.
+SELECT is(
+  public.study_participant_count(s),
+  0,
+  'Authenticated can call study_participant_count computed field'
+)
+FROM public.study s
+WHERE title LIKE 'Study: status=running, registry_published=true%'
+LIMIT 1;
+
+-- The remaining three dashboard computed fields return aggregates over an empty
+-- study_subject set; lives_ok proves EXECUTE is granted by asserting the call
+-- does not raise permission_denied_for_function.
+SELECT lives_ok(
+  'SELECT public.study_ended_count(s) FROM public.study s WHERE title LIKE ''Study: status=running, registry_published=true%''',
+  'Authenticated can call study_ended_count computed field'
+);
+SELECT lives_ok(
+  'SELECT public.active_subject_count(s) FROM public.study s WHERE title LIKE ''Study: status=running, registry_published=true%''',
+  'Authenticated can call active_subject_count computed field'
+);
+SELECT lives_ok(
+  'SELECT public.study_missed_days(s) FROM public.study s WHERE title LIKE ''Study: status=running, registry_published=true%''',
+  'Authenticated can call study_missed_days computed field'
+);
 
 -- DELETE CASCADE TESTS
 
