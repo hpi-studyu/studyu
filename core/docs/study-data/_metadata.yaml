@@ -5,6 +5,20 @@
 # - ignored_fields: Field names to skip in drift checks (runtime, Supabase-join, or UI-only).
 # - links: Canonical page paths this page links to.
 # - fields: Field descriptions keyed by Dart field name. Use {} for abstract/discriminator pages.
+type_links:
+  StudyUTimeOfDay: shared/scalars.md#time-of-day
+  TemporalAggregation: shared/enums.md#temporalaggregation
+  ImprovementDirection: shared/enums.md#improvementdirection
+  DateInputType: shared/enums.md#dateinputtype
+  DateFormatPreset: shared/enums.md#dateformatpreset
+  TimeFormatPreset: shared/enums.md#timeformatpreset
+  DefaultDateOption: shared/enums.md#defaultdateoption
+  FreeTextQuestionType: shared/enums.md#freetextquestiontype
+  FitbitQuestionType: shared/enums.md#fitbitquestiontype
+  PhaseSequence: shared/enums.md#phasesequence
+  DateTime: shared/scalars.md#datetime
+
+
 pages:
   study/index.md:
     title: Study
@@ -83,7 +97,7 @@ pages:
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation of why this question is asked.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
 
   questionnaire/question-types/choice.md:
     title: Choice Question
@@ -93,7 +107,7 @@ pages:
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       choices: List of answer options the participant may select.
       multiple: Whether multiple answers can be selected simultaneously.
 
@@ -105,7 +119,7 @@ pages:
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       minimum: Minimum numeric value on the scale.
       maximum: Maximum numeric value on the scale.
       step: Step size between selectable values. `0` means auto-generated intermediate values.
@@ -120,11 +134,11 @@ pages:
     title: Annotated Scale Question
     classes: [AnnotatedScaleQuestion]
     fields:
-      type: Fixed value `annotated_scale`.
+      type: Fixed value `annotatedScale`.
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       minimum: Minimum numeric value.
       maximum: Maximum numeric value.
       step: Step size between selectable values.
@@ -137,11 +151,11 @@ pages:
     title: Visual Analogue Question
     classes: [VisualAnalogueQuestion]
     fields:
-      type: Fixed value `visual_analogue`.
+      type: Fixed value `visualAnalogue`.
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       minimum: Minimum numeric value.
       maximum: Maximum numeric value.
       step: Step size.
@@ -157,21 +171,21 @@ pages:
     title: Image Capturing Question
     classes: [ImageCapturingQuestion]
     fields:
-      type: Fixed value `image_capturing`.
+      type: Fixed value `ImageCapturingQuestion`.
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
 
   questionnaire/question-types/audio-recording.md:
     title: Audio Recording Question
     classes: [AudioRecordingQuestion]
     fields:
-      type: Fixed value `audio_recording`.
+      type: Fixed value `AudioRecordingQuestion`.
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       maxRecordingDurationSeconds: Maximum recording length in seconds.
 
   questionnaire/question-types/date.md:
@@ -182,7 +196,7 @@ pages:
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       inputType: Input widget style (e.g. date picker, time picker, date+time).
       minDate: Optional earliest selectable date.
       maxDate: Optional latest selectable date.
@@ -198,11 +212,11 @@ pages:
     title: Free Text Question
     classes: [FreeTextQuestion]
     fields:
-      type: Fixed value `free_text`.
+      type: Fixed value `freeText`.
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       lengthRange: Optional min/max character count constraints on the answer.
       textType: Text input type (e.g. plain text, email, phone number).
       customTypeExpression: Regex or expression used when `textType` is set to `custom`.
@@ -211,11 +225,11 @@ pages:
     title: Fitbit Question
     classes: [FitbitQuestion]
     fields:
-      type: Fixed value `fitbit`.
+      type: Fixed value `FitbitQuestion`.
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
       types: List of Fitbit data types to collect (e.g. steps, sleep, heart rate).
 
   questionnaire/question-types/pain.md:
@@ -226,7 +240,7 @@ pages:
       id: Unique question identifier (UUID).
       prompt: The question text.
       rationale: Optional explanation.
-      conditional: Optional display condition.
+      conditional: Optional display condition using a question conditional.
 
   questionnaire/question-types/body-pain.md:
     title: Body Pain Models
@@ -344,20 +358,20 @@ pages:
       id: Unique section identifier (UUID).
       title: Display title of this report section.
       description: Optional description of what this section shows.
-      aggregate: Temporal aggregation strategy (e.g. per-day mean).
+      aggregate: Temporal aggregation strategy. One of `day`, `phase`, `intervention`.
       resultProperty: Reference to the numeric result property being averaged.
 
   reports/sections/linear-regression.md:
     title: Linear Regression Section
     classes: [LinearRegressionSection]
     fields:
-      type: Fixed value `linear_regression`.
+      type: Fixed value `linearRegression`.
       id: Unique section identifier (UUID).
       title: Display title of this report section.
       description: Optional description.
       resultProperty: Reference to the numeric result property being analyzed.
       alpha: Significance threshold for the regression (default 0.05).
-      improvement: Whether higher values represent improvement (`true`) or decline (`false`).
+      improvement: Direction that counts as improvement. One of `positive`, `negative`.
 
   reports/sections/textual-summary.md:
     title: Textual Summary Section
@@ -406,6 +420,22 @@ pages:
       filename: CSV export filename for this result type.
       resultProperty: Reference to the numeric property this result captures.
 
+  questionnaire/nested-objects.md:
+    title: Questionnaire Nested Objects
+    classes: [ Choice, Annotation ]
+    fields:
+      id: Unique choice identifier used in choice answers.
+      text: Participant-facing choice label.
+      value: Numeric scale value that receives an annotation.
+      annotation: Label shown for the annotated scale value.
+
+  shared/question-conditional.md:
+    title: Question Conditional
+    classes: [ QuestionConditional ]
+    generated_fields: false
+    fields: { }
+
+
   shared/data-reference.md:
     title: Data Reference
     classes: [DataReference]
@@ -418,3 +448,10 @@ pages:
     classes: [Expression, BooleanExpression, ChoiceExpression, NumericExpression, TextExpression, CompositeExpression, NotExpression]
     generated_fields: false
     fields: {}
+
+
+manual_pages:
+  shared/enums.md:
+    title: Enum Values
+  shared/scalars.md:
+    title: Scalar Formats

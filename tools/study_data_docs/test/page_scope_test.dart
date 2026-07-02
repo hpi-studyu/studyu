@@ -61,6 +61,20 @@ void main() {
     });
   });
 
+  group('inferredTypeLinks', () {
+    test('contains generated classes and abstract aliases', () {
+      expect(inferredTypeLinks['DataReference'], 'shared/data-reference.md');
+      expect(
+        inferredTypeLinks['InterventionTask'],
+        'interventions/checkmark-task.md',
+      );
+      expect(
+        inferredTypeLinks['ReportSection'],
+        'reports/report-specification.md',
+      );
+    });
+  });
+
   group('PageScopeEntry flags', () {
     test('StudyUQuestionnaire has generatedFields: false', () {
       final entry = scopeFor('StudyUQuestionnaire');

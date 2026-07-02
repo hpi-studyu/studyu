@@ -67,6 +67,7 @@ Future<void> runWrite({
       meta: pageMeta,
       classes: classes,
       allClasses: scannedClasses,
+      typeLinks: meta.typeLinks,
     );
     written++;
   }
@@ -103,19 +104,20 @@ Future<void> runCheck({
     repoRoot: repoRoot,
   );
 
-  // 1. Every canonical page must have a metadata entry.
+  // 1. Every canonical generated page must have a metadata entry.
   for (final pagePath in allPagePaths) {
     if (meta.page(pagePath) == null) {
       errors.add('Missing metadata entry for page: $pagePath');
     }
   }
 
-  // 2. Every metadata page must exist in the canonical scope.
+  // 2. Every non-manual metadata page must exist in the canonical scope.
   for (final pagePath in meta.allPagePaths) {
+    if (meta.manualPagePaths.contains(pagePath)) continue;
     if (!allPagePaths.contains(pagePath)) {
       errors.add(
         'Metadata has page "$pagePath" not in canonical scope — '
-        'remove it or add it to page_scope.dart.',
+        'remove it, add it to page_scope.dart, or move it to manual_pages.',
       );
     }
   }
@@ -128,7 +130,7 @@ Future<void> runCheck({
   }
 
   // 4. Per-page checks.
-  for (final pagePath in allPagePaths) {
+  for (final pagePath in meta.allPagePaths) {
     final pageMeta = meta.page(pagePath);
     if (pageMeta == null) continue;
 
@@ -172,7 +174,12 @@ Future<void> runCheck({
 
     // 4b. FIELDS block drift.
     if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
-      final expectedRows = buildExpectedFieldRows(classes, pageMeta);
+      final expectedRows = buildExpectedFieldRows(
+        classes,
+        pageMeta,
+        meta.typeLinks,
+        pagePath,
+      );
       final expectedContent = buildFieldsTable(expectedRows);
       final currentContent = extractBlock(existing, 'FIELDS');
 
@@ -260,7 +267,7 @@ Future<void> runCheck({
       if (entity is! File || !entity.path.endsWith('.md')) continue;
       final rel = p.relative(entity.path, from: docsDir);
       if (rel == 'index.md') continue;
-      if (!allPagePaths.contains(rel)) {
+      if (!meta.allPagePaths.contains(rel)) {
         errors.add(
           'Orphaned page in docs tree: $rel — '
           'add to page_scope.dart or delete the file.',
@@ -271,7 +278,7 @@ Future<void> runCheck({
 
   // 6. Generated root index must match the canonical page scope.
   final indexFile = File(p.join(docsDir, 'index.md'));
-  final expectedIndex = _buildIndexPage();
+  final expectedIndex = _buildIndexPage(meta);
   if (!indexFile.existsSync()) {
     errors.add('Docs index missing: index.md — run --write to generate it.');
   } else if (indexFile.readAsStringSync().trim() != expectedIndex.trim()) {
@@ -326,10 +333,10 @@ String? _validateDescriptionSection(String markdown, String pagePath) {
 
 void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   final absPath = p.join(docsDir, 'index.md');
-  File(absPath).writeAsStringSync(_buildIndexPage());
+  File(absPath).writeAsStringSync(_buildIndexPage(meta));
 }
 
-String _buildIndexPage() {
+String _buildIndexPage(DocMetadata meta) {
   final buf = StringBuffer();
   buf.writeln('# Study Data Reference');
   buf.writeln();
@@ -344,7 +351,7 @@ String _buildIndexPage() {
   buf.writeln();
 
   final sections = <String, List<String>>{};
-  for (final pagePath in allPagePaths) {
+  for (final pagePath in meta.allPagePaths) {
     final dir = p.posix.dirname(pagePath);
     sections.putIfAbsent(dir, () => []).add(pagePath);
   }

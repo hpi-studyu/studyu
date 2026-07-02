@@ -89,11 +89,11 @@ String buildFieldsTable(List<FieldRow> rows) {
     if (hasDefaults) {
       final def = row.defaultValue != null ? '`${row.defaultValue}`' : '-';
       buf.writeln(
-        '| `$fieldLabel` | `${_escapeType(row.dartType)}` | $req | $def | ${row.description} |',
+        '| `$fieldLabel` | ${row.typeLabel} | $req | $def | ${row.description} |',
       );
     } else {
       buf.writeln(
-        '| `$fieldLabel` | `${_escapeType(row.dartType)}` | $req | ${row.description} |',
+        '| `$fieldLabel` | ${row.typeLabel} | $req | ${row.description} |',
       );
     }
   }
@@ -144,6 +144,7 @@ class FieldRow {
   final bool required;
   final String description;
   final String? defaultValue;
+  final String? typeHref;
 
   const FieldRow({
     required this.dartName,
@@ -152,11 +153,18 @@ class FieldRow {
     required this.required,
     required this.description,
     this.defaultValue,
+    this.typeHref,
   });
 
   /// Display label: `field` when names match, `field (json_key)` when they differ.
   String get fieldLabel =>
       dartName == jsonKey ? dartName : '$dartName ($jsonKey)';
+
+  String get typeLabel {
+    final escaped = _escapeType(dartType);
+    if (typeHref == null) return '`$escaped`';
+    return '[`$escaped`]($typeHref)';
+  }
 }
 
 class LinkEntry {

@@ -90,6 +90,23 @@ pages:
       expect(meta.page('study/index.md')!.links, contains('study/contact.md'));
     });
 
+    test('parses type links', () {
+      final path = writeMeta('''
+type_links:
+  QuestionConditional: shared/question-conditional.md
+pages:
+  study/index.md:
+    title: Study
+    classes: [Study]
+    fields: {}
+''');
+      final meta = DocMetadata.load(path);
+      expect(
+        meta.typeLinks['QuestionConditional'],
+        'shared/question-conditional.md',
+      );
+    });
+
     test('parses virtual fields', () {
       final path = writeMeta('''
 pages:
@@ -108,6 +125,51 @@ pages:
       expect(fields['task']!.virtual, isFalse);
       expect(fields['extra']!.virtual, isTrue);
       expect(fields['extra']!.type, 'String');
+    });
+
+    test('parses manual pages', () {
+      final path = writeMeta('''
+manual_pages:
+  shared/enums.md:
+    title: Enum Values
+''');
+      final meta = DocMetadata.load(path);
+      expect(meta.manualPagePaths, contains('shared/enums.md'));
+      expect(meta.page('shared/enums.md')!.manual, isTrue);
+      expect(meta.page('shared/enums.md')!.generatedFields, isFalse);
+    });
+  });
+
+  group('writeMetadataStubs', () {
+    test('preserves structured fields and manual pages', () {
+      final path = writeMeta('''
+type_links:
+  DataReference: shared/data-reference.md
+pages:
+  shared/data-reference.md:
+    title: Data Reference
+    classes: [DataReference]
+    fields:
+      extra:
+        description: Extra virtual field.
+        virtual: true
+        type: String
+        required: true
+manual_pages:
+  shared/enums.md:
+    title: Enum Values
+''');
+
+      writeMetadataStubs(metadataPath: path, stubs: const []);
+
+      final meta = DocMetadata.load(path);
+      final extra = meta.page('shared/data-reference.md')!.fields['extra']!;
+      expect(extra.description, 'Extra virtual field.');
+      expect(extra.virtual, isTrue);
+      expect(extra.type, 'String');
+      expect(extra.required, isTrue);
+      expect(meta.typeLinks['DataReference'], 'shared/data-reference.md');
+      expect(meta.manualPagePaths, contains('shared/enums.md'));
     });
   });
 }

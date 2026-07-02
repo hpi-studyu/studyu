@@ -43,6 +43,7 @@ class PageMeta {
   final List<String> ignoredFields;
   final List<String> links; // canonical page paths this page links to
   final bool generatedFields;
+  final bool manual;
 
   const PageMeta({
     required this.path,
@@ -52,76 +53,110 @@ class PageMeta {
     this.ignoredFields = const [],
     this.links = const [],
     this.generatedFields = true,
+    this.manual = false,
   });
 }
 
 /// Loads and parses the `_metadata.yaml` file.
 class DocMetadata {
   final Map<String, PageMeta> _pages; // keyed by page path
+  final Set<String> manualPagePaths;
+  final Map<String, String> typeLinks;
 
-  DocMetadata.empty() : _pages = {};
+  DocMetadata.empty() : _pages = {}, manualPagePaths = {}, typeLinks = {};
 
   /// Loads the metadata file from [metadataPath].
-  DocMetadata.load(String metadataPath) : _pages = _parseFile(metadataPath);
+  factory DocMetadata.load(String metadataPath) {
+    final (pages, manualPagePaths, typeLinks) = _parseFile(metadataPath);
+    return DocMetadata._(pages, manualPagePaths, typeLinks);
+  }
 
-  static Map<String, PageMeta> _parseFile(String metadataPath) {
+  DocMetadata._(this._pages, this.manualPagePaths, this.typeLinks);
+
+  static (Map<String, PageMeta>, Set<String>, Map<String, String>) _parseFile(
+    String metadataPath,
+  ) {
     final file = File(metadataPath);
-    if (!file.existsSync()) return {};
+    if (!file.existsSync()) return ({}, {}, {});
 
     final raw = loadYaml(file.readAsStringSync());
-    if (raw is! YamlMap) return {};
+    if (raw is! YamlMap) return ({}, {}, {});
+
+    final typeLinks = <String, String>{};
+    final typeLinksNode = raw['type_links'];
+    if (typeLinksNode is YamlMap) {
+      for (final entry in typeLinksNode.entries) {
+        typeLinks[entry.key as String] = entry.value as String;
+      }
+    }
 
     final pages = <String, PageMeta>{};
     final pagesNode = raw['pages'];
-    if (pagesNode is! YamlMap) return {};
+    if (pagesNode is YamlMap) {
+      for (final entry in pagesNode.entries) {
+        final pagePath = entry.key as String;
+        final data = entry.value as YamlMap;
 
-    for (final entry in pagesNode.entries) {
-      final pagePath = entry.key as String;
-      final data = entry.value as YamlMap;
+        final title = data['title'] as String? ?? '';
+        final classes = _stringList(data['classes']);
+        final ignoredFields = _stringList(data['ignored_fields']);
+        final links = _stringList(data['links']);
+        final generatedFields = data['generated_fields'] as bool? ?? true;
 
-      final title = data['title'] as String? ?? '';
-      final classes = _stringList(data['classes']);
-      final ignoredFields = _stringList(data['ignored_fields']);
-      final links = _stringList(data['links']);
-      final generatedFields = data['generated_fields'] as bool? ?? true;
+        final fields = <String, FieldMeta>{};
+        final fieldsNode = data['fields'];
+        if (fieldsNode is YamlMap) {
+          for (final fieldEntry in fieldsNode.entries) {
+            final fieldName = fieldEntry.key as String;
+            final fieldData = fieldEntry.value;
+            if (fieldData == null) continue;
 
-      final fields = <String, FieldMeta>{};
-      final fieldsNode = data['fields'];
-      if (fieldsNode is YamlMap) {
-        for (final fieldEntry in fieldsNode.entries) {
-          final fieldName = fieldEntry.key as String;
-          final fieldData = fieldEntry.value;
-          if (fieldData == null) continue;
-
-          if (fieldData is String) {
-            fields[fieldName] = FieldMeta(
-              name: fieldName,
-              description: fieldData,
-            );
-          } else if (fieldData is YamlMap) {
-            fields[fieldName] = FieldMeta(
-              name: fieldName,
-              description: fieldData['description'] as String? ?? '',
-              virtual: fieldData['virtual'] as bool? ?? false,
-              type: fieldData['type'] as String?,
-              required: fieldData['required'] as bool? ?? false,
-            );
+            if (fieldData is String) {
+              fields[fieldName] = FieldMeta(
+                name: fieldName,
+                description: fieldData,
+              );
+            } else if (fieldData is YamlMap) {
+              fields[fieldName] = FieldMeta(
+                name: fieldName,
+                description: fieldData['description'] as String? ?? '',
+                virtual: fieldData['virtual'] as bool? ?? false,
+                type: fieldData['type'] as String?,
+                required: fieldData['required'] as bool? ?? false,
+              );
+            }
           }
         }
-      }
 
-      pages[pagePath] = PageMeta(
-        path: pagePath,
-        title: title,
-        classes: classes,
-        fields: fields,
-        ignoredFields: ignoredFields,
-        links: links,
-        generatedFields: generatedFields,
-      );
+        pages[pagePath] = PageMeta(
+          path: pagePath,
+          title: title,
+          classes: classes,
+          fields: fields,
+          ignoredFields: ignoredFields,
+          links: links,
+          generatedFields: generatedFields,
+        );
+      }
+    }
+    final manualPagePaths = <String>{};
+    final manualPagesNode = raw['manual_pages'];
+    if (manualPagesNode is YamlMap) {
+      for (final entry in manualPagesNode.entries) {
+        final pagePath = entry.key as String;
+        final data = entry.value as YamlMap;
+        manualPagePaths.add(pagePath);
+        pages[pagePath] = PageMeta(
+          path: pagePath,
+          title: data['title'] as String? ?? '',
+          classes: const [],
+          generatedFields: false,
+          manual: true,
+        );
+      }
     }
 
-    return pages;
+    return (pages, manualPagePaths, typeLinks);
   }
 
   PageMeta? page(String pagePath) => _pages[pagePath];
@@ -147,9 +182,23 @@ void writeMetadataStubs({
   final buf = StringBuffer();
   buf.writeln('# Auto-generated stubs — fill in descriptions.');
   buf.writeln('# Do not remove pages or fields present in the source.');
+  if (existing.typeLinks.isNotEmpty) {
+    buf.writeln('type_links:');
+    for (final entry in existing.typeLinks.entries) {
+      buf.writeln('  ${entry.key}: ${entry.value}');
+    }
+    buf.writeln();
+  }
+  final generatedPaths = stubs.map((s) => s.path).toSet();
+
   buf.writeln('pages:');
 
-  final allPaths = {...existing.allPagePaths, ...stubs.map((s) => s.path)};
+  final allPaths = {
+    ...existing.allPagePaths.where(
+      (path) => !existing.manualPagePaths.contains(path),
+    ),
+    ...generatedPaths,
+  };
 
   for (final path in allPaths) {
     final existingPage = existing.page(path);
@@ -161,6 +210,7 @@ void writeMetadataStubs({
     if (page.classes.isNotEmpty) {
       buf.writeln('    classes: [${page.classes.join(', ')}]');
     }
+
     if (!page.generatedFields) {
       buf.writeln('    generated_fields: false');
     }
@@ -175,11 +225,36 @@ void writeMetadataStubs({
     }
     buf.writeln('    fields:');
     for (final field in page.fields.values) {
-      buf.writeln('      ${field.name}: ${_yamlString(field.description)}');
+      _writeField(buf, field);
+    }
+  }
+
+  if (existing.manualPagePaths.isNotEmpty) {
+    buf.writeln();
+    buf.writeln('manual_pages:');
+    for (final path in existing.manualPagePaths) {
+      final page = existing.page(path)!;
+      buf.writeln('  ${p.posix.normalize(path)}:');
+      buf.writeln('    title: ${_yamlString(page.title)}');
     }
   }
 
   File(metadataPath).writeAsStringSync(buf.toString());
+}
+
+void _writeField(StringBuffer buf, FieldMeta field) {
+  if (field.type == null && !field.virtual && !field.required) {
+    buf.writeln('      ${field.name}: ${_yamlString(field.description)}');
+    return;
+  }
+
+  buf.writeln('      ${field.name}:');
+  buf.writeln('        description: ${_yamlString(field.description)}');
+  if (field.virtual) buf.writeln('        virtual: true');
+  if (field.type case final type?) {
+    buf.writeln('        type: ${_yamlString(type)}');
+  }
+  if (field.required) buf.writeln('        required: true');
 }
 
 String _yamlString(String value) {

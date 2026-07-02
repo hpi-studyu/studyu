@@ -90,6 +90,26 @@ void main() {
       expect(table, contains('No'));
     });
 
+    test('links type labels when type href is present', () {
+      const rows = [
+        FieldRow(
+          dartName: 'conditional',
+          jsonKey: 'conditional',
+          dartType: 'QuestionConditional<V>?',
+          required: false,
+          description: 'Optional display condition.',
+          typeHref: '../shared/question-conditional.md',
+        ),
+      ];
+      final table = buildFieldsTable(rows);
+      expect(
+        table,
+        contains(
+          '[`QuestionConditional<V>?`](../shared/question-conditional.md)',
+        ),
+      );
+    });
+
     test('returns placeholder for empty rows', () {
       final table = buildFieldsTable([]);
       expect(table, contains('No JSON-serialisable fields'));

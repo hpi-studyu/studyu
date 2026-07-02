@@ -186,6 +186,19 @@ const List<PageScopeEntry> kPageScope = [
 
   // ── Shared ────────────────────────────────────────────────────────────────
   PageScopeEntry(
+    className: 'QuestionConditional',
+    pagePath: 'shared/question-conditional.md',
+    generatedFields: false,
+  ),
+  PageScopeEntry(
+    className: 'Choice',
+    pagePath: 'questionnaire/nested-objects.md',
+  ),
+  PageScopeEntry(
+    className: 'Annotation',
+    pagePath: 'questionnaire/nested-objects.md',
+  ),
+  PageScopeEntry(
     className: 'DataReference',
     pagePath: 'shared/data-reference.md',
   ),
@@ -232,3 +245,18 @@ List<PageScopeEntry> entriesForPage(String pagePath) =>
 
 /// The set of all canonical page paths (deduplicated).
 Set<String> get allPagePaths => kPageScope.map((e) => e.pagePath).toSet();
+
+/// Extra type links for abstract base types that should not participate in
+/// generated field tables for their target pages.
+const Map<String, String> kTypeLinkTargets = {
+  'InterventionTask': 'interventions/checkmark-task.md',
+  'Observation': 'observations/questionnaire-task.md',
+  'ReportSection': 'reports/report-specification.md',
+  'StudyResult': 'results/numeric-result.md',
+};
+
+/// Type links inferred from generated page scope plus abstract base aliases.
+Map<String, String> get inferredTypeLinks => {
+  for (final entry in kPageScope) entry.className: entry.pagePath,
+  ...kTypeLinkTargets,
+};

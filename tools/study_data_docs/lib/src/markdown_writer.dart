@@ -20,6 +20,7 @@ void writePage({
   required PageMeta meta,
   required List<ScannedClass> classes,
   required Map<String, ScannedClass> allClasses,
+  required Map<String, String> typeLinks,
 }) {
   final absPath = p.join(docsDir, pagePath);
   final file = File(absPath);
@@ -41,7 +42,7 @@ void writePage({
       scopeEntries.any((e) => e.generatedFields) && meta.generatedFields;
 
   if (anyGeneratedFields) {
-    final rows = _buildFieldRows(classes, meta);
+    final rows = _buildFieldRows(classes, meta, typeLinks, pagePath);
     existing = replaceBlock(
       existing: existing,
       kind: 'FIELDS',
@@ -88,7 +89,12 @@ String _skeleton(PageMeta meta) {
   return buf.toString();
 }
 
-List<FieldRow> _buildFieldRows(List<ScannedClass> classes, PageMeta meta) {
+List<FieldRow> _buildFieldRows(
+  List<ScannedClass> classes,
+  PageMeta meta,
+  Map<String, String> typeLinks,
+  String currentPagePath,
+) {
   final rows = <FieldRow>[];
   final seen = <String>{};
 
@@ -113,6 +119,7 @@ List<FieldRow> _buildFieldRows(List<ScannedClass> classes, PageMeta meta) {
           required: field.required,
           description: description,
           defaultValue: field.defaultValue,
+          typeHref: _typeHref(field.dartType, typeLinks, currentPagePath),
         ),
       );
     }
@@ -127,12 +134,44 @@ List<FieldRow> _buildFieldRows(List<ScannedClass> classes, PageMeta meta) {
           dartType: fieldMeta.type ?? 'unknown',
           required: fieldMeta.required,
           description: fieldMeta.description,
+          typeHref: _typeHref(
+            fieldMeta.type ?? 'unknown',
+            typeLinks,
+            currentPagePath,
+          ),
         ),
       );
     }
   }
 
   return rows;
+}
+
+String? _typeHref(
+  String dartType,
+  Map<String, String> typeLinks,
+  String currentPagePath,
+) {
+  final combinedTypeLinks = {...inferredTypeLinks, ...typeLinks};
+  for (final typeName in _candidateTypeNames(dartType)) {
+    final target = combinedTypeLinks[typeName];
+    if (target != null) return _relativeLink(currentPagePath, target);
+  }
+  return null;
+}
+
+Iterable<String> _candidateTypeNames(String dartType) sync* {
+  final withoutNullability = dartType.replaceAll('?', '');
+  yield withoutNullability;
+  final genericMatch = RegExp(
+    r'^([^<]+)<(.+)>$',
+  ).firstMatch(withoutNullability);
+  if (genericMatch != null) {
+    yield genericMatch.group(1)!.trim();
+    final inner = genericMatch.group(2)!.trim();
+    yield inner;
+    yield* _candidateTypeNames(inner);
+  }
 }
 
 /// Builds the discriminator entries for the GENERATED:DISCRIMINATORS block.
@@ -226,7 +265,9 @@ String _pageLabelFromPath(String pagePath) {
 List<FieldRow> buildExpectedFieldRows(
   List<ScannedClass> classes,
   PageMeta meta,
-) => _buildFieldRows(classes, meta);
+  Map<String, String> typeLinks,
+  String currentPagePath,
+) => _buildFieldRows(classes, meta, typeLinks, currentPagePath);
 
 Map<String, Object> buildExpectedDiscriminatorEntries({
   required List<PageScopeEntry> scopeEntries,
