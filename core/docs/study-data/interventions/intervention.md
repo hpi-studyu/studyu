@@ -1,5 +1,9 @@
 # Intervention
 
+## Description
+
+`Intervention` defines one study arm and the tasks participants perform in that arm.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

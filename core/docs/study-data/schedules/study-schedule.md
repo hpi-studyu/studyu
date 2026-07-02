@@ -1,5 +1,9 @@
 # Study Schedule
 
+## Description
+
+`StudySchedule` defines phase length, baseline use, and intervention order.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

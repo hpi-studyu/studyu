@@ -1,5 +1,9 @@
 # Data Reference
 
+## Description
+
+`DataReference` points a report or result to a task result property.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

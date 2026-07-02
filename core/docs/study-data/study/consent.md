@@ -1,5 +1,9 @@
 # Consent Item
 
+## Description
+
+`ConsentItem` stores one consent statement shown before enrolment.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

@@ -1,5 +1,9 @@
 # Pain Question
 
+## Description
+
+`PainQuestion` records pain information through body pain models.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

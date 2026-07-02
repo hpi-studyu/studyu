@@ -1,5 +1,9 @@
 # Annotated Scale Question
 
+## Description
+
+`AnnotatedScaleQuestion` records a numeric scale answer with labelled values.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

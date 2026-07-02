@@ -1,5 +1,9 @@
 # Visual Analogue Question
 
+## Description
+
+`VisualAnalogueQuestion` records a slider value with endpoint labels and colors.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

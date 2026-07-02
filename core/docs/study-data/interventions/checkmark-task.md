@@ -1,5 +1,9 @@
 # Checkmark Task
 
+## Description
+
+`CheckmarkTask` records whether a participant completed a simple task.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

@@ -1,5 +1,9 @@
 # Fitbit Question
 
+## Description
+
+`FitbitQuestion` requests Fitbit data types used by the study.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

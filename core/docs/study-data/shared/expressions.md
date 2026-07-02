@@ -1,10 +1,15 @@
 # Expressions
 
-> **Note:** CompositeExpression is not dispatchable via Expression.fromJson. Do not use in study JSON until the dispatcher bug is fixed.
+## Description
 
+`Expression` documents condition payloads used by eligibility and question visibility rules.
 
 <!-- GENERATED:DISCRIMINATORS START -->
 | Field | Value(s) |
 |-------|---------|
 | `type` | `boolean`, `choice`, `composite`, `not`, `numeric`, `text` |
 <!-- GENERATED:DISCRIMINATORS END -->
+
+## Notes
+
+- `CompositeExpression` is not dispatchable through `Expression.fromJson`. Do not use it in study JSON until the dispatcher maps it.

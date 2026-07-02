@@ -1,5 +1,9 @@
 # Audio Recording Question
 
+## Description
+
+`AudioRecordingQuestion` asks participants to submit an audio recording.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

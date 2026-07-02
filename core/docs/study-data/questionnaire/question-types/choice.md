@@ -1,5 +1,9 @@
 # Choice Question
 
+## Description
+
+`ChoiceQuestion` asks participants to choose one or more configured answers.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

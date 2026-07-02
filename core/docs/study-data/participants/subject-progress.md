@@ -1,7 +1,8 @@
 # Subject Progress
 
-> **Note:** These are Supabase join rows, not portable study-definition fields. Do not include them in study JSON exported from the designer.
+## Description
 
+`SubjectProgress` stores runtime progress for one participant task completion.
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |
@@ -13,3 +14,7 @@
 | `resultType (result_type)` | `String` | Yes | String discriminator for the result payload type. |
 | `result` | `Result<dynamic>` | Yes | The serialized task result payload. |
 <!-- GENERATED:FIELDS END -->
+
+## Notes
+
+- `SubjectProgress` documents per-participant task completion rows stored by Supabase. These rows are runtime state, not portable study-definition JSON exported from the designer.

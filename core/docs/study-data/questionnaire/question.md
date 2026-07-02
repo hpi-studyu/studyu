@@ -1,5 +1,9 @@
 # Question
 
+## Description
+
+`Question` is the abstract base for participant questions. The `type` value selects the concrete question payload.
+
 
 <!-- GENERATED:DISCRIMINATORS START -->
 | Field | Value(s) |

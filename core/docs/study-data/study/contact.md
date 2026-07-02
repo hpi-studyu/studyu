@@ -1,5 +1,9 @@
 # Contact
 
+## Description
+
+`Contact` stores researcher and organization details shown with a study.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

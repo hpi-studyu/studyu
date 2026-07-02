@@ -1,5 +1,9 @@
 # Linear Regression Section
 
+## Description
+
+`LinearRegressionSection` reports a trend for a referenced numeric result property.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

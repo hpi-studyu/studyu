@@ -2,7 +2,6 @@
 # - title: Display title for the page (must match the first H1 heading).
 # - classes: Dart classes documented on this page.
 # - generated_fields: Set to false for classes with hand-written fromJson.
-# - note: Optional generated note at the top of the page.
 # - ignored_fields: Field names to skip in drift checks (runtime, Supabase-join, or UI-only).
 # - links: Canonical page paths this page links to.
 # - fields: Field descriptions keyed by Dart field name. Use {} for abstract/discriminator pages.
@@ -313,7 +312,6 @@ pages:
   participants/study-subject.md:
     title: Study Subject
     classes: [StudySubject]
-    note: These are Supabase join rows, not portable study-definition fields. Do not include them in study JSON exported from the designer.
     ignored_fields: [study, progress]
     fields:
       id: Unique participant identifier (UUID).
@@ -327,7 +325,6 @@ pages:
   participants/subject-progress.md:
     title: Subject Progress
     classes: [SubjectProgress]
-    note: These are Supabase join rows, not portable study-definition fields. Do not include them in study JSON exported from the designer.
     ignored_fields: [startedAt]
     fields:
       completedAt: UTC timestamp when the task was completed.
@@ -431,5 +428,4 @@ pages:
     title: Expressions
     classes: [Expression, BooleanExpression, ChoiceExpression, NumericExpression, TextExpression, CompositeExpression, NotExpression]
     generated_fields: false
-    note: CompositeExpression is not dispatchable via Expression.fromJson. Do not use in study JSON until the dispatcher bug is fixed.
     fields: {}

@@ -1,5 +1,9 @@
 # Intervention Result
 
+## Description
+
+`InterventionResult` defines an exported result grouped by intervention.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

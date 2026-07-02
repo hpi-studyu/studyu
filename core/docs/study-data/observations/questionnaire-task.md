@@ -1,5 +1,9 @@
 # Questionnaire Task
 
+## Description
+
+`QuestionnaireTask` schedules a questionnaire as an observation during the study.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

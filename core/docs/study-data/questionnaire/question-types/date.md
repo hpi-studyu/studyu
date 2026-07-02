@@ -1,5 +1,9 @@
 # Date Question
 
+## Description
+
+`DateQuestion` records a date, time, or combined date-time answer.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

@@ -1,5 +1,9 @@
 # Free Text Question
 
+## Description
+
+`FreeTextQuestion` records typed text with optional format limits.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

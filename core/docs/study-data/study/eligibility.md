@@ -1,5 +1,9 @@
 # Eligibility Criterion
 
+## Description
+
+`EligibilityCriterion` stores a rule that decides whether a participant can join a study.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

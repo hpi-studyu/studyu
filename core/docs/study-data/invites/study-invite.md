@@ -1,5 +1,9 @@
 # Study Invite
 
+## Description
+
+`StudyInvite` stores invite-only enrolment codes and optional preselected interventions.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

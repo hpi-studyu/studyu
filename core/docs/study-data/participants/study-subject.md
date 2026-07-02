@@ -1,7 +1,8 @@
 # Study Subject
 
-> **Note:** These are Supabase join rows, not portable study-definition fields. Do not include them in study JSON exported from the designer.
+## Description
 
+`StudySubject` stores the runtime enrolment row for one participant in one study.
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |
@@ -14,3 +15,7 @@
 | `inviteCode (invite_code)` | `String?` | No | - | Invite code used to enrol, if any. |
 | `isDeleted (is_deleted)` | `bool` | No | `false` | Whether this subject has been soft-deleted. |
 <!-- GENERATED:FIELDS END -->
+
+## Notes
+
+- `StudySubject` documents enrolment rows stored by Supabase. These rows are runtime state, not portable study-definition JSON exported from the designer.

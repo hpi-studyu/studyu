@@ -1,5 +1,9 @@
 # Image Capturing Question
 
+## Description
+
+`ImageCapturingQuestion` asks participants to submit an image.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

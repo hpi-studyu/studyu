@@ -1,5 +1,9 @@
 # Numeric Result
 
+## Description
+
+`NumericResult` defines an exported numeric result property.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

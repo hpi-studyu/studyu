@@ -1,5 +1,9 @@
 # Boolean Question
 
+## Description
+
+`BooleanQuestion` asks for a yes or no answer.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

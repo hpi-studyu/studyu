@@ -1,5 +1,9 @@
 # Schedule
 
+## Description
+
+`Schedule` defines when a task is available and when reminders fire.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

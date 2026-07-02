@@ -1,5 +1,9 @@
 # Report Specification
 
+## Description
+
+`ReportSpecification` defines the report sections shown after study participation.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

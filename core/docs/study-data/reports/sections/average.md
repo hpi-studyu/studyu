@@ -1,5 +1,9 @@
 # Average Section
 
+## Description
+
+`AverageSection` reports an average for a referenced numeric result property.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

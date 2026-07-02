@@ -1,5 +1,9 @@
 # Scale Question
 
+## Description
+
+`ScaleQuestion` records a numeric value on a bounded scale.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

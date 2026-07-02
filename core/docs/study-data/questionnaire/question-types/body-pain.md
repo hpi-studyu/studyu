@@ -1,5 +1,9 @@
 # Body Pain Models
 
+## Description
+
+Body pain models describe pain locations and intensity values used by pain questions.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |

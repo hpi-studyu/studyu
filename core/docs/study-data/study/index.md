@@ -1,5 +1,9 @@
 # Study
 
+## Description
+
+`Study` is the root study definition. It links participant-facing content, eligibility, interventions, schedules, and reports.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Default | Description |

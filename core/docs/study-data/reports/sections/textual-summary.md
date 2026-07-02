@@ -1,5 +1,9 @@
 # Textual Summary Section
 
+## Description
+
+`TextualSummarySection` reports a text summary for a referenced result property.
+
 
 <!-- GENERATED:FIELDS START -->
 | Field | Type | Required | Description |
