@@ -8,6 +8,7 @@ workspace:
   - flutter_common
   - app
   - designer_v2
+  - tools/study_data_docs
 dev_dependencies:
   melos: ^8.0.0
 
@@ -59,6 +60,16 @@ melos:
         scope:
           - 'studyu_core'
           - 'studyu_designer_v2'
+
+    docs:study-data:write:
+      run: |
+        dart run tools/study_data_docs/bin/study_data_docs.dart --write
+      description: Regenerates StudyU core study-data markdown docs
+
+    docs:study-data:check:
+      run: |
+        dart run tools/study_data_docs/bin/study_data_docs.dart --check
+      description: Checks StudyU core study-data markdown docs are up to date
 
     qualitycheck:
       run: |

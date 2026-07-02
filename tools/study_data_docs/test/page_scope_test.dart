@@ -60,19 +60,6 @@ void main() {
       expect(entry!.generatedFields, isFalse);
     });
 
-    test('CompositeExpression has a note', () {
-      final entry = scopeFor('CompositeExpression');
-      expect(entry, isNotNull);
-      expect(entry!.note, isNotNull);
-      expect(entry.note, contains('Expression.fromJson'));
-    });
-
-    test('StudySubject has a runtime-only note', () {
-      final entry = scopeFor('StudySubject');
-      expect(entry, isNotNull);
-      expect(entry!.note, contains('Supabase join rows'));
-    });
-
     test('Question has dispatcherField set to type', () {
       final entry = scopeFor('Question');
       expect(entry, isNotNull);

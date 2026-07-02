@@ -13,9 +13,6 @@ class PageScopeEntry {
   /// hand-written fromJson (e.g. StudyUQuestionnaire).
   final bool generatedFields;
 
-  /// Note text appended inside a generated comment block at the top of the page.
-  final String? note;
-
   /// When set, this class is an abstract dispatcher. The GENERATED:DISCRIMINATORS
   /// block will list all concrete subtype wire values for this JSON field,
   /// collected from every in-scope class that declares a matching discriminator.
@@ -25,7 +22,6 @@ class PageScopeEntry {
     required this.className,
     required this.pagePath,
     this.generatedFields = true,
-    this.note,
     this.dispatcherField,
   });
 }
@@ -146,16 +142,10 @@ const List<PageScopeEntry> kPageScope = [
   PageScopeEntry(
     className: 'StudySubject',
     pagePath: 'participants/study-subject.md',
-    note:
-        'These are Supabase join rows, not portable study-definition fields. '
-        'Do not include them in study JSON exported from the designer.',
   ),
   PageScopeEntry(
     className: 'SubjectProgress',
     pagePath: 'participants/subject-progress.md',
-    note:
-        'These are Supabase join rows, not portable study-definition fields. '
-        'Do not include them in study JSON exported from the designer.',
   ),
 
   // ── Reports ───────────────────────────────────────────────────────────────
@@ -224,9 +214,6 @@ const List<PageScopeEntry> kPageScope = [
   PageScopeEntry(
     className: 'CompositeExpression',
     pagePath: 'shared/expressions.md',
-    note:
-        'Not dispatchable via Expression.fromJson. Do not use in study JSON '
-        'until the dispatcher bug is fixed.',
   ),
   PageScopeEntry(className: 'NotExpression', pagePath: 'shared/expressions.md'),
 ];

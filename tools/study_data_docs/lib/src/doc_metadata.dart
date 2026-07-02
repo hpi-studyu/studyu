@@ -43,7 +43,6 @@ class PageMeta {
   final List<String> ignoredFields;
   final List<String> links; // canonical page paths this page links to
   final bool generatedFields;
-  final String? note;
 
   const PageMeta({
     required this.path,
@@ -53,7 +52,6 @@ class PageMeta {
     this.ignoredFields = const [],
     this.links = const [],
     this.generatedFields = true,
-    this.note,
   });
 }
 
@@ -86,7 +84,6 @@ class DocMetadata {
       final ignoredFields = _stringList(data['ignored_fields']);
       final links = _stringList(data['links']);
       final generatedFields = data['generated_fields'] as bool? ?? true;
-      final note = data['note'] as String?;
 
       final fields = <String, FieldMeta>{};
       final fieldsNode = data['fields'];
@@ -121,7 +118,6 @@ class DocMetadata {
         ignoredFields: ignoredFields,
         links: links,
         generatedFields: generatedFields,
-        note: note,
       );
     }
 
@@ -167,9 +163,6 @@ void writeMetadataStubs({
     }
     if (!page.generatedFields) {
       buf.writeln('    generated_fields: false');
-    }
-    if (page.note != null) {
-      buf.writeln('    note: ${_yamlString(page.note!)}');
     }
     if (page.ignoredFields.isNotEmpty) {
       buf.writeln('    ignored_fields: [${page.ignoredFields.join(', ')}]');

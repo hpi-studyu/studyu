@@ -76,15 +76,15 @@ void writePage({
   file.writeAsStringSync(existing);
 }
 
-/// Builds a skeleton for a new page — title + optional note, no placeholder comment.
+/// Builds a skeleton for a new page with required human-owned prose.
 String _skeleton(PageMeta meta) {
   final buf = StringBuffer();
   buf.writeln('# ${meta.title}');
   buf.writeln();
-  if (meta.note != null) {
-    buf.writeln('> **Note:** ${meta.note}');
-    buf.writeln();
-  }
+  buf.writeln('## Description');
+  buf.writeln();
+  buf.writeln('TODO: Describe this page.');
+  buf.writeln();
   return buf.toString();
 }
 

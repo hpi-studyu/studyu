@@ -164,6 +164,12 @@ Future<void> runCheck({
       errors.add('$pagePath: no H1 heading found.');
     }
 
+    // 4b. Description is human-owned prose and required on every page.
+    final descriptionError = _validateDescriptionSection(existing, pagePath);
+    if (descriptionError != null) {
+      errors.add(descriptionError);
+    }
+
     // 4b. FIELDS block drift.
     if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
       final expectedRows = buildExpectedFieldRows(classes, pageMeta);
@@ -281,6 +287,34 @@ Future<void> runCheck({
   }
 }
 
+String? _validateDescriptionSection(String markdown, String pagePath) {
+  final lines = markdown.split('\n');
+  final headingIndex = lines.indexWhere(
+    (line) => line.trim() == '## Description',
+  );
+  if (headingIndex == -1) {
+    return '$pagePath: missing required ## Description section.';
+  }
+
+  final bodyLines = <String>[];
+  for (var i = headingIndex + 1; i < lines.length; i++) {
+    final line = lines[i];
+    if (line.startsWith('## ')) break;
+    if (line.startsWith('<!-- GENERATED:')) break;
+    bodyLines.add(line);
+  }
+
+  final body = bodyLines.join('\n').trim();
+  if (body.isEmpty) {
+    return '$pagePath: ## Description is empty.';
+  }
+  if (body.startsWith('TODO:')) {
+    return '$pagePath: ## Description still contains TODO placeholder.';
+  }
+
+  return null;
+}
+
 void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   final absPath = p.join(docsDir, 'index.md');
   final file = File(absPath);
@@ -289,10 +323,11 @@ void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   final buf = StringBuffer();
   buf.writeln('# Study Data Reference');
   buf.writeln();
+  buf.writeln('## Description');
+  buf.writeln();
   buf.writeln(
-    'This directory documents the JSON-serialisable data models in '
-    '`studyu_core`. Generated field tables come from source; prose sections '
-    'are written by hand.',
+    'Study data docs describe the JSON-serialisable models used to define, '
+    'schedule, run, and report a StudyU study.',
   );
   buf.writeln();
   buf.writeln('## Pages');

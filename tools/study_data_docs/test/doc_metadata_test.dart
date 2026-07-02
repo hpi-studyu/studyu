@@ -109,21 +109,5 @@ pages:
       expect(fields['extra']!.virtual, isTrue);
       expect(fields['extra']!.type, 'String');
     });
-
-    test('parses page note', () {
-      final path = writeMeta('''
-pages:
-  participants/study-subject.md:
-    title: Study Subject
-    classes: [StudySubject]
-    note: These are runtime-only rows.
-    fields: {}
-''');
-      final meta = DocMetadata.load(path);
-      expect(
-        meta.page('participants/study-subject.md')!.note,
-        contains('runtime-only'),
-      );
-    });
   });
 }
