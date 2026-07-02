@@ -58,14 +58,25 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
 
-  final repoRoot = (parsed['root'] as String?) ?? await resolveRepoRoot();
-  final metadataOverride = parsed['metadata'] as String?;
+  try {
+    final repoRoot = (parsed['root'] as String?) ?? await resolveRepoRoot();
+    final metadataOverride = parsed['metadata'] as String?;
 
-  if (wantWrite) {
-    await runWrite(repoRoot: repoRoot, metadataPathOverride: metadataOverride);
-  }
+    if (wantWrite) {
+      await runWrite(
+        repoRoot: repoRoot,
+        metadataPathOverride: metadataOverride,
+      );
+    }
 
-  if (wantCheck) {
-    await runCheck(repoRoot: repoRoot, metadataPathOverride: metadataOverride);
+    if (wantCheck) {
+      await runCheck(
+        repoRoot: repoRoot,
+        metadataPathOverride: metadataOverride,
+      );
+    }
+  } catch (error) {
+    stderr.writeln('Error: $error');
+    exit(1);
   }
 }

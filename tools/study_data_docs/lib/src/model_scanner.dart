@@ -10,6 +10,7 @@ import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
@@ -194,24 +195,24 @@ List<ScannedField> _extractFields(
     if (name != null) seen[name] = cls;
   }
 
-  // Build a map from field name → initializer source text from the AST.
-  // This captures non-const defaults like `= []`, `= ''`, `= true`.
-  final initializerText = <String, String>{};
+  final initializerTextByClass = <String, Map<String, String>>{};
   for (final decl in unit.declarations) {
-    if (decl is ClassDeclaration) {
-      final body = decl.body;
-      if (body is! BlockClassBody) continue;
-      for (final member in body.members) {
-        if (member is FieldDeclaration && !member.isStatic) {
-          for (final variable in member.fields.variables) {
-            final init = variable.initializer;
-            if (init != null) {
-              initializerText[variable.name.lexeme] = init.toSource().trim();
-            }
+    if (decl is! ClassDeclaration) continue;
+    final body = decl.body;
+    if (body is! BlockClassBody) continue;
+
+    final initializers = <String, String>{};
+    for (final member in body.members) {
+      if (member is FieldDeclaration && !member.isStatic) {
+        for (final variable in member.fields.variables) {
+          final init = variable.initializer;
+          if (init != null) {
+            initializers[variable.name.lexeme] = init.toSource().trim();
           }
         }
       }
     }
+    initializerTextByClass[decl.namePart.typeName.lexeme] = initializers;
   }
 
   final fields = <ScannedField>[];
@@ -256,7 +257,7 @@ List<ScannedField> _extractFields(
           !jsonDefaultObj.isNull) {
         defaultVal = _dartObjectToSource(jsonDefaultObj);
       } else if (!hasGeneratedDefault && field.hasInitializer) {
-        defaultVal = initializerText[fieldName];
+        defaultVal = initializerTextByClass[cls.name]?[fieldName];
       }
 
       fields.add(
@@ -346,9 +347,9 @@ Map<String, _GeneratedJsonContract> _parseGeneratedJsonContracts(
 
     final className = fromJsonClassMatch.group(1)!;
     final contract = result.putIfAbsent(className, _GeneratedJsonContract.new);
-    final source = declaration.toSource();
+    final defaultsByKey = _generatedDefaultsFromFromJson(declaration);
     for (final field in contract.fieldsByName.values) {
-      final defaultValue = _generatedDefaultForKey(source, field.jsonKey);
+      final defaultValue = defaultsByKey[field.jsonKey];
       if (defaultValue != null) {
         field.defaultValue = defaultValue;
         field.hasDefaultValue = true;
@@ -388,27 +389,50 @@ String? _instanceFieldName(Expression expression) {
   }
 }
 
-String? _generatedDefaultForKey(String source, String jsonKey) {
-  final jsonRead = "json['$jsonKey']";
-  final readIndex = source.indexOf(jsonRead);
-  if (readIndex == -1) return null;
+Map<String, String> _generatedDefaultsFromFromJson(
+  FunctionDeclaration declaration,
+) {
+  final visitor = _GeneratedDefaultVisitor();
+  declaration.functionExpression.body.accept(visitor);
+  return visitor.defaultsByKey;
+}
 
-  final defaultIndex = source.indexOf('??', readIndex + jsonRead.length);
-  if (defaultIndex == -1) return null;
+class _GeneratedDefaultVisitor extends RecursiveAstVisitor<void> {
+  final Map<String, String> defaultsByKey = {};
 
-  final nextJsonRead = source.indexOf("json['", readIndex + jsonRead.length);
-  if (nextJsonRead != -1 && nextJsonRead < defaultIndex) return null;
+  @override
+  void visitBinaryExpression(BinaryExpression node) {
+    if (node.operator.lexeme == '??') {
+      for (final key in _jsonKeysReadBy(node.leftOperand)) {
+        defaultsByKey.putIfAbsent(
+          key,
+          () => node.rightOperand.toSource().trim(),
+        );
+      }
+    }
+    super.visitBinaryExpression(node);
+  }
+}
 
-  final start = defaultIndex + 2;
-  final semicolon = source.indexOf(';', start);
-  final terminator = semicolon == -1 ? source.length : semicolon;
-  final candidates = [
-    source.indexOf(',\n', start),
-    source.indexOf(',\r\n', start),
-    terminator,
-  ].where((i) => i != -1 && i <= terminator).toList()..sort();
-  if (candidates.isEmpty) return null;
-  return source.substring(start, candidates.first).trim();
+Set<String> _jsonKeysReadBy(AstNode node) {
+  final visitor = _JsonReadVisitor();
+  node.accept(visitor);
+  return visitor.keys;
+}
+
+class _JsonReadVisitor extends RecursiveAstVisitor<void> {
+  final Set<String> keys = {};
+
+  @override
+  void visitIndexExpression(IndexExpression node) {
+    final target = node.target;
+    final index = node.index;
+    if (target is SimpleIdentifier && target.name == 'json') {
+      final value = index is StringLiteral ? index.stringValue : null;
+      if (value != null) keys.add(value);
+    }
+    super.visitIndexExpression(node);
+  }
 }
 
 class _GeneratedJsonContract {

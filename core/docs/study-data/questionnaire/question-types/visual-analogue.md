@@ -21,7 +21,7 @@
 | `maximumColor`      | `int`                                                             | No       | `0xFFFF0000` | ARGB color integer for the right/maximum end.                                |
 | `minimumAnnotation` | `String`                                                          | No       | `''`         | Label shown at the minimum end.                                              |
 | `maximumAnnotation` | `String`                                                          | No       | `''`         | Label shown at the maximum end.                                              |
-| `initial`           | `unknown`                                                         | No       | -            | Numeric value selected when the question first appears.                      |
+| `initial`           | `double?`                                                         | No       | -            | Numeric value selected when the question first appears.                      |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

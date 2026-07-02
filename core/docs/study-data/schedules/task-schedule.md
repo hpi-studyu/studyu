@@ -42,5 +42,4 @@ Each entry in `completionPeriods` is a nested completion-period object.
 | `id`         | `String`                                              | Yes      | Unique completion-period identifier used to track completion for this daily task window. |
 | `unlockTime` | [`StudyUTimeOfDay`](../shared/scalars.md#time-of-day) | Yes      | Local time when this completion period opens.                                            |
 | `lockTime`   | [`StudyUTimeOfDay`](../shared/scalars.md#time-of-day) | Yes      | Local time when this completion period closes.                                           |
-
 <!-- GENERATED:FIELDS:CompletionPeriod END -->

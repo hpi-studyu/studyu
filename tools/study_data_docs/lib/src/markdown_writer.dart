@@ -14,7 +14,7 @@ import 'package:study_data_docs/src/page_scope.dart';
 ///
 /// If the file does not exist, a skeleton is written. If it exists, only the
 /// GENERATED:* blocks are updated; all other content is preserved.
-void writePage({
+bool writePage({
   required String docsDir,
   required String pagePath,
   required PageMeta meta,
@@ -28,6 +28,7 @@ void writePage({
   Directory(p.dirname(absPath)).createSync(recursive: true);
 
   String existing = file.existsSync() ? file.readAsStringSync() : '';
+  final original = existing;
 
   if (existing.isEmpty) {
     existing = _skeleton(meta);
@@ -77,7 +78,9 @@ void writePage({
     );
   }
 
+  if (existing == original) return false;
   file.writeAsStringSync(existing);
+  return true;
 }
 
 /// Builds a skeleton for a new page with required human-owned prose.

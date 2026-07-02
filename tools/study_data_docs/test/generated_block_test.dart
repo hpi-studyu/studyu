@@ -276,6 +276,165 @@ void main() {
         'lockTime',
       ]);
     });
+
+    test('keeps body pain shared class names in separate fields blocks', () {
+      const meta = PageMeta(
+        path: 'questionnaire/question-types/body-pain.md',
+        title: 'Body Pain Models',
+        classes: ['BodyPain', 'BodyPart', 'Body', 'PainType'],
+        fields: {
+          'painLevel': FieldMeta(
+            name: 'painLevel',
+            description: 'Numeric pain intensity value for a body part.',
+          ),
+          'type': FieldMeta(
+            name: 'type',
+            description: 'Pain type identifier string.',
+          ),
+          'id': FieldMeta(name: 'id', description: 'Unique identifier.'),
+          'name': FieldMeta(
+            name: 'name',
+            description: 'Display name of the body part or pain type.',
+          ),
+          'pain': FieldMeta(
+            name: 'pain',
+            description: 'Pain record associated with a body region.',
+          ),
+          'children': FieldMeta(
+            name: 'children',
+            description: 'Child body parts nested within this body region.',
+          ),
+          'parts': FieldMeta(
+            name: 'parts',
+            description: 'List of body parts making up this body model.',
+          ),
+        },
+      );
+
+      final blocks = buildExpectedFieldBlocks(
+        scopeEntries: const [
+          PageScopeEntry(
+            className: 'BodyPain',
+            pagePath: 'questionnaire/question-types/body-pain.md',
+          ),
+          PageScopeEntry(
+            className: 'BodyPart',
+            pagePath: 'questionnaire/question-types/body-pain.md',
+            fieldsBlock: 'FIELDS:BodyPart',
+          ),
+          PageScopeEntry(
+            className: 'Body',
+            pagePath: 'questionnaire/question-types/body-pain.md',
+            fieldsBlock: 'FIELDS:Body',
+          ),
+          PageScopeEntry(
+            className: 'PainType',
+            pagePath: 'questionnaire/question-types/body-pain.md',
+            fieldsBlock: 'FIELDS:PainType',
+          ),
+        ],
+        classes: const [
+          ScannedClass(
+            name: 'BodyPain',
+            sourceFile: 'core/lib/src/models/questionnaire/body_pain.dart',
+            fields: [
+              ScannedField(
+                name: 'painLevel',
+                dartType: 'int',
+                jsonKey: 'painLevel',
+                required: true,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'type',
+                dartType: 'PainType?',
+                jsonKey: 'type',
+                required: false,
+                nullable: true,
+              ),
+            ],
+          ),
+          ScannedClass(
+            name: 'BodyPart',
+            sourceFile: 'core/lib/src/models/questionnaire/body_pain.dart',
+            fields: [
+              ScannedField(
+                name: 'id',
+                dartType: 'String',
+                jsonKey: 'id',
+                required: true,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'name',
+                dartType: 'String',
+                jsonKey: 'name',
+                required: true,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'pain',
+                dartType: 'BodyPain',
+                jsonKey: 'pain',
+                required: true,
+                nullable: false,
+              ),
+              ScannedField(
+                name: 'children',
+                dartType: 'List<BodyPart>',
+                jsonKey: 'children',
+                required: true,
+                nullable: false,
+                defaultValue: 'const []',
+              ),
+            ],
+          ),
+          ScannedClass(
+            name: 'Body',
+            sourceFile: 'core/lib/src/models/questionnaire/body_pain.dart',
+            fields: [
+              ScannedField(
+                name: 'parts',
+                dartType: 'List<BodyPart>',
+                jsonKey: 'parts',
+                required: true,
+                nullable: false,
+                defaultValue: 'const []',
+              ),
+            ],
+          ),
+          ScannedClass(
+            name: 'PainType',
+            sourceFile: 'core/lib/src/models/questionnaire/body_pain.dart',
+            fields: [
+              ScannedField(
+                name: 'name',
+                dartType: 'String',
+                jsonKey: 'name',
+                required: true,
+                nullable: false,
+              ),
+            ],
+          ),
+        ],
+        meta: meta,
+        typeLinks: const {},
+        currentPagePath: 'questionnaire/question-types/body-pain.md',
+      );
+
+      expect(blocks['FIELDS']!.map((row) => row.dartName), [
+        'painLevel',
+        'type',
+      ]);
+      expect(blocks['FIELDS:BodyPart']!.map((row) => row.dartName), [
+        'id',
+        'name',
+        'pain',
+        'children',
+      ]);
+      expect(blocks['FIELDS:Body']!.map((row) => row.dartName), ['parts']);
+      expect(blocks['FIELDS:PainType']!.map((row) => row.dartName), ['name']);
+    });
   });
 
   group('buildDiscriminatorsBlock', () {

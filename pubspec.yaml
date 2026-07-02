@@ -78,6 +78,7 @@ melos:
         fi
         melos format
         melos generate
+        melos docs:study-data:check
         if [ "$CI" = "true" ]; then
           dart analyze
           flutter analyze

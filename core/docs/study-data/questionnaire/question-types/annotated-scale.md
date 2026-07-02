@@ -18,7 +18,7 @@
 | `maximum`     | `double`                                                          | No       | -       | Highest selectable numeric value.                                            |
 | `step`        | `double`                                                          | No       | -       | Distance between selectable values.                                          |
 | `annotations` | [`List<Annotation>`](../nested-objects.md)                        | No       | `[]`    | Labels attached to specific scale values.                                    |
-| `initial`     | `unknown`                                                         | No       | -       | Numeric value selected when the question first appears.                      |
+| `initial`     | `double?`                                                         | No       | -       | Numeric value selected when the question first appears.                      |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

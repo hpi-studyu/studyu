@@ -49,14 +49,11 @@ List<BrokenLink> checkLinks(String docsDir) {
       if (bareHref.isEmpty) continue;
 
       final resolved = p.normalize(p.join(p.dirname(entity.path), bareHref));
-      final targetFile = File(resolved);
-      final targetExists =
-          targetFile.existsSync() || Directory(resolved).existsSync();
+      final targetFile = _resolveMarkdownTarget(resolved);
 
-      if (!targetExists ||
+      if (targetFile == null ||
           (anchor != null &&
               anchor.isNotEmpty &&
-              targetFile.existsSync() &&
               !targetFile.readAsStringSync().containsMarkdownAnchor(anchor))) {
         brokenLinks.add(
           BrokenLink(
@@ -70,6 +67,17 @@ List<BrokenLink> checkLinks(String docsDir) {
   }
 
   return brokenLinks;
+}
+
+File? _resolveMarkdownTarget(String resolved) {
+  final file = File(resolved);
+  if (file.existsSync()) return file;
+
+  final dir = Directory(resolved);
+  if (!dir.existsSync()) return null;
+
+  final index = File(p.join(resolved, 'index.md'));
+  return index.existsSync() ? index : null;
 }
 
 /// Extracts all href values from `[text](href)` patterns.

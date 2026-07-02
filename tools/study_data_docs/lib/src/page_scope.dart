@@ -119,14 +119,17 @@ const List<PageScopeEntry> kPageScope = [
   PageScopeEntry(
     className: 'BodyPart',
     pagePath: 'questionnaire/question-types/body-pain.md',
+    fieldsBlock: 'FIELDS:BodyPart',
   ),
   PageScopeEntry(
     className: 'Body',
     pagePath: 'questionnaire/question-types/body-pain.md',
+    fieldsBlock: 'FIELDS:Body',
   ),
   PageScopeEntry(
     className: 'PainType',
     pagePath: 'questionnaire/question-types/body-pain.md',
+    fieldsBlock: 'FIELDS:PainType',
   ),
 
   // ── Interventions ──────────────────────────────────────────────────────────

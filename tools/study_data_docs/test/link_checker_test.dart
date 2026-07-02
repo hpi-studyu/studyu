@@ -84,6 +84,19 @@ void main() {
     expect(broken.first.href, equals('b.md#missing-section'));
   });
 
+  test('validates anchors on directory links against index markdown', () {
+    Directory(p.join(tmp.path, 'guide')).createSync();
+    File(p.join(tmp.path, 'a.md')).writeAsStringSync(
+      '# A\n\n[Valid](guide/#section-two)\n[Broken](guide/#missing-section)\n',
+    );
+    File(
+      p.join(tmp.path, 'guide', 'index.md'),
+    ).writeAsStringSync('# Guide\n\n## Section Two\n');
+
+    final broken = checkLinks(tmp.path);
+    expect(broken.map((link) => link.href), ['guide/#missing-section']);
+  });
+
   test('ignores anchors on external urls', () {
     File(
       p.join(tmp.path, 'a.md'),

@@ -126,6 +126,7 @@ pages:
       step: Distance between selectable values. `0` means the app chooses intermediate values.
       initial:
         description: Numeric value selected when the question first appears.
+        type: double?
         virtual: true
       annotations: Labels attached to specific scale values.
       minColor: ARGB color integer for the minimum end of the scale.
@@ -145,6 +146,7 @@ pages:
       step: Distance between selectable values.
       initial:
         description: Numeric value selected when the question first appears.
+        type: double?
         virtual: true
       annotations: Labels attached to specific scale values.
 
@@ -162,6 +164,7 @@ pages:
       step: Distance between selectable slider values.
       initial:
         description: Numeric value selected when the question first appears.
+        type: double?
         virtual: true
       minimumColor: ARGB color integer for the left/minimum end.
       maximumColor: ARGB color integer for the right/maximum end.

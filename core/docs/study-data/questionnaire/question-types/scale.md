@@ -20,7 +20,7 @@
 | `annotations`          | [`List<Annotation>`](../nested-objects.md)                        | No       | `[]`    | Labels attached to specific scale values.                                          |
 | `minColor (min_color)` | `int?`                                                            | No       | -       | ARGB color integer for the minimum end of the scale.                               |
 | `maxColor (max_color)` | `int?`                                                            | No       | -       | ARGB color integer for the maximum end of the scale.                               |
-| `initial`              | `unknown`                                                         | No       | -       | Numeric value selected when the question first appears.                            |
+| `initial`              | `double?`                                                         | No       | -       | Numeric value selected when the question first appears.                            |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

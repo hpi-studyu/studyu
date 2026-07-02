@@ -105,6 +105,16 @@ class WireModel {
   String dartName = '';
   int count = 0;
 }
+
+class CascadeDefaults {
+  List<String> tags = const [];
+}
+
+class ConstructorDefaults {
+  final List<String> children;
+
+  ConstructorDefaults({required this.children});
+}
 ''');
         File('${modelsDir.path}/wire_model.g.dart').writeAsStringSync('''
 WireModel _\$WireModelFromJson(Map<String, dynamic> json) => WireModel()
@@ -115,6 +125,21 @@ Map<String, dynamic> _\$WireModelToJson(WireModel instance) => <String, dynamic>
   'wire_name': instance.dartName,
   'count': instance.count,
 };
+
+CascadeDefaults _\$CascadeDefaultsFromJson(Map<String, dynamic> json) => CascadeDefaults()
+  ..tags = (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [];
+
+Map<String, dynamic> _\$CascadeDefaultsToJson(CascadeDefaults instance) => <String, dynamic>{
+  'tags': instance.tags,
+};
+
+ConstructorDefaults _\$ConstructorDefaultsFromJson(Map<String, dynamic> json) => ConstructorDefaults(
+  children: (json['children'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
+);
+
+Map<String, dynamic> _\$ConstructorDefaultsToJson(ConstructorDefaults instance) => <String, dynamic>{
+  'children': instance.children,
+};
 ''');
 
         final scanned = await scanModels(
@@ -122,11 +147,23 @@ Map<String, dynamic> _\$WireModelToJson(WireModel instance) => <String, dynamic>
           repoRoot: temp.path,
         );
 
-        final fields = {
+        final wireFields = {
           for (final field in scanned['WireModel']!.fields) field.name: field,
         };
-        expect(fields['dartName']!.jsonKey, 'wire_name');
-        expect(fields['count']!.defaultValue, '7');
+        expect(wireFields['dartName']!.jsonKey, 'wire_name');
+        expect(wireFields['count']!.defaultValue, '7');
+
+        final cascadeFields = {
+          for (final field in scanned['CascadeDefaults']!.fields)
+            field.name: field,
+        };
+        expect(cascadeFields['tags']!.defaultValue, 'const []');
+
+        final constructorFields = {
+          for (final field in scanned['ConstructorDefaults']!.fields)
+            field.name: field,
+        };
+        expect(constructorFields['children']!.defaultValue, 'const []');
       },
     );
   });

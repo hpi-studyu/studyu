@@ -5,6 +5,7 @@
 `Expression` documents condition payloads used by eligibility and question visibility rules.
 
 <!-- GENERATED:DISCRIMINATORS START -->
+
 | Field  | Value(s)                                      |
 |--------|-----------------------------------------------|
 | `type` | `boolean`, `choice`, `not`, `numeric`, `text` |

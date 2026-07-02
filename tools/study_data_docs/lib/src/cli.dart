@@ -21,7 +21,12 @@ Future<String> resolveRepoRoot() async {
   if (result.exitCode != 0) {
     throw StateError('Cannot resolve repo root: ${result.stderr}');
   }
-  return (result.stdout as String).trim();
+
+  final repoRoot = (result.stdout as String).trim();
+  if (!Directory(repoRoot).existsSync()) {
+    throw StateError('Resolved repo root does not exist: $repoRoot');
+  }
+  return repoRoot;
 }
 
 /// Runs `--write`: generates/updates the full docs tree.
@@ -38,10 +43,13 @@ Future<void> runWrite({
   final modelsDir = p.join(repoRoot, _kModelsDir);
 
   stdout.writeln('[write] Scanning models from $modelsDir …');
-  final scannedClasses = await scanModels(
-    modelsDir: modelsDir,
-    repoRoot: repoRoot,
-  );
+  final Map<String, ScannedClass> scannedClasses;
+  try {
+    scannedClasses = await scanModels(modelsDir: modelsDir, repoRoot: repoRoot);
+  } catch (error) {
+    stderr.writeln('[write] FAIL: $error');
+    exit(1);
+  }
 
   final meta = DocMetadata.load(metadataPath);
 
@@ -61,19 +69,20 @@ Future<void> runWrite({
         .whereType<ScannedClass>()
         .toList();
 
-    writePage(
+    if (writePage(
       docsDir: docsDir,
       pagePath: pagePath,
       meta: pageMeta,
       classes: classes,
       allClasses: scannedClasses,
       typeLinks: meta.typeLinks,
-    );
-    written++;
+    )) {
+      written++;
+    }
   }
 
-  _writeIndexPage(docsDir: docsDir, meta: meta);
-  stdout.writeln('[write] Done — $written pages written.');
+  if (_writeIndexPage(docsDir: docsDir, meta: meta)) written++;
+  stdout.writeln('[write] Done — $written page(s) changed.');
 }
 
 /// Runs `--check`: exits non-zero if docs drift from what `--write` would produce.
@@ -99,203 +108,209 @@ Future<void> runCheck({
   final meta = DocMetadata.load(metadataPath);
 
   stdout.writeln('[check] Scanning models …');
-  final scannedClasses = await scanModels(
-    modelsDir: modelsDir,
-    repoRoot: repoRoot,
-  );
+  try {
+    final scannedClasses = await scanModels(
+      modelsDir: modelsDir,
+      repoRoot: repoRoot,
+    );
 
-  // 1. Every canonical generated page must have a metadata entry.
-  for (final pagePath in allPagePaths) {
-    if (meta.page(pagePath) == null) {
-      errors.add('Missing metadata entry for page: $pagePath');
-    }
-  }
-
-  // 2. Every non-manual metadata page must exist in the canonical scope.
-  for (final pagePath in meta.allPagePaths) {
-    if (meta.manualPagePaths.contains(pagePath)) continue;
-    if (!allPagePaths.contains(pagePath)) {
-      errors.add(
-        'Metadata has page "$pagePath" not in canonical scope — '
-        'remove it, add it to page_scope.dart, or move it to manual_pages.',
-      );
-    }
-  }
-
-  // 3. Every metadata entry must list at least a title and useful field prose.
-  for (final pageMeta in meta.allPages) {
-    if (pageMeta.title.isEmpty) {
-      errors.add('${pageMeta.path}: metadata is missing a title.');
+    // 1. Every canonical generated page must have a metadata entry.
+    for (final pagePath in allPagePaths) {
+      if (meta.page(pagePath) == null) {
+        errors.add('Missing metadata entry for page: $pagePath');
+      }
     }
 
-    for (final field in pageMeta.fields.values) {
-      final weakProseError = _validateFieldDescription(pageMeta.path, field);
-      if (weakProseError != null) errors.add(weakProseError);
-    }
-  }
-  // 4. Per-page checks.
-  for (final pagePath in meta.allPagePaths) {
-    final pageMeta = meta.page(pagePath);
-    if (pageMeta == null) continue;
-
-    final absPath = p.join(docsDir, pagePath);
-    final file = File(absPath);
-
-    if (!file.existsSync()) {
-      errors.add('Docs page missing: $pagePath — run --write to generate it.');
-      continue;
-    }
-
-    final existing = file.readAsStringSync();
-    final entries = entriesForPage(pagePath);
-    final classes = entries
-        .map((e) => scannedClasses[e.className])
-        .whereType<ScannedClass>()
-        .toList();
-
-    // 4a. Page title must match metadata.
-    final firstHeadingMatch = RegExp(
-      r'^#\s+(.+)$',
-      multiLine: true,
-    ).firstMatch(existing);
-    if (firstHeadingMatch != null) {
-      final heading = firstHeadingMatch.group(1)!.trim();
-      if (heading != pageMeta.title) {
+    // 2. Every non-manual metadata page must exist in the canonical scope.
+    for (final pagePath in meta.allPagePaths) {
+      if (meta.manualPagePaths.contains(pagePath)) continue;
+      if (!allPagePaths.contains(pagePath)) {
         errors.add(
-          '$pagePath: first heading "$heading" does not match '
-          'metadata title "${pageMeta.title}".',
+          'Metadata has page "$pagePath" not in canonical scope — '
+          'remove it, add it to page_scope.dart, or move it to manual_pages.',
         );
       }
-    } else {
-      errors.add('$pagePath: no H1 heading found.');
     }
 
-    // 4b. Description is human-owned prose and required on every page.
-    final descriptionError = _validateDescriptionSection(existing, pagePath);
-    if (descriptionError != null) {
-      errors.add(descriptionError);
-    }
-
-    // 4b. FIELDS block drift.
-    if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
-      final expectedBlocks = buildExpectedFieldBlocks(
-        scopeEntries: entries,
-        classes: classes,
-        meta: pageMeta,
-        typeLinks: meta.typeLinks,
-        currentPagePath: pagePath,
-      );
-      for (final entry in expectedBlocks.entries) {
-        final expectedContent = buildFieldsTable(entry.value);
-        final currentContent = extractBlock(existing, entry.key);
-
-        if (currentContent == null) {
-          errors.add('$pagePath: missing GENERATED:${entry.key} block.');
-        } else if (currentContent.trim() != expectedContent.trim()) {
-          errors.add(
-            '$pagePath: GENERATED:${entry.key} block is out of date. Run --write.',
-          );
-        }
+    // 3. Every metadata entry must list at least a title and useful field prose.
+    for (final pageMeta in meta.allPages) {
+      if (pageMeta.title.isEmpty) {
+        errors.add('${pageMeta.path}: metadata is missing a title.');
       }
 
-      // 4c. Every serialisable field must have a description or be ignored.
-      for (final cls in classes) {
-        for (final field in cls.fields) {
-          if (!field.includeInJson) continue;
-          if (pageMeta.ignoredFields.contains(field.name) ||
-              pageMeta.ignoredFields.contains(field.jsonKey)) {
-            continue;
-          }
-          final hasMeta =
-              pageMeta.fields.containsKey(field.name) ||
-              pageMeta.fields.containsKey(field.jsonKey);
-          if (!hasMeta) {
+      for (final field in pageMeta.fields.values) {
+        final weakProseError = _validateFieldDescription(pageMeta.path, field);
+        if (weakProseError != null) errors.add(weakProseError);
+      }
+    }
+    // 4. Per-page checks.
+    for (final pagePath in meta.allPagePaths) {
+      final pageMeta = meta.page(pagePath);
+      if (pageMeta == null) continue;
+
+      final absPath = p.join(docsDir, pagePath);
+      final file = File(absPath);
+
+      if (!file.existsSync()) {
+        errors.add(
+          'Docs page missing: $pagePath — run --write to generate it.',
+        );
+        continue;
+      }
+
+      final existing = file.readAsStringSync();
+      final entries = entriesForPage(pagePath);
+      final classes = entries
+          .map((e) => scannedClasses[e.className])
+          .whereType<ScannedClass>()
+          .toList();
+
+      // 4a. Page title must match metadata.
+      final firstHeadingMatch = RegExp(
+        r'^#\s+(.+)$',
+        multiLine: true,
+      ).firstMatch(existing);
+      if (firstHeadingMatch != null) {
+        final heading = firstHeadingMatch.group(1)!.trim();
+        if (heading != pageMeta.title) {
+          errors.add(
+            '$pagePath: first heading "$heading" does not match '
+            'metadata title "${pageMeta.title}".',
+          );
+        }
+      } else {
+        errors.add('$pagePath: no H1 heading found.');
+      }
+
+      // 4b. Description is human-owned prose and required on every page.
+      final descriptionError = _validateDescriptionSection(existing, pagePath);
+      if (descriptionError != null) {
+        errors.add(descriptionError);
+      }
+
+      // 4b. FIELDS block drift.
+      if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
+        final expectedBlocks = buildExpectedFieldBlocks(
+          scopeEntries: entries,
+          classes: classes,
+          meta: pageMeta,
+          typeLinks: meta.typeLinks,
+          currentPagePath: pagePath,
+        );
+        for (final entry in expectedBlocks.entries) {
+          final expectedContent = buildFieldsTable(entry.value);
+          final currentContent = extractBlock(existing, entry.key);
+
+          if (currentContent == null) {
+            errors.add('$pagePath: missing GENERATED:${entry.key} block.');
+          } else if (currentContent.trim() != expectedContent.trim()) {
             errors.add(
-              '$pagePath: field "${field.name}" (json: "${field.jsonKey}") '
-              'has no description in _metadata.yaml and is not in ignoredFields.',
+              '$pagePath: GENERATED:${entry.key} block is out of date. Run --write.',
+            );
+          }
+        }
+
+        // 4c. Every serialisable field must have a description or be ignored.
+        for (final cls in classes) {
+          for (final field in cls.fields) {
+            if (!field.includeInJson) continue;
+            if (pageMeta.ignoredFields.contains(field.name) ||
+                pageMeta.ignoredFields.contains(field.jsonKey)) {
+              continue;
+            }
+            final hasMeta =
+                pageMeta.fields.containsKey(field.name) ||
+                pageMeta.fields.containsKey(field.jsonKey);
+            if (!hasMeta) {
+              errors.add(
+                '$pagePath: field "${field.name}" (json: "${field.jsonKey}") '
+                'has no description in _metadata.yaml and is not in ignoredFields.',
+              );
+            }
+          }
+        }
+
+        // 4d. Metadata must not describe fields absent from source (unless virtual).
+        final sourceFieldNames = {
+          for (final cls in classes)
+            for (final f in cls.fields) ...{f.name, f.jsonKey},
+        };
+        for (final fieldMeta in pageMeta.fields.values) {
+          if (fieldMeta.virtual) continue;
+          if (!sourceFieldNames.contains(fieldMeta.name)) {
+            errors.add(
+              '$pagePath: _metadata.yaml describes field "${fieldMeta.name}" '
+              'which does not exist in source. Add virtual: true or remove it.',
             );
           }
         }
       }
 
-      // 4d. Metadata must not describe fields absent from source (unless virtual).
-      final sourceFieldNames = {
-        for (final cls in classes)
-          for (final f in cls.fields) ...{f.name, f.jsonKey},
-      };
-      for (final fieldMeta in pageMeta.fields.values) {
-        if (fieldMeta.virtual) continue;
-        if (!sourceFieldNames.contains(fieldMeta.name)) {
+      // 4e. DISCRIMINATORS block drift.
+      final discriminatorEntries = buildExpectedDiscriminatorEntries(
+        scopeEntries: entries,
+        classes: classes,
+        allClasses: scannedClasses,
+      );
+      if (discriminatorEntries.isNotEmpty) {
+        final expectedContent = buildDiscriminatorsBlock(discriminatorEntries);
+        final currentContent = extractBlock(existing, 'DISCRIMINATORS');
+        if (currentContent == null) {
+          errors.add('$pagePath: missing GENERATED:DISCRIMINATORS block.');
+        } else if (currentContent.trim() != expectedContent.trim()) {
           errors.add(
-            '$pagePath: _metadata.yaml describes field "${fieldMeta.name}" '
-            'which does not exist in source. Add virtual: true or remove it.',
+            '$pagePath: GENERATED:DISCRIMINATORS block is out of date. Run --write.',
+          );
+        }
+      }
+
+      // 4f. LINKS block drift.
+      if (pageMeta.links.isNotEmpty) {
+        final linkEntries = _buildExpectedLinkEntries(pageMeta.links, pagePath);
+        final expectedContent = buildLinksBlock(linkEntries);
+        final currentContent = extractBlock(existing, 'LINKS');
+        if (currentContent == null) {
+          errors.add('$pagePath: missing GENERATED:LINKS block.');
+        } else if (currentContent.trim() != expectedContent.trim()) {
+          errors.add(
+            '$pagePath: GENERATED:LINKS block is out of date. Run --write.',
           );
         }
       }
     }
 
-    // 4e. DISCRIMINATORS block drift.
-    final discriminatorEntries = buildExpectedDiscriminatorEntries(
-      scopeEntries: entries,
-      classes: classes,
-      allClasses: scannedClasses,
-    );
-    if (discriminatorEntries.isNotEmpty) {
-      final expectedContent = buildDiscriminatorsBlock(discriminatorEntries);
-      final currentContent = extractBlock(existing, 'DISCRIMINATORS');
-      if (currentContent == null) {
-        errors.add('$pagePath: missing GENERATED:DISCRIMINATORS block.');
-      } else if (currentContent.trim() != expectedContent.trim()) {
-        errors.add(
-          '$pagePath: GENERATED:DISCRIMINATORS block is out of date. Run --write.',
-        );
+    // 5. No orphaned pages in the docs tree.
+    final docsDirectory = Directory(docsDir);
+    if (docsDirectory.existsSync()) {
+      for (final entity in docsDirectory.listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.md')) continue;
+        final rel = p.relative(entity.path, from: docsDir);
+        if (rel == 'index.md') continue;
+        if (!meta.allPagePaths.contains(rel)) {
+          errors.add(
+            'Orphaned page in docs tree: $rel — '
+            'add to page_scope.dart or delete the file.',
+          );
+        }
       }
     }
 
-    // 4f. LINKS block drift.
-    if (pageMeta.links.isNotEmpty) {
-      final linkEntries = _buildExpectedLinkEntries(pageMeta.links, pagePath);
-      final expectedContent = buildLinksBlock(linkEntries);
-      final currentContent = extractBlock(existing, 'LINKS');
-      if (currentContent == null) {
-        errors.add('$pagePath: missing GENERATED:LINKS block.');
-      } else if (currentContent.trim() != expectedContent.trim()) {
-        errors.add(
-          '$pagePath: GENERATED:LINKS block is out of date. Run --write.',
-        );
-      }
+    // 6. Generated root index must match the canonical page scope.
+    final indexFile = File(p.join(docsDir, 'index.md'));
+    final expectedIndex = _buildIndexPage(meta);
+    if (!indexFile.existsSync()) {
+      errors.add('Docs index missing: index.md — run --write to generate it.');
+    } else if (indexFile.readAsStringSync().trim() != expectedIndex.trim()) {
+      errors.add('index.md is out of date. Run --write.');
     }
-  }
 
-  // 5. No orphaned pages in the docs tree.
-  final docsDirectory = Directory(docsDir);
-  if (docsDirectory.existsSync()) {
-    for (final entity in docsDirectory.listSync(recursive: true)) {
-      if (entity is! File || !entity.path.endsWith('.md')) continue;
-      final rel = p.relative(entity.path, from: docsDir);
-      if (rel == 'index.md') continue;
-      if (!meta.allPagePaths.contains(rel)) {
-        errors.add(
-          'Orphaned page in docs tree: $rel — '
-          'add to page_scope.dart or delete the file.',
-        );
-      }
+    // 7. Broken relative links.
+    final brokenLinks = checkLinks(docsDir);
+    for (final link in brokenLinks) {
+      errors.add(link.toString());
     }
-  }
-
-  // 6. Generated root index must match the canonical page scope.
-  final indexFile = File(p.join(docsDir, 'index.md'));
-  final expectedIndex = _buildIndexPage(meta);
-  if (!indexFile.existsSync()) {
-    errors.add('Docs index missing: index.md — run --write to generate it.');
-  } else if (indexFile.readAsStringSync().trim() != expectedIndex.trim()) {
-    errors.add('index.md is out of date. Run --write.');
-  }
-
-  // 7. Broken relative links.
-  final brokenLinks = checkLinks(docsDir);
-  for (final link in brokenLinks) {
-    errors.add(link.toString());
+  } catch (error) {
+    errors.add('scan failed: $error');
   }
 
   if (errors.isEmpty) {
@@ -351,9 +366,14 @@ String? _validateFieldDescription(String pagePath, FieldMeta field) {
   return null;
 }
 
-void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
+bool _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   final absPath = p.join(docsDir, 'index.md');
-  File(absPath).writeAsStringSync(_buildIndexPage(meta));
+  final next = _buildIndexPage(meta);
+  final file = File(absPath);
+  final previous = file.existsSync() ? file.readAsStringSync() : null;
+  if (previous == next) return false;
+  file.writeAsStringSync(next);
+  return true;
 }
 
 String _buildIndexPage(DocMetadata meta) {
