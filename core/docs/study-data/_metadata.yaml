@@ -94,73 +94,73 @@ pages:
     classes: [BooleanQuestion]
     fields:
       type: Fixed value `boolean`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation of why this question is asked.
-      conditional: Optional display condition using a question conditional.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
 
   questionnaire/question-types/choice.md:
     title: Choice Question
     classes: [ChoiceQuestion]
     fields:
       type: Fixed value `choice`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      choices: List of answer options the participant may select.
-      multiple: Whether multiple answers can be selected simultaneously.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      choices: Answer options; stored answers contain choice IDs, not labels.
+      multiple: Whether participants may select more than one choice.
 
   questionnaire/question-types/scale.md:
     title: Scale Question
     classes: [ScaleQuestion]
     fields:
       type: Fixed value `scale`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      minimum: Minimum numeric value on the scale.
-      maximum: Maximum numeric value on the scale.
-      step: Step size between selectable values. `0` means auto-generated intermediate values.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      minimum: Lowest selectable numeric value on the scale.
+      maximum: Highest selectable numeric value on the scale.
+      step: Distance between selectable values. `0` means the app chooses intermediate values.
       initial:
-        description: Optional initial value shown when the question first appears.
+        description: Numeric value selected when the question first appears.
         virtual: true
-      annotations: Labeled tick marks along the scale.
-      minColor: Optional ARGB color integer for the minimum end of the scale.
-      maxColor: Optional ARGB color integer for the maximum end of the scale.
+      annotations: Labels attached to specific scale values.
+      minColor: ARGB color integer for the minimum end of the scale.
+      maxColor: ARGB color integer for the maximum end of the scale.
 
   questionnaire/question-types/annotated-scale.md:
     title: Annotated Scale Question
     classes: [AnnotatedScaleQuestion]
     fields:
       type: Fixed value `annotatedScale`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      minimum: Minimum numeric value.
-      maximum: Maximum numeric value.
-      step: Step size between selectable values.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      minimum: Lowest selectable numeric value.
+      maximum: Highest selectable numeric value.
+      step: Distance between selectable values.
       initial:
-        description: Optional initial value.
+        description: Numeric value selected when the question first appears.
         virtual: true
-      annotations: Labeled tick marks along the scale.
+      annotations: Labels attached to specific scale values.
 
   questionnaire/question-types/visual-analogue.md:
     title: Visual Analogue Question
     classes: [VisualAnalogueQuestion]
     fields:
       type: Fixed value `visualAnalogue`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      minimum: Minimum numeric value.
-      maximum: Maximum numeric value.
-      step: Step size.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      minimum: Lowest slider value.
+      maximum: Highest slider value.
+      step: Distance between selectable slider values.
       initial:
-        description: Optional initial value.
+        description: Numeric value selected when the question first appears.
         virtual: true
       minimumColor: ARGB color integer for the left/minimum end.
       maximumColor: ARGB color integer for the right/maximum end.
@@ -172,20 +172,20 @@ pages:
     classes: [ImageCapturingQuestion]
     fields:
       type: Fixed value `ImageCapturingQuestion`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
 
   questionnaire/question-types/audio-recording.md:
     title: Audio Recording Question
     classes: [AudioRecordingQuestion]
     fields:
       type: Fixed value `AudioRecordingQuestion`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
       maxRecordingDurationSeconds: Maximum recording length in seconds.
 
   questionnaire/question-types/date.md:
@@ -193,54 +193,54 @@ pages:
     classes: [DateQuestion]
     fields:
       type: Fixed value `date`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      inputType: Input widget style (e.g. date picker, time picker, date+time).
-      minDate: Optional earliest selectable date.
-      maxDate: Optional latest selectable date.
-      minTime: Optional earliest selectable time.
-      maxTime: Optional latest selectable time.
-      dateFormatPreset: Preset controlling how the date is formatted for display.
-      timeFormatPreset: Preset controlling how the time is formatted for display.
-      defaultOption: Which default value strategy to use (e.g. current date, specific date).
-      defaultSpecificDate: Specific date to pre-fill when `defaultOption` is set to a fixed date.
-      defaultSpecificTime: Specific time to pre-fill when `defaultOption` is set to a fixed time.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      inputType: Input widget style. One of `date`, `time`, `dateTime`.
+      minDate: Earliest selectable date when `inputType` includes a date.
+      maxDate: Latest selectable date when `inputType` includes a date.
+      minTime: Earliest selectable time when `inputType` includes a time.
+      maxTime: Latest selectable time when `inputType` includes a time.
+      dateFormatPreset: Display format for date values.
+      timeFormatPreset: Display format for time values.
+      defaultOption: Strategy for the pre-filled value. One of `none`, `today`, `now`, `specific`.
+      defaultSpecificDate: Date used when `defaultOption` is `specific`.
+      defaultSpecificTime: Time used when `defaultOption` is `specific`.
 
   questionnaire/question-types/free-text.md:
     title: Free Text Question
     classes: [FreeTextQuestion]
     fields:
       type: Fixed value `freeText`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      lengthRange: Optional min/max character count constraints on the answer.
-      textType: Text input type (e.g. plain text, email, phone number).
-      customTypeExpression: Regex or expression used when `textType` is set to `custom`.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      lengthRange: Allowed answer length as `[min, max]` characters.
+      textType: Text validator. One of `any`, `alphanumeric`, `numeric`, `custom`.
+      customTypeExpression: Regex used when `textType` is `custom`.
 
   questionnaire/question-types/fitbit.md:
     title: Fitbit Question
     classes: [FitbitQuestion]
     fields:
       type: Fixed value `FitbitQuestion`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
-      types: List of Fitbit data types to collect (e.g. steps, sleep, heart rate).
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
+      types: Fitbit data streams requested for this question.
 
   questionnaire/question-types/pain.md:
     title: Pain Question
     classes: [PainQuestion]
     fields:
       type: Fixed value `pain`.
-      id: Unique question identifier (UUID).
-      prompt: The question text.
-      rationale: Optional explanation.
-      conditional: Optional display condition using a question conditional.
+      id: Stable question identifier used by answers, conditions, and data references.
+      prompt: Participant-facing question text rendered as HTML in the app.
+      rationale: Extra HTML shown behind the question's information icon.
+      conditional: Visibility rule evaluated against earlier questionnaire answers.
 
   questionnaire/question-types/body-pain.md:
     title: Body Pain Models
@@ -356,10 +356,10 @@ pages:
     fields:
       type: Fixed value `average`.
       id: Unique section identifier (UUID).
-      title: Display title of this report section.
-      description: Optional description of what this section shows.
-      aggregate: Temporal aggregation strategy. One of `day`, `phase`, `intervention`.
-      resultProperty: Reference to the numeric result property being averaged.
+      title: Report card title shown above the chart.
+      description: Report card body text shown below the title.
+      aggregate: How values are averaged before plotting. One of `day`, `phase`, `intervention`.
+      resultProperty: Numeric task result used for the average chart.
 
   reports/sections/linear-regression.md:
     title: Linear Regression Section
@@ -367,10 +367,10 @@ pages:
     fields:
       type: Fixed value `linearRegression`.
       id: Unique section identifier (UUID).
-      title: Display title of this report section.
-      description: Optional description.
-      resultProperty: Reference to the numeric result property being analyzed.
-      alpha: Significance threshold for the regression (default 0.05).
+      title: Report card title shown above the regression result.
+      description: Report card body text shown below the title.
+      resultProperty: Numeric task result used as the regression outcome.
+      alpha: Significance threshold for the regression test.
       improvement: Direction that counts as improvement. One of `positive`, `negative`.
 
   reports/sections/textual-summary.md:
@@ -379,9 +379,9 @@ pages:
     fields:
       type: Fixed value `textual_summary`.
       id: Unique section identifier (UUID).
-      title: Display title of this report section.
-      description: Optional description.
-      resultProperty: Reference to the result property summarized in text.
+      title: Report card title shown above the textual summary.
+      description: Report card body text shown below the title.
+      resultProperty: Numeric task result summarized by intervention.
 
   reports/sections/gauge-comparison.md:
     title: Gauge Comparison Section
@@ -389,9 +389,9 @@ pages:
     fields:
       type: Fixed value `gauge_comparison`.
       id: Unique section identifier (UUID).
-      title: Display title of this report section.
-      description: Optional description.
-      resultProperty: Reference to the numeric result property shown in the gauge.
+      title: Report card title shown above the gauges.
+      description: Report card body text shown below the title.
+      resultProperty: Numeric task result compared between interventions.
 
   reports/sections/descriptive-stats.md:
     title: Descriptive Stats Section
@@ -399,9 +399,9 @@ pages:
     fields:
       type: Fixed value `descriptive_stats`.
       id: Unique section identifier (UUID).
-      title: Display title of this report section.
-      description: Optional description.
-      resultProperty: Reference to the result property for which statistics are computed.
+      title: Report card title shown above descriptive statistics.
+      description: Report card body text shown below the title.
+      resultProperty: Numeric task result used for summary statistics.
 
   results/intervention-result.md:
     title: Intervention Result

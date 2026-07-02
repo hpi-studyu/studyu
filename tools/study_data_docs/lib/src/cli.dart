@@ -122,13 +122,17 @@ Future<void> runCheck({
     }
   }
 
-  // 3. Every metadata entry must list at least a title.
+  // 3. Every metadata entry must list at least a title and useful field prose.
   for (final pageMeta in meta.allPages) {
     if (pageMeta.title.isEmpty) {
       errors.add('${pageMeta.path}: metadata is missing a title.');
     }
-  }
 
+    for (final field in pageMeta.fields.values) {
+      final weakProseError = _validateFieldDescription(pageMeta.path, field);
+      if (weakProseError != null) errors.add(weakProseError);
+    }
+  }
   // 4. Per-page checks.
   for (final pagePath in meta.allPagePaths) {
     final pageMeta = meta.page(pagePath);
@@ -331,6 +335,19 @@ String? _validateDescriptionSection(String markdown, String pagePath) {
   return null;
 }
 
+String? _validateFieldDescription(String pagePath, FieldMeta field) {
+  const weakDescriptions = {
+    'Optional explanation.',
+    'Optional description.',
+    'The question text.',
+  };
+
+  if (weakDescriptions.contains(field.description.trim())) {
+    return '$pagePath: field "${field.name}" has weak description "${field.description}".';
+  }
+  return null;
+}
+
 void _writeIndexPage({required String docsDir, required DocMetadata meta}) {
   final absPath = p.join(docsDir, 'index.md');
   File(absPath).writeAsStringSync(_buildIndexPage(meta));
@@ -346,6 +363,8 @@ String _buildIndexPage(DocMetadata meta) {
     'Study data docs describe the JSON-serialisable models used to define, '
     'schedule, run, and report a StudyU study.',
   );
+  buf.writeln();
+  _writeMinimalStudyExample(buf);
   buf.writeln();
   buf.writeln('## Pages');
   buf.writeln();
@@ -366,6 +385,125 @@ String _buildIndexPage(DocMetadata meta) {
   }
 
   return buf.toString();
+}
+
+void _writeMinimalStudyExample(StringBuffer buf) {
+  buf.writeln('## Minimal Study JSON');
+  buf.writeln();
+  buf.writeln(
+    'This example defines one invite-only study with one consent item, one '
+    'intervention arm, one scheduled questionnaire observation, one conditional '
+    'question, one numeric result, and one report section.',
+  );
+  buf.writeln();
+  buf.writeln('```json');
+  buf.writeln(
+    '''
+{
+  "id": "study-minimal",
+  "title": "Minimal mood study",
+  "description": "Daily mood tracking with one reminder window.",
+  "user_id": "researcher-user-id",
+  "participation": "invite",
+  "result_sharing": "private",
+  "contact": {"email": "researcher@example.org"},
+  "status": "draft",
+  "consent": [
+    {
+      "id": "consent-main",
+      "title": "Consent",
+      "text": "I agree to participate."
+    }
+  ],
+  "interventions": [
+    {
+      "type": "intervention",
+      "id": "arm-a",
+      "name": "Daily reflection",
+      "description": "Participants complete one short daily check-in.",
+      "icon": "editNote",
+      "tasks": [
+        {
+          "type": "checkmark",
+          "id": "reflection-checkmark",
+          "title": "Complete reflection",
+          "schedule": {
+            "completionPeriods": [
+              {"id": "evening", "unlockTime": "18:00", "lockTime": "22:00"}
+            ],
+            "reminders": ["19:00"]
+          }
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "type": "questionnaire",
+      "id": "daily-mood-task",
+      "title": "Daily mood",
+      "schedule": {
+        "completionPeriods": [
+          {"id": "evening", "unlockTime": "18:00", "lockTime": "22:00"}
+        ],
+        "reminders": ["19:00"]
+      },
+      "questions": [
+        {"type": "boolean", "id": "had-good-day", "prompt": "Did you have a good day?"},
+        {
+          "type": "scale",
+          "id": "mood-score",
+          "prompt": "How was your mood today?",
+          "minimum": 1,
+          "maximum": 5,
+          "step": 1,
+          "conditional": {
+            "condition": {
+              "type": "composite",
+              "logicType": "and",
+              "expressions": [{"type": "boolean", "target": "had-good-day"}]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "schedule": {
+    "numberOfCycles": 1,
+    "phaseDuration": 7,
+    "includeBaseline": false,
+    "sequence": "alternating",
+    "sequenceCustom": "ABAB"
+  },
+  "results": [
+    {
+      "type": "numeric",
+      "id": "mood-result",
+      "filename": "mood.csv",
+      "resultProperty": {"task": "daily-mood-task", "property": "mood-score"}
+    }
+  ],
+  "report_specification": {
+    "primary": {
+      "type": "average",
+      "id": "mood-average",
+      "title": "Average mood",
+      "description": "Average mood by study day.",
+      "aggregate": "day",
+      "resultProperty": {"task": "daily-mood-task", "property": "mood-score"}
+    },
+    "secondary": []
+  }
+}
+'''
+        .trim(),
+  );
+  buf.writeln('```');
+  buf.writeln();
+  buf.writeln(
+    '`DataReference.task` points to a task ID. `DataReference.property` points '
+    'to a question ID inside that task.',
+  );
 }
 
 List<LinkEntry> _buildExpectedLinkEntries(

@@ -4,8 +4,17 @@
 
 `QuestionnaireTask` schedules a questionnaire as an observation during the study.
 
+The participant app creates one task instance for each `completionPeriods` entry on every scheduled
+day. Questionnaire answers are stored by question ID. Report sections and numeric results reference
+those answers through `DataReference.task` and `DataReference.property`.
+
+Use stable IDs for questionnaire tasks and questions. Changing them breaks result references and
+conditional expressions.
+
+
 
 <!-- GENERATED:FIELDS START -->
+
 | Field       | Type                                               | Required | Default                 | Description                                     |
 |-------------|----------------------------------------------------|----------|-------------------------|-------------------------------------------------|
 | `type`      | `String`                                           | Yes      | -                       | Fixed value `questionnaire`.                    |

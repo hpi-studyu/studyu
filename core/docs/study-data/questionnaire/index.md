@@ -6,6 +6,13 @@
 
 Use this page as the questionnaire overview. The type table lists the `type` values that dispatch to concrete question payloads.
 
+The app renders `prompt` as HTML. If `rationale` contains text, the app shows an information icon
+next to the prompt and opens the rationale in a dialog. Conditional questions evaluate against
+answers from earlier visible questions.
+
+Answers store the question ID in `question` and the typed answer in `response`. Choice answers store
+choice IDs. Date answers add `responseType: DateTime` and encode the response as an ISO-8601 string.
+
 ## Question types
 
 - [Boolean](question-types/boolean.md): asks for a yes or no answer.

@@ -4,8 +4,14 @@
 
 `Intervention` defines one study arm and the tasks participants perform in that arm.
 
+Participants receive tasks from their active intervention arm. `StudySchedule` decides which
+intervention is active on each study day. The app skips intervention tasks with no `title` when it
+builds the participant's daily schedule.
+
+
 
 <!-- GENERATED:FIELDS START -->
+
 | Field         | Type                                          | Required | Default | Description                                                              |
 |---------------|-----------------------------------------------|----------|---------|--------------------------------------------------------------------------|
 | `id`          | `String`                                      | Yes      | -       | Unique intervention identifier (UUID).                                   |

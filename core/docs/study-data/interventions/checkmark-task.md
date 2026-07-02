@@ -6,6 +6,7 @@
 
 
 <!-- GENERATED:FIELDS START -->
+
 | Field      | Type                                        | Required | Description                  |
 |------------|---------------------------------------------|----------|------------------------------|
 | `type`     | `String`                                    | Yes      | Fixed value `checkmark`.     |

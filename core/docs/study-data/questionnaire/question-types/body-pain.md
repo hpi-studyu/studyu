@@ -6,6 +6,7 @@ Body pain models describe pain locations and intensity values used by pain quest
 
 
 <!-- GENERATED:FIELDS START -->
+
 | Field       | Type                             | Required | Description                                         |
 |-------------|----------------------------------|----------|-----------------------------------------------------|
 | `painLevel` | `int`                            | Yes      | Numeric pain intensity value for a body part.       |

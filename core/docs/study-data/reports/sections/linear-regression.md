@@ -6,14 +6,15 @@
 
 
 <!-- GENERATED:FIELDS START -->
+
 | Field            | Type                                                                  | Required | Default | Description                                                          |
 |------------------|-----------------------------------------------------------------------|----------|---------|----------------------------------------------------------------------|
 | `type`           | `String`                                                              | Yes      | -       | Fixed value `linearRegression`.                                      |
 | `id`             | `String`                                                              | Yes      | -       | Unique section identifier (UUID).                                    |
-| `title`          | `String?`                                                             | No       | -       | Display title of this report section.                                |
-| `description`    | `String?`                                                             | No       | -       | Optional description.                                                |
-| `resultProperty` | [`DataReference<num>?`](../../shared/data-reference.md)               | No       | -       | Reference to the numeric result property being analyzed.             |
-| `alpha`          | `double`                                                              | No       | `0.05`  | Significance threshold for the regression (default 0.05).            |
+| `title`          | `String?`                                                             | No       | -       | Report card title shown above the regression result.                 |
+| `description`    | `String?`                                                             | No       | -       | Report card body text shown below the title.                         |
+| `resultProperty` | [`DataReference<num>?`](../../shared/data-reference.md)               | No       | -       | Numeric task result used as the regression outcome.                  |
+| `alpha`          | `double`                                                              | No       | `0.05`  | Significance threshold for the regression test.                      |
 | `improvement`    | [`ImprovementDirection?`](../../shared/enums.md#improvementdirection) | No       | -       | Direction that counts as improvement. One of `positive`, `negative`. |
 <!-- GENERATED:FIELDS END -->
 

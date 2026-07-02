@@ -5,6 +5,7 @@
 `SubjectProgress` stores runtime progress for one participant task completion.
 
 <!-- GENERATED:FIELDS START -->
+
 | Field                              | Type                                         | Required | Description                                                      |
 |------------------------------------|----------------------------------------------|----------|------------------------------------------------------------------|
 | `completedAt (completed_at)`       | [`DateTime?`](../shared/scalars.md#datetime) | No       | UTC timestamp when the task was completed.                       |

@@ -4,8 +4,16 @@
 
 `NumericResult` defines an exported numeric result property.
 
+`NumericResult` names a numeric export column. It does not compute values itself. It resolves
+`resultProperty` through `DataReference`, finds the source task, then extracts the referenced
+property from stored participant progress.
+
+For questionnaire tasks, `resultProperty.property` must be a question ID whose answers are numbers.
+
+
 
 <!-- GENERATED:FIELDS START -->
+
 | Field            | Type                                                | Required | Description                                             |
 |------------------|-----------------------------------------------------|----------|---------------------------------------------------------|
 | `type`           | `String`                                            | Yes      | Fixed value `numeric`.                                  |

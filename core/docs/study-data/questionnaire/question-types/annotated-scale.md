@@ -6,18 +6,19 @@
 
 
 <!-- GENERATED:FIELDS START -->
-| Field         | Type                                                              | Required | Default | Description                                              |
-|---------------|-------------------------------------------------------------------|----------|---------|----------------------------------------------------------|
-| `type`        | `String`                                                          | Yes      | -       | Fixed value `annotatedScale`.                            |
-| `id`          | `String`                                                          | Yes      | -       | Unique question identifier (UUID).                       |
-| `prompt`      | `String?`                                                         | No       | -       | The question text.                                       |
-| `rationale`   | `String?`                                                         | No       | -       | Optional explanation.                                    |
-| `conditional` | [`QuestionConditional<V>?`](../../shared/question-conditional.md) | No       | -       | Optional display condition using a question conditional. |
-| `minimum`     | `double`                                                          | No       | -       | Minimum numeric value.                                   |
-| `maximum`     | `double`                                                          | No       | -       | Maximum numeric value.                                   |
-| `step`        | `double`                                                          | No       | -       | Step size between selectable values.                     |
-| `annotations` | [`List<Annotation>`](../nested-objects.md)                        | No       | `[]`    | Labeled tick marks along the scale.                      |
-| `initial`     | `unknown`                                                         | No       | -       | Optional initial value.                                  |
+
+| Field         | Type                                                              | Required | Default | Description                                                                  |
+|---------------|-------------------------------------------------------------------|----------|---------|------------------------------------------------------------------------------|
+| `type`        | `String`                                                          | Yes      | -       | Fixed value `annotatedScale`.                                                |
+| `id`          | `String`                                                          | Yes      | -       | Stable question identifier used by answers, conditions, and data references. |
+| `prompt`      | `String?`                                                         | No       | -       | Participant-facing question text rendered as HTML in the app.                |
+| `rationale`   | `String?`                                                         | No       | -       | Extra HTML shown behind the question's information icon.                     |
+| `conditional` | [`QuestionConditional<V>?`](../../shared/question-conditional.md) | No       | -       | Visibility rule evaluated against earlier questionnaire answers.             |
+| `minimum`     | `double`                                                          | No       | -       | Lowest selectable numeric value.                                             |
+| `maximum`     | `double`                                                          | No       | -       | Highest selectable numeric value.                                            |
+| `step`        | `double`                                                          | No       | -       | Distance between selectable values.                                          |
+| `annotations` | [`List<Annotation>`](../nested-objects.md)                        | No       | `[]`    | Labels attached to specific scale values.                                    |
+| `initial`     | `unknown`                                                         | No       | -       | Numeric value selected when the question first appears.                      |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

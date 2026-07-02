@@ -6,23 +6,24 @@
 
 
 <!-- GENERATED:FIELDS START -->
-| Field                 | Type                                                              | Required | Description                                                             |
-|-----------------------|-------------------------------------------------------------------|----------|-------------------------------------------------------------------------|
-| `type`                | `String`                                                          | Yes      | Fixed value `date`.                                                     |
-| `id`                  | `String`                                                          | Yes      | Unique question identifier (UUID).                                      |
-| `prompt`              | `String?`                                                         | No       | The question text.                                                      |
-| `rationale`           | `String?`                                                         | No       | Optional explanation.                                                   |
-| `conditional`         | [`QuestionConditional<V>?`](../../shared/question-conditional.md) | No       | Optional display condition using a question conditional.                |
-| `inputType`           | [`DateInputType`](../../shared/enums.md#dateinputtype)            | Yes      | Input widget style (e.g. date picker, time picker, date+time).          |
-| `minDate`             | [`DateTime?`](../../shared/scalars.md#datetime)                   | No       | Optional earliest selectable date.                                      |
-| `maxDate`             | [`DateTime?`](../../shared/scalars.md#datetime)                   | No       | Optional latest selectable date.                                        |
-| `minTime`             | `String?`                                                         | No       | Optional earliest selectable time.                                      |
-| `maxTime`             | `String?`                                                         | No       | Optional latest selectable time.                                        |
-| `dateFormatPreset`    | [`DateFormatPreset`](../../shared/enums.md#dateformatpreset)      | Yes      | Preset controlling how the date is formatted for display.               |
-| `timeFormatPreset`    | [`TimeFormatPreset`](../../shared/enums.md#timeformatpreset)      | Yes      | Preset controlling how the time is formatted for display.               |
-| `defaultOption`       | [`DefaultDateOption`](../../shared/enums.md#defaultdateoption)    | Yes      | Which default value strategy to use (e.g. current date, specific date). |
-| `defaultSpecificDate` | [`DateTime?`](../../shared/scalars.md#datetime)                   | No       | Specific date to pre-fill when `defaultOption` is set to a fixed date.  |
-| `defaultSpecificTime` | `String?`                                                         | No       | Specific time to pre-fill when `defaultOption` is set to a fixed time.  |
+
+| Field                 | Type                                                              | Required | Description                                                                   |
+|-----------------------|-------------------------------------------------------------------|----------|-------------------------------------------------------------------------------|
+| `type`                | `String`                                                          | Yes      | Fixed value `date`.                                                           |
+| `id`                  | `String`                                                          | Yes      | Stable question identifier used by answers, conditions, and data references.  |
+| `prompt`              | `String?`                                                         | No       | Participant-facing question text rendered as HTML in the app.                 |
+| `rationale`           | `String?`                                                         | No       | Extra HTML shown behind the question's information icon.                      |
+| `conditional`         | [`QuestionConditional<V>?`](../../shared/question-conditional.md) | No       | Visibility rule evaluated against earlier questionnaire answers.              |
+| `inputType`           | [`DateInputType`](../../shared/enums.md#dateinputtype)            | Yes      | Input widget style. One of `date`, `time`, `dateTime`.                        |
+| `minDate`             | [`DateTime?`](../../shared/scalars.md#datetime)                   | No       | Earliest selectable date when `inputType` includes a date.                    |
+| `maxDate`             | [`DateTime?`](../../shared/scalars.md#datetime)                   | No       | Latest selectable date when `inputType` includes a date.                      |
+| `minTime`             | `String?`                                                         | No       | Earliest selectable time when `inputType` includes a time.                    |
+| `maxTime`             | `String?`                                                         | No       | Latest selectable time when `inputType` includes a time.                      |
+| `dateFormatPreset`    | [`DateFormatPreset`](../../shared/enums.md#dateformatpreset)      | Yes      | Display format for date values.                                               |
+| `timeFormatPreset`    | [`TimeFormatPreset`](../../shared/enums.md#timeformatpreset)      | Yes      | Display format for time values.                                               |
+| `defaultOption`       | [`DefaultDateOption`](../../shared/enums.md#defaultdateoption)    | Yes      | Strategy for the pre-filled value. One of `none`, `today`, `now`, `specific`. |
+| `defaultSpecificDate` | [`DateTime?`](../../shared/scalars.md#datetime)                   | No       | Date used when `defaultOption` is `specific`.                                 |
+| `defaultSpecificTime` | `String?`                                                         | No       | Time used when `defaultOption` is `specific`.                                 |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

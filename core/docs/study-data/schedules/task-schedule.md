@@ -4,8 +4,15 @@
 
 `Schedule` defines when a task is available and when reminders fire.
 
+`completionPeriods` creates task instances. A task with two periods appears twice on the same day,
+once per period ID. The app uses period IDs to decide whether a task instance has been completed.
+
+Times use local `H:mm` or `HH:mm` strings. The default schedule has one window from `8:00` to
+`20:00` and no reminders.
+
 
 <!-- GENERATED:FIELDS START -->
+
 | Field               | Type                                                        | Required | Default                                                                                              | Description                                                       |
 |---------------------|-------------------------------------------------------------|----------|------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
 | `completionPeriods` | `List<CompletionPeriod>`                                    | No       | `[CompletionPeriod.noId(unlockTime: StudyUTimeOfDay(hour: 8), lockTime: StudyUTimeOfDay(hour: 20))]` | Time windows within a day during which the task can be completed. |

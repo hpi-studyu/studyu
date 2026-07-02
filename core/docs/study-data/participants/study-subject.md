@@ -5,6 +5,7 @@
 `StudySubject` stores the runtime enrolment row for one participant in one study.
 
 <!-- GENERATED:FIELDS START -->
+
 | Field                                                 | Type                                         | Required | Default | Description                                                    |
 |-------------------------------------------------------|----------------------------------------------|----------|---------|----------------------------------------------------------------|
 | `id`                                                  | `String`                                     | Yes      | -       | Unique participant identifier (UUID).                          |

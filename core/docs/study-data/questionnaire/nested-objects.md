@@ -41,5 +41,4 @@ Use `Annotation` objects in scale questions that need labelled values.
 | `text`       | `String` | No       | `''`    | Participant-facing choice label.                 |
 | `value`      | `int`    | No       | `0`     | Numeric scale value that receives an annotation. |
 | `annotation` | `String` | No       | `''`    | Label shown for the annotated scale value.       |
-
 <!-- GENERATED:FIELDS END -->

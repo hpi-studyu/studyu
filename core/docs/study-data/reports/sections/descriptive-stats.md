@@ -6,13 +6,14 @@
 
 
 <!-- GENERATED:FIELDS START -->
-| Field            | Type                                                    | Required | Description                                                         |
-|------------------|---------------------------------------------------------|----------|---------------------------------------------------------------------|
-| `type`           | `String`                                                | Yes      | Fixed value `descriptive_stats`.                                    |
-| `id`             | `String`                                                | Yes      | Unique section identifier (UUID).                                   |
-| `title`          | `String?`                                               | No       | Display title of this report section.                               |
-| `description`    | `String?`                                               | No       | Optional description.                                               |
-| `resultProperty` | [`DataReference<num>?`](../../shared/data-reference.md) | No       | Reference to the result property for which statistics are computed. |
+
+| Field            | Type                                                    | Required | Description                                           |
+|------------------|---------------------------------------------------------|----------|-------------------------------------------------------|
+| `type`           | `String`                                                | Yes      | Fixed value `descriptive_stats`.                      |
+| `id`             | `String`                                                | Yes      | Unique section identifier (UUID).                     |
+| `title`          | `String?`                                               | No       | Report card title shown above descriptive statistics. |
+| `description`    | `String?`                                               | No       | Report card body text shown below the title.          |
+| `resultProperty` | [`DataReference<num>?`](../../shared/data-reference.md) | No       | Numeric task result used for summary statistics.      |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->
