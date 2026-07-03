@@ -1279,14 +1279,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
-  String get no_internet_connection =>
-      'No internet connection. Please try again when online.';
-
-  @override
-  String error_occurred_with_message(String message) {
-    return 'An error occurred: $message';
-  }
-
   String get continue_label => 'Continue';
 
   @override
@@ -1295,6 +1287,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mark_answer_reviewed => 'Mark as reviewed';
+
+  @override
+  String get no_internet_connection =>
+      'No internet connection. Please try again when online.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'An error occurred: $message';
+  }
 
   @override
   String get date_picker_hint => 'Select a date';
