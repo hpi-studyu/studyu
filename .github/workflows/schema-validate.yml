@@ -16,7 +16,22 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 20
-      - name: Install ajv-cli
-        run: npm install -g ajv-cli
+      - name: Install ajv and ajv-formats
+        run: npm install ajv ajv-formats
       - name: Validate portable fixture against study.schema.json
-        run: ajv validate --spec=draft7 -s core/lib/src/validators/schema/study.schema.json -d core/lib/src/validators/schema/fixtures/valid_study.json
+        run: |
+          node -e "
+          const Ajv = require('ajv');
+          const addFormats = require('ajv-formats');
+          const schema = require('./core/lib/src/validators/schema/study.schema.json');
+          const data = require('./core/lib/src/validators/schema/fixtures/valid_study.json');
+          const ajv = new Ajv({allKeys: true, strict: false});
+          addFormats(ajv);
+          const validate = ajv.compile(schema);
+          const valid = validate(data);
+          if (!valid) {
+            console.error(JSON.stringify(validate.errors, null, 2));
+            process.exit(1);
+          }
+          console.log('Fixture is valid against study.schema.json');
+          "
