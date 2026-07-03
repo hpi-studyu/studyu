@@ -23,15 +23,36 @@ jobs:
           node -e "
           const Ajv = require('ajv');
           const addFormats = require('ajv-formats');
-          const schema = require('./core/lib/src/validators/schema/study.schema.json');
-          const data = require('./core/lib/src/validators/schema/fixtures/valid_study.json');
+          const fs = require('fs');
+
+          const schemaPath = './core/lib/src/validators/schema/study.schema.json';
+          const fixturePath = './core/lib/src/validators/schema/fixtures/valid_study.json';
+
+          console.log('Schema:', schemaPath);
+          console.log('Fixture:', fixturePath);
+
+          const schemaRaw = fs.readFileSync(schemaPath, 'utf8');
+          const fixtureRaw = fs.readFileSync(fixturePath, 'utf8');
+          const schema = JSON.parse(schemaRaw);
+          const data = JSON.parse(fixtureRaw);
+
+          console.log('Schema \$schema:', schema['\$schema']);
+          console.log('Schema definitions:', Object.keys(schema.definitions || {}).length, 'types');
+          console.log('Schema root properties:', Object.keys(schema.properties || {}).length, 'keys');
+          console.log('Fixture root keys:', Object.keys(data));
+          console.log('Compiling schema...');
+
           const ajv = new Ajv({allKeys: true, strict: false});
           addFormats(ajv);
           const validate = ajv.compile(schema);
+
+          console.log('Schema compiled. Validating fixture...');
           const valid = validate(data);
+
           if (!valid) {
-            console.error(JSON.stringify(validate.errors, null, 2));
+            console.error('VALIDATION FAILED:', JSON.stringify(validate.errors, null, 2));
             process.exit(1);
           }
-          console.log('Fixture is valid against study.schema.json');
+
+          console.log('Result: Fixture is valid against study.schema.json');
           "
