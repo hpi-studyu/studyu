@@ -71,6 +71,29 @@ const _dupObsStudyJson = '''
 }
 ''';
 
+const _schemaInvalidStudyJson = '''
+{
+  "id": "test-id",
+  "user_id": "user-id",
+  "title": "Schema Invalid",
+  "status": "draft",
+  "participation": "invite",
+  "result_sharing": "private",
+  "contact": {"organization": "Org", "email": "test@example.com", "website": "", "phone": "+1234"},
+  "icon_name": "accountHeart",
+  "published": false,
+  "questionnaire": [],
+  "eligibility_criteria": [],
+  "consent": [],
+  "interventions": [],
+  "observations": [],
+  "schedule": {"phaseDuration": 7, "numberOfCycles": 2, "includeBaseline": false, "sequence": "alternating", "sequenceCustom": "ABAB"},
+  "report_specification": {"secondary": []},
+  "results": [],
+  "unexpected_extra_key": true
+}
+''';
+
 void main() {
   group('validateSection', () {
     test('section=study_info runs only study info checks', () {
@@ -177,6 +200,16 @@ void main() {
       );
       expect(r, isNotNull);
       expect(r!.valid, isTrue);
+    });
+    test('validateSection returns SCHEMA_ERROR for schema-invalid json', () {
+      final r = validateSection(
+        _schemaInvalidStudyJson,
+        'study_info',
+        ValidationLevel.draft,
+      );
+      expect(r, isNotNull);
+      expect(r!.errors, isNotEmpty);
+      expect(r.errors.first.code, 'SCHEMA_ERROR');
     });
   });
 }

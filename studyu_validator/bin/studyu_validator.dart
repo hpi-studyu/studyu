@@ -13,6 +13,11 @@ void main(List<String> args) {
   parser.commands['validate']!
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
     ..addFlag('stdin', help: 'Read study JSON from stdin')
+    ..addFlag(
+      'schema-only',
+      negatable: false,
+      help: 'Validate against the JSON Schema only, skipping logic checks',
+    )
     ..addOption(
       'level',
       defaultsTo: 'draft',
@@ -38,13 +43,12 @@ void main(List<String> args) {
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
     ..addFlag('stdin', help: 'Read study JSON from stdin');
 
-  parser.commands['schema']!
-    ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help')
-    ..addOption(
-      'entity',
-      defaultsTo: 'Study',
-      help: 'Entity name: Study, Intervention, Question',
-    );
+  parser.commands['schema']!.addFlag(
+    'help',
+    abbr: 'h',
+    negatable: false,
+    help: 'Show this help',
+  );
 
   late ArgResults results;
   try {
@@ -100,9 +104,17 @@ void _runValidate(ArgResults command) {
       ? ValidationLevel.publish
       : ValidationLevel.draft;
   final section = command['section'] as String?;
+  final schemaOnly = command['schema-only'] as bool? ?? false;
+
+  if (schemaOnly && section != null) {
+    stderr.writeln('Error: --schema-only cannot be combined with --section');
+    exit(1);
+  }
 
   ValidationResult result;
-  if (section != null) {
+  if (schemaOnly) {
+    result = validateJsonSchemaOnly(json);
+  } else if (section != null) {
     result =
         validateSection(json, section, level) ??
         ValidationResult(
@@ -132,15 +144,18 @@ void _runNormalize(ArgResults command) {
 }
 
 void _runSchema(ArgResults command) {
-  final entity = command['entity'] as String;
-  stdout.writeln('Schema for $entity: see studyu://docs/$entity in studyu_mcp');
-  exit(0);
+  try {
+    stdout.writeln(loadStudySchemaText());
+    exit(0);
+  } catch (e) {
+    stderr.writeln('Error loading schema: $e');
+    exit(1);
+  }
 }
 
 String _readInput(ArgResults command) {
   final useStdin = command['stdin'] as bool? ?? false;
   if (useStdin) {
-    // Read all stdin lines — handles multi-line JSON
     final lines = <String>[];
     String? line;
     while ((line = stdin.readLineSync(encoding: utf8)) != null) {

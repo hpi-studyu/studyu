@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   args: ^2.5.0
+  json_schema: ^5.2.2
   studyu_core:
     path: ../core
 

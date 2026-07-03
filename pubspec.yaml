@@ -82,6 +82,11 @@ melos:
         dart run tools/study_data_docs/bin/study_data_docs.dart --check
       description: Checks StudyU core study-data markdown docs are up to date
 
+    docs:study-data:schema:
+      run: |
+        dart run core/tool/emit_schema.dart
+      description: regenerate core/lib/src/validators/schema/study.schema.json
+
     qualitycheck:
       run: |
         rtk_prefix=""

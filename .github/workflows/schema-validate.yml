@@ -1,0 +1,22 @@
+name: Schema Validate
+
+on:
+  push:
+    paths:
+      - core/**
+      - .github/workflows/schema-validate.yml
+      - pubspec.yaml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli
+      - name: Validate portable fixture against study.schema.json
+        run: ajv validate --spec=draft7 -s core/lib/src/validators/schema/study.schema.json -d core/lib/src/validators/schema/fixtures/valid_study.json
