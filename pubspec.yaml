@@ -50,8 +50,10 @@ melos:
         if command -v rtk >/dev/null 2>&1; then
           rtk_prefix="rtk "
         fi
-        melos exec -c 6 --fail-fast -- \
-          "${rtk_prefix}flutter test"
+        melos exec -c 1 --fail-fast -- \
+          'rtk_prefix=""; \
+          if command -v rtk >/dev/null 2>&1; then rtk_prefix="rtk "; fi; \
+          if grep -q "sdk: flutter" pubspec.yaml; then ${rtk_prefix}flutter test; else dart test; fi'
       description: Run `flutter test` for a specific package.
       packageFilters:
         dirExists: test
