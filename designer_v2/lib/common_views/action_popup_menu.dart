@@ -81,7 +81,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
             : Icons.more_horiz_rounded);
 
     return PopupMenuButton<ModelAction>(
-      key: ValueKey(actions),
+      key: key ?? ValueKey(actions),
       icon:
           triggerBuilder ??
           Icon(

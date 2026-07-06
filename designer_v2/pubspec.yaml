@@ -33,6 +33,7 @@ dependencies:
   material_color_utilities: ^0.13.0 # integration_test
   package_info_plus: ^10.2.0
   pointer_interceptor: ^0.10.1+2
+  pretty_qr_code: ^3.5.0
   reactive_color_picker: ^2.2.2
   reactive_forms: ^18.2.2
   reactive_multi_select_flutter: ^2.0.2

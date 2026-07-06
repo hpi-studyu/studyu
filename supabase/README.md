@@ -16,11 +16,20 @@ looking forward to support your research.
 
 ## Database workflow
 
+- Create new migrations with `supabase migration new <migration_name>` — commit the generated SQL under `supabase/migrations/`.
+
 - `supabase/migrations/`: canonical schema and production-safe database changes.
 - `supabase/seeds/dev/`: local development data loaded by normal `supabase db reset`.
 - `supabase/seeds/test/`: deterministic baseline loaded by `scripts/reset-test-db.sh` before database tests.
 - `supabase/tests/_helpers/`: test-only SQL helpers.
-- Production uses `supabase db push` and never runs development or test seeds.
+### Production deployments
+
+Production applies migrations only — never development or test seeds:
+
+```bash
+supabase link --project-ref "$PROJECT_REF"
+supabase db push
+```
 
 ## Getting Started
 

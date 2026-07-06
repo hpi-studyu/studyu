@@ -7,10 +7,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
@@ -19,16 +20,28 @@ import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 Widget setup(Widget child) {
   return ChangeNotifierProvider(
     create: (_) => AppState(),
-    child: MaterialApp(
+    child: MaterialApp.router(
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       locale: const Locale('en'),
-      home: child,
-      routes: {
-        Routes.about: (_) => const AboutScreen(),
-        Routes.terms: (_) => const TermsScreen(),
-        Routes.welcome: (_) => const WelcomeScreen(),
-      },
+      routerConfig: GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(path: '/', builder: (_, _) => child),
+          GoRoute(
+            path: '/${RouteNames.about}',
+            builder: (_, _) => const AboutScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.terms}',
+            builder: (_, _) => const TermsScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.welcome}',
+            builder: (_, _) => const WelcomeScreen(),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -44,33 +57,34 @@ void main() {
   test('opens welcome screen when tour is completed without preview', () {
     expect(
       initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: true),
-      Routes.welcome,
+      '/${RouteNames.welcome}',
     );
   });
 
   test('opens onboarding when tour is not completed', () {
     expect(
       initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: false),
-      Routes.onboarding,
+      '/${RouteNames.onboarding}',
     );
   });
 
   test('keeps designer preview on study terms', () {
     expect(
       initialRouteForMissingSubjectRoute(isPreview: true, onBoarded: true),
-      Routes.terms,
+      '/${RouteNames.terms}',
     );
   });
 
-  testWidgets('terms back is disabled without previous screen', (tester) async {
+  testWidgets('terms back falls back to welcome without previous screen', (
+    tester,
+  ) async {
     await tester.pumpWidget(setup(const TermsScreen()));
     await tester.pump();
 
-    final back = tester.widget<TextButton>(
-      find.byKey(const ValueKey('terms_back')),
-    );
+    await tester.tap(find.byKey(const ValueKey('terms_back')));
+    await tester.pumpAndSettle();
 
-    expect(back.onPressed, isNull);
+    expect(find.byType(WelcomeScreen), findsOneWidget);
   });
 
   testWidgets('terms back pops to welcome when available', (tester) async {

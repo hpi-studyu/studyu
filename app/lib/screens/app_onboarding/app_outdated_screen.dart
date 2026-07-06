@@ -15,10 +15,15 @@ class AppOutdatedScreen extends StatelessWidget {
     String? storeUrl;
     IconData? storeIcon;
     if (!kIsWeb && Platform.isAndroid) {
-      storeUrl = playStoreUrl;
+      if (androidPackageName != null) {
+        storeUrl =
+            'https://play.google.com/store/apps/details?id=$androidPackageName';
+      }
       storeIcon = Icons.shop;
     } else if (!kIsWeb && Platform.isIOS) {
-      storeUrl = appstoreUrl;
+      if (iosAppStoreId != null) {
+        storeUrl = 'https://apps.apple.com/app/id$iosAppStoreId';
+      }
       storeIcon = Icons.shop;
     }
     return Scaffold(

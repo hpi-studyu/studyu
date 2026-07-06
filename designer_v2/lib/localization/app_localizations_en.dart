@@ -2065,11 +2065,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_section_title => 'Invite codes';
 
   @override
-  String get code_public_disabled => 'Invite codes disabled';
+  String get code_public_disabled => 'Public Recruitment';
 
   @override
   String get code_public_disabled_description =>
-      'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.';
+      'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.';
 
   @override
   String get code_list_empty_title => 'You haven\'t invited anyone yet';
@@ -2228,6 +2228,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A survey is completed, if all of its tasks have been completed for that day';
 
   @override
+  String get banner_text_study_recruit_draft =>
+      'Because this study has not been launched yet, the links on this page will not work yet.';
+
+  @override
   String get banner_text_study_analyze_draft =>
       'Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.';
 
@@ -2382,6 +2386,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_clipboard => 'Copy to clipboard';
+
+  @override
+  String get action_qr_code_show => 'Show QR code';
+
+  @override
+  String get action_qr_code_download => 'Download QR code';
+
+  @override
+  String get action_share => 'Share';
+
+  @override
+  String get action_copy_link => 'Copy link';
 
   @override
   String get action_reportPrimary => 'Set as primary report';
