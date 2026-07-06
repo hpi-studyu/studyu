@@ -52,6 +52,8 @@ You must strictly adhere to the following workspace rules for all file modificat
 
 Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos run qualitycheck`.
 
+If `fvm exec melos run qualitycheck` prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun `fvm exec melos run qualitycheck`.
+
 ### 2. Commit Message Enforcement
 
 You must use the Conventional Commits format for all commits. Never generate a generic commit message.
