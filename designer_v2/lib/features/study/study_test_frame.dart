@@ -317,6 +317,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                           alignment: Alignment.topCenter,
                           fit: BoxFit.scaleDown,
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Stack(
                                 children: [

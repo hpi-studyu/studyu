@@ -1290,14 +1290,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
-  String get no_internet_connection =>
-      'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
-
-  @override
-  String error_occurred_with_message(String message) {
-    return 'Ein Fehler ist aufgetreten: $message';
-  }
-
   String get continue_label => 'Weiter';
 
   @override
@@ -1306,6 +1298,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get mark_answer_reviewed => 'Als überprüft markieren';
+
+  @override
+  String get no_internet_connection =>
+      'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'Ein Fehler ist aufgetreten: $message';
+  }
 
   @override
   String get date_picker_hint => 'Wählen Sie ein Datum';
