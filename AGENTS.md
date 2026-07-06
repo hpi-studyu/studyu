@@ -17,16 +17,20 @@ Use FVM and Melos from the repository root. Run `fvm install` if the configured 
 Prefix `dart`/`flutter` commands with `fvm`, and `melos` commands with `fvm exec`, to use the
 FVM-managed SDK version.
 
+Before running any melos, flutter, dart, or fvm command, check if `rtk` is installed
+(`command -v rtk`) and prefix the command with `rtk ` when available. This applies the
+project's RTK output filters.
+
 - `fvm dart pub get`: installs root dependencies.
 - `fvm exec melos bootstrap`: links workspace packages and installs package dependencies.
-- `fvm exec melos run app`: runs the StudyU app on Chrome at port `8080`.
-- `fvm exec melos run designer_v2`: runs Designer v2 on Chrome at port `8081`.
-- `fvm exec melos run dev:app` or `fvm exec melos run dev:designer_v2`: runs against `.env.dev`.
-- `fvm exec melos run local:app` or `fvm exec melos run local:designer_v2`: runs against
+- `fvm exec melos app`: runs the StudyU app on Chrome at port `8080`.
+- `fvm exec melos designer_v2`: runs Designer v2 on Chrome at port `8081`.
+- `fvm exec melos dev:app` or `fvm exec melos dev:designer_v2`: runs against `.env.dev`.
+- `fvm exec melos local:app` or `fvm exec melos local:designer_v2`: runs against
   `.env.local`.
 - `fvm exec melos run generate`: runs `build_runner` for generated Dart files.
-- `fvm exec melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
-- `fvm exec melos run build:web`: builds both web apps.
+- `fvm exec melos qualitycheck`: formats, regenerates, and analyzes the workspace.
+- `fvm exec melos build:web`: builds both web apps.
 
 ## Coding Style & Naming Conventions
 
@@ -34,7 +38,7 @@ Follow Effective Dart and the shared `analysis_options.yaml`, which includes `pa
 
 ## Testing Guidelines
 
-Tests use Flutter/Dart test tooling. Place unit and widget tests under each package's `test/` directory and Designer integration tests under `designer_v2/integration_test/`. Prefer names ending in `_test.dart`, matching the feature or model, for example `filter_evaluator_test.dart`. Run all package tests with `melos run test`; run a focused package test with `cd designer_v2 && flutter test`.
+Tests use Flutter/Dart test tooling. Place unit and widget tests under each package's `test/` directory and Designer integration tests under `designer_v2/integration_test/`. Prefer names ending in `_test.dart`, matching the feature or model, for example `filter_evaluator_test.dart`. Run all package tests with `melos test`; run a focused package test with `cd designer_v2 && flutter test`.
 
 ## Commit & Pull Request Guidelines
 
@@ -47,10 +51,8 @@ Do not commit secrets. Environment templates live in `flutter_common/lib/envs/`;
 ## AI Agent Behavioral Constraints & Execution Rules
 
 You must strictly adhere to the following workspace rules for all file modifications, terminal command executions, commit generations, and pull request actions.
-
 ### 1. Code Quality & Pre-Commit Checks
-
-Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos run qualitycheck`.
+Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos qualitycheck` (prefixed with `rtk ` if rtk is installed).
 
 If `fvm exec melos run qualitycheck` prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun `fvm exec melos run qualitycheck`.
 
