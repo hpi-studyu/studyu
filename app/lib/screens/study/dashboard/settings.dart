@@ -226,7 +226,7 @@ class _SettingsState extends State<Settings> {
                       const SizedBox(height: 12),
                       // Leave study button
                       FilledButton.icon(
-                      icon: const Icon(MdiIcons.exitToApp),
+                        icon: const Icon(MdiIcons.exitToApp),
                         label: Text(AppLocalizations.of(context)!.opt_out),
                         style: FilledButton.styleFrom(
                           backgroundColor: Colors.red[700],
