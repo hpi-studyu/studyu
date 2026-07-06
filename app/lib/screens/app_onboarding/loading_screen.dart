@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/main.dart' show navigatorKey;
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
@@ -19,6 +21,25 @@ import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase/supabase.dart'
+    show AuthApiException, PostgrestException;
+
+class SubjectDeletedException implements Exception {
+  const SubjectDeletedException();
+
+  @override
+  String toString() =>
+      'SubjectDeletedException: subject no longer exists in the backend';
+}
+
+@visibleForTesting
+String initialRouteForMissingSubjectRoute({
+  required bool isPreview,
+  required bool onBoarded,
+}) {
+  if (isPreview) return '/${RouteNames.terms}';
+  return onBoarded ? '/${RouteNames.welcome}' : '/${RouteNames.onboarding}';
+}
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -41,6 +62,9 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  final IFrameHelper _iFrameHelper = IFrameHelper();
+  bool _previewNavigationInProgress = false;
+  String? _pendingPreviewRoute;
   String? _error;
 
   Future<void> _restoreParticipantSession() async {
@@ -291,17 +315,50 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
-    await _initPreview(state);
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      final previewHandledNavigation = await _initPreview(state, l10n);
+      if (previewHandledNavigation) return;
+    } catch (error, stackTrace) {
+      StudyULogger.error(
+        l10n.preview_failed_to_initialize,
+        error: error,
+        stackTrace: stackTrace,
+      );
+      _iFrameHelper.postPreviewStatus(
+        status: 'error',
+        message: l10n.preview_overlay_study_not_ready,
+      );
+      // Do not rethrow: the call site is unawaited; an unhandled async
+      // exception would crash the app rather than showing a graceful error.
+      return;
+    }
 
     final selectedSubjectId = await getActiveSubjectId();
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
-      await noSubjectFound();
+      await noSubjectFound(state);
       return;
     }
     StudyULogger.info("Retrieving subject with ID: $selectedSubjectId");
-    StudySubject? subject = await _retrieveSubject(selectedSubjectId);
+    StudySubject? subject;
+    try {
+      subject = await _retrieveSubject(selectedSubjectId);
+    } on SubjectDeletedException {
+      StudyULogger.warning(
+        "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
+      );
+      if (!mounted) return;
+      context.go(
+        '/${RouteNames.appErrorScreen}',
+        extra: AppErrorScreenArguments(
+          selectedSubjectId: selectedSubjectId,
+          reason: AppErrorReason.deletedStudy,
+        ),
+      );
+      return;
+    }
     if (!mounted) return;
     if (subject != null) {
       subject = await Cache.synchronize(subject);
@@ -316,23 +373,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<void> noSubjectFound() async {
+  Future<void> noSubjectFound(AppState state) async {
     StudyULogger.info("No subject found");
     await cancelNotifications(context);
 
     await _restoreParticipantSession();
-    if (isUserLoggedIn()) {
+    if (isUserLoggedIn() && !state.isPreview) {
       if (!mounted) return;
       context.goNamed(RouteNames.welcome);
       return;
     }
 
-    final bool onBoarded = await SecureStorage.readBool('onboarded') ?? false;
-    // If onboarding is done, return to welcome; otherwise show onboarding.
-    final route = onBoarded ? RouteNames.welcome : RouteNames.onboarding;
+    final route = initialRouteForMissingSubjectRoute(
+      isPreview: state.isPreview,
+      onBoarded: await SecureStorage.readBool('onboarded') ?? false,
+    );
 
     if (!mounted) return;
-    context.goNamed(route);
+    _iFrameHelper.postPreviewStatus(status: 'loaded');
+    context.go(route);
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
@@ -348,39 +407,54 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<StudySubject?> _retrieveSubject(String selectedStudyObjectId) async {
-    StudySubject? subject;
     try {
-      subject = await _fetchRemoteSubject(selectedStudyObjectId);
+      return await _fetchRemoteSubject(selectedStudyObjectId);
+    } on PostgrestException catch (e) {
+      if (e.code == 'PGRST116') {
+        // Row does not exist — subject was deleted from the database.
+        // Do not retry or fall back to cache, as that would show stale data.
+        StudyULogger.warning("Subject not found in DB (deleted): $e");
+        throw const SubjectDeletedException();
+      }
+      StudyULogger.warning(
+        "Could not retrieve subject, maybe JWT is expired, try logging in: $e",
+      );
     } catch (exception) {
       StudyULogger.warning(
         "Could not retrieve subject, maybe JWT is expired, try logging in: $exception",
       );
+    }
+
+    // JWT/network error path — retry with login
+    try {
+      if (await signInParticipant()) {
+        return await _fetchRemoteSubject(selectedStudyObjectId);
+      }
+    } on AuthApiException catch (e) {
+      // Credentials were rejected — the auth account no longer exists.
+      StudyULogger.warning("Invalid credentials during re-login: $e");
+      throw const SubjectDeletedException();
+    } catch (exception) {
+      StudyULogger.warning(
+        "Could not login and retrieve the study subject: $exception",
+      );
+      StudyULogger.fatal('Could not login and retrieve the study subject.');
+      // Only fall back to cache for network errors (device offline)
       try {
-        // Try signing in again. Needed if JWT is expired
-        if (await signInParticipant()) {
-          subject = await _fetchRemoteSubject(selectedStudyObjectId);
-        }
-      } catch (exception) {
-        StudyULogger.warning(
-          "Could not login and retrieve the study subject: $exception",
-        );
-        StudyULogger.fatal('Could not login and retrieve the study subject.');
-        // Try to reload the subject from cache
-        try {
-          subject = await Cache.loadSubject();
-          StudyULogger.info("Loaded subject from cache: $subject");
-        } catch (e) {
-          StudyULogger.warning("No subject found in cache");
-        }
+        final cached = await Cache.loadSubject();
+        StudyULogger.info("Loaded subject from cache: $cached");
+        return cached;
+      } catch (e) {
+        StudyULogger.warning("No subject found in cache");
       }
     }
-    return subject;
+    return null;
   }
 
-  Future<void> _initPreview(AppState state) async {
+  Future<bool> _initPreview(AppState state, AppLocalizations l10n) async {
     if (state.isPreview) previewSubjectIdKey();
     if (widget.queryParameters == null || widget.queryParameters!.isEmpty) {
-      return;
+      return false;
     }
 
     StudyULogger.info(
@@ -388,42 +462,58 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
     final lang = AppLanguage(AppLocalizations.supportedLocales);
     final preview = study_preview.Preview(widget.queryParameters, lang);
-    final iFrameHelper = IFrameHelper();
     state.isPreview = true;
+    _iFrameHelper.postPreviewStatus(status: 'loading');
     await preview.init();
 
-    // Authorize
-    if (!await preview.handleAuthorization()) {
-      return;
+    final isAuthorized = await preview.handleAuthorization();
+    if (!isAuthorized) {
+      _iFrameHelper.postPreviewStatus(
+        status: 'error',
+        message: l10n.preview_overlay_reset_hint,
+      );
+      return true;
     }
     state.selectedStudy = preview.study;
 
     await preview.runCommands();
 
-    iFrameHelper.listen(state);
+    _iFrameHelper.listen(
+      state,
+      onNavigate: (route) => _navigatePreviewRoute(state, route, l10n),
+    );
 
     if (preview.hasRoute()) {
       // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');
 
+      if (preview.selectedRoute == '/${RouteNames.studyOverview}') {
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
+        context.go('/${RouteNames.studyOverview}');
+        return true;
+      }
+
       // ELIGIBILITY CHECK
       if (preview.selectedRoute == '/${RouteNames.eligibilityCheck}') {
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
         await context.push<EligibilityResult>(
           '/${RouteNames.eligibilityCheck}',
           extra: preview.study,
         );
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
 
       // INTERVENTION SELECTION
       if (preview.selectedRoute == '/${RouteNames.interventionSelection}') {
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await context.push('/${RouteNames.interventionSelection}');
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
 
       state.activeSubject = await preview.getStudySubject(
@@ -433,26 +523,29 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       // CONSENT
       if (preview.selectedRoute == '/${RouteNames.consent}') {
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await context.push<bool>('/${RouteNames.consent}');
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
 
       // JOURNEY
       if (preview.selectedRoute == '/${RouteNames.journey}') {
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await context.push('/${RouteNames.journey}');
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
 
       // DASHBOARD
       if (preview.selectedRoute == '/${RouteNames.dashboard}') {
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         context.go('/${RouteNames.dashboard}');
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
 
       // INTERVENTION [i]
@@ -462,10 +555,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // maybe remove
         state.selectedStudy!.schedule.includeBaseline = false;
         state.activeSubject!.study.schedule.includeBaseline = false;
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         context.go('/${RouteNames.dashboard}');
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
 
       // OBSERVATION [i]
@@ -475,7 +569,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
             (observation) => observation.id == preview.extra,
           ),
         ];
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         await context.push<bool>(
           '/${RouteNames.task}',
           extra: TaskInstance(
@@ -483,28 +578,146 @@ class _LoadingScreenState extends State<LoadingScreen> {
             tasks.first.schedule.completionPeriods.first.id,
           ),
         );
-        iFrameHelper.postRouteFinished();
-        return;
+        _iFrameHelper.postRouteFinished();
+        return true;
       }
     } else {
       if (isUserLoggedIn()) {
         final subject = await preview.getStudySubject(state);
         if (subject != null) {
           state.activeSubject = subject;
-          if (!mounted) return;
+          if (!mounted) return true;
+          _iFrameHelper.postPreviewStatus(status: 'loaded');
           context.go('/${RouteNames.dashboard}');
-          return;
+          return true;
         } else {
-          if (!mounted) return;
+          if (!mounted) return true;
+          _iFrameHelper.postPreviewStatus(status: 'loaded');
           context.go('/${RouteNames.studyOverview}');
-          return;
+          return true;
         }
       } else {
-        if (!mounted) return;
+        if (!mounted) return true;
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
         context.go('/${RouteNames.welcome}');
-        return;
+        return true;
       }
     }
+    return true;
+  }
+
+  Future<void> _navigatePreviewRoute(
+    AppState state,
+    String? route,
+    AppLocalizations l10n,
+  ) async {
+    if (_previewNavigationInProgress) {
+      _pendingPreviewRoute = route;
+      return;
+    }
+    _previewNavigationInProgress = true;
+    bool navigationPerformed = false;
+
+    try {
+      final navigator = navigatorKey.currentState;
+      if (navigator == null) return;
+
+      Future<bool> ensureSubject() async {
+        if (state.activeSubject != null) return true;
+        if (state.selectedStudy == null) return false;
+
+        final preview = study_preview.Preview({
+          ...?widget.queryParameters,
+          if (route != null) 'route': route,
+        }, AppLanguage(AppLocalizations.supportedLocales));
+        await preview.init();
+        // Recover the Supabase session before making authenticated calls.
+        if (!await preview.handleAuthorization()) return false;
+        // Prefer the already-fetched study from state over the one from
+        // handleAuthorization so the designer's latest edits are used.
+        if (state.selectedStudy != null) preview.study = state.selectedStudy;
+        state.activeSubject = await preview.getStudySubject(
+          state,
+          createSubject: true,
+        );
+        return state.activeSubject != null;
+      }
+
+      Future<void> waitForNavigator() async {
+        await WidgetsBinding.instance.endOfFrame;
+        await Future<void>.delayed(const Duration(milliseconds: 120));
+      }
+
+      Future<void> replaceNamed(String routeName) async {
+        await waitForNavigator();
+        navigatorKey.currentContext?.go(routeName);
+      }
+
+      Future<void> replaceWithEligibility() async {
+        if (state.selectedStudy == null) return;
+        await waitForNavigator();
+        navigatorKey.currentState?.pushReplacement(
+          EligibilityScreen.routeFor(study: state.selectedStudy),
+        );
+      }
+
+      if (route == null ||
+          route.isEmpty ||
+          route == 'studyOverview' ||
+          route == '/${RouteNames.studyOverview}') {
+        await replaceNamed('/${RouteNames.studyOverview}');
+        navigationPerformed = true;
+        return;
+      }
+
+      if (route == 'eligibilityCheck') {
+        if (state.selectedStudy == null) return;
+        await replaceWithEligibility();
+        navigationPerformed = true;
+        return;
+      }
+
+      if (route == '/${RouteNames.interventionSelection}' ||
+          route == 'interventionSelection') {
+        await replaceNamed('/${RouteNames.interventionSelection}');
+        navigationPerformed = true;
+        return;
+      }
+
+      if (!await ensureSubject()) {
+        _iFrameHelper.postPreviewStatus(
+          status: 'error',
+          message: l10n.preview_overlay_route_open_failed,
+        );
+        return;
+      }
+
+      if (route == 'consent') {
+        await replaceNamed('/${RouteNames.consent}');
+        navigationPerformed = true;
+      } else if (route == 'journey') {
+        await replaceNamed('/${RouteNames.journey}');
+        navigationPerformed = true;
+      } else if (route == 'dashboard') {
+        await replaceNamed('/${RouteNames.dashboard}');
+        navigationPerformed = true;
+      }
+    } finally {
+      _previewNavigationInProgress = false;
+      final pendingRoute = _pendingPreviewRoute;
+      _pendingPreviewRoute = null;
+      if (pendingRoute != null && pendingRoute != route) {
+        await _navigatePreviewRoute(state, pendingRoute, l10n);
+      } else if (navigationPerformed) {
+        _iFrameHelper.postPreviewStatus(status: 'loaded');
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    IFrameHelper.cancelSubscription();
+    super.dispose();
   }
 
   @override
@@ -530,7 +743,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  AppLocalizations.of(context)!.deep_link_error_title,
+                  AppLocalizations.of(context)!.error,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
@@ -560,10 +773,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '${AppLocalizations.of(context)!.loading}...',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              Text('${AppLocalizations.of(context)!.loading}...'),
               const CircularProgressIndicator(),
             ],
           ),
@@ -571,8 +781,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       ),
     );
   }
+}
 
-  /*if (!signInRes) {
+/*if (!signInRes) {
         final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
         if (migrateRes) {
           print("Successfully migrated to the new database");
@@ -585,7 +796,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }*/
 
-  /*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
     if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
       try {
         // create new account
@@ -613,4 +824,3 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     return false;
   }*/
-}

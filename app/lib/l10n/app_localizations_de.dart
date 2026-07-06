@@ -144,7 +144,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Einige Studien konnten nicht angezeigt werden, da Ihre App-Version veraltet ist. Bitte aktualisieren Sie Ihre App, um alle verfügbaren Studien zu sehen.';
+      'Einige Studien konnten nicht angezeigt werden. Das kann passieren, wenn Ihre App-Version veraltet ist. Bitte aktualisieren Sie die App, um alle verfügbaren Studien zu sehen, oder nehmen Sie an einer der unten angezeigten Studien teil.';
 
   @override
   String get study_overview_title => 'Übersicht';
@@ -1286,4 +1286,174 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get download_app_join => 'StudyU App herunterladen & Beitreten';
+
+  @override
+  String get deleted_study_error_title => 'Studie nicht verfügbar';
+
+  @override
+  String get deleted_study_error_description =>
+      'Diese Studie ist auf dem Server nicht mehr verfügbar. Ihre Daten bleiben vorerst auf diesem Gerät. Bitte kontaktieren Sie Ihre Studienleitung oder den Support, bevor Sie etwas löschen. Nutzen Sie \'Alle Daten löschen\' nur, wenn Sie zum Zurücksetzen der App aufgefordert werden.';
+
+  @override
+  String get dashboard_showcase_progress_title => 'Studienfortschritt';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Aktuelle Intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Heutige Aufgaben';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Kontakt';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Bericht';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'Weitere Optionen';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.';
+
+  @override
+  String get dashboard_showcase_finish => 'Fertig';
+
+  @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support-Anfrage - Ladefehler';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support-Anfrage - Studie nicht verfügbar';
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hallo,\n\ndie StudyU App zeigt an, dass meine Studie auf dem Server nicht mehr verfügbar ist. Meine Subject-ID ist: $subjectId\n\nBitte teilen Sie mir mit, ob ich meine lokalen Daten behalten oder die App zurücksetzen soll.\n\nVielen Dank.';
+  }
+
+  @override
+  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
+
+  @override
+  String get free_text_hint => 'Geben Sie Ihre Antwort ein';
+
+  @override
+  String get preview_failed_to_initialize =>
+      'Die Vorschau konnte nicht initialisiert werden.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'Die Vorschau-Route konnte gerade nicht geöffnet werden.';
+
+  @override
+  String get continue_label => 'Weiter';
+
+  @override
+  String get restored_answer_needs_review =>
+      'Bitte die wiederhergestellte Antwort überprüfen.';
+
+  @override
+  String get mark_answer_reviewed => 'Als überprüft markieren';
+
+  @override
+  String get no_internet_connection =>
+      'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'Ein Fehler ist aufgetreten: $message';
+  }
+
+  @override
+  String get date_picker_hint => 'Wählen Sie ein Datum';
+
+  @override
+  String get time_picker_hint => 'Wählen Sie eine Zeit';
+
+  @override
+  String get date_picker_button_label => 'Datum wählen';
+
+  @override
+  String get date_time_picker_button_label => 'Datum und Uhrzeit wählen';
+
+  @override
+  String get date_picker_button_label_datetime => 'Datum auswählen';
+
+  @override
+  String get time_picker_button_label_datetime => 'Zeit auswählen';
+
+  @override
+  String get time_picker_button_label => 'Zeit auswählen';
+
+  @override
+  String get date_picker_clear => 'Löschen';
+
+  @override
+  String get date_picker_validation_required => 'Bitte wählen Sie ein Datum';
+
+  @override
+  String get time_picker_validation_required => 'Bitte wählen Sie eine Zeit';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Bitte wählen Sie Datum und Zeit';
+
+  @override
+  String get time_picker_validation_range =>
+      'Bitte wählen Sie eine Zeit innerhalb des erlaubten Bereichs';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Wähle eine Zeit zwischen $min und $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Früheste erlaubte Zeit: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Späteste erlaubte Zeit: $max';
+  }
+
+  @override
+  String date_picker_validation_min_date(String minDate) {
+    return 'Das Datum muss nach $minDate liegen';
+  }
+
+  @override
+  String date_picker_validation_max_date(String maxDate) {
+    return 'Das Datum muss vor $maxDate liegen';
+  }
 }

@@ -393,7 +393,7 @@ class AboutScreen extends StatelessWidget {
                     if (!hasActiveSubject)
                       OutlinedButton.icon(
                         icon: const Icon(MdiIcons.rocket),
-                        onPressed: () => context.push('/${RouteNames.terms}'),
+                        onPressed: () => context.go('/${RouteNames.terms}'),
                         label: Text(
                           AppLocalizations.of(context)!.get_started,
                           style: const TextStyle(fontSize: 20),
@@ -402,8 +402,7 @@ class AboutScreen extends StatelessWidget {
                     else
                       OutlinedButton.icon(
                         icon: const Icon(MdiIcons.rocket),
-                        onPressed: () =>
-                            context.push('/${RouteNames.dashboard}'),
+                        onPressed: () => context.go('/${RouteNames.dashboard}'),
                         label: Text(
                           AppLocalizations.of(context)!.get_started,
                           style: const TextStyle(fontSize: 20),

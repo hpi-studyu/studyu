@@ -22,7 +22,7 @@ class AppOutdatedScreen extends StatelessWidget {
       storeIcon = Icons.shop;
     } else if (!kIsWeb && Platform.isIOS) {
       if (iosAppStoreId != null) {
-        storeUrl = 'https://itunes.apple.com/app/id$iosAppStoreId';
+        storeUrl = 'https://apps.apple.com/app/id$iosAppStoreId';
       }
       storeIcon = Icons.shop;
     }

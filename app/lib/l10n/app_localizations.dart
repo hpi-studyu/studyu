@@ -329,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_selection_hidden_studies.
   ///
   /// In en, this message translates to:
-  /// **'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.'**
+  /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
 
   /// No description provided for @study_overview_title.
@@ -2452,6 +2452,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download the StudyU App & Join'**
   String get download_app_join;
+
+  /// No description provided for @deleted_study_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study unavailable'**
+  String get deleted_study_error_title;
+
+  /// No description provided for @deleted_study_error_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.'**
+  String get deleted_study_error_description;
+
+  /// No description provided for @dashboard_showcase_progress_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study progress'**
+  String get dashboard_showcase_progress_title;
+
+  /// No description provided for @dashboard_showcase_progress_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This shows where you are in the study and how much is left.'**
+  String get dashboard_showcase_progress_description;
+
+  /// No description provided for @dashboard_showcase_current_intervention_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Current intervention'**
+  String get dashboard_showcase_current_intervention_title;
+
+  /// No description provided for @dashboard_showcase_current_intervention_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can see your current intervention and how many days remain in this phase.'**
+  String get dashboard_showcase_current_intervention_description;
+
+  /// No description provided for @dashboard_showcase_today_tasks_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s tasks'**
+  String get dashboard_showcase_today_tasks_title;
+
+  /// No description provided for @dashboard_showcase_today_tasks_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can find the tasks you need to complete today as part of the study.'**
+  String get dashboard_showcase_today_tasks_description;
+
+  /// No description provided for @dashboard_showcase_contact_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get dashboard_showcase_contact_title;
+
+  /// No description provided for @dashboard_showcase_contact_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this if you need help from the study team.'**
+  String get dashboard_showcase_contact_description;
+
+  /// No description provided for @dashboard_showcase_report_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get dashboard_showcase_report_title;
+
+  /// No description provided for @dashboard_showcase_report_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your current report when results are available.'**
+  String get dashboard_showcase_report_description;
+
+  /// No description provided for @dashboard_showcase_menu_title.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dashboard_showcase_menu_title;
+
+  /// No description provided for @dashboard_showcase_menu_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Find settings, FAQs, report history, and more here.'**
+  String get dashboard_showcase_menu_description;
+
+  /// No description provided for @dashboard_showcase_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get dashboard_showcase_finish;
+
+  /// No description provided for @support_email_subject_loading_error.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Support Request - Loading Error'**
+  String get support_email_subject_loading_error;
+
+  /// No description provided for @support_email_subject_deleted_study.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Support Request - Study Unavailable'**
+  String get support_email_subject_deleted_study;
+
+  /// Body of the support email for deleted study errors, includes the Subject ID
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.'**
+  String deleted_study_support_email_body(String subjectId);
+
+  /// No description provided for @show_dashboard_showcase_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show dashboard tour again'**
+  String get show_dashboard_showcase_again;
+
+  /// No description provided for @free_text_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your answer'**
+  String get free_text_hint;
+
+  /// No description provided for @preview_failed_to_initialize.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview failed to initialize.'**
+  String get preview_failed_to_initialize;
+
+  /// No description provided for @preview_overlay_reset_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened right now. Please try resetting the preview.'**
+  String get preview_overlay_reset_hint;
+
+  /// No description provided for @preview_overlay_study_not_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened for this study yet. Please try resetting the preview.'**
+  String get preview_overlay_study_not_ready;
+
+  /// No description provided for @preview_overlay_route_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview route could not be opened right now.'**
+  String get preview_overlay_route_open_failed;
+
+  /// No description provided for @continue_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_label;
+
+  /// No description provided for @restored_answer_needs_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review this restored answer.'**
+  String get restored_answer_needs_review;
+
+  /// No description provided for @mark_answer_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as reviewed'**
+  String get mark_answer_reviewed;
+
+  /// No description provided for @no_internet_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please try again when online.'**
+  String get no_internet_connection;
+
+  /// No description provided for @error_occurred_with_message.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred: {message}'**
+  String error_occurred_with_message(String message);
+
+  /// No description provided for @date_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get date_picker_hint;
+
+  /// No description provided for @time_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get time_picker_hint;
+
+  /// No description provided for @date_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date'**
+  String get date_picker_button_label;
+
+  /// No description provided for @date_time_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date and time'**
+  String get date_time_picker_button_label;
+
+  /// No description provided for @date_picker_button_label_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get date_picker_button_label_datetime;
+
+  /// No description provided for @time_picker_button_label_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get time_picker_button_label_datetime;
+
+  /// No description provided for @time_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get time_picker_button_label;
+
+  /// No description provided for @date_picker_clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get date_picker_clear;
+
+  /// No description provided for @date_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date'**
+  String get date_picker_validation_required;
+
+  /// No description provided for @time_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time'**
+  String get time_picker_validation_required;
+
+  /// No description provided for @datetime_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both date and time'**
+  String get datetime_picker_validation_required;
+
+  /// No description provided for @time_picker_validation_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time within the allowed range'**
+  String get time_picker_validation_range;
+
+  /// No description provided for @time_picker_range_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time between {min} and {max}'**
+  String time_picker_range_hint(Object min, Object max);
+
+  /// No description provided for @time_picker_min_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest allowed time: {min}'**
+  String time_picker_min_hint(Object min);
+
+  /// No description provided for @time_picker_max_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest allowed time: {max}'**
+  String time_picker_max_hint(Object max);
+
+  /// No description provided for @date_picker_validation_min_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date must be after {minDate}'**
+  String date_picker_validation_min_date(String minDate);
+
+  /// No description provided for @date_picker_validation_max_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date must be before {maxDate}'**
+  String date_picker_validation_max_date(String maxDate);
 }
 
 class _AppLocalizationsDelegate

@@ -144,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.';
+      'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.';
 
   @override
   String get study_overview_title => 'Overview';
@@ -1274,4 +1274,173 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get download_app_join => 'Download the StudyU App & Join';
+
+  @override
+  String get deleted_study_error_title => 'Study unavailable';
+
+  @override
+  String get deleted_study_error_description =>
+      'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.';
+
+  @override
+  String get dashboard_showcase_progress_title => 'Study progress';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'This shows where you are in the study and how much is left.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Current intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Here you can see your current intervention and how many days remain in this phase.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Today\'s tasks';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Here you can find the tasks you need to complete today as part of the study.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Contact';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Use this if you need help from the study team.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Report';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Open your current report when results are available.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'More options';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Find settings, FAQs, report history, and more here.';
+
+  @override
+  String get dashboard_showcase_finish => 'Finish';
+
+  @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support Request - Loading Error';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support Request - Study Unavailable';
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: $subjectId\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.';
+  }
+
+  @override
+  String get show_dashboard_showcase_again => 'Show dashboard tour again';
+
+  @override
+  String get free_text_hint => 'Enter your answer';
+
+  @override
+  String get preview_failed_to_initialize => 'Preview failed to initialize.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'The preview could not be opened right now. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'The preview could not be opened for this study yet. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'The preview route could not be opened right now.';
+
+  @override
+  String get continue_label => 'Continue';
+
+  @override
+  String get restored_answer_needs_review =>
+      'Please review this restored answer.';
+
+  @override
+  String get mark_answer_reviewed => 'Mark as reviewed';
+
+  @override
+  String get no_internet_connection =>
+      'No internet connection. Please try again when online.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'An error occurred: $message';
+  }
+
+  @override
+  String get date_picker_hint => 'Select a date';
+
+  @override
+  String get time_picker_hint => 'Select a time';
+
+  @override
+  String get date_picker_button_label => 'Choose date';
+
+  @override
+  String get date_time_picker_button_label => 'Choose date and time';
+
+  @override
+  String get date_picker_button_label_datetime => 'Select date';
+
+  @override
+  String get time_picker_button_label_datetime => 'Select time';
+
+  @override
+  String get time_picker_button_label => 'Select a time';
+
+  @override
+  String get date_picker_clear => 'Clear';
+
+  @override
+  String get date_picker_validation_required => 'Please select a date';
+
+  @override
+  String get time_picker_validation_required => 'Please select a time';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Please select both date and time';
+
+  @override
+  String get time_picker_validation_range =>
+      'Please select a time within the allowed range';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Select a time between $min and $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Earliest allowed time: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Latest allowed time: $max';
+  }
+
+  @override
+  String date_picker_validation_min_date(String minDate) {
+    return 'Date must be after $minDate';
+  }
+
+  @override
+  String date_picker_validation_max_date(String maxDate) {
+    return 'Date must be before $maxDate';
+  }
 }

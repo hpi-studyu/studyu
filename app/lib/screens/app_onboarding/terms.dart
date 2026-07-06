@@ -91,6 +91,7 @@ class _TermsScreenState extends State<TermsScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        backButtonKey: const ValueKey('terms_back'),
         onBack: () {
           if (context.canPop()) {
             context.pop();
@@ -101,7 +102,7 @@ class _TermsScreenState extends State<TermsScreen> {
         nextButtonKey: const ValueKey('terms_continue'),
         onNext: userCanContinue()
             ? () async {
-                final success = await anonymousSignUp();
+                final success = await ensureParticipantSignedIn();
                 if (success) {
                   if (!context.mounted) return;
                   final state = context.read<AppState>();

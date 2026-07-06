@@ -41,31 +41,23 @@ class ActionMenuInline extends StatelessWidget {
     final actionButtons = actions.map((ModelAction action) {
       return Tooltip(
         message: action.label,
-        child: Builder(
-          builder: (context) => MouseEventsRegion(
-            builder: (context, state) {
-              return IconButton(
-                padding: EdgeInsets.zero,
-                splashRadius: splashRadius,
-                onPressed: () {
-                  if (action.onExecuteWithContext != null) {
-                    action.onExecuteWithContext!(context);
-                  } else {
-                    action.onExecute();
-                  }
-                },
-                iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
-                icon: Icon(
-                  action.icon,
-                  color:
-                      iconColor?.resolve(state) ??
-                      (action.isDestructive
-                          ? Colors.red
-                          : defaultIconColor(state)),
-                ),
-              );
-            },
-          ),
+        child: MouseEventsRegion(
+          builder: (context, state) {
+            return IconButton(
+              padding: EdgeInsets.zero,
+              splashRadius: splashRadius,
+              onPressed: () => action.execute(context),
+              iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
+              icon: Icon(
+                action.icon,
+                color:
+                    iconColor?.resolve(state) ??
+                    (action.isDestructive
+                        ? Colors.red
+                        : defaultIconColor(state)),
+              ),
+            );
+          },
         ),
       );
     }).toList();

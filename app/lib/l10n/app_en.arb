@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-
   "loading": "Loading",
   "loading_error_title": "Loading Error",
   "loading_error_description": "The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.",
@@ -8,7 +7,6 @@
   "delete_all_data": "Delete all data",
   "delete_all_data_description": "Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.",
   "reset_app": "Reset App",
-
   "what_is_studyu": "What is StudyU?",
   "description_part1": "Imagine reading the sentence: \"Eating after 6 pm decreases sleep quality\"",
   "description_part2": "Now you might think something like: Well... good to know but is that affecting everyone and also ME?",
@@ -19,10 +17,8 @@
   "description_part7": "Once you have chosen one of our studies we will make sure that your health status allows participation. Afterwards you can enroll as a participant and adapt the study plan to your everyday life. Tasks (e.g. eating late and rating your tiredness) have to be done on a regular basis (e.g. once per day). Once you have reached the minimum study duration (usually just a few weeks) you will be able to unlock results for free.",
   "description_part8": "But bear in mind that results are more reliable the longer you take actively part in the study. And in order to prevent systematic error you cannot go on with the study after unlocking results. Therefore, with the help of a progress bar we will indicate you how many tasks are still needed for the minimum and how much you could improve your results with going on for some more weeks.",
   "description_part9": "But enough from our side, now it's time for StudyU!",
-
   "get_started": "Get started",
   "show_onboarding_again": "Show onboarding again",
-
   "onboarding_page0_title": "Welcome to StudyU",
   "onboarding_page0_subtitle": "Your journey to better health starts here. Let's see how it works! Tap 'Next' to continue.",
   "onboarding_page1_title": "What works for YOU?",
@@ -33,7 +29,6 @@
   "onboarding_page3_subtitle": "General stats don't always apply to you. Track your progress daily and unlock results that show what actually helps your body.",
   "onboarding_page4_title": "Take Control",
   "onboarding_page4_subtitle": "Ready to find your answers? Select a study and start your journey to better health today.",
-
   "study_selection": "Study Selection",
   "study_selection_description": "Please select a study.",
   "study_selection_single": "You can only participate in one study at a time.",
@@ -43,7 +38,7 @@
   "study_selection_unsupported": "The study you are trying to join is not compatible with your app version. Please update the app to the latest version.",
   "study_selection_closed_title": "Study closed",
   "study_selection_closed": "This study is currently closed for new participants.",
-  "study_selection_hidden_studies": "Some studies couldn't be shown, because your app version is outdated. Please update your app to see all available studies.",
+  "study_selection_hidden_studies": "Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.",
   "study_overview_title": "Overview",
   "eligibility_questionnaire_title": "Questionnaire",
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
@@ -52,22 +47,18 @@
   "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
-
   "task_already_completed": "You have already completed this task today",
   "task_cannot_be_completed": "The task cannot be completed",
   "task_outside_period": "The task cannot be completed outside of the intervention period",
   "study_notification_body": "A new task awaits your attention",
-
   "intervention_phase_duration": "Intervention phase duration",
   "days": "days",
   "study_length": "Study length",
   "study_publisher": "Study Publisher",
-
   "tasks_daily": "Tasks:",
   "baseline_description": "The baseline is a phase within a study in which the initial state is measured to allow later comparisons. During the baseline phase you should behave as usual, no study-specific interventions are carried out yet.",
   "baseline": "Baseline",
   "days_left": "days left",
-
   "today_tasks": "Today's tasks",
   "intervention_current": "Current intervention",
   "study_current": "Current study:",
@@ -76,10 +67,8 @@
   "soft_delete_desc": "You will lose your progress in ",
   "soft_delete_desc_2": " and won't be able to recover it. Previously completed studies will not be deleted.\nYour anonymized data up to this point may still be used for research purposes.",
   "hard_delete_desc": "You are about to delete all data from your device and our servers. You will not be able to restore your data.\nYour anonymized data will not be available for research purposes anymore.",
-
   "your_journey": "Your Journey",
   "journey_results_available": "Results available",
-
   "summary": "Summary",
   "consent": "Consent",
   "error": "An error occurred!",
@@ -88,17 +77,14 @@
   "back_pain": "Back pain",
   "video_task": "Video task",
   "finished": "Finished",
-
   "how_would_you_rate_your_pain_today": "How would you rate your pain today? (0 = no pain, 10 = extreme pain)",
   "thank_you_for_your_input": "Thank you for your input",
   "please_give_consent": "Please give your consent to participate in this study. You are required to read all boxes by clicking on them.",
   "please_give_consent_why": "Why?",
   "please_give_consent_reason": "Studies need to request specific consent from participants, for reasons of safety and data privacy. Hence, you must explicitly consent to participate in each study.",
   "user_did_not_give_consent": "You did not give your consent. To participate you need to give consent.",
-
   "setting_up_study": "Setting up your study...",
   "good_to_go": "You are good to go!",
-
   "dashboard": "Dashboard",
   "home": "Home",
   "profile": "Profile",
@@ -120,7 +106,6 @@
   "no": "no",
   "confirm": "Confirm selection",
   "survey": "Survey",
-
   "complete": "Complete",
   "cancel": "Cancel",
   "accept": "Accept",
@@ -131,12 +116,9 @@
   "completed": "Completed",
   "faq_full": "Frequently Asked Questions",
   "faq": "FAQ",
-
   "start_study": "Start Study",
   "next_day": "Next day",
-
   "could_not_save_results": "Could not save results",
-
   "take_a_photo": "Take a photo",
   "start_recording": "Start recording",
   "stop_recording": "Stop recording",
@@ -152,16 +134,13 @@
   "storing_photo": "The photo is being stored",
   "storing_audio": "The audio file is being stored",
   "upload_error": "The file could not be uploaded",
-
   "language": "Language",
   "en": "English",
   "de": "German",
   "allow_analytics": "Allow app analytics",
   "allow_analytics_desc": "All collected data is used only to improve app performance and never for tracking purposes. You can read more about this in our data privacy.",
-
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",
-
   "current_report": "Current report",
   "report_history": "Report history",
   "no_reports_found": "No reports defined yet",
@@ -169,34 +148,28 @@
   "not_enough_data": "Not enough data",
   "barely_enough_data": "Barely enough data",
   "enough_data": "Enough data",
-
   "terms": "Terms of Use",
   "terms_read": "Read Terms of Use",
   "terms_content": "The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.",
   "terms_agree": "I have read and agree to the terms of use",
-
   "privacy": "Privacy Policy",
   "privacy_read": "Read Privacy Policy",
   "privacy_content": "The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.",
   "privacy_agree": "I have read and agree to the privacy policy",
   "imprint_read": "Read Legal Notice",
-
   "invite_code_button": "Use invite code",
   "private_study_invite_code": "Private study invite code",
   "invite_code": "Invite code",
   "invalid_invite_code": "Not a valid invite code",
-
   "save_pdf": "Save as PDF",
   "was_saved_to": "The file was saved to ",
   "save_not_supported": "Error",
   "save_not_supported_description": "Downloading files is currently not supported in the web version.",
-
   "eligible_no": "You are not eligible for this study",
   "eligible_yes": "You are eligible for this study",
   "eligible_mistake": "If you made a mistake, you can still change your answers",
   "eligible_back": "Back to study selection",
   "eligible_choice_multi_selection": "Select all that apply",
-
   "report_overview": "Report overview",
   "report_primary_result": "Primary Result",
   "report_disclaimer": "This report is only valid if you entered all information correctly.",
@@ -204,15 +177,12 @@
   "performance_overview": "Overview of completion of tasks",
   "performance_overview_interventions": "Interventions",
   "performance_overview_observations": "Observations",
-
   "report_outcome_inconclusive": "The results are inconclusive. There does not seem to be a statistically significant difference between the interventions.",
   "report_outcome_neither": "Both interventions seem to have a negative effect on the outcome for you.",
   "report_outcome_one": "The intervention {intervention} seems to improve the outcome for you.",
   "report_axis_phase": "Phase",
-
   "study_not_started": "Your study has not started yet. Please check back tomorrow!",
   "completed_study": "You completed your last study. Look at past reports or start a new study.",
-
   "app_support": "App support",
   "app_support_text": "Contact for problems or questions with the app",
   "study_support": "Study support",
@@ -224,7 +194,6 @@
   "email": "Email",
   "phone": "Phone",
   "additionalInfo": "Additional information",
-
   "free_text_min_length_error": "Please enter at least {min} characters",
   "@free_text_min_length_error": {
     "placeholders": {
@@ -246,7 +215,6 @@
   "free_text_custom_error": "Please enter a value in the required format",
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
   "update_now": "Update now",
-
   "text_summary_section_prefix_higher": "Your ",
   "text_summary_section_was_higher": " was higher during intervention: ",
   "text_summary_section_was_lower": " was lower during intervention: ",
@@ -301,8 +269,7 @@
   "maximum": "Maximum",
   "support_email_sent": "Support Email Sent",
   "support_email_sent_description": "Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.",
-	"no_contact_email": "The support email address is not configured. Please contact your study supervisor for assistance.",
-
+  "no_contact_email": "The support email address is not configured. Please contact your study supervisor for assistance.",
   "sync_fitbit_data": "Sync Fitbit Data",
   "fitbit_data_synced": "Fitbit data synced successfully",
   "fitbit_data_not_synced": "Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.",
@@ -449,7 +416,6 @@
   "painTypeTightness": "Tightness",
   "painTypeSoreness": "Soreness",
   "painTypeStiffness": "Stiffness",
-
   "preview_mode": "Preview Mode",
   "preview_mode_active": "Preview Mode Active",
   "preview_mode_active_state": "Preview mode is now active.",
@@ -457,9 +423,8 @@
   "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
-  "submit" : "Submit",
-  "go_back" : "Go back",
-
+  "submit": "Submit",
+  "go_back": "Go back",
   "deep_link_error_title": "Error",
   "deep_link_study_not_found": "Study with ID {studyId} not found or not available",
   "@deep_link_study_not_found": {
@@ -504,5 +469,96 @@
   "deep_link_switch_confirm_hard_button": "Confirm hard delete",
   "open_link_on_mobile": "Please open this link on your mobile device.",
   "you_have_been_invited": "You have been invited to a study!",
-  "download_app_join": "Download the StudyU App & Join"
+  "download_app_join": "Download the StudyU App & Join",
+  "deleted_study_error_title": "Study unavailable",
+  "deleted_study_error_description": "This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use 'Delete all data' if they tell you to reset the app.",
+  "dashboard_showcase_progress_title": "Study progress",
+  "dashboard_showcase_progress_description": "This shows where you are in the study and how much is left.",
+  "dashboard_showcase_current_intervention_title": "Current intervention",
+  "dashboard_showcase_current_intervention_description": "Here you can see your current intervention and how many days remain in this phase.",
+  "dashboard_showcase_today_tasks_title": "Today's tasks",
+  "dashboard_showcase_today_tasks_description": "Here you can find the tasks you need to complete today as part of the study.",
+  "dashboard_showcase_contact_title": "Contact",
+  "dashboard_showcase_contact_description": "Use this if you need help from the study team.",
+  "dashboard_showcase_report_title": "Report",
+  "dashboard_showcase_report_description": "Open your current report when results are available.",
+  "dashboard_showcase_menu_title": "More options",
+  "dashboard_showcase_menu_description": "Find settings, FAQs, report history, and more here.",
+  "dashboard_showcase_finish": "Finish",
+  "support_email_subject_loading_error": "StudyU Support Request - Loading Error",
+  "support_email_subject_deleted_study": "StudyU Support Request - Study Unavailable",
+  "deleted_study_support_email_body": "Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.",
+  "@deleted_study_support_email_body": {
+    "description": "Body of the support email for deleted study errors, includes the Subject ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
+  "show_dashboard_showcase_again": "Show dashboard tour again",
+  "free_text_hint": "Enter your answer",
+  "preview_failed_to_initialize": "Preview failed to initialize.",
+  "preview_overlay_reset_hint": "The preview could not be opened right now. Please try resetting the preview.",
+  "preview_overlay_study_not_ready": "The preview could not be opened for this study yet. Please try resetting the preview.",
+  "preview_overlay_route_open_failed": "The preview route could not be opened right now.",
+  "continue_label": "Continue",
+  "restored_answer_needs_review": "Please review this restored answer.",
+  "mark_answer_reviewed": "Mark as reviewed",
+  "no_internet_connection": "No internet connection. Please try again when online.",
+  "error_occurred_with_message": "An error occurred: {message}",
+  "@error_occurred_with_message": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_hint": "Select a date",
+  "time_picker_hint": "Select a time",
+  "date_picker_button_label": "Choose date",
+  "date_time_picker_button_label": "Choose date and time",
+  "date_picker_button_label_datetime": "Select date",
+  "time_picker_button_label_datetime": "Select time",
+  "time_picker_button_label": "Select a time",
+  "date_picker_clear": "Clear",
+  "date_picker_validation_required": "Please select a date",
+  "time_picker_validation_required": "Please select a time",
+  "datetime_picker_validation_required": "Please select both date and time",
+  "time_picker_validation_range": "Please select a time within the allowed range",
+  "time_picker_range_hint": "Select a time between {min} and {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Earliest allowed time: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Latest allowed time: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "date_picker_validation_min_date": "Date must be after {minDate}",
+  "@date_picker_validation_min_date": {
+    "placeholders": {
+      "minDate": {
+        "type": "String"
+      }
+    }
+  },
+  "date_picker_validation_max_date": "Date must be before {maxDate}",
+  "@date_picker_validation_max_date": {
+    "placeholders": {
+      "maxDate": {
+        "type": "String"
+      }
+    }
+  }
 }

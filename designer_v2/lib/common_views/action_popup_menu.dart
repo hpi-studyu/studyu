@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -78,8 +80,8 @@ class ActionPopUpMenuButton extends StatelessWidget {
             ? Icons.more_vert_rounded
             : Icons.more_horiz_rounded);
 
-    return PopupMenuButton(
-      key: key,
+    return PopupMenuButton<ModelAction>(
+      key: key ?? ValueKey(actions),
       icon:
           triggerBuilder ??
           Icon(
@@ -91,18 +93,9 @@ class ActionPopUpMenuButton extends StatelessWidget {
       elevation: elevation,
       splashRadius: splashRadius,
       position: position,
-      onSelected: (action) {
-        if (action is ModelAction) {
-          if (action.onExecuteWithContext != null) {
-            action.onExecuteWithContext!(context);
-          } else {
-            action.onExecute();
-          }
-        }
-      },
-      itemBuilder: (BuildContext context) {
+      itemBuilder: (BuildContext itemContext) {
         final textTheme = theme.textTheme.labelMedium!;
-        final List<PopupMenuEntry> popupList = [];
+        final List<PopupMenuEntry<ModelAction>> popupList = [];
         for (final action in actions) {
           if (action.isSeparator) {
             popupList.add(const PopupMenuDivider());
@@ -110,7 +103,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
           }
           if (action.isHeader) {
             popupList.add(
-              PopupMenuItem(
+              PopupMenuItem<ModelAction>(
                 enabled: false,
                 height: 32, // Condensed header
                 child: Text(
@@ -126,8 +119,14 @@ class ActionPopUpMenuButton extends StatelessWidget {
             continue;
           }
           popupList.add(
-            PopupMenuItem(
+            PopupMenuItem<ModelAction>(
               value: action,
+              onTap: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!context.mounted) return;
+                  unawaited(action.execute(context));
+                });
+              },
               child: (action.tooltip != null)
                   ? Tooltip(
                       message: action.tooltip,

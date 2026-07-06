@@ -9,6 +9,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final String? nextLabel;
   final bool hideNext;
   final bool hideBack;
+  final bool backEnabled;
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
@@ -23,6 +24,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.nextLabel,
     this.hideNext = false,
     this.hideBack = false,
+    this.backEnabled = true,
     this.nextIcon,
     this.backIcon,
     this.progress,
@@ -32,6 +34,21 @@ class BottomOnboardingNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A custom onBack handler may perform its own navigation regardless of
+    // whether the navigator stack has entries, so we only gate pop-based
+    // navigation on canPop; custom handlers are always enabled when
+    // backEnabled is true.
+    final canNavigateBack = backEnabled && (onBack != null || context.canPop());
+
+    void handleBack() {
+      if (onBack != null) {
+        onBack!.call();
+        return;
+      }
+
+      context.pop();
+    }
+
     return BottomAppBar(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -44,13 +61,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainState: true,
               child: TextButton(
                 key: backButtonKey,
-                onPressed:
-                    onBack ??
-                    () {
-                      if (context.canPop()) {
-                        context.pop();
-                      }
-                    },
+                onPressed: canNavigateBack ? handleBack : null,
                 child: Row(
                   children: [
                     backIcon ?? const Icon(Icons.navigate_before),

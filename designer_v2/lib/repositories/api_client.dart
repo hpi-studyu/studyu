@@ -204,9 +204,40 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<void> deleteStudy(Study study) async {
     await _testDelay();
-    // Delegate to [SupabaseObjectMethods]
-    // TODO: proper error handling here (encountered so far: 409, 406)
+
+    // Some environments still have study foreign keys without ON DELETE CASCADE.
+    // Delete child rows explicitly so study deletion works there too.
+    await _deleteStudyDependents(study.id);
     await study.delete();
+  }
+
+  Future<void> _deleteStudyDependents(StudyID studyId) async {
+    final subjectRows = await supabaseClient
+        .from(StudySubject.tableName)
+        .select('id')
+        .eq('study_id', studyId);
+    final subjectIds = subjectRows.map((row) => row['id'] as String).toList();
+
+    if (subjectIds.isNotEmpty) {
+      await supabaseClient
+          .from(SubjectProgress.tableName)
+          .delete()
+          .inFilter('subject_id', subjectIds);
+    }
+
+    await supabaseClient
+        .from(StudySubject.tableName)
+        .delete()
+        .eq('study_id', studyId);
+    await supabaseClient
+        .from(StudyInvite.tableName)
+        .delete()
+        .eq('study_id', studyId);
+    await supabaseClient
+        .from(StudyFitbitCredentials.tableName)
+        .delete()
+        .eq('study_id', studyId);
+    await supabaseClient.from(Repo.tableName).delete().eq('study_id', studyId);
   }
 
   @override

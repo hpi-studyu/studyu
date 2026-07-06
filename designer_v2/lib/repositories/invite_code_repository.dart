@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -80,28 +81,27 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         type: ModelActionType.share,
         label: ModelActionType.share.string,
         onExecute: () {},
-        onExecuteWithContext: (BuildContext context) {
+        onExecuteWithContext: (context) {
           _showSharePopup(context, deepLink, model.code);
         },
       ),
       ModelAction(
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
+        confirmation: ModelActionConfirmations.delete(
+          subject: tr.dialog_subject_invite_code,
+        ),
         onExecute: () async {
-          return await delete(getKey(model))
-              .then(
-                (value) => ref
-                    .read(routerProvider)
-                    .dispatch(RoutingIntents.studyRecruit(model.studyId)),
-              )
-              .then(
-                (value) => Future.delayed(
-                  const Duration(milliseconds: 200),
-                  () => ref
-                      .read(notificationServiceProvider)
-                      .show(Notifications.inviteCodeDeleted),
-                ),
-              );
+          await delete(getKey(model));
+          ref
+              .read(routerProvider)
+              .dispatch(RoutingIntents.studyRecruit(model.studyId));
+          await Future.delayed(
+            const Duration(milliseconds: 200),
+            () => ref
+                .read(notificationServiceProvider)
+                .show(Notifications.inviteCodeDeleted),
+          );
         },
         isAvailable: study.isOwner(authRepository.currentUser),
         isDestructive: true,
@@ -187,12 +187,6 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       }
     });
   }
-
-  @override
-  void emitUpdate() {
-    print("InviteCodeRepository.emitUpdate");
-    super.emitUpdate();
-  }
 }
 
 class InviteCodeRepositoryDelegate
@@ -246,10 +240,7 @@ class InviteCodeRepositoryDelegate
         study.invites = prevInvites;
         studyRepository.upsertLocally(study);
       },
-      onUpdate: () {
-        print("saveOperation: studyRepository.emitUpdate()");
-        studyRepository.emitUpdate();
-      },
+      onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
     );
 

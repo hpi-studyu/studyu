@@ -115,8 +115,17 @@ GoRouter createAppRouter({
         path: '/${RouteNames.appErrorScreen}',
         name: RouteNames.appErrorScreen,
         builder: (context, state) {
-          final selectedSubjectId = state.extra as String?;
-          return AppErrorScreen(selectedSubjectId: selectedSubjectId);
+          final arguments = switch (state.extra) {
+            final AppErrorScreenArguments args => args,
+            final String selectedSubjectId => AppErrorScreenArguments(
+              selectedSubjectId: selectedSubjectId,
+            ),
+            _ => const AppErrorScreenArguments(),
+          };
+          return AppErrorScreen(
+            selectedSubjectId: arguments.selectedSubjectId,
+            reason: arguments.reason,
+          );
         },
       ),
       GoRoute(

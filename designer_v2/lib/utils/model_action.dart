@@ -1,13 +1,69 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+
+typedef ModelActionHandler = FutureOr<void> Function();
+typedef ModelActionConfirmationDialogBuilder =
+    Widget Function(BuildContext dialogContext, ModelAction action);
+
+class ModelActionConfirmation {
+  const ModelActionConfirmation({
+    required this.title,
+    this.message,
+    this.confirmLabel,
+    this.cancelLabel,
+    this.icon,
+    this.customContent,
+    this.dialogBuilder,
+  });
+
+  final String title;
+  final String? message;
+  final String? confirmLabel;
+  final String? cancelLabel;
+  final IconData? icon;
+  final Widget? customContent;
+  final ModelActionConfirmationDialogBuilder? dialogBuilder;
+}
+
+class ModelActionConfirmations {
+  static ModelActionConfirmation delete({
+    required String subject,
+    String? title,
+    String? message,
+    IconData? icon,
+  }) {
+    return ModelActionConfirmation(
+      title: title ?? tr.dialog_delete_title(subject),
+      message: message ?? tr.dialog_delete_description(subject),
+      icon: icon,
+    );
+  }
+
+  static ModelActionConfirmation remove({
+    required String subject,
+    String? title,
+    String? message,
+    IconData? icon,
+  }) {
+    return ModelActionConfirmation(
+      title: title ?? tr.dialog_remove_title(subject),
+      message: message ?? tr.dialog_remove_description(subject),
+      icon: icon,
+    );
+  }
+}
 
 class ModelAction<T> {
   final T type;
   final String label;
   IconData? icon;
   final String? tooltip;
-  final void Function() onExecute;
-  final void Function(BuildContext context)? onExecuteWithContext;
+  final ModelActionHandler onExecute;
+  final dynamic Function(BuildContext context)? onExecuteWithContext;
+  final ModelActionConfirmation? confirmation;
   final bool isHeader;
   final bool isSeparator;
   final bool isAvailable;
@@ -20,6 +76,7 @@ class ModelAction<T> {
     required this.label,
     required this.onExecute,
     this.onExecuteWithContext,
+    this.confirmation,
     this.isSeparator = false,
     this.isHeader = false,
     this.isAvailable = true,
@@ -46,6 +103,49 @@ class ModelAction<T> {
       onExecute: () {},
       isHeader: true,
     );
+  }
+
+  Future<void> execute(BuildContext context) async {
+    if (confirmation != null) {
+      if (!context.mounted) return;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) {
+          final dialogBuilder = confirmation!.dialogBuilder;
+          if (dialogBuilder != null) {
+            return dialogBuilder(dialogContext, this);
+          }
+
+          return StandardConfirmationDialog(
+            title: confirmation!.title,
+            message: confirmation!.message,
+            customContent: confirmation!.customContent,
+            icon: confirmation!.icon,
+            actions: [
+              ConfirmationDialogAction(
+                label: confirmation!.cancelLabel ?? tr.dialog_cancel,
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+              ConfirmationDialogAction(
+                label: confirmation!.confirmLabel ?? label,
+                isDestructive: isDestructive,
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+            ],
+          );
+        },
+      );
+      if (confirmed != true) {
+        return;
+      }
+    }
+
+    if (onExecuteWithContext != null) {
+      await Future.sync(() => onExecuteWithContext!(context));
+      return;
+    }
+
+    await Future.sync(onExecute);
   }
 }
 

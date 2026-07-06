@@ -149,6 +149,7 @@ class InterventionFormViewModel
     final actions = tasksCollection.availableActions(
       model,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_intervention_task,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -157,6 +158,7 @@ class InterventionFormViewModel
   List<ModelAction> availablePopupActions(InterventionTaskFormViewModel model) {
     final actions = tasksCollection.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_intervention_task,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -167,6 +169,7 @@ class InterventionFormViewModel
   ) {
     final actions = tasksCollection.availableInlineActions(
       model,
+      confirmationSubject: tr.dialog_subject_intervention_task,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);

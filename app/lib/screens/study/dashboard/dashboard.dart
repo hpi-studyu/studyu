@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -8,10 +9,13 @@ import 'package:flutter_material_design_icons/flutter_material_design_icons.dart
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
+import 'package:studyu_app/theme.dart' as app_theme;
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,15 +33,27 @@ class OverflowMenuItem {
   final String name;
   final IconData icon;
   final String? routeName;
-  final Function()? onTap;
+  final Future<void> Function()? onTap;
 
   OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
 }
 
 class _DashboardScreenState extends State<DashboardScreen>
     with WidgetsBindingObserver {
+  final GlobalKey _progressShowcaseKey = GlobalKey();
+  final GlobalKey _currentInterventionShowcaseKey = GlobalKey();
+  final GlobalKey _todayTasksShowcaseKey = GlobalKey();
+  final GlobalKey _contactShowcaseKey = GlobalKey();
+  final GlobalKey _reportShowcaseKey = GlobalKey();
+  final GlobalKey _menuShowcaseKey = GlobalKey();
+
+  late final ShowcaseView _dashboardShowcase;
+  late final TextStyle showcaseActionTextStyle;
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
+  bool _showcaseCheckStarted = false;
+  bool _redirectingToLoading = false;
+  bool _isDisposing = false;
 
   bool get showNextDay =>
       (kDebugMode || context.read<AppState>().isPreview) &&
@@ -47,6 +63,29 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    showcaseActionTextStyle = TextStyle(
+      color: app_theme.theme.colorScheme.onPrimary,
+    );
+    _dashboardShowcase = ShowcaseView.register(
+      blurValue: 1,
+      globalTooltipActionConfig: const TooltipActionConfig(actionGap: 12),
+      globalTooltipActions: [
+        TooltipActionButton(
+          type: TooltipDefaultActionType.skip,
+          backgroundColor: app_theme.theme.colorScheme.primary,
+          textStyle: showcaseActionTextStyle,
+          hideActionWidgetForShowcase: [_menuShowcaseKey],
+        ),
+        TooltipActionButton(
+          type: TooltipDefaultActionType.next,
+          backgroundColor: app_theme.theme.colorScheme.primary,
+          textStyle: showcaseActionTextStyle,
+          hideActionWidgetForShowcase: [_menuShowcaseKey],
+        ),
+      ],
+      onFinish: _markDashboardShowcaseCompleted,
+      onDismiss: (_) => _markDashboardShowcaseCompleted(),
+    );
   }
 
   @override
@@ -80,154 +119,207 @@ class _DashboardScreenState extends State<DashboardScreen>
           ).showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
+      unawaited(_startDashboardShowcaseIfNeeded());
     }
   }
 
   @override
   void dispose() {
+    _isDisposing = true;
     WidgetsBinding.instance.removeObserver(this);
+    _dashboardShowcase.dismiss();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (subject == null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        context.go('/${RouteNames.loading}');
-      });
+      if (!_redirectingToLoading) {
+        _redirectingToLoading = true;
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          context.go('/${RouteNames.loading}');
+        });
+      }
       return const SizedBox.shrink();
     }
 
     final isPreviewMode = context.read<AppState>().isPreview;
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
         automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context)!.dashboard),
+        title: Text(l10n.dashboard),
         forceMaterialTransparency: true,
         actions: [
-          IconButton(
-            tooltip: AppLocalizations.of(context)!.contact,
-            icon: const Icon(MdiIcons.faceAgent),
-            onPressed: () {
-              context.push('/${RouteNames.contact}');
-            },
+          Showcase(
+            key: _contactShowcaseKey,
+            title: l10n.dashboard_showcase_contact_title,
+            description: l10n.dashboard_showcase_contact_description,
+            tooltipBackgroundColor: theme.colorScheme.surface,
+            textColor: theme.colorScheme.onSurface,
+            targetShapeBorder: const CircleBorder(),
+            child: IconButton(
+              tooltip: l10n.contact,
+              icon: const Icon(MdiIcons.faceAgent),
+              onPressed: () {
+                context.push('/${RouteNames.contact}');
+              },
+            ),
           ),
-          IconButton(
-            tooltip: AppLocalizations.of(context)!.current_report,
-            icon: const Icon(MdiIcons.chartBar),
-            onPressed: () =>
-                context.push('/${RouteNames.reportDetails}', extra: subject),
+          Showcase(
+            key: _reportShowcaseKey,
+            title: l10n.dashboard_showcase_report_title,
+            description: l10n.dashboard_showcase_report_description,
+            tooltipBackgroundColor: theme.colorScheme.surface,
+            textColor: theme.colorScheme.onSurface,
+            targetShapeBorder: const CircleBorder(),
+            child: IconButton(
+              tooltip: l10n.current_report,
+              icon: const Icon(MdiIcons.chartBar),
+              onPressed: () =>
+                  context.push('/${RouteNames.reportDetails}', extra: subject),
+            ),
           ),
-          PopupMenuButton<OverflowMenuItem>(
-            onSelected: (value) {
-              if (value.routeName != null) {
-                context.push(value.routeName!);
-              } else {
-                value.onTap?.call();
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.report_history,
-                  MdiIcons.history,
-                  routeName: '/${RouteNames.reportHistory}',
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.faq,
-                  MdiIcons.frequentlyAskedQuestions,
-                  routeName: '/${RouteNames.faq}',
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.settings,
-                  Icons.settings,
-                  routeName: '/${RouteNames.appSettings}',
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.what_is_studyu,
-                  MdiIcons.helpCircleOutline,
-                  routeName: '/${RouteNames.about}',
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.about,
-                  MdiIcons.informationOutline,
-                  onTap: () async {
-                    final iconAuthors = ['Kiranshastry'];
-                    final PackageInfo packageInfo =
-                        await PackageInfo.fromPlatform();
-                    if (!context.mounted) return;
-                    showAboutDialog(
-                      context: context,
-                      applicationIcon: InkWell(
-                        onDoubleTap: () {
-                          DebugScreen.showDebugScreen(context);
-                        },
-                        child: const Image(
-                          image: AssetImage('assets/icon/icon.png'),
-                          height: 32,
-                        ),
-                      ),
-                      applicationVersion:
-                          '${packageInfo.version} - ${packageInfo.buildNumber}',
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: const TextStyle(color: Colors.black),
-                            children: [
-                              const TextSpan(text: 'Icons from '),
-                              TextSpan(
-                                style: const TextStyle(color: Colors.blue),
-                                text: 'www.flaticon.com',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    launchUrl(
-                                      Uri.parse('https://www.flaticon.com/'),
-                                    );
-                                  },
-                              ),
-                              const TextSpan(text: ' made by'),
-                            ],
+          Showcase(
+            key: _menuShowcaseKey,
+            title: l10n.dashboard_showcase_menu_title,
+            description: l10n.dashboard_showcase_menu_description,
+            tooltipBackgroundColor: theme.colorScheme.surface,
+            textColor: theme.colorScheme.onSurface,
+            tooltipActions: [
+              TooltipActionButton(
+                type: TooltipDefaultActionType.skip,
+                backgroundColor: theme.colorScheme.primary,
+                textStyle: showcaseActionTextStyle,
+              ),
+              TooltipActionButton(
+                type: TooltipDefaultActionType.next,
+                name: l10n.dashboard_showcase_finish,
+                backgroundColor: theme.colorScheme.primary,
+                textStyle: showcaseActionTextStyle,
+              ),
+            ],
+            targetShapeBorder: const CircleBorder(),
+            child: PopupMenuButton<OverflowMenuItem>(
+              onSelected: (value) async {
+                if (value.routeName != null) {
+                  final result = await context.push(value.routeName!);
+                  if (!mounted) return;
+                  if (value.routeName == '/${RouteNames.appSettings}' &&
+                      result == true) {
+                    await _restartDashboardShowcase();
+                  }
+                } else {
+                  await value.onTap?.call();
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.report_history,
+                    MdiIcons.history,
+                    routeName: '/${RouteNames.reportHistory}',
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.faq,
+                    MdiIcons.frequentlyAskedQuestions,
+                    routeName: '/${RouteNames.faq}',
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.settings,
+                    Icons.settings,
+                    routeName: '/${RouteNames.appSettings}',
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.what_is_studyu,
+                    MdiIcons.helpCircleOutline,
+                    routeName: '/${RouteNames.about}',
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.about,
+                    MdiIcons.informationOutline,
+                    onTap: () async {
+                      final iconAuthors = ['Kiranshastry'];
+                      final PackageInfo packageInfo =
+                          await PackageInfo.fromPlatform();
+                      if (!context.mounted) return;
+                      showAboutDialog(
+                        context: context,
+                        applicationIcon: InkWell(
+                          onDoubleTap: () {
+                            DebugScreen.showDebugScreen(context);
+                          },
+                          child: const Image(
+                            image: AssetImage('assets/icon/icon.png'),
+                            height: 32,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Column(
-                          children: iconAuthors
-                              .map(
-                                (author) => InkWell(
-                                  onTap: () {
-                                    launchUrl(
-                                      Uri.parse(
-                                        'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    author,
-                                    style: const TextStyle(color: Colors.blue),
-                                  ),
+                        applicationVersion:
+                            '${packageInfo.version} - ${packageInfo.buildNumber}',
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: const TextStyle(color: Colors.black),
+                              children: [
+                                const TextSpan(text: 'Icons from '),
+                                TextSpan(
+                                  style: const TextStyle(color: Colors.blue),
+                                  text: 'www.flaticon.com',
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(
+                                        Uri.parse('https://www.flaticon.com/'),
+                                      );
+                                    },
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ].map((choice) {
-                return PopupMenuItem<OverflowMenuItem>(
-                  value: choice,
-                  child: Row(
-                    children: [
-                      Icon(choice.icon, color: Colors.black),
-                      const SizedBox(width: 8),
-                      Text(choice.name),
-                    ],
+                                const TextSpan(text: ' made by'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Column(
+                            children: iconAuthors
+                                .map(
+                                  (author) => InkWell(
+                                    onTap: () {
+                                      launchUrl(
+                                        Uri.parse(
+                                          'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      author,
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                );
-              }).toList();
-            },
+                ].map((choice) {
+                  return PopupMenuItem<OverflowMenuItem>(
+                    value: choice,
+                    child: Row(
+                      children: [
+                        Icon(choice.icon, color: Colors.black),
+                        const SizedBox(width: 8),
+                        Text(choice.name),
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            ),
           ),
         ],
       ),
@@ -361,8 +453,41 @@ class _DashboardScreenState extends State<DashboardScreen>
         subject: subject,
         scheduleToday: scheduleToday,
         interventionIcon: subject!.getInterventionForDate(DateTime.now())?.icon,
+        progressShowcaseKey: _progressShowcaseKey,
+        currentInterventionShowcaseKey: _currentInterventionShowcaseKey,
+        todayTasksShowcaseKey: _todayTasksShowcaseKey,
       );
     }
+  }
+
+  Future<void> _startDashboardShowcaseIfNeeded() async {
+    if (_showcaseCheckStarted || context.read<AppState>().isPreview) return;
+    _showcaseCheckStarted = true;
+
+    final completed = await DashboardShowcaseStorage.isCompleted();
+    if (completed || !mounted || subject == null) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _dashboardShowcase.startShowCase([
+        _progressShowcaseKey,
+        _currentInterventionShowcaseKey,
+        _todayTasksShowcaseKey,
+        _contactShowcaseKey,
+        _reportShowcaseKey,
+        _menuShowcaseKey,
+      ], delay: const Duration(milliseconds: 300));
+    });
+  }
+
+  Future<void> _restartDashboardShowcase() async {
+    _showcaseCheckStarted = false;
+    await _startDashboardShowcaseIfNeeded();
+  }
+
+  void _markDashboardShowcaseCompleted() {
+    if (_isDisposing) return;
+    unawaited(DashboardShowcaseStorage.markCompleted());
   }
 }
 

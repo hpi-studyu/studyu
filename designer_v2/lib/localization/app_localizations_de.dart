@@ -408,7 +408,143 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get dialog_study_delete_description =>
-      'Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.';
+      'Das Löschen dieser Studie entfernt die Studienkonfiguration und alle gespeicherten Studiendaten dauerhaft.';
+
+  @override
+  String get dialog_study_delete_warning_intro =>
+      'Speichere vor dem Löschen ein Backup und prüfe, ob das Schließen der Studie ausreicht.';
+
+  @override
+  String get dialog_study_delete_backup_step =>
+      'Speichere die Studiendefinition und gesammelte Daten vor dem Löschen als Backup.';
+
+  @override
+  String get dialog_study_delete_close_step =>
+      'Stoppe neue Einschreibungen, während die Studie und vorhandene Daten erhalten bleiben.';
+
+  @override
+  String get dialog_study_delete_download_backup => 'Backup herunterladen';
+
+  @override
+  String get dialog_study_delete_data_confirmation =>
+      'Ich verstehe, dass die Studie und alle zugehörigen Daten dauerhaft gelöscht werden und nicht wieder abgerufen werden können.';
+
+  @override
+  String get dialog_study_delete_participant_confirmation =>
+      'Ich verstehe, dass aktuelle Teilnehmende ihre Studie nicht fortsetzen können und dass alle Daten aktueller und früherer Teilnehmender für sie und für mich gelöscht werden.';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation =>
+      'Ich verstehe, dass meine Entscheidung endgültig und unwiderruflich ist und dass alle Daten vollständig gelöscht werden und nicht wiederhergestellt werden können.';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_1 =>
+      'dauerhaft gelöscht';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_2 =>
+      'nicht wieder abgerufen werden können';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_1 =>
+      'aktuelle Teilnehmende ihre Studie nicht fortsetzen können';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_2 =>
+      'alle Daten aktueller und früherer Teilnehmender';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1 =>
+      'endgültig und unwiderruflich';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2 =>
+      'nicht wiederhergestellt werden können';
+
+  @override
+  String dialog_study_delete_type_name_instruction(Object studyName) {
+    return 'Gib den Studiennamen \"$studyName\" ein, um das Löschen zu bestätigen.';
+  }
+
+  @override
+  String get dialog_study_delete_type_name_label => 'Studienname';
+
+  @override
+  String dialog_study_close_type_name_instruction(Object studyName) {
+    return 'Gib den Titel der Studie \"$studyName\" ein, um zu bestätigen, dass du sie schließen möchtest:';
+  }
+
+  @override
+  String get dialog_study_close_type_name_label =>
+      'Titel der zu schließenden Studie';
+
+  @override
+  String get dialog_study_close_irreversible_confirmation =>
+      'Ich verstehe, dass das Schließen der Teilnahme endgültig ist und nicht rückgängig gemacht werden kann.';
+
+  @override
+  String get dialog_study_delete_close_instead =>
+      'Schließen statt Löschen prüfen';
+
+  @override
+  String get dialog_study_title_mismatch =>
+      'Der Studientitel stimmt nicht überein';
+
+  @override
+  String dialog_delete_title(Object subject) {
+    return '$subject löschen?';
+  }
+
+  @override
+  String dialog_delete_description(Object subject) {
+    return 'Bist du sicher, dass $subject gelöscht werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String dialog_remove_title(Object subject) {
+    return '$subject entfernen?';
+  }
+
+  @override
+  String dialog_remove_description(Object subject) {
+    return 'Bist du sicher, dass $subject entfernt werden soll? Diese Aktion kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String get dialog_subject_study => 'Studie';
+
+  @override
+  String get dialog_subject_item => 'Element';
+
+  @override
+  String get dialog_subject_question => 'Frage';
+
+  @override
+  String get dialog_subject_screener_question => 'Screening-Frage';
+
+  @override
+  String get dialog_subject_answer_option => 'Antwortoption';
+
+  @override
+  String get dialog_subject_intervention => 'Intervention';
+
+  @override
+  String get dialog_subject_intervention_task => 'Interventionsaufgabe';
+
+  @override
+  String get dialog_subject_survey => 'Umfrage';
+
+  @override
+  String get dialog_subject_consent_item => 'Einwilligungspunkt';
+
+  @override
+  String get dialog_subject_report_section => 'Berichtsabschnitt';
+
+  @override
+  String get dialog_subject_invite_code => 'Teilnahmecode';
+
+  @override
+  String get dialog_subject_fitbit_credentials => 'Fitbit-Zugangsdaten';
 
   @override
   String get form_question_create => 'Neue Frage';
@@ -726,6 +862,164 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.';
+
+  @override
+  String get question_type_date => 'Datum/Zeit';
+
+  @override
+  String get date_min_date_label => 'Frühestes Datum';
+
+  @override
+  String get date_min_date_label_helper =>
+      'Das früheste Datum, das Teilnehmer auswählen können';
+
+  @override
+  String get date_max_date_label => 'Spätestes Datum';
+
+  @override
+  String get date_max_date_label_helper =>
+      'Das späteste Datum, das Teilnehmer auswählen können';
+
+  @override
+  String get date_format_preset_label => 'Datumsformat-Voreinstellung';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden';
+
+  @override
+  String get date_picker_hint => 'Datum auswählen';
+
+  @override
+  String get time_picker_hint => 'Zeit auswählen';
+
+  @override
+  String get date_input_type_label => 'Eingabetyp';
+
+  @override
+  String get date_input_type_label_helper =>
+      'Wähle aus, welche Informationen erfasst werden sollen';
+
+  @override
+  String get date_input_type_date => 'Nur Datum';
+
+  @override
+  String get date_input_type_time => 'Nur Zeit';
+
+  @override
+  String get date_input_type_datetime => 'Datum und Zeit';
+
+  @override
+  String get time_format_preset_label => 'Zeitformat';
+
+  @override
+  String get time_format_preset_label_helper =>
+      'Wähle aus, wie die Zeit angezeigt wird';
+
+  @override
+  String get date_default_option_label => 'Standardwert';
+
+  @override
+  String get date_default_option_label_helper =>
+      'Wähle den anfänglich angezeigten Wert';
+
+  @override
+  String get date_default_option_none => 'Kein Standard';
+
+  @override
+  String get date_default_option_today => 'Heute';
+
+  @override
+  String get date_default_option_now => 'Aktuelle Zeit';
+
+  @override
+  String get date_default_option_specific => 'Bestimmtes Datum/Zeit';
+
+  @override
+  String get date_default_specific_date_label => 'Standarddatum';
+
+  @override
+  String get date_default_specific_date_label_helper =>
+      'Das vorausgewählte Datum';
+
+  @override
+  String get date_default_specific_time_label => 'Standardzeit';
+
+  @override
+  String get date_default_specific_time_label_helper =>
+      'Die vorausgewählte Zeit';
+
+  @override
+  String get date_min_time_label => 'Früheste Zeit';
+
+  @override
+  String get date_min_time_label_helper =>
+      'Die früheste Zeit, die Teilnehmer auswählen können';
+
+  @override
+  String get date_max_time_label => 'Späteste Zeit';
+
+  @override
+  String get date_max_time_label_helper =>
+      'Die späteste Zeit, die Teilnehmer auswählen können';
+
+  @override
+  String get date_validation_min_greater_than_max =>
+      'Das früheste Datum darf nicht nach dem spätesten Datum liegen';
+
+  @override
+  String get date_picker_button_label_datetime => 'Datum auswählen';
+
+  @override
+  String get time_picker_button_label_datetime => 'Zeit auswählen';
+
+  @override
+  String get time_picker_button_label => 'Zeit auswählen';
+
+  @override
+  String get date_picker_validation_required => 'Bitte wähle ein Datum';
+
+  @override
+  String get time_picker_validation_required => 'Bitte wähle eine Zeit';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Bitte wähle Datum und Zeit';
+
+  @override
+  String get time_picker_validation_range =>
+      'Bitte wähle eine Zeit innerhalb des erlaubten Bereichs';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Wähle eine Zeit zwischen $min und $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Früheste erlaubte Zeit: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Späteste erlaubte Zeit: $max';
+  }
+
+  @override
+  String get date_validation_default_today_before_min =>
+      '\'Heute\' liegt vor dem frühesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_today_after_max =>
+      '\'Heute\' liegt nach dem spätesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_specific_before_min =>
+      'Das Standarddatum liegt vor dem frühesten erlaubten Datum';
+
+  @override
+  String get date_validation_default_specific_after_max =>
+      'Das Standarddatum liegt nach dem spätesten erlaubten Datum';
 
   @override
   String get fitbit_question_title => 'Fitbit';
@@ -1616,6 +1910,66 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_button_study_test_open_new_tab => 'In neuem Fenster öffnen';
 
   @override
+  String get preview_overlay_health_checking_title =>
+      'App-Verfügbarkeit wird geprüft';
+
+  @override
+  String get preview_overlay_connecting_title =>
+      'Verbindung zur App-Vorschau wird hergestellt';
+
+  @override
+  String get preview_overlay_loading_title => 'App-Vorschau wird geladen';
+
+  @override
+  String preview_overlay_health_checking_description_local(String url) {
+    return 'Es wird geprüft, ob die StudyU-App unter $url läuft.';
+  }
+
+  @override
+  String preview_overlay_health_checking_description_remote(String url) {
+    return 'Es wird geprüft, ob die Teilnehmer-App unter $url erreichbar ist.';
+  }
+
+  @override
+  String get preview_overlay_connecting_description_local =>
+      'Die lokale StudyU-App ist erreichbar. Die Verbindung wird jetzt hergestellt.';
+
+  @override
+  String get preview_overlay_connecting_description_remote =>
+      'Die Teilnehmer-App ist erreichbar. Die Verbindung wird jetzt hergestellt.';
+
+  @override
+  String get preview_overlay_loading_description_local =>
+      'Die App-Vorschau ist verbunden. Die App wird jetzt innerhalb des Smartphone-Rahmens geladen.';
+
+  @override
+  String get preview_overlay_loading_description_remote =>
+      'Die App-Vorschau ist verbunden. Die Teilnehmer-App wird jetzt geladen.';
+
+  @override
+  String get preview_overlay_local_unavailable_title =>
+      'Lokale App-Vorschau nicht verfügbar';
+
+  @override
+  String get preview_overlay_remote_unavailable_title => 'App wird gewartet';
+
+  @override
+  String get preview_overlay_local_unavailable_message =>
+      'Die lokale StudyU-App konnte nicht erreicht werden.';
+
+  @override
+  String get preview_overlay_remote_unavailable_message =>
+      'Die StudyU-App ist vorübergehend nicht verfügbar oder wird gewartet. Bitte versuche es später noch einmal.';
+
+  @override
+  String get preview_overlay_could_not_load =>
+      'Die App-Vorschau konnte nicht geladen werden.';
+
+  @override
+  String get preview_overlay_preview_not_opened =>
+      'Die App-Vorschau konnte gerade nicht geöffnet werden.';
+
+  @override
   String get banner_study_test_unavailable =>
       'Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:';
 
@@ -2127,11 +2481,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get iconpicker_dialog_title => 'Icon auswählen';
 
   @override
-  String get dialog_unsaved_changes_title => 'Zurück und Änderungen verwerfen?';
+  String get dialog_unsaved_changes_title =>
+      'Ungespeicherte Änderungen verwerfen?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'Du hast Änderungen vorgenommen, die noch nicht gespeichert wurden & verloren gehen, wenn du zurückgehst. Wenn du die Änderungen beibehalten möchtest, musst du sie vorher speichern.';
+      'Wenn du jetzt gehst, werden deine letzten Änderungen dauerhaft gelöscht.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Hier bleiben';

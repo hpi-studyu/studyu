@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/audio_recording_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/date_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/fitbit_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/free_text_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/image_capturing_question_form_view.dart';
@@ -71,6 +72,8 @@ class _SurveyQuestionFormViewState
       ),
       SurveyQuestionType.pain: (_) =>
           PainQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.date: (_) =>
+          DateQuestionFormView(formViewModel: formViewModel),
     };
 
     final questionType = formViewModel.questionType;
