@@ -60,13 +60,9 @@ melos:
         if command -v rtk >/dev/null 2>&1; then
           rtk_prefix="rtk "
         fi
-        melos exec -c 1 --fail-fast -- \
+        melos exec -c 1 --fail-fast --scope studyu_core --scope studyu_designer_v2 -- \
           "${rtk_prefix}dart run build_runner build"
       description: Generate files with build_runner
-      packageFilters:
-        scope:
-          - 'studyu_core'
-          - 'studyu_designer_v2'
 
     qualitycheck:
       run: |
