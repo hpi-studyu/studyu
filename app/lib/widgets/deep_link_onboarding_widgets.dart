@@ -11,7 +11,7 @@ String buildAppLaunchLink({String? inviteCode, String? studyId}) {
   if (inviteCode != null) {
     return generateAppSchemeLink('invite/$inviteCode');
   }
-  return generateAppDeepLink('studyShared/$studyId');
+  return generateAppDeepLink('study/$studyId');
 }
 
 /// A screen shown to web users who open a deep link (invite or study).
@@ -68,7 +68,7 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       if (androidPackageName != null) {
-        final referrer = Uri.encodeComponent("invite_code=$inviteCode");
+        final referrer = Uri.encodeComponent("invite=$inviteCode");
         final url = Uri.parse(
           "https://play.google.com/store/apps/details?id=$androidPackageName&referrer=$referrer",
         );
@@ -90,13 +90,14 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
 
   Future<void> _launchAppStoreForStudy(String studyId) async {
     // Copy study deep link to clipboard, then open app store without referrer
-    final link = generateAppDeepLink("studyShared/$studyId");
+    final link = generateAppDeepLink("study/$studyId");
     await Clipboard.setData(ClipboardData(text: link));
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       if (androidPackageName != null) {
+        final referrer = Uri.encodeComponent("study=$studyId");
         final url = Uri.parse(
-          "https://play.google.com/store/apps/details?id=$androidPackageName",
+          "https://play.google.com/store/apps/details?id=$androidPackageName&referrer=$referrer",
         );
         if (await canLaunchUrl(url)) {
           await launchUrl(url, mode: LaunchMode.externalApplication);

@@ -55,7 +55,7 @@ class RouteNames {
   static const String eligibilityCheck = 'eligibilityCheck';
   static const String capturePicture = 'capturePicture';
   static const String invite = 'invite';
-  static const String studyShared = 'studyShared';
+  static const String study = 'study';
 }
 
 /// Creates and configures the GoRouter instance for the app
@@ -84,7 +84,7 @@ GoRouter createAppRouter({
               ? state.uri.pathSegments.first
               : '';
           if (studyId.isNotEmpty) {
-            return '/${RouteNames.studyShared}/$studyId';
+            return '/${RouteNames.study}/$studyId';
           }
         }
       }
@@ -273,8 +273,8 @@ GoRouter createAppRouter({
             LoadingScreen(deepLinkInviteCode: state.pathParameters['code']),
       ),
       GoRoute(
-        path: '/${RouteNames.studyShared}/:id',
-        name: RouteNames.studyShared,
+        path: '/${RouteNames.study}/:id',
+        name: RouteNames.study,
         builder: (context, state) =>
             LoadingScreen(deepLinkStudyId: state.pathParameters['id']),
       ),

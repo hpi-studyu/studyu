@@ -146,10 +146,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     if (!kIsWeb) {
-      final deferredCode = await DeferredLinkService.checkForDeferredLink();
+      final deferredLink = await DeferredLinkService.checkForDeferredLink();
       if (!mounted) return;
-      if (deferredCode != null) {
-        await _handleDeferredInvite(deferredCode);
+      if (deferredLink != null) {
+        await _handleDeferredLink(deferredLink);
         return;
       }
     }
@@ -157,8 +157,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await initStudy();
   }
 
-  Future<void> _handleDeferredInvite(String inviteCode) async {
-    await _handleIncomingDeepLink(inviteCode: inviteCode);
+  Future<void> _handleDeferredLink(DeferredLink deferredLink) async {
+    await _handleIncomingDeepLink(
+      inviteCode: deferredLink.inviteCode,
+      studyId: deferredLink.studyId,
+    );
   }
 
   Future<void> _initDeepLink() async {

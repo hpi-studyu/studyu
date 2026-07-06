@@ -13,10 +13,10 @@ void main() {
   });
 
   group('buildAppLaunchLink', () {
-    test('uses studyShared universal link for public study links', () {
+    test('uses public study universal link for public study links', () {
       expect(
         buildAppLaunchLink(studyId: 'test-study-id'),
-        'https://app.studyu.health/studyShared/test-study-id',
+        'https://app.studyu.health/study/test-study-id',
       );
     });
   });

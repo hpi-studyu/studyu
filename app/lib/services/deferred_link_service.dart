@@ -9,8 +9,82 @@ String deferredInviteDeepLinkHost(String? configuredDeepLinkScheme) {
   return Uri.parse(scheme).host;
 }
 
+class DeferredLink {
+  final String? inviteCode;
+  final String? studyId;
+
+  const DeferredLink._({this.inviteCode, this.studyId})
+    : assert(inviteCode != null || studyId != null);
+
+  factory DeferredLink.invite(String inviteCode) =>
+      DeferredLink._(inviteCode: inviteCode);
+
+  factory DeferredLink.study(String studyId) =>
+      DeferredLink._(studyId: studyId);
+}
+
+@visibleForTesting
+DeferredLink? parseAndroidDeferredLink({
+  required String? inviteCode,
+  required String? studyId,
+  required String? referrer,
+}) {
+  var parsedInviteCode = _sanitizeDeferredValue(inviteCode);
+  var parsedStudyId = _sanitizeDeferredValue(studyId);
+
+  if ((parsedInviteCode == null || parsedStudyId == null) && referrer != null) {
+    final uri = Uri.tryParse('?$referrer');
+    final params = uri?.queryParameters;
+    parsedInviteCode ??= _sanitizeDeferredValue(params?['invite']);
+    parsedStudyId ??= _sanitizeDeferredValue(params?['study']);
+  }
+
+  if (parsedInviteCode == null && referrer != null) {
+    parsedInviteCode = _extractReferrerValue(referrer, 'invite');
+  }
+  if (parsedStudyId == null && referrer != null) {
+    parsedStudyId = _extractReferrerValue(referrer, 'study');
+  }
+
+  if (parsedInviteCode != null) return DeferredLink.invite(parsedInviteCode);
+  if (parsedStudyId != null) return DeferredLink.study(parsedStudyId);
+  return null;
+}
+
+@visibleForTesting
+DeferredLink? parseIosDeferredLinkPath(String? referralPath) {
+  if (referralPath == null) return null;
+  final uri = Uri.tryParse(referralPath);
+  final segments = uri?.pathSegments;
+  if (segments == null) return null;
+
+  final inviteIndex = segments.indexOf('invite');
+  if (inviteIndex >= 0 && inviteIndex + 1 < segments.length) {
+    final inviteCode = _sanitizeDeferredValue(segments[inviteIndex + 1]);
+    if (inviteCode != null) return DeferredLink.invite(inviteCode);
+  }
+
+  final studyIndex = segments.indexOf('study');
+  if (studyIndex >= 0 && studyIndex + 1 < segments.length) {
+    final studyId = _sanitizeDeferredValue(segments[studyIndex + 1]);
+    if (studyId != null) return DeferredLink.study(studyId);
+  }
+
+  return null;
+}
+
+String? _extractReferrerValue(String referrer, String key) {
+  try {
+    final regexp = RegExp('(?:^|&)$key=([^&]+)');
+    final match = regexp.firstMatch(referrer);
+    return _sanitizeDeferredValue(match?.group(1));
+  } catch (_) {
+    return null;
+  }
+}
+
 class DeferredLinkService {
-  static Future<String?> checkForDeferredLink() async {
+  static Future<DeferredLink?> checkForDeferredLink() async {
     try {
       final hasProcessed =
           await SecureStorage.readBool('has_processed_deferred_link') ?? false;
@@ -22,7 +96,7 @@ class DeferredLinkService {
         return null;
       }
 
-      String? deferredCode;
+      DeferredLink? deferredLink;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final info = await StackDeferredLink.getInstallReferrerAndroid();
         final referrer = info.installReferrer; // capture to local for promotion
@@ -30,42 +104,11 @@ class DeferredLinkService {
           'debug_install_referrer',
           'Raw: $referrer\nParams: ${info.asQueryParameters}',
         );
-        deferredCode = info.getParam('invite_code');
-
-        // [FIX ATTEMPT 1] Fallback: manual parsing if getParam fails
-        if (deferredCode.isEmpty && referrer != null) {
-          final uri = Uri.tryParse('?$referrer');
-          if (uri != null) {
-            final manualCode = uri.queryParameters['invite_code'];
-            if (manualCode != null && manualCode.isNotEmpty) {
-              deferredCode = manualCode;
-              await SecureStorage.write(
-                'debug_install_referrer',
-                'Status: Manual parsing triggered.\nExtracted Code: $deferredCode',
-              );
-            }
-          }
-        }
-
-        // [FIX ATTEMPT 2] "Dirty" string parsing if still null (just in case)
-        if (deferredCode.isEmpty &&
-            referrer != null &&
-            referrer.contains('invite_code=')) {
-          try {
-            // Split by '&' or just regex find
-            final regexp = RegExp('invite_code=([^&]+)');
-            final match = regexp.firstMatch(referrer);
-            if (match != null) {
-              deferredCode = match.group(1);
-              await SecureStorage.write(
-                'debug_install_referrer',
-                'Status: Regex parsing triggered.\nExtracted Code: $deferredCode',
-              );
-            }
-          } catch (e) {
-            // ignore
-          }
-        }
+        deferredLink = parseAndroidDeferredLink(
+          inviteCode: info.getParam('invite'),
+          studyId: info.getParam('study'),
+          referrer: referrer,
+        );
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
         final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
         final host = Uri.parse(scheme).host;
@@ -75,7 +118,7 @@ class DeferredLinkService {
         );
 
         final result = await StackDeferredLink.getInstallReferrerIos(
-          deepLinks: ['$host/invite'],
+          deepLinks: ['$host/invite', '$host/study'],
         );
 
         await SecureStorage.write(
@@ -83,28 +126,20 @@ class DeferredLinkService {
           'iOS Result: ${result?.fullReferralDeepLinkPath}',
         );
 
-        if (result != null) {
-          final uri = Uri.tryParse(result.fullReferralDeepLinkPath);
-          if (uri != null && uri.pathSegments.contains('invite')) {
-            final idx = uri.pathSegments.indexOf('invite');
-            if (idx + 1 < uri.pathSegments.length) {
-              deferredCode = uri.pathSegments[idx + 1];
-            }
-          }
-        }
+        deferredLink = parseIosDeferredLinkPath(
+          result?.fullReferralDeepLinkPath,
+        );
       }
 
-      deferredCode = _sanitizeCode(deferredCode);
-
-      if (deferredCode != null) {
+      if (deferredLink != null) {
         await SecureStorage.write('has_processed_deferred_link', 'true');
-        return deferredCode;
+        return deferredLink;
       }
       // Add else block for debugging empty code
       else {
         await SecureStorage.write(
           'debug_install_referrer',
-          'Code parsed but empty or null. Final code: $deferredCode',
+          'Deferred link parsed but empty or null.',
         );
       }
     } catch (e) {
@@ -114,17 +149,17 @@ class DeferredLinkService {
     }
     return null;
   }
+}
 
-  static String? _sanitizeCode(String? code) {
-    if (code == null) return null;
-    var sanitized = code.trim();
-    if (sanitized.isEmpty) return null;
+String? _sanitizeDeferredValue(String? value) {
+  if (value == null) return null;
+  var sanitized = value.trim();
+  if (sanitized.isEmpty) return null;
 
-    try {
-      sanitized = Uri.decodeComponent(sanitized);
-    } catch (_) {
-      // ignore
-    }
-    return sanitized.trim();
+  try {
+    sanitized = Uri.decodeComponent(sanitized);
+  } catch (_) {
+    // ignore
   }
+  return sanitized.trim();
 }
