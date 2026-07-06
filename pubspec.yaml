@@ -75,16 +75,16 @@ melos:
           rtk_prefix="rtk "
         fi
         if [ "$CI" != "true" ]; then
-          fvm install
+          ${rtk_prefix}fvm install
         fi
-        melos format
-        melos generate
+        ${rtk_prefix}melos format
+        ${rtk_prefix}melos generate
         if [ "$CI" = "true" ]; then
           ${rtk_prefix}dart analyze
           ${rtk_prefix}flutter analyze
         else
-          fvm exec ${rtk_prefix}dart analyze
-          fvm exec ${rtk_prefix}flutter analyze
+          ${rtk_prefix}fvm exec dart analyze
+          ${rtk_prefix}fvm exec flutter analyze
         fi
       description: Run format, generate, and analyze checks
 
