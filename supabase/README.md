@@ -45,7 +45,7 @@ Supabase stack.
 
 ## Connect to the local Supabase Instance
 
-Run `melos run local:designer_v2` or `melos run local:app` to launch the respective StudyU
+Run `melos local:designer_v2` or `melos local:app` to launch the respective StudyU
 component with the self-hosted environment of the Supabase CLI.  The database will come seeded
 with testing data. You can log into the StudyU Designer by using the credentials
 `user1@studyu.health` and `user1pass`.
