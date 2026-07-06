@@ -284,7 +284,7 @@ INSERT INTO public.study (
 --
 
 -- plan tests in advance, this ensures the proper number of tests have been run.
-SELECT plan(27);
+SELECT plan(28);
 
 -- UNRESTRICTED TESTS
 
@@ -301,7 +301,15 @@ WHERE email IN ('test_creator_1@studyu.health', 'test_creator_2@studyu.health', 
 
 SELECT tests.clear_authentication();
 SELECT is(count(*)::int, 0, 'Check if users cannot be accessed anonymously') FROM public.user;
-SELECT is(count(*)::int, 0, 'Check if studies cannot be accessed anonymously') FROM public.study;
+SELECT is(count(*)::int, 4, 'Check if anonymous users can access public running studies')
+FROM public.study;
+SELECT is(count(*)::int, 0, 'Check if anonymous users cannot access draft or private invite-only studies')
+FROM public.study
+WHERE status = 'draft'::public.study_status
+   OR (
+    participation = 'invite'::public.participation
+    AND result_sharing = 'private'::public.result_sharing
+  );
 
 -- CREATOR 1 TESTS
 
