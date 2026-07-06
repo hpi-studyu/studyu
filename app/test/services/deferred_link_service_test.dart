@@ -2,15 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/services/deferred_link_service.dart';
 
 void main() {
-  group('deferredInviteDeepLinkHost', () {
-    test('uses configured deep link host', () {
-      expect(
-        deferredInviteDeepLinkHost('https://example.studyu.health'),
-        'example.studyu.health',
-      );
-    });
-  });
-
   group('parseAndroidDeferredLink', () {
     test('parses invite links from new Android referrer key', () {
       final link = parseAndroidDeferredLink(

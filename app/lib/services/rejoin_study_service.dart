@@ -182,6 +182,10 @@ class RejoinStudyService {
   }
 
   static Future<RecoveryResult> performRecovery(BigInt recoveryId) async {
+    // Invalidate any cached recovery secret from a prior session before
+    // establishing the recovered identity, so it cannot leak to the new
+    // account via the static cache on a shared device.
+    clearCache();
     try {
       final result = await recoverAccount(recoveryId);
 

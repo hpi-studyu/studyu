@@ -12,6 +12,7 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase/supabase.dart' show PostgrestException;
 
 Future<void> navigateToStudyOverview(
   BuildContext context,
@@ -290,10 +291,33 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               preselectedIds: invite?.preselectedInterventionIds,
             );
           } catch (e) {
-            if (!mounted) return;
-            setState(() {
-              _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
-            });
+            if (e is ArgumentError) {
+              // Study.fromJson schema mismatch — the study was authored with a
+              // newer app/schema than this client understands. Signal the user
+              // to update the app rather than mislabeling it as an invalid code.
+              if (!mounted) return;
+              setState(() {
+                _errorMessage = null;
+              });
+              if (!context.mounted) return;
+              context.pop();
+              await showAppOutdatedDialog(context);
+            } else if (e is PostgrestException) {
+              // RPC / network failure while looking up the invite code.
+              if (!mounted) return;
+              setState(() {
+                _errorMessage = AppLocalizations.of(
+                  context,
+                )!.error_occurred_with_message(e.message);
+              });
+            } else {
+              if (!mounted) return;
+              setState(() {
+                _errorMessage = AppLocalizations.of(
+                  context,
+                )!.invalid_invite_code;
+              });
+            }
           }
         },
       ),

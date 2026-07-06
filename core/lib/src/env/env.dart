@@ -9,8 +9,8 @@ late final String? projectGeneratorUrl;
 late final String? androidPackageName;
 late final String? iosAppStoreId;
 late final String? developerEmail;
-late final String? deepLinkDomain;
-late final String? appDeepLinkScheme;
+String? deepLinkDomain;
+String? appDeepLinkScheme;
 
 String get appScheme {
   if (appDeepLinkScheme != null) {

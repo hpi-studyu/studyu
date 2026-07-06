@@ -277,14 +277,7 @@ class RecoveryPhraseWidget extends StatefulWidget {
 }
 
 class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
-  final GlobalKey<RecoveryPhraseContentState> _contentKey = GlobalKey();
-  bool _hasLoaded = false;
-
-  void _onExpansionChanged(bool expanded) {
-    if (expanded && !_hasLoaded) {
-      _hasLoaded = true;
-    }
-  }
+  bool _hasExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -302,19 +295,21 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
           AppLocalizations.of(context)!.recovery_phrase_save_hint,
           style: theme.textTheme.bodySmall,
         ),
-        onExpansionChanged: _onExpansionChanged,
+        onExpansionChanged: (expanded) {
+          if (expanded && !_hasExpanded) {
+            setState(() => _hasExpanded = true);
+          }
+        },
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Container(
+          if (_hasExpanded)
+            Padding(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: theme.colorScheme.surface),
-              child: RecoveryPhraseContent(
-                key: _contentKey,
-                useGridLayout: false,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(color: theme.colorScheme.surface),
+                child: const RecoveryPhraseContent(useGridLayout: false),
               ),
             ),
-          ),
         ],
       ),
     );

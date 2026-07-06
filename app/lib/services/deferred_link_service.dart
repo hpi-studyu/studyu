@@ -3,12 +3,6 @@ import 'package:stack_deferred_link/stack_deferred_link.dart';
 import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-@visibleForTesting
-String deferredInviteDeepLinkHost(String? configuredDeepLinkScheme) {
-  final scheme = configuredDeepLinkScheme ?? 'https://app.studyu.health';
-  return Uri.parse(scheme).host;
-}
-
 class DeferredLink {
   final String? inviteCode;
   final String? studyId;

@@ -6,15 +6,8 @@ import 'package:studyu_app/util/recovery_qr_utils.dart';
 
 class RecoveryPhraseContent extends StatefulWidget {
   final bool useGridLayout;
-  final bool showConfirmation;
-  final ValueChanged<bool>? onConfirmationChanged;
 
-  const RecoveryPhraseContent({
-    super.key,
-    this.useGridLayout = true,
-    this.showConfirmation = false,
-    this.onConfirmationChanged,
-  });
+  const RecoveryPhraseContent({super.key, this.useGridLayout = true});
 
   @override
   State<RecoveryPhraseContent> createState() => RecoveryPhraseContentState();
