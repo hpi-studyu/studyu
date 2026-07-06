@@ -83,12 +83,9 @@ class FormListView<T> extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            onReorder:
+            onReorderItem:
                 onReorder ??
                 (oldIndex, newIndex) {
-                  if (newIndex > oldIndex) {
-                    newIndex -= 1;
-                  }
                   final item = items.removeAt(oldIndex);
                   items.insert(newIndex, item);
                   // Optionally, call setState or notify listeners if needed

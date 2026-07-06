@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/round_checkbox.dart';
 import 'package:studyu_core/core.dart';
@@ -25,12 +26,7 @@ class TaskBox extends StatefulWidget {
 
 class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
-    await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TaskScreen(taskInstance: widget.taskInstance),
-      ),
-    );
+    await context.push<bool>('/${RouteNames.task}', extra: widget.taskInstance);
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
@@ -54,6 +50,7 @@ class _TaskBoxState extends State<TaskBox> {
     );
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
+      key: ValueKey('task_box_${widget.taskInstance.task.id}'),
       elevation: 2,
       child: InkWell(
         onTap: isTaskOpen ? _navigateToTaskScreen : () {},
@@ -68,6 +65,7 @@ class _TaskBoxState extends State<TaskBox> {
             ),
             if (isInsidePeriod || isPreview || completed)
               RoundCheckbox(
+                key: const ValueKey('task_box_checkbox'),
                 value: completed, //_isCompleted,
                 onChanged: (value) =>
                     isTaskOpen ? _navigateToTaskScreen() : () {},

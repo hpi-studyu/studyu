@@ -61,7 +61,7 @@ final class StudyRecruitControllerProvider
 }
 
 String _$studyRecruitControllerHash() =>
-    r'31c42f0aec63c01dca7af6dc86a88e6f75be2b42';
+    r'3c4885024a3797e4605104ad9566e9515786450a';
 
 final class StudyRecruitControllerFamily extends $Family
     with
@@ -96,7 +96,7 @@ abstract class _$StudyRecruitController
   StudyRecruitControllerState build(StudyID studyId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<StudyRecruitControllerState, StudyRecruitControllerState>;
@@ -111,6 +111,6 @@ abstract class _$StudyRecruitController
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

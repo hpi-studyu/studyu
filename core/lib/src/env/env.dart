@@ -6,10 +6,30 @@ late final String supabaseAnonKey;
 late final String? appUrl;
 late final String? designerUrl;
 late final String? projectGeneratorUrl;
-late final String? playStoreUrl;
-late final String? appstoreUrl;
+late final String? androidPackageName;
+late final String? iosAppStoreId;
 late final String? developerEmail;
 late final String? deepLinkDomain;
+late final String? appDeepLinkScheme;
+
+String get appScheme {
+  if (appDeepLinkScheme != null) {
+    try {
+      final scheme = Uri.parse(appDeepLinkScheme!).scheme;
+      if (scheme.isNotEmpty) return scheme;
+    } catch (_) {}
+  }
+  return 'studyu-app';
+}
+
+String generateAppSchemeLink(String path) {
+  return '$appScheme://${path.startsWith('/') ? path.substring(1) : path}';
+}
+
+String generateAppDeepLink(String path) {
+  final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
+  return '$scheme/${path.startsWith('/') ? path.substring(1) : path}';
+}
 
 void setEnv(
   String envSupabaseUrl,
@@ -18,10 +38,11 @@ void setEnv(
   String? envAppUrl,
   String? envDesignerUrl,
   String? envProjectGeneratorUrl,
-  String? envPlayStoreUrl,
-  String? envAppstoreUrl,
+  String? envAndroidPackageName,
+  String? envIosAppStoreId,
   String? envDeveloperEmail,
   String? envDeepLinkDomain,
+  String? envAppDeepLinkScheme,
 }) {
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
@@ -46,8 +67,17 @@ void setEnv(
     projectGeneratorUrl = envProjectGeneratorUrl;
   }
 
-  playStoreUrl = envPlayStoreUrl;
-  appstoreUrl = envAppstoreUrl;
+  androidPackageName = envAndroidPackageName;
+  iosAppStoreId = envIosAppStoreId;
   developerEmail = envDeveloperEmail;
   deepLinkDomain = envDeepLinkDomain ?? 'app.studyu.health';
+  // Remove trailing slashes from deep link scheme
+  if (envAppDeepLinkScheme != null && envAppDeepLinkScheme.endsWith('/')) {
+    appDeepLinkScheme = envAppDeepLinkScheme.substring(
+      0,
+      envAppDeepLinkScheme.length - 1,
+    );
+  } else {
+    appDeepLinkScheme = envAppDeepLinkScheme;
+  }
 }

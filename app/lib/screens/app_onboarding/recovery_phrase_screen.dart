@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
@@ -103,7 +104,7 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
           FilledButton(
             onPressed: _isChecked
                 ? () {
-                    Navigator.pushNamed(context, Routes.studySelection);
+                    context.goNamed(RouteNames.studySelection);
                   }
                 : null,
             style: FilledButton.styleFrom(

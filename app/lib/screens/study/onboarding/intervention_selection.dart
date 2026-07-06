@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
@@ -97,7 +98,7 @@ class _InterventionSelectionScreenState
       selectedInterventionIds,
       appState.inviteCode,
     );
-    Navigator.pushNamed(context, Routes.journey);
+    context.push('/${RouteNames.journey}');
   }
 
   @override
@@ -106,7 +107,7 @@ class _InterventionSelectionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
-        leading: Icon(MdiIcons.formatListChecks),
+        leading: const Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(
         child: Center(

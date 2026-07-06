@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> navigateToStudyOverview(
   BuildContext context,
@@ -22,7 +22,7 @@ Future<void> navigateToStudyOverview(
   context.read<AppState>().preselectedInterventionIds = preselectedIds;
   context.read<AppState>().inviteCode = inviteCode;
   context.read<AppState>().selectedStudy = study;
-  Navigator.pushNamed(context, Routes.studyOverview);
+  context.push('/${RouteNames.studyOverview}');
 }
 
 Future<void> showAppOutdatedDialog(BuildContext context) async {
@@ -35,8 +35,9 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
+          key: const ValueKey('dialog_ok'),
+          onPressed: () => context.pop(),
+          child: Text(AppLocalizations.of(context)!.ok),
         ),
       ],
     ),
@@ -47,12 +48,14 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
+      key: const ValueKey('study_closed_dialog'),
       title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
       content: Text(AppLocalizations.of(context)!.study_selection_closed),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
+          key: const ValueKey('dialog_ok'),
+          onPressed: () => context.pop(),
+          child: Text(AppLocalizations.of(context)!.ok),
         ),
       ],
     ),
@@ -130,7 +133,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   children: [
                     MaterialBanner(
                       padding: const EdgeInsets.all(8),
-                      leading: Icon(
+                      leading: const Icon(
                         MdiIcons.exclamationThick,
                         color: Colors.orange,
                         size: 32,
@@ -196,7 +199,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
-                  icon: Icon(MdiIcons.key),
+                  icon: const Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(
                       context: context,
@@ -250,77 +253,47 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
-          Map<String, dynamic>? studyResult;
           try {
-            studyResult = await Supabase.instance.client
-                .rpc(
-                  'get_study_record_from_invite',
-                  params: {'invite_code': _controller.text},
-                )
-                .single();
-          } on PostgrestException catch (error) {
-            print(error.message);
-            setState(() {
-              _errorMessage = error.message;
-            });
-          }
-          if (studyResult == null || studyResult['id'] == null) {
-            setState(() {
-              _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
-            });
-          } else {
+            final (invite, study) = await Study.fetchByInviteCode(
+              _controller.text,
+            );
+
+            if (!mounted) return;
+
+            if (study == null) {
+              setState(() {
+                _errorMessage = AppLocalizations.of(
+                  context,
+                )!.invalid_invite_code;
+              });
+              return;
+            }
+
             setState(() {
               _errorMessage = null;
             });
 
-            Study study;
-            try {
-              study = Study.fromJson(studyResult);
-              // ignore: avoid_catching_errors
-            } on ArgumentError catch (error) {
-              debugPrint('Study selection from invite failed: $error');
-              if (!context.mounted) return;
-              Navigator.pop(context);
-              await showAppOutdatedDialog(context);
-              return;
-            }
-
             if (study.isClosed) {
               if (!context.mounted) return;
-              Navigator.pop(context);
+              context.pop();
               await showStudyClosedDialog(context);
               return;
             }
 
             if (!context.mounted) return;
-            Navigator.pop(context);
+            context.pop();
 
-            // Get preselected_intervention_ids from study_invite table
-            final inviteResult = await Supabase.instance.client
-                .from('study_invite')
-                .select('preselected_intervention_ids')
-                .eq('code', _controller.text)
-                .maybeSingle();
-            if (!context.mounted) return;
-            if (inviteResult != null &&
-                inviteResult.containsKey('preselected_intervention_ids') &&
-                inviteResult['preselected_intervention_ids'] != null) {
-              final preselectedIds = List<String>.from(
-                inviteResult['preselected_intervention_ids'] as List,
-              );
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-                preselectedIds: preselectedIds,
-              );
-            } else {
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-              );
-            }
+            await navigateToStudyOverview(
+              context,
+              study,
+              inviteCode: _controller.text,
+              preselectedIds: invite?.preselectedInterventionIds,
+            );
+          } catch (e) {
+            if (!mounted) return;
+            setState(() {
+              _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+            });
           }
         },
       ),

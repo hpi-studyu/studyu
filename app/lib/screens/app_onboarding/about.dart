@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final hasActiveSubject = context.read<AppState>().activeSubject != null;
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.what_is_studyu)),
       body: PageView(
@@ -22,7 +24,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(MdiIcons.food, size: 80, color: Colors.black),
@@ -72,7 +74,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -112,7 +114,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -152,7 +154,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -192,7 +194,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -201,7 +203,7 @@ class AboutScreen extends StatelessWidget {
                         color: Colors.blue,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'of',
                         textAlign: TextAlign.center,
@@ -246,7 +248,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -286,7 +288,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -326,7 +328,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 50),
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: Icon(
@@ -376,15 +378,38 @@ class AboutScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 40),
-                if (context.read<AppState>().activeSubject == null)
-                  OutlinedButton.icon(
-                    icon: Icon(MdiIcons.rocket),
-                    onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                    label: Text(
-                      AppLocalizations.of(context)!.get_started,
-                      style: const TextStyle(fontSize: 20),
+                Column(
+                  children: [
+                    OutlinedButton.icon(
+                      icon: const Icon(MdiIcons.playCircleOutline),
+                      onPressed: () =>
+                          context.push('/${RouteNames.onboarding}'),
+                      label: Text(
+                        AppLocalizations.of(context)!.show_onboarding_again,
+                        style: const TextStyle(fontSize: 18),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    if (!hasActiveSubject)
+                      OutlinedButton.icon(
+                        icon: const Icon(MdiIcons.rocket),
+                        onPressed: () => context.go('/${RouteNames.terms}'),
+                        label: Text(
+                          AppLocalizations.of(context)!.get_started,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      )
+                    else
+                      OutlinedButton.icon(
+                        icon: const Icon(MdiIcons.rocket),
+                        onPressed: () => context.go('/${RouteNames.dashboard}'),
+                        label: Text(
+                          AppLocalizations.of(context)!.get_started,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),

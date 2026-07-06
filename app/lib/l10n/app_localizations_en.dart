@@ -74,6 +74,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
+  String get show_onboarding_again => 'Show onboarding again';
+
+  @override
+  String get onboarding_page0_title => 'Welcome to StudyU';
+
+  @override
+  String get onboarding_page0_subtitle =>
+      'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.';
+
+  @override
+  String get onboarding_page1_title => 'What works for YOU?';
+
+  @override
+  String get onboarding_page1_subtitle =>
+      'An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.';
+
+  @override
+  String get onboarding_page2_title => 'Science Made Simple';
+
+  @override
+  String get onboarding_page2_subtitle =>
+      'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.';
+
+  @override
+  String get onboarding_page3_title => 'Your Personal Evidence';
+
+  @override
+  String get onboarding_page3_subtitle =>
+      'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.';
+
+  @override
+  String get onboarding_page4_title => 'Take Control';
+
+  @override
+  String get onboarding_page4_subtitle =>
+      'Ready to find your answers? Select a study and start your journey to better health today.';
+
+  @override
   String get study_selection => 'Study Selection';
 
   @override
@@ -106,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.';
+      'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.';
 
   @override
   String get study_overview_title => 'Overview';
@@ -596,9 +634,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get free_text_numeric_error => 'Please enter only numeric characters';
 
   @override
-  String free_text_custom_error(String pattern) {
-    return 'Please enter only characters matching the pattern $pattern';
-  }
+  String get free_text_custom_error =>
+      'Please enter a value in the required format';
 
   @override
   String get app_outdated_message =>
@@ -1158,6 +1195,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
+  String get go_back => 'Go back';
+
+  @override
   String get recovery_phrase_setup_title => 'Recovery Phrase Setup';
 
   @override
@@ -1206,6 +1246,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String recovery_successful(String id) {
     return 'Recovery successful! ID: $id';
+  }
+
+  @override
+  String get deep_link_error_title => 'Error';
+
+  @override
+  String deep_link_study_not_found(String studyId) {
+    return 'Study with ID $studyId not found or not available';
   }
 
   @override
@@ -1325,5 +1373,244 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String share_error(String error) {
     return 'Error sharing: $error';
+  }
+
+  @override
+  String get deep_link_study_invite_only =>
+      'This study requires an invite code to join';
+
+  @override
+  String deep_link_invite_invalid(String code) {
+    return 'Invalid or expired invite code: $code';
+  }
+
+  @override
+  String get deep_link_error_invalid_invite => 'Invalid invite code';
+
+  @override
+  String get deep_link_switch_warning_title => 'You are already in a study';
+
+  @override
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  ) {
+    return 'You are currently enrolled in:\n$currentStudy\n\nThe deep link points to:\n$targetStudy\n\nYou can return to your current study (recommended) or continue to leave it and switch.';
+  }
+
+  @override
+  String get deep_link_switch_primary_return => 'Return to current study';
+
+  @override
+  String get deep_link_switch_secondary_continue =>
+      'Leave current study and switch';
+
+  @override
+  String get deep_link_switch_data_choice_title =>
+      'How do you want to leave your current study?';
+
+  @override
+  String get deep_link_switch_data_choice_description =>
+      'Choose what should happen to your current study data before switching.';
+
+  @override
+  String get deep_link_switch_soft_delete_button => 'Soft delete and switch';
+
+  @override
+  String get deep_link_switch_hard_delete_button => 'Hard delete and switch';
+
+  @override
+  String get deep_link_switch_confirm_soft_title => 'Confirm soft delete';
+
+  @override
+  String get deep_link_switch_confirm_soft_button => 'Confirm soft delete';
+
+  @override
+  String get deep_link_switch_confirm_hard_title => 'Confirm hard delete';
+
+  @override
+  String get deep_link_switch_confirm_hard_description =>
+      'This will permanently and irreversibly delete all your data.';
+
+  @override
+  String get deep_link_switch_confirm_hard_button => 'Confirm hard delete';
+
+  @override
+  String get open_link_on_mobile =>
+      'Please open this link on your mobile device.';
+
+  @override
+  String get you_have_been_invited => 'You have been invited to a study!';
+
+  @override
+  String get download_app_join => 'Download the StudyU App & Join';
+
+  @override
+  String get deleted_study_error_title => 'Study unavailable';
+
+  @override
+  String get deleted_study_error_description =>
+      'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.';
+
+  @override
+  String get dashboard_showcase_progress_title => 'Study progress';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'This shows where you are in the study and how much is left.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Current intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Here you can see your current intervention and how many days remain in this phase.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Today\'s tasks';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Here you can find the tasks you need to complete today as part of the study.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Contact';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Use this if you need help from the study team.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Report';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Open your current report when results are available.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'More options';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Find settings, FAQs, report history, and more here.';
+
+  @override
+  String get dashboard_showcase_finish => 'Finish';
+
+  @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support Request - Loading Error';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support Request - Study Unavailable';
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: $subjectId\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.';
+  }
+
+  @override
+  String get show_dashboard_showcase_again => 'Show dashboard tour again';
+
+  @override
+  String get free_text_hint => 'Enter your answer';
+
+  @override
+  String get preview_failed_to_initialize => 'Preview failed to initialize.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'The preview could not be opened right now. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'The preview could not be opened for this study yet. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'The preview route could not be opened right now.';
+
+  @override
+  String get continue_label => 'Continue';
+
+  @override
+  String get restored_answer_needs_review =>
+      'Please review this restored answer.';
+
+  @override
+  String get mark_answer_reviewed => 'Mark as reviewed';
+
+  @override
+  String get no_internet_connection =>
+      'No internet connection. Please try again when online.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'An error occurred: $message';
+  }
+
+  @override
+  String get date_picker_hint => 'Select a date';
+
+  @override
+  String get time_picker_hint => 'Select a time';
+
+  @override
+  String get date_picker_button_label => 'Choose date';
+
+  @override
+  String get date_time_picker_button_label => 'Choose date and time';
+
+  @override
+  String get date_picker_button_label_datetime => 'Select date';
+
+  @override
+  String get time_picker_button_label_datetime => 'Select time';
+
+  @override
+  String get time_picker_button_label => 'Select a time';
+
+  @override
+  String get date_picker_clear => 'Clear';
+
+  @override
+  String get date_picker_validation_required => 'Please select a date';
+
+  @override
+  String get time_picker_validation_required => 'Please select a time';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Please select both date and time';
+
+  @override
+  String get time_picker_validation_range =>
+      'Please select a time within the allowed range';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Select a time between $min and $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Earliest allowed time: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Latest allowed time: $max';
+  }
+
+  @override
+  String date_picker_validation_min_date(String minDate) {
+    return 'Date must be after $minDate';
+  }
+
+  @override
+  String date_picker_validation_max_date(String maxDate) {
+    return 'Date must be before $maxDate';
   }
 }

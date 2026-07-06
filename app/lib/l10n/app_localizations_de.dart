@@ -74,6 +74,44 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
+  String get show_onboarding_again => 'Onboarding erneut ansehen';
+
+  @override
+  String get onboarding_page0_title => 'Willkommen bei StudyU';
+
+  @override
+  String get onboarding_page0_subtitle =>
+      'Ihre Reise zu einer besseren Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf \'Weiter\', um fortzufahren.';
+
+  @override
+  String get onboarding_page1_title => 'Was funktioniert für SIE?';
+
+  @override
+  String get onboarding_page1_subtitle =>
+      'Eine N-of-1-Studie ist eine wissenschaftliche Studie, in der Sie die einzige Testperson sind. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.';
+
+  @override
+  String get onboarding_page2_title => 'Wissenschaft einfach gemacht';
+
+  @override
+  String get onboarding_page2_subtitle =>
+      'Vergleichen Sie zwei Optionen (z. B. \'Kaffee\' vs. \'Tee\') mit Experten-Plänen. Wir leiten Sie Schritt für Schritt. Ganz ohne Vorwissen.';
+
+  @override
+  String get onboarding_page3_title => 'Ihre persönlichen Ergebnisse';
+
+  @override
+  String get onboarding_page3_subtitle =>
+      'Allgemeine Statistiken passen nicht immer. Verfolgen Sie Ihren Fortschritt täglich und erhalten Sie Ergebnisse, die zeigen, was Ihrem Körper wirklich hilft.';
+
+  @override
+  String get onboarding_page4_title => 'Übernehmen Sie die Kontrolle';
+
+  @override
+  String get onboarding_page4_subtitle =>
+      'Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu einer besseren Gesundheit.';
+
+  @override
   String get study_selection => 'Studienauswahl';
 
   @override
@@ -106,7 +144,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_selection_hidden_studies =>
-      'Einige Studien konnten nicht angezeigt werden, da Ihre App-Version veraltet ist. Bitte aktualisieren Sie Ihre App, um alle verfügbaren Studien zu sehen.';
+      'Einige Studien konnten nicht angezeigt werden. Das kann passieren, wenn Ihre App-Version veraltet ist. Bitte aktualisieren Sie die App, um alle verfügbaren Studien zu sehen, oder nehmen Sie an einer der unten angezeigten Studien teil.';
 
   @override
   String get study_overview_title => 'Übersicht';
@@ -603,9 +641,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte geben Sie nur numerische Zeichen ein';
 
   @override
-  String free_text_custom_error(String pattern) {
-    return 'Bitte geben Sie nur Zeichen ein, die dem Muster $pattern entsprechen';
-  }
+  String get free_text_custom_error =>
+      'Bitte geben Sie einen Wert im erforderlichen Format ein';
 
   @override
   String get app_outdated_message =>
@@ -1168,6 +1205,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
+  String get go_back => 'Zurück';
+
+  @override
   String get recovery_phrase_setup_title =>
       'Wiederherstellungsphrase einrichten';
 
@@ -1218,6 +1258,14 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String recovery_successful(String id) {
     return 'Wiederherstellung erfolgreich! ID: $id';
+  }
+
+  @override
+  String get deep_link_error_title => 'Fehler';
+
+  @override
+  String deep_link_study_not_found(String studyId) {
+    return 'Studie mit ID $studyId nicht gefunden oder nicht verfügbar';
   }
 
   @override
@@ -1342,5 +1390,247 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String share_error(String error) {
     return 'Fehler beim Teilen: $error';
+  }
+
+  @override
+  String get deep_link_study_invite_only =>
+      'Diese Studie erfordert einen Einladungscode zur Teilnahme';
+
+  @override
+  String deep_link_invite_invalid(String code) {
+    return 'Ungültiger oder abgelaufener Einladungscode: $code';
+  }
+
+  @override
+  String get deep_link_error_invalid_invite => 'Ungültiger Einladungscode';
+
+  @override
+  String get deep_link_switch_warning_title =>
+      'Sie nehmen bereits an einer Studie teil';
+
+  @override
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  ) {
+    return 'Sie sind aktuell eingeschrieben in:\n$currentStudy\n\nDer Deep Link verweist auf:\n$targetStudy\n\nSie können zur aktuellen Studie zurückkehren (empfohlen) oder fortfahren, diese zu verlassen und zu wechseln.';
+  }
+
+  @override
+  String get deep_link_switch_primary_return =>
+      'Zur aktuellen Studie zurückkehren';
+
+  @override
+  String get deep_link_switch_secondary_continue =>
+      'Aktuelle Studie verlassen und wechseln';
+
+  @override
+  String get deep_link_switch_data_choice_title =>
+      'Wie möchten Sie die aktuelle Studie verlassen?';
+
+  @override
+  String get deep_link_switch_data_choice_description =>
+      'Wählen Sie, was vor dem Wechsel mit Ihren aktuellen Studiendaten passieren soll.';
+
+  @override
+  String get deep_link_switch_soft_delete_button => 'Soft-Delete und wechseln';
+
+  @override
+  String get deep_link_switch_hard_delete_button => 'Hard-Delete und wechseln';
+
+  @override
+  String get deep_link_switch_confirm_soft_title => 'Soft-Delete bestätigen';
+
+  @override
+  String get deep_link_switch_confirm_soft_button => 'Soft-Delete bestätigen';
+
+  @override
+  String get deep_link_switch_confirm_hard_title => 'Hard-Delete bestätigen';
+
+  @override
+  String get deep_link_switch_confirm_hard_description =>
+      'Dadurch werden alle Ihre Daten dauerhaft und unwiderruflich gelöscht.';
+
+  @override
+  String get deep_link_switch_confirm_hard_button => 'Hard-Delete bestätigen';
+
+  @override
+  String get open_link_on_mobile =>
+      'Bitte öffnen Sie diesen Link auf Ihrem mobilen Gerät.';
+
+  @override
+  String get you_have_been_invited => 'Sie wurden zu einer Studie eingeladen!';
+
+  @override
+  String get download_app_join => 'StudyU App herunterladen & Beitreten';
+
+  @override
+  String get deleted_study_error_title => 'Studie nicht verfügbar';
+
+  @override
+  String get deleted_study_error_description =>
+      'Diese Studie ist auf dem Server nicht mehr verfügbar. Ihre Daten bleiben vorerst auf diesem Gerät. Bitte kontaktieren Sie Ihre Studienleitung oder den Support, bevor Sie etwas löschen. Nutzen Sie \'Alle Daten löschen\' nur, wenn Sie zum Zurücksetzen der App aufgefordert werden.';
+
+  @override
+  String get dashboard_showcase_progress_title => 'Studienfortschritt';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Aktuelle Intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Heutige Aufgaben';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Kontakt';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Bericht';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'Weitere Optionen';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.';
+
+  @override
+  String get dashboard_showcase_finish => 'Fertig';
+
+  @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support-Anfrage - Ladefehler';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support-Anfrage - Studie nicht verfügbar';
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hallo,\n\ndie StudyU App zeigt an, dass meine Studie auf dem Server nicht mehr verfügbar ist. Meine Subject-ID ist: $subjectId\n\nBitte teilen Sie mir mit, ob ich meine lokalen Daten behalten oder die App zurücksetzen soll.\n\nVielen Dank.';
+  }
+
+  @override
+  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
+
+  @override
+  String get free_text_hint => 'Geben Sie Ihre Antwort ein';
+
+  @override
+  String get preview_failed_to_initialize =>
+      'Die Vorschau konnte nicht initialisiert werden.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'Die Vorschau-Route konnte gerade nicht geöffnet werden.';
+
+  @override
+  String get continue_label => 'Weiter';
+
+  @override
+  String get restored_answer_needs_review =>
+      'Bitte die wiederhergestellte Antwort überprüfen.';
+
+  @override
+  String get mark_answer_reviewed => 'Als überprüft markieren';
+
+  @override
+  String get no_internet_connection =>
+      'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
+
+  @override
+  String error_occurred_with_message(String message) {
+    return 'Ein Fehler ist aufgetreten: $message';
+  }
+
+  @override
+  String get date_picker_hint => 'Wählen Sie ein Datum';
+
+  @override
+  String get time_picker_hint => 'Wählen Sie eine Zeit';
+
+  @override
+  String get date_picker_button_label => 'Datum wählen';
+
+  @override
+  String get date_time_picker_button_label => 'Datum und Uhrzeit wählen';
+
+  @override
+  String get date_picker_button_label_datetime => 'Datum auswählen';
+
+  @override
+  String get time_picker_button_label_datetime => 'Zeit auswählen';
+
+  @override
+  String get time_picker_button_label => 'Zeit auswählen';
+
+  @override
+  String get date_picker_clear => 'Löschen';
+
+  @override
+  String get date_picker_validation_required => 'Bitte wählen Sie ein Datum';
+
+  @override
+  String get time_picker_validation_required => 'Bitte wählen Sie eine Zeit';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Bitte wählen Sie Datum und Zeit';
+
+  @override
+  String get time_picker_validation_range =>
+      'Bitte wählen Sie eine Zeit innerhalb des erlaubten Bereichs';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Wähle eine Zeit zwischen $min und $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Früheste erlaubte Zeit: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Späteste erlaubte Zeit: $max';
+  }
+
+  @override
+  String date_picker_validation_min_date(String minDate) {
+    return 'Das Datum muss nach $minDate liegen';
+  }
+
+  @override
+  String date_picker_validation_max_date(String maxDate) {
+    return 'Das Datum muss vor $maxDate liegen';
   }
 }

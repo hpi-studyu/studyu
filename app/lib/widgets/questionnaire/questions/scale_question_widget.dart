@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/widgets/questionnaire/custom_slider.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -8,8 +7,14 @@ import 'package:studyu_core/core.dart';
 class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
   final Function(Answer)? onDone;
+  final Answer<num>? initialAnswer;
 
-  const ScaleQuestionWidget({super.key, required this.question, this.onDone});
+  const ScaleQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+    this.initialAnswer,
+  });
 
   @override
   State<ScaleQuestionWidget> createState() => _ScaleQuestionWidgetState();
@@ -17,13 +22,12 @@ class ScaleQuestionWidget extends QuestionWidget {
 
 class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
   double? value;
-  late bool sliderTouched;
 
   @override
   void initState() {
     super.initState();
-    value = widget.question.initial;
-    sliderTouched = false;
+    value =
+        widget.initialAnswer?.response.toDouble() ?? widget.question.initial;
   }
 
   @override
@@ -86,7 +90,6 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                 }),
                 onChangeEnd: (val) => setState(() {
                   value = val;
-                  sliderTouched = true;
                   widget.onDone!(widget.question.constructAnswer(value!));
                 }),
                 activeColor: activeTrackColor,
@@ -101,19 +104,6 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
             ),
           ],
         ),
-        if (!sliderTouched)
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  sliderTouched = true;
-                });
-                widget.onDone!(widget.question.constructAnswer(value!));
-              },
-              child: Text(AppLocalizations.of(context)!.done),
-            ),
-          ),
       ],
     );
   }

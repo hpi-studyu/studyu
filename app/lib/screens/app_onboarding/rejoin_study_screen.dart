@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/qr_code_scanner_screen.dart';
 import 'package:studyu_app/services/rejoin_study_service.dart';
 import 'package:studyu_core/core.dart';
@@ -132,17 +133,9 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
       if (!mounted) return;
 
       if (result.subjectId != null) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          Routes.loading,
-          (_) => false,
-        );
+        context.goNamed(RouteNames.loading);
       } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          Routes.studySelection,
-          (route) => route.settings.name == Routes.welcome,
-        );
+        context.goNamed(RouteNames.studySelection);
       }
     } catch (e, stackTrace) {
       if (!mounted) return;

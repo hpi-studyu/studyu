@@ -49,7 +49,7 @@ EXCLUDED_DIRECTORIES:
   - linux
   - web
 
-FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*|studyu|docker\/supabase\/volumes\/.*|.*\/fastlane\/README.md)
+FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|studyu|docker\/supabase\/volumes\/.*|.*\/fastlane\/README.md)
 
 # Linter specific settings
 

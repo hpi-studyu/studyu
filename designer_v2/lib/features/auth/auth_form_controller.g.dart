@@ -59,7 +59,7 @@ final class AuthFormControllerProvider
 }
 
 String _$authFormControllerHash() =>
-    r'84ecba6d9db4aacbda9ebb450d21ec94280f0081';
+    r'7342396463c074d44e734628ffbfb6b5f10bff20';
 
 final class AuthFormControllerFamily extends $Family
     with
@@ -93,7 +93,7 @@ abstract class _$AuthFormController extends $Notifier<AsyncValue<void>> {
   AsyncValue<void> build(AuthFormKey formKeyArg);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
     final element =
         ref.element
@@ -103,6 +103,6 @@ abstract class _$AuthFormController extends $Notifier<AsyncValue<void>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

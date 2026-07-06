@@ -51,3 +51,59 @@ enum FreeTextQuestionType {
 }
 
 const alphanumericPattern = r'^[a-zA-Z0-9]*$';
+
+enum FreeTextValidationError {
+  tooShort,
+  tooLong,
+  notAlphanumeric,
+  notNumeric,
+  customMismatch,
+  invalidCustomExpression,
+}
+
+extension FreeTextQuestionValidation on FreeTextQuestion {
+  FreeTextValidationError? validateResponse(String input) {
+    // For non-custom text types, length is checked before type.
+    if (textType != FreeTextQuestionType.custom) {
+      final minLength = lengthRange.first;
+      if (input.isEmpty && minLength == 0) {
+        return null;
+      }
+      if (input.length < minLength) {
+        return FreeTextValidationError.tooShort;
+      }
+      if (input.length > lengthRange.last) {
+        return FreeTextValidationError.tooLong;
+      }
+    }
+
+    switch (textType) {
+      case FreeTextQuestionType.any:
+        return null;
+      case FreeTextQuestionType.alphanumeric:
+        if (RegExp(alphanumericPattern).hasMatch(input)) {
+          return null;
+        }
+        return FreeTextValidationError.notAlphanumeric;
+      case FreeTextQuestionType.numeric:
+        if (RegExp(r'^-?[0-9]+$').hasMatch(input)) {
+          return null;
+        }
+        return FreeTextValidationError.notNumeric;
+      case FreeTextQuestionType.custom:
+        final expression = customTypeExpression;
+        if (expression == null || expression.isEmpty) {
+          return FreeTextValidationError.invalidCustomExpression;
+        }
+        try {
+          final regex = RegExp('^(?:$expression)\$');
+          if (regex.hasMatch(input)) {
+            return null;
+          }
+          return FreeTextValidationError.customMismatch;
+        } on FormatException {
+          return FreeTextValidationError.invalidCustomExpression;
+        }
+    }
+  }
+}

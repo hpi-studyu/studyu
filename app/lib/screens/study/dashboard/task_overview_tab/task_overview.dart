@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class TaskOverview extends StatefulWidget {
   final StudySubject? subject;
   final List<TaskInstance>? scheduleToday;
   final String? interventionIcon;
+  final GlobalKey? progressShowcaseKey;
+  final GlobalKey? currentInterventionShowcaseKey;
+  final GlobalKey? todayTasksShowcaseKey;
 
   const TaskOverview({
     required this.subject,
     required this.scheduleToday,
     super.key,
     this.interventionIcon,
+    this.progressShowcaseKey,
+    this.currentInterventionShowcaseKey,
+    this.todayTasksShowcaseKey,
   });
 
   @override
@@ -28,11 +37,7 @@ class _TaskOverviewState extends State<TaskOverview> {
   void _navigateToReportIfStudyCompleted(BuildContext context) {
     if (widget.subject!.completedStudy) {
       // Workaround to reload dashboard
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        Routes.dashboard,
-        (_) => false,
-      );
+      context.go('/${RouteNames.dashboard}');
     }
   }
 
@@ -66,7 +71,7 @@ class _TaskOverviewState extends State<TaskOverview> {
             icon: Icon(
               taskInstance.task is Observation
                   ? MdiIcons.orderBoolAscendingVariant
-                  : MdiIcons.fromString(widget.interventionIcon!),
+                  : MdiIconsHelper.fromString(widget.interventionIcon!),
             ),
           ),
         );
@@ -77,32 +82,44 @@ class _TaskOverviewState extends State<TaskOverview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 8),
-        ProgressRow(subject: widget.subject),
+        _buildShowcase(
+          key: widget.progressShowcaseKey,
+          title: l10n.dashboard_showcase_progress_title,
+          description: l10n.dashboard_showcase_progress_description,
+          child: ProgressRow(subject: widget.subject),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      AppLocalizations.of(context)!.intervention_current,
-                      style: theme.textTheme.titleLarge,
+              _buildShowcase(
+                key: widget.currentInterventionShowcaseKey,
+                title: l10n.dashboard_showcase_current_intervention_title,
+                description:
+                    l10n.dashboard_showcase_current_intervention_description,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        AppLocalizations.of(context)!.intervention_current,
+                        style: theme.textTheme.titleLarge,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
-                    style: const TextStyle(color: primaryColor),
-                  ),
-                ],
+                    const SizedBox(width: 5),
+                    Text(
+                      '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
+                      style: const TextStyle(color: primaryColor),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
               InterventionCardTitle(
@@ -111,9 +128,14 @@ class _TaskOverviewState extends State<TaskOverview> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                AppLocalizations.of(context)!.today_tasks,
-                style: theme.textTheme.titleLarge,
+              _buildShowcase(
+                key: widget.todayTasksShowcaseKey,
+                title: l10n.dashboard_showcase_today_tasks_title,
+                description: l10n.dashboard_showcase_today_tasks_description,
+                child: Text(
+                  AppLocalizations.of(context)!.today_tasks,
+                  style: theme.textTheme.titleLarge,
+                ),
               ),
             ],
           ),
@@ -121,6 +143,24 @@ class _TaskOverviewState extends State<TaskOverview> {
         // Todo: find good way to calculate duration of intervention and display it
         Expanded(child: ListView(children: [...buildScheduleToday(context)])),
       ],
+    );
+  }
+
+  Widget _buildShowcase({
+    required GlobalKey? key,
+    required String title,
+    required String description,
+    required Widget child,
+  }) {
+    if (key == null) return child;
+    final theme = Theme.of(context);
+    return Showcase(
+      key: key,
+      title: title,
+      description: description,
+      tooltipBackgroundColor: theme.colorScheme.surface,
+      textColor: theme.colorScheme.onSurface,
+      child: child,
     );
   }
 }

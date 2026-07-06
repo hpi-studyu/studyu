@@ -30,7 +30,10 @@ class MeasurementSurveyFormViewModel
     super.delegate,
     super.formData,
     super.validationSet = StudyFormValidationSet.draft,
-  });
+  }) {
+    // Persist survey changes when managed questions are added, edited, or removed.
+    propagateOnSave = true;
+  }
 
   final Study study;
 
@@ -140,6 +143,7 @@ class MeasurementSurveyFormViewModel
     final actions = questionFormViewModels.availableActions(
       model,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -148,6 +152,7 @@ class MeasurementSurveyFormViewModel
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
     final actions = questionFormViewModels.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -156,6 +161,7 @@ class MeasurementSurveyFormViewModel
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
     final actions = questionFormViewModels.availableInlineActions(
       model,
+      confirmationSubject: tr.dialog_subject_question,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
