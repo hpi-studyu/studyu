@@ -174,6 +174,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('Done'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 600));
     },
   );
 

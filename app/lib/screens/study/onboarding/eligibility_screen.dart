@@ -7,6 +7,8 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_core/core.dart';
 
+const _eligibilityDebugLogPrefix = 'EligibilityDebug';
+
 class EligibilityResult {
   final bool eligible;
   final QuestionnaireState answers;
@@ -57,8 +59,25 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
 
     final criteria = widget.study!.eligibilityCriteria;
-    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
-      (element) => element.isViolated(qs),
+    debugPrint(
+      '$_eligibilityDebugLogPrefix checkContinuation '
+      'criteria=${criteria.length} answers=${_debugAnswerSnapshot(qs)}',
+    );
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull((
+      element,
+    ) {
+      final result = element.condition.evaluate(qs);
+      debugPrint(
+        '$_eligibilityDebugLogPrefix criterion '
+        'id=${element.id} result=$result '
+        'condition=${element.condition.toJson()}',
+      );
+      return result == false;
+    });
+    debugPrint(
+      '$_eligibilityDebugLogPrefix checkContinuation '
+      'shouldContinue=${failingResult == null} '
+      'failingCriterion=${failingResult?.id}',
     );
     if (failingResult == null) return true;
     // freetext quickfix start
@@ -80,22 +99,30 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       return;
     }
     final criteria = widget.study!.eligibilityCriteria;
+    debugPrint(
+      '$_eligibilityDebugLogPrefix evaluateResponse '
+      'criteria=${criteria.length} answers=${_debugAnswerSnapshot(qs)}',
+    );
     setState(() {
-      final isEligible = criteria.every((criterion) {
+      final firstFailed = criteria.firstWhereOrNull((criterion) {
         // freetext quickfix start
         /*if (_isFreeTextCriterion(criterion)) {
           print('Criterion is free text, automatically satisfying it.');
-          return true;
+          return false;
         }*/
         // freetext quickfix end
-        return criterion.isSatisfied(qs);
+        final result = criterion.condition.evaluate(qs);
+        debugPrint(
+          '$_eligibilityDebugLogPrefix finalCriterion '
+          'id=${criterion.id} result=$result '
+          'condition=${criterion.condition.toJson()}',
+        );
+        return result == false;
       });
+      final isEligible = firstFailed == null;
       if (isEligible) {
         activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
-        final firstFailed = criteria.firstWhere(
-          (criterion) => criterion.isViolated(qs),
-        );
         activeResult = EligibilityResult(
           qs,
           eligible: isEligible,
@@ -103,6 +130,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         );
       }
     });
+  }
+
+  Map<String, Object?> _debugAnswerSnapshot(QuestionnaireState state) {
+    return state.answers.map(
+      (questionId, answer) => MapEntry(questionId, answer.response),
+    );
   }
 
   // todo quickfix until other question types are implemented (see DesignerV2's QuestionFormData)

@@ -99,7 +99,9 @@ class ConditionRowFormData extends IFormData {
       TextComparator.lengthGreaterThan ||
       TextComparator.lengthLessThan ||
       TextComparator.lengthGreaterThanOrEqual ||
-      TextComparator.lengthLessThanOrEqual => true,
+      TextComparator.lengthLessThanOrEqual ||
+      TextComparator.lengthEqual ||
+      TextComparator.lengthNotEqual => true,
       _ => false,
     };
   }

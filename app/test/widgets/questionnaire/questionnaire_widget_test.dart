@@ -1574,6 +1574,108 @@ void main() {
     expect(finalCompletion.containsKey('q2'), isFalse);
   });
 
+  testWidgets('free-text answer reveals conditional follow-up question', (
+    tester,
+  ) async {
+    final key = GlobalKey<QuestionnaireWidgetState>();
+    final q1 =
+        FreeTextQuestion.withId(
+            textType: FreeTextQuestionType.any,
+            lengthRange: [0, 100],
+          )
+          ..id = 'q1'
+          ..prompt = 'Question 1';
+    final q2 = _boolQuestion('q2', 'Question 2')
+      ..conditional = QuestionConditional.withCondition(
+        CompositeExpression(
+          logicType: LogicType.and,
+          expressions: [
+            TextExpression(comparator: TextComparator.lengthEqual, value: '4')
+              ..target = 'q1',
+          ],
+        ),
+      );
+
+    final List<Map<String, Object?>?> snapshots = [];
+
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      setup(
+        QuestionnaireWidget(
+          key: key,
+          [q1, q2],
+          onComplete: (state) {
+            snapshots.add(_snapshot(state));
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('yes'), findsNothing);
+
+    await tester.enterText(find.byType(TextFormField), 'abcd');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+
+    expect(key.currentState!.shownQuestions.length, 2);
+    expect(find.text('yes'), findsOneWidget);
+    expect(find.text('no'), findsOneWidget);
+    expect(snapshots.where((snapshot) => snapshot == null).length, 1);
+    expect(snapshots.where((snapshot) => snapshot != null), isEmpty);
+  });
+
+  testWidgets(
+    'answered choice then free-text length condition reveals follow-up',
+    (tester) async {
+      final q0 = _boolQuestion('q0', 'Previous question');
+      final q1 =
+          FreeTextQuestion.withId(
+              textType: FreeTextQuestionType.any,
+              lengthRange: [0, 500],
+            )
+            ..id = 'q1'
+            ..prompt = 'Question 1';
+      final q2 = _boolQuestion('q2', 'Question 2')
+        ..conditional = QuestionConditional.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [
+              TextExpression(comparator: TextComparator.lengthEqual, value: '8')
+                ..target = 'q1',
+            ],
+          ),
+        );
+
+      await tester.pumpWidget(setup(QuestionnaireWidget([q0, q1, q2])));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('yes'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.text('Done'), findsOneWidget);
+      expect(find.text('Complete'), findsNothing);
+
+      await tester.enterText(find.byType(TextFormField), '12345678');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('yes'), findsNWidgets(2));
+      expect(find.text('no'), findsNWidgets(2));
+    },
+  );
+
   testWidgets(
     'invalidation removes stale answer; re-shown question starts fresh',
     (tester) async {

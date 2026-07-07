@@ -20,6 +20,10 @@ enum TextComparator {
   lengthGreaterThanOrEqual,
   @JsonValue('length_less_than_or_equal')
   lengthLessThanOrEqual,
+  @JsonValue('length_equal')
+  lengthEqual,
+  @JsonValue('length_not_equal')
+  lengthNotEqual,
 }
 
 @JsonSerializable()
@@ -59,6 +63,10 @@ class TextExpression extends ValueExpression<String> {
         return lengthValue != null && targetValue.length >= lengthValue;
       case TextComparator.lengthLessThanOrEqual:
         return lengthValue != null && targetValue.length <= lengthValue;
+      case TextComparator.lengthEqual:
+        return lengthValue != null && targetValue.length == lengthValue;
+      case TextComparator.lengthNotEqual:
+        return lengthValue != null && targetValue.length != lengthValue;
     }
   }
 }

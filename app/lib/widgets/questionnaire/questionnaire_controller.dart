@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 
+const _questionnaireDebugLogPrefix = 'QuestionnaireDebug';
+
 enum QuestionnaireCtaMode { hidden, continue_, complete }
 
 class QuestionnaireController extends ChangeNotifier {
@@ -233,7 +235,20 @@ class QuestionnaireController extends ChangeNotifier {
   ) {
     final conditional = question.conditional;
     if (conditional == null) return true;
-    return conditional.condition.evaluate(evaluationState) == true;
+    final result = conditional.condition.evaluate(evaluationState);
+    debugPrint(
+      '$_questionnaireDebugLogPrefix visibility '
+      'question=${question.id} result=$result '
+      'condition=${conditional.condition.toJson()} '
+      'answers=${_debugAnswerSnapshot(evaluationState)}',
+    );
+    return result == true;
+  }
+
+  Map<String, Object?> _debugAnswerSnapshot(QuestionnaireState state) {
+    return state.answers.map(
+      (questionId, answer) => MapEntry(questionId, answer.response),
+    );
   }
 
   Answer? _defaultAnswerForHiddenQuestion(Question question) {
@@ -301,6 +316,10 @@ class QuestionnaireController extends ChangeNotifier {
   }
 
   void submitAnswer(Answer answer) {
+    debugPrint(
+      '$_questionnaireDebugLogPrefix submitAnswer '
+      'question=${answer.question} response=${answer.response}',
+    );
     final question = questions.firstWhere((q) => q.id == answer.question);
     final preserveDraftContext =
         question is FreeTextQuestion && _drafts.containsKey(answer.question);
@@ -346,6 +365,10 @@ class QuestionnaireController extends ChangeNotifier {
       if (error != null) return error;
       final existingAnswer = _answers.answers[question.id];
       if (existingAnswer == null || existingAnswer.response != draft) {
+        debugPrint(
+          '$_questionnaireDebugLogPrefix commitFreeTextDraft '
+          'question=${question.id} draft=$draft',
+        );
         _answers.answers[question.id] = question.constructAnswer(draft);
         _storeCurrentContext(
           question,

@@ -88,7 +88,7 @@ class ConditionRowFormViewModel
     // Listen for comparator changes
     comparatorControl.valueChanges.listen((_) {
       if (selectedQuestion?.type == FreeTextQuestion.questionType &&
-          selectedComparatorUsesTextLength) {
+          selectedComparatorUsesNumericThreshold) {
         final currentValue = valueControl.value?.toString();
         if (currentValue != null && int.tryParse(currentValue) == null) {
           valueControl.value = null;
@@ -168,6 +168,35 @@ class ConditionRowFormViewModel
           ),
         ];
       case FreeTextQuestion.questionType:
+        final freeTextQuestion = q as FreeTextQuestion;
+        if (freeTextQuestion.textType == FreeTextQuestionType.numeric) {
+          return [
+            FormControlOption(
+              NumericComparator.equal,
+              NumericComparator.equal.stringSymbol,
+            ),
+            FormControlOption(
+              NumericComparator.notEqual,
+              NumericComparator.notEqual.stringSymbol,
+            ),
+            FormControlOption(
+              NumericComparator.greaterThan,
+              NumericComparator.greaterThan.stringSymbol,
+            ),
+            FormControlOption(
+              NumericComparator.lessThan,
+              NumericComparator.lessThan.stringSymbol,
+            ),
+            FormControlOption(
+              NumericComparator.greaterThanOrEqual,
+              NumericComparator.greaterThanOrEqual.stringSymbol,
+            ),
+            FormControlOption(
+              NumericComparator.lessThanOrEqual,
+              NumericComparator.lessThanOrEqual.stringSymbol,
+            ),
+          ];
+        }
         return [
           FormControlOption(
             TextComparator.equal,
@@ -185,25 +214,50 @@ class ConditionRowFormViewModel
             TextComparator.doesNotContain,
             tr.form_array_question_visibility_logic_does_not_contain,
           ),
-          const FormControlOption(TextComparator.lengthGreaterThan, '>'),
-          const FormControlOption(TextComparator.lengthLessThan, '<'),
-          const FormControlOption(
-            TextComparator.lengthGreaterThanOrEqual,
-            '>=',
+          FormControlOption(
+            TextComparator.lengthLessThan,
+            tr.form_array_question_visibility_logic_shorter_than,
           ),
-          const FormControlOption(TextComparator.lengthLessThanOrEqual, '<='),
+          FormControlOption(
+            TextComparator.lengthLessThanOrEqual,
+            tr.form_array_question_visibility_logic_shorter_than_or_equal_to,
+          ),
+          FormControlOption(
+            TextComparator.lengthGreaterThan,
+            tr.form_array_question_visibility_logic_longer_than,
+          ),
+          FormControlOption(
+            TextComparator.lengthGreaterThanOrEqual,
+            tr.form_array_question_visibility_logic_longer_than_or_equal_to,
+          ),
+          FormControlOption(
+            TextComparator.lengthEqual,
+            tr.form_array_question_visibility_logic_same_length_as,
+          ),
+          FormControlOption(
+            TextComparator.lengthNotEqual,
+            tr.form_array_question_visibility_logic_different_length_as,
+          ),
         ];
       default:
         return [];
     }
   }
 
-  bool get selectedComparatorUsesTextLength {
+  bool get selectedComparatorUsesNumericThreshold {
     return switch (comparatorControl.value) {
+      NumericComparator.equal ||
+      NumericComparator.notEqual ||
+      NumericComparator.greaterThan ||
+      NumericComparator.lessThan ||
+      NumericComparator.greaterThanOrEqual ||
+      NumericComparator.lessThanOrEqual ||
       TextComparator.lengthGreaterThan ||
       TextComparator.lengthLessThan ||
       TextComparator.lengthGreaterThanOrEqual ||
-      TextComparator.lengthLessThanOrEqual => true,
+      TextComparator.lengthLessThanOrEqual ||
+      TextComparator.lengthEqual ||
+      TextComparator.lengthNotEqual => true,
       _ => false,
     };
   }
@@ -235,7 +289,7 @@ class ConditionRowFormViewModel
     if (expression is NumericExpression) {
       return expression.comparator;
     } else if (expression is TextExpression) {
-      return expression.comparator;
+      return _normalizeLegacyFreeTextComparator(expression.comparator);
     } else if (expression is ChoiceExpression) {
       return '='; // Default for ChoiceExpression if no NotExpression
     } else if (expression is BooleanExpression) {
@@ -336,8 +390,18 @@ class ConditionRowFormViewModel
         return NumericExpression(comparator: comparator, value: value)
           ..target = questionId;
       case FreeTextQuestion.questionType:
-        if (comparator is! TextComparator || value == null) return null;
-        if (selectedComparatorUsesTextLength &&
+        final freeTextQuestion = selectedQ as FreeTextQuestion;
+        if (value == null) return null;
+        if (freeTextQuestion.textType == FreeTextQuestionType.numeric) {
+          if (value is String) {
+            value = num.tryParse(value);
+          }
+          if (comparator is! NumericComparator || value is! num) return null;
+          return NumericExpression(comparator: comparator, value: value)
+            ..target = questionId;
+        }
+        if (comparator is! TextComparator) return null;
+        if (selectedComparatorUsesNumericThreshold &&
             int.tryParse(value as String) == null) {
           return null;
         }
@@ -386,6 +450,25 @@ class ConditionRowFormViewModel
   @override
   ManagedFormViewModel<ConditionRowFormData> createDuplicate() {
     return ConditionRowFormViewModel(currentQuestionId: currentQuestionId);
+  }
+
+  dynamic _normalizeLegacyFreeTextComparator(TextComparator comparator) {
+    final question = selectedQuestion;
+    if (question is! FreeTextQuestion ||
+        question.textType != FreeTextQuestionType.numeric) {
+      return comparator;
+    }
+
+    return switch (comparator) {
+      TextComparator.lengthEqual => NumericComparator.equal,
+      TextComparator.lengthNotEqual => NumericComparator.notEqual,
+      TextComparator.lengthGreaterThan => NumericComparator.greaterThan,
+      TextComparator.lengthLessThan => NumericComparator.lessThan,
+      TextComparator.lengthGreaterThanOrEqual =>
+        NumericComparator.greaterThanOrEqual,
+      TextComparator.lengthLessThanOrEqual => NumericComparator.lessThanOrEqual,
+      _ => comparator,
+    };
   }
 
   @override
