@@ -110,7 +110,6 @@ DECLARE
     v_new_password text;
     v_encrypted_password text;
     v_subject_id uuid;
-    v_latest_progress_date timestamptz;
 BEGIN
     -- 1. Look up user_id from recovery table
     SELECT user_id INTO v_user_id
@@ -150,9 +149,9 @@ BEGIN
     -- 5. Find latest active study subject
     -- Priority: most recent progress > most recent start date > deterministic ID ordering
     SELECT
-        ss.id,
-        MAX(sp.completed_at) as latest_progress
-    INTO v_subject_id, v_latest_progress_date
+        ss.id
+    INTO v_subject_id
+
     FROM public.study_subject ss
     LEFT JOIN public.subject_progress sp ON sp.subject_id = ss.id
     WHERE
