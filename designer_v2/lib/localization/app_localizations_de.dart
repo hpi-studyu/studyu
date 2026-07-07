@@ -286,7 +286,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_button_new_study => 'Neue Studie';
 
   @override
+  String get action_button_retry => 'Erneut versuchen';
+
+  @override
   String get search => 'Suche';
+
+  @override
+  String get navlink_all_studies => 'Alle Studien';
 
   @override
   String get studies_list_header_title => 'Titel';
@@ -317,11 +323,23 @@ class AppLocalizationsDe extends AppLocalizations {
       'Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen';
 
   @override
+  String studies_count(int visible, int total) {
+    return '$visible von $total';
+  }
+
+  @override
+  String get studies_filter_server_side_unsupported =>
+      'Dieser Filter kann serverseitig nicht angewendet werden und wird derzeit nicht unterstützt.';
+
+  @override
   String get studies_empty => 'Du hast noch keine Studien erstellt';
 
   @override
   String get studies_empty_description =>
       'Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie';
+
+  @override
+  String get studies_load_failed => 'Studien konnten nicht geladen werden.';
 
   @override
   String get navlink_learn => 'Lernen';

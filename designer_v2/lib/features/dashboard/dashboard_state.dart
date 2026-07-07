@@ -186,6 +186,10 @@ class DashboardState extends Equatable {
 }
 
 extension DashboardStateSafeViewProps on DashboardState {
+  int get visibleStudyCount => pinnedStudiesList.length + loadedStudies.length;
+
+  int get displayTotalStudyCount => totalCount + pinnedStudiesList.length;
+
   String get visibleListTitle {
     switch (studiesFilter) {
       case StudiesFilter.public:
@@ -195,7 +199,7 @@ extension DashboardStateSafeViewProps on DashboardState {
       case StudiesFilter.shared:
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
-        return tr.all_studies;
+        return tr.navlink_all_studies;
       case null:
         return tr.navlink_my_studies;
     }

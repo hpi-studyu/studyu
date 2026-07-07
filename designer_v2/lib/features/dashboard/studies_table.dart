@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
@@ -45,6 +44,8 @@ class StudiesTableColumnSize {
 }
 
 class StudiesTable extends StatelessWidget {
+  static const _loadMorePrefetchThreshold = 5;
+
   const StudiesTable({
     required this.studies,
     required this.onSelect,
@@ -52,12 +53,12 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
-    required this.pagingController,
     this.isLoadingMore = false,
     this.hasMore = false,
     this.advancedFilterUnsupported = false,
     this.loadError,
     this.onRetry,
+    this.onLoadMore,
     this.itemHeight = 60.0,
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
@@ -81,12 +82,12 @@ class StudiesTable extends StatelessWidget {
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
-  final PagingController<int, Study> pagingController;
   final bool isLoadingMore;
   final bool hasMore;
   final bool advancedFilterUnsupported;
   final Object? loadError;
   final VoidCallback? onRetry;
+  final Future<void> Function()? onLoadMore;
 
   @override
   Widget build(BuildContext context) {
@@ -254,68 +255,50 @@ class StudiesTable extends StatelessWidget {
             ),
             SizedBox(height: rowSpacing),
             Expanded(
-              child: PagingListener<int, Study>(
-                controller: pagingController,
-                builder: (context, state, fetchNextPage) =>
-                    PagedListView<int, Study>(
-                      key: const ValueKey('studies_table_rows'),
-                      state: state,
-                      fetchNextPage: fetchNextPage,
-                      // Constant row height lets the list size and scroll
-                      // efficiently — rows are recycled instead of all
-                      // staying in the layout tree.
-                      itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
-                      builderDelegate: PagedChildBuilderDelegate<Study>(
-                        itemBuilder: (context, item, index) => StudiesTableItem(
-                          key: ValueKey('study_row_${item.id}'),
-                          study: item,
-                          columnSizes: columnDefinitionsMap.values.toList(),
-                          actions: getActions(item),
-                          isPinned: pinnedStudies.contains(item.id),
-                          itemHeight: itemHeight,
-                          rowSpacing: rowSpacing,
-                          columnSpacing: columnSpacing,
-                          onPinnedChanged: (study, pinned) {
-                            pinnedStudies.contains(item.id)
-                                ? dashboardController.pinOffStudy(item.id)
-                                : dashboardController.pinStudy(item.id);
-                          },
-                          onTap: (study) => onSelect.call(study),
-                        ),
-                        newPageProgressIndicatorBuilder: (_) => const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                          child: Center(
-                            child: SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                        ),
-                        noMoreItemsIndicatorBuilder: (_) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Center(
-                            child: Text(
-                              tr.dashboard_end_of_list,
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(context).hintColor,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        newPageErrorIndicatorBuilder: (_) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Center(
-                            child: TextButton.icon(
-                              onPressed: onRetry,
-                              icon: const Icon(Icons.refresh),
-                              label: Text(tr.dashboard_retry),
-                            ),
-                          ),
-                        ),
-                      ),
+              child: ListView.builder(
+                key: const ValueKey('studies_table_rows'),
+                prototypeItem: StudiesTableItem.prototype(
+                  columnSizes: columnDefinitionsMap.values.toList(),
+                  itemHeight: itemHeight,
+                  itemPadding: itemPadding,
+                  rowSpacing: rowSpacing,
+                  columnSpacing: columnSpacing,
+                ),
+                itemCount: studies.length + (_showsFooter ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index >= studies.length) {
+                    return _buildFooter(context);
+                  }
+
+                  if (hasMore &&
+                      !isLoadingMore &&
+                      index >= studies.length - _loadMorePrefetchThreshold) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      onLoadMore?.call();
+                    });
+                  }
+
+                  final item = studies[index];
+                  return RepaintBoundary(
+                    child: StudiesTableItem(
+                      key: ValueKey('study_row_${item.id}'),
+                      study: item,
+                      columnSizes: columnDefinitionsMap.values.toList(),
+                      actions: getActions(item),
+                      isPinned: pinnedStudies.contains(item.id),
+                      itemHeight: itemHeight,
+                      itemPadding: itemPadding,
+                      rowSpacing: rowSpacing,
+                      columnSpacing: columnSpacing,
+                      onPinnedChanged: (study, pinned) {
+                        pinnedStudies.contains(item.id)
+                            ? dashboardController.pinOffStudy(item.id)
+                            : dashboardController.pinStudy(item.id);
+                      },
+                      onTap: (study) => onSelect.call(study),
                     ),
+                  );
+                },
               ),
             ),
           ],
@@ -370,6 +353,38 @@ class StudiesTable extends StatelessWidget {
           : null,
     );
   }
+
+  bool get _showsFooter => isLoadingMore || loadError != null || !hasMore;
+
+  Widget _buildFooter(BuildContext context) {
+    if (isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    if (loadError != null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: TextButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(tr.action_button_retry),
+          ),
+        ),
+      );
+    }
+
+    return SizedBox(height: rowSpacing);
+  }
 }
 
 class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
@@ -390,7 +405,7 @@ class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              tr.dashboard_filter_unsupported,
+              tr.studies_filter_server_side_unsupported,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -398,7 +413,7 @@ class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
               const SizedBox(height: 8),
               TextButton(
                 onPressed: onRetry,
-                child: Text(tr.dashboard_reset_filter),
+                child: Text(tr.filter_button_clear),
               ),
             ],
           ],
@@ -424,7 +439,7 @@ class _LoadErrorNotice extends StatelessWidget {
             const Icon(Icons.error_outline),
             const SizedBox(height: 8),
             Text(
-              tr.dashboard_load_error,
+              tr.studies_load_failed,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -433,7 +448,7 @@ class _LoadErrorNotice extends StatelessWidget {
               TextButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: Text(tr.dashboard_retry),
+                label: Text(tr.action_button_retry),
               ),
             ],
           ],

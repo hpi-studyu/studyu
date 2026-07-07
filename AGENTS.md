@@ -32,6 +32,8 @@ FVM-managed SDK version.
 
 Follow Effective Dart and the shared `analysis_options.yaml`, which includes `package:lint/strict.yaml`. Use `melos format` before committing. Keep Dart files `snake_case.dart`, classes and widgets `UpperCamelCase`, and members `lowerCamelCase`. Generated `*.g.dart` files are excluded from analysis but must be regenerated and committed when model annotations change.
 
+Do not introduce new hardcoded user-facing strings in application code. Any new UI copy, labels, error messages, helper text, button text, or empty-state text must be added to the localization files and consumed through generated localization accessors. Implementation-only constants may remain local constants when they are not user-facing and not intended for translation.
+
 ## Testing Guidelines
 
 Tests use Flutter/Dart test tooling. Place unit and widget tests under each package's `test/` directory and Designer integration tests under `designer_v2/integration_test/`. Prefer names ending in `_test.dart`, matching the feature or model, for example `filter_evaluator_test.dart`. Run all package tests with `melos run test`; run a focused package test with `cd designer_v2 && flutter test`.

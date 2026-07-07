@@ -97,7 +97,9 @@
   "notification_code_clipboard": "Code copied to clipboard",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "New study",
+  "action_button_retry": "Retry",
   "search": "Search",
+  "navlink_all_studies": "All Studies",
   "studies_list_header_title": "Title",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Participation",
@@ -107,8 +109,21 @@
   "studies_list_header_participants_completed": "Completed",
   "studies_not_found": "No Studies found",
   "modify_query": "Modify your query",
+  "studies_count": "{visible} of {total}",
+  "@studies_count": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_filter_server_side_unsupported": "This filter cannot be applied server-side and is not currently supported.",
   "studies_empty": "You don't have any studies yet",
   "studies_empty_description": "Build your own study from scratch or create a new draft copy from an already published study!",
+  "studies_load_failed": "Failed to load studies.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Learn",
   "navlink_study_design": "Design",

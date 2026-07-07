@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
@@ -29,39 +28,25 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  static const _compactFilterBreakpoint = 600.0;
+  static const _compactSearchBreakpoint = 900.0;
+  static const _wideHeaderMinWidth = 600.0;
+  static const _wideHeaderMinHeight = 800.0;
+  static const _headerCountMinWidth = 978.0;
+  static const _inlineCountMinWidth = 1100.0;
+  static const _inlineCountMinHeight = 900.0;
+  static const _headerActionSpacingTight = 10.0;
+  static const _headerActionSpacingDefault = 12.0;
+  static const _headerSearchMaxWidthTight = 280.0;
+  static const _headerSearchMaxWidthDefault = 300.0;
 
-  /// Adapter that mirrors [DashboardState] (loadedStudies + hasMore +
-  /// isLoadingMore + loadError) into a [PagingState] consumable by
-  /// `infinite_scroll_pagination`'s [PagedSliverList]. The actual fetching
-  /// still happens through [DashboardController.loadMore]; this controller
-  /// is just a render-state mirror, plus a way for the package to ask us
-  /// for the next page.
-  ///
-  /// We use one big "page" — index 0 holds everything currently loaded —
-  /// because [DashboardController] already merges newly-fetched studies
-  /// into a single growing list; we don't need the package's per-page
-  /// bookkeeping. [PagedSliverList] still recycles rows just fine.
-  late final PagingController<int, Study> _pagingController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _pagingController = PagingController<int, Study>(
-      // Asking for page 1 means "load next page" — DashboardController
-      // ignores the key and uses its own internal offset. We return null
-      // when there's no more data to fetch.
-      getNextPageKey: (state) => state.hasNextPage ? 1 : null,
-      fetchPage: _fetchPage,
-    );
     final controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 
   @override
@@ -71,36 +56,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       final controller = ref.read(dashboardControllerProvider.notifier);
       runAsync(() => controller.setStudiesFilter(widget.filter));
     }
-  }
-
-  /// Called by [PagedSliverList] when it needs the next page. We delegate
-  /// to [DashboardController.loadMore] and then return the now-loaded slice.
-  /// The package only uses our return value to know "did we get more rows"
-  /// for its own progress tracking; the canonical data comes from
-  /// [_syncPagingState] below.
-  Future<List<Study>> _fetchPage(int pageKey) async {
-    final controller = ref.read(dashboardControllerProvider.notifier);
-    final beforeCount = ref
-        .read(dashboardControllerProvider)
-        .loadedStudies
-        .length;
-    await controller.loadMore();
-    final after = ref.read(dashboardControllerProvider);
-    // Slice of the fresh rows just appended.
-    return after.loadedStudies.sublist(beforeCount);
-  }
-
-  /// Mirrors current [DashboardState] into the paging controller's value so
-  /// [PagedSliverList] renders the canonical list, hasMore flag, and any
-  /// load error coming out of [DashboardController].
-  void _syncPagingState(DashboardState state) {
-    _pagingController.value = PagingState<int, Study>(
-      pages: state.loadedStudies.isEmpty ? null : [state.loadedStudies],
-      keys: state.loadedStudies.isEmpty ? null : const [0],
-      hasNextPage: state.hasMore,
-      isLoading: state.isLoadingMore || state.isLoadingInitial,
-      error: state.loadError,
-    );
   }
 
   String _getPresetTooltip(String id) {
@@ -253,16 +208,268 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return "$propertyLabel: $valueLabel";
   }
 
+  Widget _buildStudiesCount(BuildContext context, DashboardState state) {
+    return Text(
+      AppLocalizations.of(
+        context,
+      )!.studies_count(state.visibleStudyCount, state.displayTotalStudyCount),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+    );
+  }
+
+  Widget _buildHeaderActions(
+    BuildContext context,
+    DashboardState state,
+    DashboardController controller, {
+    bool showCount = false,
+  }) {
+    final viewportWidth = MediaQuery.sizeOf(context).width;
+    final useTightHeaderActions =
+        viewportWidth >= _compactSearchBreakpoint &&
+        viewportWidth < _inlineCountMinWidth;
+    final headerActionSpacing = useTightHeaderActions
+        ? _headerActionSpacingTight
+        : _headerActionSpacingDefault;
+    final searchMaxWidth = useTightHeaderActions
+        ? _headerSearchMaxWidthTight
+        : _headerSearchMaxWidthDefault;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (showCount) ...[
+          _buildStudiesCount(context, state),
+          SizedBox(width: headerActionSpacing),
+        ],
+        MenuAnchor(
+          builder: (context, controller, child) {
+            final theme = Theme.of(context);
+            final isActive =
+                state.activeFilter != null &&
+                state.activeFilter!.children.isNotEmpty;
+            return Badge(
+              smallSize: 10,
+              isLabelVisible: isActive,
+              child: MediaQuery.sizeOf(context).width < _compactFilterBreakpoint
+                  ? IconButton.outlined(
+                      key: const ValueKey('filter_toggle_button'),
+                      onPressed: () {
+                        if (controller.isOpen) {
+                          controller.close();
+                        } else {
+                          controller.open();
+                        }
+                      },
+                      icon: const Icon(Icons.filter_list),
+                      tooltip: AppLocalizations.of(context)!.filter_button_main,
+                      style: IconButton.styleFrom(
+                        backgroundColor: state.activeFilter != null
+                            ? theme.colorScheme.primaryContainer.withValues(
+                                alpha: 0.2,
+                              )
+                            : null,
+                        side: BorderSide(
+                          color: state.activeFilter != null
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.outlineVariant,
+                        ),
+                      ),
+                    )
+                  : OutlinedButton.icon(
+                      key: const ValueKey('filter_toggle_button_labeled'),
+                      onPressed: () {
+                        if (controller.isOpen) {
+                          controller.close();
+                        } else {
+                          controller.open();
+                        }
+                      },
+                      icon: const Icon(Icons.filter_list),
+                      label: Text(
+                        AppLocalizations.of(context)!.filter_button_main,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: state.activeFilter != null
+                            ? theme.colorScheme.primaryContainer.withValues(
+                                alpha: 0.2,
+                              )
+                            : null,
+                        side: BorderSide(
+                          color: state.activeFilter != null
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.outlineVariant,
+                        ),
+                      ),
+                    ),
+            );
+          },
+          menuChildren: [
+            MenuItemButton(
+              child: Text(
+                AppLocalizations.of(context)!.filter_section_default_presets,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            ...DefaultPresets.all.map((preset) {
+              final isSelected = state.selectedSavedFilterId == preset.id;
+              final theme = Theme.of(context);
+              return Tooltip(
+                message: _getPresetTooltip(preset.id),
+                child: MenuItemButton(
+                  leadingIcon: Icon(
+                    preset.icon ?? Icons.star_border,
+                    color: isSelected ? theme.colorScheme.primary : null,
+                  ),
+                  trailingIcon: isSelected
+                      ? Icon(Icons.check, color: theme.colorScheme.primary)
+                      : null,
+                  onPressed: () {
+                    ref
+                        .read(dashboardControllerProvider.notifier)
+                        .updateFilter(
+                          isSelected ? FilterGroup() : preset.root,
+                          presetId: isSelected ? null : preset.id,
+                        );
+                  },
+                  child: Text(
+                    _getLocalizedPresetName(preset.id),
+                    style: isSelected
+                        ? TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          )
+                        : null,
+                  ),
+                ),
+              );
+            }),
+            const Divider(),
+            if (state.savedFilters.isNotEmpty) ...[
+              MenuItemButton(
+                child: Text(
+                  AppLocalizations.of(context)!.filter_section_custom_presets,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              ...state.savedFilters.map((preset) {
+                final isSelected = state.selectedSavedFilterId == preset.id;
+                final theme = Theme.of(context);
+                return MenuItemButton(
+                  leadingIcon: Icon(
+                    preset.icon ?? Icons.person_outline,
+                    color: isSelected ? theme.colorScheme.primary : null,
+                  ),
+                  trailingIcon: isSelected
+                      ? Icon(Icons.check, color: theme.colorScheme.primary)
+                      : null,
+                  onPressed: () {
+                    ref
+                        .read(dashboardControllerProvider.notifier)
+                        .updateFilter(
+                          isSelected ? FilterGroup() : preset.root,
+                          presetId: isSelected ? null : preset.id,
+                        );
+                  },
+                  child: Text(
+                    preset.name,
+                    style: isSelected
+                        ? TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          )
+                        : null,
+                  ),
+                );
+              }),
+              const Divider(),
+            ],
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.tune),
+              child: Text(AppLocalizations.of(context)!.filter_button_advanced),
+              onPressed: () {
+                _scaffoldKey.currentState!.openEndDrawer();
+              },
+            ),
+            if (state.activeFilter != null &&
+                state.activeFilter!.children.isNotEmpty) ...[
+              const Divider(),
+              MenuItemButton(
+                leadingIcon: Icon(
+                  Icons.clear,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                child: Text(
+                  AppLocalizations.of(context)!.filter_button_clear,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+                onPressed: () {
+                  ref
+                      .read(dashboardControllerProvider.notifier)
+                      .updateFilter(FilterGroup());
+                },
+              ),
+            ],
+          ],
+        ),
+        SizedBox(width: headerActionSpacing),
+        if (MediaQuery.sizeOf(context).width < _compactSearchBreakpoint)
+          IconButton(
+            key: const ValueKey('search_button'),
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  content: SizedBox(
+                    width: 400,
+                    child: Search(
+                      key: const ValueKey('search_field'),
+                      searchController: state.searchController,
+                      hintText: tr.search,
+                      onQueryChanged: (query) =>
+                          controller.filterStudies(query),
+                    ),
+                  ),
+                ),
+              );
+            },
+          )
+        else
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: searchMaxWidth),
+              child: Search(
+                key: const ValueKey('search_field'),
+                searchController: state.searchController,
+                hintText: tr.search,
+                onQueryChanged: (query) => controller.filterStudies(query),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
-
-    // Mirror current state into the paging controller every build. Cheap
-    // (one PagingState assignment) and keeps the rendered list in lock-step
-    // with DashboardController without a second source of truth.
-    _syncPagingState(state);
+    final size = MediaQuery.sizeOf(context);
+    final useWideHeaderLayout =
+        size.width >= _wideHeaderMinWidth &&
+        size.height >= _wideHeaderMinHeight;
+    final showHeaderTitleAndCount = size.width >= _compactFilterBreakpoint;
+    final showHeaderCount = size.width >= _headerCountMinWidth;
+    final showInlineCount =
+        useWideHeaderLayout &&
+        size.width >= _inlineCountMinWidth &&
+        size.height >= _inlineCountMinHeight;
+    final pinnedStudyIds = state.pinnedStudiesList
+        .map((study) => study.id)
+        .toSet();
 
     return DashboardScaffold(
       scaffoldKey: _scaffoldKey,
@@ -270,297 +477,113 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: [
-              SizedBox(
-                height: 36.0, // Fixed height for alignment
-                child: MediaQuery.of(context).size.width < 500
-                    ? IconButton.filled(
-                        key: const ValueKey('new_study_compact_button'),
-                        icon: const Icon(Icons.add),
-                        onPressed: controller.onClickNewStudy,
-                        tooltip: tr.action_button_new_study,
-                      )
-                    : PrimaryButton(
+          if (useWideHeaderLayout)
+            Table(
+              columnWidths: const {
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+                2: IntrinsicColumnWidth(),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                TableRow(
+                  children: [
+                    SizedBox(
+                      height: 36.0,
+                      child: PrimaryButton(
                         key: const ValueKey('new_study_button'),
                         text: tr.action_button_new_study,
                         onPressed: controller.onClickNewStudy,
                       ),
-              ),
-              const SizedBox(width: 20.0),
-              Expanded(
-                child: Text(
-                  state.visibleListTitle,
-                  style: theme.textTheme.headlineMedium,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              const SizedBox(width: 20.0),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Preset Dropdown
-                      // Unified Filter Button
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          final theme = Theme.of(context);
-                          final isActive =
-                              state.activeFilter != null &&
-                              state.activeFilter!.children.isNotEmpty;
-                          return Badge(
-                            smallSize: 10,
-                            isLabelVisible: isActive,
-                            child: MediaQuery.of(context).size.width < 600
-                                ? IconButton.outlined(
-                                    key: const ValueKey('filter_toggle_button'),
-                                    onPressed: () {
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                    icon: const Icon(Icons.filter_list),
-                                    tooltip: AppLocalizations.of(
-                                      context,
-                                    )!.filter_button_main,
-                                    style: IconButton.styleFrom(
-                                      backgroundColor:
-                                          state.activeFilter != null
-                                          ? theme.colorScheme.primaryContainer
-                                                .withValues(alpha: 0.2)
-                                          : null,
-                                      side: BorderSide(
-                                        color: state.activeFilter != null
-                                            ? theme.colorScheme.primary
-                                            : theme.colorScheme.outlineVariant,
-                                      ),
-                                    ),
-                                  )
-                                : OutlinedButton.icon(
-                                    key: const ValueKey(
-                                      'filter_toggle_button_labeled',
-                                    ),
-                                    onPressed: () {
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                    icon: const Icon(Icons.filter_list),
-                                    label: Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.filter_button_main,
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      backgroundColor:
-                                          state.activeFilter != null
-                                          ? theme.colorScheme.primaryContainer
-                                                .withValues(alpha: 0.2)
-                                          : null,
-                                      side: BorderSide(
-                                        color: state.activeFilter != null
-                                            ? theme.colorScheme.primary
-                                            : theme.colorScheme.outlineVariant,
-                                      ),
-                                    ),
-                                  ),
-                          );
-                        },
-                        menuChildren: [
-                          MenuItemButton(
-                            child: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.filter_section_default_presets,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          ...DefaultPresets.all.map((preset) {
-                            final isSelected =
-                                state.selectedSavedFilterId == preset.id;
-                            final theme = Theme.of(context);
-                            return Tooltip(
-                              message: _getPresetTooltip(preset.id),
-                              child: MenuItemButton(
-                                leadingIcon: Icon(
-                                  preset.icon ?? Icons.star_border,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : null,
-                                ),
-                                trailingIcon: isSelected
-                                    ? Icon(
-                                        Icons.check,
-                                        color: theme.colorScheme.primary,
-                                      )
-                                    : null,
-                                onPressed: () {
-                                  ref
-                                      .read(
-                                        dashboardControllerProvider.notifier,
-                                      )
-                                      .updateFilter(
-                                        isSelected
-                                            ? FilterGroup()
-                                            : preset.root,
-                                        presetId: isSelected ? null : preset.id,
-                                      );
-                                },
-                                child: Text(
-                                  _getLocalizedPresetName(preset.id),
-                                  style: isSelected
-                                      ? TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.primary,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                            );
-                          }),
-                          const Divider(),
-                          if (state.savedFilters.isNotEmpty) ...[
-                            MenuItemButton(
-                              child: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.filter_section_custom_presets,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            ...state.savedFilters.map((preset) {
-                              final isSelected =
-                                  state.selectedSavedFilterId == preset.id;
-                              final theme = Theme.of(context);
-                              return MenuItemButton(
-                                leadingIcon: Icon(
-                                  preset.icon ?? Icons.person_outline,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : null,
-                                ),
-                                trailingIcon: isSelected
-                                    ? Icon(
-                                        Icons.check,
-                                        color: theme.colorScheme.primary,
-                                      )
-                                    : null,
-                                onPressed: () {
-                                  ref
-                                      .read(
-                                        dashboardControllerProvider.notifier,
-                                      )
-                                      .updateFilter(
-                                        isSelected
-                                            ? FilterGroup()
-                                            : preset.root,
-                                        presetId: isSelected ? null : preset.id,
-                                      );
-                                },
-                                child: Text(
-                                  preset.name,
-                                  style: isSelected
-                                      ? TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.primary,
-                                        )
-                                      : null,
-                                ),
-                              );
-                            }),
-                            const Divider(),
-                          ],
-
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.tune),
-                            child: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.filter_button_advanced,
-                            ),
-                            onPressed: () {
-                              _scaffoldKey.currentState!.openEndDrawer();
-                            },
-                          ),
-                          if (state.activeFilter != null &&
-                              state.activeFilter!.children.isNotEmpty) ...[
-                            const Divider(),
-                            MenuItemButton(
-                              leadingIcon: Icon(
-                                Icons.clear,
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                              child: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.filter_button_clear,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
-                              ),
-                              onPressed: () {
-                                ref
-                                    .read(dashboardControllerProvider.notifier)
-                                    .updateFilter(FilterGroup());
-                              },
-                            ),
-                          ],
-                        ],
-                      ),
-
-                      const SizedBox(width: 12),
-                      if (MediaQuery.of(context).size.width < 900)
-                        IconButton(
-                          key: const ValueKey('search_button'),
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                content: SizedBox(
-                                  width: 400,
-                                  child: Search(
-                                    key: const ValueKey('search_field'),
-                                    searchController: state.searchController,
-                                    hintText: tr.search,
-                                    onQueryChanged: (query) =>
-                                        controller.filterStudies(query),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      else
-                        Flexible(
-                          child: Container(
-                            constraints: const BoxConstraints(maxWidth: 300),
-                            child: Search(
-                              key: const ValueKey('search_field'),
-                              searchController: state.searchController,
-                              hintText: tr.search,
-                              onQueryChanged: (query) =>
-                                  controller.filterStudies(query),
-                            ),
-                          ),
+                    ),
+                    if (showHeaderTitleAndCount)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Text(
+                          state.visibleListTitle,
+                          style: theme.textTheme.headlineMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
+                      )
+                    else
+                      const SizedBox.shrink(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: _buildHeaderActions(
+                        context,
+                        state,
+                        controller,
+                        showCount: showInlineCount,
+                      ),
+                    ),
+                  ],
+                ),
+                if (showHeaderTitleAndCount &&
+                    showHeaderCount &&
+                    !showInlineCount)
+                  TableRow(
+                    children: [
+                      const SizedBox.shrink(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0, top: 4.0),
+                        child: _buildStudiesCount(context, state),
+                      ),
+                      const SizedBox.shrink(),
                     ],
                   ),
+              ],
+            )
+          else
+            Table(
+              columnWidths: const {
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+                2: IntrinsicColumnWidth(),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                TableRow(
+                  children: [
+                    SizedBox(
+                      height: 36.0,
+                      child: PrimaryButton(
+                        key: const ValueKey('new_study_button'),
+                        text: tr.action_button_new_study,
+                        onPressed: controller.onClickNewStudy,
+                      ),
+                    ),
+                    if (showHeaderTitleAndCount)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Text(
+                          state.visibleListTitle,
+                          style: theme.textTheme.headlineMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: _buildHeaderActions(context, state, controller),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
+                if (showHeaderTitleAndCount && showHeaderCount)
+                  TableRow(
+                    children: [
+                      const SizedBox.shrink(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0, top: 4.0),
+                        child: _buildStudiesCount(context, state),
+                      ),
+                      const SizedBox.shrink(),
+                    ],
+                  ),
+              ],
+            ),
           if (state.activeFilter != null &&
               state.activeFilter!.children.isNotEmpty) ...[
             const SizedBox(height: 16.0),
@@ -592,16 +615,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               value: state.displayedStudies,
               data: (visibleStudies) => StudiesTable(
                 studies: visibleStudies,
-                pinnedStudies: state.pinnedStudiesList.map((s) => s.id),
+                pinnedStudies: pinnedStudyIds,
                 dashboardController: ref.watch(
                   dashboardControllerProvider.notifier,
                 ),
-                pagingController: _pagingController,
                 isLoadingMore: state.isLoadingMore,
                 hasMore: state.hasMore,
                 advancedFilterUnsupported: state.advancedFilterUnsupported,
                 loadError: state.loadError,
                 onRetry: controller.retry,
+                onLoadMore: controller.loadMore,
                 onSelect: controller.onSelectStudy,
                 getActions: controller.availableActions,
                 emptyWidget:
@@ -624,14 +647,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 description: tr.studies_empty_description,
                               ),
                             )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: EmptyBody(
-                          icon: Icons.content_paste_search_rounded,
-                          title: tr.studies_not_found,
-                          description: tr.modify_query,
-                        ),
-                      ),
+                    : const SizedBox.shrink(),
               ),
             ),
           ),

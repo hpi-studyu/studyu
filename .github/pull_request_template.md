@@ -9,5 +9,6 @@
 
 ### PR Checklist
 - [ ] `fvm exec melos run qualitycheck` passes
+- [ ] No new hardcoded user-facing strings were introduced; new UI copy is localized
 - [ ] Screenshot or video of the changes attached
 - [ ] Description links related issues
