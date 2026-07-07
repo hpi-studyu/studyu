@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
@@ -57,7 +58,6 @@ class _SettingsState extends State<Settings> {
             Text('${AppLocalizations.of(context)!.language}:'),
             const SizedBox(width: 5),
             DropdownButton<Locale>(
-              key: const ValueKey('settings_language_dropdown'),
               value: _selectedValue,
               items: dropDownItems,
               onChanged: (value) {
@@ -82,7 +82,6 @@ class _SettingsState extends State<Settings> {
             ),
             const SizedBox(width: 5),
             Switch(
-              key: const ValueKey('settings_analytics_switch'),
               value: _analyticsValue!,
               onChanged: (value) {
                 setState(() {
@@ -101,7 +100,6 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      key: const ValueKey('settings_screen'),
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: Center(
         child: SingleChildScrollView(
@@ -124,7 +122,7 @@ class _SettingsState extends State<Settings> {
                 onPressed: () async {
                   await DashboardShowcaseStorage.reset();
                   if (!context.mounted) return;
-                  Navigator.pop(context, true);
+                  context.pop(true);
                 },
               ),
               const SizedBox(height: 24),
@@ -177,7 +175,6 @@ class OptOutAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      key: const ValueKey('opt_out_dialog'),
       title: Text('${AppLocalizations.of(context)!.opt_out}?'),
       content: RichText(
         text: TextSpan(
@@ -198,7 +195,6 @@ class OptOutAlertDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton.icon(
-          key: const ValueKey('opt_out_confirm'),
           icon: const Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
@@ -221,11 +217,7 @@ class OptOutAlertDialog extends StatelessWidget {
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.studySelection,
-                (_) => false,
-              );
+              context.go('/${RouteNames.studySelection}');
             }
           },
         ),
@@ -241,12 +233,10 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    key: const ValueKey('delete_data_dialog'),
     title: Text('${AppLocalizations.of(context)!.delete_data}?'),
     content: Text(AppLocalizations.of(context)!.hard_delete_desc),
     actions: [
       ElevatedButton.icon(
-        key: const ValueKey('delete_data_confirm'),
         icon: const Icon(Icons.delete),
         label: Text(AppLocalizations.of(context)!.delete_data),
         style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -288,11 +278,7 @@ class DeleteAlertDialog extends StatelessWidget {
           await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
           if (context.mounted) await cancelNotifications(context);
           if (context.mounted) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.welcome,
-              (_) => false,
-            );
+            context.go('/${RouteNames.welcome}');
           }
         },
       ),

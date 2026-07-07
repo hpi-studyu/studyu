@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
@@ -10,7 +9,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
   static MaterialPageRoute routeFor({required StudySubject? subject}) =>
       MaterialPageRoute(
         builder: (_) => PerformanceDetailsScreen(subject),
-        settings: const RouteSettings(name: Routes.performanceDetails),
+        settings: const RouteSettings(name: 'performanceDetails'),
       );
 
   const PerformanceDetailsScreen(this.reportSubject, {super.key});

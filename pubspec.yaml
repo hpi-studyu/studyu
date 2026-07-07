@@ -15,6 +15,10 @@ melos:
   repository: https://github.com/hpi-studyu/studyu
   sdkPath: .fvm/flutter_sdk
   scripts:
+    setup:
+      run: git config core.hooksPath .githooks
+      description: Configure git to use the project's tracked hooks in .githooks/
+
     fix:
       run: |
         melos exec -c 6 -- \
@@ -44,16 +48,24 @@ melos:
 
     test:
       run: |
+        rtk_prefix=""
+        if command -v rtk >/dev/null 2>&1; then
+          rtk_prefix="rtk "
+        fi
         melos exec -c 6 --fail-fast -- \
-          "flutter test"
+          "${rtk_prefix}flutter test"
       description: Run `flutter test` for a specific package.
       packageFilters:
         dirExists: test
 
     generate:
       run: |
+        rtk_prefix=""
+        if command -v rtk >/dev/null 2>&1; then
+          rtk_prefix="rtk "
+        fi
         melos exec -c 1 --fail-fast -- \
-          "dart run build_runner build"
+          "${rtk_prefix}dart run build_runner build"
       description: Generate files with build_runner
       packageFilters:
         scope:
@@ -62,17 +74,21 @@ melos:
 
     qualitycheck:
       run: |
+        rtk_prefix=""
+        if command -v rtk >/dev/null 2>&1; then
+          rtk_prefix="rtk "
+        fi
         if [ "$CI" != "true" ]; then
           fvm install
         fi
         melos format
         melos generate
         if [ "$CI" = "true" ]; then
-          dart analyze
-          flutter analyze
+          ${rtk_prefix}dart analyze
+          ${rtk_prefix}flutter analyze
         else
-          fvm dart analyze
-          fvm flutter analyze
+          fvm exec ${rtk_prefix}dart analyze
+          fvm exec ${rtk_prefix}flutter analyze
         fi
       description: Run format, generate, and analyze checks
 

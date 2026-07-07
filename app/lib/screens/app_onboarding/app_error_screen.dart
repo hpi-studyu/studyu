@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -218,16 +219,32 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
     if (contactEmail == null || contactEmail.isEmpty) {
       StudyULogger.error('No contact email available.');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.no_contact_email)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.no_contact_email)));
       return;
     }
 
     final uriString =
         'mailto:$contactEmail?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
     final emailUri = Uri.parse(uriString);
-    await launchUrl(emailUri);
+    bool didLaunch = false;
+    try {
+      didLaunch = await launchUrl(
+        emailUri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      StudyULogger.warning('Failed to launch support email uri: $e');
+    }
+
+    if (!didLaunch) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.no_contact_email)));
+      return;
+    }
 
     // Let users dismiss the confirmation after the email app was opened.
     if (!context.mounted) return;
@@ -235,15 +252,10 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.support_email_sent),
-          content: Text(
-            AppLocalizations.of(context)!.support_email_sent_description,
-          ),
+          title: Text(loc.support_email_sent),
+          content: Text(loc.support_email_sent_description),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.close),
-            ),
+            TextButton(onPressed: () => context.pop(), child: Text(loc.ok)),
           ],
         );
       },
@@ -262,12 +274,12 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => context.pop(false),
               child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               style: TextButton.styleFrom(foregroundColor: Colors.red),
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () => context.pop(true),
               child: Text(AppLocalizations.of(context)!.reset_app),
             ),
           ],
@@ -290,7 +302,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       }
 
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+      context.goNamed(RouteNames.welcome);
       return;
     }
 

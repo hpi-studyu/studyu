@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -47,6 +47,8 @@ class Preview {
 
   Future<bool> handleAuthorization() async {
     if (!containsQuery('studyid') && !containsQuery('session')) return false;
+
+    if (!containsQuery('session')) return false;
 
     final String session = Uri.decodeComponent(queryParameters!['session']!);
     try {
@@ -106,19 +108,19 @@ class Preview {
       if ('route' == k) {
         switch (queryParameters![k]) {
           case 'consent':
-            return Routes.consent;
+            return '/${RouteNames.consent}';
           case 'eligibilityCheck': // this should include questionnaire and eligibility_criteria
-            return '/eligibilityCheck';
+            return '/${RouteNames.eligibilityCheck}';
           case 'interventionSelection':
-            return Routes.interventionSelection;
+            return '/${RouteNames.interventionSelection}';
           case 'journey':
-            return Routes.journey;
+            return '/${RouteNames.journey}';
           case 'questionnaire':
-            return Routes.questionnaire;
+            return '/${RouteNames.questionnaire}';
           case 'dashboard':
-            return Routes.dashboard;
+            return '/${RouteNames.dashboard}';
           case 'studyOverview':
-            return Routes.studyOverview;
+            return '/${RouteNames.studyOverview}';
           case 'intervention':
             return '/intervention';
           case 'observation':

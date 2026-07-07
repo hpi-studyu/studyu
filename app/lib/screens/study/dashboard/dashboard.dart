@@ -6,14 +6,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
-import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/theme.dart' as app_theme;
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
@@ -138,7 +138,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         _redirectingToLoading = true;
         SchedulerBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
-          Navigator.pushReplacementNamed(context, Routes.loading);
+          context.go('/${RouteNames.loading}');
         });
       }
       return const SizedBox.shrink();
@@ -166,7 +166,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               tooltip: l10n.contact,
               icon: const Icon(MdiIcons.faceAgent),
               onPressed: () {
-                Navigator.pushNamed(context, Routes.contact);
+                context.push('/${RouteNames.contact}');
               },
             ),
           ),
@@ -180,10 +180,8 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: IconButton(
               tooltip: l10n.current_report,
               icon: const Icon(MdiIcons.chartBar),
-              onPressed: () => Navigator.push(
-                context,
-                ReportDetailsScreen.routeFor(subject: subject!),
-              ),
+              onPressed: () =>
+                  context.push('/${RouteNames.reportDetails}', extra: subject),
             ),
           ),
           Showcase(
@@ -209,12 +207,10 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: PopupMenuButton<OverflowMenuItem>(
               onSelected: (value) async {
                 if (value.routeName != null) {
-                  final result = await Navigator.pushNamed(
-                    context,
-                    value.routeName!,
-                  );
+                  final result = await context.push(value.routeName!);
                   if (!mounted) return;
-                  if (value.routeName == Routes.appSettings && result == true) {
+                  if (value.routeName == '/${RouteNames.appSettings}' &&
+                      result == true) {
                     await _restartDashboardShowcase();
                   }
                 } else {
@@ -226,22 +222,22 @@ class _DashboardScreenState extends State<DashboardScreen>
                   OverflowMenuItem(
                     AppLocalizations.of(context)!.report_history,
                     MdiIcons.history,
-                    routeName: Routes.reportHistory,
+                    routeName: '/${RouteNames.reportHistory}',
                   ),
                   OverflowMenuItem(
                     AppLocalizations.of(context)!.faq,
                     MdiIcons.frequentlyAskedQuestions,
-                    routeName: Routes.faq,
+                    routeName: '/${RouteNames.faq}',
                   ),
                   OverflowMenuItem(
                     AppLocalizations.of(context)!.settings,
                     Icons.settings,
-                    routeName: Routes.appSettings,
+                    routeName: '/${RouteNames.appSettings}',
                   ),
                   OverflowMenuItem(
                     AppLocalizations.of(context)!.what_is_studyu,
                     MdiIcons.helpCircleOutline,
-                    routeName: Routes.about,
+                    routeName: '/${RouteNames.about}',
                   ),
                   OverflowMenuItem(
                     AppLocalizations.of(context)!.about,
@@ -420,7 +416,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               child: Text(AppLocalizations.of(context)!.ok),
             ),
           ],
@@ -520,8 +516,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () =>
-                  Navigator.pushNamed(context, Routes.reportHistory),
+              onPressed: () => context.push('/${RouteNames.reportHistory}'),
               icon: const Icon(MdiIcons.history, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.report_history,
@@ -530,8 +525,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () =>
-                  Navigator.pushNamed(context, Routes.studySelection),
+              onPressed: () => context.push('/${RouteNames.studySelection}'),
               icon: const Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.study_selection,

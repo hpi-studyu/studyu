@@ -19,13 +19,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.';
 
   @override
-  String get deleted_study_error_title => 'Study unavailable';
-
-  @override
-  String get deleted_study_error_description =>
-      'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.';
-
-  @override
   String get try_again => 'Try again';
 
   @override
@@ -79,6 +72,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get get_started => 'Get started';
+
+  @override
+  String get show_onboarding_again => 'Show onboarding again';
 
   @override
   String get onboarding_page0_title => 'Welcome to StudyU';
@@ -304,52 +300,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
-  String get dashboard_showcase_progress_title => 'Study progress';
-
-  @override
-  String get dashboard_showcase_progress_description =>
-      'This shows where you are in the study and how much is left.';
-
-  @override
-  String get dashboard_showcase_current_intervention_title =>
-      'Current intervention';
-
-  @override
-  String get dashboard_showcase_current_intervention_description =>
-      'Here you can see your current intervention and how many days remain in this phase.';
-
-  @override
-  String get dashboard_showcase_today_tasks_title => 'Today\'s tasks';
-
-  @override
-  String get dashboard_showcase_today_tasks_description =>
-      'Here you can find the tasks you need to complete today as part of the study.';
-
-  @override
-  String get dashboard_showcase_contact_title => 'Contact';
-
-  @override
-  String get dashboard_showcase_contact_description =>
-      'Use this if you need help from the study team.';
-
-  @override
-  String get dashboard_showcase_report_title => 'Report';
-
-  @override
-  String get dashboard_showcase_report_description =>
-      'Open your current report when results are available.';
-
-  @override
-  String get dashboard_showcase_menu_title => 'More options';
-
-  @override
-  String get dashboard_showcase_menu_description =>
-      'Find settings, FAQs, report history, and more here.';
-
-  @override
-  String get dashboard_showcase_finish => 'Finish';
-
-  @override
   String get home => 'Home';
 
   @override
@@ -365,21 +315,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contact_support => 'Contact Support';
 
   @override
-  String get support_email_subject_loading_error =>
-      'StudyU Support Request - Loading Error';
-
-  @override
-  String get support_email_subject_deleted_study =>
-      'StudyU Support Request - Study Unavailable';
-
-  @override
   String support_email_body(String subjectId) {
     return 'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: $subjectId\n\nPlease assist me with this issue.\n\nThank you.';
-  }
-
-  @override
-  String deleted_study_support_email_body(String subjectId) {
-    return 'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: $subjectId\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.';
   }
 
   @override
@@ -387,9 +324,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
-
-  @override
-  String get show_dashboard_showcase_again => 'Show dashboard tour again';
 
   @override
   String get yes => 'yes';
@@ -702,9 +636,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get free_text_custom_error =>
       'Please enter a value in the required format';
-
-  @override
-  String get free_text_hint => 'Enter your answer';
 
   @override
   String get app_outdated_message =>
@@ -1238,21 +1169,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get painTypeStiffness => 'Stiffness';
 
   @override
-  String get preview_failed_to_initialize => 'Preview failed to initialize.';
-
-  @override
-  String get preview_overlay_reset_hint =>
-      'The preview could not be opened right now. Please try resetting the preview.';
-
-  @override
-  String get preview_overlay_study_not_ready =>
-      'The preview could not be opened for this study yet. Please try resetting the preview.';
-
-  @override
-  String get preview_overlay_route_open_failed =>
-      'The preview route could not be opened right now.';
-
-  @override
   String get preview_mode => 'Preview Mode';
 
   @override
@@ -1277,6 +1193,174 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get go_back => 'Go back';
+
+  @override
+  String get deep_link_error_title => 'Error';
+
+  @override
+  String deep_link_study_not_found(String studyId) {
+    return 'Study with ID $studyId not found or not available';
+  }
+
+  @override
+  String get deep_link_study_invite_only =>
+      'This study requires an invite code to join';
+
+  @override
+  String deep_link_invite_invalid(String code) {
+    return 'Invalid or expired invite code: $code';
+  }
+
+  @override
+  String get deep_link_error_invalid_invite => 'Invalid invite code';
+
+  @override
+  String get deep_link_switch_warning_title => 'You are already in a study';
+
+  @override
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  ) {
+    return 'You are currently enrolled in:\n$currentStudy\n\nThe deep link points to:\n$targetStudy\n\nYou can return to your current study (recommended) or continue to leave it and switch.';
+  }
+
+  @override
+  String get deep_link_switch_primary_return => 'Return to current study';
+
+  @override
+  String get deep_link_switch_secondary_continue =>
+      'Leave current study and switch';
+
+  @override
+  String get deep_link_switch_data_choice_title =>
+      'How do you want to leave your current study?';
+
+  @override
+  String get deep_link_switch_data_choice_description =>
+      'Choose what should happen to your current study data before switching.';
+
+  @override
+  String get deep_link_switch_soft_delete_button => 'Soft delete and switch';
+
+  @override
+  String get deep_link_switch_hard_delete_button => 'Hard delete and switch';
+
+  @override
+  String get deep_link_switch_confirm_soft_title => 'Confirm soft delete';
+
+  @override
+  String get deep_link_switch_confirm_soft_button => 'Confirm soft delete';
+
+  @override
+  String get deep_link_switch_confirm_hard_title => 'Confirm hard delete';
+
+  @override
+  String get deep_link_switch_confirm_hard_description =>
+      'This will permanently and irreversibly delete all your data.';
+
+  @override
+  String get deep_link_switch_confirm_hard_button => 'Confirm hard delete';
+
+  @override
+  String get open_link_on_mobile =>
+      'Please open this link on your mobile device.';
+
+  @override
+  String get you_have_been_invited => 'You have been invited to a study!';
+
+  @override
+  String get download_app_join => 'Download the StudyU App & Join';
+
+  @override
+  String get deleted_study_error_title => 'Study unavailable';
+
+  @override
+  String get deleted_study_error_description =>
+      'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.';
+
+  @override
+  String get dashboard_showcase_progress_title => 'Study progress';
+
+  @override
+  String get dashboard_showcase_progress_description =>
+      'This shows where you are in the study and how much is left.';
+
+  @override
+  String get dashboard_showcase_current_intervention_title =>
+      'Current intervention';
+
+  @override
+  String get dashboard_showcase_current_intervention_description =>
+      'Here you can see your current intervention and how many days remain in this phase.';
+
+  @override
+  String get dashboard_showcase_today_tasks_title => 'Today\'s tasks';
+
+  @override
+  String get dashboard_showcase_today_tasks_description =>
+      'Here you can find the tasks you need to complete today as part of the study.';
+
+  @override
+  String get dashboard_showcase_contact_title => 'Contact';
+
+  @override
+  String get dashboard_showcase_contact_description =>
+      'Use this if you need help from the study team.';
+
+  @override
+  String get dashboard_showcase_report_title => 'Report';
+
+  @override
+  String get dashboard_showcase_report_description =>
+      'Open your current report when results are available.';
+
+  @override
+  String get dashboard_showcase_menu_title => 'More options';
+
+  @override
+  String get dashboard_showcase_menu_description =>
+      'Find settings, FAQs, report history, and more here.';
+
+  @override
+  String get dashboard_showcase_finish => 'Finish';
+
+  @override
+  String get support_email_subject_loading_error =>
+      'StudyU Support Request - Loading Error';
+
+  @override
+  String get support_email_subject_deleted_study =>
+      'StudyU Support Request - Study Unavailable';
+
+  @override
+  String deleted_study_support_email_body(String subjectId) {
+    return 'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: $subjectId\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.';
+  }
+
+  @override
+  String get show_dashboard_showcase_again => 'Show dashboard tour again';
+
+  @override
+  String get free_text_hint => 'Enter your answer';
+
+  @override
+  String get preview_failed_to_initialize => 'Preview failed to initialize.';
+
+  @override
+  String get preview_overlay_reset_hint =>
+      'The preview could not be opened right now. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_study_not_ready =>
+      'The preview could not be opened for this study yet. Please try resetting the preview.';
+
+  @override
+  String get preview_overlay_route_open_failed =>
+      'The preview route could not be opened right now.';
 
   @override
   String get continue_label => 'Continue';

@@ -29,10 +29,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
@@ -42,10 +40,8 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
-
 	<key>NSCameraUsageDescription</key>
 	<string>Need to access your camera to capture a photo for trial observations.</string>
-
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -67,7 +63,6 @@
 			</array>
 		</dict>
 	</dict>
-
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -93,6 +88,21 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>studyu-app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>studyu-app</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -25,7 +25,8 @@ FVM-managed SDK version.
 - `fvm exec melos run local:app` or `fvm exec melos run local:designer_v2`: runs against
   `.env.local`.
 - `fvm exec melos run generate`: runs `build_runner` for generated Dart files.
-- `fvm exec melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
+- `fvm exec melos run qualitycheck`: full CI-style check; formats, regenerates, and analyzes the workspace.
+- `scripts/pre-commit-check`: faster pre-commit/agent check; formats and analyzes, and only regenerates when staged files can affect generated output.
 - `fvm exec melos run build:web`: builds both web apps.
 
 ## Coding Style & Naming Conventions
@@ -50,7 +51,9 @@ You must strictly adhere to the following workspace rules for all file modificat
 
 ### 1. Code Quality & Pre-Commit Checks
 
-Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos run qualitycheck`.
+Before committing or opening a Pull Request, you MUST run `scripts/pre-commit-check`. This is the same shared check used by the tracked pre-commit hook: it runs format and analyze, and only runs code generation when staged files can affect generated output. Run `fvm exec melos run qualitycheck` when you need the full CI-style workspace check.
+
+If `fvm exec melos run qualitycheck` prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun `fvm exec melos run qualitycheck`.
 
 ### 2. Commit Message Enforcement
 

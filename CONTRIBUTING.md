@@ -211,3 +211,5 @@ own instance to ensure data privacy and security. For development purposes,
 Supabase can be self-hosted by using the [Supabase CLI](https://supabase.com/docs/guides/cli).
 Have a look into the [/supabase/README.md](./supabase/README.md) file for a
 guide on how to run the Supabase CLI for StudyU.
+
+Create new database migrations with the Supabase CLI (`supabase migration new <name>`) and commit the generated SQL under `supabase/migrations/`. Legacy migration files in `database/migration-legacy/` are documented in [supabase/README.md](./supabase/README.md).
