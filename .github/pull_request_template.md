@@ -2,7 +2,7 @@
 <!-- Explain the change, motivation, and link related issues (e.g., Fixes #123) -->
 
 ## Visuals
-<!-- REQUIRED: Attach a screenshot for static changes or a screen recording for interactive changes -->
+<!-- Attach a screenshot for static UI changes or a screen recording for interactive UI changes. Remove this section when the PR has no visual impact. -->
 
 ## Testing Steps
 <!-- Provide step-by-step instructions so reviewers can verify this change locally -->

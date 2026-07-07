@@ -1,3 +1,58 @@
+## 1.18.0
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**(designer): enlarge test preview frame.
+ - **FIX**(designer): disable screener without questions.
+ - **FIX**(app): open preview on study overview.
+ - **FIX**(designer): revert unintended app controller change.
+ - **FIX**(designer): restore default search bar background.
+ - **FIX**(designer): resolve splash screen initialization loop.
+ - **FIX**(dashboard): restore localized search placeholder.
+ - **FIX**(designer): use outer context for popup actions.
+ - **FIX**(designer): defer popup menu action execution.
+ - **FIX**(designer): remove default confirmation icons.
+ - **FIX**(designer): resolve confirmation merge conflicts.
+ - **FIX**(designer): centralize destructive action confirmations.
+ - **FIX**(designer): style actions in destructive confirmation dialog.
+ - **FIX**(designer): update unsaved changes dialog copy and button weights.
+ - **FIX**(designer): centralize destructive action confirmations.
+ - **FIX**(designer): handle recruit popup menu delete action.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FIX**: remove deprecated material_design_icons_flutter dependency.
+ - **FIX**(preview): avoid reloading test app page navigation.
+ - **FEAT**(designer): localize hardcoded preview overlay strings.
+ - **FEAT**: Add onCleared callback to DateQuestionWidget and QuestionContainer.
+ - **FEAT**: Refactor preview iframe style injection and cleanup logic.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: simplify date question form by removing unused preview section and related logic.
+ - **FEAT**: update date label translations for clarity in German and English.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: add localization for date format preset labels in English and German.
+ - **FEAT**: implement date range validation and localization for date questions.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+## 1.17.0
+
+ - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
+ - **FIX**: upgrade deps.
+ - **FIX**(measurements): persist new survey questions.
+ - **FIX**(designer): preserve form dirty guards.
+ - **FIX**(designer): intervention task dismissable warning works.
+ - **FIX**(designer): duplicate unsaved survey questions.
+ - **FIX**: update free text validation messages and regex handling.
+ - **FIX**: align dependencies for Flutter 3.44.
+ - **FIX**: add missing const constructors to satisfy linter.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: update Flutter version to 3.44.0 and clean up unused imports.
+ - **FIX**: remove redundant fitbit label.
+ - **FEAT**: make barrier dismissable with warning check.
+ - **FEAT**: Add custom error message support for free text questions.
+ - **FEAT**: add custom free text validation and localization support.
+ - **FEAT**(test): add stable ValueKeys for MCP automation.
+ - **FEAT**(designer): move fitbit credentials into measurement question editor.
+
 ## 1.16.0
 
  - **REFACTOR**: fix and format.

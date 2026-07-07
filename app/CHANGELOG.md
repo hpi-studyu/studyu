@@ -1,3 +1,54 @@
+## 2.14.0
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**(app): disable back without route history.
+ - **FIX**(app): open preview on study overview.
+ - **FIX**(app): restore date question answers.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FIX**: replace deprecated mdi store icons with material icons.
+ - **FIX**: remove deprecated material_design_icons_flutter dependency.
+ - **FIX**(app): clarify study selection banner message.
+ - **FIX**(preview): avoid reloading test app page navigation.
+ - **FIX**(preview): skip app onboarding in designer preview.
+ - **FEAT**(designer): localize hardcoded preview overlay strings.
+ - **FEAT**: Add onCleared callback to DateQuestionWidget and QuestionContainer.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: add date picker localization strings in German.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+## 2.13.0
+
+ - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
+ - **REFACTOR**: removed unused shared preferences.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): gate free text submit to active question.
+ - **FIX**(app): restore free text validation invalidation/re-completion and fix custom regex length skip.
+ - **FIX**: update free text validation messages and regex handling.
+ - **FIX**: align dependencies for Flutter 3.44.
+ - **FIX**: add missing const constructors to satisfy linter.
+ - **FIX**: replace deprecated MdiIcons with Flutter's built-in Icons for store links.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: adjust iOS project configurations.
+ - **FIX**: migrate flutter_secure_storage v10.0.0.
+ - **FIX**: Update onboarding subtitles for clarity and fix image paths.
+ - **FIX**: hide back button on terms screen.
+ - **FEAT**(app): cache hidden questionnaire answers, restore UI, validate complete.
+ - **FEAT**: Add custom error message support for free text questions.
+ - **FEAT**: add validation handling for free text questions.
+ - **FEAT**(test): add stable ValueKeys for MCP automation.
+ - **FEAT**: Make onboarding screen shorter.
+ - **FEAT**: Revamp onboarding screen content and structure for improved user guidance.
+ - **FEAT**: add custom_lint dependency for improved code quality checks".
+ - **FEAT**: update custom_lint and add riverpod_lint for enhanced code quality".
+ - **FEAT**: update custom_lint and add riverpod_lint for enhanced code quality.
+ - **FEAT**: add custom_lint dependency for improved code quality checks.
+ - **FEAT**: enhance onboarding flow by redirecting users based on onboarding status.
+ - **FEAT**: replace onboarding skip button with a back button.
+ - **FEAT**: Implement new app onboarding flow with dedicated screen and assets, and refine study schedule localization.
+
 ## 2.12.5
 
  - **FIX**: migrate flutter_local_notifications.

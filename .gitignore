@@ -135,9 +135,10 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
-!.vscode/settings.json
-
 # +++ CUSTOM ADDITIONS +++
+
+# Scratch directory
+.tmp/
 
 # Melos
 !*.lock
@@ -169,4 +170,10 @@ megalinter-reports/
 l10n-missing.txt
 
 # Local OpenCode state
+docs/superpowers/
+interview/
 .opencode/
+
+# Local git worktrees
+.worktrees/
+.vscode/settings.json

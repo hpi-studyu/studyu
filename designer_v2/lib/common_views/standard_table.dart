@@ -517,12 +517,17 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     for (var i = 0; i < rawCells.length; i++) {
       final isLeading = i == 0;
       final isTrailing = i == rawCells.length - 1;
-      //final disableOnTap = (widget.trailingActionsAt != null && isTrailing)
-      //    ? true : false;
+      // Avoid triggering row selection while interacting with trailing actions.
+      final disableOnTap = widget.trailingActionsAt != null && isTrailing;
       final cellColumnConfig = widget.inputColumns[i];
 
       Widget cell = rawCells[i];
-      cell = decorateCell(cell, isLeading: isLeading, isTrailing: isTrailing);
+      cell = decorateCell(
+        cell,
+        isLeading: isLeading,
+        isTrailing: isTrailing,
+        disableOnTap: disableOnTap,
+      );
       cell = applyColumnConfiguration(cell, cellColumnConfig);
       dataCells.add(cell);
     }

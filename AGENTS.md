@@ -25,7 +25,8 @@ FVM-managed SDK version.
 - `fvm exec melos run local:app` or `fvm exec melos run local:designer_v2`: runs against
   `.env.local`.
 - `fvm exec melos run generate`: runs `build_runner` for generated Dart files.
-- `fvm exec melos run qualitycheck`: formats, regenerates, and analyzes the workspace.
+- `fvm exec melos run qualitycheck`: full CI-style check; formats, regenerates, and analyzes the workspace.
+- `scripts/pre-commit-check`: faster pre-commit/agent check; formats and analyzes, and only regenerates when staged files can affect generated output.
 - `fvm exec melos run build:web`: builds both web apps.
 
 ## Coding Style & Naming Conventions
@@ -52,7 +53,9 @@ You must strictly adhere to the following workspace rules for all file modificat
 
 ### 1. Code Quality & Pre-Commit Checks
 
-Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos run qualitycheck`.
+Before committing or opening a Pull Request, you MUST run `scripts/pre-commit-check`. This is the same shared check used by the tracked pre-commit hook: it runs format and analyze, and only runs code generation when staged files can affect generated output. Run `fvm exec melos run qualitycheck` when you need the full CI-style workspace check.
+
+If `fvm exec melos run qualitycheck` prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun `fvm exec melos run qualitycheck`.
 
 ### 2. Commit Message Enforcement
 
@@ -72,7 +75,13 @@ When using the GitHub CLI (`gh`) to open a Pull Request:
 3. Keep the checklist interactive (`- [ ]`) but check off the formatting and analyzer items if you successfully ran them in Step 1.
 4. Output a reminder to the user in the chat interface stating that they must manually attach the required screenshot or video before merging.
 
-### 4. Code Reviews (Conventional Comments)
+### 4. Git Worktrees
+
+All git worktrees MUST be created inside `.worktrees/` relative to the project root (e.g.,
+`git worktree add .worktrees/<branch-name> <branch>`). Never create worktrees outside the project
+folder.
+
+### 5. Code Reviews (Conventional Comments)
 
 When asked to evaluate code or review a PR, format every single comment exactly to the Conventional Comments specification:
 

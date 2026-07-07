@@ -419,7 +419,141 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialog_study_delete_description =>
-      'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.';
+      'Deleting this study permanently removes the study setup and all stored study data.';
+
+  @override
+  String get dialog_study_delete_warning_intro =>
+      'Before deleting, save a backup and consider whether closing the study is enough.';
+
+  @override
+  String get dialog_study_delete_backup_step =>
+      'Save the study definition and collected data as a backup before deleting.';
+
+  @override
+  String get dialog_study_delete_close_step =>
+      'Stop new enrollments while keeping the study and existing data available.';
+
+  @override
+  String get dialog_study_delete_download_backup => 'Download backup';
+
+  @override
+  String get dialog_study_delete_data_confirmation =>
+      'I understand that the study and all associated data will be deleted forever and cannot be retrieved again.';
+
+  @override
+  String get dialog_study_delete_participant_confirmation =>
+      'I understand that current participants will not be able to continue their study and that all data from current and past participants will be deleted for them and for me.';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation =>
+      'I understand that my decision is final and irreversible and that all data is completely deleted and cannot be restored again.';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_1 =>
+      'deleted forever';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_2 =>
+      'cannot be retrieved again';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_1 =>
+      'current participants will not be able to continue';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_2 =>
+      'all data from current and past participants';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1 =>
+      'final and irreversible';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2 =>
+      'cannot be restored again';
+
+  @override
+  String dialog_study_delete_type_name_instruction(Object studyName) {
+    return 'Type the study name \"$studyName\" to confirm deletion.';
+  }
+
+  @override
+  String get dialog_study_delete_type_name_label => 'Study name';
+
+  @override
+  String dialog_study_close_type_name_instruction(Object studyName) {
+    return 'Enter the title of the study \"$studyName\" to confirm that you want to close it:';
+  }
+
+  @override
+  String get dialog_study_close_type_name_label =>
+      'Title of the study to close';
+
+  @override
+  String get dialog_study_close_irreversible_confirmation =>
+      'I understand that closing participation is final and cannot be reversed.';
+
+  @override
+  String get dialog_study_delete_close_instead => 'Review closing instead';
+
+  @override
+  String get dialog_study_title_mismatch => 'Study title does not match';
+
+  @override
+  String dialog_delete_title(Object subject) {
+    return 'Delete $subject?';
+  }
+
+  @override
+  String dialog_delete_description(Object subject) {
+    return 'Are you sure you want to delete this $subject? This action cannot be undone.';
+  }
+
+  @override
+  String dialog_remove_title(Object subject) {
+    return 'Remove $subject?';
+  }
+
+  @override
+  String dialog_remove_description(Object subject) {
+    return 'Are you sure you want to remove this $subject? This action cannot be undone.';
+  }
+
+  @override
+  String get dialog_subject_study => 'study';
+
+  @override
+  String get dialog_subject_item => 'item';
+
+  @override
+  String get dialog_subject_question => 'question';
+
+  @override
+  String get dialog_subject_screener_question => 'screener question';
+
+  @override
+  String get dialog_subject_answer_option => 'answer option';
+
+  @override
+  String get dialog_subject_intervention => 'intervention';
+
+  @override
+  String get dialog_subject_intervention_task => 'intervention task';
+
+  @override
+  String get dialog_subject_survey => 'survey';
+
+  @override
+  String get dialog_subject_consent_item => 'consent item';
+
+  @override
+  String get dialog_subject_report_section => 'report section';
+
+  @override
+  String get dialog_subject_invite_code => 'invite code';
+
+  @override
+  String get dialog_subject_fitbit_credentials => 'fitbit credentials';
 
   @override
   String get form_question_create => 'New Question';
@@ -735,6 +869,163 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'The input must match the specified regular expression.';
+
+  @override
+  String get question_type_date => 'Date/Time';
+
+  @override
+  String get date_min_date_label => 'Earliest date';
+
+  @override
+  String get date_min_date_label_helper =>
+      'The earliest date participants can select';
+
+  @override
+  String get date_max_date_label => 'Latest date';
+
+  @override
+  String get date_max_date_label_helper =>
+      'The latest date participants can select';
+
+  @override
+  String get date_format_preset_label => 'Date format preset';
+
+  @override
+  String get date_format_preset_label_helper =>
+      'Select how dates are displayed to participants';
+
+  @override
+  String get date_picker_hint => 'Select a date';
+
+  @override
+  String get time_picker_hint => 'Select a time';
+
+  @override
+  String get date_input_type_label => 'Input type';
+
+  @override
+  String get date_input_type_label_helper =>
+      'Select what information to collect';
+
+  @override
+  String get date_input_type_date => 'Date only';
+
+  @override
+  String get date_input_type_time => 'Time only';
+
+  @override
+  String get date_input_type_datetime => 'Date and time';
+
+  @override
+  String get time_format_preset_label => 'Time format';
+
+  @override
+  String get time_format_preset_label_helper => 'Select how time is displayed';
+
+  @override
+  String get date_default_option_label => 'Default value';
+
+  @override
+  String get date_default_option_label_helper =>
+      'Select the initial value shown to participants';
+
+  @override
+  String get date_default_option_none => 'No default';
+
+  @override
+  String get date_default_option_today => 'Today';
+
+  @override
+  String get date_default_option_now => 'Current time';
+
+  @override
+  String get date_default_option_specific => 'Specific date/time';
+
+  @override
+  String get date_default_specific_date_label => 'Default date';
+
+  @override
+  String get date_default_specific_date_label_helper =>
+      'The date that will be pre-selected';
+
+  @override
+  String get date_default_specific_time_label => 'Default time';
+
+  @override
+  String get date_default_specific_time_label_helper =>
+      'The time that will be pre-selected';
+
+  @override
+  String get date_min_time_label => 'Earliest time';
+
+  @override
+  String get date_min_time_label_helper =>
+      'The earliest time participants can select';
+
+  @override
+  String get date_max_time_label => 'Latest time';
+
+  @override
+  String get date_max_time_label_helper =>
+      'The latest time participants can select';
+
+  @override
+  String get date_validation_min_greater_than_max =>
+      'Earliest date cannot be after the latest date';
+
+  @override
+  String get date_picker_button_label_datetime => 'Select date';
+
+  @override
+  String get time_picker_button_label_datetime => 'Select time';
+
+  @override
+  String get time_picker_button_label => 'Select a time';
+
+  @override
+  String get date_picker_validation_required => 'Please select a date';
+
+  @override
+  String get time_picker_validation_required => 'Please select a time';
+
+  @override
+  String get datetime_picker_validation_required =>
+      'Please select both date and time';
+
+  @override
+  String get time_picker_validation_range =>
+      'Please select a time within the allowed range';
+
+  @override
+  String time_picker_range_hint(Object min, Object max) {
+    return 'Select a time between $min and $max';
+  }
+
+  @override
+  String time_picker_min_hint(Object min) {
+    return 'Earliest allowed time: $min';
+  }
+
+  @override
+  String time_picker_max_hint(Object max) {
+    return 'Latest allowed time: $max';
+  }
+
+  @override
+  String get date_validation_default_today_before_min =>
+      '\'Today\' is before the earliest allowed date';
+
+  @override
+  String get date_validation_default_today_after_max =>
+      '\'Today\' is after the latest allowed date';
+
+  @override
+  String get date_validation_default_specific_before_min =>
+      'Default date is before the earliest allowed date';
+
+  @override
+  String get date_validation_default_specific_after_max =>
+      'Default date is after the latest allowed date';
 
   @override
   String get fitbit_question_title => 'Fitbit';
@@ -1616,6 +1907,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_study_test_open_new_tab => 'Open in new tab';
 
   @override
+  String get preview_overlay_health_checking_title =>
+      'Checking app availability';
+
+  @override
+  String get preview_overlay_connecting_title => 'Connecting to app preview';
+
+  @override
+  String get preview_overlay_loading_title => 'Loading app preview';
+
+  @override
+  String preview_overlay_health_checking_description_local(String url) {
+    return 'Checking whether the StudyU app is running at $url.';
+  }
+
+  @override
+  String preview_overlay_health_checking_description_remote(String url) {
+    return 'Checking whether the participant app is reachable at $url.';
+  }
+
+  @override
+  String get preview_overlay_connecting_description_local =>
+      'The local StudyU app is reachable. Establishing the connection now.';
+
+  @override
+  String get preview_overlay_connecting_description_remote =>
+      'The participant app is reachable. Establishing the connection now.';
+
+  @override
+  String get preview_overlay_loading_description_local =>
+      'The app preview is connected. The app is now loading inside the phone frame.';
+
+  @override
+  String get preview_overlay_loading_description_remote =>
+      'The app preview is connected. The participant app is now loading.';
+
+  @override
+  String get preview_overlay_local_unavailable_title =>
+      'Local app preview unavailable';
+
+  @override
+  String get preview_overlay_remote_unavailable_title =>
+      'App under maintenance';
+
+  @override
+  String get preview_overlay_local_unavailable_message =>
+      'The local StudyU app could not be reached.';
+
+  @override
+  String get preview_overlay_remote_unavailable_message =>
+      'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.';
+
+  @override
+  String get preview_overlay_could_not_load =>
+      'The StudyU app preview could not be loaded.';
+
+  @override
+  String get preview_overlay_preview_not_opened =>
+      'The StudyU app preview could not be opened right now.';
+
+  @override
   String get banner_study_test_unavailable =>
       'The test mode is unavailable until you update the following information:';
 
@@ -1732,11 +2083,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_section_title => 'Invite codes';
 
   @override
-  String get code_public_disabled => 'Invite codes disabled';
+  String get code_public_disabled => 'Public Recruitment';
 
   @override
   String get code_public_disabled_description =>
-      'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.';
+      'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.';
 
   @override
   String get code_list_empty_title => 'You haven\'t invited anyone yet';
@@ -1895,6 +2246,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A survey is completed, if all of its tasks have been completed for that day';
 
   @override
+  String get banner_text_study_recruit_draft =>
+      'Because this study has not been launched yet, the links on this page will not work yet.';
+
+  @override
   String get banner_text_study_analyze_draft =>
       'Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.';
 
@@ -2051,6 +2406,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_clipboard => 'Copy to clipboard';
 
   @override
+  String get action_qr_code_show => 'Show QR code';
+
+  @override
+  String get action_qr_code_download => 'Download QR code';
+
+  @override
+  String get action_share => 'Share';
+
+  @override
+  String get action_copy_link => 'Copy link';
+
+  @override
   String get action_reportPrimary => 'Set as primary report';
 
   @override
@@ -2102,11 +2469,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconpicker_dialog_title => 'Pick an icon';
 
   @override
-  String get dialog_unsaved_changes_title => 'Go back and discard changes?';
+  String get dialog_unsaved_changes_title => 'Discard unsaved changes?';
 
   @override
   String get dialog_unsaved_changes_description =>
-      'There are unsaved changes that will be lost when you go back. If you want to keep your changes, you need to save your work before going back.';
+      'If you leave now, your recent changes will be permanently lost.';
 
   @override
   String get dialog_action_unsaved_changes_stay => 'Stay';

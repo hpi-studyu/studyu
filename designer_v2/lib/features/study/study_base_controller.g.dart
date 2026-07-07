@@ -131,7 +131,7 @@ abstract class _$StudyBaseController<T extends StudyControllerBaseState>
   StudyControllerBaseState build(StudyID studyId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<StudyControllerBaseState, StudyControllerBaseState>;
     final element =
@@ -142,6 +142,6 @@ abstract class _$StudyBaseController<T extends StudyControllerBaseState>
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

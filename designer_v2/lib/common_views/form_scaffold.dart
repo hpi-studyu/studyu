@@ -75,7 +75,10 @@ class _FormScaffoldState<T extends FormViewModel>
 
   Future<void> _promptBackNavigationConfirmation() async {
     if (!formViewModel.isDirty) {
-      Navigator.of(context).pop();
+      await formViewModel.cancel();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
       return;
     }
     final shouldPop = await showDialog<bool>(
