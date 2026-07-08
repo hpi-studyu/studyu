@@ -134,7 +134,37 @@
   "dialog_study_close_title": "Teilnahme schließen?",
   "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
-  "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
+  "dialog_study_delete_description": "Das Löschen dieser Studie entfernt die Studienkonfiguration und alle gespeicherten Studiendaten dauerhaft.",
+  "dialog_study_delete_warning_intro": "Speichere vor dem Löschen ein Backup und prüfe, ob das Schließen der Studie ausreicht.",
+  "dialog_study_delete_backup_step": "Speichere die Studiendefinition und gesammelte Daten vor dem Löschen als Backup.",
+  "dialog_study_delete_close_step": "Stoppe neue Einschreibungen, während die Studie und vorhandene Daten erhalten bleiben.",
+  "dialog_study_delete_download_backup": "Backup herunterladen",
+  "dialog_study_delete_data_confirmation": "Ich verstehe, dass die Studie und alle zugehörigen Daten dauerhaft gelöscht werden und nicht wieder abgerufen werden können.",
+  "dialog_study_delete_participant_confirmation": "Ich verstehe, dass aktuelle Teilnehmende ihre Studie nicht fortsetzen können und dass alle Daten aktueller und früherer Teilnehmender für sie und für mich gelöscht werden.",
+  "dialog_study_delete_irreversible_confirmation": "Ich verstehe, dass meine Entscheidung endgültig und unwiderruflich ist und dass alle Daten vollständig gelöscht werden und nicht wiederhergestellt werden können.",
+  "dialog_study_delete_data_confirmation_emphasis_1": "dauerhaft gelöscht",
+  "dialog_study_delete_data_confirmation_emphasis_2": "nicht wieder abgerufen werden können",
+  "dialog_study_delete_participant_confirmation_emphasis_1": "aktuelle Teilnehmende ihre Studie nicht fortsetzen können",
+  "dialog_study_delete_participant_confirmation_emphasis_2": "alle Daten aktueller und früherer Teilnehmender",
+  "dialog_study_delete_irreversible_confirmation_emphasis_1": "endgültig und unwiderruflich",
+  "dialog_study_delete_irreversible_confirmation_emphasis_2": "nicht wiederhergestellt werden können",
+  "dialog_study_delete_type_name_instruction": "Gib den Studiennamen \"{studyName}\" ein, um das Löschen zu bestätigen.",
+  "@dialog_study_delete_type_name_instruction": {
+    "placeholders": {
+      "studyName": {}
+    }
+  },
+  "dialog_study_delete_type_name_label": "Studienname",
+  "dialog_study_close_type_name_instruction": "Gib den Titel der Studie \"{studyName}\" ein, um zu bestätigen, dass du sie schließen möchtest:",
+  "@dialog_study_close_type_name_instruction": {
+    "placeholders": {
+      "studyName": {}
+    }
+  },
+  "dialog_study_close_type_name_label": "Titel der zu schließenden Studie",
+  "dialog_study_close_irreversible_confirmation": "Ich verstehe, dass das Schließen der Teilnahme endgültig ist und nicht rückgängig gemacht werden kann.",
+  "dialog_study_delete_close_instead": "Schließen statt Löschen prüfen",
+  "dialog_study_title_mismatch": "Der Studientitel stimmt nicht überein",
   "dialog_delete_title": "{subject} löschen?",
   "@dialog_delete_title": {
     "placeholders": {
@@ -198,9 +228,70 @@
   "question_type_pain_functionality_description": "Wenn ein Teilnehmer auf ein Körperteil tippt, erscheint ein Dialog, in dem er eine Schmerzstufe auswählen kann. Jedes ausgewählte Körperteil kann eine andere Schmerzstufe haben. Die gesammelten Daten umfassen die identifizierten Körperteile und ihre entsprechenden Schmerzwerte.",
   "question_type_bool": "Ja/Nein",
   "question_type_scale": "Skala",
+  "question_type_date": "Datum/Zeit",
   "question_type_image": "Bild",
   "question_type_audio": "Audio",
   "question_type_fitbit": "Fitbit",
+  "date_min_date_label": "Frühestes Datum",
+  "date_min_date_label_helper": "Das früheste Datum, das Teilnehmer auswählen können",
+  "date_max_date_label": "Spätestes Datum",
+  "date_max_date_label_helper": "Das späteste Datum, das Teilnehmer auswählen können",
+  "date_format_preset_label": "Datumsformat-Voreinstellung",
+  "date_format_preset_label_helper": "Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden",
+  "date_picker_hint": "Datum auswählen",
+  "time_picker_hint": "Zeit auswählen",
+  "date_input_type_label": "Eingabetyp",
+  "date_input_type_label_helper": "Wähle aus, welche Informationen erfasst werden sollen",
+  "date_input_type_date": "Nur Datum",
+  "date_input_type_time": "Nur Zeit",
+  "date_input_type_datetime": "Datum und Zeit",
+  "time_format_preset_label": "Zeitformat",
+  "time_format_preset_label_helper": "Wähle aus, wie die Zeit angezeigt wird",
+  "date_default_option_label": "Standardwert",
+  "date_default_option_label_helper": "Wähle den anfänglich angezeigten Wert",
+  "date_default_option_none": "Kein Standard",
+  "date_default_option_today": "Heute",
+  "date_default_option_now": "Aktuelle Zeit",
+  "date_default_option_specific": "Bestimmtes Datum/Zeit",
+  "date_default_specific_date_label": "Standarddatum",
+  "date_default_specific_date_label_helper": "Das vorausgewählte Datum",
+  "date_default_specific_time_label": "Standardzeit",
+  "date_default_specific_time_label_helper": "Die vorausgewählte Zeit",
+  "date_min_time_label": "Früheste Zeit",
+  "date_min_time_label_helper": "Die früheste Zeit, die Teilnehmer auswählen können",
+  "date_max_time_label": "Späteste Zeit",
+  "date_max_time_label_helper": "Die späteste Zeit, die Teilnehmer auswählen können",
+  "date_validation_min_greater_than_max": "Das früheste Datum darf nicht nach dem spätesten Datum liegen",
+  "date_picker_button_label_datetime": "Datum auswählen",
+  "time_picker_button_label_datetime": "Zeit auswählen",
+  "time_picker_button_label": "Zeit auswählen",
+  "date_picker_validation_required": "Bitte wähle ein Datum",
+  "time_picker_validation_required": "Bitte wähle eine Zeit",
+  "datetime_picker_validation_required": "Bitte wähle Datum und Zeit",
+  "time_picker_validation_range": "Bitte wähle eine Zeit innerhalb des erlaubten Bereichs",
+  "time_picker_range_hint": "Wähle eine Zeit zwischen {min} und {max}",
+  "@time_picker_range_hint": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "time_picker_min_hint": "Früheste erlaubte Zeit: {min}",
+  "@time_picker_min_hint": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "time_picker_max_hint": "Späteste erlaubte Zeit: {max}",
+  "@time_picker_max_hint": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "date_validation_default_today_before_min": "'Heute' liegt vor dem frühesten erlaubten Datum",
+  "date_validation_default_today_after_max": "'Heute' liegt nach dem spätesten erlaubten Datum",
+  "date_validation_default_specific_before_min": "Das Standarddatum liegt vor dem frühesten erlaubten Datum",
+  "date_validation_default_specific_after_max": "Das Standarddatum liegt nach dem spätesten erlaubten Datum",
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
   "form_field_response_pain": "Schmerz-Tracker",
@@ -619,6 +710,36 @@
   "navlink_study_test_app_dashboard": "Tagesübersicht",
   "action_button_study_test_reset": "Zurücksetzen",
   "action_button_study_test_open_new_tab": "In neuem Fenster öffnen",
+  "preview_overlay_health_checking_title": "App-Verfügbarkeit wird geprüft",
+  "preview_overlay_connecting_title": "Verbindung zur App-Vorschau wird hergestellt",
+  "preview_overlay_loading_title": "App-Vorschau wird geladen",
+  "preview_overlay_health_checking_description_local": "Es wird geprüft, ob die StudyU-App unter {url} läuft.",
+  "@preview_overlay_health_checking_description_local": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "preview_overlay_health_checking_description_remote": "Es wird geprüft, ob die Teilnehmer-App unter {url} erreichbar ist.",
+  "@preview_overlay_health_checking_description_remote": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "preview_overlay_connecting_description_local": "Die lokale StudyU-App ist erreichbar. Die Verbindung wird jetzt hergestellt.",
+  "preview_overlay_connecting_description_remote": "Die Teilnehmer-App ist erreichbar. Die Verbindung wird jetzt hergestellt.",
+  "preview_overlay_loading_description_local": "Die App-Vorschau ist verbunden. Die App wird jetzt innerhalb des Smartphone-Rahmens geladen.",
+  "preview_overlay_loading_description_remote": "Die App-Vorschau ist verbunden. Die Teilnehmer-App wird jetzt geladen.",
+  "preview_overlay_local_unavailable_title": "Lokale App-Vorschau nicht verfügbar",
+  "preview_overlay_remote_unavailable_title": "App wird gewartet",
+  "preview_overlay_local_unavailable_message": "Die lokale StudyU-App konnte nicht erreicht werden.",
+  "preview_overlay_remote_unavailable_message": "Die StudyU-App ist vorübergehend nicht verfügbar oder wird gewartet. Bitte versuche es später noch einmal.",
+  "preview_overlay_could_not_load": "Die App-Vorschau konnte nicht geladen werden.",
+  "preview_overlay_preview_not_opened": "Die App-Vorschau konnte gerade nicht geöffnet werden.",
+
   "banner_study_test_unavailable": "Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
   "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt und vollständig ein:",
   "dialog_study_test_help_title": "Teste deine Studie!",
@@ -671,8 +792,8 @@
   "form_field_preconfigured_schedule_intervention_default": "Standard",
   "form_field_preconfigured_schedule_intervention_hint": "Intervention auswählen...",
   "code_list_section_title": "Teilnahmecodes",
-  "code_public_disabled": "Teilnahmecodes deaktiviert",
-  "code_public_disabled_description": "Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung für diese Studie aktiviert ist. Alle Teilnehmer können ohne Teilnahmecodes beitreten.",
+  "code_public_disabled": "Öffentliche Rekrutierung",
+  "code_public_disabled_description": "Teilnehmer können dieser Studie einfach über die untenstehenden Links, durch Scannen des QR-Codes oder über die öffentliche Studienliste der App beitreten. Beachten Sie, dass Teilnahmecodes hier nicht verfügbar sind, da sie ausschließlich für private Studien verwendet werden.",
   "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
@@ -721,6 +842,7 @@
   "monitoring_table_completed_interventions_header_tooltip": "Alle Interventionsaufgaben wurden während der gesamten Studie abgeschlossen",
   "monitoring_table_completed_surveys_header_tooltip":"Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
+  "banner_text_study_recruit_draft": "Solange die Studie noch nicht live ist, funktionieren die Links auf dieser Seite noch nicht.",
   "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf den Daten aus den Testläufen der Studie.\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
   "action_button_study_export": "Daten exportieren",
   "action_button_study_export_prompt": "Möchtest du deine eigene Analyse durchführen?",
@@ -799,6 +921,10 @@
   "action_remove": "Entfernen",
   "action_duplicate": "Duplizieren",
   "action_clipboard": "In Zwischenablage kopieren",
+  "action_qr_code_show": "QR-Code anzeigen",
+  "action_qr_code_download": "QR-Code herunterladen",
+  "action_share": "Teilen",
+  "action_copy_link": "Link kopieren",
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",

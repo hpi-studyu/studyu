@@ -6,7 +6,6 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -259,32 +258,6 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         ),
       );
       actionButtons.add(publishButton);
-      actionButtons.add(const SizedBox(width: 12.0)); // padding
-    }
-
-    if (state.isClosedVisible) {
-      final formViewModel = ref.watch(
-        studyPublishValidatorProvider(widget.studyId),
-      );
-      final closeButton = ReactiveForm(
-        formGroup: formViewModel.form,
-        child: ReactiveFormConsumer(
-          // enable re-rendering based on form validation status
-          builder: (context, form, child) {
-            return SecondaryButton(
-              key: const ValueKey('close_study_button'),
-              text: tr.action_button_study_close,
-              icon: null,
-              onPressed: () => showStudyDialog(
-                context,
-                widget.studyId,
-                StudyDialogType.close,
-              ),
-            );
-          },
-        ),
-      );
-      actionButtons.add(closeButton);
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 

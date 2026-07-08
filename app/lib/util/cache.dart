@@ -185,11 +185,6 @@ class Cache {
     debugInfo.writeln('=== Cached User Data Debug Info ===');
 
     try {
-      // Check for fake StudyU email domain
-      debugInfo.writeln(
-        'Fake StudyU Email Domain: fake-studyu-email-domain.com',
-      );
-
       // Check selected subject ID
       if (await SecureStorage.containsKey('selected_study_object_id')) {
         final selectedSubjectId = await SecureStorage.read(

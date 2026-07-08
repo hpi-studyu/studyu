@@ -143,10 +143,34 @@ abstract class FormViewModel<T> implements IFormGroupController {
   bool get isDirty {
     if (prevFormValue == null) return false;
 
-    final currentFormValue = _getFullFormValue();
-    final isEqual = jsonEncode(prevFormValue) == jsonEncode(currentFormValue);
+    final isEqual =
+        jsonEncode(prevFormValue, toEncodable: _jsonEncodable) ==
+        jsonEncode(_getFullFormValue(), toEncodable: _jsonEncodable);
 
     return !isEqual;
+  }
+
+  static Object? _jsonEncodable(Object? value) {
+    if (value is DateTime) {
+      return value.toIso8601String();
+    }
+    if (value is Enum) {
+      return value.name;
+    }
+    if (value is Map) {
+      final result = <String, dynamic>{};
+      for (final entry in value.entries) {
+        result[entry.key.toString()] = _jsonEncodable(entry.value);
+      }
+      return result;
+    }
+    if (value is Iterable) {
+      return value.map(_jsonEncodable).toList();
+    }
+    if (value is num || value is bool || value is String) {
+      return value;
+    }
+    return value?.toString();
   }
 
   /// The [form]'s JSON value after initializing the controls with [formData]
@@ -186,7 +210,9 @@ abstract class FormViewModel<T> implements IFormGroupController {
     form.updateValueAndValidity(updateParent: false, emitEvent: false);
 
     // 3. Deep copy the full value
-    final fullValue = jsonDecode(jsonEncode(form.value)) as JsonMap;
+    final fullValue =
+        jsonDecode(jsonEncode(form.value, toEncodable: _jsonEncodable))
+            as JsonMap;
 
     // 4. Restore original states and rebuild the cache again
     _restoreControlStates(emitEvent: false, updateParent: false);

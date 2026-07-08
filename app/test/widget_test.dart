@@ -7,15 +7,42 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/about.dart';
+import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 
 Widget setup(Widget child) {
-  return MaterialApp(
-    supportedLocales: AppLocalizations.supportedLocales,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    locale: const Locale('en'),
-    home: child,
+  return ChangeNotifierProvider(
+    create: (_) => AppState(),
+    child: MaterialApp.router(
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      locale: const Locale('en'),
+      routerConfig: GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(path: '/', builder: (_, _) => child),
+          GoRoute(
+            path: '/${RouteNames.about}',
+            builder: (_, _) => const AboutScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.terms}',
+            builder: (_, _) => const TermsScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.welcome}',
+            builder: (_, _) => const WelcomeScreen(),
+          ),
+        ],
+      ),
+    ),
   );
 }
 
@@ -25,5 +52,74 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Get started'), findsOneWidget);
+  });
+
+  test('opens welcome screen when tour is completed without preview', () {
+    expect(
+      initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: true),
+      '/${RouteNames.welcome}',
+    );
+  });
+
+  test('opens onboarding when tour is not completed', () {
+    expect(
+      initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: false),
+      '/${RouteNames.onboarding}',
+    );
+  });
+
+  test('keeps designer preview on study terms', () {
+    expect(
+      initialRouteForMissingSubjectRoute(isPreview: true, onBoarded: true),
+      '/${RouteNames.terms}',
+    );
+  });
+
+  testWidgets('terms back falls back to welcome without previous screen', (
+    tester,
+  ) async {
+    await tester.pumpWidget(setup(const TermsScreen()));
+    await tester.pump();
+
+    await tester.tap(find.byKey(const ValueKey('terms_back')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+  });
+
+  testWidgets('terms back pops to welcome when available', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_get_started')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TermsScreen), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('terms_back')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+  });
+
+  testWidgets('about get started replaces about before terms', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_about')));
+    await tester.pumpAndSettle();
+    expect(find.byType(AboutScreen), findsOneWidget);
+
+    await tester.drag(find.byType(PageView), const Offset(0, -10000));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Get started'));
+    await tester.tap(find.text('Get started'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TermsScreen), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('terms_back')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(find.byType(AboutScreen), findsNothing);
   });
 }

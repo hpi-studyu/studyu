@@ -34,79 +34,21 @@ class StudyRecruitController extends _$StudyRecruitController
     return state;
   }
 
-  Future<void> loadInviteCodePage(int pageIndex) async {
-    if (pageIndex < 0) return;
+  StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
 
-    state = state.copyWith(
-      invites: const AsyncValue.loading(),
-      inviteCodePageIndex: pageIndex,
-    );
-
-    try {
-      final fetchLimit = state.inviteCodePageSize + 1;
-      final offset = pageIndex * state.inviteCodePageSize;
-      final fetchedInvites = await state.inviteCodeRepository.fetchPage(
-        offset: offset,
-        limit: fetchLimit,
-        query: state.inviteCodeSearchQuery,
-      );
-      final inviteCount = await state.inviteCodeRepository.count(
-        query: state.inviteCodeSearchQuery,
-      );
-      final hasNextPage = fetchedInvites.length > state.inviteCodePageSize;
-      final visibleInvites = fetchedInvites
-          .take(state.inviteCodePageSize)
-          .toList();
-
-      state = state.copyWith(
-        invites: AsyncValue.data(visibleInvites),
-        inviteCodePageIndex: pageIndex,
-        inviteCodeCount: inviteCount,
-        hasNextInviteCodePage: hasNextPage,
-      );
-    } catch (error, stackTrace) {
-      state = state.copyWith(
-        invites: AsyncValue.error(error, stackTrace),
-        inviteCodePageIndex: pageIndex,
-      );
-    }
-  }
-
-  Future<void> loadPreviousInviteCodePage() {
-    return loadInviteCodePage(state.inviteCodePageIndex - 1);
-  }
-
-  Future<void> loadNextInviteCodePage() {
-    if (!state.hasNextInviteCodePage) return Future.value();
-    return loadInviteCodePage(state.inviteCodePageIndex + 1);
-  }
-
-  Future<void> setInviteCodeSearchQuery(String query) {
-    state = state.copyWith(inviteCodeSearchQuery: query);
-    return loadInviteCodePage(0);
-  }
-
-  Future<void> setInviteCodePageSize(int pageSize) {
-    state = state.copyWith(inviteCodePageSize: pageSize);
-    return loadInviteCodePage(0);
-  }
-
-  void upsertInviteOnCurrentPage(StudyInvite invite) {
-    final currentInvites = state.invites.value ?? [];
-    final updatedInvites = [
-      invite,
-      ...currentInvites.where((current) => current.code != invite.code),
-    ]..sort((a, b) => a.code.compareTo(b.code));
-
-    final visibleInvites = updatedInvites
-        .take(state.inviteCodePageSize)
-        .toList();
-    state = state.copyWith(
-      invites: AsyncValue.data(visibleInvites),
-      hasNextInviteCodePage:
-          state.hasNextInviteCodePage ||
-          updatedInvites.length > state.inviteCodePageSize,
-    );
+  void _subscribeInvites() {
+    print("StudyRecruitController.subscribe");
+    _invitesSubscription?.cancel();
+    _invitesSubscription = state.inviteCodeRepository.watchAll().listen((
+      wrappedModels,
+    ) {
+      print("StudyRecruitController.listenUpdate");
+      // Update the controller's state when new invites are available in the repository
+      final invites = wrappedModels.map((invite) => invite.model).toList();
+      // Sort invites alphabetically by code
+      invites.sort((a, b) => a.code.compareTo(b.code));
+      state = state.copyWith(invites: AsyncValue.data(invites));
+    }); // TODO onError
   }
 
   Intervention? getIntervention(String interventionId) {
@@ -123,8 +65,7 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where((action) => action.type != ModelActionType.clipboard)
-        .map(_withPageRefresh)
+        .where((action) => action.type != ModelActionType.share)
         .toList();
     return withIcons(actions, modelActionIcons);
   }
@@ -132,7 +73,7 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableInlineActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where((action) => action.type == ModelActionType.clipboard)
+        .where((action) => action.type == ModelActionType.share)
         .toList();
     return withIcons(actions, modelActionIcons);
   }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
@@ -17,6 +19,9 @@ import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dar
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/services/clipboard.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notifications.dart';
 
 typedef InterventionProvider = Intervention? Function(String id);
 
@@ -38,10 +43,9 @@ class StudyRecruitScreen extends StudyPageWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _inviteCodesSectionHeader(context, ref),
-                  const SizedBox(height: 24.0), // spacing between body elements
+                  const SizedBox(height: 24.0),
                   StudyInvitesTable(
                     invites: studyInvites!,
-                    // otherwise falls through to [AsyncValueWidget.empty]
                     onSelect: _onSelectInvite(context, ref),
                     getActions: controller.availableActions,
                     getInlineActions: controller.availableInlineActions,
@@ -69,9 +73,10 @@ class StudyRecruitScreen extends StudyPageWidget {
           : Padding(
               padding: const EdgeInsets.only(top: 24),
               child: EmptyBody(
-                icon: Icons.block_sharp,
+                icon: Icons.share_rounded,
                 title: tr.code_public_disabled,
                 description: tr.code_public_disabled_description,
+                button: _publicStudyActionButtons(context, ref),
               ),
             ),
     );
@@ -98,6 +103,19 @@ class StudyRecruitScreen extends StudyPageWidget {
         style: BannerStyle.info,
       );
     }
+
+    if (state.isDraft &&
+        state.studyWithMetadata?.model.participation == Participation.open) {
+      return BannerBox(
+        noPrefix: true,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [TextParagraph(text: tr.banner_text_study_recruit_draft)],
+        ),
+        style: BannerStyle.info,
+      );
+    }
+
     return null;
   }
 
@@ -154,91 +172,37 @@ class StudyRecruitScreen extends StudyPageWidget {
     );
   }
 
-  List<Widget> _inviteCodeFormActionButtons(
-    BuildContext context,
-    WidgetRef ref,
-    InviteCodeFormViewModel formViewModel,
-  ) {
-    return [
-      DismissButton(
-        onPressed: () => formViewModel.cancel().then((_) {
-          if (context.mounted) Navigator.maybePop(context);
-        }),
-      ),
-      ReactiveFormConsumer(
-        builder: (context, form, child) {
-          return PrimaryButton(
-            text: tr.dialog_save,
-            icon: null,
-            enabled: formViewModel.isValid,
-            onPressedFuture: formViewModel.isValid
-                ? () async {
-                    final savedInvite = await formViewModel.save();
-                    final controller = ref.read(
-                      studyRecruitControllerProvider(studyId).notifier,
-                    );
-                    controller.upsertInviteOnCurrentPage(savedInvite);
-                    if (context.mounted) {
-                      Navigator.maybePop(context);
-                    }
-                  }
-                : null,
-          );
-        },
-      ),
-    ];
-  }
+  Widget _publicStudyActionButtons(BuildContext context, WidgetRef ref) {
+    final deepLink = env.generateAppDeepLink('study/$studyId');
 
-  Widget _inviteCodePaginationControls(
-    BuildContext context,
-    StudyRecruitControllerState state,
-    StudyRecruitController controller,
-  ) {
-    final theme = Theme.of(context);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          tr.code_list_active_count(state.inviteCodeCount),
-          style: theme.textTheme.bodySmall,
-        ),
-        const SizedBox(width: 16),
-        Text(tr.code_list_page_size, style: theme.textTheme.bodySmall),
-        const SizedBox(width: 8),
-        DropdownButton<int>(
-          value: state.inviteCodePageSize,
-          items: const [15, 25, 50, 100]
-              .map(
-                (pageSize) => DropdownMenuItem<int>(
-                  value: pageSize,
-                  child: Text(pageSize.toString()),
-                ),
-              )
-              .toList(),
-          onChanged: (pageSize) {
-            if (pageSize != null) controller.setInviteCodePageSize(pageSize);
+        SecondaryButton(
+          text: tr.action_copy_link,
+          icon: Icons.link_rounded,
+          onPressed: () {
+            ref
+                .read(clipboardServiceProvider)
+                .copy(deepLink)
+                .then(
+                  (_) => ref
+                      .read(notificationServiceProvider)
+                      .show(Notifications.inviteCodeClipped),
+                );
           },
         ),
-        const SizedBox(width: 16),
-        Text(
-          tr.code_list_page(state.inviteCodePageIndex + 1),
-          style: theme.textTheme.bodySmall,
-        ),
-        const SizedBox(width: 12),
-        IconButton.outlined(
-          tooltip: tr.code_list_previous_page,
-          onPressed: state.hasPreviousInviteCodePage
-              ? controller.loadPreviousInviteCodePage
-              : null,
-          icon: const Icon(Icons.chevron_left),
-        ),
-        const SizedBox(width: 8),
-        IconButton.outlined(
-          tooltip: tr.code_list_next_page,
-          onPressed: state.hasNextInviteCodePage
-              ? controller.loadNextInviteCodePage
-              : null,
-          icon: const Icon(Icons.chevron_right),
+        const SizedBox(width: 16.0),
+        SecondaryButton(
+          text: tr.action_qr_code_show,
+          icon: Icons.qr_code_rounded,
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (ctx) =>
+                  QrCodePreviewDialog(data: deepLink, filename: studyId),
+            );
+          },
         ),
       ],
     );
@@ -248,7 +212,6 @@ class StudyRecruitScreen extends StudyPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
       final formViewModel = ref.watch(inviteCodeFormViewModelProvider(studyId));
       formViewModel.read(invite);

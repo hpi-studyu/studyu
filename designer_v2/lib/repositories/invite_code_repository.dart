@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -74,6 +77,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     return true;
   }
 
+  /// Generate the deep link URL for an invite code
+  String generateInviteDeepLink(String code) {
+    return env.generateAppDeepLink('invite/$code');
+  }
+
   @override
   Future<List<StudyInvite>> fetchPage({
     required int offset,
@@ -100,19 +108,15 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
 
   @override
   List<ModelAction> availableActions(StudyInvite model) {
+    final deepLink = generateInviteDeepLink(model.code);
+
     final actions = [
       ModelAction(
-        type: ModelActionType.clipboard,
-        label: ModelActionType.clipboard.string,
-        onExecute: () => {
-          ref
-              .read(clipboardServiceProvider)
-              .copy(model.code)
-              .then(
-                (value) => ref
-                    .read(notificationServiceProvider)
-                    .show(Notifications.inviteCodeClipped),
-              ),
+        type: ModelActionType.share,
+        label: ModelActionType.share.string,
+        onExecute: () {},
+        onExecuteWithContext: (context) {
+          _showSharePopup(context, deepLink, model.code);
         },
       ),
       ModelAction(
@@ -122,20 +126,16 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
           subject: tr.dialog_subject_invite_code,
         ),
         onExecute: () async {
-          return await delete(getKey(model))
-              .then(
-                (value) => ref
-                    .read(routerProvider)
-                    .dispatch(RoutingIntents.studyRecruit(model.studyId)),
-              )
-              .then(
-                (value) => Future.delayed(
-                  const Duration(milliseconds: 200),
-                  () => ref
-                      .read(notificationServiceProvider)
-                      .show(Notifications.inviteCodeDeleted),
-                ),
-              );
+          await delete(getKey(model));
+          ref
+              .read(routerProvider)
+              .dispatch(RoutingIntents.studyRecruit(model.studyId));
+          await Future.delayed(
+            const Duration(milliseconds: 200),
+            () => ref
+                .read(notificationServiceProvider)
+                .show(Notifications.inviteCodeDeleted),
+          );
         },
         isAvailable: study.isOwner(authRepository.currentUser),
         isDestructive: true,
@@ -145,10 +145,81 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     return actions.where((action) => action.isAvailable).toList();
   }
 
-  @override
-  void emitUpdate() {
-    print("InviteCodeRepository.emitUpdate");
-    super.emitUpdate();
+  void _showSharePopup(BuildContext context, String deepLink, String filename) {
+    final effectiveContext = context;
+
+    // Determine where to render the popup based on the clicked element
+    final RenderBox button = context.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset(0, button.size.height), ancestor: overlay),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme.labelMedium!;
+    final iconColorDefault =
+        theme.iconTheme.color?.withValues(alpha: 0.7) ?? Colors.grey;
+
+    showMenu<String>(
+      context: context,
+      position: position,
+      elevation: 5,
+      items: [
+        PopupMenuItem<String>(
+          value: 'copy_link',
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            horizontalTitleGap: 4.0,
+            leading: Icon(
+              Icons.link_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: iconColorDefault,
+            ),
+            title: Text(ModelActionType.clipboard.string, style: textTheme),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'qr_code',
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            horizontalTitleGap: 4.0,
+            leading: Icon(
+              Icons.qr_code_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: iconColorDefault,
+            ),
+            title: Text(ModelActionType.qrCodeShow.string, style: textTheme),
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'copy_link') {
+        ref
+            .read(clipboardServiceProvider)
+            .copy(deepLink)
+            .then(
+              (_) => ref
+                  .read(notificationServiceProvider)
+                  .show(Notifications.inviteCodeClipped),
+            );
+      } else if (value == 'qr_code') {
+        if (effectiveContext.mounted) {
+          showDialog(
+            context: effectiveContext,
+            builder: (ctx) =>
+                QrCodePreviewDialog(data: deepLink, filename: filename),
+          );
+        }
+      }
+    });
   }
 }
 
@@ -186,11 +257,11 @@ class InviteCodeRepositoryDelegate
         await studyRepository.ensurePersisted(model.studyId);
         await apiClient.saveStudyInvite(model);
       },
-      rollback: () {},
-      onUpdate: () {
-        print("saveOperation: studyRepository.emitUpdate()");
-        studyRepository.emitUpdate();
+      rollback: () {
+        study.invites = prevInvites;
+        studyRepository.upsertLocally(study);
       },
+      onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
     );
 
@@ -200,7 +271,11 @@ class InviteCodeRepositoryDelegate
   @override
   Future<void> delete(StudyInvite model) {
     final deleteOperation = OptimisticUpdate(
-      applyOptimistic: () {},
+      applyOptimistic: () {
+        study.invites!.remove(model);
+        /*study.invites!.removeWhere((i) => i.code == model.code);*/
+        studyRepository.upsertLocally(study);
+      },
       apply: () => apiClient.deleteStudyInvite(model),
       rollback: () {},
       onUpdate: studyRepository.emitUpdate,

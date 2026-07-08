@@ -8,9 +8,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:studyu_app/app.dart';
-import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -67,14 +68,14 @@ Future<void> main() async {
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
   AppConfig? appConfig;
-  String initialRoute = Routes.loading;
+  String initialRoute = '/${RouteNames.loading}';
   try {
     appConfig = await AppConfig.getAppConfig();
   } on PostgrestException catch (e) {
     debugPrint('Postgres exception: $e');
     if (e.code == 'PGRST301') {
       // Unauthorized - likely due to wrong supabase environment variables
-      initialRoute = Routes.appErrorScreen;
+      initialRoute = '/${RouteNames.appErrorScreen}';
     }
   } catch (error) {
     // device could be offline
@@ -82,7 +83,7 @@ Future<void> main() async {
   }
 
   if (appConfig != null && await isAppOutdated(appConfig)) {
-    initialRoute = Routes.appOutdated;
+    initialRoute = '/${RouteNames.appOutdated}';
   }
 
   await AppAnalytics.init();
@@ -100,20 +101,20 @@ Future<void> main() async {
   AppLifecycleListener(
     onResume: () async {
       try {
-        final navigatorState = navigatorKey.currentState;
-        if (navigatorState == null) return;
-        String? currentRoute;
-        navigatorState.popUntil((route) {
-          currentRoute = route.settings.name;
-          return true;
-        });
-        if (currentRoute == Routes.appOutdated) return;
+        final context = navigatorKey.currentContext;
+        if (context == null) return;
+
+        // Get the current location from the GoRouter
+        final router = GoRouter.of(context);
+        final currentLocation =
+            router.routerDelegate.currentConfiguration.uri.path;
+        if (currentLocation == '/${RouteNames.appOutdated}') return;
+
         final appConfig = await AppConfig.getAppConfig();
         if (await isAppOutdated(appConfig)) {
-          await navigatorState.pushNamedAndRemoveUntil(
-            Routes.appOutdated,
-            (route) => false,
-          );
+          if (context.mounted) {
+            context.go('/${RouteNames.appOutdated}');
+          }
         }
       } catch (error) {
         // device could be offline

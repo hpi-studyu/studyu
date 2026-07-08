@@ -833,8 +833,128 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_study_delete_description.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.'**
+  /// **'Deleting this study permanently removes the study setup and all stored study data.'**
   String get dialog_study_delete_description;
+
+  /// No description provided for @dialog_study_delete_warning_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Before deleting, save a backup and consider whether closing the study is enough.'**
+  String get dialog_study_delete_warning_intro;
+
+  /// No description provided for @dialog_study_delete_backup_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the study definition and collected data as a backup before deleting.'**
+  String get dialog_study_delete_backup_step;
+
+  /// No description provided for @dialog_study_delete_close_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop new enrollments while keeping the study and existing data available.'**
+  String get dialog_study_delete_close_step;
+
+  /// No description provided for @dialog_study_delete_download_backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Download backup'**
+  String get dialog_study_delete_download_backup;
+
+  /// No description provided for @dialog_study_delete_data_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that the study and all associated data will be deleted forever and cannot be retrieved again.'**
+  String get dialog_study_delete_data_confirmation;
+
+  /// No description provided for @dialog_study_delete_participant_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that current participants will not be able to continue their study and that all data from current and past participants will be deleted for them and for me.'**
+  String get dialog_study_delete_participant_confirmation;
+
+  /// No description provided for @dialog_study_delete_irreversible_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that my decision is final and irreversible and that all data is completely deleted and cannot be restored again.'**
+  String get dialog_study_delete_irreversible_confirmation;
+
+  /// No description provided for @dialog_study_delete_data_confirmation_emphasis_1.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted forever'**
+  String get dialog_study_delete_data_confirmation_emphasis_1;
+
+  /// No description provided for @dialog_study_delete_data_confirmation_emphasis_2.
+  ///
+  /// In en, this message translates to:
+  /// **'cannot be retrieved again'**
+  String get dialog_study_delete_data_confirmation_emphasis_2;
+
+  /// No description provided for @dialog_study_delete_participant_confirmation_emphasis_1.
+  ///
+  /// In en, this message translates to:
+  /// **'current participants will not be able to continue'**
+  String get dialog_study_delete_participant_confirmation_emphasis_1;
+
+  /// No description provided for @dialog_study_delete_participant_confirmation_emphasis_2.
+  ///
+  /// In en, this message translates to:
+  /// **'all data from current and past participants'**
+  String get dialog_study_delete_participant_confirmation_emphasis_2;
+
+  /// No description provided for @dialog_study_delete_irreversible_confirmation_emphasis_1.
+  ///
+  /// In en, this message translates to:
+  /// **'final and irreversible'**
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1;
+
+  /// No description provided for @dialog_study_delete_irreversible_confirmation_emphasis_2.
+  ///
+  /// In en, this message translates to:
+  /// **'cannot be restored again'**
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2;
+
+  /// No description provided for @dialog_study_delete_type_name_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the study name \"{studyName}\" to confirm deletion.'**
+  String dialog_study_delete_type_name_instruction(Object studyName);
+
+  /// No description provided for @dialog_study_delete_type_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Study name'**
+  String get dialog_study_delete_type_name_label;
+
+  /// No description provided for @dialog_study_close_type_name_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the title of the study \"{studyName}\" to confirm that you want to close it:'**
+  String dialog_study_close_type_name_instruction(Object studyName);
+
+  /// No description provided for @dialog_study_close_type_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Title of the study to close'**
+  String get dialog_study_close_type_name_label;
+
+  /// No description provided for @dialog_study_close_irreversible_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that closing participation is final and cannot be reversed.'**
+  String get dialog_study_close_irreversible_confirmation;
+
+  /// No description provided for @dialog_study_delete_close_instead.
+  ///
+  /// In en, this message translates to:
+  /// **'Review closing instead'**
+  String get dialog_study_delete_close_instead;
+
+  /// No description provided for @dialog_study_title_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Study title does not match'**
+  String get dialog_study_title_mismatch;
 
   /// No description provided for @dialog_delete_title.
   ///
@@ -1459,6 +1579,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The input must match the specified regular expression.'**
   String get free_text_question_type_custom_explanation;
+
+  /// No description provided for @question_type_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date/Time'**
+  String get question_type_date;
+
+  /// No description provided for @date_min_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date'**
+  String get date_min_date_label;
+
+  /// No description provided for @date_min_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The earliest date participants can select'**
+  String get date_min_date_label_helper;
+
+  /// No description provided for @date_max_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest date'**
+  String get date_max_date_label;
+
+  /// No description provided for @date_max_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest date participants can select'**
+  String get date_max_date_label_helper;
+
+  /// No description provided for @date_format_preset_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Date format preset'**
+  String get date_format_preset_label;
+
+  /// No description provided for @date_format_preset_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how dates are displayed to participants'**
+  String get date_format_preset_label_helper;
+
+  /// No description provided for @date_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get date_picker_hint;
+
+  /// No description provided for @time_picker_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get time_picker_hint;
+
+  /// No description provided for @date_input_type_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Input type'**
+  String get date_input_type_label;
+
+  /// No description provided for @date_input_type_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select what information to collect'**
+  String get date_input_type_label_helper;
+
+  /// No description provided for @date_input_type_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date only'**
+  String get date_input_type_date;
+
+  /// No description provided for @date_input_type_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time only'**
+  String get date_input_type_time;
+
+  /// No description provided for @date_input_type_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date and time'**
+  String get date_input_type_datetime;
+
+  /// No description provided for @time_format_preset_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Time format'**
+  String get time_format_preset_label;
+
+  /// No description provided for @time_format_preset_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how time is displayed'**
+  String get time_format_preset_label_helper;
+
+  /// No description provided for @date_default_option_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default value'**
+  String get date_default_option_label;
+
+  /// No description provided for @date_default_option_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the initial value shown to participants'**
+  String get date_default_option_label_helper;
+
+  /// No description provided for @date_default_option_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No default'**
+  String get date_default_option_none;
+
+  /// No description provided for @date_default_option_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get date_default_option_today;
+
+  /// No description provided for @date_default_option_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Current time'**
+  String get date_default_option_now;
+
+  /// No description provided for @date_default_option_specific.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific date/time'**
+  String get date_default_option_specific;
+
+  /// No description provided for @date_default_specific_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date'**
+  String get date_default_specific_date_label;
+
+  /// No description provided for @date_default_specific_date_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The date that will be pre-selected'**
+  String get date_default_specific_date_label_helper;
+
+  /// No description provided for @date_default_specific_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default time'**
+  String get date_default_specific_time_label;
+
+  /// No description provided for @date_default_specific_time_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The time that will be pre-selected'**
+  String get date_default_specific_time_label_helper;
+
+  /// No description provided for @date_min_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest time'**
+  String get date_min_time_label;
+
+  /// No description provided for @date_min_time_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The earliest time participants can select'**
+  String get date_min_time_label_helper;
+
+  /// No description provided for @date_max_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest time'**
+  String get date_max_time_label;
+
+  /// No description provided for @date_max_time_label_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest time participants can select'**
+  String get date_max_time_label_helper;
+
+  /// No description provided for @date_validation_min_greater_than_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date cannot be after the latest date'**
+  String get date_validation_min_greater_than_max;
+
+  /// No description provided for @date_picker_button_label_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get date_picker_button_label_datetime;
+
+  /// No description provided for @time_picker_button_label_datetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get time_picker_button_label_datetime;
+
+  /// No description provided for @time_picker_button_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get time_picker_button_label;
+
+  /// No description provided for @date_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date'**
+  String get date_picker_validation_required;
+
+  /// No description provided for @time_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time'**
+  String get time_picker_validation_required;
+
+  /// No description provided for @datetime_picker_validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both date and time'**
+  String get datetime_picker_validation_required;
+
+  /// No description provided for @time_picker_validation_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time within the allowed range'**
+  String get time_picker_validation_range;
+
+  /// No description provided for @time_picker_range_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time between {min} and {max}'**
+  String time_picker_range_hint(Object min, Object max);
+
+  /// No description provided for @time_picker_min_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest allowed time: {min}'**
+  String time_picker_min_hint(Object min);
+
+  /// No description provided for @time_picker_max_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest allowed time: {max}'**
+  String time_picker_max_hint(Object max);
+
+  /// No description provided for @date_validation_default_today_before_min.
+  ///
+  /// In en, this message translates to:
+  /// **'\'Today\' is before the earliest allowed date'**
+  String get date_validation_default_today_before_min;
+
+  /// No description provided for @date_validation_default_today_after_max.
+  ///
+  /// In en, this message translates to:
+  /// **'\'Today\' is after the latest allowed date'**
+  String get date_validation_default_today_after_max;
+
+  /// No description provided for @date_validation_default_specific_before_min.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date is before the earliest allowed date'**
+  String get date_validation_default_specific_before_min;
+
+  /// No description provided for @date_validation_default_specific_after_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Default date is after the latest allowed date'**
+  String get date_validation_default_specific_after_max;
 
   /// No description provided for @fitbit_question_title.
   ///
@@ -2919,6 +3309,96 @@ abstract class AppLocalizations {
   /// **'Open in new tab'**
   String get action_button_study_test_open_new_tab;
 
+  /// No description provided for @preview_overlay_health_checking_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking app availability'**
+  String get preview_overlay_health_checking_title;
+
+  /// No description provided for @preview_overlay_connecting_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to app preview'**
+  String get preview_overlay_connecting_title;
+
+  /// No description provided for @preview_overlay_loading_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading app preview'**
+  String get preview_overlay_loading_title;
+
+  /// No description provided for @preview_overlay_health_checking_description_local.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking whether the StudyU app is running at {url}.'**
+  String preview_overlay_health_checking_description_local(String url);
+
+  /// No description provided for @preview_overlay_health_checking_description_remote.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking whether the participant app is reachable at {url}.'**
+  String preview_overlay_health_checking_description_remote(String url);
+
+  /// No description provided for @preview_overlay_connecting_description_local.
+  ///
+  /// In en, this message translates to:
+  /// **'The local StudyU app is reachable. Establishing the connection now.'**
+  String get preview_overlay_connecting_description_local;
+
+  /// No description provided for @preview_overlay_connecting_description_remote.
+  ///
+  /// In en, this message translates to:
+  /// **'The participant app is reachable. Establishing the connection now.'**
+  String get preview_overlay_connecting_description_remote;
+
+  /// No description provided for @preview_overlay_loading_description_local.
+  ///
+  /// In en, this message translates to:
+  /// **'The app preview is connected. The app is now loading inside the phone frame.'**
+  String get preview_overlay_loading_description_local;
+
+  /// No description provided for @preview_overlay_loading_description_remote.
+  ///
+  /// In en, this message translates to:
+  /// **'The app preview is connected. The participant app is now loading.'**
+  String get preview_overlay_loading_description_remote;
+
+  /// No description provided for @preview_overlay_local_unavailable_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Local app preview unavailable'**
+  String get preview_overlay_local_unavailable_title;
+
+  /// No description provided for @preview_overlay_remote_unavailable_title.
+  ///
+  /// In en, this message translates to:
+  /// **'App under maintenance'**
+  String get preview_overlay_remote_unavailable_title;
+
+  /// No description provided for @preview_overlay_local_unavailable_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The local StudyU app could not be reached.'**
+  String get preview_overlay_local_unavailable_message;
+
+  /// No description provided for @preview_overlay_remote_unavailable_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.'**
+  String get preview_overlay_remote_unavailable_message;
+
+  /// No description provided for @preview_overlay_could_not_load.
+  ///
+  /// In en, this message translates to:
+  /// **'The StudyU app preview could not be loaded.'**
+  String get preview_overlay_could_not_load;
+
+  /// No description provided for @preview_overlay_preview_not_opened.
+  ///
+  /// In en, this message translates to:
+  /// **'The StudyU app preview could not be opened right now.'**
+  String get preview_overlay_preview_not_opened;
+
   /// No description provided for @banner_study_test_unavailable.
   ///
   /// In en, this message translates to:
@@ -3102,13 +3582,13 @@ abstract class AppLocalizations {
   /// No description provided for @code_public_disabled.
   ///
   /// In en, this message translates to:
-  /// **'Invite codes disabled'**
+  /// **'Public Recruitment'**
   String get code_public_disabled;
 
   /// No description provided for @code_public_disabled_description.
   ///
   /// In en, this message translates to:
-  /// **'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.'**
+  /// **'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.'**
   String get code_public_disabled_description;
 
   /// No description provided for @code_list_empty_title.
@@ -3375,6 +3855,12 @@ abstract class AppLocalizations {
   /// **'A survey is completed, if all of its tasks have been completed for that day'**
   String get monitoring_table_completed_surveys_header_tooltip;
 
+  /// No description provided for @banner_text_study_recruit_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Because this study has not been launched yet, the links on this page will not work yet.'**
+  String get banner_text_study_recruit_draft;
+
   /// No description provided for @banner_text_study_analyze_draft.
   ///
   /// In en, this message translates to:
@@ -3572,6 +4058,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy to clipboard'**
   String get action_clipboard;
+
+  /// No description provided for @action_qr_code_show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show QR code'**
+  String get action_qr_code_show;
+
+  /// No description provided for @action_qr_code_download.
+  ///
+  /// In en, this message translates to:
+  /// **'Download QR code'**
+  String get action_qr_code_download;
+
+  /// No description provided for @action_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get action_share;
+
+  /// No description provided for @action_copy_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get action_copy_link;
 
   /// No description provided for @action_reportPrimary.
   ///

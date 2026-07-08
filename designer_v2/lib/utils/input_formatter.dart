@@ -1,5 +1,8 @@
 import 'package:flutter/services.dart';
 
+String normalizeStudySequenceInput(String value) =>
+    value.replaceAll(RegExp(r'\s+'), '').toUpperCase();
+
 class NumericalRangeFormatter extends TextInputFormatter {
   NumericalRangeFormatter({this.min, this.max});
 
@@ -30,14 +33,15 @@ class StudySequenceFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text == '') {
-      return newValue.copyWith(text: newValue.text.toUpperCase());
-    } else if (newValue.text
-        .replaceAll(' ', '')
-        .contains(RegExp(r'^[abAB]+$'))) {
-      return newValue.copyWith(text: newValue.text.toUpperCase());
-    } else {
+    final normalized = normalizeStudySequenceInput(newValue.text);
+
+    if (normalized.isNotEmpty && !RegExp(r'^[AB]+$').hasMatch(normalized)) {
       return oldValue;
     }
+
+    return TextEditingValue(
+      text: normalized,
+      selection: TextSelection.collapsed(offset: normalized.length),
+    );
   }
 }
