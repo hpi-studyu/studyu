@@ -383,7 +383,18 @@ class StudiesTable extends StatelessWidget {
       );
     }
 
-    return SizedBox(height: rowSpacing);
+    return Padding(
+      padding: EdgeInsets.only(top: rowSpacing, bottom: rowSpacing),
+      child: Center(
+        child: Text(
+          tr.studies_end_of_list,
+          textAlign: TextAlign.center,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+        ),
+      ),
+    );
   }
 }
 

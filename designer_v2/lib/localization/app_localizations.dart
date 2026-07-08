@@ -674,16 +674,22 @@ abstract class AppLocalizations {
   /// **'Modify your query'**
   String get modify_query;
 
-  /// No description provided for @studies_count.
+  /// No description provided for @studies_count_total.
   ///
   /// In en, this message translates to:
-  /// **'{visible} of {total}'**
-  String studies_count(int visible, int total);
+  /// **'{total, plural, =1{1 study} other{{total} studies}}'**
+  String studies_count_total(int total);
+
+  /// No description provided for @studies_count_filtered.
+  ///
+  /// In en, this message translates to:
+  /// **'{visible} of {total, plural, =1{1 study} other{{total} studies}}'**
+  String studies_count_filtered(int visible, int total);
 
   /// No description provided for @studies_filter_server_side_unsupported.
   ///
   /// In en, this message translates to:
-  /// **'This filter cannot be applied server-side and is not currently supported.'**
+  /// **'This filter can\'t be used here right now. Clear the filter and try again.'**
   String get studies_filter_server_side_unsupported;
 
   /// No description provided for @studies_empty.
@@ -698,10 +704,16 @@ abstract class AppLocalizations {
   /// **'Build your own study from scratch or create a new draft copy from an already published study!'**
   String get studies_empty_description;
 
+  /// No description provided for @studies_end_of_list.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s all for now.'**
+  String get studies_end_of_list;
+
   /// No description provided for @studies_load_failed.
   ///
   /// In en, this message translates to:
-  /// **'Failed to load studies.'**
+  /// **'Couldn\'t load studies. Try again.'**
   String get studies_load_failed;
 
   /// No description provided for @navlink_learn.

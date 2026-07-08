@@ -323,13 +323,30 @@ class AppLocalizationsDe extends AppLocalizations {
       'Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen';
 
   @override
-  String studies_count(int visible, int total) {
-    return '$visible von $total';
+  String studies_count_total(int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total Studien',
+      one: '1 Studie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studies_count_filtered(int visible, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total Studien',
+      one: '1 Studie',
+    );
+    return '$visible von $_temp0';
   }
 
   @override
   String get studies_filter_server_side_unsupported =>
-      'Dieser Filter kann serverseitig nicht angewendet werden und wird derzeit nicht unterstützt.';
+      'Dieser Filter kann hier gerade nicht verwendet werden. Setze den Filter zurück und versuche es erneut.';
 
   @override
   String get studies_empty => 'Du hast noch keine Studien erstellt';
@@ -339,7 +356,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie';
 
   @override
-  String get studies_load_failed => 'Studien konnten nicht geladen werden.';
+  String get studies_end_of_list => 'Das war\'s fürs Erste.';
+
+  @override
+  String get studies_load_failed =>
+      'Studien konnten nicht geladen werden. Bitte versuche es erneut.';
 
   @override
   String get navlink_learn => 'Lernen';

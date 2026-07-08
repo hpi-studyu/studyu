@@ -109,8 +109,16 @@
   "studies_list_header_participants_completed": "Completed",
   "studies_not_found": "No Studies found",
   "modify_query": "Modify your query",
-  "studies_count": "{visible} of {total}",
-  "@studies_count": {
+  "studies_count_total": "{total, plural, =1{1 study} other{{total} studies}}",
+  "@studies_count_total": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_count_filtered": "{visible} of {total, plural, =1{1 study} other{{total} studies}}",
+  "@studies_count_filtered": {
     "placeholders": {
       "visible": {
         "type": "int"
@@ -120,10 +128,11 @@
       }
     }
   },
-  "studies_filter_server_side_unsupported": "This filter cannot be applied server-side and is not currently supported.",
+  "studies_filter_server_side_unsupported": "This filter can't be used here right now. Clear the filter and try again.",
   "studies_empty": "You don't have any studies yet",
   "studies_empty_description": "Build your own study from scratch or create a new draft copy from an already published study!",
-  "studies_load_failed": "Failed to load studies.",
+  "studies_end_of_list": "That's all for now.",
+  "studies_load_failed": "Couldn't load studies. Try again.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Learn",
   "navlink_study_design": "Design",

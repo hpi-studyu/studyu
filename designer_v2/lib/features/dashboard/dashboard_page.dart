@@ -31,10 +31,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   static const _compactFilterBreakpoint = 600.0;
   static const _compactSearchBreakpoint = 900.0;
   static const _wideHeaderMinWidth = 600.0;
-  static const _wideHeaderMinHeight = 800.0;
   static const _headerCountMinWidth = 978.0;
   static const _inlineCountMinWidth = 1100.0;
-  static const _inlineCountMinHeight = 900.0;
   static const _headerActionSpacingTight = 10.0;
   static const _headerActionSpacingDefault = 12.0;
   static const _headerSearchMaxWidthTight = 280.0;
@@ -209,10 +207,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildStudiesCount(BuildContext context, DashboardState state) {
+    final localizations = AppLocalizations.of(context)!;
+    final countLabel = state.hasAppliedFilter
+        ? localizations.studies_count_filtered(
+            state.visibleStudyCount,
+            state.displayTotalStudyCount,
+          )
+        : localizations.studies_count_total(state.displayTotalStudyCount);
+
     return Text(
-      AppLocalizations.of(
-        context,
-      )!.studies_count(state.visibleStudyCount, state.displayTotalStudyCount),
+      countLabel,
       style: Theme.of(
         context,
       ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
@@ -458,15 +462,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
     final size = MediaQuery.sizeOf(context);
-    final useWideHeaderLayout =
-        size.width >= _wideHeaderMinWidth &&
-        size.height >= _wideHeaderMinHeight;
+    final useWideHeaderLayout = size.width >= _wideHeaderMinWidth;
     final showHeaderTitleAndCount = size.width >= _compactFilterBreakpoint;
     final showHeaderCount = size.width >= _headerCountMinWidth;
     final showInlineCount =
-        useWideHeaderLayout &&
-        size.width >= _inlineCountMinWidth &&
-        size.height >= _inlineCountMinHeight;
+        useWideHeaderLayout && size.width >= _inlineCountMinWidth;
     final pinnedStudyIds = state.pinnedStudiesList
         .map((study) => study.id)
         .toSet();

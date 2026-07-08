@@ -190,6 +190,9 @@ extension DashboardStateSafeViewProps on DashboardState {
 
   int get displayTotalStudyCount => totalCount + pinnedStudiesList.length;
 
+  bool get hasAppliedFilter =>
+      activeFilter != null && activeFilter!.children.isNotEmpty;
+
   String get visibleListTitle {
     switch (studiesFilter) {
       case StudiesFilter.public:

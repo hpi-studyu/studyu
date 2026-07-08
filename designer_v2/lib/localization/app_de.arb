@@ -107,8 +107,16 @@
   "studies_list_header_participants_completed": "Abgeschlossen",
   "studies_not_found": "Es konnten keine Studien gefunden werden",
   "modify_query": "Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen",
-  "studies_count": "{visible} von {total}",
-  "@studies_count": {
+  "studies_count_total": "{total, plural, =1{1 Studie} other{{total} Studien}}",
+  "@studies_count_total": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_count_filtered": "{visible} von {total, plural, =1{1 Studie} other{{total} Studien}}",
+  "@studies_count_filtered": {
     "placeholders": {
       "visible": {
         "type": "int"
@@ -118,10 +126,11 @@
       }
     }
   },
-  "studies_filter_server_side_unsupported": "Dieser Filter kann serverseitig nicht angewendet werden und wird derzeit nicht unterstützt.",
+  "studies_filter_server_side_unsupported": "Dieser Filter kann hier gerade nicht verwendet werden. Setze den Filter zurück und versuche es erneut.",
   "studies_empty": "Du hast noch keine Studien erstellt",
   "studies_empty_description": "Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie",
-  "studies_load_failed": "Studien konnten nicht geladen werden.",
+  "studies_end_of_list": "Das war's fürs Erste.",
+  "studies_load_failed": "Studien konnten nicht geladen werden. Bitte versuche es erneut.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Lernen",
   "navlink_study_design": "Entwerfen",
