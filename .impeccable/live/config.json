@@ -1,0 +1,10 @@
+{
+  "files": [
+    "app/web/index.html",
+    "designer_v2/web/index.html"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true,
+  "_note": "Flutter web apps render into a canvas element; live mode overlay injection works at the HTML level but cannot interact with Flutter widget internals. Use /impeccable live for inspecting the page shell (AppBar HTML wrapper, web-specific meta, CSP headers) or for any non-Flutter HTML surfaces. Flutter UI variants should be implemented directly in Dart theme/widget files."
+}

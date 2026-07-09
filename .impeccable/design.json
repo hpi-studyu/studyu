@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-09T00:00:00Z",
+  "title": "Design System: StudyU",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Research Teal-Blue",
+        "canonical": "#0066CC",
+        "tonalRamp": ["#001433", "#002966", "#003D99", "#0052A3", "#0066CC", "#3385D6", "#66A3E0", "#99C2EB", "#CCE0F5", "#E6F0FA"]
+      },
+      "primary-container": {
+        "role": "primary-container",
+        "displayName": "Protocol Blue Tint",
+        "canonical": "#D6E8FF",
+        "tonalRamp": ["#003D99", "#0052A3", "#0066CC", "#3385D6", "#66A3E0", "#99C2EB", "#BDD5F5", "#D6E8FF", "#EBF3FF", "#F5F9FF"]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Protocol Orange",
+        "canonical": "#FF6B00",
+        "tonalRamp": ["#331600", "#662C00", "#994200", "#CC5800", "#FF6B00", "#FF8A33", "#FFA966", "#FFC899", "#FFE6CC", "#FFF3E5"]
+      },
+      "secondary-container": {
+        "role": "secondary-container",
+        "displayName": "Soft Orange",
+        "canonical": "#FFEDD8",
+        "tonalRamp": ["#994200", "#CC5800", "#FF6B00", "#FF8A33", "#FFB37A", "#FFC899", "#FFD9B3", "#FFEDD8", "#FFF6EC", "#FFFBF7"]
+      },
+      "surface": {
+        "role": "surface",
+        "displayName": "Protocol White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#C0C2C5", "#D0D2D5", "#E0E2E5", "#EBEBEE", "#F3F3F7", "#F8F8FB", "#FAFAFD", "#FCFCFE", "#FEFEFE", "#FFFFFF"]
+      },
+      "surface-container": {
+        "role": "surface-container",
+        "displayName": "Surface Container",
+        "canonical": "#F3F3F7",
+        "tonalRamp": ["#C5C5CA", "#D5D5D9", "#E5E5E9", "#EBEBEE", "#F0F0F4", "#F3F3F7", "#F7F7FA", "#FAFAFD", "#FCFCFE", "#FFFFFF"]
+      },
+      "on-surface": {
+        "role": "ink",
+        "displayName": "Ink",
+        "canonical": "#1A1C1E",
+        "tonalRamp": ["#1A1C1E", "#2D2F32", "#44474A", "#5C5F63", "#75787C", "#9A9DA1", "#BEC0C4", "#D5D7DA", "#EAEBED", "#F5F5F6"]
+      },
+      "error": {
+        "role": "error",
+        "displayName": "Error Red",
+        "canonical": "#BA1A1A",
+        "tonalRamp": ["#3B0000", "#680000", "#930000", "#BA1A1A", "#C94040", "#D96666", "#E89999", "#F3CCCC", "#FAE5E5", "#FDF3F3"]
+      },
+      "divider": {
+        "role": "divider",
+        "displayName": "Protocol Divider",
+        "canonical": "#E0E2E6",
+        "tonalRamp": ["#B0B2B6", "#C0C2C6", "#D0D2D6", "#DDE0E4", "#E0E2E6", "#E8EAED", "#EFF0F3", "#F5F6F8", "#FAFAFA", "#FFFFFF"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Major modal headlines or app-level introductions. Rarely used in the Designer." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings on major pages. headlineMedium in Material terms." },
+      "title": { "displayName": "Title", "purpose": "Card headers, page section titles, sidebar section names." },
+      "title-small": { "displayName": "Title Small", "purpose": "Sub-section headers, dialog titles, table column groups. titleLarge in Material." },
+      "body": { "displayName": "Body", "purpose": "All running prose, form content, table cells. The primary reading size. Max 65-75ch line length." },
+      "label": { "displayName": "Label", "purpose": "Form labels, button text, chip labels, navigation items. Medium weight for scan-ability." }
+    },
+    "shadows": [
+      {
+        "name": "appbar-structural",
+        "value": "0 2px 4px rgba(0, 102, 204, 0.15)",
+        "purpose": "Separates the fixed AppBar navigation layer from scroll content. Structural layer signal, not interactivity."
+      },
+      {
+        "name": "tooltip-ambient",
+        "value": "0 1px 4px rgba(255, 107, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.08)",
+        "purpose": "Light ambient shadow on tooltip popups. Secondary orange tint."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Material standard easing for state transitions (hover, focus, selection)."
+      },
+      {
+        "name": "ease-out-page",
+        "value": "ease-in",
+        "purpose": "Page transition crossfade used by WebTransitionBuilder. Old page fades out, new page fades in."
+      },
+      {
+        "name": "duration-short",
+        "value": "150ms",
+        "purpose": "State transitions: hover, focus, checked."
+      },
+      {
+        "name": "duration-medium",
+        "value": "250ms",
+        "purpose": "Page transitions, modal entrance/exit."
+      }
+    ],
+    "breakpoints": [
+      { "name": "min-content", "value": "600px", "purpose": "kMinContentWidth — minimum usable width for the Designer form scaffold." },
+      { "name": "max-content", "value": "1264px", "purpose": "kMaxContentWidth — content centers beyond this width." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The primary action button. Research Teal-Blue fill, white text, flat with gently rounded corners.",
+      "html": "<button class=\"ds-btn-primary\">Publish Study</button>",
+      "css": ".ds-btn-primary { background: #0066CC; color: #ffffff; padding: 12px 24px; font-size: 14px; font-weight: 500; font-family: system-ui, -apple-system, sans-serif; letter-spacing: 0.01em; border: none; border-radius: 5px; cursor: pointer; transition: background 150ms ease-in-out; } .ds-btn-primary:hover { background: #0052A3; } .ds-btn-primary:focus-visible { outline: 2px solid #0066CC; outline-offset: 2px; background: #0052A3; } .ds-btn-primary:disabled { background: rgba(26, 28, 30, 0.12); color: rgba(26, 28, 30, 0.38); cursor: not-allowed; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action. Transparent background, primary-colored text. Used for cancel, dismiss, and secondary form actions.",
+      "html": "<button class=\"ds-btn-ghost\">Cancel</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #0066CC; padding: 12px 24px; font-size: 14px; font-weight: 500; font-family: system-ui, -apple-system, sans-serif; letter-spacing: 0.01em; border: none; border-radius: 5px; cursor: pointer; transition: background 150ms ease-in-out; } .ds-btn-ghost:hover { background: rgba(0, 102, 204, 0.08); } .ds-btn-ghost:focus-visible { outline: 2px solid #0066CC; outline-offset: 2px; background: rgba(0, 102, 204, 0.08); } .ds-btn-ghost:disabled { color: rgba(26, 28, 30, 0.38); cursor: not-allowed; }"
+    },
+    {
+      "name": "Participant CTA Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Protocol Orange primary action for participant App. One per screen maximum. Means 'act here'.",
+      "html": "<button class=\"ds-btn-cta\">Start Today's Task</button>",
+      "css": ".ds-btn-cta { background: #FF6B00; color: #ffffff; padding: 14px 28px; font-size: 14px; font-weight: 600; font-family: system-ui, -apple-system, sans-serif; letter-spacing: 0.01em; border: none; border-radius: 5px; cursor: pointer; min-height: 48px; transition: background 150ms ease-in-out; } .ds-btn-cta:hover { background: #CC5800; } .ds-btn-cta:focus-visible { outline: 2px solid #FF6B00; outline-offset: 3px; background: #CC5800; } .ds-btn-cta:disabled { background: rgba(26, 28, 30, 0.12); color: rgba(26, 28, 30, 0.38); cursor: not-allowed; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard outlined text field. White fill, neutral border, primary blue on focus. Used in study forms and participant data entry.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\">Study Title</label><input class=\"ds-input\" type=\"text\" placeholder=\"Enter study title\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-field-label { font-size: 14px; font-weight: 500; font-family: system-ui, -apple-system, sans-serif; color: rgba(26, 28, 30, 0.9); } .ds-input { background: #ffffff; color: #1A1C1E; font-size: 14px; font-family: system-ui, -apple-system, sans-serif; padding: 16px; border: 1px solid rgba(227, 229, 233, 0.8); border-radius: 5px; outline: none; transition: border-color 150ms ease-in-out; box-sizing: border-box; width: 100%; } .ds-input::placeholder { color: rgba(68, 71, 74, 0.4); } .ds-input:hover { border-color: rgba(227, 229, 233, 1); } .ds-input:focus { border-color: #0066CC; border-width: 1px; } .ds-input:disabled { background: rgba(227, 229, 233, 0.6); color: rgba(26, 28, 30, 0.5); cursor: not-allowed; } .ds-input.error { border-color: #BA1A1A; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The primary structural container in the Designer. Flat, white, gently rounded. No shadow — containment is defined by shape and background.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Study Overview</div><div class=\"ds-card-body\">Configure the basic parameters of your N-of-1 trial.</div></div>",
+      "css": ".ds-card { background: #ffffff; border-radius: 8px; padding: 24px; overflow: hidden; box-sizing: border-box; } .ds-card-title { font-size: 15px; font-weight: 700; font-family: system-ui, -apple-system, sans-serif; color: rgba(26, 28, 30, 0.9); margin-bottom: 8px; } .ds-card-body { font-size: 14px; font-weight: 400; font-family: system-ui, -apple-system, sans-serif; line-height: 1.35; color: rgba(26, 28, 30, 0.8); }"
+    },
+    {
+      "name": "Navigation AppBar",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "The Designer's top navigation bar. White background with a subtle structural shadow to separate the navigation layer from scroll content.",
+      "html": "<nav class=\"ds-appbar\"><span class=\"ds-appbar-logo\">StudyU Designer</span><div class=\"ds-appbar-actions\"><button class=\"ds-btn-ghost\">My Studies</button><button class=\"ds-btn-primary\">New Study</button></div></nav>",
+      "css": ".ds-appbar { display: flex; align-items: center; justify-content: space-between; background: #ffffff; color: #1A1C1E; padding: 0 24px; height: 64px; box-shadow: 0 2px 4px rgba(0, 102, 204, 0.15); position: sticky; top: 0; z-index: 10; } .ds-appbar-logo { font-size: 15px; font-weight: 700; font-family: system-ui, -apple-system, sans-serif; color: #1A1C1E; } .ds-appbar-actions { display: flex; align-items: center; gap: 8px; }"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Study status indicator for the Designer dashboard. Communicates draft / active / completed via tint, NOT via color alone.",
+      "html": "<div style=\"display:flex;gap:8px\"><span class=\"ds-chip ds-chip--active\"><svg width=\"8\" height=\"8\" viewBox=\"0 0 8 8\"><circle cx=\"4\" cy=\"4\" r=\"4\" fill=\"currentColor\"/></svg> Active</span><span class=\"ds-chip ds-chip--draft\"><svg width=\"8\" height=\"8\" viewBox=\"0 0 8 8\"><circle cx=\"4\" cy=\"4\" r=\"4\" fill=\"currentColor\"/></svg> Draft</span></div>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; font-family: system-ui, -apple-system, sans-serif; padding: 4px 12px; border-radius: 8px; } .ds-chip--active { background: rgba(214, 232, 255, 0.8); color: #0052A3; } .ds-chip--draft { background: #F3F3F7; color: #44474A; } .ds-chip--completed { background: rgba(186, 26, 26, 0.08); color: #BA1A1A; }"
+    },
+    {
+      "name": "Tooltip",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Distinctive orange-tinted tooltip. The secondary color gives it warmth and brand identity without being an interactive element.",
+      "html": "<div class=\"ds-tooltip\">N-of-1 trials measure individual treatment effects</div>",
+      "css": ".ds-tooltip { background: rgba(255, 107, 0, 0.9); color: #ffffff; font-size: 14px; font-family: system-ui, -apple-system, sans-serif; line-height: 1.35; padding: 7px 11px; border-radius: 2px; box-shadow: 0 1px 2px rgba(255, 107, 0, 0.3), 0 2px 6px rgba(0,0,0,0.1); max-width: 280px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Clinical Protocol",
+    "overview": "StudyU's visual language is built on the logic of a well-structured clinical protocol: every element earns its place by communicating information or reducing ambiguity. Layout is generous but never loose; hierarchy is clear without being loud; density serves experts without excluding participants. The system operates in the register of scientific instruments — precise, trustworthy, and calm.\n\nThe platform serves two fundamentally different users through one coherent visual identity. The Designer gives researchers an expert-grade environment with confident density; the App offers participants a guided, low-overhead experience. Both share the same typographic system, color vocabulary, and interaction principles. The brand personality is precise, credible, empowering — the tone of a thoughtful clinician-researcher.\n\nThis system explicitly rejects the aesthetics of fitness and wellness apps, tech-startup SaaS surfaces, and health advocacy campaigns. StudyU is an operational tool for rigorous science, and every pixel should communicate that.",
+    "keyCharacteristics": [
+      "Material Design 3 foundation with dynamic color seeded from Research Teal-Blue",
+      "Light mode first; dark mode supported via the Material ThemeProvider dynamic system",
+      "Flat-by-default surfaces with structural shadow only on elevation changes",
+      "Consistent 14px body type across both apps — dense enough for researchers, readable for participants",
+      "Orange secondary accent used sparingly as a call-to-action signal, never decoratively"
+    ],
+    "rules": [
+      {
+        "name": "The One Orange Rule",
+        "body": "The secondary/orange accent covers ≤10% of any given screen. When it appears, it means 'this is the primary action.' Using it for decoration, status, or layout chrome voids its signal value.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Warm-Tint Rule",
+        "body": "Background surfaces are tinted toward the primary blue hue — never toward warmth. There is no cream, sand, paper, or parchment in this system.",
+        "section": "colors"
+      },
+      {
+        "name": "The 14px Floor Rule",
+        "body": "No text in production UI renders below 14px. The participant App serves users who may be elderly or cognitively taxed. Smaller text is prohibited regardless of perceived elegance.",
+        "section": "typography"
+      },
+      {
+        "name": "The Single-Family Rule",
+        "body": "One font family across both apps. Visual rhythm is created through weight and size, not through pairing. Introducing a display font for 'personality' is forbidden.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Card Rule",
+        "body": "Cards are elevation: 0. If a card needs to announce itself, use a background tint and shape, not shadow. Elevation is reserved for layer hierarchy, not visual emphasis within a layer.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use colorScheme.primary (Research Teal-Blue) for all primary interactive affordances.",
+      "Do use secondary / protocol orange for primary participant calls to action — one per screen maximum.",
+      "Do use flat cards (elevation: 0, 8px radius, white fill) as structural containers in the Designer.",
+      "Do size all interactive touch targets to at least 48×48dp in the participant App.",
+      "Do enforce 14px as the minimum text size.",
+      "Do apply prefers-reduced-motion alternatives to all transitions.",
+      "Do use weight and size to create typographic hierarchy.",
+      "Do ensure color is never the sole carrier of status information — pair color with an icon."
+    ],
+    "donts": [
+      "Don't use fitness/wellness aesthetic conventions: no gamification, progress rings for motivation, motivational copy, or saturated lifestyle color.",
+      "Don't use tech-startup SaaS conventions: no dark mode with gradient accents, no glassmorphism, no neon colors, no hero-metric dashboard layouts.",
+      "Don't use health advocacy campaign conventions: no large emotional photography as background, no campaign-poster hierarchy.",
+      "Don't use border-left or border-right greater than 1px as a colored accent stripe on cards or list items.",
+      "Don't use gradient text (background-clip: text with a gradient).",
+      "Don't use warm-tinted backgrounds (cream, sand, paper, parchment, bone, linen).",
+      "Don't use orange for status indicators, tags, decorative dividers, or layout chrome.",
+      "Don't use shadows on cards — cards are flat.",
+      "Don't nest cards.",
+      "Don't render text below 14px.",
+      "Don't use uppercase tracked eyebrow text above every section heading."
+    ]
+  }
+}

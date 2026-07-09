@@ -63,6 +63,7 @@ You must use the Conventional Commits format for all commits. Never generate a g
 - **Allowed Types**: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`
 - **Allowed Scopes**: `app`, `designer`, `core`, `flutter_common`, `db`
 - **Case**: The description must be lowercase. Do not end with a period.
+- **No Co-Authored-By trailers.** Do not add `Co-Authored-By` lines to any commit message.
 
 ### 3. Pull Request Automation
 
