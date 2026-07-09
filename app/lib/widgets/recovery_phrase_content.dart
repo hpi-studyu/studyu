@@ -224,9 +224,9 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 3.5,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+        mainAxisExtent: 36,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 4,
       ),
       itemCount: _phrase?.length ?? 0,
       itemBuilder: (context, index) {
@@ -239,7 +239,7 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
             ),
           ),
           alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           child: RichText(
             text: TextSpan(
               children: [
@@ -253,7 +253,7 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
                   text: _phrase![index],
                   style: Theme.of(
                     context,
-                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -351,8 +351,8 @@ class _ActionButton extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(30),
           child: Container(
-            width: 56,
-            height: 56,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: Theme.of(
                 context,
@@ -362,10 +362,10 @@ class _ActionButton extends StatelessWidget {
             child: Icon(icon, color: Theme.of(context).colorScheme.primary),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall,
+          style: Theme.of(context).textTheme.labelMedium,
           textAlign: TextAlign.center,
         ),
       ],

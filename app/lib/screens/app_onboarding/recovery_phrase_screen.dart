@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
@@ -12,111 +15,49 @@ class RecoveryPhraseScreen extends StatefulWidget {
 }
 
 class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
-  bool _isChecked = false;
+  bool _isChecked = kDebugMode;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.recovery_phrase_setup_title),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 700),
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 16.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.recovery_phrase_header,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.recovery_phrase_save_hint,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                        const SizedBox(height: 32),
-                        const RecoveryPhraseContent(),
-                      ],
-                    ),
-                  ),
-                ),
-                _buildBottomSection(),
-              ],
-            ),
-          ),
-        ),
+      body: OnboardingPage(
+        title: AppLocalizations.of(context)!.recovery_phrase_header,
+        description: AppLocalizations.of(context)!.recovery_phrase_save_hint,
+        bottomCheckboxItems: _confirmationItems(),
+        bottomNavigationBar: _buildNavigation(),
+        child: const RecoveryPhraseContent(),
       ),
     );
   }
 
-  Widget _buildBottomSection() {
-    return Container(
-      padding: const EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
+  List<OnboardingCheckboxItem> _confirmationItems() {
+    return [
+      OnboardingCheckboxItem(
+        label: AppLocalizations.of(context)!.recovery_phrase_saved_confirmation,
+        value: _isChecked,
+        onChanged: (value) {
+          setState(() {
+            _isChecked = value ?? false;
+          });
+        },
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          CheckboxListTile(
-            value: _isChecked,
-            onChanged: (value) {
-              setState(() {
-                _isChecked = value ?? false;
-              });
-            },
-            title: Text(
-              AppLocalizations.of(context)!.recovery_phrase_saved_confirmation,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            contentPadding: EdgeInsets.zero,
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-          const SizedBox(height: 16),
-          FilledButton(
-            onPressed: _isChecked
-                ? () {
-                    context.goNamed(RouteNames.studySelection);
-                  }
-                : null,
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(AppLocalizations.of(context)!.continue_to_study),
-          ),
-        ],
-      ),
+    ];
+  }
+
+  Widget _buildNavigation() {
+    return BottomOnboardingNavigation(
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.goNamed(RouteNames.terms);
+        }
+      },
+      onNext: _isChecked
+          ? () {
+              context.pushNamed(RouteNames.studySelection);
+            }
+          : null,
     );
   }
 }

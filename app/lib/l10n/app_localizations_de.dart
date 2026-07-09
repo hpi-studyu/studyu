@@ -469,6 +469,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enough_data => 'Genügend Daten';
 
   @override
+  String get legal_documents => 'Rechtliche Dokumente';
+
+  @override
+  String get legal_documents_description =>
+      'Bitte lies und akzeptiere die Nutzungsbedingungen und Datenschutzbestimmung, bevor du fortfährst.';
+
+  @override
   String get terms => 'Bedingungen';
 
   @override
@@ -495,6 +502,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get privacy_agree =>
       'Ich habe die Datenschutzbestimmung gelesen und bin damit einverstanden';
+
+  @override
+  String get legal_notice => 'Impressum';
+
+  @override
+  String get legal_notice_content =>
+      'Im Impressum steht, wer für StudyU verantwortlich ist und wie du uns kontaktieren kannst.';
 
   @override
   String get imprint_read => 'Impressum lesen';
@@ -1208,11 +1222,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get go_back => 'Zurück';
 
   @override
-  String get recovery_phrase_setup_title =>
-      'Wiederherstellungsphrase einrichten';
-
-  @override
-  String get recovery_phrase_header => 'Deine geheime Wiederherstellungsphrase';
+  String get recovery_phrase_header => 'Wiederherstellungsphrase speichern';
 
   @override
   String get copy_to_clipboard => 'In die Zwischenablage kopieren';
@@ -1233,7 +1243,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Speichere sie jetzt an einem sicheren Ort.';
+      'Bewahre diese 13 Wörter an einem sicheren Ort auf. Mit ihnen kannst du deinen Studienfortschritt auf einem neuen Handy oder nach einer Neuinstallation der App wiederherstellen. Wenn du deine Wiederherstellungsphrase verlierst, kannst du deinen Fortschritt nicht wiederherstellen. Teile sie niemals mit anderen.';
 
   @override
   String get recovery_phrase_saved_confirmation =>
@@ -1243,7 +1253,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get continue_to_study => 'Weiter zur Studie';
 
   @override
-  String get rejoin_study => 'Studie wieder beitreten';
+  String get rejoin_study => 'Konto wiederherstellen';
 
   @override
   String get enter_recovery_phrase => 'Gib deine Wiederherstellungsphrase ein';
@@ -1253,7 +1263,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get invalid_recovery_phrase =>
-      'Ungültige Wiederherstellungsphrase. Bitte überprüfe deine Wörter.';
+      'Diese Wiederherstellungsphrase passt zu keinem Konto. Achte darauf, dass alle 13 Wörter in der richtigen Reihenfolge stehen.';
+
+  @override
+  String get recovery_phrase_too_many_words =>
+      'Wiederherstellungsphrasen haben 13 Wörter. Entferne zusätzliche Wörter, um fortzufahren.';
 
   @override
   String recovery_successful(String id) {
@@ -1280,32 +1294,28 @@ class AppLocalizationsDe extends AppLocalizations {
       'Kein Konto mit dieser Wiederherstellungsphrase gefunden.';
 
   @override
-  String get recovery_rate_limit =>
-      'Bitte warte einen Moment, bevor du es erneut versuchst.';
-
-  @override
   String get recovery_network_error =>
       'Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.';
 
   @override
   String get rejoin_study_description =>
-      'Gib deine 13-Wörter-Wiederherstellungsphrase ein, um deine Studie auf diesem Gerät fortzusetzen.';
+      'Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.';
 
   @override
   String get rejoin_study_help_title =>
-      'So verwendest du deine Wiederherstellungsphrase';
+      'Mit Wiederherstellungsphrase wiederherstellen';
 
   @override
   String get rejoin_study_help_1 =>
-      'Gib alle 13 Wörter deiner gespeicherten Wiederherstellungsphrase in der richtigen Reihenfolge ein';
+      'Gib alle 13 Wörter in der richtigen Reihenfolge ein';
 
   @override
   String get rejoin_study_help_2 =>
-      'Wörter können eingefügt werden—sie füllen automatisch die Felder aus';
+      'Du kannst die Phrase manuell eingeben oder einfügen';
 
   @override
   String get rejoin_study_help_3 =>
-      'Die Wiederherstellungsphrase unterscheidet nicht zwischen Groß- und Kleinschreibung';
+      'Oder scanne stattdessen den QR-Code; beide Optionen stellen dasselbe Konto wieder her';
 
   @override
   String get share_recovery => 'Wiederherstellung teilen';
@@ -1330,7 +1340,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get scan_qr_description =>
-      'Scanne einen QR-Code mit deiner Wiederherstellungsphrase';
+      'Scanne deinen Wiederherstellungs-QR-Code, statt die Phrase einzugeben.';
 
   @override
   String get scanning_qr => 'QR-Code wird gescannt';

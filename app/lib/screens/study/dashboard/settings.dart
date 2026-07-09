@@ -132,9 +132,6 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              // Recovery phrase card
-              const RecoveryPhraseWidget(),
 
               // Dashboard showcase reset
               Card(
@@ -201,6 +198,9 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
+              // Recovery phrase card
+              const RecoveryPhraseWidget(),
 
               const SizedBox(height: 24),
 

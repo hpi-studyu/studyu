@@ -466,6 +466,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enough_data => 'Enough data';
 
   @override
+  String get legal_documents => 'Legal Documents';
+
+  @override
+  String get legal_documents_description =>
+      'Please read and accept the terms of use and privacy policy before continuing.';
+
+  @override
   String get terms => 'Terms of Use';
 
   @override
@@ -490,6 +497,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy_agree => 'I have read and agree to the privacy policy';
+
+  @override
+  String get legal_notice => 'Legal Notice';
+
+  @override
+  String get legal_notice_content =>
+      'The legal notice shows who is responsible for StudyU and how you can contact us.';
 
   @override
   String get imprint_read => 'Read Legal Notice';
@@ -1198,10 +1212,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get go_back => 'Go back';
 
   @override
-  String get recovery_phrase_setup_title => 'Recovery Phrase Setup';
-
-  @override
-  String get recovery_phrase_header => 'Your secret recovery phrase';
+  String get recovery_phrase_header => 'Save Recovery Phrase';
 
   @override
   String get copy_to_clipboard => 'Copy to clipboard';
@@ -1221,7 +1232,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Save it now in a safe place you won\'t lose.';
+      'Keep these 13 words in a safe place. They let you restore your study progress on a new phone or after reinstalling the app. If you lose your recovery phrase, you won\'t be able to recover your progress. Never share it with anyone.';
 
   @override
   String get recovery_phrase_saved_confirmation =>
@@ -1231,7 +1242,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continue_to_study => 'Continue to study';
 
   @override
-  String get rejoin_study => 'Rejoin Study';
+  String get rejoin_study => 'Restore account';
 
   @override
   String get enter_recovery_phrase => 'Enter your recovery phrase';
@@ -1241,7 +1252,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalid_recovery_phrase =>
-      'Invalid recovery phrase. Please check your words.';
+      'This recovery phrase does not match an account. Make sure all 13 words are in the right order.';
+
+  @override
+  String get recovery_phrase_too_many_words =>
+      'Recovery phrases have 13 words. Remove extra words to continue.';
 
   @override
   String recovery_successful(String id) {
@@ -1268,29 +1283,25 @@ class AppLocalizationsEn extends AppLocalizations {
       'No account found with this recovery phrase.';
 
   @override
-  String get recovery_rate_limit => 'Please wait a moment before trying again.';
-
-  @override
   String get recovery_network_error =>
       'Network error. Please check your connection and try again.';
 
   @override
   String get rejoin_study_description =>
-      'Enter your 13-word recovery phrase to continue your study on this device.';
+      'Restore your account on this device with the recovery phrase you saved before joining a study.';
 
   @override
-  String get rejoin_study_help_title => 'How to use your recovery phrase';
+  String get rejoin_study_help_title => 'Restore with your recovery phrase';
 
   @override
-  String get rejoin_study_help_1 =>
-      'Enter all 13 words from your saved recovery phrase in order';
+  String get rejoin_study_help_1 => 'Enter all 13 words in order';
 
   @override
-  String get rejoin_study_help_2 =>
-      'Words can be pasted—they\'ll automatically fill the fields';
+  String get rejoin_study_help_2 => 'You can type or paste the phrase manually';
 
   @override
-  String get rejoin_study_help_3 => 'The recovery phrase is case-insensitive';
+  String get rejoin_study_help_3 =>
+      'Or scan the QR code instead; both options restore the same account';
 
   @override
   String get share_recovery => 'Share Recovery';
@@ -1315,7 +1326,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan_qr_description =>
-      'Scan a QR code containing your recovery phrase';
+      'Scan your recovery QR code instead of typing the phrase.';
 
   @override
   String get scanning_qr => 'Scanning QR Code';

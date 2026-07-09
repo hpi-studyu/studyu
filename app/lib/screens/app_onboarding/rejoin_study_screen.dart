@@ -4,6 +4,8 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/app_onboarding/qr_code_scanner_screen.dart';
 import 'package:studyu_app/services/rejoin_study_service.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
 
 class RejoinStudyScreen extends StatefulWidget {
@@ -18,9 +20,10 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
   bool _isLoading = false;
-  DateTime? _lastAttempt;
-  final _cooldownDuration = const Duration(seconds: 5);
   List<String> _words = [];
+  bool get _hasTooManyWords => _words.length > RecoveryConstants.totalWordCount;
+  bool get _canSubmitPhrase =>
+      !_isLoading && _words.length == RecoveryConstants.totalWordCount;
 
   @override
   void initState() {
@@ -76,38 +79,31 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
   }
 
   void _validateAndSubmit() {
-    // Rate limiting check
-    if (_lastAttempt != null &&
-        DateTime.now().difference(_lastAttempt!) < _cooldownDuration) {
-      setState(() {
-        _errorMessage = AppLocalizations.of(context)!.recovery_rate_limit;
-      });
-      return;
-    }
-    _lastAttempt = DateTime.now();
-
     setState(() {
       _errorMessage = null;
     });
 
-    if (_formKey.currentState!.validate()) {
-      final words = _words.map((w) => w.trim().toLowerCase()).toList();
+    if (!_formKey.currentState!.validate()) return;
 
-      if (words.length != RecoveryConstants.totalWordCount) {
-        setState(() {
-          _errorMessage = AppLocalizations.of(context)!.invalid_recovery_phrase;
-        });
-        return;
-      }
+    final localizations = AppLocalizations.of(context)!;
+    final words = _words.map((w) => w.trim().toLowerCase()).toList();
 
-      try {
-        final id = RejoinStudyService.decodeRecoveryPhrase(words);
-        _onSuccess(id);
-      } catch (e) {
-        setState(() {
-          _errorMessage = AppLocalizations.of(context)!.invalid_recovery_phrase;
-        });
-      }
+    if (words.length != RecoveryConstants.totalWordCount) {
+      setState(() {
+        _errorMessage = words.length > RecoveryConstants.totalWordCount
+            ? localizations.recovery_phrase_too_many_words
+            : localizations.invalid_recovery_phrase;
+      });
+      return;
+    }
+
+    try {
+      final id = RejoinStudyService.decodeRecoveryPhrase(words);
+      _onSuccess(id);
+    } catch (e) {
+      setState(() {
+        _errorMessage = localizations.invalid_recovery_phrase;
+      });
     }
   }
 
@@ -173,29 +169,17 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.rejoin_study)),
-      body: SingleChildScrollView(
+      body: OnboardingPage(
+        title: AppLocalizations.of(context)!.enter_recovery_phrase,
+        description: AppLocalizations.of(context)!.rejoin_study_description,
+        maxWidth: 900,
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                AppLocalizations.of(context)!.enter_recovery_phrase,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context)!.rejoin_study_description,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
               Card(
                 elevation: 0,
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -206,20 +190,13 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 20,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          const Icon(Icons.info_outline, size: 20),
                           const SizedBox(width: 8),
                           Text(
                             AppLocalizations.of(
                               context,
                             )!.rejoin_study_help_title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -246,41 +223,106 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              // Single Text Input Field with validation feedback
-              TextFormField(
-                controller: _phraseController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(
-                    context,
-                  )!.enter_recovery_phrase,
-                  hintText: 'apple banana cherry ...',
-                  border: const OutlineInputBorder(),
-                  helperText:
-                      '${_words.length}/${RecoveryConstants.totalWordCount} words',
-                  helperStyle: TextStyle(
-                    color: _words.length == RecoveryConstants.totalWordCount
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight:
-                        _words.length == RecoveryConstants.totalWordCount
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                  suffixIcon: _words.length == RecoveryConstants.totalWordCount
-                      ? Icon(
-                          Icons.check_circle,
-                          color: Theme.of(context).colorScheme.primary,
-                        )
-                      : null,
-                ),
-                maxLines: 4,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => _validateAndSubmit(),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return AppLocalizations.of(context)!.required;
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final phraseField = TextFormField(
+                    controller: _phraseController,
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(
+                        context,
+                      )!.enter_recovery_phrase,
+                      hintText: 'apple banana cherry ...',
+                      border: const OutlineInputBorder(),
+                      helperText: _hasTooManyWords
+                          ? AppLocalizations.of(
+                              context,
+                            )!.recovery_phrase_too_many_words
+                          : '${_words.length}/${RecoveryConstants.totalWordCount} words',
+                      helperStyle: TextStyle(
+                        color: _hasTooManyWords
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      suffixIcon:
+                          _words.length == RecoveryConstants.totalWordCount
+                          ? Icon(
+                              Icons.check_circle,
+                              color: Theme.of(context).colorScheme.primary,
+                            )
+                          : null,
+                    ),
+                    maxLines: 4,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) {
+                      if (_canSubmitPhrase) _validateAndSubmit();
+                    },
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return AppLocalizations.of(context)!.required;
+                      }
+                      if (_hasTooManyWords) {
+                        return AppLocalizations.of(
+                          context,
+                        )!.recovery_phrase_too_many_words;
+                      }
+                      return null;
+                    },
+                  );
+
+                  final scanButton = SizedBox.square(
+                    dimension: 120,
+                    child: OutlinedButton(
+                      onPressed: _scanQrCode,
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.qr_code_scanner),
+                          const SizedBox(height: 8),
+                          Text(
+                            AppLocalizations.of(context)!.scan_qr_code,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+
+                  final orText = Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'OR',
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  );
+
+                  if (constraints.maxWidth < 700) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        phraseField,
+                        const SizedBox(height: 12),
+                        Center(child: orText),
+                        const SizedBox(height: 12),
+                        scanButton,
+                      ],
+                    );
                   }
-                  return null;
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: phraseField),
+                      SizedBox(height: 120, child: Center(child: orText)),
+                      scanButton,
+                    ],
+                  );
                 },
               ),
               if (_errorMessage != null) ...[
@@ -291,18 +333,9 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                   textAlign: TextAlign.center,
                 ),
               ],
-              const SizedBox(height: 16),
-              OutlinedButton.icon(
-                onPressed: _scanQrCode,
-                icon: const Icon(Icons.qr_code_scanner),
-                label: Text(AppLocalizations.of(context)!.scan_qr_code),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
-                ),
-              ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: _isLoading ? null : _validateAndSubmit,
+                onPressed: _canSubmitPhrase ? _validateAndSubmit : null,
                 child: _isLoading
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
@@ -328,6 +361,16 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        hideNext: true,
+        onBack: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.goNamed(RouteNames.welcome);
+          }
+        },
       ),
     );
   }

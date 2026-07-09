@@ -938,6 +938,18 @@ abstract class AppLocalizations {
   /// **'Enough data'**
   String get enough_data;
 
+  /// No description provided for @legal_documents.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Documents'**
+  String get legal_documents;
+
+  /// No description provided for @legal_documents_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please read and accept the terms of use and privacy policy before continuing.'**
+  String get legal_documents_description;
+
   /// No description provided for @terms.
   ///
   /// In en, this message translates to:
@@ -985,6 +997,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I have read and agree to the privacy policy'**
   String get privacy_agree;
+
+  /// No description provided for @legal_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Notice'**
+  String get legal_notice;
+
+  /// No description provided for @legal_notice_content.
+  ///
+  /// In en, this message translates to:
+  /// **'The legal notice shows who is responsible for StudyU and how you can contact us.'**
+  String get legal_notice_content;
 
   /// No description provided for @imprint_read.
   ///
@@ -2324,16 +2348,10 @@ abstract class AppLocalizations {
   /// **'Go back'**
   String get go_back;
 
-  /// No description provided for @recovery_phrase_setup_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Recovery Phrase Setup'**
-  String get recovery_phrase_setup_title;
-
   /// No description provided for @recovery_phrase_header.
   ///
   /// In en, this message translates to:
-  /// **'Your secret recovery phrase'**
+  /// **'Save Recovery Phrase'**
   String get recovery_phrase_header;
 
   /// No description provided for @copy_to_clipboard.
@@ -2369,7 +2387,7 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_save_hint.
   ///
   /// In en, this message translates to:
-  /// **'Save it now in a safe place you won\'t lose.'**
+  /// **'Keep these 13 words in a safe place. They let you restore your study progress on a new phone or after reinstalling the app. If you lose your recovery phrase, you won\'t be able to recover your progress. Never share it with anyone.'**
   String get recovery_phrase_save_hint;
 
   /// No description provided for @recovery_phrase_saved_confirmation.
@@ -2387,7 +2405,7 @@ abstract class AppLocalizations {
   /// No description provided for @rejoin_study.
   ///
   /// In en, this message translates to:
-  /// **'Rejoin Study'**
+  /// **'Restore account'**
   String get rejoin_study;
 
   /// No description provided for @enter_recovery_phrase.
@@ -2405,8 +2423,14 @@ abstract class AppLocalizations {
   /// No description provided for @invalid_recovery_phrase.
   ///
   /// In en, this message translates to:
-  /// **'Invalid recovery phrase. Please check your words.'**
+  /// **'This recovery phrase does not match an account. Make sure all 13 words are in the right order.'**
   String get invalid_recovery_phrase;
+
+  /// No description provided for @recovery_phrase_too_many_words.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery phrases have 13 words. Remove extra words to continue.'**
+  String get recovery_phrase_too_many_words;
 
   /// No description provided for @recovery_successful.
   ///
@@ -2444,12 +2468,6 @@ abstract class AppLocalizations {
   /// **'No account found with this recovery phrase.'**
   String get recovery_user_not_found;
 
-  /// No description provided for @recovery_rate_limit.
-  ///
-  /// In en, this message translates to:
-  /// **'Please wait a moment before trying again.'**
-  String get recovery_rate_limit;
-
   /// No description provided for @recovery_network_error.
   ///
   /// In en, this message translates to:
@@ -2459,31 +2477,31 @@ abstract class AppLocalizations {
   /// No description provided for @rejoin_study_description.
   ///
   /// In en, this message translates to:
-  /// **'Enter your 13-word recovery phrase to continue your study on this device.'**
+  /// **'Restore your account on this device with the recovery phrase you saved before joining a study.'**
   String get rejoin_study_description;
 
   /// No description provided for @rejoin_study_help_title.
   ///
   /// In en, this message translates to:
-  /// **'How to use your recovery phrase'**
+  /// **'Restore with your recovery phrase'**
   String get rejoin_study_help_title;
 
   /// No description provided for @rejoin_study_help_1.
   ///
   /// In en, this message translates to:
-  /// **'Enter all 13 words from your saved recovery phrase in order'**
+  /// **'Enter all 13 words in order'**
   String get rejoin_study_help_1;
 
   /// No description provided for @rejoin_study_help_2.
   ///
   /// In en, this message translates to:
-  /// **'Words can be pasted—they\'ll automatically fill the fields'**
+  /// **'You can type or paste the phrase manually'**
   String get rejoin_study_help_2;
 
   /// No description provided for @rejoin_study_help_3.
   ///
   /// In en, this message translates to:
-  /// **'The recovery phrase is case-insensitive'**
+  /// **'Or scan the QR code instead; both options restore the same account'**
   String get rejoin_study_help_3;
 
   /// No description provided for @share_recovery.
@@ -2531,7 +2549,7 @@ abstract class AppLocalizations {
   /// No description provided for @scan_qr_description.
   ///
   /// In en, this message translates to:
-  /// **'Scan a QR code containing your recovery phrase'**
+  /// **'Scan your recovery QR code instead of typing the phrase.'**
   String get scan_qr_description;
 
   /// No description provided for @scanning_qr.
