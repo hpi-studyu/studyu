@@ -100,7 +100,9 @@ void main() {
     ) async {
       // Negative ID should return null
       final negativeId = BigInt.from(-1);
-      final negativeUuid = RestoreAccountService.convertBigIntToUuid(negativeId);
+      final negativeUuid = RestoreAccountService.convertBigIntToUuid(
+        negativeId,
+      );
       expect(negativeUuid, isNull);
 
       // ID exceeding 128 bits should return null
