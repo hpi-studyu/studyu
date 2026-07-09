@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -16,6 +17,7 @@ class DashboardState extends Equatable {
     this.loadedStudies = const [],
     this.pinnedStudiesList = const [],
     this.totalCount = 0,
+    this.pageTotalCount = 0,
     this.isLoadingInitial = true,
     this.isLoadingMore = false,
     this.isLoadingPinned = false,
@@ -42,6 +44,11 @@ class DashboardState extends Equatable {
   /// Total number of studies that match the current query (from PostgREST
   /// exact count). Used to know when [hasMore] should flip to false.
   final int totalCount;
+
+  /// Total number of studies available on the current page before search or
+  /// additional filter refinements are applied. Excludes pinned rows, which
+  /// are added back via derived getters.
+  final int pageTotalCount;
 
   /// True while the first page (and pinned set) is loading.
   final bool isLoadingInitial;
@@ -115,6 +122,7 @@ class DashboardState extends Equatable {
     List<Study> Function()? loadedStudies,
     List<Study> Function()? pinnedStudiesList,
     int? totalCount,
+    int? pageTotalCount,
     bool? isLoadingInitial,
     bool? isLoadingMore,
     bool? isLoadingPinned,
@@ -139,6 +147,7 @@ class DashboardState extends Equatable {
           ? pinnedStudiesList()
           : this.pinnedStudiesList,
       totalCount: totalCount ?? this.totalCount,
+      pageTotalCount: pageTotalCount ?? this.pageTotalCount,
       isLoadingInitial: isLoadingInitial ?? this.isLoadingInitial,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       isLoadingPinned: isLoadingPinned ?? this.isLoadingPinned,
@@ -169,6 +178,7 @@ class DashboardState extends Equatable {
     loadedStudies,
     pinnedStudiesList,
     totalCount,
+    pageTotalCount,
     isLoadingInitial,
     isLoadingMore,
     isLoadingPinned,
@@ -186,12 +196,42 @@ class DashboardState extends Equatable {
 }
 
 extension DashboardStateSafeViewProps on DashboardState {
-  int get visibleStudyCount => pinnedStudiesList.length + loadedStudies.length;
+  String get _trimmedQuery => query.trim().toLowerCase();
 
-  int get displayTotalStudyCount => totalCount + pinnedStudiesList.length;
+  bool _matchesPagePreset(Study study) {
+    final preset = studiesFilter ?? DashboardState.defaultFilter;
+    return preset.apply(studies: [study], user: currentUser).isNotEmpty;
+  }
+
+  bool _matchesSearchQuery(Study study) {
+    if (_trimmedQuery.isEmpty) return true;
+    return (study.title ?? '').toLowerCase().contains(_trimmedQuery);
+  }
+
+  bool _matchesActiveFilter(Study study) {
+    if (activeFilter == null || activeFilter!.children.isEmpty) return true;
+    return FilterEvaluator.evaluate(activeFilter!, study, currentUser);
+  }
+
+  int get pagePinnedStudyCount =>
+      pinnedStudiesList.where(_matchesPagePreset).length;
+
+  int get filteredPinnedStudyCount => pinnedStudiesList
+      .where(_matchesPagePreset)
+      .where(_matchesSearchQuery)
+      .where(_matchesActiveFilter)
+      .length;
+
+  int get filteredStudyCount => totalCount + filteredPinnedStudyCount;
+
+  int get visibleStudyCount => filteredPinnedStudyCount + loadedStudies.length;
+
+  int get displayTotalStudyCount => pageTotalCount + pagePinnedStudyCount;
 
   bool get hasAppliedFilter =>
       activeFilter != null && activeFilter!.children.isNotEmpty;
+
+  bool get hasActiveRefinement => hasAppliedFilter || _trimmedQuery.isNotEmpty;
 
   String get visibleListTitle {
     switch (studiesFilter) {

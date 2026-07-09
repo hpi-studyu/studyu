@@ -81,6 +81,7 @@ class DashboardController extends _$DashboardController
       loadedStudies: () => const [],
       pinnedStudiesList: () => const [],
       totalCount: 0,
+      pageTotalCount: 0,
       isLoadingInitial: true,
       isLoadingMore: false,
       isLoadingPinned: true,
@@ -91,7 +92,8 @@ class DashboardController extends _$DashboardController
 
     final pinnedFuture = _fetchPinnedFor(token);
     final pageFuture = _fetchPage(token, isInitial: true);
-    await Future.wait([pinnedFuture, pageFuture]);
+    final pageTotalFuture = _fetchPageTotalCount(token);
+    await Future.wait([pinnedFuture, pageFuture, pageTotalFuture]);
   }
 
   Future<void> _fetchPinnedFor(int token) async {
@@ -168,6 +170,27 @@ class DashboardController extends _$DashboardController
         isLoadingMore: false,
         loadError: () => e,
       );
+    }
+  }
+
+  Future<void> _fetchPageTotalCount(int token) async {
+    try {
+      final pinnedIds = _userRepository.user.preferences.pinnedStudies;
+      final page = await _studyRepository.fetchPage(
+        offset: 0,
+        limit: 1,
+        sortBy: state.sortByColumn,
+        ascending: state.sortAscending,
+        preset: state.studiesFilter ?? DashboardState.defaultFilter,
+        currentUser: state.currentUser,
+        excludeIds: pinnedIds.toList(),
+      );
+
+      if (token != _fetchToken) return;
+
+      state = state.copyWith(pageTotalCount: page.totalCount);
+    } catch (_) {
+      if (token != _fetchToken) return;
     }
   }
 

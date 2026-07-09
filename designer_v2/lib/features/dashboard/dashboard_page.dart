@@ -208,9 +208,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildStudiesCount(BuildContext context, DashboardState state) {
     final localizations = AppLocalizations.of(context)!;
-    final countLabel = state.hasAppliedFilter
+    final countLabel = state.hasActiveRefinement
         ? localizations.studies_count_filtered(
-            state.visibleStudyCount,
+            state.filteredStudyCount,
             state.displayTotalStudyCount,
           )
         : localizations.studies_count_total(state.displayTotalStudyCount);
