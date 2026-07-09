@@ -432,7 +432,7 @@
 
   "recovery_phrase_header": "Save Recovery Phrase",
   "copy_to_clipboard": "Copy to clipboard",
-  "copied_to_clipboard": "Copied to clipboard",
+  "copied_to_clipboard": "Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.",
   "recovery_phrase_purpose_header": "You'll need this phrase to:",
   "recovery_phrase_purpose_1": "✓ Continue on a different phone",
   "recovery_phrase_purpose_2": "✓ Restore your progress after reinstalling",
@@ -441,7 +441,7 @@
   "show_recovery_phrase": "Show Recovery Phrase",
   "recovery_phrase_list_header": "Your recovery phrase",
   "recovery_phrase_list_helper": "Make sure you save all 13 words in this exact order.",
-  "recovery_phrase_saved_confirmation": "I have saved all 13 words in a safe place.",
+  "recovery_phrase_saved_confirmation": "I have saved all 13 words in a safe place and can retrieve them when I want to restore my account.",
   "continue_to_study": "Continue to study",
   "restore_account": "Restore account",
   "enter_recovery_phrase": "Enter your recovery phrase",

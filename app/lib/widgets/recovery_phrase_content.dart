@@ -154,23 +154,62 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
   Widget _buildPhraseGrid() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    const rowHeight = 36.0;
 
-    return SelectionArea(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorScheme.outlineVariant),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (var index = 0; index < _phrase!.length; index++)
-                _PhraseWordRow(number: index + 1, word: _phrase![index]),
-            ],
-          ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                for (var index = 0; index < _phrase!.length; index++)
+                  SizedBox(
+                    height: rowHeight,
+                    width: 28,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${index + 1}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.disabledColor,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SelectionArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final word in _phrase!)
+                      SizedBox(
+                        height: rowHeight,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            word,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -223,45 +262,5 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
         ],
       );
     }
-  }
-}
-
-class _PhraseWordRow extends StatelessWidget {
-  final int number;
-  final String word;
-
-  const _PhraseWordRow({required this.number, required this.word});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 28,
-            child: Text(
-              '$number',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.disabledColor,
-              ),
-              textAlign: TextAlign.right,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              word,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

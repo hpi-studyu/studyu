@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
 
@@ -133,8 +132,21 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.enter_recovery_phrase),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.goNamed(RouteNames.welcome);
+            }
+          },
+        ),
+      ),
       body: OnboardingPage(
-        title: AppLocalizations.of(context)!.enter_recovery_phrase,
+        title: '',
         description: '',
         descriptionWidget: const _RestoreAccountInfoCard(),
         maxWidth: 900,
@@ -145,7 +157,6 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 24),
               TextFormField(
                 controller: _phraseController,
                 decoration: InputDecoration(
@@ -226,16 +237,6 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        hideNext: true,
-        onBack: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.goNamed(RouteNames.welcome);
-          }
-        },
       ),
     );
   }

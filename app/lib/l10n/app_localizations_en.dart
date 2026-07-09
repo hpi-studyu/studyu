@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1219,7 +1218,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get copy_to_clipboard => 'Copy to clipboard';
 
   @override
-  String get copied_to_clipboard => 'Copied to clipboard';
+  String get copied_to_clipboard =>
+      'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.';
 
   @override
   String get recovery_phrase_purpose_header => 'You\'ll need this phrase to:';
@@ -1250,7 +1250,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recovery_phrase_saved_confirmation =>
-      'I have saved all 13 words in a safe place.';
+      'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account.';
 
   @override
   String get continue_to_study => 'Continue to study';
@@ -1311,7 +1311,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restore_account_help_1 => 'Enter all 13 words in order';
 
   @override
-  String get restore_account_help_2 => 'You can type or paste the phrase manually';
+  String get restore_account_help_2 =>
+      'You can type or paste the phrase manually';
 
   @override
   String get share_recovery => 'Share Recovery';

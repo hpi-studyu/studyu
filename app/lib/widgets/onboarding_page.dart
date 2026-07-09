@@ -21,7 +21,7 @@ class OnboardingPage extends StatelessWidget {
     this.bottomContent,
     this.bottomNavigationBar,
     this.maxWidth = 700,
-    this.padding = const EdgeInsets.fromLTRB(24.0, 56.0, 24.0, 16.0),
+    this.padding = const EdgeInsets.fromLTRB(24.0, 36.0, 24.0, 16.0),
   });
 
   @override

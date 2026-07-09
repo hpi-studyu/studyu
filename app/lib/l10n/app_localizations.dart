@@ -2363,7 +2363,7 @@ abstract class AppLocalizations {
   /// No description provided for @copied_to_clipboard.
   ///
   /// In en, this message translates to:
-  /// **'Copied to clipboard'**
+  /// **'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.'**
   String get copied_to_clipboard;
 
   /// No description provided for @recovery_phrase_purpose_header.
@@ -2417,7 +2417,7 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_saved_confirmation.
   ///
   /// In en, this message translates to:
-  /// **'I have saved all 13 words in a safe place.'**
+  /// **'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account.'**
   String get recovery_phrase_saved_confirmation;
 
   /// No description provided for @continue_to_study.
