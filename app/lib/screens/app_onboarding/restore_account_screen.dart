@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/services/rejoin_study_service.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
 
-class RejoinStudyScreen extends StatefulWidget {
-  const RejoinStudyScreen({super.key});
+class RestoreAccountScreen extends StatefulWidget {
+  const RestoreAccountScreen({super.key});
 
   @override
-  State<RejoinStudyScreen> createState() => _RejoinStudyScreenState();
+  State<RestoreAccountScreen> createState() => _RestoreAccountScreenState();
 }
 
-class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
+class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
   final TextEditingController _phraseController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
@@ -84,7 +84,7 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
     }
 
     try {
-      final id = RejoinStudyService.decodeRecoveryPhrase(words);
+      final id = RestoreAccountService.decodeRecoveryPhrase(words);
       _onSuccess(id);
     } catch (e) {
       setState(() {
@@ -100,7 +100,7 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
     });
 
     try {
-      final result = await RejoinStudyService.performRecovery(id);
+      final result = await RestoreAccountService.performRecovery(id);
 
       if (!mounted) return;
 
@@ -221,7 +221,7 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                           ),
                         ],
                       )
-                    : Text(AppLocalizations.of(context)!.rejoin_study),
+                    : Text(AppLocalizations.of(context)!.restore_account),
               ),
             ],
           ),
@@ -264,7 +264,7 @@ class _RestoreAccountInfoCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                AppLocalizations.of(context)!.rejoin_study_description,
+                AppLocalizations.of(context)!.restore_account_description,
                 style: theme.textTheme.bodyMedium,
               ),
             ),

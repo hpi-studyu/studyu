@@ -28,7 +28,7 @@ class RecoveryResult {
   }
 }
 
-class RejoinStudyService {
+class RestoreAccountService {
   static List<String>? _cachedPhrase;
   static String? _cachedRecoveryId;
 

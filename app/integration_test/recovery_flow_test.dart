@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
-import 'package:studyu_app/services/rejoin_study_service.dart';
+import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 
@@ -15,7 +15,7 @@ void main() {
   group('Recovery Flow Integration Tests', () {
     setUp(() {
       // Clear any cached recovery data before each test
-      RejoinStudyService.clearCache();
+      RestoreAccountService.clearCache();
     });
 
     testWidgets('Recovery phrase encoding and decoding roundtrip', (
@@ -32,7 +32,7 @@ void main() {
       expect(words.length, equals(RecoveryConstants.totalWordCount));
 
       // Decode the words
-      final decodedId = RejoinStudyService.decodeRecoveryPhrase(words);
+      final decodedId = RestoreAccountService.decodeRecoveryPhrase(words);
       expect(decodedId, equals(testId));
     });
 
@@ -42,14 +42,14 @@ void main() {
       // Test with too few words
       final shortWords = ['word1', 'word2', 'word3'];
       expect(
-        () => RejoinStudyService.decodeRecoveryPhrase(shortWords),
+        () => RestoreAccountService.decodeRecoveryPhrase(shortWords),
         throwsArgumentError,
       );
 
       // Test with too many words
       final longWords = List<String>.generate(20, (i) => 'word$i');
       expect(
-        () => RejoinStudyService.decodeRecoveryPhrase(longWords),
+        () => RestoreAccountService.decodeRecoveryPhrase(longWords),
         throwsArgumentError,
       );
     });
@@ -69,7 +69,7 @@ void main() {
 
       // Should throw due to checksum mismatch or invalid word
       expect(
-        () => RejoinStudyService.decodeRecoveryPhrase(corruptedWords),
+        () => RestoreAccountService.decodeRecoveryPhrase(corruptedWords),
         throwsA(isA<ArgumentError>()),
       );
     });
@@ -79,7 +79,7 @@ void main() {
         '1234567890ABCDEF1234567890ABCDEF',
         radix: 16,
       );
-      final uuid = RejoinStudyService.convertBigIntToUuid(testId);
+      final uuid = RestoreAccountService.convertBigIntToUuid(testId);
 
       expect(uuid, isNotNull);
       expect(
@@ -100,21 +100,21 @@ void main() {
     ) async {
       // Negative ID should return null
       final negativeId = BigInt.from(-1);
-      final negativeUuid = RejoinStudyService.convertBigIntToUuid(negativeId);
+      final negativeUuid = RestoreAccountService.convertBigIntToUuid(negativeId);
       expect(negativeUuid, isNull);
 
       // ID exceeding 128 bits should return null
       final tooLargeId = BigInt.one << 128;
-      final largeUuid = RejoinStudyService.convertBigIntToUuid(tooLargeId);
+      final largeUuid = RestoreAccountService.convertBigIntToUuid(tooLargeId);
       expect(largeUuid, isNull);
     });
 
-    testWidgets('RejoinStudyScreen renders correctly', (tester) async {
+    testWidgets('RestoreAccountScreen renders correctly', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: RejoinStudyScreen(),
+          home: RestoreAccountScreen(),
         ),
       );
 

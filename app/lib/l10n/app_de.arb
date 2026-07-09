@@ -445,7 +445,7 @@
   "recovery_phrase_list_helper": "Stelle sicher, dass du alle 13 Wörter in genau dieser Reihenfolge speicherst.",
   "recovery_phrase_saved_confirmation": "Ich habe alle 13 Wörter an einem sicheren Ort gespeichert.",
   "continue_to_study": "Weiter zur Studie",
-  "rejoin_study": "Konto wiederherstellen",
+  "restore_account": "Konto wiederherstellen",
   "enter_recovery_phrase": "Gib deine Wiederherstellungsphrase ein",
   "required": "Erforderlich",
   "invalid_recovery_phrase": "Diese Wiederherstellungsphrase passt zu keinem Konto. Achte darauf, dass alle 13 Wörter in der richtigen Reihenfolge stehen.",
@@ -473,10 +473,10 @@
   "recovery_user_not_found": "Kein Konto mit dieser Wiederherstellungsphrase gefunden.",
   "recovery_network_error": "Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.",
 
-  "rejoin_study_description": "Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.",
-  "rejoin_study_help_title": "Mit Wiederherstellungsphrase wiederherstellen",
-  "rejoin_study_help_1": "Gib alle 13 Wörter in der richtigen Reihenfolge ein",
-  "rejoin_study_help_2": "Du kannst die Phrase manuell eingeben oder einfügen",
+  "restore_account_description": "Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.",
+  "restore_account_help_title": "Mit Wiederherstellungsphrase wiederherstellen",
+  "restore_account_help_1": "Gib alle 13 Wörter in der richtigen Reihenfolge ein",
+  "restore_account_help_2": "Du kannst die Phrase manuell eingeben oder einfügen",
 
   "share_recovery": "Wiederherstellung teilen",
   "share_as_text": "Als Text teilen",

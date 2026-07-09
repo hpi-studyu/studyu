@@ -1267,7 +1267,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get continue_to_study => 'Weiter zur Studie';
 
   @override
-  String get rejoin_study => 'Konto wiederherstellen';
+  String get restore_account => 'Konto wiederherstellen';
 
   @override
   String get enter_recovery_phrase => 'Gib deine Wiederherstellungsphrase ein';
@@ -1312,19 +1312,19 @@ class AppLocalizationsDe extends AppLocalizations {
       'Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.';
 
   @override
-  String get rejoin_study_description =>
+  String get restore_account_description =>
       'Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.';
 
   @override
-  String get rejoin_study_help_title =>
+  String get restore_account_help_title =>
       'Mit Wiederherstellungsphrase wiederherstellen';
 
   @override
-  String get rejoin_study_help_1 =>
+  String get restore_account_help_1 =>
       'Gib alle 13 Wörter in der richtigen Reihenfolge ein';
 
   @override
-  String get rejoin_study_help_2 =>
+  String get restore_account_help_2 =>
       'Du kannst die Phrase manuell eingeben oder einfügen';
 
   @override

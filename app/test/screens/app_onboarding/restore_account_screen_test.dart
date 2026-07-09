@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 
 Widget _wrap(Widget child) {
   return MaterialApp(
@@ -16,7 +16,7 @@ void main() {
   testWidgets('disables restore when recovery phrase has too many words', (
     tester,
   ) async {
-    await tester.pumpWidget(_wrap(const RejoinStudyScreen()));
+    await tester.pumpWidget(_wrap(const RestoreAccountScreen()));
 
     await tester.enterText(
       find.byType(TextFormField),

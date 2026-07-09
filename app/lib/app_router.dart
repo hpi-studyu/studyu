@@ -8,7 +8,7 @@ import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/onboarding_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/recovery_phrase_screen.dart';
-import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
@@ -167,7 +167,7 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.restoreAccount}',
         name: RouteNames.restoreAccount,
-        builder: (context, state) => const RejoinStudyScreen(),
+        builder: (context, state) => const RestoreAccountScreen(),
       ),
       GoRoute(
         path: '/${RouteNames.studySelection}',

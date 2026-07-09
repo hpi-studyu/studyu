@@ -14,7 +14,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
-import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_core/env.dart';
@@ -42,7 +42,7 @@ Widget setup(Widget child) {
           GoRoute(
             path: '/${RouteNames.restoreAccount}',
             name: RouteNames.restoreAccount,
-            builder: (_, _) => const RejoinStudyScreen(),
+            builder: (_, _) => const RestoreAccountScreen(),
           ),
           GoRoute(
             path: '/${RouteNames.welcome}',
@@ -76,7 +76,7 @@ void main() {
     await tester.tap(find.text('Restore account'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(RejoinStudyScreen), findsOneWidget);
+    expect(find.byType(RestoreAccountScreen), findsOneWidget);
   });
 
   test('restore account route is registered by name', () {

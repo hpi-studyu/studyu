@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/services/rejoin_study_service.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/recovery_file_utils.dart';
 
 class RecoveryPhraseContent extends StatefulWidget {
@@ -44,7 +44,7 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
     });
 
     try {
-      final phrase = await RejoinStudyService.getRecoveryPhrase();
+      final phrase = await RestoreAccountService.getRecoveryPhrase();
       if (mounted) {
         setState(() {
           _phrase = phrase;

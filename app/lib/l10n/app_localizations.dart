@@ -2426,11 +2426,11 @@ abstract class AppLocalizations {
   /// **'Continue to study'**
   String get continue_to_study;
 
-  /// No description provided for @rejoin_study.
+  /// No description provided for @restore_account.
   ///
   /// In en, this message translates to:
   /// **'Restore account'**
-  String get rejoin_study;
+  String get restore_account;
 
   /// No description provided for @enter_recovery_phrase.
   ///
@@ -2498,29 +2498,29 @@ abstract class AppLocalizations {
   /// **'Network error. Please check your connection and try again.'**
   String get recovery_network_error;
 
-  /// No description provided for @rejoin_study_description.
+  /// No description provided for @restore_account_description.
   ///
   /// In en, this message translates to:
   /// **'Restore your account on this device with the recovery phrase you saved before joining a study.'**
-  String get rejoin_study_description;
+  String get restore_account_description;
 
-  /// No description provided for @rejoin_study_help_title.
+  /// No description provided for @restore_account_help_title.
   ///
   /// In en, this message translates to:
   /// **'Restore with your recovery phrase'**
-  String get rejoin_study_help_title;
+  String get restore_account_help_title;
 
-  /// No description provided for @rejoin_study_help_1.
+  /// No description provided for @restore_account_help_1.
   ///
   /// In en, this message translates to:
   /// **'Enter all 13 words in order'**
-  String get rejoin_study_help_1;
+  String get restore_account_help_1;
 
-  /// No description provided for @rejoin_study_help_2.
+  /// No description provided for @restore_account_help_2.
   ///
   /// In en, this message translates to:
   /// **'You can type or paste the phrase manually'**
-  String get rejoin_study_help_2;
+  String get restore_account_help_2;
 
   /// No description provided for @share_recovery.
   ///

@@ -1256,7 +1256,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continue_to_study => 'Continue to study';
 
   @override
-  String get rejoin_study => 'Restore account';
+  String get restore_account => 'Restore account';
 
   @override
   String get enter_recovery_phrase => 'Enter your recovery phrase';
@@ -1301,17 +1301,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Network error. Please check your connection and try again.';
 
   @override
-  String get rejoin_study_description =>
+  String get restore_account_description =>
       'Restore your account on this device with the recovery phrase you saved before joining a study.';
 
   @override
-  String get rejoin_study_help_title => 'Restore with your recovery phrase';
+  String get restore_account_help_title => 'Restore with your recovery phrase';
 
   @override
-  String get rejoin_study_help_1 => 'Enter all 13 words in order';
+  String get restore_account_help_1 => 'Enter all 13 words in order';
 
   @override
-  String get rejoin_study_help_2 => 'You can type or paste the phrase manually';
+  String get restore_account_help_2 => 'You can type or paste the phrase manually';
 
   @override
   String get share_recovery => 'Share Recovery';

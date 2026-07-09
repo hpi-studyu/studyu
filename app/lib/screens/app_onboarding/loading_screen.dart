@@ -16,7 +16,7 @@ import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/services/deferred_link_service.dart';
-import 'package:studyu_app/services/rejoin_study_service.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
@@ -355,7 +355,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       );
       // The cached recovery secret belongs to the deleted account; clear it
       // so a subsequent user on this device cannot read it.
-      RejoinStudyService.clearCache();
+      RestoreAccountService.clearCache();
       if (!mounted) return;
       context.go(
         '/${RouteNames.appErrorScreen}',
