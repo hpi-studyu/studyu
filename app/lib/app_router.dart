@@ -39,7 +39,7 @@ class RouteNames {
   static const String onboarding = 'onboarding';
   static const String terms = 'terms';
   static const String recoveryPhrase = 'recoveryPhrase';
-  static const String rejoinAccount = 'rejoinAccount';
+  static const String restoreAccount = 'restoreAccount';
   static const String about = 'about';
   static const String studySelection = 'studySelection';
   static const String studyOverview = 'studyOverview';
@@ -165,8 +165,8 @@ GoRouter createAppRouter({
         builder: (context, state) => const RecoveryPhraseScreen(),
       ),
       GoRoute(
-        path: '/${RouteNames.rejoinAccount}',
-        name: RouteNames.rejoinAccount,
+        path: '/${RouteNames.restoreAccount}',
+        name: RouteNames.restoreAccount,
         builder: (context, state) => const RejoinStudyScreen(),
       ),
       GoRoute(

@@ -2387,13 +2387,37 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_save_hint.
   ///
   /// In en, this message translates to:
-  /// **'Keep these 13 words in a safe place. They let you restore your study progress on a new phone or after reinstalling the app. If you lose your recovery phrase, you won\'t be able to recover your progress. Never share it with anyone.'**
+  /// **'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app.\n\nNever share them with anyone.'**
   String get recovery_phrase_save_hint;
+
+  /// No description provided for @recovery_phrase_save_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Never share them with anyone.'**
+  String get recovery_phrase_save_warning;
+
+  /// No description provided for @show_recovery_phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Recovery Phrase'**
+  String get show_recovery_phrase;
+
+  /// No description provided for @recovery_phrase_list_header.
+  ///
+  /// In en, this message translates to:
+  /// **'Your recovery phrase'**
+  String get recovery_phrase_list_header;
+
+  /// No description provided for @recovery_phrase_list_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure you save all 13 words in this exact order.'**
+  String get recovery_phrase_list_helper;
 
   /// No description provided for @recovery_phrase_saved_confirmation.
   ///
   /// In en, this message translates to:
-  /// **'I saved my recovery phrase somewhere I can find it later.'**
+  /// **'I have saved all 13 words in a safe place.'**
   String get recovery_phrase_saved_confirmation;
 
   /// No description provided for @continue_to_study.
@@ -2498,12 +2522,6 @@ abstract class AppLocalizations {
   /// **'You can type or paste the phrase manually'**
   String get rejoin_study_help_2;
 
-  /// No description provided for @rejoin_study_help_3.
-  ///
-  /// In en, this message translates to:
-  /// **'Or scan the QR code instead; both options restore the same account'**
-  String get rejoin_study_help_3;
-
   /// No description provided for @share_recovery.
   ///
   /// In en, this message translates to:
@@ -2516,12 +2534,6 @@ abstract class AppLocalizations {
   /// **'Share as Text'**
   String get share_as_text;
 
-  /// No description provided for @share_as_qr.
-  ///
-  /// In en, this message translates to:
-  /// **'Share as QR Code'**
-  String get share_as_qr;
-
   /// No description provided for @download_recovery.
   ///
   /// In en, this message translates to:
@@ -2533,54 +2545,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download as Text File'**
   String get download_as_text;
-
-  /// No description provided for @download_as_qr.
-  ///
-  /// In en, this message translates to:
-  /// **'Download as QR Image'**
-  String get download_as_qr;
-
-  /// No description provided for @scan_qr_code.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan QR Code'**
-  String get scan_qr_code;
-
-  /// No description provided for @scan_qr_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan your recovery QR code instead of typing the phrase.'**
-  String get scan_qr_description;
-
-  /// No description provided for @scanning_qr.
-  ///
-  /// In en, this message translates to:
-  /// **'Scanning QR Code'**
-  String get scanning_qr;
-
-  /// No description provided for @qr_scan_instruction.
-  ///
-  /// In en, this message translates to:
-  /// **'Point your camera at the QR code'**
-  String get qr_scan_instruction;
-
-  /// No description provided for @invalid_qr_code.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid QR code. Please scan a valid recovery QR code.'**
-  String get invalid_qr_code;
-
-  /// No description provided for @qr_scan_error.
-  ///
-  /// In en, this message translates to:
-  /// **'Error scanning QR code. Please try again.'**
-  String get qr_scan_error;
-
-  /// No description provided for @recovery_security_warning.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep your recovery phrase and QR code safe. Anyone with access can recover your account.'**
-  String get recovery_security_warning;
 
   /// No description provided for @file_saved.
   ///
@@ -2612,12 +2576,6 @@ abstract class AppLocalizations {
   /// **'Download'**
   String get download_btn;
 
-  /// No description provided for @qr_code_btn.
-  ///
-  /// In en, this message translates to:
-  /// **'QR Code'**
-  String get qr_code_btn;
-
   /// No description provided for @general_section.
   ///
   /// In en, this message translates to:
@@ -2635,12 +2593,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Participation options'**
   String get participation_options_section;
-
-  /// No description provided for @download_as_qr_btn.
-  ///
-  /// In en, this message translates to:
-  /// **'Download as QR'**
-  String get download_as_qr_btn;
 
   /// No description provided for @share_recovery_text_btn.
   ///

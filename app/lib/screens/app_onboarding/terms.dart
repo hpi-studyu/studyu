@@ -76,9 +76,8 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: OnboardingPage(
-        title: '',
-        description: '',
-        bottomCheckboxItems: _acknowledgmentItems(),
+        title: AppLocalizations.of(context)!.legal_documents,
+        description: AppLocalizations.of(context)!.legal_documents_description,
         bottomNavigationBar: _buildNavigation(),
         child: RetryFutureBuilder<AppConfig>(
           tryFunction: AppConfig.getAppConfig,
@@ -103,12 +102,28 @@ class _TermsScreenState extends State<TermsScreen> {
           pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
         ),
         const SizedBox(height: 20),
+        CheckboxListTile(
+          title: Text(AppLocalizations.of(context)!.terms_agree),
+          value: _acceptedTerms,
+          onChanged: (val) => setState(() => _acceptedTerms = val ?? false),
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+        ),
+        const SizedBox(height: 20),
         LegalSection(
           title: AppLocalizations.of(context)!.privacy,
           description: AppLocalizations.of(context)!.privacy_content,
           icon: const Icon(MdiIcons.shieldLock),
           pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
           pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
+        ),
+        const SizedBox(height: 20),
+        CheckboxListTile(
+          title: Text(AppLocalizations.of(context)!.privacy_agree),
+          value: _acceptedPrivacy,
+          onChanged: (val) => setState(() => _acceptedPrivacy = val ?? false),
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
         ),
         const SizedBox(height: 20),
         LegalSection(
@@ -118,23 +133,9 @@ class _TermsScreenState extends State<TermsScreen> {
           pdfUrl: appConfig.imprint[appLocale.languageCode],
           pdfUrlLabel: AppLocalizations.of(context)!.imprint_read,
         ),
+        const SizedBox(height: 20),
       ],
     );
-  }
-
-  List<OnboardingCheckboxItem> _acknowledgmentItems() {
-    return [
-      OnboardingCheckboxItem(
-        label: AppLocalizations.of(context)!.terms_agree,
-        value: _acceptedTerms,
-        onChanged: (val) => setState(() => _acceptedTerms = val ?? false),
-      ),
-      OnboardingCheckboxItem(
-        label: AppLocalizations.of(context)!.privacy_agree,
-        value: _acceptedPrivacy,
-        onChanged: (val) => setState(() => _acceptedPrivacy = val ?? false),
-      ),
-    ];
   }
 
   Widget _buildNavigation() {
@@ -190,8 +191,8 @@ class LegalSection extends StatelessWidget {
       children: [
         Text(
           title!,
-          style: theme.textTheme.headlineMedium!.copyWith(
-            color: theme.primaryColor,
+          style: theme.textTheme.titleLarge!.copyWith(
+            color: theme.colorScheme.primary,
           ),
         ),
         const SizedBox(height: 20),

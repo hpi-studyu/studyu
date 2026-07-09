@@ -4,7 +4,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
 import 'package:studyu_app/services/rejoin_study_service.dart';
-import 'package:studyu_app/util/recovery_qr_utils.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 
@@ -121,10 +120,10 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Verify screen elements are present
       expect(find.byType(TextFormField), findsOneWidget);
       expect(find.byType(FilledButton), findsOneWidget);
-      expect(find.byType(OutlinedButton), findsOneWidget);
+      expect(find.byType(OutlinedButton), findsNothing);
+      expect(find.text('Scan QR Code'), findsNothing);
     });
 
     testWidgets('RecoveryPhraseContent widget loads and displays phrase', (
@@ -153,64 +152,6 @@ void main() {
           find.byType(Wrap).evaluate().isNotEmpty;
 
       expect(hasError || hasContent, isTrue);
-    });
-
-    testWidgets('Recovery QR utils generate valid deep links', (tester) async {
-      final testPhrase = [
-        'abandon',
-        'ability',
-        'able',
-        'about',
-        'above',
-        'absent',
-        'absorb',
-        'abstract',
-        'absurd',
-        'abuse',
-        'access',
-        'accident',
-        'account',
-      ];
-
-      final deepLink = RecoveryQrUtils.generateDeepLink(testPhrase);
-
-      // Verify deep link format
-      expect(deepLink, startsWith('https://'));
-      expect(deepLink, contains('/recover'));
-      expect(deepLink, contains('phrase='));
-
-      // Verify phrase can be parsed back
-      final parsedPhrase = RecoveryQrUtils.parseDeepLink(deepLink);
-      expect(parsedPhrase, isNotNull);
-      expect(parsedPhrase!.length, equals(RecoveryConstants.totalWordCount));
-
-      // Compare phrases (case-insensitive)
-      for (var i = 0; i < testPhrase.length; i++) {
-        expect(
-          parsedPhrase[i].toLowerCase(),
-          equals(testPhrase[i].toLowerCase()),
-        );
-      }
-    });
-
-    testWidgets('Recovery QR utils reject invalid deep links', (tester) async {
-      // Invalid domain
-      final invalidDomain = RecoveryQrUtils.parseDeepLink(
-        'https://invalid.domain/recover?phrase=test',
-      );
-      expect(invalidDomain, isNull);
-
-      // Missing phrase parameter
-      final missingPhrase = RecoveryQrUtils.parseDeepLink(
-        'https://app.studyu.health/recover',
-      );
-      expect(missingPhrase, isNull);
-
-      // Invalid word count
-      final invalidCount = RecoveryQrUtils.parseDeepLink(
-        'https://app.studyu.health/recover?phrase=one+two+three',
-      );
-      expect(invalidCount, isNull);
     });
   });
 }

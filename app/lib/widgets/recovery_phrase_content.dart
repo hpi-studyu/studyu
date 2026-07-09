@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/services/rejoin_study_service.dart';
-import 'package:studyu_app/util/recovery_qr_utils.dart';
+import 'package:studyu_app/util/recovery_file_utils.dart';
 
 class RecoveryPhraseContent extends StatefulWidget {
   final bool useGridLayout;
+  final List<String>? initialPhrase;
+  final bool isChecked;
+  final ValueChanged<bool?>? onCheckedChanged;
 
-  const RecoveryPhraseContent({super.key, this.useGridLayout = true});
+  const RecoveryPhraseContent({
+    super.key,
+    this.useGridLayout = true,
+    this.initialPhrase,
+    this.isChecked = false,
+    this.onCheckedChanged,
+  });
 
   @override
   State<RecoveryPhraseContent> createState() => RecoveryPhraseContentState();
 }
 
 class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
-  List<String>? _phrase;
-  bool _isLoading = true;
+  late List<String>? _phrase = widget.initialPhrase;
+  late bool _isLoading = widget.initialPhrase == null;
   String? _error;
 
   List<String>? get phrase => _phrase;
@@ -25,7 +34,7 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
   @override
   void initState() {
     super.initState();
-    loadPhrase();
+    if (widget.initialPhrase == null) loadPhrase();
   }
 
   Future<void> loadPhrase() async {
@@ -66,44 +75,10 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
     );
   }
 
-  Future<void> _shareText() async {
-    if (_phrase == null) return;
-    try {
-      await RecoveryQrUtils.shareRecoveryText(_phrase!);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.share_error(e.toString()),
-            ),
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _shareQr() async {
-    if (_phrase == null) return;
-    try {
-      await RecoveryQrUtils.shareRecoveryQr(_phrase!);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.share_error(e.toString()),
-            ),
-          ),
-        );
-      }
-    }
-  }
-
   Future<void> _downloadText() async {
     if (_phrase == null) return;
     try {
-      await RecoveryQrUtils.downloadRecoveryText(_phrase!);
+      await RecoveryFileUtils.downloadRecoveryText(_phrase!);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppLocalizations.of(context)!.file_saved)),
@@ -118,70 +93,6 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
         );
       }
     }
-  }
-
-  Future<void> _downloadQr() async {
-    if (_phrase == null) return;
-    try {
-      await RecoveryQrUtils.downloadRecoveryQr(_phrase!);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.file_saved)),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.file_save_error),
-          ),
-        );
-      }
-    }
-  }
-
-  void _showQrCodeDialog() {
-    if (_phrase == null) return;
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.qr_code_btn,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 24),
-              RecoveryQrUtils.renderQrWidget(
-                RecoveryQrUtils.buildQrCode(
-                  RecoveryQrUtils.generateDeepLink(_phrase!),
-                ),
-                size: 240,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _ActionButton(
-                    icon: Icons.share,
-                    label: AppLocalizations.of(context)!.share_as_qr,
-                    onTap: _shareQr,
-                  ),
-                  _ActionButton(
-                    icon: Icons.download,
-                    label: AppLocalizations.of(context)!.download_as_qr,
-                    onTap: _downloadQr,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -211,55 +122,57 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Text(
+          AppLocalizations.of(context)!.recovery_phrase_list_header,
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          AppLocalizations.of(context)!.recovery_phrase_list_helper,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 16),
         if (widget.useGridLayout) _buildPhraseGrid() else _buildPhraseChips(),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
         _buildActionButtons(),
+        const SizedBox(height: 16),
+        CheckboxListTile(
+          title: Text(
+            AppLocalizations.of(context)!.recovery_phrase_saved_confirmation,
+          ),
+          value: widget.isChecked,
+          onChanged: widget.onCheckedChanged,
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+        ),
       ],
     );
   }
 
   Widget _buildPhraseGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisExtent: 36,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 4,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return SelectionArea(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colorScheme.outlineVariant),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (var index = 0; index < _phrase!.length; index++)
+                _PhraseWordRow(number: index + 1, word: _phrase![index]),
+            ],
+          ),
+        ),
       ),
-      itemCount: _phrase?.length ?? 0,
-      itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
-              ),
-            ),
-          ),
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: '${index + 1}. ',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).disabledColor,
-                  ),
-                ),
-                TextSpan(
-                  text: _phrase![index],
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -274,33 +187,24 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
 
   Widget _buildActionButtons() {
     if (widget.useGridLayout) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      return Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        alignment: WrapAlignment.center,
         children: [
-          _ActionButton(
-            icon: Icons.share_outlined,
-            label: AppLocalizations.of(context)!.share_btn,
-            onTap: _shareText,
+          TextButton.icon(
+            icon: const Icon(Icons.copy_outlined),
+            label: Text(AppLocalizations.of(context)!.copy_btn),
+            onPressed: _copyToClipboard,
           ),
-          _ActionButton(
-            icon: Icons.copy_outlined,
-            label: AppLocalizations.of(context)!.copy_btn,
-            onTap: _copyToClipboard,
-          ),
-          _ActionButton(
-            icon: Icons.download_outlined,
-            label: AppLocalizations.of(context)!.download_btn,
-            onTap: _downloadText,
-          ),
-          _ActionButton(
-            icon: Icons.qr_code_2,
-            label: AppLocalizations.of(context)!.qr_code_btn,
-            onTap: _showQrCodeDialog,
+          TextButton.icon(
+            icon: const Icon(Icons.download_outlined),
+            label: Text(AppLocalizations.of(context)!.download_btn),
+            onPressed: _downloadText,
           ),
         ],
       );
     } else {
-      final theme = Theme.of(context);
       return Wrap(
         spacing: 16,
         runSpacing: 8,
@@ -311,19 +215,10 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
             onPressed: _copyToClipboard,
             label: Text(AppLocalizations.of(context)!.copy_to_clipboard),
           ),
-          FilledButton.tonalIcon(
-            style: FilledButton.styleFrom(
-              foregroundColor: theme.primaryColor,
-              backgroundColor: theme.colorScheme.surfaceContainerHighest,
-            ),
-            icon: const Icon(Icons.qr_code),
-            onPressed: _downloadQr,
-            label: Text(AppLocalizations.of(context)!.download_as_qr_btn),
-          ),
           OutlinedButton.icon(
-            onPressed: _shareText,
-            icon: const Icon(Icons.share),
-            label: Text(AppLocalizations.of(context)!.share_recovery_text_btn),
+            onPressed: _downloadText,
+            icon: const Icon(Icons.download),
+            label: Text(AppLocalizations.of(context)!.download_btn),
           ),
         ],
       );
@@ -331,44 +226,42 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
   }
 }
 
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
+class _PhraseWordRow extends StatelessWidget {
+  final int number;
+  final String word;
 
-  const _ActionButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  const _PhraseWordRow({required this.number, required this.word});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(30),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Theme.of(
-                context,
-              ).colorScheme.primaryContainer.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 28,
+            child: Text(
+              '$number',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.disabledColor,
+              ),
+              textAlign: TextAlign.right,
             ),
-            child: Icon(icon, color: Theme.of(context).colorScheme.primary),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium,
-          textAlign: TextAlign.center,
-        ),
-      ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              word,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

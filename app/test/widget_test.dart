@@ -17,6 +17,8 @@ import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
+import 'package:studyu_core/env.dart';
+import 'package:supabase/supabase.dart';
 
 Widget setup(Widget child) {
   return ChangeNotifierProvider(
@@ -38,8 +40,8 @@ Widget setup(Widget child) {
             builder: (_, _) => const TermsScreen(),
           ),
           GoRoute(
-            path: '/${RouteNames.rejoinAccount}',
-            name: RouteNames.rejoinAccount,
+            path: '/${RouteNames.restoreAccount}',
+            name: RouteNames.restoreAccount,
             builder: (_, _) => const RejoinStudyScreen(),
           ),
           GoRoute(
@@ -53,6 +55,13 @@ Widget setup(Widget child) {
 }
 
 void main() {
+  setUpAll(() {
+    setEnv(
+      'https://example.supabase.co',
+      'test-anon-key',
+      supabaseClient: SupabaseClient('https://example.supabase.co', 'test'),
+    );
+  });
   testWidgets('Counter increments smoke test', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
@@ -60,7 +69,7 @@ void main() {
     expect(find.text('Get started'), findsOneWidget);
   });
 
-  testWidgets('restore account opens rejoin account route', (tester) async {
+  testWidgets('restore account opens restore account route', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
@@ -70,10 +79,10 @@ void main() {
     expect(find.byType(RejoinStudyScreen), findsOneWidget);
   });
 
-  test('rejoin account route is registered by name', () {
+  test('restore account route is registered by name', () {
     final router = createAppRouter(queryParameters: const {});
 
-    expect(router.namedLocation(RouteNames.rejoinAccount), '/rejoinAccount');
+    expect(router.namedLocation(RouteNames.restoreAccount), '/restoreAccount');
   });
 
   test('opens welcome screen when tour is completed without preview', () {

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1232,11 +1233,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Keep these 13 words in a safe place. They let you restore your study progress on a new phone or after reinstalling the app. If you lose your recovery phrase, you won\'t be able to recover your progress. Never share it with anyone.';
+      'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app.\n\nNever share them with anyone.';
+
+  @override
+  String get recovery_phrase_save_warning => 'Never share them with anyone.';
+
+  @override
+  String get show_recovery_phrase => 'Show Recovery Phrase';
+
+  @override
+  String get recovery_phrase_list_header => 'Your recovery phrase';
+
+  @override
+  String get recovery_phrase_list_helper =>
+      'Make sure you save all 13 words in this exact order.';
 
   @override
   String get recovery_phrase_saved_confirmation =>
-      'I saved my recovery phrase somewhere I can find it later.';
+      'I have saved all 13 words in a safe place.';
 
   @override
   String get continue_to_study => 'Continue to study';
@@ -1300,50 +1314,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rejoin_study_help_2 => 'You can type or paste the phrase manually';
 
   @override
-  String get rejoin_study_help_3 =>
-      'Or scan the QR code instead; both options restore the same account';
-
-  @override
   String get share_recovery => 'Share Recovery';
 
   @override
   String get share_as_text => 'Share as Text';
 
   @override
-  String get share_as_qr => 'Share as QR Code';
-
-  @override
   String get download_recovery => 'Download Recovery';
 
   @override
   String get download_as_text => 'Download as Text File';
-
-  @override
-  String get download_as_qr => 'Download as QR Image';
-
-  @override
-  String get scan_qr_code => 'Scan QR Code';
-
-  @override
-  String get scan_qr_description =>
-      'Scan your recovery QR code instead of typing the phrase.';
-
-  @override
-  String get scanning_qr => 'Scanning QR Code';
-
-  @override
-  String get qr_scan_instruction => 'Point your camera at the QR code';
-
-  @override
-  String get invalid_qr_code =>
-      'Invalid QR code. Please scan a valid recovery QR code.';
-
-  @override
-  String get qr_scan_error => 'Error scanning QR code. Please try again.';
-
-  @override
-  String get recovery_security_warning =>
-      'Keep your recovery phrase and QR code safe. Anyone with access can recover your account.';
 
   @override
   String get file_saved => 'File saved successfully';
@@ -1361,9 +1341,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get download_btn => 'Download';
 
   @override
-  String get qr_code_btn => 'QR Code';
-
-  @override
   String get general_section => 'General';
 
   @override
@@ -1371,9 +1348,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get participation_options_section => 'Participation options';
-
-  @override
-  String get download_as_qr_btn => 'Download as QR';
 
   @override
   String get share_recovery_text_btn => 'Share Recovery Text';

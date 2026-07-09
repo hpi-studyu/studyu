@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/screens/app_onboarding/qr_code_scanner_screen.dart';
 import 'package:studyu_app/services/rejoin_study_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
@@ -62,19 +61,6 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
         return localizations.recovery_failed;
       default:
         return localizations.recovery_failed;
-    }
-  }
-
-  Future<void> _scanQrCode() async {
-    final result = await Navigator.push<List<String>>(
-      context,
-      MaterialPageRoute(builder: (context) => const QrCodeScannerScreen()),
-    );
-
-    if (result != null && mounted) {
-      setState(() {
-        _phraseController.text = result.join(' ');
-      });
     }
   }
 
@@ -144,34 +130,13 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
     }
   }
 
-  Widget _buildHelpItem(BuildContext context, IconData icon, String text) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          icon,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: OnboardingPage(
         title: AppLocalizations.of(context)!.enter_recovery_phrase,
-        description: AppLocalizations.of(context)!.rejoin_study_description,
+        description: '',
+        descriptionWidget: const _RestoreAccountInfoCard(),
         maxWidth: 900,
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -180,149 +145,49 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Card(
-                elevation: 0,
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.info_outline, size: 20),
-                          const SizedBox(width: 8),
-                          Text(
-                            AppLocalizations.of(
-                              context,
-                            )!.rejoin_study_help_title,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      _buildHelpItem(
-                        context,
-                        Icons.list_alt,
-                        AppLocalizations.of(context)!.rejoin_study_help_1,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildHelpItem(
-                        context,
-                        Icons.content_paste,
-                        AppLocalizations.of(context)!.rejoin_study_help_2,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildHelpItem(
-                        context,
-                        Icons.text_fields,
-                        AppLocalizations.of(context)!.rejoin_study_help_3,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               const SizedBox(height: 24),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final phraseField = TextFormField(
-                    controller: _phraseController,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(
-                        context,
-                      )!.enter_recovery_phrase,
-                      hintText: 'apple banana cherry ...',
-                      border: const OutlineInputBorder(),
-                      helperText: _hasTooManyWords
-                          ? AppLocalizations.of(
-                              context,
-                            )!.recovery_phrase_too_many_words
-                          : '${_words.length}/${RecoveryConstants.totalWordCount} words',
-                      helperStyle: TextStyle(
-                        color: _hasTooManyWords
-                            ? Theme.of(context).colorScheme.error
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      suffixIcon:
-                          _words.length == RecoveryConstants.totalWordCount
-                          ? Icon(
-                              Icons.check_circle,
-                              color: Theme.of(context).colorScheme.primary,
-                            )
-                          : null,
-                    ),
-                    maxLines: 4,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (_) {
-                      if (_canSubmitPhrase) _validateAndSubmit();
-                    },
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return AppLocalizations.of(context)!.required;
-                      }
-                      if (_hasTooManyWords) {
-                        return AppLocalizations.of(
+              TextFormField(
+                controller: _phraseController,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(
+                    context,
+                  )!.enter_recovery_phrase,
+                  hintText: 'apple banana cherry ...',
+                  border: const OutlineInputBorder(),
+                  helperText: _hasTooManyWords
+                      ? AppLocalizations.of(
                           context,
-                        )!.recovery_phrase_too_many_words;
-                      }
-                      return null;
-                    },
-                  );
-
-                  final scanButton = SizedBox.square(
-                    dimension: 120,
-                    child: OutlinedButton(
-                      onPressed: _scanQrCode,
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.qr_code_scanner),
-                          const SizedBox(height: 8),
-                          Text(
-                            AppLocalizations.of(context)!.scan_qr_code,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-
-                  final orText = Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'OR',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  );
-
-                  if (constraints.maxWidth < 700) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        phraseField,
-                        const SizedBox(height: 12),
-                        Center(child: orText),
-                        const SizedBox(height: 12),
-                        scanButton,
-                      ],
-                    );
+                        )!.recovery_phrase_too_many_words
+                      : '${_words.length}/${RecoveryConstants.totalWordCount} words',
+                  helperStyle: TextStyle(
+                    color: _hasTooManyWords
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  suffixIcon: _words.length == RecoveryConstants.totalWordCount
+                      ? Icon(
+                          Icons.check_circle,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : null,
+                ),
+                maxLines: 4,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) {
+                  if (_canSubmitPhrase) _validateAndSubmit();
+                },
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return AppLocalizations.of(context)!.required;
                   }
-
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(child: phraseField),
-                      SizedBox(height: 120, child: Center(child: orText)),
-                      scanButton,
-                    ],
-                  );
+                  if (_hasTooManyWords) {
+                    return AppLocalizations.of(
+                      context,
+                    )!.recovery_phrase_too_many_words;
+                  }
+                  return null;
                 },
               ),
               if (_errorMessage != null) ...[
@@ -371,6 +236,40 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
             context.goNamed(RouteNames.welcome);
           }
         },
+      ),
+    );
+  }
+}
+
+class _RestoreAccountInfoCard extends StatelessWidget {
+  const _RestoreAccountInfoCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer.withValues(alpha: 0.25),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.lock_outline, color: colorScheme.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                AppLocalizations.of(context)!.rejoin_study_description,
+                style: theme.textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

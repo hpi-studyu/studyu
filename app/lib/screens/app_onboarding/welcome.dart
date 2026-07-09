@@ -68,7 +68,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextButton(
-                onPressed: () => context.pushNamed(RouteNames.rejoinAccount),
+                onPressed: () => context.pushNamed(RouteNames.restoreAccount),
                 child: Text(
                   AppLocalizations.of(context)!.rejoin_study,
                   style: const TextStyle(fontSize: 16, color: Colors.grey),
