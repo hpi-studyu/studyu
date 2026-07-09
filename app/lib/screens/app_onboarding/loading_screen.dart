@@ -68,13 +68,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
   String? _pendingPreviewRoute;
   String? _error;
 
-  Future<void> _restoreParticipantSession() async {
-    if (isUserLoggedIn()) return;
+  Future<bool> _restoreParticipantSession() async {
+    if (isUserLoggedIn()) return false;
     final hasStoredCredentials =
         await SecureStorage.containsKey(userEmailKey) &&
         await SecureStorage.containsKey(userPasswordKey);
-    if (!hasStoredCredentials) return;
-    await signInParticipant();
+    if (!hasStoredCredentials) return false;
+    try {
+      await signInParticipant();
+      return false;
+    } on AuthApiException catch (error, stackTrace) {
+      StudyULogger.warning(
+        'Stored participant credentials are invalid. Showing reset screen.',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      if (!mounted) return true;
+      context.go('/${RouteNames.appErrorScreen}');
+      return true;
+    }
   }
 
   void _storePendingDeepLink({String? studyId, String? inviteCode}) {
@@ -132,7 +144,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> _runStartupFlow() async {
-    await _restoreParticipantSession();
+    if (await _restoreParticipantSession()) return;
 
     if (kIsWeb && widget.hasDeepLink) {
       return;
@@ -384,7 +396,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     StudyULogger.info("No subject found");
     await cancelNotifications(context);
 
-    await _restoreParticipantSession();
+    if (await _restoreParticipantSession()) return;
     if (isUserLoggedIn() && !state.isPreview) {
       if (!mounted) return;
       context.goNamed(RouteNames.welcome);
