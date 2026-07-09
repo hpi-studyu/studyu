@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
@@ -414,6 +415,7 @@ class DeleteAlertDialog extends StatelessWidget {
             // PGRST116: subject already deleted from DB — proceed with local cleanup
           }
           // Reached when delete succeeded or subject was already gone from DB
+          RestoreAccountService.clearCache();
           await deleteLocalData();
           await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
           if (context.mounted) await cancelNotifications(context);

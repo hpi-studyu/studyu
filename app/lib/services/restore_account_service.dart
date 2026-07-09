@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,14 +32,53 @@ class RecoveryResult {
 class RestoreAccountService {
   static List<String>? _cachedPhrase;
   static String? _cachedRecoveryId;
+  static String? _cachedUserId;
+  static Future<String?> Function() _recoveryIdGetter = _fetchRecoveryId;
+  static String? Function() _currentUserIdGetter = _currentUserId;
 
   static void clearCache() {
     _cachedPhrase = null;
     _cachedRecoveryId = null;
+    _cachedUserId = null;
+  }
+
+  @visibleForTesting
+  static Future<String?> Function() get debugRecoveryIdGetterForTesting =>
+      _recoveryIdGetter;
+
+  @visibleForTesting
+  static set debugRecoveryIdGetterForTesting(
+    Future<String?> Function() getter,
+  ) {
+    _recoveryIdGetter = getter;
+  }
+
+  @visibleForTesting
+  static void debugResetRecoveryIdGetterForTesting() {
+    _recoveryIdGetter = _fetchRecoveryId;
+  }
+
+  @visibleForTesting
+  static String? Function() get debugCurrentUserIdGetterForTesting =>
+      _currentUserIdGetter;
+
+  @visibleForTesting
+  static set debugCurrentUserIdGetterForTesting(String? Function() getter) {
+    _currentUserIdGetter = getter;
+  }
+
+  @visibleForTesting
+  static void debugResetCurrentUserIdGetterForTesting() {
+    _currentUserIdGetter = _currentUserId;
   }
 
   static Future<List<String>?> getRecoveryPhrase() async {
-    if (_cachedPhrase != null) return _cachedPhrase;
+    final currentUserId = _currentUserIdGetter();
+    if (_cachedPhrase != null &&
+        currentUserId != null &&
+        _cachedUserId == currentUserId) {
+      return _cachedPhrase;
+    }
 
     final recoveryId = await getOrCreateRecoveryId();
     if (recoveryId == null) return null;
@@ -51,6 +91,7 @@ class RestoreAccountService {
 
     try {
       final id = BigInt.parse(sanitizedId, radix: 16);
+      _cachedUserId = currentUserId;
       return _cachedPhrase = encode(id);
     } on FormatException catch (e) {
       StudyULogger.warning('Failed to parse recovery ID: $e');
@@ -79,8 +120,22 @@ class RestoreAccountService {
   }
 
   static Future<String?> getOrCreateRecoveryId() async {
-    if (_cachedRecoveryId != null) return _cachedRecoveryId;
+    final currentUserId = _currentUserIdGetter();
+    if (_cachedRecoveryId != null &&
+        currentUserId != null &&
+        _cachedUserId == currentUserId) {
+      return _cachedRecoveryId;
+    }
 
+    final recoveryId = await _recoveryIdGetter();
+    if (recoveryId != null) {
+      _cachedRecoveryId = recoveryId;
+      _cachedUserId = currentUserId;
+    }
+    return recoveryId;
+  }
+
+  static Future<String?> _fetchRecoveryId() async {
     try {
       final response = await Supabase.instance.client.rpc(
         'get_or_create_recovery',
@@ -99,6 +154,9 @@ class RestoreAccountService {
     }
   }
 
+  static String? _currentUserId() =>
+      Supabase.instance.client.auth.currentUser?.id;
+
   static BigInt decodeRecoveryPhrase(List<String> words) {
     // Validate word count first
     if (words.length != RecoveryConstants.totalWordCount) {
@@ -111,7 +169,9 @@ class RestoreAccountService {
     try {
       final enWords = words.map((w) => w.toLowerCase().trim()).toList();
       return decode(enWords, wordlist: wordlistEn);
-    } on Exception catch (e) {
+    } catch (e) {
+      if (e is! ArgumentError) rethrow;
+
       // Check if error is due to word not found in English list
       final errorStr = e.toString();
       if (errorStr.contains('Invalid word') ||
@@ -120,9 +180,11 @@ class RestoreAccountService {
         try {
           final deWords = words.map((w) => w.toLowerCase().trim()).toList();
           return decode(deWords, wordlist: wordlistDe);
-        } on Exception catch (_) {
+        } catch (deError) {
+          if (deError is! ArgumentError) rethrow;
+
           // German also failed, throw original English error
-          rethrow;
+          throw e;
         }
       }
       rethrow;
