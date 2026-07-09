@@ -14,6 +14,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 
@@ -37,6 +38,11 @@ Widget setup(Widget child) {
             builder: (_, _) => const TermsScreen(),
           ),
           GoRoute(
+            path: '/${RouteNames.rejoinAccount}',
+            name: RouteNames.rejoinAccount,
+            builder: (_, _) => const RejoinStudyScreen(),
+          ),
+          GoRoute(
             path: '/${RouteNames.welcome}',
             builder: (_, _) => const WelcomeScreen(),
           ),
@@ -52,6 +58,22 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Get started'), findsOneWidget);
+  });
+
+  testWidgets('restore account opens rejoin account route', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Restore account'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RejoinStudyScreen), findsOneWidget);
+  });
+
+  test('rejoin account route is registered by name', () {
+    final router = createAppRouter(queryParameters: const {});
+
+    expect(router.namedLocation(RouteNames.rejoinAccount), '/rejoinAccount');
   });
 
   test('opens welcome screen when tour is completed without preview', () {

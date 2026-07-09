@@ -67,6 +67,7 @@ Future<void> main() async {
   final queryParameters = Uri.base.queryParameters;
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   AppConfig? appConfig;
   String initialRoute = '/${RouteNames.loading}';
   try {
