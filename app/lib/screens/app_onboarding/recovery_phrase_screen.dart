@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/app_router.dart';
@@ -16,7 +17,7 @@ class RecoveryPhraseScreen extends StatefulWidget {
 }
 
 class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
-  bool _isChecked = false;
+  bool _isChecked = kDebugMode;
   bool _isRevealed = false;
 
   @override
