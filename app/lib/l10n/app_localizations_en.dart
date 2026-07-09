@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1220,16 +1221,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get copied_to_clipboard =>
       'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.';
-
-  @override
-  String get recovery_phrase_purpose_header => 'You\'ll need this phrase to:';
-
-  @override
-  String get recovery_phrase_purpose_1 => '✓ Continue on a different phone';
-
-  @override
-  String get recovery_phrase_purpose_2 =>
-      '✓ Restore your progress after reinstalling';
 
   @override
   String get recovery_phrase_save_hint =>

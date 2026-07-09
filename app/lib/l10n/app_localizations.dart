@@ -2366,24 +2366,6 @@ abstract class AppLocalizations {
   /// **'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.'**
   String get copied_to_clipboard;
 
-  /// No description provided for @recovery_phrase_purpose_header.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ll need this phrase to:'**
-  String get recovery_phrase_purpose_header;
-
-  /// No description provided for @recovery_phrase_purpose_1.
-  ///
-  /// In en, this message translates to:
-  /// **'✓ Continue on a different phone'**
-  String get recovery_phrase_purpose_1;
-
-  /// No description provided for @recovery_phrase_purpose_2.
-  ///
-  /// In en, this message translates to:
-  /// **'✓ Restore your progress after reinstalling'**
-  String get recovery_phrase_purpose_2;
-
   /// No description provided for @recovery_phrase_save_hint.
   ///
   /// In en, this message translates to:
