@@ -9,6 +9,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -74,95 +75,93 @@ class _TermsScreenState extends State<TermsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: RetryFutureBuilder<AppConfig>(
-                  tryFunction: AppConfig.getAppConfig,
-                  successBuilder:
-                      (BuildContext context, AppConfig? appConfig) =>
-                          legalSection(context, appConfig),
-                ),
-              ),
-            ),
-          ],
+      body: OnboardingPage(
+        title: '',
+        description: '',
+        bottomCheckboxItems: _acknowledgmentItems(),
+        bottomNavigationBar: _buildNavigation(),
+        child: RetryFutureBuilder<AppConfig>(
+          tryFunction: AppConfig.getAppConfig,
+          successBuilder: (BuildContext context, AppConfig? appConfig) =>
+              legalSection(context, appConfig),
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        backButtonKey: const ValueKey('terms_back'),
-        onBack: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.go('/${RouteNames.welcome}');
-          }
-        },
-        nextButtonKey: const ValueKey('terms_continue'),
-        onNext: userCanContinue()
-            ? () async {
-                final success = await ensureParticipantSignedIn();
-                if (success) {
-                  if (!context.mounted) return;
-                  final state = context.read<AppState>();
-                  if (state.hasPendingDeepLink) {
-                    await _handlePendingDeepLink(state);
-                  } else {
-                    context.push('/${RouteNames.recoveryPhrase}');
-                  }
-                }
-              }
-            : null,
       ),
     );
   }
 
   Widget legalSection(BuildContext context, AppConfig? appConfig) {
     final appLocale = Localizations.localeOf(context);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            LegalSection(
-              title: AppLocalizations.of(context)!.terms,
-              description: AppLocalizations.of(context)!.terms_content,
-              acknowledgment: AppLocalizations.of(context)!.terms_agree,
-              onChange: (val) => setState(() => _acceptedTerms = val!),
-              isChecked: _acceptedTerms,
-              icon: const Icon(MdiIcons.fileDocumentEdit),
-              pdfUrl: appConfig!.appTerms[appLocale.languageCode],
-              pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
-            ),
-            const SizedBox(height: 20),
-            LegalSection(
-              title: AppLocalizations.of(context)!.privacy,
-              description: AppLocalizations.of(context)!.privacy_content,
-              acknowledgment: AppLocalizations.of(context)!.privacy_agree,
-              onChange: (val) => setState(() => _acceptedPrivacy = val!),
-              isChecked: _acceptedPrivacy,
-              icon: const Icon(MdiIcons.shieldLock),
-              pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
-              pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
-            ),
-            const SizedBox(height: 30),
-            OutlinedButton.icon(
-              icon: const Icon(MdiIcons.scaleBalance),
-              onPressed: () async {
-                final uri = Uri.parse(
-                  appConfig.imprint[appLocale.languageCode]!,
-                );
-                if (await canLaunchUrl(uri)) {
-                  launchUrl(uri, mode: LaunchMode.externalApplication);
-                }
-              },
-              label: Text(AppLocalizations.of(context)!.imprint_read),
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LegalSection(
+          title: AppLocalizations.of(context)!.terms,
+          description: AppLocalizations.of(context)!.terms_content,
+          icon: const Icon(MdiIcons.fileDocumentEdit),
+          pdfUrl: appConfig!.appTerms[appLocale.languageCode],
+          pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
         ),
+        const SizedBox(height: 20),
+        LegalSection(
+          title: AppLocalizations.of(context)!.privacy,
+          description: AppLocalizations.of(context)!.privacy_content,
+          icon: const Icon(MdiIcons.shieldLock),
+          pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
+          pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
+        ),
+        const SizedBox(height: 20),
+        LegalSection(
+          title: AppLocalizations.of(context)!.legal_notice,
+          description: AppLocalizations.of(context)!.legal_notice_content,
+          icon: const Icon(MdiIcons.scaleBalance),
+          pdfUrl: appConfig.imprint[appLocale.languageCode],
+          pdfUrlLabel: AppLocalizations.of(context)!.imprint_read,
+        ),
+      ],
+    );
+  }
+
+  List<OnboardingCheckboxItem> _acknowledgmentItems() {
+    return [
+      OnboardingCheckboxItem(
+        label: AppLocalizations.of(context)!.terms_agree,
+        value: _acceptedTerms,
+        onChanged: (val) => setState(() => _acceptedTerms = val ?? false),
       ),
+      OnboardingCheckboxItem(
+        label: AppLocalizations.of(context)!.privacy_agree,
+        value: _acceptedPrivacy,
+        onChanged: (val) => setState(() => _acceptedPrivacy = val ?? false),
+      ),
+    ];
+  }
+
+  Widget _buildNavigation() {
+    return BottomOnboardingNavigation(
+      backButtonKey: const ValueKey('terms_back'),
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/${RouteNames.welcome}');
+        }
+      },
+      nextButtonKey: const ValueKey('terms_continue'),
+      onNext: userCanContinue()
+          ? () async {
+              final success = await ensureParticipantSignedIn();
+              if (success) {
+                if (!mounted) return;
+                final state = context.read<AppState>();
+                if (state.hasPendingDeepLink) {
+                  await _handlePendingDeepLink(state);
+                } else {
+                  context.push('/${RouteNames.recoveryPhrase}');
+                }
+              }
+            }
+          : null,
     );
   }
 }
@@ -173,9 +172,6 @@ class LegalSection extends StatelessWidget {
   final Icon? icon;
   final String? pdfUrl;
   final String? pdfUrlLabel;
-  final String? acknowledgment;
-  final bool? isChecked;
-  final ValueChanged<bool?>? onChange;
 
   const LegalSection({
     super.key,
@@ -184,14 +180,12 @@ class LegalSection extends StatelessWidget {
     this.icon,
     this.pdfUrl,
     this.pdfUrlLabel,
-    this.acknowledgment,
-    this.isChecked,
-    this.onChange,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Column(
       children: [
         Text(
@@ -212,11 +206,6 @@ class LegalSection extends StatelessWidget {
             }
           },
           label: Text(pdfUrlLabel!),
-        ),
-        CheckboxListTile(
-          title: Text(acknowledgment!),
-          value: isChecked,
-          onChanged: onChange,
         ),
       ],
     );

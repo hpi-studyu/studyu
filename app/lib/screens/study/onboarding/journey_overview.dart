@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -53,10 +52,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.your_journey),
-        leading: const Icon(MdiIcons.mapMarkerPath),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.your_journey)),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

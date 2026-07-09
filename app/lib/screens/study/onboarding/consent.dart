@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
@@ -75,7 +74,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.consent),
-        leading: const Icon(MdiIcons.textBoxCheck),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
