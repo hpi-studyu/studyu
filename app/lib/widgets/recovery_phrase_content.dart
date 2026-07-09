@@ -9,6 +9,8 @@ class RecoveryPhraseContent extends StatefulWidget {
   final List<String>? initialPhrase;
   final bool isChecked;
   final ValueChanged<bool?>? onCheckedChanged;
+  final bool showConfirmation;
+  final bool showSaveHint;
 
   const RecoveryPhraseContent({
     super.key,
@@ -16,6 +18,8 @@ class RecoveryPhraseContent extends StatefulWidget {
     this.initialPhrase,
     this.isChecked = false,
     this.onCheckedChanged,
+    this.showConfirmation = true,
+    this.showSaveHint = false,
   });
 
   @override
@@ -128,7 +132,14 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 4),
+        if (widget.showSaveHint) ...[
+          const SizedBox(height: 8),
+          Text(
+            AppLocalizations.of(context)!.recovery_phrase_save_hint,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+        const SizedBox(height: 16),
         Text(
           AppLocalizations.of(context)!.recovery_phrase_list_helper,
           style: Theme.of(context).textTheme.bodyMedium,
@@ -137,16 +148,18 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
         if (widget.useGridLayout) _buildPhraseGrid() else _buildPhraseChips(),
         const SizedBox(height: 16),
         _buildActionButtons(),
-        const SizedBox(height: 16),
-        CheckboxListTile(
-          title: Text(
-            AppLocalizations.of(context)!.recovery_phrase_saved_confirmation,
+        if (widget.showConfirmation) ...[
+          const SizedBox(height: 16),
+          CheckboxListTile(
+            title: Text(
+              AppLocalizations.of(context)!.recovery_phrase_saved_confirmation,
+            ),
+            value: widget.isChecked,
+            onChanged: widget.onCheckedChanged,
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
           ),
-          value: widget.isChecked,
-          onChanged: widget.onCheckedChanged,
-          contentPadding: EdgeInsets.zero,
-          controlAffinity: ListTileControlAffinity.leading,
-        ),
+        ],
       ],
     );
   }
@@ -188,24 +201,15 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
             const SizedBox(width: 12),
             Expanded(
               child: SelectionArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final word in _phrase!)
-                      SizedBox(
-                        height: rowHeight,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            word,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.onSurface,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+                child: SelectableText(
+                  _phrase!.join('\n'),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
+                    height:
+                        rowHeight /
+                        (theme.textTheme.titleMedium?.fontSize ?? 16),
+                  ),
                 ),
               ),
             ),
@@ -225,42 +229,22 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
   }
 
   Widget _buildActionButtons() {
-    if (widget.useGridLayout) {
-      return Wrap(
-        spacing: 8,
-        runSpacing: 4,
-        alignment: WrapAlignment.center,
-        children: [
-          TextButton.icon(
-            icon: const Icon(Icons.copy_outlined),
-            label: Text(AppLocalizations.of(context)!.copy_btn),
-            onPressed: _copyToClipboard,
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.download_outlined),
-            label: Text(AppLocalizations.of(context)!.download_btn),
-            onPressed: _downloadText,
-          ),
-        ],
-      );
-    } else {
-      return Wrap(
-        spacing: 16,
-        runSpacing: 8,
-        alignment: WrapAlignment.center,
-        children: [
-          FilledButton.icon(
-            icon: const Icon(Icons.copy),
-            onPressed: _copyToClipboard,
-            label: Text(AppLocalizations.of(context)!.copy_to_clipboard),
-          ),
-          OutlinedButton.icon(
-            onPressed: _downloadText,
-            icon: const Icon(Icons.download),
-            label: Text(AppLocalizations.of(context)!.download_btn),
-          ),
-        ],
-      );
-    }
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      alignment: WrapAlignment.center,
+      children: [
+        TextButton.icon(
+          icon: const Icon(Icons.copy_outlined),
+          label: Text(AppLocalizations.of(context)!.copy_btn),
+          onPressed: _copyToClipboard,
+        ),
+        TextButton.icon(
+          icon: const Icon(Icons.download_outlined),
+          label: Text(AppLocalizations.of(context)!.download_btn),
+          onPressed: _downloadText,
+        ),
+      ],
+    );
   }
 }

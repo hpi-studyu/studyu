@@ -67,10 +67,7 @@ class _SettingsState extends State<Settings> {
               // General section header
               Text(
                 AppLocalizations.of(context)!.general_section,
-                style: theme.textTheme.titleMedium!.copyWith(
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: theme.textTheme.titleMedium!.copyWith(),
               ),
               const SizedBox(height: 12),
 
@@ -83,9 +80,7 @@ class _SettingsState extends State<Settings> {
                       Expanded(
                         child: Text(
                           AppLocalizations.of(context)!.language,
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: theme.textTheme.bodyMedium!.copyWith(),
                         ),
                       ),
                       DropdownButton<Locale>(
@@ -114,9 +109,7 @@ class _SettingsState extends State<Settings> {
                       Expanded(
                         child: Text(
                           AppLocalizations.of(context)!.allow_analytics,
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: theme.textTheme.bodyMedium!.copyWith(),
                         ),
                       ),
                       Switch(
@@ -145,9 +138,7 @@ class _SettingsState extends State<Settings> {
                           AppLocalizations.of(
                             context,
                           )!.show_dashboard_showcase_again,
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: theme.textTheme.bodyMedium!.copyWith(),
                         ),
                       ),
                       OutlinedButton.icon(
@@ -173,6 +164,10 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
+              // Recovery phrase card
+              const RecoveryPhraseWidget(),
+
               const SizedBox(height: 24),
 
               // Current study section header
@@ -180,7 +175,6 @@ class _SettingsState extends State<Settings> {
                 AppLocalizations.of(context)!.current_study_section,
                 style: theme.textTheme.titleMedium!.copyWith(
                   color: theme.primaryColor,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
 
@@ -198,9 +192,6 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              // Recovery phrase card
-              const RecoveryPhraseWidget(),
 
               const SizedBox(height: 24),
 
@@ -210,7 +201,6 @@ class _SettingsState extends State<Settings> {
                 AppLocalizations.of(context)!.participation_options_section,
                 style: theme.textTheme.titleMedium!.copyWith(
                   color: theme.primaryColor,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
               Align(
@@ -284,16 +274,12 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
     final theme = Theme.of(context);
     return Card(
       child: ExpansionTile(
-        leading: Icon(Icons.key, color: theme.primaryColor),
+        leading: Icon(Icons.lock_outline, color: theme.primaryColor),
         title: Text(
           AppLocalizations.of(context)!.recovery_phrase_header,
           style: theme.textTheme.bodyMedium!.copyWith(
             fontWeight: FontWeight.w500,
           ),
-        ),
-        subtitle: Text(
-          AppLocalizations.of(context)!.recovery_phrase_save_hint,
-          style: theme.textTheme.bodySmall,
         ),
         onExpansionChanged: (expanded) {
           if (expanded && !_hasExpanded) {
@@ -307,7 +293,11 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(color: theme.colorScheme.surface),
-                child: const RecoveryPhraseContent(useGridLayout: false),
+                child: const RecoveryPhraseContent(
+                  useGridLayout: false,
+                  showConfirmation: false,
+                  showSaveHint: true,
+                ),
               ),
             ),
         ],
