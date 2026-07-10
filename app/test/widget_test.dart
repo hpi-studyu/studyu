@@ -17,7 +17,7 @@ import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
-import 'package:studyu_core/env.dart';
+import 'package:studyu_core/core.dart';
 import 'package:supabase/supabase.dart';
 
 Widget setup(Widget child, {AppState? appState}) {
@@ -103,6 +103,49 @@ void main() {
     expect(
       initialRouteForMissingSubjectRoute(isPreview: true, onBoarded: true),
       '/${RouteNames.terms}',
+    );
+  });
+
+  test('terms continue returns to invite overview when invite is selected', () {
+    final appState = AppState()
+      ..selectedStudy = Study('study-1', 'owner-1')
+      ..inviteCode = 'invite-1';
+
+    expect(
+      routeAfterTermsWithoutPendingDeepLink(appState),
+      '/${RouteNames.studyOverview}',
+    );
+  });
+
+  test('terms continue returns to overview after accepted invite back', () {
+    final appState = AppState()..selectedStudy = Study('study-1', 'owner-1');
+
+    expect(
+      routeAfterTermsWithoutPendingDeepLink(appState),
+      '/${RouteNames.studyOverview}',
+    );
+  });
+
+  test('terms back clears pending invite flow', () {
+    final appState = AppState()
+      ..setPendingDeepLink(
+        study: Study('study-1', 'owner-1'),
+        inviteCode: 'invite-1',
+      );
+
+    expect(shouldClearInviteOnTermsBack(appState), isTrue);
+  });
+
+  test('terms continue opens study selection after invite decline', () {
+    final appState = AppState()
+      ..selectedStudy = Study('study-1', 'owner-1')
+      ..inviteCode = 'invite-1';
+    appState.selectedStudy = null;
+    appState.inviteCode = null;
+
+    expect(
+      routeAfterTermsWithoutPendingDeepLink(appState),
+      '/${RouteNames.studySelection}',
     );
   });
 

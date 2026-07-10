@@ -22,6 +22,17 @@ class TermsScreen extends StatefulWidget {
   State<TermsScreen> createState() => _TermsScreenState();
 }
 
+@visibleForTesting
+String routeAfterTermsWithoutPendingDeepLink(AppState state) {
+  if (state.selectedStudy != null) {
+    return '/${RouteNames.studyOverview}';
+  }
+  return '/${RouteNames.studySelection}';
+}
+
+@visibleForTesting
+bool shouldClearInviteOnTermsBack(AppState state) => state.hasPendingDeepLink;
+
 class _TermsScreenState extends State<TermsScreen> {
   bool _acceptedTerms = kDebugMode;
   bool _acceptedPrivacy = kDebugMode;
@@ -38,7 +49,7 @@ class _TermsScreenState extends State<TermsScreen> {
       activeStudyId: state.activeSubject?.studyId,
     );
 
-    state.clearPendingDeepLink();
+    if (result is! DeepLinkSuccess) state.clearPendingDeepLink();
     if (!mounted) return;
 
     switch (result) {
@@ -146,7 +157,12 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget _buildNavigation() {
     return BottomOnboardingNavigation(
       backButtonKey: const ValueKey('terms_back'),
-      onBack: () {
+      onBack: () async {
+        final state = context.read<AppState>();
+        if (shouldClearInviteOnTermsBack(state)) {
+          await PendingDeepLinkService.clear(state);
+          if (!mounted) return;
+        }
         if (context.canPop()) {
           context.pop();
         } else {
@@ -163,7 +179,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 if (state.hasPendingDeepLink) {
                   await _handlePendingDeepLink(state);
                 } else {
-                  context.push('/${RouteNames.studySelection}');
+                  context.push(routeAfterTermsWithoutPendingDeepLink(state));
                 }
               }
             }

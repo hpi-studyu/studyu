@@ -17,12 +17,19 @@ class PendingDeepLinkService {
   }
 
   static Future<void> clear(AppState state) async {
-    state.clearPendingDeepLink();
     state.selectedStudy = null;
     state.inviteCode = null;
     state.preselectedInterventionIds = null;
+    state.clearPendingDeepLink();
     await SecureStorage.delete(_inviteKey);
     await SecureStorage.delete(_studyKey);
+  }
+
+  static Future<({String? studyId, String? inviteCode})> readStorage() async {
+    return (
+      studyId: await SecureStorage.read(_studyKey),
+      inviteCode: await SecureStorage.read(_inviteKey),
+    );
   }
 
   static Future<void> clearStorage() async {

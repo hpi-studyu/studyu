@@ -56,7 +56,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     if (!mounted) return;
     if (accepted == true) {
-      context.push('/${RouteNames.terms}');
+      await context.push('/${RouteNames.terms}');
+      if (!mounted) return;
+      setState(() => _inviteDialogShown = false);
     } else {
       await PendingDeepLinkService.clear(state);
       _inviteDialogShown = false;

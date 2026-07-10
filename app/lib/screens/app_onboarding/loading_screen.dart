@@ -174,6 +174,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     if (widget.hasDeepLink) {
+      final storedLink = await PendingDeepLinkService.readStorage();
+      if (storedLink.inviteCode != widget.deepLinkInviteCode ||
+          storedLink.studyId != widget.deepLinkStudyId) {
+        await PendingDeepLinkService.clearStorage();
+      }
       await _handleIncomingDeepLink(
         studyId: widget.deepLinkStudyId,
         inviteCode: widget.deepLinkInviteCode,
