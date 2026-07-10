@@ -40,26 +40,6 @@ void main() {
     );
   });
 
-  group('parseIosDeferredLinkPath', () {
-    test('keeps invite links routable from deferred universal link paths', () {
-      final link = parseIosDeferredLinkPath(
-        'https://app.studyu.health/invite/invite-123',
-      );
-
-      expect(link?.inviteCode, 'invite-123');
-      expect(link?.studyId, isNull);
-    });
-
-    test('parses public study links from deferred universal link paths', () {
-      final link = parseIosDeferredLinkPath(
-        'https://app.studyu.health/study/study-123',
-      );
-
-      expect(link?.studyId, 'study-123');
-      expect(link?.inviteCode, isNull);
-    });
-  });
-
   group('pendingDeferredLinkFromStorageValues', () {
     test('restores invite links before study links', () {
       final link = pendingDeferredLinkFromStorageValues(

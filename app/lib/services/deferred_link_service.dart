@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:stack_deferred_link/stack_deferred_link.dart';
-import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class DeferredLink {
@@ -118,25 +117,11 @@ class DeferredLinkService {
           referrer: referrer,
         );
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
-        final host = Uri.parse(scheme).host;
         await SecureStorage.write(
           'debug_install_referrer',
-          'iOS Check. Host: $host',
+          'iOS deferred deep linking disabled: clipboard handoff removed.',
         );
-
-        final result = await StackDeferredLink.getInstallReferrerIos(
-          deepLinks: ['$host/invite', '$host/study'],
-        );
-
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'iOS Result: ${result?.fullReferralDeepLinkPath}',
-        );
-
-        deferredLink = parseIosDeferredLinkPath(
-          result?.fullReferralDeepLinkPath,
-        );
+        return null;
       }
 
       if (deferredLink != null) {
