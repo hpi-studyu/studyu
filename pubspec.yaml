@@ -9,12 +9,16 @@ workspace:
   - app
   - designer_v2
 dev_dependencies:
-  melos: ^8.0.0
+  melos: ^8.2.0
 
 melos:
   repository: https://github.com/hpi-studyu/studyu
   sdkPath: .fvm/flutter_sdk
   scripts:
+    setup:
+      run: git config core.hooksPath .githooks
+      description: Configure git to use the project's tracked hooks in .githooks/
+
     fix:
       run: |
         melos exec -c 6 -- \

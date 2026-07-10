@@ -16,7 +16,7 @@ dependencies:
   csv: ^8.0.0
   cupertino_icons: ^1.0.9
   dynamic_color: ^1.8.1
-  equatable: ^2.0.8
+  equatable: ^2.1.0
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
@@ -33,7 +33,7 @@ dependencies:
   material_color_utilities: ^0.13.0 # integration_test
   package_info_plus: ^10.2.0
   pointer_interceptor: ^0.10.1+2
-  pretty_qr_code: ^3.5.0
+  pretty_qr_code: ^3.6.0
   reactive_color_picker: ^2.2.2
   reactive_forms: ^18.2.2
   reactive_multi_select_flutter: ^2.0.2
@@ -42,14 +42,14 @@ dependencies:
   rxdart: ^0.28.0
   studyu_core: ^4.9.0
   studyu_flutter_common: ^1.10.4
-  supabase: ^2.13.0
-  supabase_flutter: ^2.15.0
+  supabase: ^2.14.0
+  supabase_flutter: ^2.16.0
   url_launcher: ^6.3.2
   uuid: ^4.5.3
   web: ^1.1.1
 
 dev_dependencies:
-  build_runner: ^2.15.0
+  build_runner: ^2.15.1
   # flutter_launcher_icons: ^0.14.4 # seems deprecated, maybe icons_launcher is an alternative
   flutter_lints: ^6.0.0
   flutter_test:
@@ -59,7 +59,7 @@ dev_dependencies:
   json_diff: ^0.2.1
   lint: ^2.8.0
   mockito: ^5.6.3
-  patrol_finders: ^3.5.0
+  patrol_finders: ^3.6.0
   riverpod_generator: ^4.0.4
   test: ^1.30.0
 

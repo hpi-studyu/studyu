@@ -6,7 +6,6 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/theme.dart';
-import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -49,7 +48,6 @@ class _MyAppState extends State<MyApp> {
       ],
       child: Consumer<AppLanguage>(
         builder: (context, model, child) {
-          context.read<AppState>().analytics = AppAnalytics(context);
           return MaterialApp.router(
             title: 'StudyU',
             theme: theme,

@@ -29,7 +29,8 @@ project's RTK output filters.
 - `fvm exec melos local:app` or `fvm exec melos local:designer_v2`: runs against
   `.env.local`.
 - `fvm exec melos generate`: runs `build_runner` for generated Dart files.
-- `fvm exec melos qualitycheck`: formats, regenerates, and analyzes the workspace.
+- `fvm exec melos qualitycheck`: full CI-style check; formats, regenerates, and analyzes the workspace.
+- `scripts/pre-commit-check`: faster pre-commit/agent check; formats and analyzes, and only regenerates when staged files can affect generated output.
 - `fvm exec melos build:web`: builds both web apps.
 
 ## Coding Style & Naming Conventions
@@ -53,6 +54,8 @@ Do not commit secrets. Environment templates live in `flutter_common/lib/envs/`;
 You must strictly adhere to the following workspace rules for all file modifications, terminal command executions, commit generations, and pull request actions.
 ### 1. Code Quality & Pre-Commit Checks
 Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos qualitycheck` (prefixed with `rtk ` if rtk is installed).
+
+Before committing or opening a Pull Request, you MUST run `scripts/pre-commit-check`. This is the same shared check used by the tracked pre-commit hook: it runs format and analyze, and only runs code generation when staged files can affect generated output. Run `fvm exec melos qualitycheck` when you need the full CI-style workspace check.
 
 If the qualitycheck command prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun the qualitycheck command.
 
