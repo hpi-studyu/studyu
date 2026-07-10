@@ -12,7 +12,6 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:studyu_app/app.dart';
 import 'package:studyu_app/app_router.dart';
-import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart';
@@ -87,17 +86,7 @@ Future<void> main() async {
     initialRoute = '/${RouteNames.appOutdated}';
   }
 
-  await AppAnalytics.init();
-  if (!kDebugMode &&
-      AppAnalytics.isUserEnabled != null &&
-      AppAnalytics.isUserEnabled!) {
-    AppAnalytics.start(
-      appConfig,
-      MyApp(queryParameters, appConfig, initialRoute: initialRoute),
-    );
-  } else {
-    runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
-  }
+  runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
 
   AppLifecycleListener(
     onResume: () async {

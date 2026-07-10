@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
@@ -70,7 +69,6 @@ GoRouter createAppRouter({
   return GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,
-    observers: [SentryNavigatorObserver()],
     redirect: (context, state) {
       if (state.uri.scheme == appScheme) {
         if (state.uri.host == 'invite') {
