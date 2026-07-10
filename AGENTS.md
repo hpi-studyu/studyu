@@ -53,11 +53,11 @@ Do not commit secrets. Environment templates live in `flutter_common/lib/envs/`;
 
 You must strictly adhere to the following workspace rules for all file modifications, terminal command executions, commit generations, and pull request actions.
 ### 1. Code Quality & Pre-Commit Checks
-Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos qualitycheck` (prefixed with `rtk ` if rtk is installed).
+Before staging changes, committing, or opening a Pull Request, you MUST run `scripts/pre-commit-check`. This is the same shared check used by the tracked `.githooks/pre-commit` hook: it runs format and analyze, and only runs code generation when staged files can affect generated output.
 
-Before committing or opening a Pull Request, you MUST run `scripts/pre-commit-check`. This is the same shared check used by the tracked pre-commit hook: it runs format and analyze, and only runs code generation when staged files can affect generated output. Run `fvm exec melos qualitycheck` when you need the full CI-style workspace check.
+Do NOT run `fvm exec melos qualitycheck` as the default pre-commit or pre-PR check. Run it only when you need the full CI-style workspace check or when explicitly requested.
 
-If the qualitycheck command prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun the qualitycheck command.
+If `scripts/pre-commit-check` or the qualitycheck command prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun the same command.
 
 ### 2. Commit Message Enforcement
 
