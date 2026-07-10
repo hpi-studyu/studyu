@@ -86,6 +86,16 @@ We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
 guidelines for Dart and Flutter. Run `fvm exec melos qualitycheck` to
 format, analyze, and regenerate code.
 
+### Optional RTK output filtering
+
+This repository includes `.rtk/filters.toml` for [RTK](https://github.com/rtk-ai/rtk), a CLI proxy that compresses noisy command output. RTK is optional; without it, run the documented commands normally.
+
+If RTK is installed, prefix Flutter, Dart, FVM, or Melos commands with `rtk` for shorter output:
+
+```bash
+rtk fvm exec melos qualitycheck
+```
+
 ## Frontend
 
 We use Flutter's Material Design with a custom light theme defined in `app/lib/theme.dart`.

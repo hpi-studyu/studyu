@@ -28,7 +28,7 @@ project's RTK output filters.
 - `fvm exec melos dev:app` or `fvm exec melos dev:designer_v2`: runs against `.env.dev`.
 - `fvm exec melos local:app` or `fvm exec melos local:designer_v2`: runs against
   `.env.local`.
-- `fvm exec melos run generate`: runs `build_runner` for generated Dart files.
+- `fvm exec melos generate`: runs `build_runner` for generated Dart files.
 - `fvm exec melos qualitycheck`: formats, regenerates, and analyzes the workspace.
 - `fvm exec melos build:web`: builds both web apps.
 
@@ -54,7 +54,7 @@ You must strictly adhere to the following workspace rules for all file modificat
 ### 1. Code Quality & Pre-Commit Checks
 Before staging changes, committing, or opening a Pull Request, you MUST run `fvm exec melos qualitycheck` (prefixed with `rtk ` if rtk is installed).
 
-If `fvm exec melos run qualitycheck` prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun `fvm exec melos run qualitycheck`.
+If the qualitycheck command prints `[rtk] WARNING: untrusted project filters (.rtk/filters.toml)`, review `.rtk/filters.toml`. If it only contains repository-owned output filters, run `rtk trust`, then rerun the qualitycheck command.
 
 ### 2. Commit Message Enforcement
 
