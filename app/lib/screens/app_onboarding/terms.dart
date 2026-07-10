@@ -160,7 +160,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 if (state.hasPendingDeepLink) {
                   await _handlePendingDeepLink(state);
                 } else {
-                  context.push('/${RouteNames.recoveryPhrase}');
+                  context.push('/${RouteNames.studySelection}');
                 }
               }
             }

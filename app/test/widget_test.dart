@@ -20,9 +20,9 @@ import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_core/env.dart';
 import 'package:supabase/supabase.dart';
 
-Widget setup(Widget child) {
+Widget setup(Widget child, {AppState? appState}) {
   return ChangeNotifierProvider(
-    create: (_) => AppState(),
+    create: (_) => appState ?? AppState(),
     child: MaterialApp.router(
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

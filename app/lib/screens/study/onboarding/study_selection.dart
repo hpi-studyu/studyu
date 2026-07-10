@@ -197,11 +197,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           if (context.canPop()) {
             context.pop();
           } else {
-            context.goNamed(
-              Supabase.instance.client.auth.currentUser == null
-                  ? RouteNames.welcome
-                  : RouteNames.recoveryPhrase,
-            );
+            context.goNamed(RouteNames.welcome);
           }
         },
       ),

@@ -13,6 +13,7 @@ class AppState with ChangeNotifier {
   List<String>? preselectedInterventionIds;
   StudyNotifications? studyNotifications;
   bool isPreview = false;
+  bool showRecoveryPhraseOnDashboard = false;
   late AppAnalytics analytics;
 
   String? pendingDeepLinkStudyId;

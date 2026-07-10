@@ -66,7 +66,6 @@ DeferredLink? parseIosDeferredLinkPath(String? referralPath) {
   return null;
 }
 
-@visibleForTesting
 DeferredLink? pendingDeferredLinkFromStorageValues({
   required String? inviteCode,
   required String? studyId,

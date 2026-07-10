@@ -17,3 +17,23 @@ class DashboardShowcaseStorage {
     await SecureStorage.delete(_completedKey);
   }
 }
+
+class RecoveryPhraseStorage {
+  static const _pendingKeyPrefix = 'recovery_phrase_pending';
+
+  const RecoveryPhraseStorage._();
+
+  static String _key(String subjectId) => '${_pendingKeyPrefix}_$subjectId';
+
+  static Future<bool> isPending(String subjectId) async {
+    return await SecureStorage.readBool(_key(subjectId)) ?? false;
+  }
+
+  static Future<void> markPending(String subjectId) async {
+    await SecureStorage.write(_key(subjectId), 'true');
+  }
+
+  static Future<void> clearPending(String subjectId) async {
+    await SecureStorage.delete(_key(subjectId));
+  }
+}

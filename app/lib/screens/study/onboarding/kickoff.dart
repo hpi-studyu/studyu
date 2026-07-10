@@ -6,6 +6,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -32,6 +33,9 @@ class _KickoffScreen extends State<KickoffScreen> {
       context.read<AppState>().init(context);
       await Cache.storeSubject(context.read<AppState>().activeSubject);
       await storeActiveSubjectId(subject!.id);
+      if (!context.mounted) return;
+      context.read<AppState>().showRecoveryPhraseOnDashboard = true;
+      await RecoveryPhraseStorage.markPending(subject!.id);
       if (!context.mounted) return;
       setState(() => ready = true);
       context.go('/${RouteNames.dashboard}');

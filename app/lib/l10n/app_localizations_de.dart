@@ -1233,7 +1233,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst.\n\nTeile sie niemals mit anderen.';
+      'Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit in deinen Studieneinstellungen wieder ansehen.\n\nTeile sie niemals mit anderen.';
 
   @override
   String get recovery_phrase_save_warning => 'Teile sie niemals mit anderen.';
@@ -1250,7 +1250,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recovery_phrase_saved_confirmation =>
-      'Ich habe alle 13 Wörter an einem sicheren Ort gespeichert und kann sie abrufen, wenn ich mein Konto wiederherstellen möchte.';
+      'Ich habe alle 13 Wörter an einem sicheren Ort gespeichert und kann sie abrufen, wenn ich mein Konto wiederherstellen möchte. Ich kann sie auch jederzeit in den Studieneinstellungen einsehen.';
 
   @override
   String get continue_to_study => 'Weiter zur Studie';
