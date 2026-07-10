@@ -195,6 +195,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
+  Future<void> _markDeferredLinkProcessed() async {
+    await SecureStorage.write('has_processed_deferred_link', 'true');
+    await SecureStorage.delete('pending_deferred_link_invite');
+    await SecureStorage.delete('pending_deferred_link_study');
+  }
+
+  Future<void> _markDeferredLinkHandedOff() async {
+    await SecureStorage.write('has_processed_deferred_link', 'true');
+  }
+
   Future<void> _handleDeepLinkResult(
     DeepLinkResult result, {
     bool isDeferred = false,
@@ -212,7 +222,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         );
         state.preselectedInterventionIds = preselectedInterventionIds;
         if (isDeferred) {
-          await SecureStorage.write('has_processed_deferred_link', 'true');
+          await _markDeferredLinkHandedOff();
         }
 
         final onBoarded = await SecureStorage.readBool('onboarded') ?? false;
@@ -222,9 +232,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       case DeepLinkError(type: final errorType, :final errorValue):
         setState(() => _error = _getErrorMessage(errorType, errorValue));
         if (isDeferred) {
-          await SecureStorage.write('has_processed_deferred_link', 'true');
-          await SecureStorage.delete('pending_deferred_link_invite');
-          await SecureStorage.delete('pending_deferred_link_study');
+          await _markDeferredLinkProcessed();
         }
       case DeepLinkSuccess(
         :final study,
@@ -240,21 +248,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         final confirmed = await _confirmSwitchToDeepLinkedStudy(study);
         if (!confirmed) {
+          if (isDeferred) {
+            await _markDeferredLinkProcessed();
+          }
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
           return;
         }
 
         if (alreadyEnrolled) {
+          if (isDeferred) {
+            await _markDeferredLinkProcessed();
+          }
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
           return;
         }
 
         if (isDeferred) {
-          await SecureStorage.write('has_processed_deferred_link', 'true');
-          await SecureStorage.delete('pending_deferred_link_invite');
-          await SecureStorage.delete('pending_deferred_link_study');
+          await _markDeferredLinkProcessed();
         }
         if (!mounted) return;
         context.go('/${RouteNames.studyOverview}');
