@@ -98,6 +98,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> _handleIncomingDeepLink({
     String? studyId,
     String? inviteCode,
+    bool isDeferred = false,
   }) async {
     final state = context.read<AppState>();
 
@@ -118,7 +119,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     // 4. Handle the result (Errors will be caught here, NeedsAuth will route to onboarding)
-    await _handleDeepLinkResult(result);
+    await _handleDeepLinkResult(result, isDeferred: isDeferred);
   }
 
   @override
@@ -165,6 +166,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
         await _handleDeferredLink(deferredLink);
         return;
       }
+      final pendingLink = pendingDeferredLinkFromStorageValues(
+        inviteCode: await SecureStorage.read('pending_deferred_link_invite'),
+        studyId: await SecureStorage.read('pending_deferred_link_study'),
+      );
+      if (pendingLink != null) {
+        if (!mounted) return;
+        await _handleDeferredLink(pendingLink);
+        return;
+      }
     }
 
     await initStudy();
@@ -174,6 +184,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await _handleIncomingDeepLink(
       inviteCode: deferredLink.inviteCode,
       studyId: deferredLink.studyId,
+      isDeferred: true,
     );
   }
 
@@ -184,7 +195,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  Future<void> _handleDeepLinkResult(DeepLinkResult result) async {
+  Future<void> _handleDeepLinkResult(
+    DeepLinkResult result, {
+    bool isDeferred = false,
+  }) async {
     final state = context.read<AppState>();
     switch (result) {
       case DeepLinkNeedsAuth(
@@ -197,6 +211,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
           inviteCode: inviteCode,
         );
         state.preselectedInterventionIds = preselectedInterventionIds;
+        if (isDeferred) {
+          await SecureStorage.write('has_processed_deferred_link', 'true');
+        }
 
         final onBoarded = await SecureStorage.readBool('onboarded') ?? false;
         if (!mounted) return;
@@ -204,6 +221,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       case DeepLinkError(type: final errorType, :final errorValue):
         setState(() => _error = _getErrorMessage(errorType, errorValue));
+        if (isDeferred) {
+          await SecureStorage.write('has_processed_deferred_link', 'true');
+          await SecureStorage.delete('pending_deferred_link_invite');
+          await SecureStorage.delete('pending_deferred_link_study');
+        }
       case DeepLinkSuccess(
         :final study,
         :final inviteCode,
@@ -229,6 +251,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
           return;
         }
 
+        if (isDeferred) {
+          await SecureStorage.write('has_processed_deferred_link', 'true');
+          await SecureStorage.delete('pending_deferred_link_invite');
+          await SecureStorage.delete('pending_deferred_link_study');
+        }
         if (!mounted) return;
         context.go('/${RouteNames.studyOverview}');
     }

@@ -67,6 +67,20 @@ DeferredLink? parseIosDeferredLinkPath(String? referralPath) {
   return null;
 }
 
+@visibleForTesting
+DeferredLink? pendingDeferredLinkFromStorageValues({
+  required String? inviteCode,
+  required String? studyId,
+}) {
+  final parsedInviteCode = _sanitizeDeferredValue(inviteCode);
+  if (parsedInviteCode != null) return DeferredLink.invite(parsedInviteCode);
+
+  final parsedStudyId = _sanitizeDeferredValue(studyId);
+  if (parsedStudyId != null) return DeferredLink.study(parsedStudyId);
+
+  return null;
+}
+
 String? _extractReferrerValue(String referrer, String key) {
   try {
     final regexp = RegExp('(?:^|&)$key=([^&]+)');
@@ -126,7 +140,18 @@ class DeferredLinkService {
       }
 
       if (deferredLink != null) {
-        await SecureStorage.write('has_processed_deferred_link', 'true');
+        if (deferredLink.inviteCode != null) {
+          await SecureStorage.write(
+            'pending_deferred_link_invite',
+            deferredLink.inviteCode!,
+          );
+        }
+        if (deferredLink.studyId != null) {
+          await SecureStorage.write(
+            'pending_deferred_link_study',
+            deferredLink.studyId!,
+          );
+        }
         return deferredLink;
       }
       // Add else block for debugging empty code

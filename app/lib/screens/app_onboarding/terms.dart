@@ -38,6 +38,8 @@ class _TermsScreenState extends State<TermsScreen> {
     );
 
     state.clearPendingDeepLink();
+    await SecureStorage.delete('pending_deferred_link_invite');
+    await SecureStorage.delete('pending_deferred_link_study');
     if (!mounted) return;
 
     switch (result) {

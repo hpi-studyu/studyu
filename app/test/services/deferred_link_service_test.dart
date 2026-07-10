@@ -59,4 +59,35 @@ void main() {
       expect(link?.inviteCode, isNull);
     });
   });
+
+  group('pendingDeferredLinkFromStorageValues', () {
+    test('restores invite links before study links', () {
+      final link = pendingDeferredLinkFromStorageValues(
+        inviteCode: ' invite-123 ',
+        studyId: 'study-123',
+      );
+
+      expect(link?.inviteCode, 'invite-123');
+      expect(link?.studyId, isNull);
+    });
+
+    test('restores study links when no invite is pending', () {
+      final link = pendingDeferredLinkFromStorageValues(
+        inviteCode: null,
+        studyId: ' study-123 ',
+      );
+
+      expect(link?.studyId, 'study-123');
+      expect(link?.inviteCode, isNull);
+    });
+
+    test('ignores empty pending values', () {
+      final link = pendingDeferredLinkFromStorageValues(
+        inviteCode: ' ',
+        studyId: '',
+      );
+
+      expect(link, isNull);
+    });
+  });
 }
