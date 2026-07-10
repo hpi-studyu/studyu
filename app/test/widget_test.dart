@@ -17,6 +17,7 @@ import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
+import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase/supabase.dart';
 
@@ -104,6 +105,31 @@ void main() {
       initialRouteForMissingSubjectRoute(isPreview: true, onBoarded: true),
       '/${RouteNames.terms}',
     );
+  });
+
+  test('dashboard showcase waits until next-day study has started', () {
+    final now = DateTime(2026, 7, 10, 12);
+
+    expect(
+      isDashboardShowcaseEligible(
+        startedAt: DateTime(2026, 7, 11),
+        now: now,
+        isPreview: false,
+        checkStarted: false,
+      ),
+      isFalse,
+    );
+    expect(
+      isDashboardShowcaseEligible(
+        startedAt: DateTime(2026, 7, 10),
+        now: now,
+        isPreview: false,
+        checkStarted: false,
+      ),
+      isTrue,
+    );
+    expect(shouldMarkDashboardShowcaseCompleted(wasStarted: false), isFalse);
+    expect(shouldMarkDashboardShowcaseCompleted(wasStarted: true), isTrue);
   });
 
   test('terms continue returns to invite overview when invite is selected', () {

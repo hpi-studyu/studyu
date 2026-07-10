@@ -21,6 +21,24 @@ import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+@visibleForTesting
+bool isDashboardShowcaseEligible({
+  required DateTime? startedAt,
+  required DateTime now,
+  required bool isPreview,
+  required bool checkStarted,
+}) {
+  return !checkStarted &&
+      !isPreview &&
+      startedAt != null &&
+      !startedAt.isAfter(now);
+}
+
+@visibleForTesting
+bool shouldMarkDashboardShowcaseCompleted({required bool wasStarted}) {
+  return wasStarted;
+}
+
 class DashboardScreen extends StatefulWidget {
   final String? error;
 
@@ -53,6 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
   bool _showcaseCheckStarted = false;
+  bool _dashboardShowcaseStarted = false;
   bool _redirectingToLoading = false;
   bool _isDisposing = false;
 
@@ -407,6 +426,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     setState(() {
                       scheduleToday = subject!.scheduleFor(DateTime.now());
                     });
+                    unawaited(_startDashboardShowcaseIfNeeded());
                   } on SocketException catch (_) {}
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
@@ -482,10 +502,14 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _startDashboardShowcaseIfNeeded() async {
-    if (_showcaseCheckStarted || context.read<AppState>().isPreview) return;
-
-    // ponytail: no TaskOverview targets on first-day wait screen — skip so showcase can run later
-    if (subject == null || subject!.startedAt!.isAfter(DateTime.now())) return;
+    if (!isDashboardShowcaseEligible(
+      startedAt: subject?.startedAt,
+      now: DateTime.now(),
+      isPreview: context.read<AppState>().isPreview,
+      checkStarted: _showcaseCheckStarted,
+    )) {
+      return;
+    }
 
     _showcaseCheckStarted = true;
 
@@ -502,6 +526,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         _reportShowcaseKey,
         _menuShowcaseKey,
       ], delay: const Duration(milliseconds: 300));
+      _dashboardShowcaseStarted = true;
     });
   }
 
@@ -511,7 +536,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _markDashboardShowcaseCompleted() {
-    if (_isDisposing) return;
+    if (_isDisposing ||
+        !shouldMarkDashboardShowcaseCompleted(
+          wasStarted: _dashboardShowcaseStarted,
+        )) {
+      return;
+    }
     unawaited(DashboardShowcaseStorage.markCompleted());
   }
 
