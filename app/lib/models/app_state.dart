@@ -22,6 +22,19 @@ class AppState with ChangeNotifier {
   bool get hasPendingDeepLink =>
       pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
 
+  void setPendingDeepLink({
+    required Study study,
+    String? inviteCode,
+    List<String>? preselectedInterventionIds,
+  }) {
+    pendingDeepLinkStudyId = inviteCode == null ? study.id : null;
+    pendingDeepLinkInviteCode = inviteCode;
+    selectedStudy = study;
+    this.inviteCode = inviteCode;
+    this.preselectedInterventionIds = preselectedInterventionIds;
+    notifyListeners();
+  }
+
   void clearPendingDeepLink() {
     pendingDeepLinkStudyId = null;
     pendingDeepLinkInviteCode = null;

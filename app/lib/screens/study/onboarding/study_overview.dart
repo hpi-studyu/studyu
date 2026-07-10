@@ -7,6 +7,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -68,6 +69,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (result.eligible) {
       navigateToJourney(context);
     } else {
+      await PendingDeepLinkService.clear(context.read<AppState>());
+      if (!context.mounted) return;
       context.pop();
     }
   }

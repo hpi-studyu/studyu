@@ -8,6 +8,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
@@ -38,8 +39,6 @@ class _TermsScreenState extends State<TermsScreen> {
     );
 
     state.clearPendingDeepLink();
-    await SecureStorage.delete('pending_deferred_link_invite');
-    await SecureStorage.delete('pending_deferred_link_study');
     if (!mounted) return;
 
     switch (result) {
@@ -47,30 +46,34 @@ class _TermsScreenState extends State<TermsScreen> {
         :final study,
         :final inviteCode,
         :final preselectedInterventionIds,
-        :final alreadyEnrolled,
       ):
-        if (alreadyEnrolled) {
-          context.go('/${RouteNames.dashboard}');
-        } else {
-          state.selectedStudy = study;
-          if (inviteCode != null) {
-            state.inviteCode = inviteCode;
-            state.preselectedInterventionIds = preselectedInterventionIds;
-          }
-          context.go('/${RouteNames.studyOverview}');
+        state.selectedStudy = study;
+        if (inviteCode != null) {
+          state.inviteCode = inviteCode;
+          state.preselectedInterventionIds = preselectedInterventionIds;
         }
+        context.push('/${RouteNames.studyOverview}');
       case DeepLinkError(type: final errorType, :final errorValue):
-        final l10n = AppLocalizations.of(context)!;
+        final message = getDeepLinkErrorMessage(
+          AppLocalizations.of(context)!,
+          errorType,
+          errorValue,
+        );
+        final ok = AppLocalizations.of(context)!.ok;
+        await PendingDeepLinkService.clear(state);
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(getDeepLinkErrorMessage(l10n, errorType, errorValue)),
+            content: Text(message),
             duration: const Duration(seconds: 5),
-            action: SnackBarAction(label: l10n.ok, onPressed: () {}),
+            action: SnackBarAction(label: ok, onPressed: () {}),
           ),
         );
-        context.go('/${RouteNames.studySelection}');
+        context.go('/${RouteNames.welcome}');
       case DeepLinkNeedsAuth():
-        context.go('/${RouteNames.studySelection}');
+        await PendingDeepLinkService.clear(state);
+        if (!mounted) return;
+        context.go('/${RouteNames.welcome}');
     }
   }
 

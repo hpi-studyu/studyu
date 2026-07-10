@@ -9,6 +9,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
@@ -182,7 +183,11 @@ class _ConsentScreenState extends State<ConsentScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
-        onBack: () => context.go('/${RouteNames.studySelection}'),
+        onBack: () async {
+          await PendingDeepLinkService.clear(context.read<AppState>());
+          if (!context.mounted) return;
+          context.go('/${RouteNames.studySelection}');
+        },
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode

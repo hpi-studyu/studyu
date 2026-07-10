@@ -6,6 +6,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -32,6 +33,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     if (consentGiven != null && consentGiven) {
       context.push('/${RouteNames.kickoff}');
     } else {
+      await PendingDeepLinkService.clear(context.read<AppState>());
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
