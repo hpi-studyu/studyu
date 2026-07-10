@@ -2627,6 +2627,18 @@ abstract class AppLocalizations {
     String targetStudy,
   );
 
+  /// No description provided for @deep_link_switch_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get deep_link_switch_open_settings;
+
+  /// No description provided for @deep_link_switch_continue_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Study'**
+  String get deep_link_switch_continue_study;
+
   /// No description provided for @deep_link_switch_primary_return.
   ///
   /// In en, this message translates to:

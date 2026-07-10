@@ -58,7 +58,12 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () => context.go('/${RouteNames.dashboard}'),
+        ),
+        title: Text(AppLocalizations.of(context)!.settings),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),

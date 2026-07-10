@@ -519,6 +519,8 @@
       }
     }
   },
+  "deep_link_switch_open_settings": "Open Settings",
+  "deep_link_switch_continue_study": "Continue Study",
   "deep_link_switch_primary_return": "Zur aktuellen Studie zurückkehren",
   "deep_link_switch_secondary_continue": "Aktuelle Studie verlassen und wechseln",
   "deep_link_switch_data_choice_title": "Wie möchten Sie die aktuelle Studie verlassen?",

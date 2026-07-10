@@ -1389,6 +1389,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get deep_link_switch_open_settings => 'Open Settings';
+
+  @override
+  String get deep_link_switch_continue_study => 'Continue Study';
+
+  @override
   String get deep_link_switch_primary_return =>
       'Zur aktuellen Studie zurückkehren';
 

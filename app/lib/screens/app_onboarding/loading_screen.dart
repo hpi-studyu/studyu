@@ -248,12 +248,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => context.go('/${RouteNames.dashboard}'),
-            child: Text(l10n.deep_link_switch_primary_return),
-          ),
-          TextButton(
             onPressed: () => context.go('/${RouteNames.appSettings}'),
-            child: Text(l10n.settings),
+            child: Text(l10n.deep_link_switch_open_settings),
+          ),
+          FilledButton(
+            onPressed: () => context.go('/${RouteNames.dashboard}'),
+            child: Text(l10n.deep_link_switch_continue_study),
           ),
         ],
       ),
