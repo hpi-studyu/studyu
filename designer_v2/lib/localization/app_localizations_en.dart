@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -402,7 +401,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialog_study_delete_description =>
-      'Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.';
+      'Deleting this study permanently removes the study setup and all stored study data.';
+
+  @override
+  String get dialog_study_delete_warning_intro =>
+      'Before deleting, save a backup and consider whether closing the study is enough.';
+
+  @override
+  String get dialog_study_delete_backup_step =>
+      'Save the study definition and collected data as a backup before deleting.';
+
+  @override
+  String get dialog_study_delete_close_step =>
+      'Stop new enrollments while keeping the study and existing data available.';
+
+  @override
+  String get dialog_study_delete_download_backup => 'Download backup';
+
+  @override
+  String get dialog_study_delete_data_confirmation =>
+      'I understand that the study and all associated data will be deleted forever and cannot be retrieved again.';
+
+  @override
+  String get dialog_study_delete_participant_confirmation =>
+      'I understand that current participants will not be able to continue their study and that all data from current and past participants will be deleted for them and for me.';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation =>
+      'I understand that my decision is final and irreversible and that all data is completely deleted and cannot be restored again.';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_1 =>
+      'deleted forever';
+
+  @override
+  String get dialog_study_delete_data_confirmation_emphasis_2 =>
+      'cannot be retrieved again';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_1 =>
+      'current participants will not be able to continue';
+
+  @override
+  String get dialog_study_delete_participant_confirmation_emphasis_2 =>
+      'all data from current and past participants';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_1 =>
+      'final and irreversible';
+
+  @override
+  String get dialog_study_delete_irreversible_confirmation_emphasis_2 =>
+      'cannot be restored again';
+
+  @override
+  String dialog_study_delete_type_name_instruction(Object studyName) {
+    return 'Type the study name \"$studyName\" to confirm deletion.';
+  }
+
+  @override
+  String get dialog_study_delete_type_name_label => 'Study name';
+
+  @override
+  String dialog_study_close_type_name_instruction(Object studyName) {
+    return 'Enter the title of the study \"$studyName\" to confirm that you want to close it:';
+  }
+
+  @override
+  String get dialog_study_close_type_name_label =>
+      'Title of the study to close';
+
+  @override
+  String get dialog_study_close_irreversible_confirmation =>
+      'I understand that closing participation is final and cannot be reversed.';
+
+  @override
+  String get dialog_study_delete_close_instead => 'Review closing instead';
+
+  @override
+  String get dialog_study_title_mismatch => 'Study title does not match';
 
   @override
   String dialog_delete_title(Object subject) {
@@ -1812,6 +1889,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_study_test_open_new_tab => 'Open in new tab';
 
   @override
+  String get preview_overlay_health_checking_title =>
+      'Checking app availability';
+
+  @override
+  String get preview_overlay_connecting_title => 'Connecting to app preview';
+
+  @override
+  String get preview_overlay_loading_title => 'Loading app preview';
+
+  @override
+  String preview_overlay_health_checking_description_local(String url) {
+    return 'Checking whether the StudyU app is running at $url.';
+  }
+
+  @override
+  String preview_overlay_health_checking_description_remote(String url) {
+    return 'Checking whether the participant app is reachable at $url.';
+  }
+
+  @override
+  String get preview_overlay_connecting_description_local =>
+      'The local StudyU app is reachable. Establishing the connection now.';
+
+  @override
+  String get preview_overlay_connecting_description_remote =>
+      'The participant app is reachable. Establishing the connection now.';
+
+  @override
+  String get preview_overlay_loading_description_local =>
+      'The app preview is connected. The app is now loading inside the phone frame.';
+
+  @override
+  String get preview_overlay_loading_description_remote =>
+      'The app preview is connected. The participant app is now loading.';
+
+  @override
+  String get preview_overlay_local_unavailable_title =>
+      'Local app preview unavailable';
+
+  @override
+  String get preview_overlay_remote_unavailable_title =>
+      'App under maintenance';
+
+  @override
+  String get preview_overlay_local_unavailable_message =>
+      'The local StudyU app could not be reached.';
+
+  @override
+  String get preview_overlay_remote_unavailable_message =>
+      'The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.';
+
+  @override
+  String get preview_overlay_could_not_load =>
+      'The StudyU app preview could not be loaded.';
+
+  @override
+  String get preview_overlay_preview_not_opened =>
+      'The StudyU app preview could not be opened right now.';
+
+  @override
   String get banner_study_test_unavailable =>
       'The test mode is unavailable until you update the following information:';
 
@@ -1928,11 +2065,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_section_title => 'Invite codes';
 
   @override
-  String get code_public_disabled => 'Invite codes disabled';
+  String get code_public_disabled => 'Public Recruitment';
 
   @override
   String get code_public_disabled_description =>
-      'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.';
+      'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.';
 
   @override
   String get code_list_empty_title => 'You haven\'t invited anyone yet';
@@ -2091,6 +2228,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A survey is completed, if all of its tasks have been completed for that day';
 
   @override
+  String get banner_text_study_recruit_draft =>
+      'Because this study has not been launched yet, the links on this page will not work yet.';
+
+  @override
   String get banner_text_study_analyze_draft =>
       'Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.';
 
@@ -2245,6 +2386,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_clipboard => 'Copy to clipboard';
+
+  @override
+  String get action_qr_code_show => 'Show QR code';
+
+  @override
+  String get action_qr_code_download => 'Download QR code';
+
+  @override
+  String get action_share => 'Share';
+
+  @override
+  String get action_copy_link => 'Copy link';
 
   @override
   String get action_reportPrimary => 'Set as primary report';

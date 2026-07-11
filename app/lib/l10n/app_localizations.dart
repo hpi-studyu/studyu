@@ -206,6 +206,12 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get get_started;
 
+  /// No description provided for @show_onboarding_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show onboarding again'**
+  String get show_onboarding_again;
+
   /// No description provided for @onboarding_page0_title.
   ///
   /// In en, this message translates to:
@@ -323,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_selection_hidden_studies.
   ///
   /// In en, this message translates to:
-  /// **'Some studies couldn\'t be shown, because your app version is outdated. Please update your app to see all available studies.'**
+  /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
 
   /// No description provided for @study_overview_title.
@@ -2311,6 +2317,315 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @go_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get go_back;
+
+  /// No description provided for @deep_link_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get deep_link_error_title;
+
+  /// No description provided for @deep_link_study_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Study with ID {studyId} not found or not available'**
+  String deep_link_study_not_found(String studyId);
+
+  /// No description provided for @deep_link_study_invite_only.
+  ///
+  /// In en, this message translates to:
+  /// **'This study requires an invite code to join'**
+  String get deep_link_study_invite_only;
+
+  /// No description provided for @deep_link_invite_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired invite code: {code}'**
+  String deep_link_invite_invalid(String code);
+
+  /// No description provided for @deep_link_error_invalid_invite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid invite code'**
+  String get deep_link_error_invalid_invite;
+
+  /// No description provided for @deep_link_switch_warning_title.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already in a study'**
+  String get deep_link_switch_warning_title;
+
+  /// No description provided for @deep_link_switch_warning_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently enrolled in:\n{currentStudy}\n\nThe deep link points to:\n{targetStudy}\n\nYou can return to your current study (recommended) or continue to leave it and switch.'**
+  String deep_link_switch_warning_description(
+    String currentStudy,
+    String targetStudy,
+  );
+
+  /// No description provided for @deep_link_switch_primary_return.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to current study'**
+  String get deep_link_switch_primary_return;
+
+  /// No description provided for @deep_link_switch_secondary_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave current study and switch'**
+  String get deep_link_switch_secondary_continue;
+
+  /// No description provided for @deep_link_switch_data_choice_title.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to leave your current study?'**
+  String get deep_link_switch_data_choice_title;
+
+  /// No description provided for @deep_link_switch_data_choice_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what should happen to your current study data before switching.'**
+  String get deep_link_switch_data_choice_description;
+
+  /// No description provided for @deep_link_switch_soft_delete_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft delete and switch'**
+  String get deep_link_switch_soft_delete_button;
+
+  /// No description provided for @deep_link_switch_hard_delete_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard delete and switch'**
+  String get deep_link_switch_hard_delete_button;
+
+  /// No description provided for @deep_link_switch_confirm_soft_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm soft delete'**
+  String get deep_link_switch_confirm_soft_title;
+
+  /// No description provided for @deep_link_switch_confirm_soft_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm soft delete'**
+  String get deep_link_switch_confirm_soft_button;
+
+  /// No description provided for @deep_link_switch_confirm_hard_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm hard delete'**
+  String get deep_link_switch_confirm_hard_title;
+
+  /// No description provided for @deep_link_switch_confirm_hard_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently and irreversibly delete all your data.'**
+  String get deep_link_switch_confirm_hard_description;
+
+  /// No description provided for @deep_link_switch_confirm_hard_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm hard delete'**
+  String get deep_link_switch_confirm_hard_button;
+
+  /// No description provided for @open_link_on_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Please open this link on your mobile device.'**
+  String get open_link_on_mobile;
+
+  /// No description provided for @you_have_been_invited.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been invited to a study!'**
+  String get you_have_been_invited;
+
+  /// No description provided for @download_app_join.
+  ///
+  /// In en, this message translates to:
+  /// **'Download the StudyU App & Join'**
+  String get download_app_join;
+
+  /// No description provided for @deleted_study_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study unavailable'**
+  String get deleted_study_error_title;
+
+  /// No description provided for @deleted_study_error_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.'**
+  String get deleted_study_error_description;
+
+  /// No description provided for @dashboard_showcase_progress_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Study progress'**
+  String get dashboard_showcase_progress_title;
+
+  /// No description provided for @dashboard_showcase_progress_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This shows where you are in the study and how much is left.'**
+  String get dashboard_showcase_progress_description;
+
+  /// No description provided for @dashboard_showcase_current_intervention_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Current intervention'**
+  String get dashboard_showcase_current_intervention_title;
+
+  /// No description provided for @dashboard_showcase_current_intervention_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can see your current intervention and how many days remain in this phase.'**
+  String get dashboard_showcase_current_intervention_description;
+
+  /// No description provided for @dashboard_showcase_today_tasks_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s tasks'**
+  String get dashboard_showcase_today_tasks_title;
+
+  /// No description provided for @dashboard_showcase_today_tasks_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can find the tasks you need to complete today as part of the study.'**
+  String get dashboard_showcase_today_tasks_description;
+
+  /// No description provided for @dashboard_showcase_contact_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get dashboard_showcase_contact_title;
+
+  /// No description provided for @dashboard_showcase_contact_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this if you need help from the study team.'**
+  String get dashboard_showcase_contact_description;
+
+  /// No description provided for @dashboard_showcase_report_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get dashboard_showcase_report_title;
+
+  /// No description provided for @dashboard_showcase_report_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your current report when results are available.'**
+  String get dashboard_showcase_report_description;
+
+  /// No description provided for @dashboard_showcase_menu_title.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dashboard_showcase_menu_title;
+
+  /// No description provided for @dashboard_showcase_menu_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Find settings, FAQs, report history, and more here.'**
+  String get dashboard_showcase_menu_description;
+
+  /// No description provided for @dashboard_showcase_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get dashboard_showcase_finish;
+
+  /// No description provided for @support_email_subject_loading_error.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Support Request - Loading Error'**
+  String get support_email_subject_loading_error;
+
+  /// No description provided for @support_email_subject_deleted_study.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Support Request - Study Unavailable'**
+  String get support_email_subject_deleted_study;
+
+  /// Body of the support email for deleted study errors, includes the Subject ID
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.'**
+  String deleted_study_support_email_body(String subjectId);
+
+  /// No description provided for @show_dashboard_showcase_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show dashboard tour again'**
+  String get show_dashboard_showcase_again;
+
+  /// No description provided for @free_text_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your answer'**
+  String get free_text_hint;
+
+  /// No description provided for @preview_failed_to_initialize.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview failed to initialize.'**
+  String get preview_failed_to_initialize;
+
+  /// No description provided for @preview_overlay_reset_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened right now. Please try resetting the preview.'**
+  String get preview_overlay_reset_hint;
+
+  /// No description provided for @preview_overlay_study_not_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview could not be opened for this study yet. Please try resetting the preview.'**
+  String get preview_overlay_study_not_ready;
+
+  /// No description provided for @preview_overlay_route_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The preview route could not be opened right now.'**
+  String get preview_overlay_route_open_failed;
+
+  /// No description provided for @continue_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_label;
+
+  /// No description provided for @restored_answer_needs_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review this restored answer.'**
+  String get restored_answer_needs_review;
+
+  /// No description provided for @mark_answer_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as reviewed'**
+  String get mark_answer_reviewed;
+
+  /// No description provided for @no_internet_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please try again when online.'**
+  String get no_internet_connection;
+
+  /// No description provided for @error_occurred_with_message.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred: {message}'**
+  String error_occurred_with_message(String message);
 
   /// No description provided for @date_picker_hint.
   ///

@@ -5,6 +5,8 @@ import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 typedef ModelActionHandler = FutureOr<void> Function();
+typedef ModelActionConfirmationDialogBuilder =
+    Widget Function(BuildContext dialogContext, ModelAction action);
 
 class ModelActionConfirmation {
   const ModelActionConfirmation({
@@ -13,6 +15,8 @@ class ModelActionConfirmation {
     this.confirmLabel,
     this.cancelLabel,
     this.icon,
+    this.customContent,
+    this.dialogBuilder,
   });
 
   final String title;
@@ -20,6 +24,8 @@ class ModelActionConfirmation {
   final String? confirmLabel;
   final String? cancelLabel;
   final IconData? icon;
+  final Widget? customContent;
+  final ModelActionConfirmationDialogBuilder? dialogBuilder;
 }
 
 class ModelActionConfirmations {
@@ -56,6 +62,7 @@ class ModelAction<T> {
   IconData? icon;
   final String? tooltip;
   final ModelActionHandler onExecute;
+  final dynamic Function(BuildContext context)? onExecuteWithContext;
   final ModelActionConfirmation? confirmation;
   final bool isHeader;
   final bool isSeparator;
@@ -68,9 +75,10 @@ class ModelAction<T> {
     required this.type,
     required this.label,
     required this.onExecute,
+    this.onExecuteWithContext,
     this.confirmation,
     this.isSeparator = false,
-    this.isHeader = false, // Added default
+    this.isHeader = false,
     this.isAvailable = true,
     this.isDestructive = false,
     this.icon,
@@ -99,28 +107,42 @@ class ModelAction<T> {
 
   Future<void> execute(BuildContext context) async {
     if (confirmation != null) {
+      if (!context.mounted) return;
       final confirmed = await showDialog<bool>(
         context: context,
-        builder: (dialogContext) => StandardConfirmationDialog(
-          title: confirmation!.title,
-          message: confirmation!.message,
-          icon: confirmation!.icon,
-          actions: [
-            ConfirmationDialogAction(
-              label: confirmation!.cancelLabel ?? tr.dialog_cancel,
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-            ),
-            ConfirmationDialogAction(
-              label: confirmation!.confirmLabel ?? label,
-              isDestructive: isDestructive,
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-            ),
-          ],
-        ),
+        builder: (dialogContext) {
+          final dialogBuilder = confirmation!.dialogBuilder;
+          if (dialogBuilder != null) {
+            return dialogBuilder(dialogContext, this);
+          }
+
+          return StandardConfirmationDialog(
+            title: confirmation!.title,
+            message: confirmation!.message,
+            customContent: confirmation!.customContent,
+            icon: confirmation!.icon,
+            actions: [
+              ConfirmationDialogAction(
+                label: confirmation!.cancelLabel ?? tr.dialog_cancel,
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+              ConfirmationDialogAction(
+                label: confirmation!.confirmLabel ?? label,
+                isDestructive: isDestructive,
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+            ],
+          );
+        },
       );
       if (confirmed != true) {
         return;
       }
+    }
+
+    if (onExecuteWithContext != null) {
+      await Future.sync(() => onExecuteWithContext!(context));
+      return;
     }
 
     await Future.sync(onExecute);
@@ -142,6 +164,9 @@ enum ModelActionType {
   remove, // same semantics as delete
   duplicate,
   clipboard,
+  share,
+  qrCodeShow,
+  qrCodeDownload,
   primary, // ReportSection
 }
 
@@ -159,6 +184,12 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.action_duplicate;
       case ModelActionType.clipboard:
         return tr.action_clipboard;
+      case ModelActionType.share:
+        return tr.action_share;
+      case ModelActionType.qrCodeShow:
+        return tr.action_qr_code_show;
+      case ModelActionType.qrCodeDownload:
+        return tr.action_qr_code_download;
       case ModelActionType.primary:
         return tr.action_reportPrimary;
     }
@@ -171,6 +202,9 @@ Map<ModelActionType, IconData> modelActionIcons = {
   ModelActionType.remove: Icons.close_rounded,
   ModelActionType.duplicate: Icons.file_copy_rounded,
   ModelActionType.clipboard: Icons.copy_rounded,
+  ModelActionType.share: Icons.ios_share_rounded,
+  ModelActionType.qrCodeShow: Icons.qr_code_rounded,
+  ModelActionType.qrCodeDownload: Icons.download_rounded,
   ModelActionType.primary: Icons.arrow_circle_up_rounded,
 };
 

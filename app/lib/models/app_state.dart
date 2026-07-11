@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -13,7 +12,18 @@ class AppState with ChangeNotifier {
   List<String>? preselectedInterventionIds;
   StudyNotifications? studyNotifications;
   bool isPreview = false;
-  late AppAnalytics analytics;
+
+  String? pendingDeepLinkStudyId;
+  String? pendingDeepLinkInviteCode;
+
+  bool get hasPendingDeepLink =>
+      pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
+
+  void clearPendingDeepLink() {
+    pendingDeepLinkStudyId = null;
+    pendingDeepLinkInviteCode = null;
+    notifyListeners();
+  }
 
   /// Flag indicating whether the participant's progress should be tracked
   ///
@@ -26,7 +36,6 @@ class AppState with ChangeNotifier {
 
   void init(BuildContext context) {
     scheduleNotifications(context);
-    analytics.initAdvanced();
     initCache();
   }
 

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:js_interop' as js;
 import 'dart:js_interop_unsafe';
 import 'dart:ui_web' as ui;
@@ -5,6 +6,7 @@ import 'dart:ui_web' as ui;
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:web/web.dart' as web;
 
 /// Style element ID for the preview iframe styles
@@ -79,9 +81,15 @@ class RouteInformation {
 abstract class PlatformController {
   final String studyId;
   final String baseSrc;
+  final ValueNotifier<bool> navigationEnabled = ValueNotifier(false);
   late String previewSrc;
   late RouteInformation routeInformation;
   late Widget frameWidget;
+  VoidCallback? onLoadStarted;
+  VoidCallback? onConnected;
+  VoidCallback? onLoading;
+  VoidCallback? onReady;
+  ValueChanged<String>? onError;
 
   PlatformController(this.baseSrc, this.studyId);
 
@@ -98,6 +106,7 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
+  bool _isListening = false;
 
   WebController(super.baseSrc, super.studyId) {
     super.frameWidget = Container();
@@ -108,7 +117,6 @@ class WebController extends PlatformController {
   void activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    // debugLog("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -126,6 +134,14 @@ class WebController extends PlatformController {
       // z-index: 0 keeps iframe interactive while below Flutter overlays
       ..style.zIndex = '0';
 
+    iFrameElement.onLoad.listen((_) {
+      onConnected?.call();
+    });
+
+    iFrameElement.onError.listen((_) {
+      onError?.call(tr.preview_overlay_could_not_load);
+    });
+
     ui.platformViewRegistry.registerViewFactory(
       '$studyId$key',
       (int viewId) => iFrameElement
@@ -139,6 +155,8 @@ class WebController extends PlatformController {
 
   @override
   void generateUrl({String? route, String? extra, String? cmd, String? data}) {
+    onLoadStarted?.call();
+    navigationEnabled.value = false;
     routeInformation = RouteInformation(route, extra, cmd, data);
     if (baseSrc == '') {
       previewSrc = '';
@@ -161,19 +179,24 @@ class WebController extends PlatformController {
 
   @override
   void navigate({String? route, String? extra, String? cmd, String? data}) {
-    generateUrl(route: route, extra: extra, cmd: cmd, data: data);
+    if (navigationEnabled.value && cmd == null) {
+      routeInformation = RouteInformation(route, extra, cmd, data);
+      send(
+        jsonEncode({
+          'type': 'previewNavigate',
+          if (route != null) 'route': route,
+          if (extra != null) 'extra': extra,
+          if (data != null) 'data': data,
+        }),
+      );
+      navigationEnabled.value = false;
+      return;
+    }
 
-    //html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
-    //if (frame != null) {
-    // iFrameElement = frame;
+    generateUrl(route: route, extra: extra, cmd: cmd, data: data);
     if (iFrameElement.src != previewSrc) {
-      // debugLog("*********NAVIGATE TO: $previewSrc");
       iFrameElement.src = previewSrc;
-      //iFrameElement.src = newPrev;
-    } /* else {
-       print("Same link detected");
-      } */
-    // }
+    }
   }
 
   @override
@@ -202,20 +225,53 @@ class WebController extends PlatformController {
 
   @override
   void listen() {
+    if (_isListening) return;
+    _isListening = true;
     web.window.onMessage.listen((event) {
-      final data = event.data;
-      if (data == 'routeFinished'.toJS) {
+      final data = event.data.dartify();
+      if (data is String) {
+        try {
+          final parsed = jsonDecode(data);
+          if (parsed is Map<String, dynamic> &&
+              parsed['type'] == 'previewStatus') {
+            final status = parsed['status'] as String?;
+            switch (status) {
+              case 'loading':
+                onLoading?.call();
+                return;
+              case 'loaded':
+                navigationEnabled.value = true;
+                onReady?.call();
+                return;
+              case 'error':
+                navigationEnabled.value = false;
+                onError?.call(tr.preview_overlay_preview_not_opened);
+                return;
+            }
+          }
+        } catch (_) {
+          // Fall through to legacy string handling.
+        }
+      }
+      if (data == 'previewConnected') {
+        onConnected?.call();
+        return;
+      }
+      if (data == 'previewReady') {
+        navigationEnabled.value = true;
+        onReady?.call();
+        return;
+      }
+      if (data == 'routeFinished') {
+        navigationEnabled.value = true;
+        onReady?.call();
         // debugLog("Preview route finished");
-        refresh();
       }
     });
   }
 
   @override
   void send(String message) {
-    // debugLog("Send updated study to client");
-    // Send to all windows for debugging
-    // iFrameElement.contentWindow?.postMessage(message, '*');
     iFrameElement.contentWindow?.postMessage(
       message.toJS,
       (env.appUrl ?? '').toJS,

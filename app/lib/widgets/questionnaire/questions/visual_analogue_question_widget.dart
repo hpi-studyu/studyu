@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -68,19 +67,13 @@ class _VisualAnalogueQuestionWidgetState
         Slider(
           value: value,
           onChanged: changed,
+          onChangeEnd: (val) =>
+              widget.onDone!(widget.question.constructAnswer(val)),
           min: widget.question.minimum,
           max: widget.question.maximum,
           divisions:
               (widget.question.maximum - widget.question.minimum) ~/
               widget.question.step,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () =>
-                widget.onDone!(widget.question.constructAnswer(value)),
-            child: Text(AppLocalizations.of(context)!.done),
-          ),
         ),
       ],
     );

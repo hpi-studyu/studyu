@@ -18,6 +18,7 @@
   "description_part8": "But bear in mind that results are more reliable the longer you take actively part in the study. And in order to prevent systematic error you cannot go on with the study after unlocking results. Therefore, with the help of a progress bar we will indicate you how many tasks are still needed for the minimum and how much you could improve your results with going on for some more weeks.",
   "description_part9": "But enough from our side, now it's time for StudyU!",
   "get_started": "Get started",
+  "show_onboarding_again": "Show onboarding again",
   "onboarding_page0_title": "Welcome to StudyU",
   "onboarding_page0_subtitle": "Your journey to better health starts here. Let's see how it works! Tap 'Next' to continue.",
   "onboarding_page1_title": "What works for YOU?",
@@ -423,6 +424,96 @@
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
   "submit": "Submit",
+  "go_back": "Go back",
+  "deep_link_error_title": "Error",
+  "deep_link_study_not_found": "Study with ID {studyId} not found or not available",
+  "@deep_link_study_not_found": {
+    "placeholders": {
+      "studyId": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_study_invite_only": "This study requires an invite code to join",
+  "deep_link_invite_invalid": "Invalid or expired invite code: {code}",
+  "@deep_link_invite_invalid": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_error_invalid_invite": "Invalid invite code",
+  "deep_link_switch_warning_title": "You are already in a study",
+  "deep_link_switch_warning_description": "You are currently enrolled in:\n{currentStudy}\n\nThe deep link points to:\n{targetStudy}\n\nYou can return to your current study (recommended) or continue to leave it and switch.",
+  "@deep_link_switch_warning_description": {
+    "placeholders": {
+      "currentStudy": {
+        "type": "String"
+      },
+      "targetStudy": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_switch_primary_return": "Return to current study",
+  "deep_link_switch_secondary_continue": "Leave current study and switch",
+  "deep_link_switch_data_choice_title": "How do you want to leave your current study?",
+  "deep_link_switch_data_choice_description": "Choose what should happen to your current study data before switching.",
+  "deep_link_switch_soft_delete_button": "Soft delete and switch",
+  "deep_link_switch_hard_delete_button": "Hard delete and switch",
+  "deep_link_switch_confirm_soft_title": "Confirm soft delete",
+  "deep_link_switch_confirm_soft_button": "Confirm soft delete",
+  "deep_link_switch_confirm_hard_title": "Confirm hard delete",
+  "deep_link_switch_confirm_hard_description": "This will permanently and irreversibly delete all your data.",
+  "deep_link_switch_confirm_hard_button": "Confirm hard delete",
+  "open_link_on_mobile": "Please open this link on your mobile device.",
+  "you_have_been_invited": "You have been invited to a study!",
+  "download_app_join": "Download the StudyU App & Join",
+  "deleted_study_error_title": "Study unavailable",
+  "deleted_study_error_description": "This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use 'Delete all data' if they tell you to reset the app.",
+  "dashboard_showcase_progress_title": "Study progress",
+  "dashboard_showcase_progress_description": "This shows where you are in the study and how much is left.",
+  "dashboard_showcase_current_intervention_title": "Current intervention",
+  "dashboard_showcase_current_intervention_description": "Here you can see your current intervention and how many days remain in this phase.",
+  "dashboard_showcase_today_tasks_title": "Today's tasks",
+  "dashboard_showcase_today_tasks_description": "Here you can find the tasks you need to complete today as part of the study.",
+  "dashboard_showcase_contact_title": "Contact",
+  "dashboard_showcase_contact_description": "Use this if you need help from the study team.",
+  "dashboard_showcase_report_title": "Report",
+  "dashboard_showcase_report_description": "Open your current report when results are available.",
+  "dashboard_showcase_menu_title": "More options",
+  "dashboard_showcase_menu_description": "Find settings, FAQs, report history, and more here.",
+  "dashboard_showcase_finish": "Finish",
+  "support_email_subject_loading_error": "StudyU Support Request - Loading Error",
+  "support_email_subject_deleted_study": "StudyU Support Request - Study Unavailable",
+  "deleted_study_support_email_body": "Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.",
+  "@deleted_study_support_email_body": {
+    "description": "Body of the support email for deleted study errors, includes the Subject ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
+  "show_dashboard_showcase_again": "Show dashboard tour again",
+  "free_text_hint": "Enter your answer",
+  "preview_failed_to_initialize": "Preview failed to initialize.",
+  "preview_overlay_reset_hint": "The preview could not be opened right now. Please try resetting the preview.",
+  "preview_overlay_study_not_ready": "The preview could not be opened for this study yet. Please try resetting the preview.",
+  "preview_overlay_route_open_failed": "The preview route could not be opened right now.",
+  "continue_label": "Continue",
+  "restored_answer_needs_review": "Please review this restored answer.",
+  "mark_answer_reviewed": "Mark as reviewed",
+  "no_internet_connection": "No internet connection. Please try again when online.",
+  "error_occurred_with_message": "An error occurred: {message}",
+  "@error_occurred_with_message": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
   "date_picker_hint": "Select a date",
   "time_picker_hint": "Select a time",
   "date_picker_button_label": "Choose date",

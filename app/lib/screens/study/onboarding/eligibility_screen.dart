@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -121,11 +122,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }*/
 
   void _finish() {
-    Navigator.pop(context, activeResult);
+    context.pop(activeResult);
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-    key: const ValueKey('eligibility_pass_banner'),
     leading: const Icon(
       MdiIcons.checkboxMarkedCircle,
       color: Colors.green,
@@ -141,7 +141,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   );
 
   Widget _constructFailBanner() => MaterialBanner(
-    key: const ValueKey('eligibility_fail_banner'),
     leading: const Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +163,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     ),
     actions: [
       TextButton(
-        key: const ValueKey('eligibility_back'),
         onPressed: _finish,
         child: Text(AppLocalizations.of(context)!.eligible_back),
       ),
@@ -180,7 +178,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      key: const ValueKey('eligibility_screen'),
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
@@ -208,7 +205,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         ],
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        nextButtonKey: const ValueKey('eligibility_continue'),
         onNext: activeResult?.eligible ?? false ? _finish : null,
         progress: const OnboardingProgress(stage: 0, progress: 0.5),
       ),
