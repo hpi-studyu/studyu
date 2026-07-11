@@ -74,7 +74,7 @@ Changes to the models in the `core` package requires to perform a re-generation
 of the JSON IO code. The toolchain we use for this consists of [build_runner](https://pub.dev/packages/build_runner)
 and [json_serializable](https://pub.dev/packages/json_serializable).
 
-After you made changes to the models, update the generated IO code by running `melos run generate`.
+After you made changes to the models, update the generated IO code by running `melos generate`.
 
 Contrary to most recommendations, we commit those generated files (`*.g.dart`) to Git. This
 is needed, because `core` is a dependency of the StudyU App and the StudyU Designer
@@ -83,8 +83,18 @@ and dependencies need to have all files generated, when being imported.
 ## Code Style
 
 We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
-guidelines for Dart and Flutter. Run `fvm exec melos run qualitycheck` to
+guidelines for Dart and Flutter. Run `fvm exec melos qualitycheck` to
 format, analyze, and regenerate code.
+
+### Optional RTK output filtering
+
+This repository includes `.rtk/filters.toml` for [RTK](https://github.com/rtk-ai/rtk), a CLI proxy that compresses noisy command output. RTK is optional; without it, run the documented commands normally.
+
+If RTK is installed, prefix Flutter, Dart, FVM, or Melos commands with `rtk` for shorter output:
+
+```bash
+rtk fvm exec melos qualitycheck
+```
 
 ## Frontend
 
@@ -126,7 +136,7 @@ Every pull request should include the following:
 
 ### PR Checklist
 
-- [ ] `fvm exec melos run qualitycheck` passes
+- [ ] `fvm exec melos qualitycheck` passes
 - [ ] Screenshot or video of the changes attached
 - [ ] Description links related issues
 
