@@ -115,11 +115,13 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   /// Debounced search - triggers after user stops typing
   void _onSearchChanged(String value, TemplateViewModel templateViewModel) {
     templateViewModel.setSearchQuery(value);
+    if (!mounted) return;
     setState(() {});
 
     _debounceTimer?.cancel();
 
     if (value.trim().isEmpty) {
+      if (!mounted) return;
       setState(() {
         _combinedResults = [];
         _hasSearched = false;
@@ -138,6 +140,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     templateViewModel.setSearchQuery(query);
 
     if (query.isEmpty) {
+      if (!mounted) return;
       setState(() {
         _combinedResults = [];
         _hasSearched = false;
@@ -153,6 +156,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     _offSearched = false;
     _usdaSearched = false;
 
+    if (!mounted) return;
     setState(() {
       _isInitialLoading = true;
       _hasSearched = true;
@@ -165,6 +169,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       _searchUsda(query, isInitial: true),
     ]);
 
+    if (!mounted) return;
     setState(() {
       _isInitialLoading = false;
     });
@@ -177,6 +182,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final query = _searchController.text.trim();
     if (query.isEmpty) return;
 
+    if (!mounted) return;
     setState(() {
       _isLoadingMore = true;
     });
@@ -192,6 +198,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
     await Future.wait(futures);
 
+    if (!mounted) return;
     setState(() {
       _isLoadingMore = false;
     });
@@ -226,6 +233,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
       _offSearched = true;
 
+      if (!mounted) return;
       if (searchResult.products != null && searchResult.products!.isNotEmpty) {
         final newResults = searchResult.products!.map((product) {
           final nutriments = product.nutriments;
@@ -271,6 +279,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
       _usdaSearched = true;
 
+      if (!mounted) return;
       if (searchResult.foods.isNotEmpty) {
         final newResults = searchResult.foods.map((food) {
           return UnifiedFoodResult(

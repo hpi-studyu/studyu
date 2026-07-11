@@ -7,6 +7,7 @@ import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
@@ -46,6 +47,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   DailyRecallEntryViewModel? _viewModel;
   late TextEditingController _specialOccasionController;
   VoidCallback? _viewModelListener;
+  bool _isCompleting = false;
 
   @override
   void initState() {
@@ -190,6 +192,28 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                       ),
                     ),
                   ),
+                  if (model.isInTaskMode)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: _isCompleting || !model.meetsMinimumMeals
+                              ? null
+                              : () => _completeTask(model),
+                          icon: _isCompleting
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.check),
+                          label: Text(l10n.complete),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -197,6 +221,33 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         },
       ),
     );
+  }
+
+  Future<void> _completeTask(DailyRecallEntryViewModel model) async {
+    if (_isCompleting || !model.meetsMinimumMeals) return;
+    setState(() => _isCompleting = true);
+    try {
+      await model.flushPendingAutoSave();
+      final completedRecall = model.markCompleted();
+      if (model.shouldSaveToDb && model.subject != null) {
+        await model.subject!.upsertNutritionResult(
+          taskId: widget.task!.id,
+          periodId: widget.completionPeriod!.id,
+          recall: completedRecall,
+        );
+      }
+      if (mounted) Navigator.of(context).pop(completedRecall);
+    } catch (error) {
+      if (mounted) {
+        setState(() => _isCompleting = false);
+        StudyULogger.error('Failed to save nutrition results: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.could_not_save_results),
+          ),
+        );
+      }
+    }
   }
 
   PreferredSizeWidget _buildAppBar(

@@ -16,8 +16,10 @@ class PhotoGalleryService {
   Future<bool> hasPermission() async {
     // On Android, check the specific permission based on API level
     if (Platform.isAndroid) {
-      final status = await Permission.photos.status;
-      return status.isGranted || status.isLimited;
+      final photosStatus = await Permission.photos.status;
+      if (photosStatus.isGranted || photosStatus.isLimited) return true;
+      final storageStatus = await Permission.storage.status;
+      return storageStatus.isGranted || storageStatus.isLimited;
     }
     // On iOS, use PhotoManager's check
     final state = await PhotoManager.getPermissionState(
@@ -30,8 +32,10 @@ class PhotoGalleryService {
   Future<bool> requestPermission() async {
     // On Android, request the specific permission
     if (Platform.isAndroid) {
-      final status = await Permission.photos.request();
-      return status.isGranted || status.isLimited;
+      final photosStatus = await Permission.photos.request();
+      if (photosStatus.isGranted || photosStatus.isLimited) return true;
+      final storageStatus = await Permission.storage.request();
+      return storageStatus.isGranted || storageStatus.isLimited;
     }
     // On iOS, use PhotoManager's request
     final state = await PhotoManager.requestPermissionExtend();

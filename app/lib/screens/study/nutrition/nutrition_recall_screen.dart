@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -19,7 +20,7 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
     final result = await Navigator.of(
       context,
     ).push(NutritionTaskWidget.route());
-    if (result != null) {
+    if (result != null && mounted) {
       setState(() {
         dailyRecalls.add(result);
       });
@@ -35,9 +36,10 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Nutrition Diary')),
+      appBar: AppBar(title: Text(l10n.daily_food_diary)),
       body: dailyRecalls.isEmpty
           ? Center(
               child: Column(
@@ -50,14 +52,11 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No dietary recalls recorded yet',
+                    l10n.no_meals_recorded,
                     style: theme.textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    'Tap the + button to start recording',
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(l10n.add_meal, style: theme.textTheme.bodyMedium),
                 ],
               ),
             )
@@ -74,7 +73,7 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
                     title: Text(
                       '${recall.date.day}/${recall.date.month}/${recall.date.year}',
                     ),
-                    subtitle: Text('${recall.meals.length} meals recorded'),
+                    subtitle: Text(l10n.meals_count(recall.meals.length)),
                     trailing: Icon(
                       recall.entryCompletedAt != null
                           ? Icons.check_circle

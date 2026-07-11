@@ -17,6 +17,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   DateTime? lastSaveTime;
 
   Timer? _autoSaveTimer;
+  Future<void>? _autoSaveFuture;
   int? _studyDaySnapshot;
   String? _interventionId;
   String? _periodId;
@@ -118,6 +119,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
       recall = _copyWithRecall(
         isUsualIntakeDay: isUsual,
         specialOccasion: specialOccasion,
+        clearSpecialOccasion: specialOccasion == null,
       );
       notifyListeners();
       _scheduleAutoSave('usual day toggled');
@@ -126,7 +128,10 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   void updateSpecialOccasion(String? occasion) {
     if (occasion != recall.specialOccasion) {
-      recall = _copyWithRecall(specialOccasion: occasion);
+      recall = _copyWithRecall(
+        specialOccasion: occasion,
+        clearSpecialOccasion: occasion == null,
+      );
       // Note: TextField controller text isn't reset here to prevent cursor jumps
       _scheduleAutoSave('special occasion changed');
     }
@@ -154,21 +159,54 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   DailyRecall _copyWithRecall({
     bool? isUsualIntakeDay,
     String? specialOccasion,
+    bool clearSpecialOccasion = false,
     DateTime? entryCompletedAt,
+    bool clearEntryCompletedAt = false,
     DateTime? lastAutoSavedAt,
   }) {
     return DailyRecall(
       id: recall.id,
       date: recall.date,
       isUsualIntakeDay: isUsualIntakeDay ?? recall.isUsualIntakeDay,
-      specialOccasion: specialOccasion ?? recall.specialOccasion,
+      specialOccasion: clearSpecialOccasion
+          ? null
+          : specialOccasion ?? recall.specialOccasion,
       recallMode: recall.recallMode,
       entryStartedAt: recall.entryStartedAt,
-      entryCompletedAt: entryCompletedAt ?? recall.entryCompletedAt,
+      entryCompletedAt: clearEntryCompletedAt
+          ? null
+          : entryCompletedAt ?? recall.entryCompletedAt,
       meals: recall.meals,
       studyDaySnapshot: _studyDaySnapshot ?? recall.studyDaySnapshot,
       lastAutoSavedAt: lastAutoSavedAt ?? recall.lastAutoSavedAt,
     );
+  }
+
+  DailyRecall markCompleted() {
+    final completedAt = DateTime.now();
+    recall = _copyWithRecall(entryCompletedAt: completedAt);
+    notifyListeners();
+    return recall;
+  }
+
+  /// Cancels a scheduled auto-save and waits for an already-running save.
+  ///
+  /// Completion must be persisted after any older auto-save so that an
+  /// incomplete snapshot cannot overwrite the completed recall.
+  Future<void> flushPendingAutoSave() async {
+    _autoSaveTimer?.cancel();
+    _autoSaveTimer = null;
+
+    final pendingSave = _autoSaveFuture;
+    if (pendingSave == null) return;
+
+    try {
+      await pendingSave;
+    } catch (error, stackTrace) {
+      StudyULogger.warning(
+        '[DailyRecallVM] Pending auto-save failed before completion: $error\n$stackTrace',
+      );
+    }
   }
 
   void _scheduleAutoSave([String reason = 'unspecified']) {
@@ -181,7 +219,8 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
     _autoSaveTimer?.cancel();
     _autoSaveTimer = Timer(NutritionRecallAutoSaveManager.debounceDuration, () {
-      _performAutoSave();
+      _autoSaveTimer = null;
+      _autoSaveFuture = _performAutoSave();
     });
   }
 
@@ -226,8 +265,9 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
         'recallMode=${recall.recallMode} lastAutoSavedAt=${recall.lastAutoSavedAt}',
       );
 
+      final recallToSave = recall;
       await _autoSaveManager.saveRecall(
-        recall: recall,
+        recall: recallToSave,
         subjectId: subject!.id,
         taskId: task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
         interventionId:
@@ -241,7 +281,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
         await subject!.upsertNutritionResult(
           taskId: task!.id,
           periodId: completionPeriod!.id,
-          recall: recall,
+          recall: recallToSave,
         );
       }
 

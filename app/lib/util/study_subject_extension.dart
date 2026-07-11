@@ -29,16 +29,17 @@ extension StudySubjectExtension on StudySubject {
         recall.lastAutoSavedAt ??
         DateTime.now();
 
-    if (recall.studyDaySnapshot != null) {
-      final snapshotDate = startedAt!.add(
-        Duration(days: recall.studyDaySnapshot!),
-      );
-      interventionId =
-          getInterventionForDate(snapshotDate)?.id ??
-          getInterventionForDate(DateTime.now())!.id;
-    } else {
-      interventionId = getInterventionForDate(DateTime.now())!.id;
+    final baseDate = startedAt;
+    final snapshotDate = baseDate != null && recall.studyDaySnapshot != null
+        ? baseDate.add(Duration(days: recall.studyDaySnapshot!))
+        : null;
+    final intervention =
+        (snapshotDate == null ? null : getInterventionForDate(snapshotDate)) ??
+        getInterventionForDate(DateTime.now());
+    if (intervention == null) {
+      throw StateError('No intervention found for nutrition recall');
     }
+    interventionId = intervention.id;
 
     // Find existing progress for this task on the same study day
     final existingIndex = progress.indexWhere(
@@ -57,22 +58,13 @@ extension StudySubjectExtension on StudySubject {
       'meals=${recall.meals.length} progressLen=${progress.length}',
     );
 
-    final progressToSave =
-        existingIndex >= 0
-              ? (progress[existingIndex]
-                  ..interventionId = interventionId
-                  ..taskId = taskId
-                  ..result = resultObject
-                  ..resultType = resultObject.type
-                  ..completedAt = existingCompletedAt ?? completionDate.toUtc())
-              : SubjectProgress(
-                  subjectId: id,
-                  interventionId: interventionId,
-                  taskId: taskId,
-                  result: resultObject,
-                  resultType: resultObject.type,
-                )
-          ..completedAt = (existingCompletedAt ?? completionDate).toUtc();
+    final progressToSave = SubjectProgress(
+      subjectId: id,
+      interventionId: interventionId,
+      taskId: taskId,
+      result: resultObject,
+      resultType: resultObject.type,
+    )..completedAt = (existingCompletedAt ?? completionDate).toUtc();
 
     try {
       final saved = await progressToSave.save();
@@ -95,7 +87,9 @@ extension StudySubjectExtension on StudySubject {
   bool _isSameStudyDay(SubjectProgress p, DailyRecall recall) {
     if (p.resultType != 'DailyRecall') return false;
     try {
-      final existingRecall = p.result.result as DailyRecall;
+      final existingResult = p.result.result;
+      if (existingResult is! DailyRecall) return false;
+      final existingRecall = existingResult;
       var match = existingRecall.studyDaySnapshot == recall.studyDaySnapshot;
 
       // Fallback: older rows may not have studyDaySnapshot set; compare by calculated study day.
@@ -173,18 +167,22 @@ extension StudySubjectExtension on StudySubject {
     String interventionId;
     DateTime completionDate;
 
-    if (result is DailyRecall && result.studyDaySnapshot != null) {
-      final snapshotDate = startedAt!.add(
-        Duration(days: result.studyDaySnapshot!),
-      );
-      interventionId =
-          getInterventionForDate(snapshotDate)?.id ??
-          getInterventionForDate(DateTime.now())!.id;
-      completionDate = result.entryCompletedAt ?? DateTime.now();
-    } else {
-      interventionId = getInterventionForDate(DateTime.now())!.id;
-      completionDate = DateTime.now();
+    final snapshotDate =
+        startedAt != null &&
+            result is DailyRecall &&
+            result.studyDaySnapshot != null
+        ? startedAt!.add(Duration(days: result.studyDaySnapshot!))
+        : null;
+    final intervention =
+        (snapshotDate == null ? null : getInterventionForDate(snapshotDate)) ??
+        getInterventionForDate(DateTime.now());
+    if (intervention == null) {
+      throw StateError('No intervention found for result');
     }
+    interventionId = intervention.id;
+    completionDate = result is DailyRecall
+        ? result.entryCompletedAt ?? DateTime.now()
+        : DateTime.now();
 
     SubjectProgress p = SubjectProgress(
       subjectId: id,
