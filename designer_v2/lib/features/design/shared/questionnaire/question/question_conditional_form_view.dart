@@ -408,9 +408,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           keyboardType: conditionVm.selectedComparatorUsesNumericThreshold
               ? TextInputType.number
               : TextInputType.text,
-          inputFormatters: conditionVm.selectedComparatorUsesNumericThreshold
-              ? [FilteringTextInputFormatter.digitsOnly]
-              : null,
+          inputFormatters: freeTextThresholdInputFormatters(conditionVm),
           decoration: InputDecoration(
             labelText: tr.form_array_question_visibility_logic_value_title,
             border: const OutlineInputBorder(),
@@ -446,4 +444,20 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       currentQuestionId: formViewModel.currentQuestionId,
     );
   }
+}
+
+List<TextInputFormatter>? freeTextThresholdInputFormatters(
+  ConditionRowFormViewModel conditionVm,
+) {
+  if (!conditionVm.selectedComparatorUsesNumericThreshold) {
+    return null;
+  }
+
+  return [
+    FilteringTextInputFormatter.allow(
+      conditionVm.selectedQuestionAllowsSignedNumericThreshold
+          ? RegExp(r'^-?\d*\.?\d*')
+          : RegExp(r'^\d*'),
+    ),
+  ];
 }

@@ -262,6 +262,12 @@ class ConditionRowFormViewModel
     };
   }
 
+  bool get selectedQuestionAllowsSignedNumericThreshold {
+    final question = selectedQuestion;
+    return question is FreeTextQuestion &&
+        question.textType == FreeTextQuestionType.numeric;
+  }
+
   // --- Get available values for a 'choice' question ---
   List<FormControlOption<dynamic>> get availableChoiceValues {
     if (selectedQuestion?.type == ChoiceQuestion.questionType) {
