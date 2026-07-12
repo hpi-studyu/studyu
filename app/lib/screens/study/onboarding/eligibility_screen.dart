@@ -8,8 +8,6 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_core/core.dart';
 
-const _eligibilityDebugLogPrefix = 'EligibilityDebug';
-
 class EligibilityResult {
   final bool eligible;
   final QuestionnaireState answers;
@@ -60,26 +58,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
 
     final criteria = widget.study!.eligibilityCriteria;
-    debugPrint(
-      '$_eligibilityDebugLogPrefix checkContinuation '
-      'criteria=${criteria.length} answers=${_debugAnswerSnapshot(qs)}',
-    );
     final EligibilityCriterion? failingResult = criteria.firstWhereOrNull((
       element,
     ) {
-      final result = element.condition.evaluate(qs);
-      debugPrint(
-        '$_eligibilityDebugLogPrefix criterion '
-        'id=${element.id} result=$result '
-        'condition=${element.condition.toJson()}',
-      );
-      return result == false;
+      return element.isViolated(qs);
     });
-    debugPrint(
-      '$_eligibilityDebugLogPrefix checkContinuation '
-      'shouldContinue=${failingResult == null} '
-      'failingCriterion=${failingResult?.id}',
-    );
     if (failingResult == null) return true;
     // freetext quickfix start
     // failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
@@ -100,10 +83,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       return;
     }
     final criteria = widget.study!.eligibilityCriteria;
-    debugPrint(
-      '$_eligibilityDebugLogPrefix evaluateResponse '
-      'criteria=${criteria.length} answers=${_debugAnswerSnapshot(qs)}',
-    );
     setState(() {
       final firstFailed = criteria.firstWhereOrNull((criterion) {
         // freetext quickfix start
@@ -112,13 +91,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           return false;
         }*/
         // freetext quickfix end
-        final result = criterion.condition.evaluate(qs);
-        debugPrint(
-          '$_eligibilityDebugLogPrefix finalCriterion '
-          'id=${criterion.id} result=$result '
-          'condition=${criterion.condition.toJson()}',
-        );
-        return result == false;
+        return !criterion.isSatisfied(qs);
       });
       final isEligible = firstFailed == null;
       if (isEligible) {
@@ -131,12 +104,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         );
       }
     });
-  }
-
-  Map<String, Object?> _debugAnswerSnapshot(QuestionnaireState state) {
-    return state.answers.map(
-      (questionId, answer) => MapEntry(questionId, answer.response),
-    );
   }
 
   // todo quickfix until other question types are implemented (see DesignerV2's QuestionFormData)
