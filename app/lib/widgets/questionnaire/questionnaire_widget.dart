@@ -47,12 +47,16 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
   final List<GlobalKey> questionKeys = <GlobalKey>[];
   final _scrollController = ScrollController();
+  final _completeButtonFocusNode = FocusNode(
+    debugLabel: 'questionnaire_complete',
+  );
   bool _isProgrammaticScroll = false;
 
   // Stable keys reused across rebuilds to preserve widget state.
   final Map<String, GlobalKey> _containerKeys = {};
   final Map<String, GlobalKey<FreeTextQuestionWidgetState>> _freeTextKeys = {};
   final Set<String> _shownReviewErrors = {};
+  final Set<String> _reviewedAnswerIds = {};
 
   QuestionnaireState? validateSyncAndBuildPayload() {
     final containersAtClick = List<QuestionContainer>.of(shownQuestions);
@@ -218,7 +222,10 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _onQuestionCleared(String questionId) {
     _controller.removeAnswer(questionId);
-    setState(() => _rebuildShownQuestionsFromController(revealNext: false));
+    setState(() {
+      _reviewedAnswerIds.remove(questionId);
+      _rebuildShownQuestionsFromController(revealNext: false);
+    });
     _finishQuestionnaire(null);
   }
 
@@ -316,6 +323,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int _) {
+    _reviewedAnswerIds.remove(answer.question);
     if (kDebugMode) {
       debugPrint(
         "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
@@ -411,6 +419,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _completeButtonFocusNode.dispose();
     _controller.removeListener(_onControllerChanged);
     _controller.dispose();
     super.dispose();
@@ -467,7 +476,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                       children: [
                         question,
                         if (_controller.needsReview(question.question.id))
-                          _buildReviewRequiredBanner(question.question.id),
+                          _buildReviewRequiredNotice(question.question.id)
+                        else if (_reviewedAnswerIds.contains(
+                          question.question.id,
+                        ))
+                          _buildAnswerReviewedNotice(),
                       ],
                     ),
                   ),
@@ -484,56 +497,104 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     );
   }
 
-  Widget _buildReviewRequiredBanner(String questionId) {
-    final l10n = AppLocalizations.of(context)!;
-    final showError = _shownReviewErrors.contains(questionId);
+  void _markAnswerReviewed(String questionId) {
+    _controller.markReviewed(questionId);
+    setState(() {
+      _shownReviewErrors.remove(questionId);
+      _reviewedAnswerIds.add(questionId);
+    });
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Card(
-        color: showError ? Colors.red.shade50 : Colors.amber.shade50,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    showError ? Icons.error_outline : Icons.info_outline,
-                    color: showError
-                        ? Colors.red.shade700
-                        : const Color(0xFF92400E),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      l10n.restored_answer_needs_review,
-                      style: TextStyle(
-                        color: showError
-                            ? Colors.red.shade900
-                            : const Color(0xFF92400E),
-                        fontWeight: FontWeight.w600,
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _controller.visibleAnswersNeedReview()) return;
+      if (_completeButtonFocusNode.context != null) {
+        _completeButtonFocusNode.requestFocus();
+      }
+    });
+  }
+
+  Widget _buildReviewRequiredNotice(String questionId) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.amber.shade50,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(Icons.restore_outlined, size: 18),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.restored_answer_needs_review,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            l10n.restored_answer_review_description,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                FilledButton.icon(
+                  onPressed: () => _markAnswerReviewed(questionId),
+                  style: FilledButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    setState(() => _shownReviewErrors.remove(questionId));
-                    _controller.markReviewed(questionId);
-                  },
                   icon: const Icon(Icons.check),
                   label: Text(l10n.mark_answer_reviewed),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnswerReviewedNotice() {
+    final l10n = AppLocalizations.of(context)!;
+    final color = Theme.of(context).colorScheme.primary;
+
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        child: Row(
+          children: [
+            Icon(Icons.check_circle_outline, size: 18, color: color),
+            const SizedBox(width: 8),
+            Text(
+              l10n.answer_reviewed,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -542,10 +603,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   Widget _buildCtaBar(QuestionnaireCtaMode mode) {
     final l10n = AppLocalizations.of(context)!;
     final isContinue = mode == QuestionnaireCtaMode.continue_;
-    final label = isContinue ? l10n.continue_label : l10n.complete;
+    final label = isContinue ? l10n.continue_label : l10n.complete_task;
     final backgroundColor = isContinue ? Colors.orange.shade700 : Colors.green;
     final isSubmitting = widget.isSubmitting;
     final needsReview = !isContinue && _controller.visibleAnswersNeedReview();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -564,24 +626,31 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                   )
                 : Icon(isContinue ? Icons.arrow_forward : Icons.check),
             label: Text(label),
+            focusNode: isContinue ? null : _completeButtonFocusNode,
             onPressed: isSubmitting || needsReview
                 ? null
                 : _handleGlobalCtaPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: backgroundColor,
               foregroundColor: Colors.white,
-              disabledBackgroundColor: backgroundColor.withValues(alpha: 0.7),
-              disabledForegroundColor: Colors.white,
+              disabledBackgroundColor: colorScheme.onSurface.withValues(
+                alpha: 0.12,
+              ),
+              disabledForegroundColor: colorScheme.onSurface.withValues(
+                alpha: 0.38,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
           ),
           if (needsReview) ...[
             const SizedBox(height: 8),
-            Text(
-              '${l10n.task_cannot_be_completed}: '
-              '${l10n.restored_answer_needs_review}',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall,
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                l10n.review_restored_answer_to_continue,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
           ],
         ],

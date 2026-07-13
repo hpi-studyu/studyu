@@ -2606,14 +2606,38 @@ abstract class AppLocalizations {
   /// No description provided for @restored_answer_needs_review.
   ///
   /// In en, this message translates to:
-  /// **'Please review this restored answer.'**
+  /// **'Restored answer requires review'**
   String get restored_answer_needs_review;
+
+  /// No description provided for @restored_answer_review_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete task becomes available after review.'**
+  String get restored_answer_review_description;
 
   /// No description provided for @mark_answer_reviewed.
   ///
   /// In en, this message translates to:
-  /// **'Mark as reviewed'**
+  /// **'I\'ve reviewed this answer'**
   String get mark_answer_reviewed;
+
+  /// No description provided for @answer_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer reviewed'**
+  String get answer_reviewed;
+
+  /// No description provided for @review_restored_answer_to_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the restored answer to continue.'**
+  String get review_restored_answer_to_continue;
+
+  /// No description provided for @complete_task.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete task'**
+  String get complete_task;
 
   /// No description provided for @no_internet_connection.
   ///

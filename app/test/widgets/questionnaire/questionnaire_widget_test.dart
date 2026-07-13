@@ -132,7 +132,7 @@ void main() {
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -144,7 +144,7 @@ void main() {
 
       _expectSelectableButtonSelected(find.text('no'));
       expect(find.text('A'), findsNothing);
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
@@ -156,7 +156,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -212,7 +212,7 @@ void main() {
       widget.onDone!(q2.constructAnswer(imageFile));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -223,7 +223,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(ImageCapturingQuestionWidget), findsNothing);
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
@@ -290,7 +290,7 @@ void main() {
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -301,7 +301,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('A'), findsNothing);
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final stoppedCompletion = snapshots.where((s) => s != null).last!;
@@ -350,7 +350,7 @@ void main() {
       await tester.tap(find.text('Confirm selection'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -366,7 +366,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -423,7 +423,7 @@ void main() {
       await tester.tap(find.text('B').last);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -434,7 +434,7 @@ void main() {
       await tester.tap(find.text('no'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
@@ -447,7 +447,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -508,7 +508,7 @@ void main() {
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final completion = snapshots.where((s) => s != null).last!;
@@ -567,7 +567,7 @@ void main() {
 
       expect(find.text('Skipped default source'), findsNothing);
       expect(find.text('Hidden by q2 default'), findsNothing);
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final completion = snapshots.where((s) => s != null).lastOrNull;
@@ -645,7 +645,7 @@ void main() {
       await tester.tap(find.text('Follow B'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final completion = snapshots.where((s) => s != null).last!;
@@ -744,7 +744,7 @@ void main() {
       await tester.tap(find.text('yes').last);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -759,7 +759,7 @@ void main() {
       expect(find.byType(QuestionContainer), findsOneWidget);
       expect(find.text('yes'), findsOneWidget);
       expect(find.text('no'), findsOneWidget);
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
@@ -772,7 +772,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final restoredCompletion = snapshots.where((s) => s != null).last!;
@@ -935,7 +935,7 @@ void main() {
     // q2 is now in the widget tree (check by choice button text, not HtmlText prompt)
     expect(find.byType(QuestionContainer), findsNWidgets(2));
     expect(find.text('A'), findsOneWidget);
-    expect(find.text('Complete'), findsNothing);
+    expect(find.text('Complete task'), findsNothing);
     expect(find.text('Continue'), findsNothing);
   });
 
@@ -977,7 +977,7 @@ void main() {
 
       expect(find.text('Submit'), findsNothing);
       expect(find.text('Continue'), findsNothing);
-      expect(find.text('Complete'), findsNothing);
+      expect(find.text('Complete task'), findsNothing);
 
       await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
@@ -986,7 +986,7 @@ void main() {
       expect(find.text('yes'), findsOneWidget);
       expect(find.text('no'), findsOneWidget);
       expect(find.text('Continue'), findsNothing);
-      expect(find.text('Complete'), findsNothing);
+      expect(find.text('Complete task'), findsNothing);
     },
   );
 
@@ -1048,13 +1048,13 @@ void main() {
       expect(find.text('no'), findsOneWidget);
       // q2 visible but unanswered, q1 already committed → CTA hidden
       expect(find.text('Continue'), findsNothing);
-      expect(find.text('Complete'), findsNothing);
+      expect(find.text('Complete task'), findsNothing);
 
       // Answer q2 → button question commits; Complete submits manually.
       await tester.tap(find.text('yes'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final completion = snapshots.where((s) => s != null).last!;
@@ -1102,7 +1102,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       // Now edit q1. Draft updated. validateSyncAndBuildPayload commits it.
@@ -1114,8 +1114,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(blockedPayload, isNull);
-      expect(find.text('Please review this restored answer.'), findsOneWidget);
-      await tester.tap(find.text('Mark as reviewed'));
+      expect(find.text('Review this answer'), findsOneWidget);
+      await tester.tap(find.text("I've reviewed this answer"));
       await tester.pumpAndSettle();
 
       final payload = questionnaireKey.currentState!
@@ -1176,7 +1176,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final validCompletion = snapshots.where((s) => s != null).last!;
@@ -1206,7 +1206,7 @@ void main() {
           .validateSyncAndBuildPayload();
       await tester.pumpAndSettle();
       expect(blockedCorrectedPayload, isNull);
-      await tester.tap(find.text('Mark as reviewed'));
+      await tester.tap(find.text("I've reviewed this answer"));
       await tester.pumpAndSettle();
 
       final correctedPayload = questionnaireKey.currentState!
@@ -1266,7 +1266,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final validCompletion = snapshots.where((s) => s != null).last!;
@@ -1294,7 +1294,7 @@ void main() {
           .validateSyncAndBuildPayload();
       await tester.pumpAndSettle();
       expect(blockedCorrectedPayload, isNull);
-      await tester.tap(find.text('Mark as reviewed'));
+      await tester.tap(find.text("I've reviewed this answer"));
       await tester.pumpAndSettle();
 
       final correctedPayload = questionnaireKey.currentState!
@@ -1370,13 +1370,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
-    expect(find.text('Complete'), findsNothing);
+    expect(find.text('Complete task'), findsNothing);
 
     await tester.tap(find.text('Done').last);
     await tester.pumpAndSettle();
-    expect(find.text('Complete'), findsOneWidget);
+    expect(find.text('Complete task'), findsOneWidget);
 
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     final validCompletion = snapshots.where((s) => s != null).last!;
@@ -1454,7 +1454,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Done').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -1480,11 +1480,11 @@ void main() {
     expect(find.text('Submit'), findsNothing);
     expect(find.text('Done'), findsOneWidget);
     expect(find.text('Continue'), findsNothing);
-    expect(find.text('Complete'), findsNothing);
+    expect(find.text('Complete task'), findsNothing);
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(find.text('Please review this restored answer.'), findsOneWidget);
-    await tester.tap(find.text('Mark as reviewed'));
+    expect(find.text('Review this answer'), findsOneWidget);
+    await tester.tap(find.text("I've reviewed this answer"));
     await tester.pumpAndSettle();
 
     final syncedPayload = _snapshot(
@@ -1555,7 +1555,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Done').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -1572,7 +1572,7 @@ void main() {
     // q1 owns an inline Done button while its draft is pending.
     expect(find.text('Done'), findsOneWidget);
     expect(find.text('Continue'), findsNothing);
-    expect(find.text('Complete'), findsNothing);
+    expect(find.text('Complete task'), findsNothing);
 
     // No auto-complete
     final completions = snapshots.where((s) => s != null).toList();
@@ -1588,8 +1588,8 @@ void main() {
     expect(find.byType(TextFormField), findsOneWidget);
 
     // CTA now Complete → press to submit
-    expect(find.text('Complete'), findsOneWidget);
-    await tester.tap(find.text('Complete'));
+    expect(find.text('Complete task'), findsOneWidget);
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     // Final completion fires (q1='hide', q2 hidden)
@@ -1660,13 +1660,13 @@ void main() {
       expect(blockedPayload, isNull);
       expect(find.text('A'), findsNothing);
       expect(find.byType(TextFormField), findsNWidgets(2));
-      expect(find.text('Complete'), findsNothing);
+      expect(find.text('Complete task'), findsNothing);
 
       await tester.enterText(find.byType(TextFormField).last, 'answered');
       await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
 
-      expect(find.text('Complete'), findsOneWidget);
+      expect(find.text('Complete task'), findsOneWidget);
       final payload = questionnaireKey.currentState!
           .validateSyncAndBuildPayload();
       expect(payload, isNotNull);
@@ -1697,13 +1697,13 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'valid');
       await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
-      expect(find.text('Complete'), findsOneWidget);
+      expect(find.text('Complete task'), findsOneWidget);
 
       await tester.enterText(find.byType(TextFormField), '');
       await tester.pumpAndSettle();
 
       expect(find.text('Done'), findsOneWidget);
-      expect(find.text('Complete'), findsNothing);
+      expect(find.text('Complete task'), findsNothing);
       expect(find.text('Please enter at least 2 characters'), findsOneWidget);
       expect(
         questionnaireKey.currentState!.validateSyncAndBuildPayload(),
@@ -1764,7 +1764,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final firstCompletion = snapshots.where((s) => s != null).last!;
@@ -1785,7 +1785,7 @@ void main() {
       // Q2 hidden
       expect(find.byType(QuestionContainer), findsOneWidget);
       expect(find.byType(TextFormField), findsNothing);
-      await tester.tap(find.text('Complete'));
+      await tester.tap(find.text('Complete task'));
       await tester.pumpAndSettle();
 
       final hiddenCompletion = snapshots.where((s) => s != null).last!;
@@ -1834,7 +1834,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     final completion = snapshots.where((s) => s != null).last;
@@ -2017,67 +2017,69 @@ void main() {
     await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(find.text('Review this answer'), findsOneWidget);
     expect(
-      find.text(
-        'The task cannot be completed: Please review this restored answer.',
-      ),
+      find.text('This response was restored. Review it before continuing.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Review the restored answer to continue.'),
       findsOneWidget,
     );
     final completeButton = tester.widget<ElevatedButton>(
-      find.widgetWithText(ElevatedButton, 'Complete'),
+      find.widgetWithText(ElevatedButton, 'Complete task'),
     );
     expect(completeButton.onPressed, isNull);
+    expect(
+      completeButton.style?.backgroundColor?.resolve({WidgetState.disabled}),
+      isNot(Colors.green),
+    );
     expect(completions.last, isNull);
 
     final completionCountBeforeBlockedSubmit = completions
         .whereType<QuestionnaireState>()
         .length;
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     expect(
       completions.whereType<QuestionnaireState>().length,
       completionCountBeforeBlockedSubmit,
     );
-    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(find.text('Review this answer'), findsOneWidget);
 
     final markReviewedButton = find.widgetWithText(
       OutlinedButton,
-      'Mark as reviewed',
+      "I've reviewed this answer",
     );
     expect(markReviewedButton, findsOneWidget);
-    expect(find.widgetWithText(TextButton, 'Mark as reviewed'), findsNothing);
     expect(
-      find.ancestor(
-        of: markReviewedButton,
-        matching: find.byWidgetPredicate(
-          (widget) =>
-              widget is Align && widget.alignment == Alignment.centerLeft,
-        ),
-      ),
-      findsOneWidget,
+      find.descendant(of: markReviewedButton, matching: find.byType(Icon)),
+      findsNothing,
+    );
+    expect(find.byIcon(Icons.info_outline), findsOneWidget);
+    expect(
+      find.widgetWithText(TextButton, "I've reviewed this answer"),
+      findsNothing,
     );
 
     await tester.tap(markReviewedButton);
     await tester.pumpAndSettle();
-    expect(find.text('Please review this restored answer.'), findsNothing);
+    expect(find.text('Review this answer'), findsNothing);
     expect(
-      find.text(
-        'The task cannot be completed: Please review this restored answer.',
-      ),
+      find.text('This response was restored. Review it before continuing.'),
       findsNothing,
     );
-    expect(
-      tester
-          .widget<ElevatedButton>(
-            find.widgetWithText(ElevatedButton, 'Complete'),
-          )
-          .onPressed,
-      isNotNull,
+    expect(find.text('Review the restored answer to continue.'), findsNothing);
+    expect(find.text('Answer reviewed'), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle_outline), findsOneWidget);
+    final enabledCompleteButton = tester.widget<ElevatedButton>(
+      find.widgetWithText(ElevatedButton, 'Complete task'),
     );
+    expect(enabledCompleteButton.onPressed, isNotNull);
+    expect(enabledCompleteButton.focusNode?.hasFocus, isTrue);
 
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     final reviewedCompletion = completions.whereType<QuestionnaireState>().last;
@@ -2126,7 +2128,7 @@ void main() {
     await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(find.text('Review this answer'), findsOneWidget);
     expect(
       completions.whereType<QuestionnaireState>().length,
       completedBeforeContextChange,
@@ -2181,7 +2183,7 @@ void main() {
     await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(find.text('Review this answer'), findsOneWidget);
     expect(
       completions.whereType<QuestionnaireState>().length,
       completedBeforeContextChange,
@@ -2225,7 +2227,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('What did you eat?'), findsNothing);
 
-    await tester.tap(find.text('Complete'));
+    await tester.tap(find.text('Complete task'));
     await tester.pumpAndSettle();
 
     final completion = completions.whereType<QuestionnaireState>().last;
