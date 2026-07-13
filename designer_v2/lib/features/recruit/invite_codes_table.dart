@@ -13,6 +13,17 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 
 typedef ParticipantCountProvider = int Function(StudyInvite invite);
 
+enum InviteCodesTableColumn {
+  rowNumber,
+  code,
+  actions,
+  enrolled,
+  createdAt,
+  updatedAt,
+  interventionA,
+  interventionB,
+}
+
 class StudyInvitesTable extends StatelessWidget {
   const StudyInvitesTable({
     required this.invites,
@@ -42,93 +53,149 @@ class StudyInvitesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StandardTable<StudyInvite>(
-      items: invites,
-      columns: [
-        StandardTableColumn(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final activeColumns = _visibleColumnsForWidth(constraints.maxWidth);
+        final columns = [
+          for (final column in activeColumns) _buildColumnDefinition(column),
+        ];
+
+        return StandardTable<StudyInvite>(
+          items: invites,
+          columns: columns,
+          headerRowBuilder: (context, tableColumns) =>
+              _buildHeaderRow(context, tableColumns, activeColumns),
+          onSelectItem: onSelect,
+          buildCellsAt: (context, item, rowIdx, states) =>
+              _buildRow(context, item, rowIdx, states, activeColumns),
+          trailingActionsAt: (item, _) => getActions(item),
+          rowSpacing: 5.0,
+          minRowHeight: 30.0,
+        );
+      },
+    );
+  }
+
+  List<InviteCodesTableColumn> _visibleColumnsForWidth(double width) {
+    final columns = [
+      InviteCodesTableColumn.rowNumber,
+      InviteCodesTableColumn.code,
+      InviteCodesTableColumn.actions,
+      InviteCodesTableColumn.enrolled,
+      InviteCodesTableColumn.createdAt,
+      InviteCodesTableColumn.updatedAt,
+      InviteCodesTableColumn.interventionA,
+      InviteCodesTableColumn.interventionB,
+    ];
+
+    if (width < 1600) {
+      columns.remove(InviteCodesTableColumn.interventionB);
+    }
+    if (width < 1400) {
+      columns.remove(InviteCodesTableColumn.updatedAt);
+    }
+    if (width < 1220) {
+      columns.remove(InviteCodesTableColumn.interventionA);
+    }
+    if (width < 980) {
+      columns.remove(InviteCodesTableColumn.createdAt);
+    }
+
+    return columns;
+  }
+
+  StandardTableColumn _buildColumnDefinition(InviteCodesTableColumn column) {
+    switch (column) {
+      case InviteCodesTableColumn.rowNumber:
+        return StandardTableColumn(
           label: '#',
           columnWidth: const FixedColumnWidth(60),
-        ),
-        StandardTableColumn(
+        );
+      case InviteCodesTableColumn.code:
+        return StandardTableColumn(
           label: tr.code_list_header_code,
           columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(200),
-            FlexColumnWidth(1.6),
+            FixedColumnWidth(180),
+            FlexColumnWidth(1.8),
           ),
           sortable: true,
-        ),
-        StandardTableColumn(
+        );
+      case InviteCodesTableColumn.actions:
+        return StandardTableColumn(
+          label: '',
+          columnWidth: const FixedColumnWidth(84),
+        );
+      case InviteCodesTableColumn.enrolled:
+        return StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
           columnWidth: const FixedColumnWidth(100),
           sortable: true,
-        ),
-        StandardTableColumn(
+        );
+      case InviteCodesTableColumn.createdAt:
+        return StandardTableColumn(
           label: tr.studies_list_header_created_at,
           columnWidth: const FixedColumnWidth(120),
           sortable: true,
-        ),
-        StandardTableColumn(
+        );
+      case InviteCodesTableColumn.updatedAt:
+        return StandardTableColumn(
           label: tr.code_list_header_updated_at,
           columnWidth: const FixedColumnWidth(120),
           sortable: true,
-        ),
-        StandardTableColumn(
+        );
+      case InviteCodesTableColumn.interventionA:
+        return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
           columnWidth: const MaxColumnWidth(
             FixedColumnWidth(150),
             FlexColumnWidth(),
           ),
-        ),
-        StandardTableColumn(
+        );
+      case InviteCodesTableColumn.interventionB:
+        return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_b,
           columnWidth: const MaxColumnWidth(
             FixedColumnWidth(150),
             FlexColumnWidth(),
           ),
-        ),
-        //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
-      ],
-      headerRowBuilder: _buildHeaderRow,
-      onSelectItem: onSelect,
-      buildCellsAt: _buildRow,
-      trailingActionsAt: (item, _) => getActions(item),
-      rowSpacing: 5.0,
-      minRowHeight: 30.0,
-    );
+        );
+    }
   }
 
   TableRow _buildHeaderRow(
     BuildContext context,
     List<StandardTableColumn> columns,
+    List<InviteCodesTableColumn> activeColumns,
   ) {
     final headerWidgets = <Widget>[
-      _buildHeaderCell(context, columns[0]),
-      _buildHeaderCell(
-        context,
-        columns[1],
-        sortTarget: InviteCodesSortColumn.code,
-      ),
-      _buildHeaderCell(
-        context,
-        columns[2],
-        sortTarget: InviteCodesSortColumn.enrolled,
-      ),
-      _buildHeaderCell(
-        context,
-        columns[3],
-        sortTarget: InviteCodesSortColumn.createdAt,
-      ),
-      _buildHeaderCell(
-        context,
-        columns[4],
-        sortTarget: InviteCodesSortColumn.updatedAt,
-      ),
-      _buildHeaderCell(context, columns[5]),
-      _buildHeaderCell(context, columns[6]),
-      _buildHeaderCell(context, columns[7]),
+      for (var i = 0; i < activeColumns.length; i++)
+        _buildHeaderCell(
+          context,
+          columns[i],
+          sortTarget: _sortTargetForColumn(activeColumns[i]),
+        ),
+      _buildHeaderCell(context, columns.last),
     ];
 
     return TableRow(children: headerWidgets);
+  }
+
+  InviteCodesSortColumn? _sortTargetForColumn(InviteCodesTableColumn column) {
+    switch (column) {
+      case InviteCodesTableColumn.code:
+        return InviteCodesSortColumn.code;
+      case InviteCodesTableColumn.enrolled:
+        return InviteCodesSortColumn.enrolled;
+      case InviteCodesTableColumn.createdAt:
+        return InviteCodesSortColumn.createdAt;
+      case InviteCodesTableColumn.updatedAt:
+        return InviteCodesSortColumn.updatedAt;
+      case InviteCodesTableColumn.rowNumber:
+      case InviteCodesTableColumn.actions:
+      case InviteCodesTableColumn.interventionA:
+      case InviteCodesTableColumn.interventionB:
+        return null;
+    }
   }
 
   Widget _buildHeaderCell(
@@ -156,6 +223,7 @@ class StudyInvitesTable extends StatelessWidget {
     StudyInvite item,
     int rowIdx,
     Set<WidgetState> states,
+    List<InviteCodesTableColumn> activeColumns,
   ) {
     final theme = Theme.of(context);
     final mutedTextStyle = ThemeConfig.bodyTextBackground(theme);
@@ -190,28 +258,36 @@ class StudyInvitesTable extends StatelessWidget {
     final createdAtText = item.createdAt?.toTimeAgoString() ?? '-';
     final updatedAtText = item.updatedAt?.toTimeAgoString() ?? '-';
 
-    return [
-      Text((firstRowNumber + rowIdx).toString(), style: mutedTextStyle),
-      SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            Text(
-              item.code,
-              style: const TextStyle(overflow: TextOverflow.ellipsis),
-              maxLines: 1,
+    Widget buildCell(InviteCodesTableColumn column) {
+      switch (column) {
+        case InviteCodesTableColumn.rowNumber:
+          return Text(
+            (firstRowNumber + rowIdx).toString(),
+            style: mutedTextStyle,
+          );
+        case InviteCodesTableColumn.code:
+          return Text(item.code, maxLines: 1, overflow: TextOverflow.ellipsis);
+        case InviteCodesTableColumn.actions:
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: ActionMenuInline(
+              actions: getInlineActions(item),
+              paddingHorizontal: 0,
             ),
-            // TODO: support inline actions in standard table widget
-            ActionMenuInline(actions: getInlineActions(item)),
-          ],
-        ),
-      ),
-      EnrolledBadge(enrolledCount: participantCount),
-      Text(createdAtText, style: mutedTextStyle),
-      Text(updatedAtText, style: mutedTextStyle),
-      buildInterventionCell(interventionA),
-      buildInterventionCell(interventionB),
-    ];
+          );
+        case InviteCodesTableColumn.enrolled:
+          return EnrolledBadge(enrolledCount: participantCount);
+        case InviteCodesTableColumn.createdAt:
+          return Text(createdAtText, style: mutedTextStyle);
+        case InviteCodesTableColumn.updatedAt:
+          return Text(updatedAtText, style: mutedTextStyle);
+        case InviteCodesTableColumn.interventionA:
+          return buildInterventionCell(interventionA);
+        case InviteCodesTableColumn.interventionB:
+          return buildInterventionCell(interventionB);
+      }
+    }
+
+    return [for (final column in activeColumns) buildCell(column)];
   }
 }
