@@ -117,7 +117,7 @@ class StudyInvitesTable extends StatelessWidget {
           label: tr.code_list_header_code,
           columnWidth: const MaxColumnWidth(
             FixedColumnWidth(140),
-            FlexColumnWidth(1.2),
+            FlexColumnWidth(),
           ),
           sortable: true,
         );
@@ -147,12 +147,12 @@ class StudyInvitesTable extends StatelessWidget {
       case InviteCodesTableColumn.interventionA:
         return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
-          columnWidth: const FixedColumnWidth(104),
+          columnWidth: const FixedColumnWidth(120),
         );
       case InviteCodesTableColumn.interventionB:
         return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_b,
-          columnWidth: const FixedColumnWidth(104),
+          columnWidth: const FixedColumnWidth(120),
         );
     }
   }
@@ -212,7 +212,7 @@ class StudyInvitesTable extends StatelessWidget {
         sortingActive: isSortingActive,
         sortAscending: effectiveAscending,
         onSort: isSortable ? () => onSortColumn(sortTarget) : null,
-        center: tableColumn == InviteCodesTableColumn.rowNumber,
+        rightAlign: tableColumn == InviteCodesTableColumn.rowNumber,
       ),
     );
   }
@@ -289,9 +289,12 @@ class StudyInvitesTable extends StatelessWidget {
     Widget buildCell(InviteCodesTableColumn column) {
       switch (column) {
         case InviteCodesTableColumn.rowNumber:
-          return Text(
-            (firstRowNumber + rowIdx).toString(),
-            style: mutedTextStyle,
+          return Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              (firstRowNumber + rowIdx).toString(),
+              style: mutedTextStyle,
+            ),
           );
         case InviteCodesTableColumn.code:
           return Text(item.code, maxLines: 1, overflow: TextOverflow.ellipsis);
