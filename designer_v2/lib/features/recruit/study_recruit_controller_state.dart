@@ -50,8 +50,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
   bool get hasComputedNextInviteCodePage =>
       inviteCodeCount > ((inviteCodePageIndex + 1) * inviteCodePageSize);
 
-  int get inviteCodeTotalPages =>
-      inviteCodeCount == 0
+  int get inviteCodeTotalPages => inviteCodeCount == 0
       ? 1
       : ((inviteCodeCount - 1) ~/ inviteCodePageSize) + 1;
 
@@ -85,8 +84,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       inviteCodeCount: inviteCodeCount ?? this.inviteCodeCount,
       hasNextInviteCodePage:
           hasNextInviteCodePage ?? this.hasNextInviteCodePage,
-      inviteCodeSortColumn:
-          inviteCodeSortColumn ?? this.inviteCodeSortColumn,
+      inviteCodeSortColumn: inviteCodeSortColumn ?? this.inviteCodeSortColumn,
       inviteCodeSortAscending:
           inviteCodeSortAscending ?? this.inviteCodeSortAscending,
     );

@@ -106,8 +106,7 @@ class StudyRecruitController extends _$StudyRecruitController
 
   Future<void> showCreatedInviteCode(StudyInvite invite) async {
     _searchDebounce?.cancel();
-    final currentInvites =
-        state.invites is AsyncData<List<StudyInvite>?>
+    final currentInvites = state.invites is AsyncData<List<StudyInvite>?>
         ? (state.invites as AsyncData<List<StudyInvite>?>).value ??
               const <StudyInvite>[]
         : const <StudyInvite>[];
@@ -120,7 +119,9 @@ class StudyRecruitController extends _$StudyRecruitController
         invite,
         ...currentInvites.where((item) => item.code != invite.code),
       ];
-      final visibleInvites = updatedInvites.take(state.inviteCodePageSize).toList();
+      final visibleInvites = updatedInvites
+          .take(state.inviteCodePageSize)
+          .toList();
       state = state.copyWith(
         invites: AsyncValue.data(visibleInvites),
         inviteCodeCount: state.inviteCodeCount + 1,

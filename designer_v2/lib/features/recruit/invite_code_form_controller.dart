@@ -173,11 +173,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     return inviteCodeRepository
         .save(buildFormData(), runOptimistically: false)
         .then((wrapped) {
-      if (updateState) {
-        finalizeInitializationBaseline();
-      }
-      return wrapped!.model;
-    });
+          if (updateState) {
+            finalizeInitializationBaseline();
+          }
+          return wrapped!.model;
+        });
   }
 }
 
