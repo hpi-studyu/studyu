@@ -7,9 +7,7 @@ import 'package:studyu_core/core.dart';
 
 Widget setup(Widget child) {
   final router = GoRouter(
-    routes: [
-      GoRoute(path: '/', builder: (context, state) => child),
-    ],
+    routes: [GoRoute(path: '/', builder: (context, state) => child)],
   );
 
   return MaterialApp.router(
