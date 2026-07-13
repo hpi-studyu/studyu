@@ -7,60 +7,63 @@ import 'package:synchronized/synchronized.dart';
 
 final storageLock = Lock();
 
-String supabaseSessionStorageKey(String? environment) {
-  if (environment == null) return supabasePersistSessionKey;
-  return '$supabasePersistSessionKey-${Uri.encodeComponent(environment)}';
+String storageKeyForEnvironment(String key, String environment) {
+  if (environment == '.env') return key;
+  return '${Uri.encodeComponent(environment)}:$key';
 }
 
 class SupabaseStorage extends LocalStorage {
-  SupabaseStorage([String? environment])
-    : _persistSessionKey = supabaseSessionStorageKey(environment);
-
-  final String _persistSessionKey;
-
   @override
   Future<void> initialize() async {}
 
   @override
   Future<bool> hasAccessToken() async {
-    return await SecureStorage.containsKey(_persistSessionKey);
+    return await SecureStorage.containsKey(supabasePersistSessionKey);
   }
 
   @override
   Future<String?> accessToken() async {
-    return await SecureStorage.read(_persistSessionKey);
+    return await SecureStorage.read(supabasePersistSessionKey);
   }
 
   @override
   Future<void> persistSession(String persistSessionString) async {
-    return await SecureStorage.write(_persistSessionKey, persistSessionString);
+    return await SecureStorage.write(
+      supabasePersistSessionKey,
+      persistSessionString,
+    );
   }
 
   @override
   Future<void> removePersistedSession() async {
-    return await SecureStorage.delete(_persistSessionKey);
+    return await SecureStorage.delete(supabasePersistSessionKey);
   }
 }
 
 class SecureStorage {
   static const storage = FlutterSecureStorage();
+  static String environment = '.env';
+
+  static String _scopedKey(String key) {
+    return storageKeyForEnvironment(key, environment);
+  }
 
   static Future<bool> containsKey(String key) async {
     return await storageLock.synchronized(() async {
-      return await storage.containsKey(key: key);
+      return await storage.containsKey(key: _scopedKey(key));
     });
   }
 
   static Future<void> write(String key, String value) async {
     return await storageLock.synchronized(() async {
-      return await storage.write(key: key, value: value);
+      return await storage.write(key: _scopedKey(key), value: value);
     });
   }
 
   static Future<String?> read(String key) async {
     return await storageLock.synchronized(() async {
       try {
-        return await storage.read(key: key);
+        return await storage.read(key: _scopedKey(key));
       } catch (e) {
         StudyULogger.error("Error reading key $key from secure storage: $e");
         if (e is PlatformException && e.code == 'BadPaddingException') {
@@ -81,7 +84,7 @@ class SecureStorage {
 
   static Future<void> delete(String key) async {
     return await storageLock.synchronized(() async {
-      return await storage.delete(key: key);
+      return await storage.delete(key: _scopedKey(key));
     });
   }
 

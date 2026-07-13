@@ -2,11 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_flutter_common/src/utils/storage.dart';
 
 void main() {
-  test('Supabase session storage is isolated by debug environment', () {
-    final developmentKey = supabaseSessionStorageKey('.env.dev');
-    final productionKey = supabaseSessionStorageKey('.env');
-
-    expect(developmentKey, isNot(productionKey));
-    expect(supabaseSessionStorageKey(null), 'SUPABASE_PERSIST_SESSION_KEY');
+  test('scopes storage outside the production environment', () {
+    expect(storageKeyForEnvironment('user_email', '.env'), 'user_email');
+    expect(
+      storageKeyForEnvironment('user_email', '.env.dev'),
+      '.env.dev:user_email',
+    );
+    expect(
+      storageKeyForEnvironment('user_email', '.env.local'),
+      '.env.local:user_email',
+    );
   });
 }

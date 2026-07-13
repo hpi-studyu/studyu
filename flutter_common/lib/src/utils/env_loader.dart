@@ -8,11 +8,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 const envsAssetPath = 'packages/studyu_flutter_common/lib/envs';
 
-// load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
-String envFilePath() {
+String envFileName() {
   const env = String.fromEnvironment('STUDYU_ENV');
-  return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
+  return env.isNotEmpty ? env : '.env';
 }
+
+// load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
+String envFilePath() => '$envsAssetPath/${envFileName()}';
 
 String? getEnv(String name, {bool optional = false}) {
   final value = dotenv.env[name];
@@ -40,6 +42,7 @@ String? getEnv(String name, {bool optional = false}) {
 
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
+  SecureStorage.environment = envFileName();
   final supabaseUrls = loadSupabaseUrls();
 
   final supabaseAnonKey = getEnv('STUDYU_SUPABASE_PUBLIC_ANON_KEY');
@@ -71,9 +74,7 @@ Future<void> loadEnv() async {
   await Supabase.initialize(
     url: workingSupabaseUrl,
     publishableKey: supabaseAnonKey,
-    authOptions: FlutterAuthClientOptions(
-      localStorage: SupabaseStorage(kDebugMode ? envFilePath() : null),
-    ),
+    authOptions: FlutterAuthClientOptions(localStorage: SupabaseStorage()),
     debug: true,
   );
 
