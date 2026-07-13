@@ -110,9 +110,8 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
       final formJson = jsonEncode(
         formViewModelCurrent.buildFormData().toJson(),
       );
-      controller.routeInformation.data = formJson;
       try {
-        controller.send(formJson);
+        controller.updateData(formJson);
       } catch (_) {
         // The preview iframe may reload while form changes are emitted.
       }
