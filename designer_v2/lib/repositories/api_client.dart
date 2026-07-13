@@ -30,11 +30,16 @@ abstract class StudyUApi {
     required int offset,
     required int limit,
     String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
     bool ascending = false,
   });
 
-  Future<int> countStudyInvites(StudyID studyId, {String? query});
+  Future<int> countStudyInvites(
+    StudyID studyId, {
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+  });
 
   Future<Study> fetchStudyFromInvite(String code);
 
@@ -282,27 +287,40 @@ class StudyUApiClient extends SupabaseClientDependant
     required int offset,
     required int limit,
     String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
     bool ascending = false,
   }) async {
     await _testDelay();
     try {
-      var request = supabaseClient
-          .from(StudyInvite.tableName)
-          .select('*,study_invite_participant_count')
-          .eq('study_id', studyId);
-      if (query != null && query.trim().isNotEmpty) {
-        request = request.ilike('code', '%${query.trim()}%');
-      }
+      final normalizedFilters = filters.normalized();
       final sortColumn = switch (sortBy) {
         InviteCodesSortColumn.code => 'code',
-        InviteCodesSortColumn.enrolled => 'study_invite_participant_count',
+        InviteCodesSortColumn.enrolled => 'enrolled',
         InviteCodesSortColumn.createdAt => 'created_at',
         InviteCodesSortColumn.updatedAt => 'updated_at',
       };
-      final data = await request
-          .order(sortColumn, ascending: ascending)
-          .range(offset, offset + limit - 1);
+      final data = await executeRpc(
+        'fetch_study_invites_filtered',
+        params: {
+          'p_study_id': studyId,
+          'p_offset': offset,
+          'p_limit': limit,
+          'p_query': _trimmedOrNull(query),
+          'p_sort_by': sortColumn,
+          'p_ascending': ascending,
+          'p_enrolled_status': _mapEnrolledFilter(normalizedFilters.enrolled),
+          'p_enrolled_min': normalizedFilters.enrolledMin,
+          'p_enrolled_max': normalizedFilters.enrolledMax,
+          'p_intervention_filter': _mapInterventionFilter(
+            normalizedFilters.intervention,
+          ),
+          'p_created_from': _dateParam(normalizedFilters.createdFrom),
+          'p_created_to': _dateParam(normalizedFilters.createdTo),
+          'p_updated_from': _dateParam(normalizedFilters.updatedFrom),
+          'p_updated_to': _dateParam(normalizedFilters.updatedTo),
+        },
+      );
       return deserializeList<StudyInvite>(data);
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(
@@ -314,17 +332,32 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<int> countStudyInvites(StudyID studyId, {String? query}) async {
+  Future<int> countStudyInvites(
+    StudyID studyId, {
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+  }) async {
     await _testDelay();
     try {
-      var request = supabaseClient
-          .from(StudyInvite.tableName)
-          .count()
-          .eq('study_id', studyId);
-      if (query != null && query.trim().isNotEmpty) {
-        request = request.ilike('code', '%${query.trim()}%');
-      }
-      return request;
+      final normalizedFilters = filters.normalized();
+      final count = await executeRpc(
+        'count_study_invites_filtered',
+        params: {
+          'p_study_id': studyId,
+          'p_query': _trimmedOrNull(query),
+          'p_enrolled_status': _mapEnrolledFilter(normalizedFilters.enrolled),
+          'p_enrolled_min': normalizedFilters.enrolledMin,
+          'p_enrolled_max': normalizedFilters.enrolledMax,
+          'p_intervention_filter': _mapInterventionFilter(
+            normalizedFilters.intervention,
+          ),
+          'p_created_from': _dateParam(normalizedFilters.createdFrom),
+          'p_created_to': _dateParam(normalizedFilters.createdTo),
+          'p_updated_from': _dateParam(normalizedFilters.updatedFrom),
+          'p_updated_to': _dateParam(normalizedFilters.updatedTo),
+        },
+      );
+      return count as int;
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(
         statusCode: error.code,
@@ -347,6 +380,35 @@ class StudyUApiClient extends SupabaseClientDependant
     } catch (e) {
       throw StudyInviteNotFoundException();
     }
+  }
+
+  String? _trimmedOrNull(String? value) {
+    final trimmed = value?.trim();
+    return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  String? _dateParam(DateTime? value) {
+    if (value == null) return null;
+    final month = value.month.toString().padLeft(2, '0');
+    final day = value.day.toString().padLeft(2, '0');
+    return '${value.year}-$month-$day';
+  }
+
+  String? _mapEnrolledFilter(InviteCodeEnrolledFilter filter) {
+    return switch (filter) {
+      InviteCodeEnrolledFilter.all => null,
+      InviteCodeEnrolledFilter.unused => 'unused',
+      InviteCodeEnrolledFilter.used => 'used',
+    };
+  }
+
+  String? _mapInterventionFilter(InviteCodeInterventionFilter filter) {
+    return switch (filter) {
+      InviteCodeInterventionFilter.all => null,
+      InviteCodeInterventionFilter.defaultAssignment => 'default',
+      InviteCodeInterventionFilter.interventionA => 'intervention_a',
+      InviteCodeInterventionFilter.interventionB => 'intervention_b',
+    };
   }
 
   @override

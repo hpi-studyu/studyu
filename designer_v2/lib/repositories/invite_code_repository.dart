@@ -29,11 +29,15 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
     required int offset,
     required int limit,
     String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
     bool ascending = false,
   });
 
-  Future<int> count({String? query});
+  Future<int> count({
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+  });
 }
 
 class InviteCodeRepository extends ModelRepository<StudyInvite>
@@ -90,6 +94,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     required int offset,
     required int limit,
     String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
     bool ascending = false,
   }) async {
@@ -98,6 +103,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       offset: offset,
       limit: limit,
       query: query,
+      filters: filters,
       sortBy: sortBy,
       ascending: ascending,
     );
@@ -109,8 +115,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   }
 
   @override
-  Future<int> count({String? query}) {
-    return apiClient.countStudyInvites(studyId, query: query);
+  Future<int> count({
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+  }) {
+    return apiClient.countStudyInvites(studyId, query: query, filters: filters);
   }
 
   @override

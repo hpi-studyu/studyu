@@ -55,6 +55,7 @@ class StudyRecruitController extends _$StudyRecruitController
 
     final query = state.inviteCodeSearchQuery.trim();
     final effectiveQuery = query.isEmpty ? null : query;
+    final filters = state.inviteCodeFilters.normalized();
     final offset = pageIndex * state.inviteCodePageSize;
 
     try {
@@ -63,10 +64,14 @@ class StudyRecruitController extends _$StudyRecruitController
           offset: offset,
           limit: state.inviteCodePageSize,
           query: effectiveQuery,
+          filters: filters,
           sortBy: state.inviteCodeSortColumn,
           ascending: state.inviteCodeSortAscending,
         ),
-        state.inviteCodeRepository.count(query: effectiveQuery),
+        state.inviteCodeRepository.count(
+          query: effectiveQuery,
+          filters: filters,
+        ),
       ]);
 
       if (token != _fetchToken) return;
@@ -104,6 +109,13 @@ class StudyRecruitController extends _$StudyRecruitController
     await loadInviteCodePage(0);
   }
 
+  Future<void> setInviteCodeFilters(InviteCodeFilters filters) async {
+    final normalized = filters.normalized();
+    if (normalized == state.inviteCodeFilters) return;
+    state = state.copyWith(inviteCodeFilters: normalized);
+    await loadInviteCodePage(0);
+  }
+
   Future<void> showCreatedInviteCode(StudyInvite invite) async {
     _searchDebounce?.cancel();
     final currentInvites = state.invites is AsyncData<List<StudyInvite>?>
@@ -113,8 +125,11 @@ class StudyRecruitController extends _$StudyRecruitController
     final query = state.inviteCodeSearchQuery.trim().toLowerCase();
     final matchesCurrentQuery =
         query.isEmpty || invite.code.toLowerCase().contains(query);
+    final canOptimisticallyInsert = state.inviteCodeFilters.isEmpty;
 
-    if (state.inviteCodePageIndex == 0 && matchesCurrentQuery) {
+    if (canOptimisticallyInsert &&
+        state.inviteCodePageIndex == 0 &&
+        matchesCurrentQuery) {
       final updatedInvites = [
         invite,
         ...currentInvites.where((item) => item.code != invite.code),
@@ -127,7 +142,7 @@ class StudyRecruitController extends _$StudyRecruitController
         inviteCodeCount: state.inviteCodeCount + 1,
         hasNextInviteCodePage: updatedInvites.length > state.inviteCodePageSize,
       );
-    } else if (query.isEmpty) {
+    } else if (query.isEmpty && canOptimisticallyInsert) {
       state = state.copyWith(inviteCodeCount: state.inviteCodeCount + 1);
     }
 

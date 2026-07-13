@@ -13,7 +13,9 @@ import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_filter_button.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
@@ -21,6 +23,7 @@ import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dar
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
@@ -71,6 +74,30 @@ class StudyRecruitScreen extends StudyPageWidget {
     return state.invites.when(
       data: (studyInvites) {
         if (studyInvites == null || studyInvites.isEmpty) {
+          final hasActiveFilters =
+              state.inviteCodeSearchQuery.trim().isNotEmpty ||
+              !state.inviteCodeFilters.isEmpty;
+          if (hasActiveFilters) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: EmptyBody(
+                icon: Icons.filter_alt_off_rounded,
+                title: 'No matching invite codes'.hardcoded,
+                description:
+                    'Try changing search or filters to see more invite codes.'
+                        .hardcoded,
+                button: SecondaryButton(
+                  text: 'Clear filters'.hardcoded,
+                  onPressed: () async {
+                    await controller.setInviteCodeSearchQuery('');
+                    await controller.setInviteCodeFilters(
+                      const InviteCodeFilters(),
+                    );
+                  },
+                ),
+              ),
+            );
+          }
           return Padding(
             padding: const EdgeInsets.only(top: 24),
             child: EmptyBody(
@@ -158,6 +185,11 @@ class StudyRecruitScreen extends StudyPageWidget {
         Container(width: 32.0),
         _newInviteCodeButton(context, ref),
         const Spacer(),
+        InviteCodeFilterButton(
+          filters: state.inviteCodeFilters,
+          onApply: controller.setInviteCodeFilters,
+        ),
+        const SizedBox(width: 12),
         SizedBox(
           width: _searchFieldWidth,
           child: Search(
