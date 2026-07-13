@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -18,6 +19,8 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     this.inviteCodeSearchQuery = '',
     this.inviteCodeCount = 0,
     this.hasNextInviteCodePage = false,
+    this.inviteCodeSortColumn = InviteCodesSortColumn.createdAt,
+    this.inviteCodeSortAscending = false,
   });
 
   /// The list of invite codes (if any) for the currently selected study
@@ -37,6 +40,10 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
   final int inviteCodeCount;
 
   final bool hasNextInviteCodePage;
+
+  final InviteCodesSortColumn inviteCodeSortColumn;
+
+  final bool inviteCodeSortAscending;
 
   bool get hasPreviousInviteCodePage => inviteCodePageIndex > 0;
 
@@ -60,6 +67,8 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     String? inviteCodeSearchQuery,
     int? inviteCodeCount,
     bool? hasNextInviteCodePage,
+    InviteCodesSortColumn? inviteCodeSortColumn,
+    bool? inviteCodeSortAscending,
   }) {
     return StudyRecruitControllerState(
       studyId: studyId,
@@ -76,6 +85,10 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       inviteCodeCount: inviteCodeCount ?? this.inviteCodeCount,
       hasNextInviteCodePage:
           hasNextInviteCodePage ?? this.hasNextInviteCodePage,
+      inviteCodeSortColumn:
+          inviteCodeSortColumn ?? this.inviteCodeSortColumn,
+      inviteCodeSortAscending:
+          inviteCodeSortAscending ?? this.inviteCodeSortAscending,
     );
   }
 
@@ -90,5 +103,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     inviteCodeSearchQuery,
     inviteCodeCount,
     hasNextInviteCodePage,
+    inviteCodeSortColumn,
+    inviteCodeSortAscending,
   ];
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -62,6 +63,8 @@ class StudyRecruitController extends _$StudyRecruitController
           offset: offset,
           limit: state.inviteCodePageSize,
           query: effectiveQuery,
+          sortBy: state.inviteCodeSortColumn,
+          ascending: state.inviteCodeSortAscending,
         ),
         state.inviteCodeRepository.count(query: effectiveQuery),
       ]);
@@ -137,6 +140,16 @@ class StudyRecruitController extends _$StudyRecruitController
   Future<void> setInviteCodePageSize(int pageSize) async {
     if (pageSize == state.inviteCodePageSize) return;
     state = state.copyWith(inviteCodePageSize: pageSize);
+    await loadInviteCodePage(0);
+  }
+
+  Future<void> setInviteCodeSorting(InviteCodesSortColumn column) async {
+    final isSameColumn = state.inviteCodeSortColumn == column;
+    final ascending = !isSameColumn || !state.inviteCodeSortAscending;
+    state = state.copyWith(
+      inviteCodeSortColumn: column,
+      inviteCodeSortAscending: ascending,
+    );
     await loadInviteCodePage(0);
   }
 

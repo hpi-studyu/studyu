@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -28,6 +29,8 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
     required int offset,
     required int limit,
     String? query,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
+    bool ascending = false,
   });
 
   Future<int> count({String? query});
@@ -87,12 +90,16 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     required int offset,
     required int limit,
     String? query,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
+    bool ascending = false,
   }) async {
     final invites = await apiClient.fetchStudyInvitesPage(
       studyId,
       offset: offset,
       limit: limit,
       query: query,
+      sortBy: sortBy,
+      ascending: ascending,
     );
     for (final invite in invites) {
       upsertLocally(invite);

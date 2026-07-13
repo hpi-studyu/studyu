@@ -4,6 +4,8 @@ import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/recruit/enrolled_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -19,6 +21,9 @@ class StudyInvitesTable extends StatelessWidget {
     required this.getActions,
     required this.getIntervention,
     required this.getParticipantCountForInvite,
+    required this.sortColumn,
+    required this.sortAscending,
+    required this.onSortColumn,
     this.firstRowNumber = 1,
     super.key,
   });
@@ -30,6 +35,9 @@ class StudyInvitesTable extends StatelessWidget {
 
   final InterventionProvider getIntervention;
   final ParticipantCountProvider getParticipantCountForInvite;
+  final InviteCodesSortColumn sortColumn;
+  final bool sortAscending;
+  final void Function(InviteCodesSortColumn column) onSortColumn;
   final int firstRowNumber;
 
   @override
@@ -47,6 +55,7 @@ class StudyInvitesTable extends StatelessWidget {
             FixedColumnWidth(200),
             FlexColumnWidth(1.6),
           ),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
@@ -55,10 +64,12 @@ class StudyInvitesTable extends StatelessWidget {
         StandardTableColumn(
           label: tr.studies_list_header_created_at,
           columnWidth: const FixedColumnWidth(120),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.code_list_header_updated_at,
           columnWidth: const FixedColumnWidth(120),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
@@ -76,11 +87,62 @@ class StudyInvitesTable extends StatelessWidget {
         ),
         //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
       ],
+      headerRowBuilder: _buildHeaderRow,
       onSelectItem: onSelect,
       buildCellsAt: _buildRow,
       trailingActionsAt: (item, _) => getActions(item),
       rowSpacing: 5.0,
       minRowHeight: 30.0,
+    );
+  }
+
+  TableRow _buildHeaderRow(
+    BuildContext context,
+    List<StandardTableColumn> columns,
+  ) {
+    final headerWidgets = <Widget>[
+      _buildHeaderCell(context, columns[0]),
+      _buildHeaderCell(
+        context,
+        columns[1],
+        sortTarget: InviteCodesSortColumn.code,
+      ),
+      _buildHeaderCell(context, columns[2]),
+      _buildHeaderCell(
+        context,
+        columns[3],
+        sortTarget: InviteCodesSortColumn.createdAt,
+      ),
+      _buildHeaderCell(
+        context,
+        columns[4],
+        sortTarget: InviteCodesSortColumn.updatedAt,
+      ),
+      _buildHeaderCell(context, columns[5]),
+      _buildHeaderCell(context, columns[6]),
+      _buildHeaderCell(context, columns[7]),
+    ];
+
+    return TableRow(children: headerWidgets);
+  }
+
+  Widget _buildHeaderCell(
+    BuildContext context,
+    StandardTableColumn column, {
+    InviteCodesSortColumn? sortTarget,
+  }) {
+    final isSortable = sortTarget != null;
+    final isSortingActive = isSortable && sortColumn == sortTarget;
+    final effectiveAscending = !isSortingActive || sortAscending;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      child: StudiesTableColumnHeader(
+        column.label,
+        sortable: isSortable,
+        sortingActive: isSortingActive,
+        sortAscending: effectiveAscending,
+        onSort: isSortable ? () => onSortColumn(sortTarget) : null,
+      ),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/domain/study_subject.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
@@ -29,6 +30,8 @@ abstract class StudyUApi {
     required int offset,
     required int limit,
     String? query,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
+    bool ascending = false,
   });
 
   Future<int> countStudyInvites(StudyID studyId, {String? query});
@@ -279,6 +282,8 @@ class StudyUApiClient extends SupabaseClientDependant
     required int offset,
     required int limit,
     String? query,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
+    bool ascending = false,
   }) async {
     await _testDelay();
     try {
@@ -289,8 +294,13 @@ class StudyUApiClient extends SupabaseClientDependant
       if (query != null && query.trim().isNotEmpty) {
         request = request.ilike('code', '%${query.trim()}%');
       }
+      final sortColumn = switch (sortBy) {
+        InviteCodesSortColumn.code => 'code',
+        InviteCodesSortColumn.createdAt => 'created_at',
+        InviteCodesSortColumn.updatedAt => 'updated_at',
+      };
       final data = await request
-          .order('created_at', ascending: false)
+          .order(sortColumn, ascending: ascending)
           .range(offset, offset + limit - 1);
       return deserializeList<StudyInvite>(data);
     } on PostgrestException catch (error) {

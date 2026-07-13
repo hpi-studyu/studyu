@@ -92,6 +92,9 @@ class StudyRecruitScreen extends StudyPageWidget {
               getIntervention: controller.getIntervention,
               getParticipantCountForInvite:
                   controller.getParticipantCountForInvite,
+              sortColumn: state.inviteCodeSortColumn,
+              sortAscending: state.inviteCodeSortAscending,
+              onSortColumn: controller.setInviteCodeSorting,
               firstRowNumber: state.inviteCodeFirstRowNumber,
             ),
             const SizedBox(height: 12),
