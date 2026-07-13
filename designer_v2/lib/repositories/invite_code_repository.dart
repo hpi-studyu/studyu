@@ -251,6 +251,7 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<StudyInvite> save(StudyInvite model) {
+    final prevInvites = [...?study.invites];
     final saveOperation = OptimisticUpdate(
       applyOptimistic: () {},
       apply: () async {

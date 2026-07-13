@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
@@ -28,6 +29,9 @@ typedef InterventionProvider = Intervention? Function(String id);
 class StudyRecruitScreen extends StudyPageWidget {
   const StudyRecruitScreen(super.studyId, {super.key});
 
+  static const _searchFieldWidth = 280.0;
+  static const _inviteCodePageSizes = [15, 25, 50, 100];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
@@ -37,38 +41,13 @@ class StudyRecruitScreen extends StudyPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) => study.participation == Participation.invite
-          ? AsyncValueWidget<List<StudyInvite>?>(
-              value: state.invites,
-              data: (studyInvites) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _inviteCodesSectionHeader(context, ref),
-                  const SizedBox(height: 24.0),
-                  StudyInvitesTable(
-                    invites: studyInvites!,
-                    onSelect: _onSelectInvite(context, ref),
-                    getActions: controller.availableActions,
-                    getInlineActions: controller.availableInlineActions,
-                    getIntervention: controller.getIntervention,
-                    getParticipantCountForInvite:
-                        controller.getParticipantCountForInvite,
-                    firstRowNumber: state.inviteCodeFirstRowNumber,
-                  ),
-                  if (studyInvites.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    _inviteCodePaginationControls(context, state, controller),
-                  ],
-                ],
-              ),
-              empty: () => Padding(
-                padding: const EdgeInsets.only(top: 24),
-                child: EmptyBody(
-                  icon: Icons.link_off_rounded,
-                  title: tr.code_list_empty_title,
-                  description: tr.code_list_empty_description,
-                  button: _newInviteCodeButton(context, ref),
-                ),
-              ),
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _inviteCodesSectionHeader(context, ref),
+                const SizedBox(height: 24.0),
+                _inviteCodesContent(context, ref, state, controller),
+              ],
             )
           : Padding(
               padding: const EdgeInsets.only(top: 24),
@@ -79,6 +58,48 @@ class StudyRecruitScreen extends StudyPageWidget {
                 button: _publicStudyActionButtons(context, ref),
               ),
             ),
+    );
+  }
+
+  Widget _inviteCodesContent(
+    BuildContext context,
+    WidgetRef ref,
+    StudyRecruitControllerState state,
+    StudyRecruitController controller,
+  ) {
+    return state.invites.when(
+      data: (studyInvites) {
+        if (studyInvites == null || studyInvites.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: EmptyBody(
+              icon: Icons.link_off_rounded,
+              title: tr.code_list_empty_title,
+              description: tr.code_list_empty_description,
+              button: _newInviteCodeButton(context, ref),
+            ),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StudyInvitesTable(
+              invites: studyInvites,
+              onSelect: _onSelectInvite(context, ref),
+              getActions: controller.availableActions,
+              getInlineActions: controller.availableInlineActions,
+              getIntervention: controller.getIntervention,
+              getParticipantCountForInvite:
+                  controller.getParticipantCountForInvite,
+              firstRowNumber: state.inviteCodeFirstRowNumber,
+            ),
+            const SizedBox(height: 12),
+            _inviteCodePaginationControls(context, state, controller),
+          ],
+        );
+      },
+      error: (error, stackTrace) => Center(child: Text(error.toString())),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -134,7 +155,7 @@ class StudyRecruitScreen extends StudyPageWidget {
         _newInviteCodeButton(context, ref),
         const Spacer(),
         SizedBox(
-          width: 280,
+          width: _searchFieldWidth,
           child: Search(
             hintText: tr.code_list_search_hint,
             initialText: state.inviteCodeSearchQuery,
@@ -169,6 +190,99 @@ class StudyRecruitScreen extends StudyPageWidget {
                 ),
               );
             },
+    );
+  }
+
+  List<Widget> _inviteCodeFormActionButtons(
+    BuildContext context,
+    WidgetRef ref,
+    InviteCodeFormViewModel formViewModel,
+  ) {
+    return [
+      DismissButton(
+        onPressed: () => formViewModel.cancel().then((_) {
+          if (context.mounted) Navigator.maybePop(context);
+        }),
+      ),
+      ReactiveFormConsumer(
+        builder: (context, form, child) {
+          return PrimaryButton(
+            text: tr.dialog_save,
+            icon: null,
+            enabled: formViewModel.isValid,
+            onPressedFuture: formViewModel.isValid
+                ? () async {
+                    await formViewModel.save();
+                    await ref
+                        .read(studyRecruitControllerProvider(studyId).notifier)
+                        .loadInviteCodePage(
+                          ref
+                              .read(studyRecruitControllerProvider(studyId))
+                              .inviteCodePageIndex,
+                        );
+                    if (context.mounted) {
+                      Navigator.maybePop(context);
+                    }
+                  }
+                : null,
+          );
+        },
+      ),
+    ];
+  }
+
+  Widget _inviteCodePaginationControls(
+    BuildContext context,
+    StudyRecruitControllerState state,
+    StudyRecruitController controller,
+  ) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          tr.code_list_active_count(state.inviteCodeCount),
+          style: theme.textTheme.bodySmall,
+        ),
+        const SizedBox(width: 16),
+        Text(tr.code_list_page_size, style: theme.textTheme.bodySmall),
+        const SizedBox(width: 8),
+        DropdownButton<int>(
+          value: state.inviteCodePageSize,
+          items: _inviteCodePageSizes
+              .map(
+                (pageSize) => DropdownMenuItem<int>(
+                  value: pageSize,
+                  child: Text(pageSize.toString()),
+                ),
+              )
+              .toList(),
+          onChanged: (pageSize) {
+            if (pageSize == null) return;
+            controller.setInviteCodePageSize(pageSize);
+          },
+        ),
+        const SizedBox(width: 16),
+        Text(
+          tr.code_list_page(state.inviteCodePageIndex + 1),
+          style: theme.textTheme.bodySmall,
+        ),
+        const SizedBox(width: 8),
+        IconButton(
+          onPressed: state.hasPreviousInviteCodePage
+              ? controller.loadPreviousInviteCodePage
+              : null,
+          icon: const Icon(Icons.chevron_left_rounded),
+          tooltip: MaterialLocalizations.of(context).previousPageTooltip,
+        ),
+        IconButton(
+          onPressed: state.hasNextInviteCodePage
+              ? controller.loadNextInviteCodePage
+              : null,
+          icon: const Icon(Icons.chevron_right_rounded),
+          tooltip: MaterialLocalizations.of(context).nextPageTooltip,
+        ),
+      ],
     );
   }
 

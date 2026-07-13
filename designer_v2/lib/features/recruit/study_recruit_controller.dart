@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -14,6 +16,8 @@ part 'study_recruit_controller.g.dart';
 @riverpod
 class StudyRecruitController extends _$StudyRecruitController
     implements IModelActionProvider<StudyInvite> {
+  static const _searchDebounceDuration = Duration(milliseconds: 300);
+
   /// [inviteCodeRepository] Reference to the repository for invite codes (resolved dynamically via Riverpod when the [state.study] becomes available)
   @override
   StudyRecruitControllerState build(StudyID studyId) {
@@ -29,26 +33,77 @@ class StudyRecruitController extends _$StudyRecruitController
     );
     ref.onDispose(() {
       print("StudyRecruitController.dispose");
+      _searchDebounce?.cancel();
     });
     Future.microtask(() => loadInviteCodePage(0));
     return state;
   }
 
-  StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
+  Timer? _searchDebounce;
+  int _fetchToken = 0;
 
-  void _subscribeInvites() {
-    print("StudyRecruitController.subscribe");
-    _invitesSubscription?.cancel();
-    _invitesSubscription = state.inviteCodeRepository.watchAll().listen((
-      wrappedModels,
-    ) {
-      print("StudyRecruitController.listenUpdate");
-      // Update the controller's state when new invites are available in the repository
-      final invites = wrappedModels.map((invite) => invite.model).toList();
-      // Sort invites alphabetically by code
-      invites.sort((a, b) => a.code.compareTo(b.code));
-      state = state.copyWith(invites: AsyncValue.data(invites));
-    }); // TODO onError
+  Future<void> loadInviteCodePage(int pageIndex) async {
+    if (pageIndex < 0) return;
+    final token = ++_fetchToken;
+    state = state.copyWith(invites: const AsyncValue.loading());
+
+    final query = state.inviteCodeSearchQuery.trim();
+    final effectiveQuery = query.isEmpty ? null : query;
+    final offset = pageIndex * state.inviteCodePageSize;
+
+    try {
+      final results = await Future.wait([
+        state.inviteCodeRepository.fetchPage(
+          offset: offset,
+          limit: state.inviteCodePageSize,
+          query: effectiveQuery,
+        ),
+        state.inviteCodeRepository.count(query: effectiveQuery),
+      ]);
+
+      if (token != _fetchToken) return;
+
+      final invites = results[0] as List<StudyInvite>;
+      final inviteCount = results[1] as int;
+      state = state.copyWith(
+        invites: AsyncValue.data(invites),
+        inviteCodePageIndex: pageIndex,
+        inviteCodeCount: inviteCount,
+        hasNextInviteCodePage: offset + invites.length < inviteCount,
+      );
+    } catch (error, stackTrace) {
+      if (token != _fetchToken) return;
+      state = state.copyWith(
+        invites: AsyncValue.error(error, stackTrace),
+        inviteCodeCount: 0,
+        hasNextInviteCodePage: false,
+      );
+    }
+  }
+
+  Future<void> setInviteCodeSearchQuery(String query) async {
+    if (query == state.inviteCodeSearchQuery) return;
+    state = state.copyWith(inviteCodeSearchQuery: query);
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(_searchDebounceDuration, () {
+      unawaited(loadInviteCodePage(0));
+    });
+  }
+
+  Future<void> setInviteCodePageSize(int pageSize) async {
+    if (pageSize == state.inviteCodePageSize) return;
+    state = state.copyWith(inviteCodePageSize: pageSize);
+    await loadInviteCodePage(0);
+  }
+
+  Future<void> loadNextInviteCodePage() async {
+    if (!state.hasNextInviteCodePage) return;
+    await loadInviteCodePage(state.inviteCodePageIndex + 1);
+  }
+
+  Future<void> loadPreviousInviteCodePage() async {
+    if (!state.hasPreviousInviteCodePage) return;
+    await loadInviteCodePage(state.inviteCodePageIndex - 1);
   }
 
   Intervention? getIntervention(String interventionId) {
@@ -66,6 +121,7 @@ class StudyRecruitController extends _$StudyRecruitController
     final actions = state.inviteCodeRepository
         .availableActions(model)
         .where((action) => action.type != ModelActionType.share)
+        .map(_withPageRefresh)
         .toList();
     return withIcons(actions, modelActionIcons);
   }
@@ -94,7 +150,7 @@ class StudyRecruitController extends _$StudyRecruitController
         action.onExecute();
         Future.delayed(
           const Duration(milliseconds: 300),
-          () => loadInviteCodePage(state.inviteCodePageIndex),
+          () => unawaited(loadInviteCodePage(state.inviteCodePageIndex)),
         );
       },
     );
