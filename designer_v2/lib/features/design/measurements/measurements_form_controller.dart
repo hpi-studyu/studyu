@@ -151,9 +151,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onNewItem() {
-    final studyId = study.id;
+    final viewModel = provide(
+      MeasurementFormRouteArgs(
+        studyId: study.id,
+        measurementId: Config.newModelId,
+      ),
+    );
     router.dispatch(
-      RoutingIntents.studyEditMeasurement(studyId, Config.newModelId),
+      RoutingIntents.studyEditMeasurement(study.id, viewModel.measurementId),
     );
   }
 
@@ -162,14 +167,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   @override
   MeasurementSurveyFormViewModel provide(MeasurementFormRouteArgs args) {
     if (args.measurementId.isNewId) {
-      // Eagerly add the managed viewmodel in case it needs to be [provide]d
-      // to a child controller
+      final existingDraft = surveyMeasurementFormViewModels.findWhere(
+        (viewModel) => viewModel.formMode == FormMode.create,
+      );
+      if (existingDraft != null) return existingDraft;
+
       final viewModel = MeasurementSurveyFormViewModel(
         study: study,
         delegate: this,
         validationSet: validationSet,
       );
-      surveyMeasurementFormViewModels.stage(viewModel);
+      surveyMeasurementFormViewModels.add(viewModel);
       return viewModel;
     }
 
@@ -189,7 +197,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     MeasurementSurveyFormViewModel formViewModel,
     FormMode formMode,
   ) {
-    return; // no-op
+    if (formMode == FormMode.create) {
+      surveyMeasurementFormViewModels.remove(formViewModel);
+    }
   }
 
   @override
