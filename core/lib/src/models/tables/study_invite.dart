@@ -17,8 +17,18 @@ class StudyInvite extends SupabaseObjectFunctions<StudyInvite> {
   String studyId;
   @JsonKey(name: 'preselected_intervention_ids')
   List<String>? preselectedInterventionIds;
+  @JsonKey(name: 'created_at', includeIfNull: false)
+  DateTime? createdAt;
+  @JsonKey(name: 'updated_at', includeIfNull: false)
+  DateTime? updatedAt;
 
-  StudyInvite(this.code, this.studyId, {this.preselectedInterventionIds});
+  StudyInvite(
+    this.code,
+    this.studyId, {
+    this.preselectedInterventionIds,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory StudyInvite.fromJson(Map<String, dynamic> json) =>
       _$StudyInviteFromJson(json);

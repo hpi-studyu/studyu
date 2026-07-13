@@ -2107,6 +2107,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get code_list_header_code => 'Code';
 
   @override
+  String get code_list_header_updated_at => 'Aktualisiert';
+
+  @override
   String get action_button_code_new => 'Neuer Code';
 
   @override

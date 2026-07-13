@@ -32,6 +32,10 @@ class SearchState extends State<Search> {
   @override
   void didUpdateWidget(Search oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.initialText != oldWidget.initialText &&
+        widget.initialText != _searchController.text) {
+      _searchController.text = widget.initialText ?? '';
+    }
   }
 
   void _onSearchPressed() {

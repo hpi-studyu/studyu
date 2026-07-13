@@ -42,10 +42,15 @@ class StudyRecruitController extends _$StudyRecruitController
   Timer? _searchDebounce;
   int _fetchToken = 0;
 
-  Future<void> loadInviteCodePage(int pageIndex) async {
+  Future<void> loadInviteCodePage(
+    int pageIndex, {
+    bool showLoading = true,
+  }) async {
     if (pageIndex < 0) return;
     final token = ++_fetchToken;
-    state = state.copyWith(invites: const AsyncValue.loading());
+    if (showLoading) {
+      state = state.copyWith(invites: const AsyncValue.loading());
+    }
 
     final query = state.inviteCodeSearchQuery.trim();
     final effectiveQuery = query.isEmpty ? null : query;
@@ -87,6 +92,45 @@ class StudyRecruitController extends _$StudyRecruitController
     _searchDebounce?.cancel();
     _searchDebounce = Timer(_searchDebounceDuration, () {
       unawaited(loadInviteCodePage(0));
+    });
+  }
+
+  Future<void> showInviteCode(String code) async {
+    _searchDebounce?.cancel();
+    state = state.copyWith(inviteCodeSearchQuery: code);
+    await loadInviteCodePage(0);
+  }
+
+  Future<void> showCreatedInviteCode(StudyInvite invite) async {
+    _searchDebounce?.cancel();
+    final currentInvites =
+        state.invites is AsyncData<List<StudyInvite>?>
+        ? (state.invites as AsyncData<List<StudyInvite>?>).value ??
+              const <StudyInvite>[]
+        : const <StudyInvite>[];
+    final query = state.inviteCodeSearchQuery.trim().toLowerCase();
+    final matchesCurrentQuery =
+        query.isEmpty || invite.code.toLowerCase().contains(query);
+
+    if (state.inviteCodePageIndex == 0 && matchesCurrentQuery) {
+      final updatedInvites = [
+        invite,
+        ...currentInvites.where((item) => item.code != invite.code),
+      ];
+      final visibleInvites = updatedInvites.take(state.inviteCodePageSize).toList();
+      state = state.copyWith(
+        invites: AsyncValue.data(visibleInvites),
+        inviteCodeCount: state.inviteCodeCount + 1,
+        hasNextInviteCodePage: updatedInvites.length > state.inviteCodePageSize,
+      );
+    } else if (query.isEmpty) {
+      state = state.copyWith(inviteCodeCount: state.inviteCodeCount + 1);
+    }
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      unawaited(
+        loadInviteCodePage(state.inviteCodePageIndex, showLoading: false),
+      );
     });
   }
 
@@ -150,7 +194,9 @@ class StudyRecruitController extends _$StudyRecruitController
         action.onExecute();
         Future.delayed(
           const Duration(milliseconds: 300),
-          () => unawaited(loadInviteCodePage(state.inviteCodePageIndex)),
+          () => unawaited(
+            loadInviteCodePage(state.inviteCodePageIndex, showLoading: false),
+          ),
         );
       },
     );

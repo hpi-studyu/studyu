@@ -799,6 +799,7 @@
   "code_list_empty_title": "You haven't invited anyone yet",
   "code_list_empty_description": "Add participants to your study via invite codes.",
   "code_list_header_code": "Code",
+  "code_list_header_updated_at": "Updated",
   "action_button_code_new": "New code",
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Participant details",

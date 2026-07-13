@@ -797,6 +797,7 @@
   "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
+  "code_list_header_updated_at": "Aktualisiert",
   "action_button_code_new": "Neuer Code",
   "notification_code_deleted": "Teilnahmecode gelöscht",
   "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",

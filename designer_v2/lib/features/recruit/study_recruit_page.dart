@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
@@ -212,14 +213,20 @@ class StudyRecruitScreen extends StudyPageWidget {
             enabled: formViewModel.isValid,
             onPressedFuture: formViewModel.isValid
                 ? () async {
-                    await formViewModel.save();
-                    await ref
-                        .read(studyRecruitControllerProvider(studyId).notifier)
-                        .loadInviteCodePage(
-                          ref
-                              .read(studyRecruitControllerProvider(studyId))
-                              .inviteCodePageIndex,
-                        );
+                    final wasCreate = formViewModel.formMode == FormMode.create;
+                    final savedInvite = await formViewModel.save();
+                    final controller = ref.read(
+                      studyRecruitControllerProvider(studyId).notifier,
+                    );
+                    if (wasCreate) {
+                      await controller.showCreatedInviteCode(savedInvite);
+                    } else {
+                      await controller.loadInviteCodePage(
+                        ref
+                            .read(studyRecruitControllerProvider(studyId))
+                            .inviteCodePageIndex,
+                      );
+                    }
                     if (context.mounted) {
                       Navigator.maybePop(context);
                     }

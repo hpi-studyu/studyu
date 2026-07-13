@@ -290,7 +290,7 @@ class StudyUApiClient extends SupabaseClientDependant
         request = request.ilike('code', '%${query.trim()}%');
       }
       final data = await request
-          .order('code')
+          .order('created_at', ascending: false)
           .range(offset, offset + limit - 1);
       return deserializeList<StudyInvite>(data);
     } on PostgrestException catch (error) {

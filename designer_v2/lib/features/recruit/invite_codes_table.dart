@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/recruit/enrolled_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
 typedef ParticipantCountProvider = int Function(StudyInvite invite);
 
@@ -50,6 +51,14 @@ class StudyInvitesTable extends StatelessWidget {
         StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
           columnWidth: const FixedColumnWidth(100),
+        ),
+        StandardTableColumn(
+          label: tr.studies_list_header_created_at,
+          columnWidth: const FixedColumnWidth(120),
+        ),
+        StandardTableColumn(
+          label: tr.code_list_header_updated_at,
+          columnWidth: const FixedColumnWidth(120),
         ),
         StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
@@ -111,6 +120,8 @@ class StudyInvitesTable extends StatelessWidget {
     }
 
     final participantCount = getParticipantCountForInvite(item);
+    final createdAtText = item.createdAt?.toTimeAgoString() ?? '-';
+    final updatedAtText = item.updatedAt?.toTimeAgoString() ?? '-';
 
     return [
       Text((firstRowNumber + rowIdx).toString(), style: mutedTextStyle),
@@ -130,6 +141,8 @@ class StudyInvitesTable extends StatelessWidget {
         ),
       ),
       EnrolledBadge(enrolledCount: participantCount),
+      Text(createdAtText, style: mutedTextStyle),
+      Text(updatedAtText, style: mutedTextStyle),
       buildInterventionCell(interventionA),
       buildInterventionCell(interventionB),
     ];
