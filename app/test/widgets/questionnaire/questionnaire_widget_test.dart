@@ -2018,6 +2018,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Please review this restored answer.'), findsOneWidget);
+    expect(
+      find.text(
+        'The task cannot be completed: Please review this restored answer.',
+      ),
+      findsOneWidget,
+    );
+    final completeButton = tester.widget<ElevatedButton>(
+      find.widgetWithText(ElevatedButton, 'Complete'),
+    );
+    expect(completeButton.onPressed, isNull);
     expect(completions.last, isNull);
 
     final completionCountBeforeBlockedSubmit = completions
@@ -2032,9 +2042,40 @@ void main() {
     );
     expect(find.text('Please review this restored answer.'), findsOneWidget);
 
-    await tester.tap(find.text('Mark as reviewed'));
+    final markReviewedButton = find.widgetWithText(
+      OutlinedButton,
+      'Mark as reviewed',
+    );
+    expect(markReviewedButton, findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Mark as reviewed'), findsNothing);
+    expect(
+      find.ancestor(
+        of: markReviewedButton,
+        matching: find.byWidgetPredicate(
+          (widget) =>
+              widget is Align && widget.alignment == Alignment.centerLeft,
+        ),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(markReviewedButton);
     await tester.pumpAndSettle();
     expect(find.text('Please review this restored answer.'), findsNothing);
+    expect(
+      find.text(
+        'The task cannot be completed: Please review this restored answer.',
+      ),
+      findsNothing,
+    );
+    expect(
+      tester
+          .widget<ElevatedButton>(
+            find.widgetWithText(ElevatedButton, 'Complete'),
+          )
+          .onPressed,
+      isNotNull,
+    );
 
     await tester.tap(find.text('Complete'));
     await tester.pumpAndSettle();

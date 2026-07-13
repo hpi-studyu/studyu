@@ -522,8 +522,8 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               ),
               const SizedBox(height: 8),
               Align(
-                alignment: Alignment.centerRight,
-                child: TextButton.icon(
+                alignment: Alignment.centerLeft,
+                child: OutlinedButton.icon(
                   onPressed: () {
                     setState(() => _shownReviewErrors.remove(questionId));
                     _controller.markReviewed(questionId);
@@ -545,31 +545,46 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     final label = isContinue ? l10n.continue_label : l10n.complete;
     final backgroundColor = isContinue ? Colors.orange.shade700 : Colors.green;
     final isSubmitting = widget.isSubmitting;
+    final needsReview = !isContinue && _controller.visibleAnswersNeedReview();
 
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Center(
-        child: ElevatedButton.icon(
-          icon: isSubmitting
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-              : Icon(isContinue ? Icons.arrow_forward : Icons.check),
-          label: Text(label),
-          onPressed: isSubmitting ? null : _handleGlobalCtaPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor,
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: backgroundColor.withValues(alpha: 0.7),
-            disabledForegroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ElevatedButton.icon(
+            icon: isSubmitting
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : Icon(isContinue ? Icons.arrow_forward : Icons.check),
+            label: Text(label),
+            onPressed: isSubmitting || needsReview
+                ? null
+                : _handleGlobalCtaPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: backgroundColor,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: backgroundColor.withValues(alpha: 0.7),
+              disabledForegroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
           ),
-        ),
+          if (needsReview) ...[
+            const SizedBox(height: 8),
+            Text(
+              '${l10n.task_cannot_be_completed}: '
+              '${l10n.restored_answer_needs_review}',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ],
       ),
     );
   }
