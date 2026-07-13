@@ -72,7 +72,7 @@ Future<void> loadEnv() async {
     url: workingSupabaseUrl,
     publishableKey: supabaseAnonKey,
     authOptions: FlutterAuthClientOptions(
-      localStorage: SupabaseStorage(workingSupabaseUrl),
+      localStorage: SupabaseStorage(kDebugMode ? workingSupabaseUrl : null),
     ),
     debug: true,
   );

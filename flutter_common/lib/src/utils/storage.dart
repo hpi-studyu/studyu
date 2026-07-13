@@ -7,13 +7,14 @@ import 'package:synchronized/synchronized.dart';
 
 final storageLock = Lock();
 
-String supabaseSessionStorageKey(String supabaseUrl) {
+String supabaseSessionStorageKey(String? supabaseUrl) {
+  if (supabaseUrl == null) return supabasePersistSessionKey;
   final authority = Uri.parse(supabaseUrl).authority;
   return '$supabasePersistSessionKey-${Uri.encodeComponent(authority)}';
 }
 
 class SupabaseStorage extends LocalStorage {
-  SupabaseStorage(String supabaseUrl)
+  SupabaseStorage([String? supabaseUrl])
     : _persistSessionKey = supabaseSessionStorageKey(supabaseUrl);
 
   final String _persistSessionKey;

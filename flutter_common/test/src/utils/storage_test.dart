@@ -13,5 +13,6 @@ void main() {
 
     expect(developmentKey, isNot(productionKey));
     expect(localKey, contains('localhost%3A54321'));
+    expect(supabaseSessionStorageKey(null), 'SUPABASE_PERSIST_SESSION_KEY');
   });
 }
