@@ -271,7 +271,7 @@ class StudyRecruitScreen extends StudyPageWidget {
         ),
         const SizedBox(width: 16),
         Text(
-          tr.code_list_page(state.inviteCodePageIndex + 1),
+          '${tr.code_list_page(state.inviteCodePageIndex + 1)} / ${state.inviteCodeTotalPages}',
           style: theme.textTheme.bodySmall,
         ),
         const SizedBox(width: 8),
@@ -283,7 +283,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           tooltip: MaterialLocalizations.of(context).previousPageTooltip,
         ),
         IconButton(
-          onPressed: state.hasNextInviteCodePage
+          onPressed: state.hasComputedNextInviteCodePage
               ? controller.loadNextInviteCodePage
               : null,
           icon: const Icon(Icons.chevron_right_rounded),

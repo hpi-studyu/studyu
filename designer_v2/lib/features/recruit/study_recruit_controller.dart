@@ -141,7 +141,7 @@ class StudyRecruitController extends _$StudyRecruitController
   }
 
   Future<void> loadNextInviteCodePage() async {
-    if (!state.hasNextInviteCodePage) return;
+    if (!state.hasComputedNextInviteCodePage) return;
     await loadInviteCodePage(state.inviteCodePageIndex + 1);
   }
 

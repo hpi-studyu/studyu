@@ -40,6 +40,14 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
 
   bool get hasPreviousInviteCodePage => inviteCodePageIndex > 0;
 
+  bool get hasComputedNextInviteCodePage =>
+      inviteCodeCount > ((inviteCodePageIndex + 1) * inviteCodePageSize);
+
+  int get inviteCodeTotalPages =>
+      inviteCodeCount == 0
+      ? 1
+      : ((inviteCodeCount - 1) ~/ inviteCodePageSize) + 1;
+
   int get inviteCodeFirstRowNumber =>
       (inviteCodePageIndex * inviteCodePageSize) + 1;
 
