@@ -115,10 +115,9 @@ void main() {
     await tester.tap(button);
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('onboarding_test_screen')),
-      findsOneWidget,
-    );
+    final onboarding = find.byKey(const ValueKey('onboarding_test_screen'));
+    expect(onboarding, findsOneWidget);
+    expect(GoRouter.of(tester.element(onboarding)).canPop(), isFalse);
   });
 
   testWidgets('terms back falls back to welcome without previous screen', (
