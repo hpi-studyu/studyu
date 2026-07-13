@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_core/core.dart';
 
 Widget setup(Widget child) {
-  return MaterialApp(
+  final router = GoRouter(
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => child),
+    ],
+  );
+
+  return MaterialApp.router(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
-    home: child,
+    routerConfig: router,
   );
 }
 
