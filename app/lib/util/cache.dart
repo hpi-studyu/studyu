@@ -165,11 +165,8 @@ class Cache {
           StudyULogger.fatal(
             "Cache synchronization found local changes that cannot be merged",
           );
-          StudyUDiagnostics.captureMessage(
+          StudyULogger.error(
             "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}",
-          );
-          StudyUDiagnostics.captureException(
-            Exception("CacheSynchronizationException"),
           );
         }
       }

@@ -9,7 +9,7 @@ workspace:
   - app
   - designer_v2
 dev_dependencies:
-  melos: ^8.0.0
+  melos: ^8.2.0
 
 melos:
   repository: https://github.com/hpi-studyu/studyu
@@ -64,13 +64,9 @@ melos:
         if command -v rtk >/dev/null 2>&1; then
           rtk_prefix="rtk "
         fi
-        melos exec -c 1 --fail-fast -- \
+        melos exec -c 1 --fail-fast --scope studyu_core --scope studyu_designer_v2 -- \
           "${rtk_prefix}dart run build_runner build"
       description: Generate files with build_runner
-      packageFilters:
-        scope:
-          - 'studyu_core'
-          - 'studyu_designer_v2'
 
     qualitycheck:
       run: |
@@ -79,16 +75,16 @@ melos:
           rtk_prefix="rtk "
         fi
         if [ "$CI" != "true" ]; then
-          fvm install
+          ${rtk_prefix}fvm install
         fi
-        melos format
-        melos generate
+        ${rtk_prefix}melos format
+        ${rtk_prefix}melos generate
         if [ "$CI" = "true" ]; then
           ${rtk_prefix}dart analyze
           ${rtk_prefix}flutter analyze
         else
-          fvm exec ${rtk_prefix}dart analyze
-          fvm exec ${rtk_prefix}flutter analyze
+          ${rtk_prefix}fvm exec dart analyze
+          ${rtk_prefix}fvm exec flutter analyze
         fi
       description: Run format, generate, and analyze checks
 

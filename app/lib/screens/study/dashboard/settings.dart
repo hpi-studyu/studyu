@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
@@ -25,13 +24,11 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Locale? _selectedValue;
-  bool? _analyticsValue;
   StudySubject? subject;
 
   @override
   void initState() {
     super.initState();
-    _analyticsValue = AppAnalytics.isUserEnabled;
     _selectedValue = context.read<AppLanguage>().appLocal;
     subject = context.read<AppState>().activeSubject;
   }
@@ -65,29 +62,6 @@ class _SettingsState extends State<Settings> {
                   _selectedValue = value;
                 });
                 context.read<AppLanguage>().changeLanguage(value);
-              },
-            ),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text('${AppLocalizations.of(context)!.allow_analytics}: '),
-            Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              showDuration: const Duration(milliseconds: 10000),
-              margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-              message: AppLocalizations.of(context)!.allow_analytics_desc,
-              child: const Icon(Icons.info),
-            ),
-            const SizedBox(width: 5),
-            Switch(
-              value: _analyticsValue!,
-              onChanged: (value) {
-                setState(() {
-                  _analyticsValue = value;
-                });
-                AppAnalytics.setEnabled(value);
               },
             ),
           ],
