@@ -144,9 +144,6 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   /// Indices to rebuild [TableRow]s for instead of using the cached version
   final Set<int> _dirtyRowIndices = {};
 
-  /// Static helper row for padding
-  late final TableRow paddingRow = _buildPaddingRow();
-
   List<T>? sortDefaultOrder;
 
   @override
@@ -188,6 +185,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     }
 
     final headerRow = _buildHeaderRow();
+    final paddingRow = _buildPaddingRow();
     final List<TableRow> tableHeaderRows = (widget.showTableHeader)
         ? [headerRow, paddingRow, paddingRow]
         : [];
@@ -289,6 +287,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
 
   List<TableRow> _tableRows(ThemeData theme) {
     final List<TableRow> rows = [];
+    final paddingRow = _buildPaddingRow();
 
     // reuse or rebuild rows if needed
     for (var rowIdx = 0; rowIdx < widget.items.length; rowIdx++) {

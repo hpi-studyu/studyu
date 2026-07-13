@@ -69,6 +69,7 @@ class StudyInvitesTable extends StatelessWidget {
           buildCellsAt: (context, item, rowIdx, states) =>
               _buildRow(context, item, rowIdx, states, activeColumns),
           trailingActionsAt: (item, _) => getActions(item),
+          cellSpacing: 6.0,
           rowSpacing: 5.0,
           minRowHeight: 30.0,
         );
@@ -88,16 +89,16 @@ class StudyInvitesTable extends StatelessWidget {
       InviteCodesTableColumn.interventionB,
     ];
 
-    if (width < 1600) {
+    if (width < 860) {
       columns.remove(InviteCodesTableColumn.interventionB);
     }
-    if (width < 1400) {
-      columns.remove(InviteCodesTableColumn.updatedAt);
-    }
-    if (width < 1220) {
+    if (width < 780) {
       columns.remove(InviteCodesTableColumn.interventionA);
     }
-    if (width < 980) {
+    if (width < 700) {
+      columns.remove(InviteCodesTableColumn.updatedAt);
+    }
+    if (width < 620) {
       columns.remove(InviteCodesTableColumn.createdAt);
     }
 
@@ -109,55 +110,49 @@ class StudyInvitesTable extends StatelessWidget {
       case InviteCodesTableColumn.rowNumber:
         return StandardTableColumn(
           label: '#',
-          columnWidth: const FixedColumnWidth(60),
+          columnWidth: const FixedColumnWidth(48),
         );
       case InviteCodesTableColumn.code:
         return StandardTableColumn(
           label: tr.code_list_header_code,
           columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(180),
-            FlexColumnWidth(1.8),
+            FixedColumnWidth(140),
+            FlexColumnWidth(1.2),
           ),
           sortable: true,
         );
       case InviteCodesTableColumn.actions:
         return StandardTableColumn(
           label: '',
-          columnWidth: const FixedColumnWidth(84),
+          columnWidth: const FixedColumnWidth(56),
         );
       case InviteCodesTableColumn.enrolled:
         return StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
-          columnWidth: const FixedColumnWidth(100),
+          columnWidth: const FixedColumnWidth(96),
           sortable: true,
         );
       case InviteCodesTableColumn.createdAt:
         return StandardTableColumn(
           label: tr.studies_list_header_created_at,
-          columnWidth: const FixedColumnWidth(120),
+          columnWidth: const FixedColumnWidth(104),
           sortable: true,
         );
       case InviteCodesTableColumn.updatedAt:
         return StandardTableColumn(
           label: tr.code_list_header_updated_at,
-          columnWidth: const FixedColumnWidth(120),
+          columnWidth: const FixedColumnWidth(104),
           sortable: true,
         );
       case InviteCodesTableColumn.interventionA:
         return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
-          columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(150),
-            FlexColumnWidth(),
-          ),
+          columnWidth: const FixedColumnWidth(104),
         );
       case InviteCodesTableColumn.interventionB:
         return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_b,
-          columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(150),
-            FlexColumnWidth(),
-          ),
+          columnWidth: const FixedColumnWidth(104),
         );
     }
   }
@@ -171,10 +166,11 @@ class StudyInvitesTable extends StatelessWidget {
       for (var i = 0; i < activeColumns.length; i++)
         _buildHeaderCell(
           context,
+          activeColumns[i],
           columns[i],
           sortTarget: _sortTargetForColumn(activeColumns[i]),
         ),
-      _buildHeaderCell(context, columns.last),
+      _buildHeaderCell(context, null, columns.last),
     ];
 
     return TableRow(children: headerWidgets);
@@ -200,22 +196,54 @@ class StudyInvitesTable extends StatelessWidget {
 
   Widget _buildHeaderCell(
     BuildContext context,
+    InviteCodesTableColumn? tableColumn,
     StandardTableColumn column, {
     InviteCodesSortColumn? sortTarget,
   }) {
     final isSortable = sortTarget != null;
     final isSortingActive = isSortable && sortColumn == sortTarget;
     final effectiveAscending = !isSortingActive || sortAscending;
+    final padding = _headerPaddingForColumn(tableColumn);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      padding: padding,
       child: StudiesTableColumnHeader(
         column.label,
         sortable: isSortable,
         sortingActive: isSortingActive,
         sortAscending: effectiveAscending,
         onSort: isSortable ? () => onSortColumn(sortTarget) : null,
+        center: tableColumn == InviteCodesTableColumn.rowNumber,
       ),
     );
+  }
+
+  EdgeInsets _headerPaddingForColumn(InviteCodesTableColumn? column) {
+    return switch (column) {
+      InviteCodesTableColumn.rowNumber => const EdgeInsets.fromLTRB(
+        6,
+        10,
+        4,
+        10,
+      ),
+      InviteCodesTableColumn.code => const EdgeInsets.fromLTRB(8, 10, 8, 10),
+      InviteCodesTableColumn.actions => const EdgeInsets.fromLTRB(2, 10, 2, 10),
+      InviteCodesTableColumn.enrolled => const EdgeInsets.fromLTRB(
+        8,
+        10,
+        8,
+        10,
+      ),
+      InviteCodesTableColumn.createdAt ||
+      InviteCodesTableColumn.updatedAt ||
+      InviteCodesTableColumn.interventionA ||
+      InviteCodesTableColumn.interventionB => const EdgeInsets.fromLTRB(
+        8,
+        10,
+        8,
+        10,
+      ),
+      null => const EdgeInsets.fromLTRB(4, 10, 4, 10),
+    };
   }
 
   List<Widget> _buildRow(
@@ -269,9 +297,15 @@ class StudyInvitesTable extends StatelessWidget {
           return Text(item.code, maxLines: 1, overflow: TextOverflow.ellipsis);
         case InviteCodesTableColumn.actions:
           return Align(
-            alignment: Alignment.centerLeft,
             child: ActionMenuInline(
               actions: getInlineActions(item),
+              iconSize: 18,
+              splashRadius: 16,
+              buttonConstraints: const BoxConstraints.tightFor(
+                width: 24,
+                height: 24,
+              ),
+              visualDensity: VisualDensity.compact,
               paddingHorizontal: 0,
             ),
           );

@@ -43,7 +43,7 @@ class StudyRecruitScreen extends StudyPageWidget {
       value: state.study,
       data: (study) => study.participation == Participation.invite
           ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _inviteCodesSectionHeader(context, ref),
                 const SizedBox(height: 24.0),
@@ -82,7 +82,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           );
         }
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             StudyInvitesTable(
               invites: studyInvites,
