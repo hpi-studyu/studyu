@@ -135,13 +135,13 @@ class StudyInvitesTable extends StatelessWidget {
       case InviteCodesTableColumn.createdAt:
         return StandardTableColumn(
           label: tr.studies_list_header_created_at,
-          columnWidth: const FixedColumnWidth(104),
+          columnWidth: const FixedColumnWidth(132),
           sortable: true,
         );
       case InviteCodesTableColumn.updatedAt:
         return StandardTableColumn(
           label: tr.code_list_header_updated_at,
-          columnWidth: const FixedColumnWidth(104),
+          columnWidth: const FixedColumnWidth(132),
           sortable: true,
         );
       case InviteCodesTableColumn.interventionA:
