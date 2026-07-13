@@ -76,7 +76,7 @@ class WelcomeScreen extends StatelessWidget {
                     style: TextButton.styleFrom(foregroundColor: Colors.orange),
                     icon: const Icon(Icons.bug_report),
                     onPressed: () => context.push('/${RouteNames.onboarding}'),
-                    label: const Text('DEBUG: Show onboarding'),
+                    label: const Text('Show onboarding'),
                   ),
                 ),
             ],

@@ -110,7 +110,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final button = find.byKey(const ValueKey('welcome_debug_onboarding'));
-    expect(find.text('DEBUG: Show onboarding'), findsOneWidget);
+    expect(find.text('Show onboarding'), findsOneWidget);
 
     await tester.tap(button);
     await tester.pumpAndSettle();
