@@ -47,7 +47,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     super.didChangeDependencies();
     _route?.unregisterPopEntry(this);
     _route = ModalRoute.of(context);
-    debugPrint('[PopEntry] registering with route: ${_route.runtimeType}');
     _route?.registerPopEntry(this);
   }
 
@@ -64,9 +63,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
 
   @override
   void onPopInvokedWithResult(bool didPop, Object? result) {
-    debugPrint(
-      '[PopEntry] onPopInvokedWithResult didPop=$didPop canPop=${_canPopNotifier.value}',
-    );
     if (didPop) {
       return;
     }
@@ -79,10 +75,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
   }
 
   Future<void> _handleDismiss() async {
-    debugPrint(
-      '[PopEntry] _handleDismiss isDirty=${widget.formViewModel.isDirty}',
-    );
-
     if (!widget.formViewModel.isDirty) {
       await widget.formViewModel.cancel();
       if (mounted) {
