@@ -71,7 +71,9 @@ Future<void> loadEnv() async {
   await Supabase.initialize(
     url: workingSupabaseUrl,
     publishableKey: supabaseAnonKey,
-    authOptions: FlutterAuthClientOptions(localStorage: SupabaseStorage()),
+    authOptions: FlutterAuthClientOptions(
+      localStorage: SupabaseStorage(workingSupabaseUrl),
+    ),
     debug: true,
   );
 

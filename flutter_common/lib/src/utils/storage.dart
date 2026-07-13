@@ -7,31 +7,38 @@ import 'package:synchronized/synchronized.dart';
 
 final storageLock = Lock();
 
+String supabaseSessionStorageKey(String supabaseUrl) {
+  final authority = Uri.parse(supabaseUrl).authority;
+  return '$supabasePersistSessionKey-${Uri.encodeComponent(authority)}';
+}
+
 class SupabaseStorage extends LocalStorage {
+  SupabaseStorage(String supabaseUrl)
+    : _persistSessionKey = supabaseSessionStorageKey(supabaseUrl);
+
+  final String _persistSessionKey;
+
   @override
   Future<void> initialize() async {}
 
   @override
   Future<bool> hasAccessToken() async {
-    return await SecureStorage.containsKey(supabasePersistSessionKey);
+    return await SecureStorage.containsKey(_persistSessionKey);
   }
 
   @override
   Future<String?> accessToken() async {
-    return await SecureStorage.read(supabasePersistSessionKey);
+    return await SecureStorage.read(_persistSessionKey);
   }
 
   @override
   Future<void> persistSession(String persistSessionString) async {
-    return await SecureStorage.write(
-      supabasePersistSessionKey,
-      persistSessionString,
-    );
+    return await SecureStorage.write(_persistSessionKey, persistSessionString);
   }
 
   @override
   Future<void> removePersistedSession() async {
-    return await SecureStorage.delete(supabasePersistSessionKey);
+    return await SecureStorage.delete(_persistSessionKey);
   }
 }
 
