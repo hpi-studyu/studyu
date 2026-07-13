@@ -11,14 +11,12 @@ class Cache {
   static bool isSynchronizing = false;
 
   static Future<void> storeSubject(StudySubject? subject) async {
-    // debugPrint("Store subject in cache");
     if (subject == null) return;
     SecureStorage.write(cacheSubjectKey, jsonEncode(subject.toFullJson()));
     assert(subject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject({StudySubject? backupSubject}) async {
-    // debugPrint("Load subject from cache");
     if (await SecureStorage.containsKey(cacheSubjectKey)) {
       final cachedSubjectStr = await SecureStorage.read(cacheSubjectKey);
       final cachedSubject =
@@ -110,7 +108,6 @@ class Cache {
       return remoteSubject;
     }
 
-    debugPrint("Synchronize subject with cache");
     isSynchronizing = true;
 
     try {

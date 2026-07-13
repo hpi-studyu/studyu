@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
@@ -63,9 +62,6 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   }
 
   Future<void> _handleCompletion(QuestionnaireState? qs) async {
-    if (kDebugMode) {
-      debugPrint('Questionnaire completed with response: $qs');
-    }
     // Only a non-null payload (all visible questions answered) submits.
     if (qs == null) return;
     if (isRedundantClick(_lastClickTime)) return;

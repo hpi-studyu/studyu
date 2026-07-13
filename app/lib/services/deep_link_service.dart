@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 
 /// Result types for deep link processing
@@ -49,7 +48,6 @@ class DeepLinkService {
     try {
       return await Study.fetchById(studyId);
     } catch (e) {
-      debugPrint('Failed to fetch study by ID: $e');
       return null;
     }
   }
@@ -167,7 +165,6 @@ class DeepLinkService {
         preselectedInterventionIds: invite.preselectedInterventionIds,
       );
     } catch (e) {
-      debugPrint('Failed to fetch study by invite code: $e');
       return DeepLinkError(DeepLinkErrorType.invalidInvite, inviteCode);
     }
   }

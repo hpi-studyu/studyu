@@ -164,7 +164,6 @@ class _AudioRecordingQuestionWidgetState
       final hasPermission = await _audioRecorder.hasPermission();
 
       if (!hasPermission) {
-        debugPrint('No permission to record audio');
         _handleRecordingError(isPermissionRelated: true);
         return;
       }
@@ -180,7 +179,6 @@ class _AudioRecordingQuestionWidgetState
       await _audioRecorder.start(config, path: _recordedFile!.localFilePath);
       _startTimer();
     } catch (e) {
-      debugPrint('Error starting recording: $e');
       _handleRecordingError();
     }
   }
@@ -203,7 +201,6 @@ class _AudioRecordingQuestionWidgetState
       }
       widget.onDone!(widget.question.constructAnswer(recordedFile));
     } catch (e) {
-      debugPrint('Error stopping recording: $e');
       _handleRecordingError();
     }
   }

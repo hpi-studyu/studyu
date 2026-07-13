@@ -46,7 +46,6 @@ Future<void> main() async {
     FlutterError.onError = (FlutterErrorDetails details) {
       if (details.exception is AssertionError &&
           details.exception.toString().contains('_debugDuringDeviceUpdate')) {
-        debugPrint('Mouse tracker assertion suppressed: ${details.exception}');
         return;
       }
       FlutterError.presentError(details);
@@ -60,7 +59,6 @@ Future<void> main() async {
     await loadEnv();
   } catch (error) {
     // device could be offline
-    debugPrint('Error loading env: $error');
   }
   await _configureLocalTimeZone();
   final queryParameters = Uri.base.queryParameters;
@@ -71,14 +69,12 @@ Future<void> main() async {
   try {
     appConfig = await AppConfig.getAppConfig();
   } on PostgrestException catch (e) {
-    debugPrint('Postgres exception: $e');
     if (e.code == 'PGRST301') {
       // Unauthorized - likely due to wrong supabase environment variables
       initialRoute = '/${RouteNames.appErrorScreen}';
     }
   } catch (error) {
     // device could be offline
-    debugPrint('Error fetching app config: $error');
   }
 
   if (appConfig != null && await isAppOutdated(appConfig)) {
@@ -107,7 +103,6 @@ Future<void> main() async {
         }
       } catch (error) {
         // device could be offline
-        debugPrint('Error fetching app config: $error');
       }
     },
   );

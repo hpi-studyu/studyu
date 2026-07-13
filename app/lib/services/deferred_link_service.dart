@@ -143,7 +143,6 @@ class DeferredLinkService {
         );
       }
     } catch (e) {
-      debugPrint("Deferred link check failed: $e");
       // debug error
       await SecureStorage.write('debug_install_referrer', 'Error: $e');
     }

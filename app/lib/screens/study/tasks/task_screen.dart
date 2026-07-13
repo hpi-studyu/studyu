@@ -95,12 +95,9 @@ Future<void> handleTaskCompletion(
       );
     }
   } catch (exception) {
-    debugPrint("Could not save results: $exception");
     try {
       await Cache.storeSubject(activeSubject);
-      debugPrint("Store subject in cache");
     } catch (cacheError) {
-      debugPrint("Could not cache results: $cacheError");
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
