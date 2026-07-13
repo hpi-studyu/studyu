@@ -60,6 +60,7 @@ class StudyInvitesTable extends StatelessWidget {
         StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
           columnWidth: const FixedColumnWidth(100),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_created_at,
@@ -107,7 +108,11 @@ class StudyInvitesTable extends StatelessWidget {
         columns[1],
         sortTarget: InviteCodesSortColumn.code,
       ),
-      _buildHeaderCell(context, columns[2]),
+      _buildHeaderCell(
+        context,
+        columns[2],
+        sortTarget: InviteCodesSortColumn.enrolled,
+      ),
       _buildHeaderCell(
         context,
         columns[3],

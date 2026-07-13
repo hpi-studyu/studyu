@@ -119,6 +119,16 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
 
     final actions = [
       ModelAction(
+        type: ModelActionType.clipboard,
+        label: ModelActionType.clipboard.string,
+        onExecute: () async {
+          await ref.read(clipboardServiceProvider).copy(deepLink);
+          ref
+              .read(notificationServiceProvider)
+              .show(Notifications.inviteCodeClipped);
+        },
+      ),
+      ModelAction(
         type: ModelActionType.share,
         label: ModelActionType.share.string,
         onExecute: () {},

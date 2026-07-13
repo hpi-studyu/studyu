@@ -178,7 +178,11 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where((action) => action.type != ModelActionType.share)
+        .where(
+          (action) =>
+              action.type != ModelActionType.share &&
+              action.type != ModelActionType.clipboard,
+        )
         .map(_withPageRefresh)
         .toList();
     return withIcons(actions, modelActionIcons);
@@ -187,7 +191,11 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableInlineActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where((action) => action.type == ModelActionType.share)
+        .where(
+          (action) =>
+              action.type == ModelActionType.share ||
+              action.type == ModelActionType.clipboard,
+        )
         .toList();
     return withIcons(actions, modelActionIcons);
   }

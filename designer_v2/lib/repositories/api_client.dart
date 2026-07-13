@@ -289,13 +289,14 @@ class StudyUApiClient extends SupabaseClientDependant
     try {
       var request = supabaseClient
           .from(StudyInvite.tableName)
-          .select()
+          .select('*,study_invite_participant_count')
           .eq('study_id', studyId);
       if (query != null && query.trim().isNotEmpty) {
         request = request.ilike('code', '%${query.trim()}%');
       }
       final sortColumn = switch (sortBy) {
         InviteCodesSortColumn.code => 'code',
+        InviteCodesSortColumn.enrolled => 'study_invite_participant_count',
         InviteCodesSortColumn.createdAt => 'created_at',
         InviteCodesSortColumn.updatedAt => 'updated_at',
       };
