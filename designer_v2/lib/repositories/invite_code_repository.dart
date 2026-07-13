@@ -125,13 +125,14 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   @override
   List<ModelAction> availableActions(StudyInvite model) {
     final deepLink = generateInviteDeepLink(model.code);
+    final inviteCode = model.code;
 
     final actions = [
       ModelAction(
         type: ModelActionType.clipboard,
         label: ModelActionType.clipboard.string,
         onExecute: () async {
-          await ref.read(clipboardServiceProvider).copy(deepLink);
+          await ref.read(clipboardServiceProvider).copy(inviteCode);
           ref
               .read(notificationServiceProvider)
               .show(Notifications.inviteCodeClipped);
@@ -142,7 +143,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         label: ModelActionType.share.string,
         onExecute: () {},
         onExecuteWithContext: (context) {
-          _showSharePopup(context, deepLink, model.code);
+          _showSharePopup(context, deepLink, inviteCode);
         },
       ),
       ModelAction(
@@ -171,7 +172,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     return actions.where((action) => action.isAvailable).toList();
   }
 
-  void _showSharePopup(BuildContext context, String deepLink, String filename) {
+  void _showSharePopup(
+    BuildContext context,
+    String deepLink,
+    String inviteCode,
+  ) {
     final effectiveContext = context;
 
     // Determine where to render the popup based on the clicked element
@@ -230,7 +235,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       if (value == 'copy_link') {
         ref
             .read(clipboardServiceProvider)
-            .copy(deepLink)
+            .copy(inviteCode)
             .then(
               (_) => ref
                   .read(notificationServiceProvider)
@@ -241,7 +246,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
           showDialog(
             context: effectiveContext,
             builder: (ctx) =>
-                QrCodePreviewDialog(data: deepLink, filename: filename),
+                QrCodePreviewDialog(data: deepLink, filename: inviteCode),
           );
         }
       }
