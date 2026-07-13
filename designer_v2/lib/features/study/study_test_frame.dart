@@ -102,8 +102,14 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
   void _updatePreviewRoute() {
     if (_activeFrameController == null) return;
+    final data = jsonEncode(
+      ref
+          .read(studyFormViewModelProvider(widget.studyId))
+          .buildFormData()
+          .toJson(),
+    );
     if (widget.route != null) {
-      _activeFrameController!.generateUrl(route: widget.route);
+      _activeFrameController!.generateUrl(route: widget.route, data: data);
     } else {
       String route = 'default';
 
@@ -113,15 +119,20 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
           route: route,
           extra:
               (widget.routeArgs! as InterventionFormRouteArgs).interventionId,
+          data: data,
         );
       } else if (widget.routeArgs is MeasurementFormRouteArgs) {
         route = 'observation';
         _activeFrameController!.generateUrl(
           route: route,
           extra: (widget.routeArgs! as MeasurementFormRouteArgs).measurementId,
+          data: data,
         );
       } else {
-        _activeFrameController!.generateUrl(route: TestAppRoutes.studyOverview);
+        _activeFrameController!.generateUrl(
+          route: TestAppRoutes.studyOverview,
+          data: data,
+        );
       }
     }
   }
@@ -278,7 +289,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     frameController = ref.watch(
       studyTestPlatformControllerProvider(widget.studyId),
     );
-    _ensureFrameController();
+    if (!formViewModel.form.hasErrors) {
+      _ensureFrameController();
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {

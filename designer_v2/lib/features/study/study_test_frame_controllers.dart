@@ -173,7 +173,7 @@ class WebController extends PlatformController {
       previewSrc = "$previewSrc&cmd=$cmd";
     }
     if (data != null) {
-      previewSrc = "$previewSrc&data=$data";
+      previewSrc = "$previewSrc&data=${Uri.encodeQueryComponent(data)}";
     }
   }
 
@@ -207,14 +207,19 @@ class WebController extends PlatformController {
           route: routeInformation.route,
           extra: routeInformation.extra,
           cmd: cmd,
+          data: routeInformation.data,
         );
         return;
       }
-      navigate(route: routeInformation.route, cmd: cmd);
+      navigate(
+        route: routeInformation.route,
+        cmd: cmd,
+        data: routeInformation.data,
+      );
       return;
     }
 
-    navigate(cmd: cmd);
+    navigate(cmd: cmd, data: routeInformation.data);
     return;
   }
 
