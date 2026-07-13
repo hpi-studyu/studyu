@@ -614,6 +614,12 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get dashboard;
 
+  /// No description provided for @study_not_available_for_testing_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'This study is not available for testing yet.'**
+  String get study_not_available_for_testing_yet;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:
