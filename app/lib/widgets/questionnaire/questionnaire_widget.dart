@@ -57,6 +57,9 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   QuestionnaireState? validateSyncAndBuildPayload() {
     final containersAtClick = List<QuestionContainer>.of(shownQuestions);
     final renderKeysAtClick = List<GlobalKey>.of(questionKeys);
+    final visibleBeforeCommit = _controller.visibleQuestions
+        .map((question) => question.id)
+        .toList(growable: false);
 
     // Commit all visible free-text drafts. The controller validates drafts
     // and returns the first validation error, or null if all are valid.
@@ -85,19 +88,36 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       }
     }
 
-    // Check non-free-text questions have answers.
-    int? firstInvalidIndex;
-    for (int i = 0; i < containersAtClick.length; i++) {
-      final questionId = containersAtClick[i].question.id;
-      final isFreeText = containersAtClick[i].question is FreeTextQuestion;
-      if (!isFreeText && _controller.answerFor(questionId) == null) {
-        firstInvalidIndex = i;
-        break;
-      }
+    final visibleAfterCommit = _controller.visibleQuestions;
+    final visibleAfterCommitIds = visibleAfterCommit
+        .map((question) => question.id)
+        .toList(growable: false);
+
+    // Applying a branch change is a progression step, not completion. Rebuild
+    // first so newly required questions are rendered before another attempt.
+    if (!listEquals(visibleBeforeCommit, visibleAfterCommitIds)) {
+      setState(() => _rebuildShownQuestionsFromController());
+      _controller.markRestoredVisibleAnswersNeedingReview(
+        visibleBeforeCommit.toSet(),
+      );
+      _scrollToNewQuestion();
+      return null;
     }
 
-    if (firstInvalidIndex != null) {
-      _scrollToQuestion(renderKeysAtClick[firstInvalidIndex]);
+    final firstUnanswered = visibleAfterCommit.indexWhere(
+      (question) => _controller.answerFor(question.id) == null,
+    );
+    if (firstUnanswered >= 0) {
+      final questionId = visibleAfterCommit[firstUnanswered].id;
+      final shownIndex = containersAtClick.indexWhere(
+        (container) => container.question.id == questionId,
+      );
+      if (shownIndex >= 0) {
+        _scrollToQuestion(renderKeysAtClick[shownIndex]);
+      } else {
+        setState(() => _rebuildShownQuestionsFromController());
+        _scrollToNewQuestion();
+      }
       return null;
     }
 
