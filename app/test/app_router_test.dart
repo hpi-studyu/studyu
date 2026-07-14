@@ -5,6 +5,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/study_unavailable_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_core/core.dart';
@@ -52,13 +53,17 @@ void main() {
       '/${RouteNames.studyUnavailable}',
     );
 
-    expect(find.text('Back'), findsNothing);
+    await tester.tap(find.text('Back'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WelcomeScreen), findsOneWidget);
 
     router.push('/${RouteNames.studyOverview}');
     await tester.pumpAndSettle();
     expect(find.byType(StudyUnavailableScreen), findsOneWidget);
     expect(find.byType(StudyOverviewScreen), findsNothing);
 
+    await tester.tap(find.text('Back'));
+    await tester.pumpAndSettle();
     appState
       ..selectedStudy = null
       ..activeSubject = StudySubject.fromStudy(study, 'user', [], null);

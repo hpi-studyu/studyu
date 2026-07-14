@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
 class StudyUnavailableScreen extends StatelessWidget {
@@ -27,14 +28,18 @@ class StudyUnavailableScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 20),
                 ),
-                if (context.canPop()) ...[
-                  const SizedBox(height: 24),
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.arrow_back),
-                    label: Text(l10n.back),
-                    onPressed: context.pop,
-                  ),
-                ],
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.arrow_back),
+                  label: Text(l10n.back),
+                  onPressed: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.goNamed(RouteNames.welcome);
+                    }
+                  },
+                ),
               ],
             ),
           ),
