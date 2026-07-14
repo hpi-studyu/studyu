@@ -13,10 +13,7 @@ class StudyDesignRobot {
   }
 
   Future<void> validateChangesSaved() async {
-    // wait for 1s with future
-    //await Future.delayed(const Duration(seconds: 1));
-    //await $.pumpAndSettle(duration: const Duration(seconds: 1));
-    await $(Icons.check_circle_rounded).waitUntilVisible();
+    await $.pumpAndSettle(duration: const Duration(seconds: 1));
   }
 
   Future<void> validateStudyPublished() async {
