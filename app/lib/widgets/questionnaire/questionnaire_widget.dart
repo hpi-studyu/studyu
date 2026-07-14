@@ -23,6 +23,7 @@ class QuestionnaireWidget extends StatefulWidget {
   /// When true, the global CTA shows a loading spinner and is disabled.
   /// The parent sets this while it processes a completed submission.
   final bool isSubmitting;
+  final bool hideCta;
 
   const QuestionnaireWidget(
     this.questions, {
@@ -33,6 +34,7 @@ class QuestionnaireWidget extends StatefulWidget {
     this.onComplete,
     this.shouldContinue,
     this.isSubmitting = false,
+    this.hideCta = false,
     super.key,
   });
 
@@ -418,7 +420,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     final ctaMode = _controller.ctaModeFor(
       shownQuestions.map((c) => c.question),
     );
-    final showCta = ctaMode != QuestionnaireCtaMode.hidden;
+    final showCta = !widget.hideCta && ctaMode != QuestionnaireCtaMode.hidden;
 
     return Column(
       children: [
