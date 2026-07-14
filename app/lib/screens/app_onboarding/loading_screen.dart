@@ -718,12 +718,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   @override
-  void dispose() {
-    IFrameHelper.cancelSubscription();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (kIsWeb && widget.hasDeepLink) {
       return DeepLinkWebLandingPage(
