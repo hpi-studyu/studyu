@@ -81,35 +81,35 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboarding_page0_subtitle =>
-      'Ihre Reise zu einer besseren Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf \'Weiter\', um fortzufahren.';
+      'Forschende können ermitteln, was im Durchschnitt wirkt. Sie können nicht feststellen, ob eine Gewohnheit oder Behandlung bei Ihnen wirkt. Mit StudyU testen Sie diese Frage selbst.';
 
   @override
-  String get onboarding_page1_title => 'Was funktioniert für SIE?';
+  String get onboarding_page1_title => 'Ihre persönliche Studie';
 
   @override
   String get onboarding_page1_subtitle =>
-      'Eine N-of-1-Studie ist eine wissenschaftliche Studie, in der Sie die einzige Testperson sind. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.';
+      'Bei einer N-of-1-Studie sind Sie die einzige teilnehmende Person. Sie durchlaufen verschiedene Phasen, zum Beispiel frühes und spätes Essen, und erfassen Ergebnisse wie Ihre Schlafqualität.';
 
   @override
-  String get onboarding_page2_title => 'Wissenschaft einfach gemacht';
+  String get onboarding_page2_title => 'Ein Plan von Fachleuten';
 
   @override
   String get onboarding_page2_subtitle =>
-      'Vergleichen Sie zwei Optionen (z. B. \'Kaffee\' vs. \'Tee\') mit Experten-Plänen. Wir leiten Sie Schritt für Schritt. Ganz ohne Vorwissen.';
+      'Wählen Sie eine Studie, die zu Ihrer Frage passt. StudyU stellt einen von Fachleuten entwickelten Studienplan bereit, prüft, ob Sie sicher teilnehmen können, und hilft Ihnen, den Plan in Ihren Alltag einzubauen.';
 
   @override
-  String get onboarding_page3_title => 'Ihre persönlichen Ergebnisse';
+  String get onboarding_page3_title => 'Regelmäßige Aufgaben';
 
   @override
   String get onboarding_page3_subtitle =>
-      'Allgemeine Statistiken passen nicht immer. Verfolgen Sie Ihren Fortschritt täglich und erhalten Sie Ergebnisse, die zeigen, was Ihrem Körper wirklich hilft.';
+      'Befolgen Sie die zugewiesene Option und dokumentieren Sie Ihre Beobachtungen, meist einmal täglich. Der Fortschrittsbalken zeigt, wie viele Aufgaben bis zur Auswertung fehlen.';
 
   @override
-  String get onboarding_page4_title => 'Übernehmen Sie die Kontrolle';
+  String get onboarding_page4_title => 'Aussagekräftige Ergebnisse';
 
   @override
   String get onboarding_page4_subtitle =>
-      'Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu einer besseren Gesundheit.';
+      'Nach einigen Wochen können Sie vergleichen, welche Option bei Ihnen besser funktioniert hat. Mit jeder zusätzlichen Aufgabe erhöhen Sie die Aussagekraft. Wenn Sie die Ergebnisse freischalten, beendet StudyU die Studie, damit die Auswertung unverfälscht bleibt.';
 
   @override
   String get study_selection => 'Studienauswahl';

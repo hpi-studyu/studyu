@@ -81,35 +81,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboarding_page0_subtitle =>
-      'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.';
+      'Researchers can estimate what works on average. They cannot determine whether a habit or treatment works for you. StudyU helps you test that question yourself.';
 
   @override
-  String get onboarding_page1_title => 'What works for YOU?';
+  String get onboarding_page1_title => 'Your Personal Study';
 
   @override
   String get onboarding_page1_subtitle =>
-      'An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.';
+      'In an N-of-1 study, you are the only participant. You follow different phases, such as eating early and eating late, and record outcomes such as sleep quality.';
 
   @override
-  String get onboarding_page2_title => 'Science Made Simple';
+  String get onboarding_page2_title => 'An Expert Study Plan';
 
   @override
   String get onboarding_page2_subtitle =>
-      'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.';
+      'Choose a study that matches your question. StudyU provides an expert-designed protocol, checks whether you can participate safely, and helps fit the plan into your routine.';
 
   @override
-  String get onboarding_page3_title => 'Your Personal Evidence';
+  String get onboarding_page3_title => 'Complete Regular Tasks';
 
   @override
   String get onboarding_page3_subtitle =>
-      'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.';
+      'Follow the assigned option and record your observations, usually once a day. The progress bar shows how many tasks remain before you can view your results.';
 
   @override
-  String get onboarding_page4_title => 'Take Control';
+  String get onboarding_page4_title => 'Build Reliable Evidence';
 
   @override
   String get onboarding_page4_subtitle =>
-      'Ready to find your answers? Select a study and start your journey to better health today.';
+      'After a few weeks, you can compare how each option worked for you. Each completed task strengthens the result. When you unlock your results, StudyU ends the study to protect the analysis.';
 
   @override
   String get study_selection => 'Study Selection';

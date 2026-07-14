@@ -99,6 +99,11 @@ abstract class PlatformController {
   void navigate({String? route, String? extra, String? cmd, String? data});
   void refresh({String? cmd});
   void listen();
+  void updateData(String data) {
+    routeInformation.data = data;
+    send(data);
+  }
+
   void send(String message);
   void openNewPage() {}
   void dispose() {}
@@ -153,28 +158,47 @@ class WebController extends PlatformController {
     );
   }
 
+  String _buildPreviewUrl({
+    String? route,
+    String? extra,
+    String? cmd,
+    String? data,
+  }) {
+    if (baseSrc == '') return '';
+
+    var url = baseSrc;
+    if (route != null) url = "$url&route=$route";
+    if (extra != null) url = "$url&extra=$extra";
+    if (cmd != null) url = "$url&cmd=$cmd";
+    if (data != null) {
+      url = "$url&data=${Uri.encodeQueryComponent(data)}";
+    }
+    return url;
+  }
+
   @override
   void generateUrl({String? route, String? extra, String? cmd, String? data}) {
     onLoadStarted?.call();
     navigationEnabled.value = false;
     routeInformation = RouteInformation(route, extra, cmd, data);
-    if (baseSrc == '') {
-      previewSrc = '';
-      return;
-    }
-    previewSrc = baseSrc;
-    if (route != null) {
-      previewSrc = "$previewSrc&route=$route";
-    }
-    if (extra != null) {
-      previewSrc = "$previewSrc&extra=$extra";
-    }
-    if (cmd != null) {
-      previewSrc = "$previewSrc&cmd=$cmd";
-    }
-    if (data != null) {
-      previewSrc = "$previewSrc&data=$data";
-    }
+    previewSrc = _buildPreviewUrl(
+      route: route,
+      extra: extra,
+      cmd: cmd,
+      data: data,
+    );
+  }
+
+  @override
+  void updateData(String data) {
+    routeInformation.data = data;
+    previewSrc = _buildPreviewUrl(
+      route: routeInformation.route,
+      extra: routeInformation.extra,
+      cmd: routeInformation.cmd,
+      data: data,
+    );
+    if (_isListening) send(data);
   }
 
   @override
@@ -207,14 +231,19 @@ class WebController extends PlatformController {
           route: routeInformation.route,
           extra: routeInformation.extra,
           cmd: cmd,
+          data: routeInformation.data,
         );
         return;
       }
-      navigate(route: routeInformation.route, cmd: cmd);
+      navigate(
+        route: routeInformation.route,
+        cmd: cmd,
+        data: routeInformation.data,
+      );
       return;
     }
 
-    navigate(cmd: cmd);
+    navigate(cmd: cmd, data: routeInformation.data);
     return;
   }
 

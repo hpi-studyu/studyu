@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -132,6 +133,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
               const Spacer(),
+              if (kDebugMode)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: TextButton.icon(
+                    key: const ValueKey('welcome_debug_onboarding'),
+                    style: TextButton.styleFrom(foregroundColor: Colors.orange),
+                    icon: const Icon(Icons.bug_report),
+                    onPressed: () => context.go('/${RouteNames.onboarding}'),
+                    label: const Text('Show onboarding'),
+                  ),
+                ),
             ],
           ),
         ),
