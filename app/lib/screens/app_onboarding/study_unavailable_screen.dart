@@ -9,6 +9,7 @@ class StudyUnavailableScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final router = GoRouter.maybeOf(context);
 
     return Scaffold(
       body: SafeArea(
@@ -28,18 +29,20 @@ class StudyUnavailableScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 20),
                 ),
-                const SizedBox(height: 24),
-                OutlinedButton.icon(
-                  icon: const Icon(Icons.arrow_back),
-                  label: Text(l10n.back),
-                  onPressed: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.goNamed(RouteNames.welcome);
-                    }
-                  },
-                ),
+                if (router != null) ...[
+                  const SizedBox(height: 24),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.arrow_back),
+                    label: Text(l10n.back),
+                    onPressed: () {
+                      if (router.canPop()) {
+                        router.pop();
+                      } else {
+                        router.goNamed(RouteNames.welcome);
+                      }
+                    },
+                  ),
+                ],
               ],
             ),
           ),
