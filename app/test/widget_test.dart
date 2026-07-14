@@ -40,6 +40,13 @@ Widget setup(Widget child) {
             path: '/${RouteNames.welcome}',
             builder: (_, _) => const WelcomeScreen(),
           ),
+          GoRoute(
+            path: '/${RouteNames.onboarding}',
+            builder: (_, _) => const Text(
+              'Onboarding',
+              key: ValueKey('onboarding_test_screen'),
+            ),
+          ),
         ],
       ),
     ),
@@ -56,23 +63,61 @@ void main() {
 
   test('opens welcome screen when tour is completed without preview', () {
     expect(
-      initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: true),
+      initialRouteForMissingSubjectRoute(
+        isPreview: false,
+        isDebugMode: false,
+        onBoarded: true,
+      ),
       '/${RouteNames.welcome}',
     );
   });
 
   test('opens onboarding when tour is not completed', () {
     expect(
-      initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: false),
+      initialRouteForMissingSubjectRoute(
+        isPreview: false,
+        isDebugMode: false,
+        onBoarded: false,
+      ),
       '/${RouteNames.onboarding}',
     );
   });
 
   test('keeps designer preview on study terms', () {
     expect(
-      initialRouteForMissingSubjectRoute(isPreview: true, onBoarded: true),
+      initialRouteForMissingSubjectRoute(
+        isPreview: true,
+        isDebugMode: false,
+        onBoarded: false,
+      ),
       '/${RouteNames.terms}',
     );
+  });
+
+  test('skips onboarding in debug mode', () {
+    expect(
+      initialRouteForMissingSubjectRoute(
+        isPreview: false,
+        isDebugMode: true,
+        onBoarded: false,
+      ),
+      '/${RouteNames.welcome}',
+    );
+  });
+
+  testWidgets('debug button opens onboarding', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    final button = find.byKey(const ValueKey('welcome_debug_onboarding'));
+    expect(find.text('Show onboarding'), findsOneWidget);
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    final onboarding = find.byKey(const ValueKey('onboarding_test_screen'));
+    expect(onboarding, findsOneWidget);
+    expect(GoRouter.of(tester.element(onboarding)).canPop(), isFalse);
   });
 
   testWidgets('terms back falls back to welcome without previous screen', (
