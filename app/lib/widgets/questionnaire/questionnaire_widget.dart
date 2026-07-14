@@ -24,6 +24,7 @@ class QuestionnaireWidget extends StatefulWidget {
   /// The parent sets this while it processes a completed submission.
   final bool isSubmitting;
   final bool hideCta;
+  final bool autoComplete;
 
   const QuestionnaireWidget(
     this.questions, {
@@ -35,6 +36,7 @@ class QuestionnaireWidget extends StatefulWidget {
     this.shouldContinue,
     this.isSubmitting = false,
     this.hideCta = false,
+    this.autoComplete = false,
     super.key,
   });
 
@@ -191,6 +193,19 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _finishQuestionnaire(QuestionnaireState? result) {
     widget.onComplete?.call(result);
+  }
+
+  bool _autoCompleteIfReady() {
+    if (!widget.autoComplete ||
+        _controller.ctaModeFor(shownQuestions.map((c) => c.question)) !=
+            QuestionnaireCtaMode.complete) {
+      return false;
+    }
+
+    final payload = validateSyncAndBuildPayload();
+    if (payload == null) return false;
+    _finishQuestionnaire(payload);
+    return true;
   }
 
   void _handleGlobalCtaPressed() {
@@ -351,13 +366,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     _controller.markRestoredVisibleAnswersNeedingReview(visibleBeforeRebuild);
 
     if (_controller.allVisibleQuestionsAnswered) {
-      _scrollToNewQuestion();
-    } else {
-      if (_controller.hasConditionalDependents(answer.question)) {
-        _finishQuestionnaire(null);
-      }
-      _scrollToNewQuestion();
+      if (_autoCompleteIfReady()) return;
+    } else if (_controller.hasConditionalDependents(answer.question)) {
+      _finishQuestionnaire(null);
     }
+    _scrollToNewQuestion();
   }
 
   void _scrollToNewQuestion() {
@@ -449,7 +462,10 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     final ctaMode = _controller.ctaModeFor(
       shownQuestions.map((c) => c.question),
     );
-    final showCta = !widget.hideCta && ctaMode != QuestionnaireCtaMode.hidden;
+    final showCta =
+        !widget.autoComplete &&
+        !widget.hideCta &&
+        ctaMode != QuestionnaireCtaMode.hidden;
 
     return Column(
       children: [
@@ -506,6 +522,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || _controller.visibleAnswersNeedReview()) return;
+      if (_autoCompleteIfReady()) return;
       if (_completeButtonFocusNode.context != null) {
         _completeButtonFocusNode.requestFocus();
       }
