@@ -4,9 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
-import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
@@ -102,29 +100,11 @@ class _InterventionSelectionScreenState
     context.push('/${RouteNames.journey}');
   }
 
-  Future<void> onBack() async {
-    if (!selectedStudy!.hasEligibilityCheck) {
-      context.pop();
-      return;
-    }
-
-    final result = await context.push<EligibilityResult>(
-      '/${RouteNames.eligibilityCheck}',
-      extra: selectedStudy,
-    );
-    if (result == null || result.eligible || !mounted) return;
-
-    await PendingDeepLinkService.clear(context.read<AppState>());
-    if (!mounted) return;
-    context.go('/${RouteNames.studySelection}');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(onPressed: onBack),
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
       ),
       body: SingleChildScrollView(
@@ -143,7 +123,6 @@ class _InterventionSelectionScreenState
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onBack: onBack,
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
         progress: OnboardingProgress(
           stage: 1,

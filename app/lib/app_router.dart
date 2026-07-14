@@ -236,8 +236,14 @@ GoRouter createAppRouter({
         path: '/${RouteNames.eligibilityCheck}',
         name: RouteNames.eligibilityCheck,
         builder: (context, state) {
-          final study = state.extra as Study?;
-          return EligibilityScreen(study: study);
+          final extra = state.extra;
+          if (extra is EligibilityScreenArguments) {
+            return EligibilityScreen(
+              study: extra.study,
+              onEligible: extra.onEligible,
+            );
+          }
+          return EligibilityScreen(study: extra as Study?);
         },
       ),
       GoRoute(
