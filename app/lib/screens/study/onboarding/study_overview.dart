@@ -114,7 +114,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: appState.selectedStudy!.hasEligibilityCheck
+        onNext: study!.hasEligibilityCheck
             ? () => navigateToEligibilityCheck(context)
             : () => navigateToJourney(context),
       ),
