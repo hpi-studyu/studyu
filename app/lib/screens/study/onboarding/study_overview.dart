@@ -83,38 +83,40 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     final appState = context.watch<AppState>();
     final returnToStudySelection = shouldReturnToStudySelection(appState);
 
-    return PopScope(
-      canPop: !returnToStudySelection,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        appState
-          ..selectedStudy = null
-          ..selectedInterventions = null
-          ..inviteCode = null
-          ..preselectedInterventionIds = null;
-        context.go('/${RouteNames.studySelection}');
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.study_overview_title),
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            if (!returnToStudySelection) {
+              context.pop();
+              return;
+            }
+            appState
+              ..selectedStudy = null
+              ..selectedInterventions = null
+              ..inviteCode = null
+              ..preselectedInterventionIds = null;
+            context.go('/${RouteNames.studySelection}');
+          },
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Hero(
-                tag: 'study_tile_${study!.id}',
-                child: Material(child: StudyTile.fromStudy(study: study!)),
-              ),
-              const SizedBox(height: 16),
-              StudyDetailsView(study: study),
-            ],
-          ),
+        title: Text(AppLocalizations.of(context)!.study_overview_title),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Hero(
+              tag: 'study_tile_${study!.id}',
+              child: Material(child: StudyTile.fromStudy(study: study!)),
+            ),
+            const SizedBox(height: 16),
+            StudyDetailsView(study: study),
+          ],
         ),
-        bottomNavigationBar: BottomOnboardingNavigation(
-          onNext: appState.selectedStudy!.hasEligibilityCheck
-              ? () => navigateToEligibilityCheck(context)
-              : () => navigateToJourney(context),
-        ),
+      ),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        onNext: appState.selectedStudy!.hasEligibilityCheck
+            ? () => navigateToEligibilityCheck(context)
+            : () => navigateToJourney(context),
       ),
     );
   }
