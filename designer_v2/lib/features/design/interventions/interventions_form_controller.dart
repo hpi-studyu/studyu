@@ -159,9 +159,14 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void onNewItem() {
-    final studyId = study.id;
+    final viewModel = provide(
+      InterventionFormRouteArgs(
+        studyId: study.id,
+        interventionId: Config.newModelId,
+      ),
+    );
     router.dispatch(
-      RoutingIntents.studyEditIntervention(studyId, Config.newModelId),
+      RoutingIntents.studyEditIntervention(study.id, viewModel.interventionId),
     );
   }
 
@@ -171,14 +176,17 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   @override
   InterventionFormViewModel provide(InterventionFormRouteArgs args) {
     if (args.interventionId.isNewId) {
-      // Eagerly add the managed viewmodel in case it needs to be [provide]d
-      // to a child controller
+      final existingDraft = interventionsCollection.findWhere(
+        (viewModel) => viewModel.formMode == FormMode.create,
+      );
+      if (existingDraft != null) return existingDraft;
+
       final viewModel = InterventionFormViewModel(
         study: study,
         delegate: this,
         validationSet: validationSet,
       );
-      interventionsCollection.stage(viewModel);
+      interventionsCollection.add(viewModel);
       return viewModel;
     }
 
@@ -195,7 +203,9 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void onCancel(InterventionFormViewModel formViewModel, FormMode formMode) {
-    return; // no-op
+    if (formMode == FormMode.create) {
+      interventionsCollection.remove(formViewModel);
+    }
   }
 
   @override

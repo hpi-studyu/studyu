@@ -35,6 +35,7 @@ class EligibilityScreen extends StatefulWidget {
 class _EligibilityScreenState extends State<EligibilityScreen> {
   EligibilityResult? activeResult;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _ignoreNextNullResponse = false;
 
   @override
   void initState() {
@@ -62,6 +63,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       (element) => element.isViolated(qs),
     );
     if (failingResult == null) return true;
+    // QuestionnaireWidget reports null after the continuation predicate stops.
+    _ignoreNextNullResponse = true;
     // freetext quickfix start
     // failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
     // freetext quickfix end
@@ -77,6 +80,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   void _evaluateResponse(QuestionnaireState? qs) {
     if (qs == null) {
+      if (_ignoreNextNullResponse) {
+        _ignoreNextNullResponse = false;
+        return;
+      }
       _invalidateResponse();
       return;
     }
@@ -199,6 +206,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               title: widget.study!.title,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
+              hideCta: activeResult?.eligible == false,
             ),
           ),
           if (activeResult != null) _constructResultBanner(),
