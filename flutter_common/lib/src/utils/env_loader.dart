@@ -41,8 +41,11 @@ String? getEnv(String name, {bool optional = false}) {
 }
 
 Future<void> loadEnv() async {
+  SecureStorage.environment = effectiveStorageEnvironment(
+    envFileName(),
+    isDebug: kDebugMode,
+  );
   await dotenv.load(fileName: envFilePath());
-  SecureStorage.environment = envFileName();
   final supabaseUrls = loadSupabaseUrls();
 
   final supabaseAnonKey = getEnv('STUDYU_SUPABASE_PUBLIC_ANON_KEY');
