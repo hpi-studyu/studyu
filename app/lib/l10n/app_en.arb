@@ -63,7 +63,31 @@
   "intervention_current": "Current intervention",
   "study_current": "Current study:",
   "opt_out": "Leave study",
-  "delete_data": "Leave study and delete all data",
+  "leave_study_keep_data_title": "Leave study and keep your data?",
+  "leave_study_keep_data_body": "You will stop participating in the study “{studyName}”. We will keep the progress and responses you have already submitted, and researchers may continue to use your anonymized data.\n\nYou cannot rejoin this participation after leaving. Your previous studies will not be affected.",
+  "@leave_study_keep_data_body": {
+    "placeholders": {
+      "studyName": {
+        "type": "String"
+      }
+    }
+  },
+  "stay_in_study": "Stay in study",
+  "acknowledge_consequences": "I have read this information and understand the consequences.",
+  "leave_keep_data": "Leave and keep my data",
+  "leave_study_description": "Stop participating. Your existing study data will be retained.",
+  "delete_data": "Leave study and delete my data",
+  "leave_study_delete_data_title": "Leave study and delete my data?",
+  "leave_study_delete_data_body": "You will stop participating in the study “{studyName}”. We will permanently delete your progress and responses for this study from our servers and remove its saved data from this device.\n\nThis cannot be undone. Neither you nor anyone from the study team will be able to recover this data.",
+  "@leave_study_delete_data_body": {
+    "placeholders": {
+      "studyName": {
+        "type": "String"
+      }
+    }
+  },
+  "leave_delete_data": "Leave and delete my data",
+  "delete_study_data_description": "Permanently delete your study data. This cannot be undone.",
   "soft_delete_desc": "You will lose your progress in ",
   "soft_delete_desc_2": " and won't be able to recover it. Previously completed studies will not be deleted.\nYour anonymized data up to this point may still be used for research purposes.",
   "hard_delete_desc": "You are about to delete all data from your device and our servers. You will not be able to restore your data.\nYour anonymized data will not be available for research purposes anymore.",
@@ -101,6 +125,31 @@
     }
   },
   "about": "About",
+  "study_information": "Study information",
+  "study_information_description": "Only share these details with your study team when they ask for them.",
+  "study_name": "Study name",
+  "study_id": "Study ID",
+  "subject_id": "Subject ID",
+  "study_start_date": "Study start date",
+  "app_version": "App version",
+  "platform": "Platform",
+  "not_available": "Not available",
+  "view_study_information": "View details",
+  "email_study_team": "Email study team",
+  "study_team_email_unavailable": "This study has no contact email.",
+  "copy_all_information": "Copy all information",
+  "value_copied": "{label} copied to clipboard.",
+  "@value_copied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "all_information_copied": "All information copied to clipboard.",
+  "participant_information_email_subject": "[StudyU] Participant information",
+  "participant_information_email_intro": "Hello,\n\nI am contacting you about my participation in the study. These are my StudyU details:",
+  "email_app_unavailable": "No email app is available.",
   "settings": "Settings",
   "yes": "yes",
   "no": "no",
@@ -135,6 +184,7 @@
   "storing_audio": "The audio file is being stored",
   "upload_error": "The file could not be uploaded",
   "language": "Language",
+  "use_device_language": "Use device language",
   "en": "English",
   "de": "German",
   "allow_analytics": "Allow app analytics",
@@ -152,11 +202,11 @@
   "legal_documents_description": "Please read and accept the terms of use and privacy policy before continuing.",
   "terms": "Terms of Use",
   "terms_read": "Read Terms of Use",
-  "terms_content": "The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.",
+  "terms_content": "The terms of use give an overview on the purpose and use of the StudyU app. ",
   "terms_agree": "I have read and agree to the terms of use",
   "privacy": "Privacy Policy",
   "privacy_read": "Read Privacy Policy",
-  "privacy_content": "The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.",
+  "privacy_content": "The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have.",
   "privacy_agree": "I have read and agree to the privacy policy",
   "legal_notice": "Legal Notice",
   "legal_notice_content": "The legal notice shows who is responsible for StudyU and how you can contact us.",
@@ -430,10 +480,11 @@
   "submit": "Submit",
   "go_back": "Go back",
 
-  "recovery_phrase_header": "Save Recovery Phrase",
+  "study_settings_section": "Study settings",
+  "recovery_phrase_header": "View recovery phrase",
   "copy_to_clipboard": "Copy to clipboard",
   "copied_to_clipboard": "Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.",
-  "recovery_phrase_save_hint": "Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can always view your recovery phrase again in your study settings.\n\nNever share them with anyone.",
+  "recovery_phrase_save_hint": "Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.\n\nNever share them with anyone.",
   "recovery_phrase_save_warning": "Never share them with anyone.",
   "show_recovery_phrase": "Show Recovery Phrase",
   "recovery_phrase_list_header": "Your recovery phrase",
@@ -484,7 +535,7 @@
   "download_btn": "Download",
   "general_section": "General",
   "current_study_section": "Current study",
-  "participation_options_section": "Participation options",
+  "participation_options_section": "Manage participation",
   "share_recovery_text_btn": "Share Recovery Text",
   "recovery_phrase_load_error": "Failed to load recovery phrase",
   "share_error": "Error sharing: {error}",
@@ -559,7 +610,8 @@
       }
     }
   },
-  "show_dashboard_showcase_again": "Show dashboard tour again",
+  "dashboard_tour": "Dashboard walkthrough",
+  "show_again": "Replay tour",
   "free_text_hint": "Enter your answer",
   "preview_failed_to_initialize": "Preview failed to initialize.",
   "preview_overlay_reset_hint": "The preview could not be opened right now. Please try resetting the preview.",
