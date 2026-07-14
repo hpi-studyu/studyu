@@ -1114,7 +1114,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(blockedPayload, isNull);
-      expect(find.text('Review this answer'), findsOneWidget);
+      expect(find.text('Restored answer requires review'), findsOneWidget);
       await tester.tap(find.text("I've reviewed this answer"));
       await tester.pumpAndSettle();
 
@@ -1483,7 +1483,7 @@ void main() {
     expect(find.text('Complete task'), findsNothing);
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(find.text('Review this answer'), findsOneWidget);
+    expect(find.text('Restored answer requires review'), findsOneWidget);
     await tester.tap(find.text("I've reviewed this answer"));
     await tester.pumpAndSettle();
 
@@ -2017,9 +2017,9 @@ void main() {
     await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Review this answer'), findsOneWidget);
+    expect(find.text('Restored answer requires review'), findsOneWidget);
     expect(
-      find.text('This response was restored. Review it before continuing.'),
+      find.text('Complete task becomes available after review.'),
       findsOneWidget,
     );
     expect(
@@ -2046,18 +2046,14 @@ void main() {
       completions.whereType<QuestionnaireState>().length,
       completionCountBeforeBlockedSubmit,
     );
-    expect(find.text('Review this answer'), findsOneWidget);
+    expect(find.text('Restored answer requires review'), findsOneWidget);
 
     final markReviewedButton = find.widgetWithText(
-      OutlinedButton,
+      FilledButton,
       "I've reviewed this answer",
     );
     expect(markReviewedButton, findsOneWidget);
-    expect(
-      find.descendant(of: markReviewedButton, matching: find.byType(Icon)),
-      findsNothing,
-    );
-    expect(find.byIcon(Icons.info_outline), findsOneWidget);
+    expect(find.byIcon(Icons.restore_outlined), findsOneWidget);
     expect(
       find.widgetWithText(TextButton, "I've reviewed this answer"),
       findsNothing,
@@ -2065,9 +2061,9 @@ void main() {
 
     await tester.tap(markReviewedButton);
     await tester.pumpAndSettle();
-    expect(find.text('Review this answer'), findsNothing);
+    expect(find.text('Restored answer requires review'), findsNothing);
     expect(
-      find.text('This response was restored. Review it before continuing.'),
+      find.text('Complete task becomes available after review.'),
       findsNothing,
     );
     expect(find.text('Review the restored answer to continue.'), findsNothing);
@@ -2128,7 +2124,7 @@ void main() {
     await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Review this answer'), findsOneWidget);
+    expect(find.text('Restored answer requires review'), findsOneWidget);
     expect(
       completions.whereType<QuestionnaireState>().length,
       completedBeforeContextChange,
@@ -2183,7 +2179,7 @@ void main() {
     await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Review this answer'), findsOneWidget);
+    expect(find.text('Restored answer requires review'), findsOneWidget);
     expect(
       completions.whereType<QuestionnaireState>().length,
       completedBeforeContextChange,
