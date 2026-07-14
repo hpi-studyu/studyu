@@ -435,7 +435,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
       // re-initialized, which re-triggers the valueChanges stream subscription
       // used for auto-saving (entering the infinite loop)
     }
-    delegate?.onSave(this, prevFormMode);
+    await delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
     if (prevFormMode == FormMode.create) {

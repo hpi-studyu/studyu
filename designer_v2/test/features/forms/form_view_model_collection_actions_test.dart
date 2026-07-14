@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -22,7 +24,7 @@ class _TestFormData implements IFormData {
 }
 
 class _TestFormViewModel extends ManagedFormViewModel<_TestFormData> {
-  _TestFormViewModel({super.formData, this.duplicate});
+  _TestFormViewModel({super.formData, super.delegate, this.duplicate});
 
   final _TestFormViewModel? duplicate;
   final FormControl<String> valueControl = FormControl<String>(value: '');
@@ -56,9 +58,36 @@ class _TestFormViewModel extends ManagedFormViewModel<_TestFormData> {
   }
 }
 
+class _TestDelegate implements IFormViewModelDelegate<_TestFormViewModel> {
+  final saveCompleter = Completer<void>();
+
+  @override
+  void onCancel(_TestFormViewModel formViewModel, FormMode prevFormMode) {}
+
+  @override
+  Future<void> onSave(
+    _TestFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) => saveCompleter.future;
+}
+
 void main() {
   setUpAll(() {
     AppTranslation.setForTesting(AppLocalizationsEn());
+  });
+
+  test('save waits for its delegate', () async {
+    final delegate = _TestDelegate();
+    final viewModel = _TestFormViewModel(delegate: delegate);
+
+    var completed = false;
+    final save = viewModel.save().then((_) => completed = true);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(completed, isFalse);
+    delegate.saveCompleter.complete();
+    await save;
+    expect(completed, isTrue);
   });
 
   test('duplicate action saves the duplicated view model', () async {
