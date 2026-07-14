@@ -13,6 +13,9 @@ import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+@visibleForTesting
+bool shouldReturnToStudySelection(AppState state) => !state.hasPendingDeepLink;
+
 class StudyOverviewScreen extends StatefulWidget {
   const StudyOverviewScreen({super.key});
 
@@ -77,26 +80,41 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.study_overview_title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Hero(
-              tag: 'study_tile_${study!.id}',
-              child: Material(child: StudyTile.fromStudy(study: study!)),
-            ),
-            const SizedBox(height: 16),
-            StudyDetailsView(study: study),
-          ],
+    final appState = context.watch<AppState>();
+    final returnToStudySelection = shouldReturnToStudySelection(appState);
+
+    return PopScope(
+      canPop: !returnToStudySelection,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        appState
+          ..selectedStudy = null
+          ..selectedInterventions = null
+          ..inviteCode = null
+          ..preselectedInterventionIds = null;
+        context.go('/${RouteNames.studySelection}');
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.study_overview_title),
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: context.watch<AppState>().selectedStudy!.hasEligibilityCheck
-            ? () => navigateToEligibilityCheck(context)
-            : () => navigateToJourney(context),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Hero(
+                tag: 'study_tile_${study!.id}',
+                child: Material(child: StudyTile.fromStudy(study: study!)),
+              ),
+              const SizedBox(height: 16),
+              StudyDetailsView(study: study),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomOnboardingNavigation(
+          onNext: appState.selectedStudy!.hasEligibilityCheck
+              ? () => navigateToEligibilityCheck(context)
+              : () => navigateToJourney(context),
+        ),
       ),
     );
   }
