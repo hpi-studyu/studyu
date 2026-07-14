@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -480,7 +481,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get terms_content =>
-      'The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.';
+      'The terms of use give an overview on the purpose and use of the StudyU app.';
 
   @override
   String get terms_agree => 'I have read and agree to the terms of use';
@@ -493,7 +494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy_content =>
-      'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.';
+      'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have.';
 
   @override
   String get privacy_agree => 'I have read and agree to the privacy policy';

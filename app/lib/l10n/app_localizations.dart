@@ -965,7 +965,7 @@ abstract class AppLocalizations {
   /// No description provided for @terms_content.
   ///
   /// In en, this message translates to:
-  /// **'The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.'**
+  /// **'The terms of use give an overview on the purpose and use of the StudyU app.'**
   String get terms_content;
 
   /// No description provided for @terms_agree.
@@ -989,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacy_content.
   ///
   /// In en, this message translates to:
-  /// **'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.'**
+  /// **'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have.'**
   String get privacy_content;
 
   /// No description provided for @privacy_agree.

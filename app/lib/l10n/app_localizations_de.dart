@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -483,7 +484,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get terms_content =>
-      'Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
+      'Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. ';
 
   @override
   String get terms_agree =>
@@ -497,7 +498,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get privacy_content =>
-      'Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
+      'Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben.';
 
   @override
   String get privacy_agree =>
