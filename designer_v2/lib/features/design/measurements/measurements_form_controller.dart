@@ -180,18 +180,33 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   void onNewSurvey() {
-    final studyId = study.id;
+    final viewModel = provideWithType(
+      MeasurementFormRouteArgs(
+        studyId: study.id,
+        measurementId: Config.newModelId,
+      ),
+      null,
+    );
     router.dispatch(
-      RoutingIntents.studyEditMeasurement(studyId, Config.newModelId),
+      RoutingIntents.studyEditMeasurement(
+        study.id,
+        (viewModel as dynamic).measurementId as MeasurementID,
+      ),
     );
   }
 
   void onNewNutrition() {
-    final studyId = study.id;
+    final viewModel = provideWithType(
+      MeasurementFormRouteArgs(
+        studyId: study.id,
+        measurementId: Config.newModelId,
+      ),
+      'nutrition',
+    );
     router.dispatch(
       RoutingIntents.studyEditMeasurement(
-        studyId,
-        Config.newModelId,
+        study.id,
+        (viewModel as dynamic).measurementId as MeasurementID,
         queryParameters: {'type': 'nutrition'},
       ),
     );
@@ -251,29 +266,28 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - IProviderArgsResolver
 
   @override
-  dynamic provide(MeasurementFormRouteArgs args) {
+  dynamic provide(MeasurementFormRouteArgs args) => provideWithType(args, null);
+
+  dynamic provideWithType(MeasurementFormRouteArgs args, String? type) {
     if (args.measurementId.isNewId) {
-      return _provideNewSurvey();
+      final existingDraft = measurementViewModelsCollection.findWhere(
+        (viewModel) =>
+            viewModel.formMode == FormMode.create &&
+            (type == 'nutrition'
+                ? viewModel is NutritionFormViewModel
+                : viewModel is MeasurementSurveyFormViewModel),
+      );
+      if (existingDraft != null) return existingDraft;
+
+      return type == 'nutrition' ? _provideNewNutrition() : _provideNewSurvey();
     }
 
     final viewModel = measurementViewModelsCollection.findWhere(
       (vm) => (vm as dynamic).measurementId == args.measurementId,
     );
-    if (viewModel != null) {
-      return viewModel;
-    }
+    if (viewModel != null) return viewModel;
 
     throw MeasurementNotFoundException();
-  }
-
-  dynamic provideWithType(MeasurementFormRouteArgs args, String? type) {
-    if (args.measurementId.isNewId) {
-      if (type == 'nutrition') {
-        return _provideNewNutrition();
-      }
-      return _provideNewSurvey();
-    }
-    return provide(args);
   }
 
   MeasurementSurveyFormViewModel _provideNewSurvey() {
@@ -282,7 +296,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       delegate: this,
       validationSet: validationSet,
     );
-    measurementViewModelsCollection.stage(viewModel);
+    measurementViewModelsCollection.add(viewModel);
     return viewModel;
   }
 
@@ -292,7 +306,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       delegate: this,
       validationSet: validationSet,
     );
-    measurementViewModelsCollection.stage(viewModel);
+    measurementViewModelsCollection.add(viewModel);
     return viewModel;
   }
 
@@ -300,9 +314,13 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onCancel(ManagedFormViewModel formViewModel, FormMode formMode) {
-    measurementViewModelsCollection.unstage(
-      formViewModel as ManagedFormViewModel<IFormDataWithSchedule>,
-    );
+    if (formMode != FormMode.create) return;
+
+    final typedVm =
+        formViewModel as ManagedFormViewModel<IFormDataWithSchedule>;
+    if (!measurementViewModelsCollection.unstage(typedVm)) {
+      measurementViewModelsCollection.remove(typedVm);
+    }
   }
 
   @override

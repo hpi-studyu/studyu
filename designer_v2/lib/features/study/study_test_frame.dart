@@ -37,6 +37,23 @@ class PreviewFrame extends ConsumerStatefulWidget {
   ConsumerState<PreviewFrame> createState() => _PreviewFrameState();
 }
 
+@visibleForTesting
+({String route, String? extra}) previewRouteTarget(PreviewFrame frame) {
+  if (frame.route != null) return (route: frame.route!, extra: null);
+
+  return switch (frame.routeArgs) {
+    final InterventionFormRouteArgs args => (
+      route: 'intervention',
+      extra: args.interventionId,
+    ),
+    final MeasurementFormRouteArgs args => (
+      route: 'observation',
+      extra: args.measurementId,
+    ),
+    _ => (route: TestAppRoutes.studyOverview, extra: null),
+  };
+}
+
 class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   static const Duration _healthCheckTimeout = Duration(seconds: 5);
   PlatformController? frameController;
@@ -87,43 +104,36 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     _formChangesSubscription = formViewModelCurrent.form.valueChanges.listen((
       event,
     ) {
-      if (frameController != null) {
-        final formJson = jsonEncode(
-          formViewModelCurrent.buildFormData().toJson(),
-        );
-        try {
-          frameController!.send(formJson);
-        } catch (_) {
-          // The preview iframe may reload while form changes are emitted.
-        }
+      final controller = _activeFrameController;
+      if (controller == null) return;
+
+      final formJson = jsonEncode(
+        formViewModelCurrent.buildFormData().toJson(),
+      );
+      try {
+        controller.updateData(formJson);
+      } catch (_) {
+        // The preview iframe may reload while form changes are emitted.
       }
     });
   }
 
   void _updatePreviewRoute() {
-    if (_activeFrameController == null) return;
-    if (widget.route != null) {
-      _activeFrameController!.generateUrl(route: widget.route);
-    } else {
-      String route = 'default';
+    final controller = _activeFrameController;
+    if (controller == null) return;
 
-      if (widget.routeArgs is InterventionFormRouteArgs) {
-        route = 'intervention';
-        _activeFrameController!.generateUrl(
-          route: route,
-          extra:
-              (widget.routeArgs! as InterventionFormRouteArgs).interventionId,
-        );
-      } else if (widget.routeArgs is MeasurementFormRouteArgs) {
-        route = 'observation';
-        _activeFrameController!.generateUrl(
-          route: route,
-          extra: (widget.routeArgs! as MeasurementFormRouteArgs).measurementId,
-        );
-      } else {
-        _activeFrameController!.generateUrl(route: TestAppRoutes.studyOverview);
-      }
-    }
+    final data = jsonEncode(
+      ref
+          .read(studyFormViewModelProvider(widget.studyId))
+          .buildFormData()
+          .toJson(),
+    );
+    final target = previewRouteTarget(widget);
+    controller.generateUrl(
+      route: target.route,
+      extra: target.extra,
+      data: data,
+    );
   }
 
   Uri? _configuredAppUri(String appUrl) => Uri.tryParse(appUrl);
@@ -257,7 +267,10 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   @override
   void didUpdateWidget(covariant PreviewFrame oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_activeFrameController == null) return;
+    if (_activeFrameController == null ||
+        previewRouteTarget(widget) == previewRouteTarget(oldWidget)) {
+      return;
+    }
 
     _updatePreviewRoute();
     final nextPreviewUrl = _activeFrameController!.previewSrc;
@@ -278,7 +291,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     frameController = ref.watch(
       studyTestPlatformControllerProvider(widget.studyId),
     );
-    _ensureFrameController();
+    if (!formViewModel.form.hasErrors) {
+      _ensureFrameController();
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
