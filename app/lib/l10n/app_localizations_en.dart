@@ -579,7 +579,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get terms_content =>
-      'The terms of use give an overview on the purpose and use of the StudyU app. ';
+      'The terms of use give an overview on the purpose and use of the StudyU app.';
 
   @override
   String get terms_agree => 'I have read and agree to the terms of use';

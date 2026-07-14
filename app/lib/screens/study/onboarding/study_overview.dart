@@ -64,18 +64,19 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     final study = context.read<AppState>().selectedStudy;
     final result = await context.push<EligibilityResult>(
       '/${RouteNames.eligibilityCheck}',
-      extra: study,
+      extra: EligibilityScreenArguments(
+        study: study,
+        onEligible: navigateToJourney,
+      ),
     );
     if (result == null) return;
 
     if (!context.mounted) return;
-    if (result.eligible) {
-      navigateToJourney(context);
-    } else {
-      await PendingDeepLinkService.clear(context.read<AppState>());
-      if (!context.mounted) return;
-      context.go('/${RouteNames.studySelection}');
-    }
+    if (result.eligible) return;
+
+    await PendingDeepLinkService.clear(context.read<AppState>());
+    if (!context.mounted) return;
+    context.go('/${RouteNames.studySelection}');
   }
 
   @override
@@ -114,7 +115,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: appState.selectedStudy!.hasEligibilityCheck
+        onNext: study!.hasEligibilityCheck
             ? () => navigateToEligibilityCheck(context)
             : () => navigateToJourney(context),
       ),

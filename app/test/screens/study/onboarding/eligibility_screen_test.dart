@@ -6,6 +6,67 @@ import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {
+  testWidgets('keeps eligibility below the next onboarding step', (
+    tester,
+  ) async {
+    final question = BooleanQuestion.withId()
+      ..id = 'eligible'
+      ..prompt = 'Do you fulfill the criterion?';
+    final criterion = EligibilityCriterion.withId()
+      ..condition = (BooleanExpression()..target = question.id);
+    final study = Study.withId('user')
+      ..title = 'Study'
+      ..questionnaire.questions = [question]
+      ..eligibilityCriteria = [criterion];
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => EligibilityScreen(
+            study: study,
+            onEligible: (context) async {
+              await context.push('/intervention');
+            },
+          ),
+        ),
+        GoRoute(
+          path: '/intervention',
+          builder: (_, _) => const Scaffold(body: Text('Intervention')),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp.router(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        routerConfig: router,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Complete'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Intervention'), findsOneWidget);
+
+    router.pop();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EligibilityScreen), findsOneWidget);
+  });
+
   testWidgets('shows failed eligibility immediately after the answer', (
     tester,
   ) async {

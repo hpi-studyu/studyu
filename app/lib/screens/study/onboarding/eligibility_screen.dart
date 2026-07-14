@@ -16,8 +16,18 @@ class EligibilityResult {
   EligibilityResult(this.answers, {required this.eligible, this.firstFailed});
 }
 
+typedef EligibilityContinuation = Future<void> Function(BuildContext context);
+
+class EligibilityScreenArguments {
+  final Study? study;
+  final EligibilityContinuation? onEligible;
+
+  const EligibilityScreenArguments({required this.study, this.onEligible});
+}
+
 class EligibilityScreen extends StatefulWidget {
   final Study? study;
+  final EligibilityContinuation? onEligible;
 
   static MaterialPageRoute<EligibilityResult> routeFor({
     required Study? study,
@@ -26,7 +36,7 @@ class EligibilityScreen extends StatefulWidget {
     settings: const RouteSettings(name: '/eligibilityCheck'),
   );
 
-  const EligibilityScreen({required this.study, super.key});
+  const EligibilityScreen({required this.study, this.onEligible, super.key});
 
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();
@@ -128,7 +138,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         false;
   }*/
 
-  void _finish() {
+  Future<void> _finish() async {
+    if (activeResult?.eligible == true && widget.onEligible != null) {
+      await widget.onEligible!(context);
+      return;
+    }
     context.pop(activeResult);
   }
 

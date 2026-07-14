@@ -1139,7 +1139,7 @@ abstract class AppLocalizations {
   /// No description provided for @terms_content.
   ///
   /// In en, this message translates to:
-  /// **'The terms of use give an overview on the purpose and use of the StudyU app. '**
+  /// **'The terms of use give an overview on the purpose and use of the StudyU app.'**
   String get terms_content;
 
   /// No description provided for @terms_agree.
