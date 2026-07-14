@@ -71,7 +71,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     } else {
       await PendingDeepLinkService.clear(context.read<AppState>());
       if (!context.mounted) return;
-      context.pop();
+      context.go('/${RouteNames.studySelection}');
     }
   }
 

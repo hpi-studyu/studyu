@@ -43,6 +43,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
           duration: const Duration(seconds: 30),
         ),
       );
+      context.go('/${RouteNames.studySelection}');
     }
   }
 
