@@ -126,7 +126,7 @@ class StudiesTable extends StatelessWidget {
             10;
 
         // Calculate the minimum status column width
-        int maxStatusLength = "Entwurf".length;
+        int maxStatusLength = tr.study_status_draft.length;
         maxStatusLength = max(
           maxStatusLength,
           tr.studies_list_header_status.length,

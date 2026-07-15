@@ -533,7 +533,7 @@ void main() {
     );
 
     test(
-      'pinStudy moves a loaded study to pinnedStudiesList without reload',
+      'pinStudy reloads data and moves study to pinnedStudiesList',
       () async {
         final h = _Harness(
           initialPage: StudiesPage(
@@ -541,19 +541,23 @@ void main() {
             totalCount: 3,
           ),
         );
-        // updatePreferences is called by the controller; stub it.
+        await h.settle();
+
+        // After pinning 'b', simulate user prefs updated and server returning
+        // 'b' as pinned and [a, c] as the paginated list.
+        final updatedUser = StudyUUser(
+          id: 'me',
+          email: 'me@x.test',
+          preferences: Preferences(pinnedStudies: {'b'}),
+        );
+        when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
+          when(h.userRepo.user).thenReturn(updatedUser);
+          return updatedUser;
+        });
         when(
-          h.userRepo.updatePreferences(any, any),
-        ).thenAnswer((_) async => h.studyUUser);
-        await h.settle();
-        clearInteractions(h.studyRepo);
-
-        await h.controller.pinStudy('b');
-        await h.settle();
-
-        expect(h.state.loadedStudies.map((s) => s.id), ['a', 'c']);
-        expect(h.state.pinnedStudiesList.map((s) => s.id), ['b']);
-        verifyNever(
+          h.studyRepo.fetchPinned(any),
+        ).thenAnswer((_) async => [_study('b')]);
+        when(
           h.studyRepo.fetchPage(
             offset: anyNamed('offset'),
             limit: anyNamed('limit'),
@@ -565,7 +569,30 @@ void main() {
             advancedFilter: anyNamed('advancedFilter'),
             excludeIds: anyNamed('excludeIds'),
           ),
+        ).thenAnswer(
+          (_) async =>
+              StudiesPage(studies: [_study('a'), _study('c')], totalCount: 2),
         );
+        clearInteractions(h.studyRepo);
+
+        await h.controller.pinStudy('b');
+        await h.settle();
+
+        expect(h.state.loadedStudies.map((s) => s.id), ['a', 'c']);
+        expect(h.state.pinnedStudiesList.map((s) => s.id), ['b']);
+        verify(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(greaterThanOrEqualTo(1));
       },
     );
 
@@ -677,7 +704,7 @@ void main() {
           advancedFilter: anyNamed('advancedFilter'),
           excludeIds: anyNamed('excludeIds'),
         ),
-      ).called(1);
+      ).called(2);
     });
   });
 }

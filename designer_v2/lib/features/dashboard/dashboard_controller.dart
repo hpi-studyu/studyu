@@ -168,6 +168,7 @@ class DashboardController extends _$DashboardController
       state = state.copyWith(
         isLoadingInitial: false,
         isLoadingMore: false,
+        hasMore: false,
         loadError: () => e,
       );
     }
@@ -275,45 +276,12 @@ class DashboardController extends _$DashboardController
 
   Future<void> pinStudy(String modelId) async {
     await _userRepository.updatePreferences(PreferenceAction.pin, modelId);
-    final fromLoaded = state.loadedStudies.firstWhere(
-      (s) => s.id == modelId,
-      orElse: () => state.pinnedStudiesList.firstWhere(
-        (s) => s.id == modelId,
-        orElse: () => Study('', ''),
-      ),
-    );
-    if (fromLoaded.id.isEmpty) return;
-    final newLoaded = state.loadedStudies
-        .where((s) => s.id != modelId)
-        .toList();
-    final alreadyPinned = state.pinnedStudiesList.any((s) => s.id == modelId);
-    final newPinned = alreadyPinned
-        ? state.pinnedStudiesList
-        : [...state.pinnedStudiesList, fromLoaded];
-    state = state.copyWith(
-      loadedStudies: () => newLoaded,
-      pinnedStudiesList: () => newPinned,
-    );
+    await _resetAndReload();
   }
 
   Future<void> pinOffStudy(String modelId) async {
     await _userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
-    final pinned = state.pinnedStudiesList.firstWhere(
-      (s) => s.id == modelId,
-      orElse: () => Study('', ''),
-    );
-    if (pinned.id.isEmpty) return;
-    final newPinned = state.pinnedStudiesList
-        .where((s) => s.id != modelId)
-        .toList();
-    final alreadyLoaded = state.loadedStudies.any((s) => s.id == modelId);
-    final newLoaded = alreadyLoaded
-        ? state.loadedStudies
-        : [pinned, ...state.loadedStudies];
-    state = state.copyWith(
-      pinnedStudiesList: () => newPinned,
-      loadedStudies: () => newLoaded,
-    );
+    await _resetAndReload();
   }
 
   void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
@@ -397,10 +365,61 @@ class DashboardController extends _$DashboardController
       ),
     ].where((action) => action.isAvailable).toList();
 
-    final studyActions = _studyRepository
+    final repoActions = _studyRepository
         .availableActions(model)
         .where((action) => action.type != StudyActionType.exportDefinition)
         .toList();
+
+    // Wrap mutating actions so the paginated state refreshes after success
+    // and delete errors are surfaced instead of silently swallowed.
+    final studyActions = repoActions.map((action) {
+      final type = action.type as StudyActionType?;
+      if (type == StudyActionType.delete) {
+        return ModelAction(
+          type: action.type,
+          label: action.label,
+          icon: action.icon,
+          tooltip: action.tooltip,
+          confirmation: action.confirmation,
+          isAvailable: action.isAvailable,
+          isDestructive: action.isDestructive,
+          isSeparator: action.isSeparator,
+          isHeader: action.isHeader,
+          isChecked: action.isChecked,
+          showBadge: action.showBadge,
+          onExecute: () async {
+            try {
+              await action.onExecute();
+              await _resetAndReload();
+            } catch (e) {
+              state = state.copyWith(loadError: () => e);
+            }
+          },
+        );
+      }
+      if (type == StudyActionType.duplicate ||
+          type == StudyActionType.duplicateDraft ||
+          type == StudyActionType.close) {
+        return ModelAction(
+          type: action.type,
+          label: action.label,
+          icon: action.icon,
+          tooltip: action.tooltip,
+          confirmation: action.confirmation,
+          isAvailable: action.isAvailable,
+          isDestructive: action.isDestructive,
+          isSeparator: action.isSeparator,
+          isHeader: action.isHeader,
+          isChecked: action.isChecked,
+          showBadge: action.showBadge,
+          onExecute: () async {
+            await action.onExecute();
+            await _resetAndReload();
+          },
+        );
+      }
+      return action;
+    }).toList();
 
     return withIcons([...pinActions, ...studyActions], studyActionIcons);
   }

@@ -704,6 +704,30 @@ abstract class AppLocalizations {
   /// **'Build your own study from scratch or create a new draft copy from an already published study!'**
   String get studies_empty_description;
 
+  /// No description provided for @studies_empty_public.
+  ///
+  /// In en, this message translates to:
+  /// **'No public studies found'**
+  String get studies_empty_public;
+
+  /// No description provided for @studies_empty_public_description.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no studies in the public registry matching your current filters.'**
+  String get studies_empty_public_description;
+
+  /// No description provided for @studies_empty_shared.
+  ///
+  /// In en, this message translates to:
+  /// **'No shared studies found'**
+  String get studies_empty_shared;
+
+  /// No description provided for @studies_empty_shared_description.
+  ///
+  /// In en, this message translates to:
+  /// **'No studies have been shared with you yet.'**
+  String get studies_empty_shared_description;
+
   /// No description provided for @studies_end_of_list.
   ///
   /// In en, this message translates to:
@@ -5066,6 +5090,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Studies'**
   String get all_studies;
+
+  /// No description provided for @studies_filter_add_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Add filter'**
+  String get studies_filter_add_filter;
+
+  /// No description provided for @studies_filter_remove_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove filter'**
+  String get studies_filter_remove_filter;
 }
 
 class _AppLocalizationsDelegate

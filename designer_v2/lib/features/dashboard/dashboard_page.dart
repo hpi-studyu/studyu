@@ -208,12 +208,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildStudiesCount(BuildContext context, DashboardState state) {
     final localizations = AppLocalizations.of(context)!;
-    final countLabel = state.hasActiveRefinement
-        ? localizations.studies_count_filtered(
-            state.filteredStudyCount,
-            state.displayTotalStudyCount,
-          )
-        : localizations.studies_count_total(state.displayTotalStudyCount);
+    final String countLabel;
+    if (state.isLoadingInitial) {
+      countLabel = localizations.studies_count_total(
+        state.displayTotalStudyCount,
+      );
+    } else if (state.hasActiveRefinement) {
+      countLabel = localizations.studies_count_filtered(
+        state.filteredStudyCount,
+        state.displayTotalStudyCount,
+      );
+    } else {
+      countLabel = localizations.studies_count_total(
+        state.displayTotalStudyCount,
+      );
+    }
 
     return Text(
       countLabel,
@@ -441,15 +450,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             },
           )
         else
-          Flexible(
-            child: Container(
-              constraints: BoxConstraints(maxWidth: searchMaxWidth),
-              child: Search(
-                key: const ValueKey('search_field'),
-                searchController: state.searchController,
-                hintText: tr.search,
-                onQueryChanged: (query) => controller.filterStudies(query),
-              ),
+          SizedBox(
+            width: searchMaxWidth,
+            child: Search(
+              key: const ValueKey('search_field'),
+              searchController: state.searchController,
+              hintText: tr.search,
+              onQueryChanged: (query) => controller.filterStudies(query),
             ),
           ),
       ],
@@ -647,7 +654,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 description: tr.studies_empty_description,
                               ),
                             )
-                    : const SizedBox.shrink(),
+                    : widget.filter == StudiesFilter.public
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: EmptyBody(
+                          icon: Icons.content_paste_search_rounded,
+                          title: tr.studies_empty_public,
+                          description: tr.studies_empty_public_description,
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: EmptyBody(
+                          icon: Icons.content_paste_search_rounded,
+                          title: tr.studies_empty_shared,
+                          description: tr.studies_empty_shared_description,
+                        ),
+                      ),
               ),
             ),
           ),

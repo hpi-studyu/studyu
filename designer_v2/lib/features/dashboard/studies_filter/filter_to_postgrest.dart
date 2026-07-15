@@ -73,10 +73,18 @@ String _renderCondition(FilterCondition condition, User currentUser) {
   final op = condition.operator;
   final value = condition.value;
 
+  final isStringColumn = _isStringProperty(property);
+
   switch (op) {
     case FilterOperator.equals:
+      if (isStringColumn) {
+        return '$column.ilike.${_formatLikePattern(value, exact: true)}';
+      }
       return '$column.eq.${_formatValue(value)}';
     case FilterOperator.notEquals:
+      if (isStringColumn) {
+        return '$column.not.ilike.${_formatLikePattern(value, exact: true)}';
+      }
       return '$column.neq.${_formatValue(value)}';
     case FilterOperator.contains:
       return '$column.ilike.${_formatLikePattern(value, contains: true)}';
@@ -110,6 +118,18 @@ String _renderCondition(FilterCondition condition, User currentUser) {
         Duration(days: value.toInt()),
       );
       return '$column.gte.${since.toIso8601String()}';
+  }
+}
+
+bool _isStringProperty(StudyProperty property) {
+  switch (property) {
+    case StudyProperty.title:
+    case StudyProperty.status:
+    case StudyProperty.participation:
+    case StudyProperty.resultSharing:
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -155,13 +175,20 @@ String _formatScalar(String value) {
 
 String _formatLikePattern(
   dynamic value, {
+  bool exact = false,
   bool contains = false,
   bool startsWith = false,
   bool endsWith = false,
 }) {
   final raw = (value ?? '').toString();
-  final escaped = raw.replaceAll('"', r'\"');
-  final pattern = contains
+  // Escape PostgREST/SQL wildcard characters to prevent accidental injection
+  final escaped = raw
+      .replaceAll('%', '\\%')
+      .replaceAll('_', '\\_')
+      .replaceAll('"', r'\"');
+  final pattern = exact
+      ? escaped
+      : contains
       ? '*$escaped*'
       : startsWith
       ? '$escaped*'

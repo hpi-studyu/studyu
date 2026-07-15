@@ -349,6 +349,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Build your own study from scratch or create a new draft copy from an already published study!';
 
   @override
+  String get studies_empty_public => 'No public studies found';
+
+  @override
+  String get studies_empty_public_description =>
+      'There are no studies in the public registry matching your current filters.';
+
+  @override
+  String get studies_empty_shared => 'No shared studies found';
+
+  @override
+  String get studies_empty_shared_description =>
+      'No studies have been shared with you yet.';
+
+  @override
   String get studies_end_of_list => 'That\'s all for now.';
 
   @override
@@ -2956,4 +2970,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all_studies => 'All Studies';
+
+  @override
+  String get studies_filter_add_filter => 'Add filter';
+
+  @override
+  String get studies_filter_remove_filter => 'Remove filter';
 }

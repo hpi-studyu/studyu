@@ -131,6 +131,10 @@
   "studies_filter_server_side_unsupported": "This filter can't be used here right now. Clear the filter and try again.",
   "studies_empty": "You don't have any studies yet",
   "studies_empty_description": "Build your own study from scratch or create a new draft copy from an already published study!",
+  "studies_empty_public": "No public studies found",
+  "studies_empty_public_description": "There are no studies in the public registry matching your current filters.",
+  "studies_empty_shared": "No shared studies found",
+  "studies_empty_shared_description": "No studies have been shared with you yet.",
   "studies_end_of_list": "That's all for now.",
   "studies_load_failed": "Couldn't load studies. Try again.",
   "@__________________STUDYPAGE__________________": {},
@@ -1123,5 +1127,7 @@
   "dashboard_filter_unsupported": "This filter is not compatible with server-side search. Please reset the filter.",
   "dashboard_reset_filter": "Reset filter",
   "dashboard_load_error": "Failed to load studies.",
-  "all_studies": "All Studies"
+  "all_studies": "All Studies",
+  "studies_filter_add_filter": "Add filter",
+  "studies_filter_remove_filter": "Remove filter"
 }

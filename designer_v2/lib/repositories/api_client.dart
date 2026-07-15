@@ -254,6 +254,7 @@ class StudyUApiClient extends SupabaseClientDependant
 
       final response = await q
           .order(sortColumn, ascending: ascending)
+          .order('id', ascending: true) // stable tiebreaker
           .range(offset, offset + limit - 1)
           .count(CountOption.exact);
 
