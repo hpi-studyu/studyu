@@ -28,7 +28,8 @@ class InterventionPreview extends ConsumerWidget {
               ],
             ),
           ),
-          previewBanner(ref, routeArgs.studyId) ?? const SizedBox.shrink(),
+          if (previewBanner(ref, routeArgs.studyId) case final banner?)
+            Positioned(top: 0, left: 0, right: 0, child: banner),
         ],
       ),
     );

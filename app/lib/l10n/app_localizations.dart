@@ -221,55 +221,55 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page0_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Your journey to better health starts here. Let\'s see how it works! Tap \'Next\' to continue.'**
+  /// **'Researchers can estimate what works on average. They cannot determine whether a habit or treatment works for you. StudyU helps you test that question yourself.'**
   String get onboarding_page0_subtitle;
 
   /// No description provided for @onboarding_page1_title.
   ///
   /// In en, this message translates to:
-  /// **'What works for YOU?'**
+  /// **'Your Personal Study'**
   String get onboarding_page1_title;
 
   /// No description provided for @onboarding_page1_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'An N-of-1 trial is a scientific study with you as the only participant. Stop guessing and discover insights tailored to your unique biology.'**
+  /// **'In an N-of-1 study, you are the only participant. You follow different phases, such as eating early and eating late, and record outcomes such as sleep quality.'**
   String get onboarding_page1_subtitle;
 
   /// No description provided for @onboarding_page2_title.
   ///
   /// In en, this message translates to:
-  /// **'Science Made Simple'**
+  /// **'An Expert Study Plan'**
   String get onboarding_page2_title;
 
   /// No description provided for @onboarding_page2_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Compare two options (like \'Coffee\' vs \'Tea\') with expert-designed plans. We guide you step-by-step. No research experience needed.'**
+  /// **'Choose a study that matches your question. StudyU provides an expert-designed protocol, checks whether you can participate safely, and helps fit the plan into your routine.'**
   String get onboarding_page2_subtitle;
 
   /// No description provided for @onboarding_page3_title.
   ///
   /// In en, this message translates to:
-  /// **'Your Personal Evidence'**
+  /// **'Complete Regular Tasks'**
   String get onboarding_page3_title;
 
   /// No description provided for @onboarding_page3_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'General stats don\'t always apply to you. Track your progress daily and unlock results that show what actually helps your body.'**
+  /// **'Follow the assigned option and record your observations, usually once a day. The progress bar shows how many tasks remain before you can view your results.'**
   String get onboarding_page3_subtitle;
 
   /// No description provided for @onboarding_page4_title.
   ///
   /// In en, this message translates to:
-  /// **'Take Control'**
+  /// **'Build Reliable Evidence'**
   String get onboarding_page4_title;
 
   /// No description provided for @onboarding_page4_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Ready to find your answers? Select a study and start your journey to better health today.'**
+  /// **'After a few weeks, you can compare how each option worked for you. Each completed task strengthens the result. When you unlock your results, StudyU ends the study to protect the analysis.'**
   String get onboarding_page4_subtitle;
 
   /// No description provided for @study_selection.
