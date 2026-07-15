@@ -572,6 +572,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                             RecoveryPhraseContent(
                               useGridLayout: false,
                               isChecked: isChecked,
+                              showSuccessFeedback: false,
                               onCheckedChanged: (value) {
                                 setDialogState(
                                   () => isChecked = value ?? false,

@@ -11,6 +11,7 @@ class RecoveryPhraseContent extends StatefulWidget {
   final ValueChanged<bool?>? onCheckedChanged;
   final bool showConfirmation;
   final bool showSaveHint;
+  final bool showSuccessFeedback;
 
   const RecoveryPhraseContent({
     super.key,
@@ -20,6 +21,7 @@ class RecoveryPhraseContent extends StatefulWidget {
     this.onCheckedChanged,
     this.showConfirmation = true,
     this.showSaveHint = false,
+    this.showSuccessFeedback = true,
   });
 
   @override
@@ -72,18 +74,20 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
     if (_phrase == null) return;
     final text = _phrase!.join(' ');
     Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.copied_to_clipboard),
-      ),
-    );
+    if (widget.showSuccessFeedback) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.copied_to_clipboard),
+        ),
+      );
+    }
   }
 
   Future<void> _downloadText() async {
     if (_phrase == null) return;
     try {
       await RecoveryFileUtils.downloadRecoveryText(_phrase!);
-      if (mounted) {
+      if (mounted && widget.showSuccessFeedback) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppLocalizations.of(context)!.file_saved)),
         );
