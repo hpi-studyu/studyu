@@ -42,6 +42,7 @@ class WelcomeEntryHub extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
+            key: const PageStorageKey('welcome_entry_hub_scroll'),
             padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 440),
