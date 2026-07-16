@@ -6,11 +6,14 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations_en.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
@@ -54,6 +57,42 @@ Widget setup(Widget child) {
 }
 
 void main() {
+  test('uses the current onboarding route as the browser title', () {
+    final l10n = AppLocalizationsEn();
+
+    expect(browserTitleForPath('/terms', l10n), l10n.terms);
+    expect(browserTitleForPath('/consent', l10n), l10n.consent);
+    expect(
+      browserTitleForPath('/eligibilityCheck', l10n),
+      l10n.eligibility_questionnaire_title,
+    );
+  });
+
+  testWidgets('updates the browser title after onboarding navigation', (
+    tester,
+  ) async {
+    final titles = <String>[];
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method == 'SystemChrome.setApplicationSwitcherDescription') {
+        titles.add((call.arguments as Map<String, dynamic>)['label'] as String);
+      }
+      return null;
+    });
+    addTearDown(
+      () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+
+    await tester.pumpWidget(const MyApp({}, null, initialRoute: '/welcome'));
+    await tester.pumpAndSettle();
+    expect(titles.last, 'Welcome to StudyU');
+
+    GoRouter.of(tester.element(find.byType(Navigator).last)).go('/terms');
+    await tester.pumpAndSettle();
+    expect(titles.last, 'Terms of Use');
+  });
+
   testWidgets('Counter increments smoke test', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
