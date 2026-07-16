@@ -33,7 +33,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'status.eq."running"',
+        'status.ilike."running"',
       );
     });
 
@@ -54,7 +54,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'and(status.eq."running",study_participant_count.gt.5)',
+        'and(status.ilike."running",study_participant_count.gt.5)',
       );
     });
 
@@ -76,7 +76,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'or(registry_published.eq.true,result_sharing.eq."public")',
+        'or(registry_published.eq.true,result_sharing.ilike."public")',
       );
     });
 
@@ -107,7 +107,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'and(status.eq."running",or(active_subject_count.lt.2,study_participant_count.lt.5))',
+        'and(status.ilike."running",or(active_subject_count.lt.2,study_participant_count.lt.5))',
       );
     });
 
