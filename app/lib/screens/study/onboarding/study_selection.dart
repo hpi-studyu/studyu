@@ -250,21 +250,25 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
+          final inviteCode = _controller.text;
           Map<String, dynamic>? studyResult;
           try {
             studyResult = await Supabase.instance.client
                 .rpc(
                   'get_study_record_from_invite',
-                  params: {'invite_code': _controller.text},
+                  params: {'invite_code': inviteCode},
                 )
                 .single();
           } on PostgrestException catch (error) {
             print(error.message);
+            if (!mounted) return;
             setState(() {
               _errorMessage = error.message;
             });
+            return;
           }
-          if (studyResult == null || studyResult['id'] == null) {
+          if (!mounted) return;
+          if (studyResult['id'] == null) {
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });
@@ -292,35 +296,24 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               return;
             }
 
-            if (!context.mounted) return;
-            Navigator.pop(context);
-
-            // Get preselected_intervention_ids from study_invite table
             final inviteResult = await Supabase.instance.client
                 .from('study_invite')
                 .select('preselected_intervention_ids')
-                .eq('code', _controller.text)
+                .eq('code', inviteCode)
                 .maybeSingle();
             if (!context.mounted) return;
-            if (inviteResult != null &&
-                inviteResult.containsKey('preselected_intervention_ids') &&
-                inviteResult['preselected_intervention_ids'] != null) {
-              final preselectedIds = List<String>.from(
-                inviteResult['preselected_intervention_ids'] as List,
-              );
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-                preselectedIds: preselectedIds,
-              );
-            } else {
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-              );
-            }
+
+            final preselectedInterventionIds =
+                inviteResult?['preselected_intervention_ids'];
+            final appState = context.read<AppState>();
+            appState.preselectedInterventionIds =
+                preselectedInterventionIds == null
+                ? null
+                : List<String>.from(preselectedInterventionIds as List);
+            appState.inviteCode = inviteCode;
+            appState.selectedStudy = study;
+            // Replace (not push) so accepting an invite can't be undone via back button.
+            Navigator.pushReplacementNamed(context, Routes.studyOverview);
           }
         },
       ),
