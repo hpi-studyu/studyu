@@ -63,6 +63,10 @@ GoRouter createAppRouter({
   String initialLocation = '/${RouteNames.loading}',
   GlobalKey<NavigatorState>? navigatorKey,
 }) {
+  // ponytail: Reflect the existing push-based navigation on web; use
+  // declarative routes instead if direct deep-linking becomes required.
+  GoRouter.optionURLReflectsImperativeAPIs = true;
+
   return GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,

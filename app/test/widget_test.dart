@@ -1,3 +1,5 @@
+import 'dart:async';
+
 // This is a basic Flutter widget test.
 //
 // To perform an interaction with a widget in your test, use the WidgetTester
@@ -6,6 +8,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -118,6 +121,52 @@ void main() {
     final onboarding = find.byKey(const ValueKey('onboarding_test_screen'));
     expect(onboarding, findsOneWidget);
     expect(GoRouter.of(tester.element(onboarding)).canPop(), isFalse);
+  });
+
+  testWidgets('pushed onboarding route updates the browser URL', (
+    tester,
+  ) async {
+    final navigationCalls = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.navigation, (call) async {
+          navigationCalls.add(call);
+          return null;
+        });
+
+    GoRouter.optionURLReflectsImperativeAPIs = false;
+    final router = createAppRouter(
+      queryParameters: const {},
+      initialLocation: '/${RouteNames.welcome}',
+    );
+    addTearDown(() {
+      router.dispose();
+      GoRouter.optionURLReflectsImperativeAPIs = false;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.navigation, null);
+    });
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    navigationCalls.clear();
+
+    unawaited(router.push('/${RouteNames.about}'));
+    await tester.pumpAndSettle();
+
+    final update = navigationCalls.lastWhere(
+      (call) => call.method == 'routeInformationUpdated',
+    );
+    final arguments = update.arguments! as Map<Object?, Object?>;
+    expect(arguments['uri'] ?? arguments['location'], '/${RouteNames.about}');
   });
 
   testWidgets('terms back falls back to welcome without previous screen', (
