@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey_template_providers.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 /// A Material 3 dialog that lets researchers browse and apply premade survey templates.
 class SurveyTemplatePickerDialog extends ConsumerWidget {
@@ -184,22 +185,36 @@ class _TemplateItemState extends State<_TemplateItem> {
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              template.description,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  template.description,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                if (template.isMultiDay) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    tr.form_survey_template_multi_day_help,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
           trailing: template.isMultiDay
-              ? IconButton(
+              ? TextButton.icon(
                   icon: Icon(
                     _expanded
                         ? Icons.expand_less_rounded
                         : Icons.expand_more_rounded,
                   ),
+                  label: Text(tr.form_survey_template_choose_day),
                   onPressed: () => setState(() => _expanded = !_expanded),
                 )
               : _isAlreadyAdded
@@ -272,18 +287,15 @@ class _DayEntryTile extends StatelessWidget {
               color: colorScheme.primary,
               size: 20,
             )
-          : IconButton(
-              icon: Icon(
-                Icons.add_circle_outline_rounded,
-                color: colorScheme.primary,
-                size: 20,
-              ),
+          : FilledButton.tonalIcon(
               onPressed: () {
                 final newVm = formViewModel.applyTemplateDayEntry(entry);
                 if (newVm != null) {
                   Navigator.of(context).pop();
                 }
               },
+              icon: const Icon(Icons.add_rounded),
+              label: Text(tr.form_survey_template_add_and_edit),
             ),
     );
   }

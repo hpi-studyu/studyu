@@ -442,7 +442,7 @@ class _ScheduleRuleEditor extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Schedule',
+                              'Occurrence schedule',
                               style: theme.textTheme.titleSmall?.copyWith(
                                 color: colorScheme.onSurface,
                                 fontWeight: FontWeight.w600,
@@ -451,8 +451,8 @@ class _ScheduleRuleEditor extends StatelessWidget {
                             const SizedBox(height: 2),
                             Text(
                               isScheduled
-                                  ? 'This survey appears on specific study days'
-                                  : 'Show on specific study days',
+                                  ? 'One occurrence pattern is active'
+                                  : 'Limit this survey to selected study days',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
@@ -519,37 +519,49 @@ class _ScheduleTypeSelector extends StatelessWidget {
       builder: (context, form, child) {
         final selectedType = formViewModel.selectedScheduleType;
 
-        return SegmentedButton<TaskScheduleType>(
-          segments: const [
-            ButtonSegment(
-              value: TaskScheduleType.specificDays,
-              label: Text('Specific days'),
-              icon: Icon(Icons.calendar_today_rounded, size: 18),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Choose one pattern. Selecting another pattern replaces the current one.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
-            ButtonSegment(
-              value: TaskScheduleType.everyNDays,
-              label: Text('Every N days'),
-              icon: Icon(Icons.repeat_rounded, size: 18),
-            ),
-            ButtonSegment(
-              value: TaskScheduleType.perCycle,
-              label: Text('Per cycle'),
-              icon: Icon(Icons.loop_rounded, size: 18),
+            const SizedBox(height: 8),
+            SegmentedButton<TaskScheduleType>(
+              segments: const [
+                ButtonSegment(
+                  value: TaskScheduleType.specificDays,
+                  label: Text('Specific days'),
+                  icon: Icon(Icons.calendar_today_rounded, size: 18),
+                ),
+                ButtonSegment(
+                  value: TaskScheduleType.everyNDays,
+                  label: Text('Every N days'),
+                  icon: Icon(Icons.repeat_rounded, size: 18),
+                ),
+                ButtonSegment(
+                  value: TaskScheduleType.perCycle,
+                  label: Text('Per cycle'),
+                  icon: Icon(Icons.loop_rounded, size: 18),
+                ),
+              ],
+              selected: {selectedType},
+              onSelectionChanged: (selected) {
+                formViewModel.scheduleTypeControl.value = selected.first.name;
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return colorScheme.primaryContainer;
+                  }
+                  return colorScheme.surface;
+                }),
+              ),
+              showSelectedIcon: false,
             ),
           ],
-          selected: {selectedType},
-          onSelectionChanged: (selected) {
-            formViewModel.scheduleTypeControl.value = selected.first.name;
-          },
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.selected)) {
-                return colorScheme.primaryContainer;
-              }
-              return colorScheme.surface;
-            }),
-          ),
-          showSelectedIcon: false,
         );
       },
     );
@@ -600,7 +612,7 @@ class _SpecificDaysEditor extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Select study days (1-indexed):',
+          'Select study days:',
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
@@ -705,7 +717,7 @@ class _EveryNDaysEditor extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Starting from day',
+              'Start after',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
               ),
@@ -716,6 +728,7 @@ class _EveryNDaysEditor extends StatelessWidget {
               child: ReactiveTextField<int>(
                 formControl: formViewModel.startDayOffsetControl,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(
@@ -725,16 +738,21 @@ class _EveryNDaysEditor extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  helperText: '0-based',
-                  helperStyle: const TextStyle(fontSize: 10),
                 ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'days',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface,
               ),
             ),
           ],
         ),
         const SizedBox(height: 4),
         Text(
-          'Study has $totalDays total days (0–${totalDays - 1})',
+          '0 starts on the first study day. The study has $totalDays total days.',
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
             fontStyle: FontStyle.italic,
@@ -771,7 +789,7 @@ class _PerCycleEditor extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Show on day',
+              'Show after',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
               ),
@@ -782,6 +800,7 @@ class _PerCycleEditor extends StatelessWidget {
               child: ReactiveTextField<int>(
                 formControl: formViewModel.dayOfCycleControl,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(
@@ -791,14 +810,12 @@ class _PerCycleEditor extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  helperText: '0-based',
-                  helperStyle: const TextStyle(fontSize: 10),
                 ),
               ),
             ),
             const SizedBox(width: 8),
             Text(
-              'of each cycle',
+              'days from the start of each cycle',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
               ),
@@ -807,7 +824,7 @@ class _PerCycleEditor extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Each cycle is $cycleLengthDays days ($phasesPerCycle phases × $phaseDuration days)',
+          '0 starts on the first day of the cycle. Each cycle is $cycleLengthDays days ($phasesPerCycle phases × $phaseDuration days).',
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
             fontStyle: FontStyle.italic,
@@ -914,14 +931,14 @@ class _SchedulePreview extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.visibility_rounded, size: 18, color: colorScheme.primary),
+          Icon(Icons.event_available, size: 18, color: colorScheme.primary),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Preview',
+                  'Schedule summary',
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w600,

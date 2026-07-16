@@ -2712,13 +2712,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Custom: Define your own sequence pattern to meet specific study requirements.';
 
   @override
-  String get form_nutrition_tracking_title => 'Nutritional Tracking';
-
-  @override
-  String get form_nutrition_tracking_enable_hint =>
-      'Enable nutritional tracking for this study';
-
-  @override
   String get form_measurement_type_select => 'Select Measurement Type';
 
   @override
@@ -2729,7 +2722,24 @@ class AppLocalizationsEn extends AppLocalizations {
       'Collect self-reported data from participants using questions and scales.';
 
   @override
-  String get form_measurement_type_nutrition => 'Nutrition Task';
+  String get form_measurement_type_template => 'Survey from template';
+
+  @override
+  String get form_measurement_type_template_description =>
+      'Start with a premade survey and edit it for this study.';
+
+  @override
+  String get form_survey_template_choose_day => 'Choose day';
+
+  @override
+  String get form_survey_template_add_and_edit => 'Add and edit';
+
+  @override
+  String get form_survey_template_multi_day_help =>
+      'Each day adds a separate survey scheduled for that study day.';
+
+  @override
+  String get form_measurement_type_nutrition => 'Nutrition tracking';
 
   @override
   String get form_measurement_type_nutrition_description =>
@@ -2744,14 +2754,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_field_nutrition_collect_meal_context =>
-      'Collect Meal Context';
+      'Collect meal context';
 
   @override
-  String get form_field_nutrition_allow_recipes => 'Allow Recipes';
+  String get form_field_nutrition_collect_meal_context_help =>
+      'Ask participants where and with whom they ate.';
+
+  @override
+  String get form_field_nutrition_allow_recipes => 'Allow recipes';
+
+  @override
+  String get form_field_nutrition_allow_recipes_help =>
+      'Let participants combine food items into reusable recipes.';
 
   @override
   String get form_field_nutrition_minimum_meals_required =>
-      'Minimum Meals Required';
+      'Minimum meals required';
+
+  @override
+  String get form_field_nutrition_minimum_meals_help =>
+      'Require this many non-skipped meals before participants can complete the task.';
 
   @override
   String get form_field_nutrition_minimum_meals_hint => 'Optional';

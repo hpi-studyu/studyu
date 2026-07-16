@@ -2750,13 +2750,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.';
 
   @override
-  String get form_nutrition_tracking_title => 'Ernährungsverfolgung';
-
-  @override
-  String get form_nutrition_tracking_enable_hint =>
-      'Ernährungsverfolgung für diese Studie aktivieren';
-
-  @override
   String get form_measurement_type_select => 'Messungstyp auswählen';
 
   @override
@@ -2767,7 +2760,24 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sammle selbstberichtete Daten von Teilnehmern mithilfe von Fragen und Skalen.';
 
   @override
-  String get form_measurement_type_nutrition => 'Ernährungsaufgabe';
+  String get form_measurement_type_template => 'Fragebogen aus Vorlage';
+
+  @override
+  String get form_measurement_type_template_description =>
+      'Beginne mit einem vorgefertigten Fragebogen und passe ihn für diese Studie an.';
+
+  @override
+  String get form_survey_template_choose_day => 'Tag auswählen';
+
+  @override
+  String get form_survey_template_add_and_edit => 'Hinzufügen und bearbeiten';
+
+  @override
+  String get form_survey_template_multi_day_help =>
+      'Jeder Tag fügt einen eigenen Fragebogen hinzu, der für diesen Studientag geplant ist.';
+
+  @override
+  String get form_measurement_type_nutrition => 'Ernährungserfassung';
 
   @override
   String get form_measurement_type_nutrition_description =>
@@ -2785,11 +2795,23 @@ class AppLocalizationsDe extends AppLocalizations {
       'Mahlzeitkontext erfassen';
 
   @override
+  String get form_field_nutrition_collect_meal_context_help =>
+      'Frage Teilnehmende, wo und mit wem sie gegessen haben.';
+
+  @override
   String get form_field_nutrition_allow_recipes => 'Rezepte erlauben';
 
   @override
+  String get form_field_nutrition_allow_recipes_help =>
+      'Erlaube Teilnehmenden, Lebensmittel zu wiederverwendbaren Rezepten zusammenzufassen.';
+
+  @override
   String get form_field_nutrition_minimum_meals_required =>
-      'Mindestanzahl erforderlicher Mahlzeiten';
+      'Mindestanzahl an Mahlzeiten';
+
+  @override
+  String get form_field_nutrition_minimum_meals_help =>
+      'Lege fest, wie viele nicht übersprungene Mahlzeiten vor Abschluss der Aufgabe erforderlich sind.';
 
   @override
   String get form_field_nutrition_minimum_meals_hint => 'Optional';

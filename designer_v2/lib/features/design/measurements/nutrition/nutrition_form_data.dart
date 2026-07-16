@@ -3,13 +3,12 @@ import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
-
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 class NutritionFormData extends IFormDataWithSchedule {
-  static String get kDefaultTitle =>
-      'Nutrition Tracking'; // TODO: Add to translation
+  static String get kDefaultTitle => tr.form_field_nutrition_default_title;
 
   NutritionFormData({
     required this.measurementId,

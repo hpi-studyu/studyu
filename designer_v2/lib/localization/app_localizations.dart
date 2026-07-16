@@ -4623,18 +4623,6 @@ abstract class AppLocalizations {
   /// **'Custom: Define your own sequence pattern to meet specific study requirements.'**
   String get study_schedule_custom_description;
 
-  /// No description provided for @form_nutrition_tracking_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Nutritional Tracking'**
-  String get form_nutrition_tracking_title;
-
-  /// No description provided for @form_nutrition_tracking_enable_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Enable nutritional tracking for this study'**
-  String get form_nutrition_tracking_enable_hint;
-
   /// No description provided for @form_measurement_type_select.
   ///
   /// In en, this message translates to:
@@ -4653,10 +4641,40 @@ abstract class AppLocalizations {
   /// **'Collect self-reported data from participants using questions and scales.'**
   String get form_measurement_type_survey_description;
 
+  /// No description provided for @form_measurement_type_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Survey from template'**
+  String get form_measurement_type_template;
+
+  /// No description provided for @form_measurement_type_template_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with a premade survey and edit it for this study.'**
+  String get form_measurement_type_template_description;
+
+  /// No description provided for @form_survey_template_choose_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose day'**
+  String get form_survey_template_choose_day;
+
+  /// No description provided for @form_survey_template_add_and_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add and edit'**
+  String get form_survey_template_add_and_edit;
+
+  /// No description provided for @form_survey_template_multi_day_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Each day adds a separate survey scheduled for that study day.'**
+  String get form_survey_template_multi_day_help;
+
   /// No description provided for @form_measurement_type_nutrition.
   ///
   /// In en, this message translates to:
-  /// **'Nutrition Task'**
+  /// **'Nutrition tracking'**
   String get form_measurement_type_nutrition;
 
   /// No description provided for @form_measurement_type_nutrition_description.
@@ -4680,20 +4698,38 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_nutrition_collect_meal_context.
   ///
   /// In en, this message translates to:
-  /// **'Collect Meal Context'**
+  /// **'Collect meal context'**
   String get form_field_nutrition_collect_meal_context;
+
+  /// No description provided for @form_field_nutrition_collect_meal_context_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask participants where and with whom they ate.'**
+  String get form_field_nutrition_collect_meal_context_help;
 
   /// No description provided for @form_field_nutrition_allow_recipes.
   ///
   /// In en, this message translates to:
-  /// **'Allow Recipes'**
+  /// **'Allow recipes'**
   String get form_field_nutrition_allow_recipes;
+
+  /// No description provided for @form_field_nutrition_allow_recipes_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Let participants combine food items into reusable recipes.'**
+  String get form_field_nutrition_allow_recipes_help;
 
   /// No description provided for @form_field_nutrition_minimum_meals_required.
   ///
   /// In en, this message translates to:
-  /// **'Minimum Meals Required'**
+  /// **'Minimum meals required'**
   String get form_field_nutrition_minimum_meals_required;
+
+  /// No description provided for @form_field_nutrition_minimum_meals_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Require this many non-skipped meals before participants can complete the task.'**
+  String get form_field_nutrition_minimum_meals_help;
 
   /// No description provided for @form_field_nutrition_minimum_meals_hint.
   ///

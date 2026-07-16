@@ -56,21 +56,6 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   bool get isNutritionEnabled =>
       measurementViewModels.any((vm) => vm is NutritionFormViewModel);
 
-  set isNutritionEnabled(bool enabled) {
-    if (enabled) {
-      if (!isNutritionEnabled) {
-        onNewNutrition();
-      }
-    } else {
-      final nutritionVm = measurementViewModels
-          .whereType<NutritionFormViewModel>()
-          .firstOrNull;
-      if (nutritionVm != null) {
-        measurementViewModelsCollection.remove(nutritionVm);
-      }
-    }
-  }
-
   @override
   FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [],
@@ -149,10 +134,15 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   List<ModelAction> availablePopupActions(ManagedFormViewModel model) {
-    final actions = measurementViewModelsCollection.availablePopupActions(
+    var actions = measurementViewModelsCollection.availablePopupActions(
       model as ManagedFormViewModel<IFormDataWithSchedule>,
       isReadOnly: isReadonly,
     );
+    if (model is NutritionFormViewModel) {
+      actions = actions
+          .where((action) => action.type != ModelActionType.duplicate)
+          .toList();
+    }
     return withIcons(actions, modelActionIcons);
   }
 
