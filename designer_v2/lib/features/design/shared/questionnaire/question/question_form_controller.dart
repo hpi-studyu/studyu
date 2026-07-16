@@ -175,6 +175,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     validators: [Validators.required],
     value: false,
   );
+  final FormControl<bool> isSelectionRequiredControl = FormControl(
+    validators: [Validators.required],
+    value: false,
+  );
   late final FormArray<Choice> choiceResponseOptionsArray = FormArray([
     for (int i = 0; i < customOptionsInitial; i++)
       FormControl(value: Choice.withId()),
@@ -552,6 +556,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     }),
     SurveyQuestionType.choice: FormGroup({
       'isMultipleChoice': isMultipleChoiceControl,
+      'isSelectionRequired': isSelectionRequiredControl,
       'choiceOptionsArray': choiceResponseOptionsArray,
     }),
     SurveyQuestionType.scale: FormGroup({
@@ -948,6 +953,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case SurveyQuestionType.choice:
         isMultipleChoiceControl.value =
             (data as ChoiceQuestionFormData).isMultipleChoice;
+        isSelectionRequiredControl.value = data.isSelectionRequired;
         // Unfortunately needed because of how [FormArray.updateValue] is implemented
         // Note: `formArray.value = []` does not remove any controls!
         answerOptionsArray.clear();
@@ -1024,6 +1030,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!,
+          isSelectionRequired: isSelectionRequiredControl.value!,
           // required
           answerOptions: validAnswerOptions,
         );

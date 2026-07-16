@@ -8,6 +8,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final ChoiceQuestion question;
   final Function(Answer) onDone;
   final String multiSelectionText;
+  final String requiredMultiSelectionText;
   final Answer<List<String>>? initialAnswer;
 
   const ChoiceQuestionWidget({
@@ -15,6 +16,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
     required this.question,
     required this.onDone,
     required this.multiSelectionText,
+    required this.requiredMultiSelectionText,
     this.initialAnswer,
   });
 
@@ -22,7 +24,11 @@ class ChoiceQuestionWidget extends QuestionWidget {
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
 
   @override
-  String? get subtitle => question.multiple ? multiSelectionText : null;
+  String? get subtitle => question.multiple
+      ? question.selectionRequired
+            ? requiredMultiSelectionText
+            : multiSelectionText
+      : null;
 }
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
@@ -40,6 +46,12 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   }
 
   void tapped(Choice choice) {
+    if (widget.question.selectionRequired &&
+        selected.length == 1 &&
+        selected.contains(choice)) {
+      return;
+    }
+
     setState(() {
       if (!widget.question.multiple) selected.clear();
       if (selected.contains(choice)) {
@@ -56,6 +68,8 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   }
 
   void confirm() {
+    if (widget.question.selectionRequired && selected.isEmpty) return;
+
     setState(() {
       confirmButtonTouched = true;
     });
@@ -81,12 +95,12 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
     if (widget.question.multiple && !confirmButtonTouched) {
       choiceWidgets.add(
         OutlinedButton(
-          onPressed: confirm,
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all<Color>(
-              Theme.of(context).colorScheme.secondary,
-            ),
-            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+          onPressed: widget.question.selectionRequired && selected.isEmpty
+              ? null
+              : confirm,
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            foregroundColor: Colors.white,
           ),
           child: Text(AppLocalizations.of(context)!.confirm),
         ),

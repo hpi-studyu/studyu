@@ -51,6 +51,9 @@ class QuestionContainer extends StatelessWidget {
           multiSelectionText: AppLocalizations.of(
             context,
           )!.eligible_choice_multi_selection,
+          requiredMultiSelectionText: AppLocalizations.of(
+            context,
+          )!.eligible_choice_multi_selection_required,
         );
       case final BooleanQuestion booleanQuestion:
         return BooleanQuestionWidget(

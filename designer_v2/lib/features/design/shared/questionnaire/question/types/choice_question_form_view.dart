@@ -18,16 +18,27 @@ class ChoiceQuestionFormView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        FormTableLayout(
-          rows: [
-            FormTableRow(
-              label: tr.form_field_response_choice_multiple,
-              labelHelpText: tr.form_field_response_choice_multiple_tooltip,
-              input: ReactiveSwitch(
-                formControl: formViewModel.isMultipleChoiceControl,
+        ReactiveValueListenableBuilder<bool>(
+          formControl: formViewModel.isMultipleChoiceControl,
+          builder: (context, control, _) => FormTableLayout(
+            rows: [
+              FormTableRow(
+                label: tr.form_field_response_choice_multiple,
+                labelHelpText: tr.form_field_response_choice_multiple_tooltip,
+                input: ReactiveSwitch(
+                  formControl: formViewModel.isMultipleChoiceControl,
+                ),
               ),
-            ),
-          ],
+              if (control.value == true)
+                FormTableRow(
+                  label: tr.form_field_response_choice_required,
+                  labelHelpText: tr.form_field_response_choice_required_tooltip,
+                  input: ReactiveSwitch(
+                    formControl: formViewModel.isSelectionRequiredControl,
+                  ),
+                ),
+            ],
+          ),
         ),
         const SizedBox(height: 12.0),
         ReactiveFormArray(

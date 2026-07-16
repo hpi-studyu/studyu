@@ -189,10 +189,12 @@ class ChoiceQuestionFormData extends QuestionFormData {
     super.questionInfoText,
     super.conditional,
     this.isMultipleChoice = false,
+    this.isSelectionRequired = false,
     required this.answerOptions,
   });
 
   final bool isMultipleChoice;
+  final bool isSelectionRequired;
   final List<Choice> answerOptions;
 
   @override
@@ -208,6 +210,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
+      isSelectionRequired: question.selectionRequired,
       answerOptions: question.choices,
       conditional: question.conditional,
     );
@@ -222,6 +225,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
+    question.selectionRequired = isSelectionRequired;
     question.choices = answerOptions;
     question.conditional = conditional == null
         ? null
@@ -241,6 +245,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
       isMultipleChoice: isMultipleChoice,
+      isSelectionRequired: isSelectionRequired,
       answerOptions: [...answerOptions],
       conditional: conditional?.deepCopy(),
     );

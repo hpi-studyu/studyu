@@ -1067,8 +1067,14 @@ abstract class AppLocalizations {
   /// No description provided for @eligible_choice_multi_selection.
   ///
   /// In en, this message translates to:
-  /// **'Select all that apply'**
+  /// **'Select all that apply (optional)'**
   String get eligible_choice_multi_selection;
+
+  /// No description provided for @eligible_choice_multi_selection_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply (at least one required)'**
+  String get eligible_choice_multi_selection_required;
 
   /// No description provided for @report_overview.
   ///

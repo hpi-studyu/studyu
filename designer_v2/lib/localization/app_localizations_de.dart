@@ -596,7 +596,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wähle die Antwortoptionen so, dass sie zur Frage passen und die von dir gewünschten Daten erhoben werden.';
 
   @override
-  String get question_type_choice => 'Multiple-Choice';
+  String get question_type_choice => 'Auswahl';
 
   @override
   String get question_type_free_text => 'Freitext';
@@ -663,11 +663,18 @@ class AppLocalizationsDe extends AppLocalizations {
       'Maximale Aufnahmedauer in Sekunden';
 
   @override
-  String get form_field_response_choice_multiple => 'Mehrfachauswahl';
+  String get form_field_response_choice_multiple => 'Mehrfachauswahl erlauben';
 
   @override
   String get form_field_response_choice_multiple_tooltip =>
-      'Erlaubt die Auswahl von mehreren Antwortoptionen gleichzeitig,\nansonsten kann nur eine einzige Option ausgewählt werden';
+      'Teilnehmende können mehr als eine Antwort auswählen.';
+
+  @override
+  String get form_field_response_choice_required => 'Antwort erforderlich';
+
+  @override
+  String get form_field_response_choice_required_tooltip =>
+      'Teilnehmende müssen mindestens eine Antwortoption auswählen.';
 
   @override
   String get form_array_response_options_choice_new =>
