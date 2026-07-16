@@ -99,7 +99,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     }
 
     setState(() {
-      _guidanceMessage = '✓ Valid barcode! Looking up...';
+      _guidanceMessage = 'Valid barcode. Looking up...';
     });
 
     // Prevent duplicate scans within 2 seconds (reduced from 3 for faster scanning)
@@ -506,7 +506,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    '📦 Large barcode? Move back 15-30cm\n📏 Small barcode? Move closer',
+                    'Large barcode? Move back 15-30 cm\nSmall barcode? Move closer',
                     style: TextStyle(
                       color: Colors.yellowAccent,
                       fontSize: 13,
@@ -528,7 +528,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                       child: Column(
                         children: [
                           const Text(
-                            '✓ DETECTED',
+                            'DETECTED',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,

@@ -2927,6 +2927,36 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// No description provided for @discard_meal_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard meal changes?'**
+  String get discard_meal_changes_title;
+
+  /// No description provided for @discard_meal_changes_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your changes to this meal will be lost.'**
+  String get discard_meal_changes_message;
+
+  /// No description provided for @enter_skip_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a reason before saving.'**
+  String get enter_skip_reason;
+
+  /// No description provided for @add_food_before_saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one food item before saving.'**
+  String get add_food_before_saving;
+
   /// No description provided for @meal_information.
   ///
   /// In en, this message translates to:
@@ -3050,61 +3080,61 @@ abstract class AppLocalizations {
   /// No description provided for @company_alone.
   ///
   /// In en, this message translates to:
-  /// **'👤 Alone'**
+  /// **'Alone'**
   String get company_alone;
 
   /// No description provided for @company_family.
   ///
   /// In en, this message translates to:
-  /// **'👨‍👩‍👧‍👦 Family'**
+  /// **'Family'**
   String get company_family;
 
   /// No description provided for @company_friends.
   ///
   /// In en, this message translates to:
-  /// **'👥 Friends'**
+  /// **'Friends'**
   String get company_friends;
 
   /// No description provided for @company_colleagues.
   ///
   /// In en, this message translates to:
-  /// **'💼 Colleagues'**
+  /// **'Colleagues'**
   String get company_colleagues;
 
   /// No description provided for @company_other.
   ///
   /// In en, this message translates to:
-  /// **'🤝 Other'**
+  /// **'Other'**
   String get company_other;
 
   /// No description provided for @distraction_none.
   ///
   /// In en, this message translates to:
-  /// **'🧘 None'**
+  /// **'None'**
   String get distraction_none;
 
   /// No description provided for @distraction_tv.
   ///
   /// In en, this message translates to:
-  /// **'📺 TV'**
+  /// **'TV'**
   String get distraction_tv;
 
   /// No description provided for @distraction_phone.
   ///
   /// In en, this message translates to:
-  /// **'📱 Phone'**
+  /// **'Phone'**
   String get distraction_phone;
 
   /// No description provided for @distraction_work.
   ///
   /// In en, this message translates to:
-  /// **'💻 Work'**
+  /// **'Work'**
   String get distraction_work;
 
   /// No description provided for @distraction_other.
   ///
   /// In en, this message translates to:
-  /// **'📖 Other'**
+  /// **'Other'**
   String get distraction_other;
 
   /// No description provided for @food_entry_title.
@@ -3302,25 +3332,25 @@ abstract class AppLocalizations {
   /// No description provided for @entry_type_single_ingredient.
   ///
   /// In en, this message translates to:
-  /// **'🥕 Single Ingredient'**
+  /// **'Single Ingredient'**
   String get entry_type_single_ingredient;
 
   /// No description provided for @entry_type_recipe.
   ///
   /// In en, this message translates to:
-  /// **'📖 Recipe'**
+  /// **'Recipe'**
   String get entry_type_recipe;
 
   /// No description provided for @entry_type_branded_product.
   ///
   /// In en, this message translates to:
-  /// **'🏷️ Branded Product'**
+  /// **'Branded Product'**
   String get entry_type_branded_product;
 
   /// No description provided for @entry_type_manual_entry.
   ///
   /// In en, this message translates to:
-  /// **'✏️ Manual Entry'**
+  /// **'Manual Entry'**
   String get entry_type_manual_entry;
 
   /// No description provided for @portion_method_household.
@@ -3766,6 +3796,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Details'**
   String get details;
+
+  /// No description provided for @meal_context.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal context'**
+  String get meal_context;
 
   /// No description provided for @search_food_database.
   ///

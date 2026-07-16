@@ -208,7 +208,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          l10n.photoRecallTapToEnlarge,
+                          l10n.photoRecallSubtitle,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
