@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -73,6 +72,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get get_started => 'Get started';
+
+  @override
+  String get welcome_find_study_title => 'Find your study';
+
+  @override
+  String get welcome_find_study_description =>
+      'Choose a public study or use an invitation.';
+
+  @override
+  String get browse_public_studies => 'Browse public studies';
+
+  @override
+  String get welcome_returning_participant =>
+      'Already participated with StudyU?';
+
+  @override
+  String get restore_studyu_account => 'Restore StudyU account';
 
   @override
   String get show_onboarding_again => 'Show onboarding again';

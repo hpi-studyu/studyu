@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
@@ -68,83 +67,124 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final primaryButtonStyle = FilledButton.styleFrom(
+      minimumSize: const Size.fromHeight(56),
+      textStyle: theme.textTheme.titleMedium,
+    );
+    final secondaryButtonStyle = OutlinedButton.styleFrom(
+      minimumSize: const Size.fromHeight(56),
+      textStyle: theme.textTheme.titleMedium,
+    );
+
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Spacer(),
-              GestureDetector(
-                onDoubleTap: () {
-                  DebugScreen.showDebugScreen(context);
-                },
-                child: const Image(
-                  image: AssetImage('assets/icon/logo.png'),
-                  height: 200,
-                ),
-              ),
-              const SizedBox(height: 20),
-              OutlinedButton.icon(
-                key: const ValueKey('welcome_about'),
-                icon: const Icon(Icons.info),
-                onPressed: () => context.push('/${RouteNames.about}'),
-                label: Text(
-                  AppLocalizations.of(context)!.what_is_studyu,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 20),
-              OutlinedButton.icon(
-                key: const ValueKey('welcome_contact'),
-                icon: const Icon(MdiIcons.accountBox),
-                onPressed: () => context.push('/${RouteNames.contact}'),
-                label: Text(
-                  AppLocalizations.of(context)!.contact,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 20),
-              OutlinedButton.icon(
-                key: const ValueKey('welcome_faq'),
-                icon: const Icon(MdiIcons.frequentlyAskedQuestions),
-                onPressed: () => context.push('/${RouteNames.faq}'),
-                label: Text(
-                  AppLocalizations.of(context)!.faq,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              const Spacer(),
-              OutlinedButton.icon(
-                key: const ValueKey('welcome_get_started'),
-                icon: const Icon(MdiIcons.rocket, size: 30),
-                onPressed: () => context.push('/${RouteNames.terms}'),
-                label: Text(
-                  AppLocalizations.of(context)!.get_started,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () => context.pushNamed(RouteNames.restoreAccount),
-                child: Text(
-                  AppLocalizations.of(context)!.restore_account,
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
-              const Spacer(),
-              if (kDebugMode)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: TextButton.icon(
-                    key: const ValueKey('welcome_debug_onboarding'),
-                    style: TextButton.styleFrom(foregroundColor: Colors.orange),
-                    icon: const Icon(Icons.bug_report),
-                    onPressed: () => context.go('/${RouteNames.onboarding}'),
-                    label: const Text('Show onboarding'),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  GestureDetector(
+                    onDoubleTap: () => DebugScreen.showDebugScreen(context),
+                    child: const Image(
+                      image: AssetImage('assets/icon/logo.png'),
+                      height: 140,
+                    ),
                   ),
-                ),
-            ],
+                  const SizedBox(height: 24),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      l10n.welcome_find_study_title,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: theme.primaryColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.welcome_find_study_description,
+                    style: theme.textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  FilledButton.icon(
+                    key: const ValueKey('welcome_get_started'),
+                    style: primaryButtonStyle,
+                    icon: const Icon(Icons.search),
+                    onPressed: () => context.push('/${RouteNames.terms}'),
+                    label: Text(l10n.browse_public_studies),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    key: const ValueKey('welcome_use_invite_code'),
+                    style: secondaryButtonStyle,
+                    icon: const Icon(Icons.vpn_key_outlined),
+                    onPressed: () =>
+                        context.push('/${RouteNames.terms}?invite=true'),
+                    label: Text(l10n.invite_code_button),
+                  ),
+                  const SizedBox(height: 28),
+                  const Divider(),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.welcome_returning_participant,
+                    style: theme.textTheme.titleSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    key: const ValueKey('welcome_restore_account'),
+                    style: secondaryButtonStyle,
+                    icon: const Icon(Icons.restore),
+                    onPressed: () =>
+                        context.pushNamed(RouteNames.restoreAccount),
+                    label: Text(l10n.restore_studyu_account),
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 4,
+                    children: [
+                      TextButton(
+                        key: const ValueKey('welcome_about'),
+                        onPressed: () => context.push('/${RouteNames.about}'),
+                        child: Text(l10n.what_is_studyu),
+                      ),
+                      TextButton(
+                        key: const ValueKey('welcome_faq'),
+                        onPressed: () => context.push('/${RouteNames.faq}'),
+                        child: Text(l10n.faq),
+                      ),
+                      TextButton(
+                        key: const ValueKey('welcome_contact'),
+                        onPressed: () => context.push('/${RouteNames.contact}'),
+                        child: Text(l10n.contact),
+                      ),
+                    ],
+                  ),
+                  if (kDebugMode) ...[
+                    const SizedBox(height: 8),
+                    TextButton.icon(
+                      key: const ValueKey('welcome_debug_onboarding'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.orange,
+                      ),
+                      icon: const Icon(Icons.bug_report),
+                      onPressed: () => context.go('/${RouteNames.onboarding}'),
+                      label: const Text('Show onboarding'),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

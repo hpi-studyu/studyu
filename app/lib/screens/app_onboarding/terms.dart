@@ -16,18 +16,23 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({super.key});
+  final bool openInviteCode;
+
+  const TermsScreen({this.openInviteCode = false, super.key});
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
 }
 
 @visibleForTesting
-String routeAfterTermsWithoutPendingDeepLink(AppState state) {
+String routeAfterTermsWithoutPendingDeepLink(
+  AppState state, {
+  bool openInviteCode = false,
+}) {
   if (state.selectedStudy != null) {
     return '/${RouteNames.studyOverview}';
   }
-  return '/${RouteNames.studySelection}';
+  return '/${RouteNames.studySelection}${openInviteCode ? '?invite=true' : ''}';
 }
 
 @visibleForTesting
@@ -179,7 +184,12 @@ class _TermsScreenState extends State<TermsScreen> {
                 if (state.hasPendingDeepLink) {
                   await _handlePendingDeepLink(state);
                 } else {
-                  context.push(routeAfterTermsWithoutPendingDeepLink(state));
+                  context.push(
+                    routeAfterTermsWithoutPendingDeepLink(
+                      state,
+                      openInviteCode: widget.openInviteCode,
+                    ),
+                  );
                 }
               }
             }

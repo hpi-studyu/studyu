@@ -155,7 +155,9 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.terms}',
         name: RouteNames.terms,
-        builder: (context, state) => const TermsScreen(),
+        builder: (context, state) => TermsScreen(
+          openInviteCode: state.uri.queryParameters['invite'] == 'true',
+        ),
       ),
       GoRoute(
         path: '/${RouteNames.recoveryPhrase}',
@@ -170,7 +172,9 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.studySelection}',
         name: RouteNames.studySelection,
-        builder: (context, state) => const StudySelectionScreen(),
+        builder: (context, state) => StudySelectionScreen(
+          openInviteCode: state.uri.queryParameters['invite'] == 'true',
+        ),
       ),
       GoRoute(
         path: '/${RouteNames.studyOverview}',

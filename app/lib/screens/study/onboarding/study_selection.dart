@@ -65,7 +65,9 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
 }
 
 class StudySelectionScreen extends StatefulWidget {
-  const StudySelectionScreen({super.key});
+  final bool openInviteCode;
+
+  const StudySelectionScreen({this.openInviteCode = false, super.key});
 
   @override
   State<StudySelectionScreen> createState() => _StudySelectionScreenState();
@@ -74,6 +76,21 @@ class StudySelectionScreen extends StatefulWidget {
 class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
   final publishedStudies = Study.publishedPublicStudies();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.openInviteCode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_showInviteCodeDialog());
+      });
+    }
+  }
+
+  Future<void> _showInviteCodeDialog() => showDialog<void>(
+    context: context,
+    builder: (_) => const InviteCodeDialog(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -178,12 +195,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               child: Center(
                 child: OutlinedButton.icon(
                   icon: const Icon(MdiIcons.key),
-                  onPressed: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (_) => const InviteCodeDialog(),
-                    );
-                  },
+                  onPressed: _showInviteCodeDialog,
                   label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
               ),

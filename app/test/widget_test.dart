@@ -18,6 +18,7 @@ import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
+import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase/supabase.dart';
 
@@ -38,7 +39,9 @@ Widget setup(Widget child, {AppState? appState}) {
           ),
           GoRoute(
             path: '/${RouteNames.terms}',
-            builder: (_, _) => const TermsScreen(),
+            builder: (_, state) => TermsScreen(
+              openInviteCode: state.uri.queryParameters['invite'] == 'true',
+            ),
           ),
           GoRoute(
             path: '/${RouteNames.restoreAccount}',
@@ -70,21 +73,52 @@ void main() {
       supabaseClient: SupabaseClient('https://example.supabase.co', 'test'),
     );
   });
-  testWidgets('Counter increments smoke test', (tester) async {
+  testWidgets('welcome prioritizes study discovery', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Get started'), findsOneWidget);
+    expect(
+      find.widgetWithText(FilledButton, 'Browse public studies'),
+      findsOneWidget,
+    );
+    expect(
+      find.widgetWithText(OutlinedButton, 'Use invite code'),
+      findsOneWidget,
+    );
+    expect(
+      find.widgetWithText(OutlinedButton, 'Restore StudyU account'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('restore account opens restore account route', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Restore account'));
+    await tester.tap(find.text('Restore StudyU account'));
     await tester.pumpAndSettle();
 
     expect(find.byType(RestoreAccountScreen), findsOneWidget);
+  });
+
+  testWidgets('invite action carries intent into terms', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_use_invite_code')));
+    await tester.pumpAndSettle();
+
+    final terms = tester.widget<TermsScreen>(find.byType(TermsScreen));
+    expect(terms.openInviteCode, isTrue);
+  });
+
+  testWidgets('invite intent opens invite code dialog', (tester) async {
+    await tester.pumpWidget(
+      setup(const StudySelectionScreen(openInviteCode: true)),
+    );
+    await tester.pump();
+
+    expect(find.byType(InviteCodeDialog), findsOneWidget);
   });
 
   test('restore account route is registered by name', () {
@@ -194,6 +228,13 @@ void main() {
     );
   });
 
+  test('terms continue preserves manual invite intent', () {
+    expect(
+      routeAfterTermsWithoutPendingDeepLink(AppState(), openInviteCode: true),
+      '/${RouteNames.studySelection}?invite=true',
+    );
+  });
+
   test('skips onboarding in debug mode', () {
     expect(
       initialRouteForMissingSubjectRoute(
@@ -212,6 +253,7 @@ void main() {
     final button = find.byKey(const ValueKey('welcome_debug_onboarding'));
     expect(find.text('Show onboarding'), findsOneWidget);
 
+    await tester.ensureVisible(button);
     await tester.tap(button);
     await tester.pumpAndSettle();
 
@@ -250,7 +292,9 @@ void main() {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('welcome_about')));
+    final about = find.byKey(const ValueKey('welcome_about'));
+    await tester.ensureVisible(about);
+    await tester.tap(about);
     await tester.pumpAndSettle();
     expect(find.byType(AboutScreen), findsOneWidget);
 

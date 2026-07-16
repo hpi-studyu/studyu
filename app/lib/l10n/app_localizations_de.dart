@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -73,6 +72,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get get_started => 'Los geht\'s';
+
+  @override
+  String get welcome_find_study_title => 'Finden Sie Ihre Studie';
+
+  @override
+  String get welcome_find_study_description =>
+      'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
+
+  @override
+  String get browse_public_studies => 'Öffentliche Studien durchsuchen';
+
+  @override
+  String get welcome_returning_participant =>
+      'Sie haben bereits mit StudyU an einer Studie teilgenommen?';
+
+  @override
+  String get restore_studyu_account => 'StudyU-Konto wiederherstellen';
 
   @override
   String get show_onboarding_again => 'Onboarding erneut ansehen';
