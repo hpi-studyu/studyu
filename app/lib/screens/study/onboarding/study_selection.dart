@@ -312,6 +312,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 : List<String>.from(preselectedInterventionIds as List);
             appState.inviteCode = inviteCode;
             appState.selectedStudy = study;
+            // Replace (not push) so accepting an invite can't be undone via back button.
             Navigator.pushReplacementNamed(context, Routes.studyOverview);
           }
         },
