@@ -253,10 +253,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
+          final inviteCode = _controller.text;
           try {
-            final (invite, study) = await Study.fetchByInviteCode(
-              _controller.text,
-            );
+            final (invite, study) = await Study.fetchByInviteCode(inviteCode);
 
             if (!mounted) return;
 
@@ -286,7 +285,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             await navigateToStudyOverview(
               context,
               study,
-              inviteCode: _controller.text,
+              inviteCode: inviteCode,
               preselectedIds: invite?.preselectedInterventionIds,
             );
           } catch (e) {
