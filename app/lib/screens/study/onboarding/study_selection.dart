@@ -250,21 +250,25 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
+          final inviteCode = _controller.text;
           Map<String, dynamic>? studyResult;
           try {
             studyResult = await Supabase.instance.client
                 .rpc(
                   'get_study_record_from_invite',
-                  params: {'invite_code': _controller.text},
+                  params: {'invite_code': inviteCode},
                 )
                 .single();
           } on PostgrestException catch (error) {
             print(error.message);
+            if (!mounted) return;
             setState(() {
               _errorMessage = error.message;
             });
+            return;
           }
-          if (studyResult == null || studyResult['id'] == null) {
+          if (!mounted) return;
+          if (studyResult['id'] == null) {
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });
@@ -295,7 +299,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             final inviteResult = await Supabase.instance.client
                 .from('study_invite')
                 .select('preselected_intervention_ids')
-                .eq('code', _controller.text)
+                .eq('code', inviteCode)
                 .maybeSingle();
             if (!context.mounted) return;
 
@@ -306,7 +310,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 preselectedInterventionIds == null
                 ? null
                 : List<String>.from(preselectedInterventionIds as List);
-            appState.inviteCode = _controller.text;
+            appState.inviteCode = inviteCode;
             appState.selectedStudy = study;
             Navigator.pushReplacementNamed(context, Routes.studyOverview);
           }
