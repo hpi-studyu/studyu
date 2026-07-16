@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/welcome_entry_hub.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 
@@ -66,128 +67,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final primaryButtonStyle = FilledButton.styleFrom(
-      minimumSize: const Size.fromHeight(56),
-      textStyle: theme.textTheme.titleMedium,
-    );
-    final secondaryButtonStyle = OutlinedButton.styleFrom(
-      minimumSize: const Size.fromHeight(56),
-      textStyle: theme.textTheme.titleMedium,
-    );
-
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  GestureDetector(
-                    onDoubleTap: () => DebugScreen.showDebugScreen(context),
-                    child: const Image(
-                      image: AssetImage('assets/icon/logo.png'),
-                      height: 140,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      l10n.welcome_find_study_title,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: theme.primaryColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.welcome_find_study_description,
-                    style: theme.textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  FilledButton.icon(
-                    key: const ValueKey('welcome_get_started'),
-                    style: primaryButtonStyle,
-                    icon: const Icon(Icons.search),
-                    onPressed: () => context.push('/${RouteNames.terms}'),
-                    label: Text(l10n.browse_public_studies),
-                  ),
-                  const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    key: const ValueKey('welcome_use_invite_code'),
-                    style: secondaryButtonStyle,
-                    icon: const Icon(Icons.vpn_key_outlined),
-                    onPressed: () =>
-                        context.push('/${RouteNames.terms}?invite=true'),
-                    label: Text(l10n.invite_code_button),
-                  ),
-                  const SizedBox(height: 28),
-                  const Divider(),
-                  const SizedBox(height: 12),
-                  Text(
-                    l10n.welcome_returning_participant,
-                    style: theme.textTheme.titleSmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    key: const ValueKey('welcome_restore_account'),
-                    style: secondaryButtonStyle,
-                    icon: const Icon(Icons.restore),
-                    onPressed: () =>
-                        context.pushNamed(RouteNames.restoreAccount),
-                    label: Text(l10n.restore_studyu_account),
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 4,
-                    children: [
-                      TextButton(
-                        key: const ValueKey('welcome_about'),
-                        onPressed: () => context.push('/${RouteNames.about}'),
-                        child: Text(l10n.what_is_studyu),
-                      ),
-                      TextButton(
-                        key: const ValueKey('welcome_faq'),
-                        onPressed: () => context.push('/${RouteNames.faq}'),
-                        child: Text(l10n.faq),
-                      ),
-                      TextButton(
-                        key: const ValueKey('welcome_contact'),
-                        onPressed: () => context.push('/${RouteNames.contact}'),
-                        child: Text(l10n.contact),
-                      ),
-                    ],
-                  ),
-                  if (kDebugMode) ...[
-                    const SizedBox(height: 8),
-                    TextButton.icon(
-                      key: const ValueKey('welcome_debug_onboarding'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.orange,
-                      ),
-                      icon: const Icon(Icons.bug_report),
-                      onPressed: () => context.go('/${RouteNames.onboarding}'),
-                      label: const Text('Show onboarding'),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => WelcomeEntryHub(
+    onLogoDoubleTap: () => DebugScreen.showDebugScreen(context),
+    onBrowsePublicStudies: () => context.push('/${RouteNames.terms}'),
+    onUseInviteCode: () => context.push('/${RouteNames.terms}?invite=true'),
+    onRestoreAccount: () => context.pushNamed(RouteNames.restoreAccount),
+    onAbout: () => context.push('/${RouteNames.about}'),
+    onFaq: () => context.push('/${RouteNames.faq}'),
+    onContact: () => context.push('/${RouteNames.contact}'),
+    onDebugOnboarding: kDebugMode
+        ? () => context.go('/${RouteNames.onboarding}')
+        : null,
+  );
 }
