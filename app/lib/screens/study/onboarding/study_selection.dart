@@ -292,34 +292,23 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               return;
             }
 
-            // Get preselected_intervention_ids before closing the dialog so its
-            // context remains mounted while the request is in flight.
             final inviteResult = await Supabase.instance.client
                 .from('study_invite')
                 .select('preselected_intervention_ids')
                 .eq('code', _controller.text)
                 .maybeSingle();
             if (!context.mounted) return;
-            Navigator.pop(context);
-            if (inviteResult != null &&
-                inviteResult.containsKey('preselected_intervention_ids') &&
-                inviteResult['preselected_intervention_ids'] != null) {
-              final preselectedIds = List<String>.from(
-                inviteResult['preselected_intervention_ids'] as List,
-              );
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-                preselectedIds: preselectedIds,
-              );
-            } else {
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-              );
-            }
+
+            final preselectedInterventionIds =
+                inviteResult?['preselected_intervention_ids'];
+            final appState = context.read<AppState>();
+            appState.preselectedInterventionIds =
+                preselectedInterventionIds == null
+                ? null
+                : List<String>.from(preselectedInterventionIds as List);
+            appState.inviteCode = _controller.text;
+            appState.selectedStudy = study;
+            Navigator.pushReplacementNamed(context, Routes.studyOverview);
           }
         },
       ),
