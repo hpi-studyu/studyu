@@ -292,16 +292,15 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               return;
             }
 
-            if (!context.mounted) return;
-            Navigator.pop(context);
-
-            // Get preselected_intervention_ids from study_invite table
+            // Get preselected_intervention_ids before closing the dialog so its
+            // context remains mounted while the request is in flight.
             final inviteResult = await Supabase.instance.client
                 .from('study_invite')
                 .select('preselected_intervention_ids')
                 .eq('code', _controller.text)
                 .maybeSingle();
             if (!context.mounted) return;
+            Navigator.pop(context);
             if (inviteResult != null &&
                 inviteResult.containsKey('preselected_intervention_ids') &&
                 inviteResult['preselected_intervention_ids'] != null) {
