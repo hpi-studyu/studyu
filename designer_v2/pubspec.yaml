@@ -1,6 +1,7 @@
 name: studyu_designer_v2
 version: 1.18.0
-description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
+description: >-
+  Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
@@ -50,7 +51,8 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.15.1
-  # flutter_launcher_icons: ^0.14.4 # seems deprecated, maybe icons_launcher is an alternative
+  # flutter_launcher_icons: ^0.14.4
+  # Deprecated? icons_launcher may be an alternative.
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
