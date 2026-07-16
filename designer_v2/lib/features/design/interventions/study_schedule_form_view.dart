@@ -126,9 +126,13 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                           ),
                         ),
                       //formControl: widget.formViewModel.phaseDurationControl,
-                      onChanged: (value) =>
+                      onChanged: (value) {
+                        final phaseDuration = int.tryParse(value);
+                        if (phaseDuration != null) {
                           widget.formViewModel.phaseDurationControl.value =
-                              int.parse(value),
+                              phaseDuration;
+                        }
+                      },
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
@@ -161,9 +165,13 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                     child: TextField(
                       readOnly: widget.formViewModel.numCyclesControl.disabled,
                       //formControl: widget.formViewModel.numCyclesControl,
-                      onChanged: (value) =>
+                      onChanged: (value) {
+                        final numCycles = int.tryParse(value);
+                        if (numCycles != null) {
                           widget.formViewModel.numCyclesControl.value =
-                              int.parse(value),
+                              numCycles;
+                        }
+                      },
                       controller: TextEditingController()
                         ..value = TextEditingValue(
                           text: widget.formViewModel.numCyclesControl.value
