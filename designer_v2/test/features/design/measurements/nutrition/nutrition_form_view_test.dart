@@ -4,11 +4,25 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_view.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 void main() {
   setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
+
+  test('allows an empty optional minimum meal count', () {
+    final formViewModel = NutritionFormViewModel(
+      study: Study.withId('study-1'),
+      validationSet: StudyFormValidationSet.test,
+    );
+
+    expect(formViewModel.minimumMealsRequiredControl.valid, isTrue);
+
+    formViewModel.minimumMealsRequiredControl.value = 0;
+
+    expect(formViewModel.minimumMealsRequiredControl.valid, isFalse);
+  });
 
   testWidgets('add meal type shows a new input', (tester) async {
     final formViewModel = NutritionFormViewModel(
