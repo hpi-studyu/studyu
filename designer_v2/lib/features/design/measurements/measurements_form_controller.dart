@@ -56,6 +56,20 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   bool get isNutritionEnabled =>
       measurementViewModels.any((vm) => vm is NutritionFormViewModel);
 
+  String measurementTitle(
+    ManagedFormViewModel<IFormDataWithSchedule> viewModel,
+  ) {
+    if (viewModel is MeasurementSurveyFormViewModel) {
+      return viewModel.surveyTitleControl.value ??
+          viewModel.formData?.title ??
+          '';
+    }
+    if (viewModel is NutritionFormViewModel) {
+      return viewModel.titleControl.value ?? viewModel.formData?.title ?? '';
+    }
+    return '';
+  }
+
   @override
   FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [],
@@ -206,7 +220,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   /// Check if a survey with the given [title] is already added.
   bool isSurveyWithTitleAdded(String title) {
-    return measurementViewModels.any((vm) {
+    return measurementViewModelsCollection.retrievableViewModels.any((vm) {
       if (vm is MeasurementSurveyFormViewModel) {
         return vm.formData?.title == title;
       }
@@ -215,25 +229,56 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   /// Apply a single-task survey template (e.g. FFQ 26-question).
-  void applyTemplate(SurveyTemplate template) {
-    final task = template.buildTask();
-    final formData = MeasurementSurveyFormData.fromDomainModel(task);
-    final viewModel = MeasurementSurveyFormViewModel(
-      study: study,
-      formData: formData,
-      delegate: this,
-      validationSet: validationSet,
-    );
+  MeasurementSurveyFormViewModel? applyTemplate(SurveyTemplate template) {
+    final viewModel = _viewModelForTask(template.buildTask());
+    if (viewModel == null) return null;
     measurementViewModelsCollection.stage(viewModel);
     onSelectItem(viewModel);
+    return viewModel;
   }
 
   /// Apply a single day entry from a multi-day template (e.g. DHQ3 day 3).
   MeasurementSurveyFormViewModel? applyTemplateDayEntry(
     SurveyTemplateDayEntry entry,
   ) {
+    final viewModel = _viewModelForDayEntry(entry);
+    if (viewModel == null) return null;
+    measurementViewModelsCollection.stage(viewModel);
+    onSelectItem(viewModel);
+    return viewModel;
+  }
+
+  Future<void> addPredefinedMeasurements({
+    required bool includeNutrition,
+    required Iterable<SurveyTemplate> templates,
+    required Iterable<SurveyTemplateDayEntry> dayEntries,
+  }) async {
+    var changed = false;
+
+    for (final template in templates) {
+      final viewModel = _viewModelForTask(template.buildTask());
+      if (viewModel == null) continue;
+      measurementViewModelsCollection.add(viewModel);
+      changed = true;
+    }
+    for (final entry in dayEntries) {
+      final viewModel = _viewModelForDayEntry(entry);
+      if (viewModel == null) continue;
+      measurementViewModelsCollection.add(viewModel);
+      changed = true;
+    }
+    if (includeNutrition && !isNutritionEnabled) {
+      _provideNewNutrition();
+      changed = true;
+    }
+
+    if (changed) await save();
+  }
+
+  MeasurementSurveyFormViewModel? _viewModelForDayEntry(
+    SurveyTemplateDayEntry entry,
+  ) {
     final task = entry.buildTask();
-    if (isSurveyWithTitleAdded(task.title ?? '')) return null;
     final phaseDuration = study.schedule.phaseDuration;
     final baseDay = study.schedule.includeBaseline ? phaseDuration : 0;
     final dayIndex = entry.dayIndex;
@@ -241,16 +286,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
         ? baseDay + dayIndex
         : baseDay + phaseDuration + (dayIndex - 7);
     task.scheduleRule = TaskScheduleRule.forSpecificDays([studyDay]);
-    final formData = MeasurementSurveyFormData.fromDomainModel(task);
-    final viewModel = MeasurementSurveyFormViewModel(
+    return _viewModelForTask(task);
+  }
+
+  MeasurementSurveyFormViewModel? _viewModelForTask(QuestionnaireTask task) {
+    if (isSurveyWithTitleAdded(task.title ?? '')) return null;
+    return MeasurementSurveyFormViewModel(
       study: study,
-      formData: formData,
+      formData: MeasurementSurveyFormData.fromDomainModel(task),
       delegate: this,
       validationSet: validationSet,
     );
-    measurementViewModelsCollection.stage(viewModel);
-    onSelectItem(viewModel);
-    return viewModel;
   }
 
   // - IProviderArgsResolver
@@ -304,11 +350,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onCancel(ManagedFormViewModel formViewModel, FormMode formMode) {
-    if (formMode != FormMode.create) return;
-
     final typedVm =
         formViewModel as ManagedFormViewModel<IFormDataWithSchedule>;
-    if (!measurementViewModelsCollection.unstage(typedVm)) {
+    if (measurementViewModelsCollection.unstage(typedVm)) return;
+    if (formMode == FormMode.create) {
       measurementViewModelsCollection.remove(typedVm);
     }
   }

@@ -61,7 +61,11 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
 
   FormControlValidation get minimumMealsMin => FormControlValidation(
     control: minimumMealsRequiredControl,
-    validators: [Validators.min(1)],
+    validators: [
+      Validators.delegate(
+        (control) => control.value == null ? null : Validators.min(1)(control),
+      ),
+    ],
     validationMessages: {
       ValidationMessage.min: (_) =>
           tr.form_field_nutrition_minimum_meals_min_error,

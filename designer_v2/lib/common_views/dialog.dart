@@ -15,6 +15,7 @@ class StandardDialog extends StatelessWidget {
     this.maxWidth,
     this.maxHeight,
     this.actionButtons = const [],
+    this.scrollBody = true,
     this.backgroundColor,
     this.borderRadius = 20.0,
     super.key,
@@ -24,6 +25,7 @@ class StandardDialog extends StatelessWidget {
   final String? titleText;
   final Widget body;
   final List<Widget> actionButtons;
+  final bool scrollBody;
 
   final Color? backgroundColor;
   final double? borderRadius;
@@ -102,7 +104,11 @@ class StandardDialog extends StatelessWidget {
                       SizedBox(height: padding.top * 2 / 3)
                     else
                       const SizedBox.shrink(),
-                    Expanded(child: SingleChildScrollView(child: body)),
+                    Expanded(
+                      child: scrollBody
+                          ? SingleChildScrollView(child: body)
+                          : body,
+                    ),
                     SizedBox(height: padding.bottom),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

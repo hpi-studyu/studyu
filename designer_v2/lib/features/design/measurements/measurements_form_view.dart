@@ -4,10 +4,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurement_selection_dialog.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurement_picker_dialog.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey_template_picker_dialog.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -15,6 +14,7 @@ import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
   const StudyDesignMeasurementsFormView(super.studyId, {super.key});
@@ -56,9 +56,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                               _showAddMeasurementDialog(context, formViewModel)
                         : null,
                     onNewItemLabel: tr.form_array_measurements_surveys_new,
-                    rowTitle: (viewModel) =>
-                        ((viewModel.formData as dynamic).title as String?) ??
-                        '',
+                    rowTitle: formViewModel.measurementTitle,
                     rowPrefix: (context, viewModel, _) => Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: Icon(
@@ -111,22 +109,14 @@ Future<void> _showAddMeasurementDialog(
 ) async {
   final selection = await showDialog<MeasurementSelection>(
     context: context,
-    builder: (_) => MeasurementSelectionDialog(
+    barrierColor: ThemeConfig.modalBarrierColor(Theme.of(context)),
+    builder: (_) => MeasurementPickerDialog(
+      formViewModel: formViewModel,
       canAddNutrition: !formViewModel.isNutritionEnabled,
     ),
   );
-  if (!context.mounted || selection == null) return;
-
-  switch (selection) {
-    case MeasurementSelection.blankSurvey:
-      formViewModel.onNewSurvey();
-    case MeasurementSelection.template:
-      await showDialog<void>(
-        context: context,
-        builder: (_) =>
-            SurveyTemplatePickerDialog(formViewModel: formViewModel),
-      );
-    case MeasurementSelection.nutrition:
-      formViewModel.onNewNutrition();
+  if (!context.mounted || selection != MeasurementSelection.blankSurvey) {
+    return;
   }
+  formViewModel.onNewSurvey();
 }
