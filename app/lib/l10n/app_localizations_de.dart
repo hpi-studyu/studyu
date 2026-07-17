@@ -1253,6 +1253,33 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ich habe alle 13 Wörter an einem sicheren Ort gespeichert und kann sie abrufen, wenn ich mein Konto wiederherstellen möchte. Ich kann sie auch jederzeit in den Studieneinstellungen einsehen.';
 
   @override
+  String get recovery_phrase_rotate_button =>
+      'Wiederherstellungsphrase neu ausstellen';
+
+  @override
+  String get recovery_phrase_rotate_dialog_title =>
+      'Wiederherstellungsphrase neu ausstellen?';
+
+  @override
+  String get recovery_phrase_rotate_dialog_description =>
+      'Deine aktuelle Wiederherstellungsphrase funktioniert danach sofort nicht mehr. Du musst die neue Phrase speichern, um dein Konto zukünftig wiederherstellen zu können.';
+
+  @override
+  String get recovery_phrase_rotate_acknowledgement =>
+      'Ich verstehe, dass meine aktuelle Wiederherstellungsphrase sofort nicht mehr funktionieren wird.';
+
+  @override
+  String get recovery_phrase_rotate_confirm => 'Phrase neu ausstellen';
+
+  @override
+  String get recovery_phrase_rotate_success =>
+      'Eine neue Wiederherstellungsphrase wurde ausgestellt. Speichere sie jetzt.';
+
+  @override
+  String get recovery_phrase_rotate_error =>
+      'Eine neue Wiederherstellungsphrase konnte nicht ausgestellt werden. Bitte versuche es erneut.';
+
+  @override
   String get continue_to_study => 'Weiter zur Studie';
 
   @override

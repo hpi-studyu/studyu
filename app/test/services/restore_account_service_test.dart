@@ -6,15 +6,6 @@ void main() {
   group('RestoreAccountService', () {
     tearDown(RestoreAccountService.clearCache);
 
-    test('RecoveryResult reads the replacement recovery ID', () {
-      final result = RecoveryResult.fromJson({
-        'success': true,
-        'recovery_id': '00000000-0000-4000-8000-000000000002',
-      });
-
-      expect(result.recoveryId, '00000000-0000-4000-8000-000000000002');
-    });
-
     test('decodeRecoveryPhrase accepts German recovery phrases', () {
       final recoveryId = BigInt.parse(
         '1234567890ABCDEF1234567890ABCDEF',
@@ -23,6 +14,60 @@ void main() {
       final words = encode(recoveryId, wordlist: wordlistDe);
 
       expect(RestoreAccountService.decodeRecoveryPhrase(words), recoveryId);
+    });
+
+    test('rotateRecoveryPhrase replaces the cached phrase', () async {
+      const oldRecoveryId = '00000000-0000-0000-0000-000000000001';
+      const newRecoveryId = '00000000-0000-0000-0000-000000000002';
+      var fetchCount = 0;
+
+      RestoreAccountService.debugCurrentUserIdGetterForTesting = () => 'user';
+      RestoreAccountService.debugRecoveryIdGetterForTesting = () async {
+        fetchCount++;
+        return oldRecoveryId;
+      };
+      RestoreAccountService.debugRecoveryIdRotatorForTesting = () async =>
+          newRecoveryId;
+      addTearDown(
+        RestoreAccountService.debugResetCurrentUserIdGetterForTesting,
+      );
+      addTearDown(RestoreAccountService.debugResetRecoveryIdGetterForTesting);
+      addTearDown(RestoreAccountService.debugResetRecoveryIdRotatorForTesting);
+
+      expect(
+        await RestoreAccountService.getRecoveryPhrase(),
+        encode(BigInt.one),
+      );
+      expect(
+        await RestoreAccountService.rotateRecoveryPhrase(),
+        encode(BigInt.two),
+      );
+      expect(
+        await RestoreAccountService.getRecoveryPhrase(),
+        encode(BigInt.two),
+      );
+      expect(fetchCount, 1);
+    });
+
+    test('failed rotation clears the cached phrase', () async {
+      var fetchCount = 0;
+      RestoreAccountService.debugCurrentUserIdGetterForTesting = () => 'user';
+      RestoreAccountService.debugRecoveryIdGetterForTesting = () async {
+        fetchCount++;
+        return '00000000-0000-0000-0000-000000000001';
+      };
+      RestoreAccountService.debugRecoveryIdRotatorForTesting = () async => null;
+      addTearDown(
+        RestoreAccountService.debugResetCurrentUserIdGetterForTesting,
+      );
+      addTearDown(RestoreAccountService.debugResetRecoveryIdGetterForTesting);
+      addTearDown(RestoreAccountService.debugResetRecoveryIdRotatorForTesting);
+
+      await RestoreAccountService.getRecoveryPhrase();
+      expect(await RestoreAccountService.rotateRecoveryPhrase(), isNull);
+      await RestoreAccountService.getRecoveryPhrase();
+
+      expect(fetchCount, 2);
     });
 
     test(

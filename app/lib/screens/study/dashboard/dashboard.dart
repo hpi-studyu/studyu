@@ -579,6 +579,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                               useGridLayout: false,
                               isChecked: isChecked,
                               showSuccessFeedback: false,
+                              showRotation: false,
                               onCheckedChanged: (value) {
                                 setDialogState(
                                   () => isChecked = value ?? false,

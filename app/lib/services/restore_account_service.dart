@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,7 +7,6 @@ class RecoveryResult {
   final bool success;
   final String? email;
   final String? password;
-  final String? recoveryId;
   final String? subjectId;
   final String? error;
 
@@ -16,7 +14,6 @@ class RecoveryResult {
     required this.success,
     this.email,
     this.password,
-    this.recoveryId,
     this.subjectId,
     this.error,
   });
@@ -26,7 +23,6 @@ class RecoveryResult {
       success: json['success'] as bool? ?? false,
       email: json['email'] as String?,
       password: json['password'] as String?,
-      recoveryId: json['recovery_id'] as String?,
       subjectId: json['subject_id'] as String?,
       error: json['error'] as String?,
     );
@@ -38,6 +34,7 @@ class RestoreAccountService {
   static String? _cachedRecoveryId;
   static String? _cachedUserId;
   static Future<String?> Function() _recoveryIdGetter = _fetchRecoveryId;
+  static Future<String?> Function() _recoveryIdRotator = _rotateRecoveryId;
   static String? Function() _currentUserIdGetter = _currentUserId;
 
   static void clearCache() {
@@ -60,6 +57,22 @@ class RestoreAccountService {
   @visibleForTesting
   static void debugResetRecoveryIdGetterForTesting() {
     _recoveryIdGetter = _fetchRecoveryId;
+  }
+
+  @visibleForTesting
+  static Future<String?> Function() get debugRecoveryIdRotatorForTesting =>
+      _recoveryIdRotator;
+
+  @visibleForTesting
+  static set debugRecoveryIdRotatorForTesting(
+    Future<String?> Function() rotator,
+  ) {
+    _recoveryIdRotator = rotator;
+  }
+
+  @visibleForTesting
+  static void debugResetRecoveryIdRotatorForTesting() {
+    _recoveryIdRotator = _rotateRecoveryId;
   }
 
   @visibleForTesting
@@ -154,6 +167,36 @@ class RestoreAccountService {
       }
     } catch (e) {
       StudyULogger.warning('Error getting recovery_id: $e');
+      return null;
+    }
+  }
+
+  static Future<List<String>?> rotateRecoveryPhrase() async {
+    clearCache();
+    final recoveryId = await _recoveryIdRotator();
+    final sanitizedId = recoveryId == null ? null : _sanitizeUuid(recoveryId);
+    if (sanitizedId == null) return null;
+
+    try {
+      final phrase = encode(BigInt.parse(sanitizedId, radix: 16));
+      _cachedRecoveryId = recoveryId;
+      _cachedPhrase = phrase;
+      _cachedUserId = _currentUserIdGetter();
+      return phrase;
+    } on FormatException catch (e) {
+      StudyULogger.warning('Failed to parse rotated recovery ID: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> _rotateRecoveryId() async {
+    try {
+      final response = await Supabase.instance.client.rpc('rotate_recovery_id');
+      if (response is String) return response;
+      StudyULogger.warning('Unexpected rotate_recovery_id response');
+      return null;
+    } catch (e) {
+      StudyULogger.warning('Error rotating recovery_id: $e');
       return null;
     }
   }
@@ -267,11 +310,6 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
-      if (result.recoveryId != null) {
-        _cachedRecoveryId = result.recoveryId;
-        _cachedUserId = _currentUserIdGetter();
-      }
-
       if (result.subjectId != null) {
         final isValid = await validateSubject(result.subjectId!);
 
@@ -280,12 +318,10 @@ class RestoreAccountService {
             success: true,
             email: result.email,
             password: result.password,
-            recoveryId: result.recoveryId,
           );
         }
 
         await storeActiveSubjectId(result.subjectId!);
-        await RecoveryPhraseStorage.markPending(result.subjectId!);
       }
 
       return result;
