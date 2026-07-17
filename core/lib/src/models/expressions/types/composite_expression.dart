@@ -41,21 +41,13 @@ class CompositeExpression extends Expression {
         .map((exp) => exp.evaluate(state))
         .toList();
 
-    // Filter out nulls if you want to ignore expressions that couldn't be evaluated,
-    // or handle them as 'false' based on your specific logic.
-    // For simplicity, if any sub-expression is null, the composite evaluation will be null.
-    if (evaluatedResults.contains(null)) {
-      return null;
-    }
-
-    // All results are non-null booleans now
-    final boolResults = evaluatedResults.cast<bool>();
-
     switch (logicType) {
       case LogicType.and:
-        return boolResults.every((result) => result == true);
+        if (evaluatedResults.contains(false)) return false;
+        return evaluatedResults.contains(null) ? null : true;
       case LogicType.or:
-        return boolResults.any((result) => result == true);
+        if (evaluatedResults.contains(true)) return true;
+        return evaluatedResults.contains(null) ? null : false;
     }
   }
 }
