@@ -21,6 +21,10 @@ class ChoiceQuestionFormView extends ConsumerWidget {
         ReactiveValueListenableBuilder<bool>(
           formControl: formViewModel.isMultipleChoiceControl,
           builder: (context, control, _) => FormTableLayout(
+            columnWidths: const {
+              0: IntrinsicColumnWidth(),
+              1: FlexColumnWidth(),
+            },
             rows: [
               FormTableRow(
                 label: tr.form_field_response_choice_multiple,
