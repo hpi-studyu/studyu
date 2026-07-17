@@ -539,7 +539,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get imprint_read => 'Impressum lesen';
 
   @override
-  String get invite_code_button => 'Einladungscode verwenden';
+  String get invite_code_button => 'Mit einem Einladungscode beitreten';
 
   @override
   String get private_study_invite_code =>
