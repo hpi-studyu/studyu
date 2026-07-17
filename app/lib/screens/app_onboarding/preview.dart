@@ -45,12 +45,9 @@ class Preview {
     }
   }
 
-  Future<bool> handleAuthorization() async {
-    if (!containsQuery('studyid') && !containsQuery('session')) return false;
+  Future<bool> handleAuthorization(String session) async {
+    if (!containsQuery('studyid') || session.isEmpty) return false;
 
-    if (!containsQuery('session')) return false;
-
-    final String session = Uri.decodeComponent(queryParameters!['session']!);
     try {
       await Supabase.instance.client.auth.recoverSession(session);
     } catch (_) {

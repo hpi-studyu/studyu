@@ -10,30 +10,28 @@ class StudyTestControllerState extends StudyControllerBaseState {
     required super.router,
     required super.currentUser,
     required super.studyWithMetadata,
-    this.serializedSession = '',
+    this.hasSession = false,
     this.languageCode = 'en',
   });
 
-  final String serializedSession;
+  final bool hasSession;
   final String languageCode;
 
-  bool get canTest => serializedSession.isNotEmpty;
+  bool get canTest => hasSession;
 
   String get appUrl {
-    if (!canTest || studyValue == null) {
-      return '';
-    }
-    String appUrl = env.appUrl ?? '';
-    appUrl += "/preview?session=${Uri.encodeComponent(serializedSession)}";
-    appUrl += "&studyid=$studyId";
-    appUrl += "&languageCode=$languageCode";
-    return appUrl;
+    if (!canTest || studyValue == null) return '';
+    return buildPreviewAppUrl(
+      baseUrl: env.appUrl ?? '',
+      studyId: studyId,
+      languageCode: languageCode,
+    );
   }
 
   @override
   StudyTestControllerState copyWith({
     WrappedModel<Study>? studyWithMetadata,
-    String? serializedSession,
+    bool? hasSession,
     String? languageCode,
   }) {
     return StudyTestControllerState(
@@ -42,7 +40,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
       router: router,
       currentUser: currentUser,
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
-      serializedSession: serializedSession ?? this.serializedSession,
+      hasSession: hasSession ?? this.hasSession,
       languageCode: languageCode ?? this.languageCode,
     );
   }
@@ -50,5 +48,15 @@ class StudyTestControllerState extends StudyControllerBaseState {
   // - Equatable
 
   @override
-  List<Object?> get props => [...super.props, serializedSession];
+  List<Object?> get props => [...super.props, hasSession];
+}
+
+String buildPreviewAppUrl({
+  required String baseUrl,
+  required String studyId,
+  required String languageCode,
+}) {
+  if (baseUrl.isEmpty) return '';
+  return '$baseUrl/preview?studyid=${Uri.encodeQueryComponent(studyId)}'
+      '&languageCode=${Uri.encodeQueryComponent(languageCode)}';
 }

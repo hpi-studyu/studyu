@@ -140,10 +140,16 @@ class _DashboardScreenState extends State<DashboardScreen>
           ).showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
-      final inMemory = context.read<AppState>().showRecoveryPhraseOnDashboard;
-      if (inMemory) {
-        context.read<AppState>().showRecoveryPhraseOnDashboard = false;
+      final appState = context.read<AppState>();
+      if (!appState.showParticipantRecovery) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) unawaited(_startDashboardShowcaseIfNeeded());
+        });
+        return;
       }
+
+      final inMemory = appState.showRecoveryPhraseOnDashboard;
+      if (inMemory) appState.showRecoveryPhraseOnDashboard = false;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
         final shouldShow =

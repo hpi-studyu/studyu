@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_core/core.dart' show Study;
+import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import "package:universal_html/html.dart" as html;
 
@@ -14,15 +14,49 @@ class IFrameHelper {
   static StreamSubscription<html.MessageEvent>? _messageSubscription;
 
   String? _designerOrigin() {
-    final referrerObject = html.document.referrer as Object?;
-    final referrer = referrerObject is String ? referrerObject : null;
-    if (referrer != null && referrer.isNotEmpty) {
-      final uri = Uri.tryParse(referrer);
-      if (uri != null && uri.hasScheme && uri.host.isNotEmpty) {
-        return uri.origin;
-      }
+    final uri = Uri.tryParse(env.designerUrl ?? '');
+    return uri == null || !uri.hasScheme || uri.host.isEmpty
+        ? null
+        : uri.origin;
+  }
+
+  html.WindowBase? _parentWindow() {
+    try {
+      return html.window.parent;
+    } catch (_) {
+      return null;
     }
-    return env.designerUrl;
+  }
+
+  bool _isExpectedMessage(
+    html.MessageEvent event,
+    html.WindowBase parent,
+    String designerOrigin,
+  ) => event.origin == designerOrigin && event.source == parent;
+
+  Future<String?> requestPreviewSession() async {
+    final parent = _parentWindow();
+    final designerOrigin = _designerOrigin();
+    if (parent == null || designerOrigin == null) return null;
+
+    final completer = Completer<String?>();
+    late final StreamSubscription<html.MessageEvent> subscription;
+    subscription = html.window.onMessage.listen((event) {
+      if (!_isExpectedMessage(event, parent, designerOrigin)) return;
+      final session = parsePreviewSession(event.data);
+      if (session != null && !completer.isCompleted) {
+        completer.complete(session);
+      }
+    });
+
+    parent.postMessage(createPreviewSessionRequest(), designerOrigin);
+    try {
+      return await completer.future.timeout(const Duration(seconds: 5));
+    } on TimeoutException {
+      return null;
+    } finally {
+      await subscription.cancel();
+    }
   }
 
   void postPreviewStatus({required String status, String? message}) {
@@ -41,12 +75,7 @@ class IFrameHelper {
   }
 
   void _postMessage(Object message) {
-    final html.WindowBase? parent;
-    try {
-      parent = html.window.parent;
-    } catch (_) {
-      return;
-    }
+    final parent = _parentWindow();
     if (parent == null) return;
 
     final designerOrigin = _designerOrigin();
@@ -56,8 +85,13 @@ class IFrameHelper {
   }
 
   void listen(AppState state, {PreviewNavigationHandler? onNavigate}) {
+    final parent = _parentWindow();
+    final designerOrigin = _designerOrigin();
+    if (parent == null || designerOrigin == null) return;
+
     _messageSubscription?.cancel();
     _messageSubscription = html.window.onMessage.listen((event) async {
+      if (!_isExpectedMessage(event, parent, designerOrigin)) return;
       final data = event.data;
       if (data is! String) return;
 
@@ -71,6 +105,17 @@ class IFrameHelper {
 
       final messageContent = decodedMessage;
       if (messageContent['type'] == 'previewNavigate') {
+        if (!messageContent.keys.every(
+              (key) => const {'type', 'route', 'extra', 'data'}.contains(key),
+            ) ||
+            (messageContent['route'] != null &&
+                messageContent['route'] is! String) ||
+            (messageContent['extra'] != null &&
+                messageContent['extra'] is! String) ||
+            (messageContent['data'] != null &&
+                messageContent['data'] is! String)) {
+          return;
+        }
         await onNavigate?.call(messageContent['route'] as String?);
         return;
       }
