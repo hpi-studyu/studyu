@@ -258,6 +258,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get your_journey => 'Deine Reise';
 
   @override
+  String get journey_overview_description =>
+      'Sehen Sie sich den Ablauf Ihrer Studie an, bevor Sie fortfahren.';
+
+  @override
   String get journey_results_available => 'Ergebnisse verfügbar';
 
   @override

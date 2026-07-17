@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +6,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -74,7 +74,6 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -91,32 +90,16 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
       body: OnboardingPage(
         title: '',
         description: '',
-        descriptionWidget: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: AppLocalizations.of(context)!.study_selection_single,
-                style: theme.textTheme.titleSmall,
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.study_selection_single,
+          actionLabel: AppLocalizations.of(context)!.study_selection_single_why,
+          onAction: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text(
+                AppLocalizations.of(context)!.study_selection_single_reason,
               ),
-              TextSpan(text: ' ', style: theme.textTheme.titleSmall),
-              TextSpan(
-                text: AppLocalizations.of(context)!.study_selection_single_why,
-                style: theme.textTheme.titleSmall!.copyWith(
-                  color: theme.primaryColor,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      content: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.study_selection_single_reason,
-                      ),
-                    ),
-                  ),
-              ),
-            ],
+            ),
           ),
         ),
         child: Column(

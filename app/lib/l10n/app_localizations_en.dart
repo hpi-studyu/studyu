@@ -256,6 +256,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get your_journey => 'Your Journey';
 
   @override
+  String get journey_overview_description =>
+      'Review your study timeline before continuing.';
+
+  @override
   String get journey_results_available => 'Results available';
 
   @override

@@ -105,6 +105,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    final appBar = tester.widget<AppBar>(find.byType(AppBar));
+    expect(appBar.leading, isNull);
+    expect(
+      find.text(
+        'Please answer a few questions to make sure that you can safely participate in this study.',
+      ),
+      findsOneWidget,
+    );
+
     await tester.tap(find.text('no'));
     await tester.pumpAndSettle();
 

@@ -530,6 +530,12 @@ abstract class AppLocalizations {
   /// **'Your Journey'**
   String get your_journey;
 
+  /// No description provided for @journey_overview_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your study timeline before continuing.'**
+  String get journey_overview_description;
+
   /// No description provided for @journey_results_available.
   ///
   /// In en, this message translates to:
