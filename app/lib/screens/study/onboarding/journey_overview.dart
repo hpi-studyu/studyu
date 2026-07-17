@@ -41,7 +41,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
           content: Text(
             AppLocalizations.of(context)!.user_did_not_give_consent,
           ),
-          duration: const Duration(seconds: 30),
         ),
       );
       context.go('/${RouteNames.studySelection}');

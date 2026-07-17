@@ -8,6 +8,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -51,10 +52,20 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(localizations.legal_documents),
+      ),
       body: OnboardingPage(
-        title: AppLocalizations.of(context)!.legal_documents,
-        description: AppLocalizations.of(context)!.legal_documents_description,
+        title: '',
+        description: '',
+        descriptionWidget: StudyOnboardingDescription(
+          text: localizations.legal_documents_description,
+        ),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         bottomNavigationBar: _buildNavigation(),
         child: RetryFutureBuilder<AppConfig>(
           tryFunction: AppConfig.getAppConfig,
@@ -177,12 +188,9 @@ class LegalSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 32,
+                  width: 40,
                   child: IconTheme(
-                    data: IconThemeData(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      size: 24,
-                    ),
+                    data: IconThemeData(color: theme.primaryColor, size: 40),
                     child: icon!,
                   ),
                 ),
@@ -191,13 +199,7 @@ class LegalSection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title!,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      Text(title!, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 4),
                       Text(
                         description!,
