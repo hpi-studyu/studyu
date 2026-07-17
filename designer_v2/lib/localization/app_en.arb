@@ -1030,6 +1030,7 @@
   "form_measurement_type_template": "Predefined measurements",
   "form_measurement_category_all": "All",
   "form_measurement_category_nutrition": "Nutrition",
+  "form_measurement_search_placeholder": "Search measurements",
   "form_survey_template_empty": "No predefined measurements available",
   "form_survey_template_added": "Added",
   "form_survey_template_apply": "Add",

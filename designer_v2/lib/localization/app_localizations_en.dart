@@ -2735,6 +2735,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_measurement_category_nutrition => 'Nutrition';
 
   @override
+  String get form_measurement_search_placeholder => 'Search measurements';
+
+  @override
   String get form_survey_template_empty =>
       'No predefined measurements available';
 

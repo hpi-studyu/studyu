@@ -410,17 +410,12 @@ class _MeasurementCard extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.zero,
           color: selected
-              ? colorScheme.primaryContainer.withValues(alpha: 0.35)
+              ? colorScheme.primaryContainer.withValues(alpha: 0.18)
               : Colors.white,
           elevation: 3,
           shadowColor: Colors.black.withValues(alpha: 0.15),
           clipBehavior: clipBehavior,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: selected
-                ? BorderSide(color: colorScheme.primary, width: 2)
-                : BorderSide.none,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: content,
         ),
       ),
@@ -512,6 +507,14 @@ class _PredefinedMeasurementsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        TextField(
+          enabled: false,
+          decoration: InputDecoration(
+            hintText: tr.form_measurement_search_placeholder,
+            prefixIcon: const Icon(Icons.search_rounded),
+          ),
+        ),
+        const SizedBox(height: 16),
         if (showHeading) ...[
           Text(category.label, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
@@ -809,14 +812,21 @@ class _DayEntryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final checked = selected || !enabled;
 
     return CheckboxListTile(
       dense: true,
       enabled: enabled,
-      selected: selected,
+      selected: checked,
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        return states.contains(WidgetState.selected)
+            ? colorScheme.primary
+            : null;
+      }),
+      checkColor: colorScheme.onPrimary,
       hoverColor: colorScheme.primaryContainer.withValues(alpha: 0.25),
       selectedTileColor: colorScheme.primaryContainer.withValues(alpha: 0.35),
-      value: selected,
+      value: checked,
       onChanged: enabled ? (value) => onChanged(entry, value ?? false) : null,
       contentPadding: const EdgeInsets.symmetric(horizontal: 24),
       title: Row(

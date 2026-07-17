@@ -4665,6 +4665,12 @@ abstract class AppLocalizations {
   /// **'Nutrition'**
   String get form_measurement_category_nutrition;
 
+  /// No description provided for @form_measurement_search_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search measurements'**
+  String get form_measurement_search_placeholder;
+
   /// No description provided for @form_survey_template_empty.
   ///
   /// In en, this message translates to:
