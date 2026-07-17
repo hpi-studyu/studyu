@@ -90,6 +90,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
       body: OnboardingPage(
         title: '',
         description: '',
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         descriptionWidget: StudyOnboardingDescription(
           text: AppLocalizations.of(context)!.study_selection_single,
           actionLabel: AppLocalizations.of(context)!.study_selection_single_why,
