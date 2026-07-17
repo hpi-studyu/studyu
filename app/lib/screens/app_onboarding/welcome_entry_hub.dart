@@ -66,12 +66,12 @@ class WelcomeEntryHub extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.welcome_find_study_description,
-                    style: theme.textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
+                  // const SizedBox(height: 8),
+                  // Text(
+                  //   l10n.welcome_find_study_description,
+                  //   style: theme.textTheme.bodyLarge,
+                  //   textAlign: TextAlign.center,
+                  // ),
                   const SizedBox(height: 32),
                   FilledButton.icon(
                     key: const ValueKey('welcome_get_started'),

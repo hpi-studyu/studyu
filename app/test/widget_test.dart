@@ -82,6 +82,11 @@ void main() {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
+    expect(find.text('Take part in a study'), findsOneWidget);
+    expect(
+      find.text('Choose a public study or use an invitation.'),
+      findsNothing,
+    );
     expect(
       find.widgetWithText(FilledButton, 'Browse public studies'),
       findsOneWidget,

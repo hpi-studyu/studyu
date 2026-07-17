@@ -209,7 +209,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcome_find_study_title.
   ///
   /// In en, this message translates to:
-  /// **'Find your study'**
+  /// **'Take part in a study'**
   String get welcome_find_study_title;
 
   /// No description provided for @welcome_find_study_description.

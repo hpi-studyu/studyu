@@ -73,11 +73,6 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
   final publishedStudies = Study.publishedPublicStudies();
 
-  Future<void> _showInviteCodeDialog() => showDialog<void>(
-    context: context,
-    builder: (_) => const InviteCodeDialog(),
-  );
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -174,16 +169,6 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         },
                       );
                     },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Center(
-                child: OutlinedButton.icon(
-                  icon: const Icon(MdiIcons.key),
-                  onPressed: _showInviteCodeDialog,
-                  label: Text(AppLocalizations.of(context)!.invite_code_button),
-                ),
               ),
             ),
           ],
