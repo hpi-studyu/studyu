@@ -47,13 +47,13 @@ class WelcomeEntryHub extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
             key: const PageStorageKey('welcome_entry_hub_scroll'),
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: 440,
-                  minHeight: constraints.maxHeight > 40
-                      ? constraints.maxHeight - 40
+                  minHeight: constraints.maxHeight > 24
+                      ? constraints.maxHeight - 24
                       : 0,
                 ),
                 child: Column(
@@ -100,7 +100,7 @@ class WelcomeEntryHub extends StatelessWidget {
                           onPressed: onUseInviteCode,
                           label: Text(l10n.invite_code_button),
                         ),
-                        const SizedBox(height: 28),
+                        const SizedBox(height: 32),
                         const Divider(),
                         const SizedBox(height: 12),
                         Text(
@@ -121,7 +121,7 @@ class WelcomeEntryHub extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 16),
                         Row(
                           children: [
                             Expanded(
@@ -156,7 +156,7 @@ class WelcomeEntryHub extends StatelessWidget {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 32, bottom: 8),
+                          padding: const EdgeInsets.only(top: 16, bottom: 8),
                           child: Text(
                             l10n.made_with_love_in_potsdam,
                             style: theme.textTheme.labelSmall?.copyWith(
