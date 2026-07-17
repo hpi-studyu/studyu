@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/studyu_driver_state.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -174,6 +175,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             });
                           });
                         }
+                        assert(() {
+                          StudyUDriverState.visibleStudies = studies;
+                          return true;
+                        }());
                         return ListView.builder(
                           key: const ValueKey('study_selection_list'),
                           itemCount: studies.length,
@@ -183,6 +188,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                               tag: 'study_tile_${studies[index].id}',
                               child: Material(
                                 child: StudyTile.fromStudy(
+                                  key: ValueKey('study_tile_${study.id}'),
                                   study: study,
                                   onTap: () async {
                                     await navigateToStudyOverview(

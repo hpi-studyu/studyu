@@ -1197,6 +1197,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  mcp_server:
+    dependency: transitive
+    description:
+      name: mcp_server
+      sha256: d5b2603a51b524c60753ea9031c52759f80b53dd6606f38ae70305b5eaa28d4d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   melos:
     dependency: "direct dev"
     description:
