@@ -93,6 +93,7 @@ COMMENT ON FUNCTION public.get_or_create_recovery() IS 'Gets existing recovery_i
  *   "success": true/false,
  *   "email": "user-email@domain.com",
  *   "password": "newly-generated-password",
+ *   "recovery_id": "replacement-recovery-uuid",
  *   "subject_id": "study-subject-uuid-or-null",
  *   "error": "error-message-if-failed"
  * }
@@ -110,11 +111,13 @@ DECLARE
     v_new_password text;
     v_encrypted_password text;
     v_subject_id uuid;
+    v_new_recovery_id uuid;
 BEGIN
     -- 1. Look up user_id from recovery table
     SELECT user_id INTO v_user_id
     FROM public.user_recovery
-    WHERE recovery_id = p_recovery_id;
+    WHERE recovery_id = p_recovery_id
+    FOR UPDATE;
     
     IF v_user_id IS NULL THEN
         RETURN jsonb_build_object(
@@ -146,7 +149,13 @@ BEGIN
         updated_at = now() at time zone 'utc'
     WHERE id = v_user_id;
 
-    -- 5. Find latest active study subject
+    -- 5. Rotate the recovery ID so the used phrase cannot be reused.
+    UPDATE public.user_recovery
+    SET recovery_id = gen_random_uuid()
+    WHERE recovery_id = p_recovery_id
+    RETURNING recovery_id INTO v_new_recovery_id;
+
+    -- 6. Find latest active study subject
     -- Priority: most recent progress > most recent start date > deterministic ID ordering
     SELECT
         ss.id
@@ -165,11 +174,12 @@ BEGIN
         ss.id DESC                               -- Deterministic ordering for identical dates
     LIMIT 1;
 
-    -- 6. Return success with credentials and optional subject_id
+    -- 7. Return success with credentials, replacement recovery ID, and optional subject ID.
     RETURN jsonb_build_object(
         'success', true,
         'email', v_user_email,
         'password', v_new_password,
+        'recovery_id', v_new_recovery_id,
         'subject_id', v_subject_id  -- Will be null if no active studies found
     );
 

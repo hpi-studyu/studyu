@@ -6,6 +6,15 @@ void main() {
   group('RestoreAccountService', () {
     tearDown(RestoreAccountService.clearCache);
 
+    test('RecoveryResult reads the replacement recovery ID', () {
+      final result = RecoveryResult.fromJson({
+        'success': true,
+        'recovery_id': '00000000-0000-4000-8000-000000000002',
+      });
+
+      expect(result.recoveryId, '00000000-0000-4000-8000-000000000002');
+    });
+
     test('decodeRecoveryPhrase accepts German recovery phrases', () {
       final recoveryId = BigInt.parse(
         '1234567890ABCDEF1234567890ABCDEF',

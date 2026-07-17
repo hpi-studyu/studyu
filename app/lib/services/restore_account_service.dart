@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,6 +8,7 @@ class RecoveryResult {
   final bool success;
   final String? email;
   final String? password;
+  final String? recoveryId;
   final String? subjectId;
   final String? error;
 
@@ -14,6 +16,7 @@ class RecoveryResult {
     required this.success,
     this.email,
     this.password,
+    this.recoveryId,
     this.subjectId,
     this.error,
   });
@@ -23,6 +26,7 @@ class RecoveryResult {
       success: json['success'] as bool? ?? false,
       email: json['email'] as String?,
       password: json['password'] as String?,
+      recoveryId: json['recovery_id'] as String?,
       subjectId: json['subject_id'] as String?,
       error: json['error'] as String?,
     );
@@ -263,6 +267,11 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
+      if (result.recoveryId != null) {
+        _cachedRecoveryId = result.recoveryId;
+        _cachedUserId = _currentUserIdGetter();
+      }
+
       if (result.subjectId != null) {
         final isValid = await validateSubject(result.subjectId!);
 
@@ -271,10 +280,12 @@ class RestoreAccountService {
             success: true,
             email: result.email,
             password: result.password,
+            recoveryId: result.recoveryId,
           );
         }
 
         await storeActiveSubjectId(result.subjectId!);
+        await RecoveryPhraseStorage.markPending(result.subjectId!);
       }
 
       return result;
