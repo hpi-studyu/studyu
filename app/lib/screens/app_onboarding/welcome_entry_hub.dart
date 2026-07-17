@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
 class WelcomeEntryHub extends StatelessWidget {
@@ -116,45 +117,55 @@ class WelcomeEntryHub extends StatelessWidget {
                           label: Text(l10n.restore_studyu_account),
                         ),
                         const SizedBox(height: 24),
-                        const Divider(),
+                      ],
+                    ),
+                    Column(
+                      children: [
                         const SizedBox(height: 8),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
+                        Row(
                           children: [
-                            TextButton(
-                              key: const ValueKey('welcome_about'),
-                              style: footerLinkStyle,
-                              onPressed: onAbout,
-                              child: Text(l10n.what_is_studyu),
+                            Expanded(
+                              child: TextButton.icon(
+                                key: const ValueKey('welcome_about'),
+                                style: footerLinkStyle,
+                                onPressed: onAbout,
+                                icon: const Icon(MdiIcons.helpCircleOutline),
+                                label: Text(l10n.what_is_studyu),
+                              ),
                             ),
-                            Text('·', style: theme.textTheme.bodyMedium),
-                            TextButton(
-                              key: const ValueKey('welcome_faq'),
-                              style: footerLinkStyle,
-                              onPressed: onFaq,
-                              child: Text(l10n.faq),
+                            Expanded(
+                              child: TextButton.icon(
+                                key: const ValueKey('welcome_faq'),
+                                style: footerLinkStyle,
+                                onPressed: onFaq,
+                                icon: const Icon(
+                                  MdiIcons.frequentlyAskedQuestions,
+                                ),
+                                label: Text(l10n.faq),
+                              ),
                             ),
-                            Text('·', style: theme.textTheme.bodyMedium),
-                            TextButton(
-                              key: const ValueKey('welcome_contact'),
-                              style: footerLinkStyle,
-                              onPressed: onContact,
-                              child: Text(l10n.contact),
+                            Expanded(
+                              child: TextButton.icon(
+                                key: const ValueKey('welcome_contact'),
+                                style: footerLinkStyle,
+                                onPressed: onContact,
+                                icon: const Icon(MdiIcons.email),
+                                label: Text(l10n.contact),
+                              ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 32, bottom: 8),
-                      child: Text(
-                        l10n.made_with_love_in_potsdam,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 32, bottom: 8),
+                          child: Text(
+                            l10n.made_with_love_in_potsdam,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                      ],
                     ),
                   ],
                 ),
