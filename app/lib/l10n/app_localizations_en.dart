@@ -142,6 +142,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get study_selection_single_why => 'Why?';
 
   @override
+  String get study_selection_invite_code_hint =>
+      'Have an invite code? Join with it instead.';
+
+  @override
   String get study_selection_single_reason =>
       'If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.';
 

@@ -326,6 +326,12 @@ abstract class AppLocalizations {
   /// **'Why?'**
   String get study_selection_single_why;
 
+  /// No description provided for @study_selection_invite_code_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Have an invite code? Join with it instead.'**
+  String get study_selection_invite_code_hint;
+
   /// No description provided for @study_selection_single_reason.
   ///
   /// In en, this message translates to:
