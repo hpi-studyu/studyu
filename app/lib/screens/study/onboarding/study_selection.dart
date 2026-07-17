@@ -256,6 +256,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
           const SizedBox(height: 16),
           TextFormField(
             controller: _controller,
+            autofocus: true,
             validator: (_) => _errorMessage,
             autovalidateMode: AutovalidateMode.always,
             decoration: InputDecoration(labelText: l10n.invite_code),
