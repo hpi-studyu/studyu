@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
@@ -65,9 +63,7 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
 }
 
 class StudySelectionScreen extends StatefulWidget {
-  final bool openInviteCode;
-
-  const StudySelectionScreen({this.openInviteCode = false, super.key});
+  const StudySelectionScreen({super.key});
 
   @override
   State<StudySelectionScreen> createState() => _StudySelectionScreenState();
@@ -76,16 +72,6 @@ class StudySelectionScreen extends StatefulWidget {
 class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
   final publishedStudies = Study.publishedPublicStudies();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.openInviteCode) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(_showInviteCodeDialog());
-      });
-    }
-  }
 
   Future<void> _showInviteCodeDialog() => showDialog<void>(
     context: context,

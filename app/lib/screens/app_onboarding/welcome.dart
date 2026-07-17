@@ -6,6 +6,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome_entry_hub.dart';
+import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 
@@ -57,7 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     if (!mounted) return;
     if (accepted == true) {
-      await context.push('/${RouteNames.terms}');
+      await context.push('/${RouteNames.studyOverview}');
       if (!mounted) return;
       setState(() => _inviteDialogShown = false);
     } else {
@@ -66,11 +67,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
   }
 
+  Future<void> _showInviteCodeDialog() => showDialog<void>(
+    context: context,
+    builder: (_) => const InviteCodeDialog(),
+  );
+
   @override
   Widget build(BuildContext context) => WelcomeEntryHub(
     onLogoDoubleTap: () => DebugScreen.showDebugScreen(context),
-    onBrowsePublicStudies: () => context.push('/${RouteNames.terms}'),
-    onUseInviteCode: () => context.push('/${RouteNames.terms}?invite=true'),
+    onBrowsePublicStudies: () => context.push('/${RouteNames.studySelection}'),
+    onUseInviteCode: _showInviteCodeDialog,
     onRestoreAccount: () => context.pushNamed(RouteNames.restoreAccount),
     onAbout: () => context.push('/${RouteNames.about}'),
     onFaq: () => context.push('/${RouteNames.faq}'),

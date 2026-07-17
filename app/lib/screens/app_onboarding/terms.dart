@@ -6,9 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/services/deep_link_error_helper.dart';
-import 'package:studyu_app/services/deep_link_service.dart';
-import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
@@ -16,27 +13,17 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TermsScreen extends StatefulWidget {
-  final bool openInviteCode;
-
-  const TermsScreen({this.openInviteCode = false, super.key});
+  const TermsScreen({super.key});
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
 }
 
 @visibleForTesting
-String routeAfterTermsWithoutPendingDeepLink(
-  AppState state, {
-  bool openInviteCode = false,
-}) {
-  if (state.selectedStudy != null) {
-    return '/${RouteNames.studyOverview}';
-  }
-  return '/${RouteNames.studySelection}${openInviteCode ? '?invite=true' : ''}';
+String? routeAfterTerms(AppState state, {required bool canPop}) {
+  if (state.selectedStudy == null) return '/${RouteNames.studySelection}';
+  return canPop ? null : '/${RouteNames.studyOverview}';
 }
-
-@visibleForTesting
-bool shouldClearInviteOnTermsBack(AppState state) => state.hasPendingDeepLink;
 
 class _TermsScreenState extends State<TermsScreen> {
   bool _acceptedTerms = kDebugMode;
@@ -44,53 +31,6 @@ class _TermsScreenState extends State<TermsScreen> {
 
   bool userCanContinue() {
     return _acceptedTerms && _acceptedPrivacy;
-  }
-
-  Future<void> _handlePendingDeepLink(AppState state) async {
-    final result = await DeepLinkService.processDeepLink(
-      studyId: state.pendingDeepLinkStudyId,
-      inviteCode: state.pendingDeepLinkInviteCode,
-      isAuthenticated: true,
-      activeStudyId: state.activeSubject?.studyId,
-    );
-
-    if (result is! DeepLinkSuccess) state.clearPendingDeepLink();
-    if (!mounted) return;
-
-    switch (result) {
-      case DeepLinkSuccess(
-        :final study,
-        :final inviteCode,
-        :final preselectedInterventionIds,
-      ):
-        state.selectedStudy = study;
-        if (inviteCode != null) {
-          state.inviteCode = inviteCode;
-          state.preselectedInterventionIds = preselectedInterventionIds;
-        }
-        context.push('/${RouteNames.studyOverview}');
-      case DeepLinkError(type: final errorType, :final errorValue):
-        final message = getDeepLinkErrorMessage(
-          AppLocalizations.of(context)!,
-          errorType,
-          errorValue,
-        );
-        final ok = AppLocalizations.of(context)!.ok;
-        await PendingDeepLinkService.clear(state);
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            duration: const Duration(seconds: 5),
-            action: SnackBarAction(label: ok, onPressed: () {}),
-          ),
-        );
-        context.go('/${RouteNames.welcome}');
-      case DeepLinkNeedsAuth():
-        await PendingDeepLinkService.clear(state);
-        if (!mounted) return;
-        context.go('/${RouteNames.welcome}');
-    }
   }
 
   @override
@@ -162,12 +102,7 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget _buildNavigation() {
     return BottomOnboardingNavigation(
       backButtonKey: const ValueKey('terms_back'),
-      onBack: () async {
-        final state = context.read<AppState>();
-        if (shouldClearInviteOnTermsBack(state)) {
-          await PendingDeepLinkService.clear(state);
-          if (!mounted) return;
-        }
+      onBack: () {
         if (context.canPop()) {
           context.pop();
         } else {
@@ -178,19 +113,15 @@ class _TermsScreenState extends State<TermsScreen> {
       onNext: userCanContinue()
           ? () async {
               final success = await ensureParticipantSignedIn();
-              if (success) {
-                if (!mounted) return;
-                final state = context.read<AppState>();
-                if (state.hasPendingDeepLink) {
-                  await _handlePendingDeepLink(state);
-                } else {
-                  context.push(
-                    routeAfterTermsWithoutPendingDeepLink(
-                      state,
-                      openInviteCode: widget.openInviteCode,
-                    ),
-                  );
-                }
+              if (!success || !mounted) return;
+              final route = routeAfterTerms(
+                context.read<AppState>(),
+                canPop: context.canPop(),
+              );
+              if (route == null) {
+                context.pop(true);
+              } else {
+                context.go(route);
               }
             }
           : null,

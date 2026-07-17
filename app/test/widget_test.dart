@@ -39,8 +39,13 @@ Widget setup(Widget child, {AppState? appState}) {
           ),
           GoRoute(
             path: '/${RouteNames.terms}',
-            builder: (_, state) => TermsScreen(
-              openInviteCode: state.uri.queryParameters['invite'] == 'true',
+            builder: (_, _) => const TermsScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.studySelection}',
+            builder: (_, _) => const Text(
+              'Study selection',
+              key: ValueKey('study_selection_test_screen'),
             ),
           ),
           GoRoute(
@@ -101,24 +106,32 @@ void main() {
     expect(find.byType(RestoreAccountScreen), findsOneWidget);
   });
 
-  testWidgets('invite action carries intent into terms', (tester) async {
+  testWidgets('browse action opens study selection directly', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_get_started')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('study_selection_test_screen')),
+      findsOneWidget,
+    );
+    expect(find.byType(TermsScreen), findsNothing);
+  });
+
+  testWidgets('invite action opens invite code dialog over welcome', (
+    tester,
+  ) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey('welcome_use_invite_code')));
     await tester.pumpAndSettle();
 
-    final terms = tester.widget<TermsScreen>(find.byType(TermsScreen));
-    expect(terms.openInviteCode, isTrue);
-  });
-
-  testWidgets('invite intent opens invite code dialog', (tester) async {
-    await tester.pumpWidget(
-      setup(const StudySelectionScreen(openInviteCode: true)),
-    );
-    await tester.pump();
-
+    expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.byType(InviteCodeDialog), findsOneWidget);
+    expect(find.byType(TermsScreen), findsNothing);
   });
 
   test('restore account route is registered by name', () {
@@ -185,56 +198,6 @@ void main() {
     expect(shouldMarkDashboardShowcaseCompleted(wasStarted: true), isTrue);
   });
 
-  test('terms continue returns to invite overview when invite is selected', () {
-    final appState = AppState()
-      ..selectedStudy = Study('study-1', 'owner-1')
-      ..inviteCode = 'invite-1';
-
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(appState),
-      '/${RouteNames.studyOverview}',
-    );
-  });
-
-  test('terms continue returns to overview after accepted invite back', () {
-    final appState = AppState()..selectedStudy = Study('study-1', 'owner-1');
-
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(appState),
-      '/${RouteNames.studyOverview}',
-    );
-  });
-
-  test('terms back clears pending invite flow', () {
-    final appState = AppState()
-      ..setPendingDeepLink(
-        study: Study('study-1', 'owner-1'),
-        inviteCode: 'invite-1',
-      );
-
-    expect(shouldClearInviteOnTermsBack(appState), isTrue);
-  });
-
-  test('terms continue opens study selection after invite decline', () {
-    final appState = AppState()
-      ..selectedStudy = Study('study-1', 'owner-1')
-      ..inviteCode = 'invite-1';
-    appState.selectedStudy = null;
-    appState.inviteCode = null;
-
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(appState),
-      '/${RouteNames.studySelection}',
-    );
-  });
-
-  test('terms continue preserves manual invite intent', () {
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(AppState(), openInviteCode: true),
-      '/${RouteNames.studySelection}?invite=true',
-    );
-  });
-
   test('skips onboarding in debug mode', () {
     expect(
       initialRouteForMissingSubjectRoute(
@@ -274,21 +237,27 @@ void main() {
     expect(find.byType(WelcomeScreen), findsOneWidget);
   });
 
-  testWidgets('terms back pops to welcome when available', (tester) async {
-    await tester.pumpWidget(setup(const WelcomeScreen()));
+  testWidgets('terms back preserves pending invite state', (tester) async {
+    final study = Study('study-1', 'owner-1')..title = 'Study';
+    final appState = AppState()
+      ..setPendingDeepLink(study: study, inviteCode: 'invite-1');
+    const overview = Text('Study overview');
+    await tester.pumpWidget(setup(overview, appState: appState));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('welcome_get_started')));
+    GoRouter.of(
+      tester.element(find.byWidget(overview)),
+    ).push('/${RouteNames.terms}');
     await tester.pumpAndSettle();
-    expect(find.byType(TermsScreen), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('terms_back')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(appState.hasPendingDeepLink, isTrue);
+    expect(appState.selectedStudy, same(study));
   });
 
-  testWidgets('about get started replaces about before terms', (tester) async {
+  testWidgets('about get started opens study selection', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
@@ -303,12 +272,12 @@ void main() {
     await tester.ensureVisible(find.text('Get started'));
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
-    expect(find.byType(TermsScreen), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('terms_back')));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('study_selection_test_screen')),
+      findsOneWidget,
+    );
+    expect(find.byType(TermsScreen), findsNothing);
     expect(find.byType(AboutScreen), findsNothing);
   });
 }

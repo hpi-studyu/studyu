@@ -25,6 +25,7 @@ class StudyOverviewScreen extends StatefulWidget {
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Study? study;
+  bool _acceptedTerms = false;
 
   @override
   void initState() {
@@ -32,12 +33,25 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     study = context.read<AppState>().selectedStudy;
   }
 
+  Future<bool> _ensureTermsAccepted(BuildContext context) async {
+    if (_acceptedTerms) return true;
+    final accepted = await context.push<bool>('/${RouteNames.terms}');
+    if (!context.mounted || accepted != true) return false;
+    _acceptedTerms = true;
+    return true;
+  }
+
+  Future<void> _continueOnboarding(BuildContext context) async {
+    if (!await _ensureTermsAccepted(context) || !context.mounted) return;
+    if (study!.hasEligibilityCheck) {
+      await navigateToEligibilityCheck(context);
+    } else {
+      await navigateToJourney(context);
+    }
+  }
+
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
-    if (Supabase.instance.client.auth.currentUser == null) {
-      context.push('/${RouteNames.terms}');
-      return;
-    }
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy!,
@@ -115,9 +129,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: study!.hasEligibilityCheck
-            ? () => navigateToEligibilityCheck(context)
-            : () => navigateToJourney(context),
+        nextButtonKey: const ValueKey('study_overview_continue'),
+        onNext: () => _continueOnboarding(context),
       ),
     );
   }
