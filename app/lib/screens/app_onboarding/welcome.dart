@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -81,8 +80,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     onAbout: () => context.push('/${RouteNames.about}'),
     onFaq: () => context.push('/${RouteNames.faq}'),
     onContact: () => context.push('/${RouteNames.contact}'),
-    onDebugOnboarding: kDebugMode
-        ? () => context.go('/${RouteNames.onboarding}')
-        : null,
   );
 }

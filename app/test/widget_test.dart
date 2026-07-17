@@ -235,20 +235,16 @@ void main() {
     );
   });
 
-  testWidgets('debug button opens onboarding', (tester) async {
+  testWidgets('welcome keeps debug controls out of the entry hub', (
+    tester,
+  ) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    final button = find.byKey(const ValueKey('welcome_debug_onboarding'));
-    expect(find.text('Show onboarding'), findsOneWidget);
-
-    await tester.ensureVisible(button);
-    await tester.tap(button);
-    await tester.pumpAndSettle();
-
-    final onboarding = find.byKey(const ValueKey('onboarding_test_screen'));
-    expect(onboarding, findsOneWidget);
-    expect(GoRouter.of(tester.element(onboarding)).canPop(), isFalse);
+    expect(
+      find.byKey(const ValueKey('welcome_debug_onboarding')),
+      findsNothing,
+    );
   });
 
   testWidgets('terms back falls back to welcome without previous screen', (

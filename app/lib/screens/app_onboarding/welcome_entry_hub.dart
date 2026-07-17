@@ -9,7 +9,6 @@ class WelcomeEntryHub extends StatelessWidget {
   final VoidCallback onAbout;
   final VoidCallback onFaq;
   final VoidCallback onContact;
-  final VoidCallback? onDebugOnboarding;
   final String logoAssetPath;
 
   const WelcomeEntryHub({
@@ -20,7 +19,6 @@ class WelcomeEntryHub extends StatelessWidget {
     required this.onAbout,
     required this.onFaq,
     required this.onContact,
-    this.onDebugOnboarding,
     this.logoAssetPath = 'assets/icon/logo.png',
     super.key,
   });
@@ -127,26 +125,18 @@ class WelcomeEntryHub extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.made_with_love_in_potsdam,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  if (onDebugOnboarding != null) ...[
-                    const SizedBox(height: 8),
-                    TextButton.icon(
-                      key: const ValueKey('welcome_debug_onboarding'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.orange,
+                  const SizedBox(height: 12),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      l10n.made_with_love_in_potsdam,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      icon: const Icon(Icons.bug_report),
-                      onPressed: onDebugOnboarding,
-                      label: const Text('Show onboarding'),
+                      textAlign: TextAlign.center,
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),
