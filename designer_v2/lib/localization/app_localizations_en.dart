@@ -2716,23 +2716,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Custom: Define your own sequence pattern to meet specific study requirements.';
 
   @override
-  String get form_measurement_type_select => 'Add measurement';
+  String get form_measurement_type_select => 'Add measurements';
 
   @override
-  String get form_measurement_type_survey => 'Custom survey';
+  String get form_measurement_type_survey => 'Create custom survey';
 
   @override
   String get form_measurement_type_survey_description =>
       'Build a survey using questions and scales.';
 
   @override
-  String get form_measurement_type_template => 'Predefined measurements';
+  String get form_measurement_type_template => 'Measurement library';
 
   @override
   String get form_measurement_category_all => 'All';
 
   @override
+  String get form_measurement_category_all_heading => 'All measurements';
+
+  @override
   String get form_measurement_category_nutrition => 'Nutrition';
+
+  @override
+  String get form_measurement_category_nutrition_heading =>
+      'Nutrition measurements';
 
   @override
   String get form_measurement_search_placeholder => 'Search measurements';
@@ -2745,6 +2752,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_survey_template_added => 'Added';
 
   @override
+  String get form_survey_template_added_to_study => 'Added to study';
+
+  @override
   String get form_survey_template_apply => 'Add';
 
   @override
@@ -2754,13 +2764,28 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: 'Add $count measurements',
       one: 'Add 1 measurement',
-      zero: 'Add 0 measurements',
+      zero: 'Add measurements',
     );
     return '$_temp0';
   }
 
   @override
-  String get form_survey_template_select_all => 'Select all';
+  String get form_survey_template_adding => 'Adding…';
+
+  @override
+  String form_survey_template_all_days(int count) {
+    return 'All $count days';
+  }
+
+  @override
+  String get form_survey_template_select_every_survey =>
+      'Select every survey in this measurement';
+
+  @override
+  String get form_survey_template_expand_days => 'Show survey days';
+
+  @override
+  String get form_survey_template_collapse_days => 'Hide survey days';
 
   @override
   String get form_survey_template_choose_day => 'Choose day';
@@ -2769,15 +2794,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_survey_template_add_and_edit => 'Add and edit';
 
   @override
-  String get form_survey_template_single_help => 'Adds 1 editable survey';
+  String get form_survey_template_single_help => '1 editable survey';
 
   @override
   String form_survey_template_multi_day_help(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Adds $count surveys, scheduled one per day',
-      one: 'Adds 1 survey, scheduled for one day',
+      other: '$count surveys · Scheduled daily',
+      one: '1 survey · Scheduled daily',
     );
     return '$_temp0';
   }

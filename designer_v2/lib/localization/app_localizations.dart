@@ -4632,13 +4632,13 @@ abstract class AppLocalizations {
   /// No description provided for @form_measurement_type_select.
   ///
   /// In en, this message translates to:
-  /// **'Add measurement'**
+  /// **'Add measurements'**
   String get form_measurement_type_select;
 
   /// No description provided for @form_measurement_type_survey.
   ///
   /// In en, this message translates to:
-  /// **'Custom survey'**
+  /// **'Create custom survey'**
   String get form_measurement_type_survey;
 
   /// No description provided for @form_measurement_type_survey_description.
@@ -4650,7 +4650,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_measurement_type_template.
   ///
   /// In en, this message translates to:
-  /// **'Predefined measurements'**
+  /// **'Measurement library'**
   String get form_measurement_type_template;
 
   /// No description provided for @form_measurement_category_all.
@@ -4659,11 +4659,23 @@ abstract class AppLocalizations {
   /// **'All'**
   String get form_measurement_category_all;
 
+  /// No description provided for @form_measurement_category_all_heading.
+  ///
+  /// In en, this message translates to:
+  /// **'All measurements'**
+  String get form_measurement_category_all_heading;
+
   /// No description provided for @form_measurement_category_nutrition.
   ///
   /// In en, this message translates to:
   /// **'Nutrition'**
   String get form_measurement_category_nutrition;
+
+  /// No description provided for @form_measurement_category_nutrition_heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition measurements'**
+  String get form_measurement_category_nutrition_heading;
 
   /// No description provided for @form_measurement_search_placeholder.
   ///
@@ -4683,6 +4695,12 @@ abstract class AppLocalizations {
   /// **'Added'**
   String get form_survey_template_added;
 
+  /// No description provided for @form_survey_template_added_to_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to study'**
+  String get form_survey_template_added_to_study;
+
   /// No description provided for @form_survey_template_apply.
   ///
   /// In en, this message translates to:
@@ -4692,14 +4710,38 @@ abstract class AppLocalizations {
   /// No description provided for @form_survey_template_add_selected_count.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{Add 0 measurements} =1{Add 1 measurement} other{Add {count} measurements}}'**
+  /// **'{count, plural, =0{Add measurements} =1{Add 1 measurement} other{Add {count} measurements}}'**
   String form_survey_template_add_selected_count(int count);
 
-  /// No description provided for @form_survey_template_select_all.
+  /// No description provided for @form_survey_template_adding.
   ///
   /// In en, this message translates to:
-  /// **'Select all'**
-  String get form_survey_template_select_all;
+  /// **'Adding…'**
+  String get form_survey_template_adding;
+
+  /// No description provided for @form_survey_template_all_days.
+  ///
+  /// In en, this message translates to:
+  /// **'All {count} days'**
+  String form_survey_template_all_days(int count);
+
+  /// No description provided for @form_survey_template_select_every_survey.
+  ///
+  /// In en, this message translates to:
+  /// **'Select every survey in this measurement'**
+  String get form_survey_template_select_every_survey;
+
+  /// No description provided for @form_survey_template_expand_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Show survey days'**
+  String get form_survey_template_expand_days;
+
+  /// No description provided for @form_survey_template_collapse_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide survey days'**
+  String get form_survey_template_collapse_days;
 
   /// No description provided for @form_survey_template_choose_day.
   ///
@@ -4716,13 +4758,13 @@ abstract class AppLocalizations {
   /// No description provided for @form_survey_template_single_help.
   ///
   /// In en, this message translates to:
-  /// **'Adds 1 editable survey'**
+  /// **'1 editable survey'**
   String get form_survey_template_single_help;
 
   /// No description provided for @form_survey_template_multi_day_help.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{Adds 1 survey, scheduled for one day} other{Adds {count} surveys, scheduled one per day}}'**
+  /// **'{count, plural, =1{1 survey · Scheduled daily} other{{count} surveys · Scheduled daily}}'**
   String form_survey_template_multi_day_help(int count);
 
   /// No description provided for @form_survey_template_day_label.

@@ -8,6 +8,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
+import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -81,6 +82,34 @@ void main() {
       isEmpty,
     );
     expect(measurements.applyTemplateDayEntry(entry), isNotNull);
+  });
+
+  test('adds selected predefined measurements without duplicates', () async {
+    final measurements = _measurements();
+    final template = SurveyTemplateRegistry.findById('ffq_26')!;
+    final dayEntry = SurveyTemplateRegistry.findById(
+      'dhq3_14day',
+    )!.dayEntries!.first;
+
+    await measurements.addPredefinedMeasurements(
+      includeNutrition: true,
+      templates: [template],
+      dayEntries: [dayEntry],
+    );
+    await measurements.addPredefinedMeasurements(
+      includeNutrition: true,
+      templates: [template],
+      dayEntries: [dayEntry],
+    );
+
+    final viewModels =
+        measurements.measurementViewModelsCollection.retrievableViewModels;
+    expect(viewModels, hasLength(3));
+    expect(viewModels.whereType<NutritionFormViewModel>(), hasLength(1));
+    expect(
+      viewModels.whereType<MeasurementSurveyFormViewModel>(),
+      hasLength(2),
+    );
   });
 
   test('disabled occurrence schedule delegates to the default schedule', () {

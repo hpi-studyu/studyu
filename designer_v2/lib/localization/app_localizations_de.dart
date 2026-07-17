@@ -2754,23 +2754,30 @@ class AppLocalizationsDe extends AppLocalizations {
       'Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.';
 
   @override
-  String get form_measurement_type_select => 'Messung hinzufügen';
+  String get form_measurement_type_select => 'Messungen hinzufügen';
 
   @override
-  String get form_measurement_type_survey => 'Eigener Fragebogen';
+  String get form_measurement_type_survey => 'Eigenen Fragebogen erstellen';
 
   @override
   String get form_measurement_type_survey_description =>
       'Erstelle einen Fragebogen mit Fragen und Skalen.';
 
   @override
-  String get form_measurement_type_template => 'Vordefinierte Messungen';
+  String get form_measurement_type_template => 'Messungsbibliothek';
 
   @override
   String get form_measurement_category_all => 'Alle';
 
   @override
+  String get form_measurement_category_all_heading => 'Alle Messungen';
+
+  @override
   String get form_measurement_category_nutrition => 'Ernährung';
+
+  @override
+  String get form_measurement_category_nutrition_heading =>
+      'Ernährungsmessungen';
 
   @override
   String get form_measurement_search_placeholder => 'Messungen durchsuchen';
@@ -2783,6 +2790,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get form_survey_template_added => 'Hinzugefügt';
 
   @override
+  String get form_survey_template_added_to_study => 'Zur Studie hinzugefügt';
+
+  @override
   String get form_survey_template_apply => 'Hinzufügen';
 
   @override
@@ -2792,13 +2802,28 @@ class AppLocalizationsDe extends AppLocalizations {
       locale: localeName,
       other: '$count Messungen hinzufügen',
       one: '1 Messung hinzufügen',
-      zero: '0 Messungen hinzufügen',
+      zero: 'Messungen hinzufügen',
     );
     return '$_temp0';
   }
 
   @override
-  String get form_survey_template_select_all => 'Alle auswählen';
+  String get form_survey_template_adding => 'Wird hinzugefügt…';
+
+  @override
+  String form_survey_template_all_days(int count) {
+    return 'Alle $count Tage';
+  }
+
+  @override
+  String get form_survey_template_select_every_survey =>
+      'Jeden Fragebogen dieser Messung auswählen';
+
+  @override
+  String get form_survey_template_expand_days => 'Fragebogentage anzeigen';
+
+  @override
+  String get form_survey_template_collapse_days => 'Fragebogentage ausblenden';
 
   @override
   String get form_survey_template_choose_day => 'Tag auswählen';
@@ -2807,16 +2832,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get form_survey_template_add_and_edit => 'Hinzufügen und bearbeiten';
 
   @override
-  String get form_survey_template_single_help =>
-      'Fügt 1 bearbeitbaren Fragebogen hinzu';
+  String get form_survey_template_single_help => '1 bearbeitbarer Fragebogen';
 
   @override
   String form_survey_template_multi_day_help(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Fügt $count Fragebögen hinzu, jeweils einen pro Tag geplant',
-      one: 'Fügt 1 Fragebogen hinzu, für einen Tag geplant',
+      other: '$count Fragebögen · Täglich geplant',
+      one: '1 Fragebogen · Täglich geplant',
     );
     return '$_temp0';
   }

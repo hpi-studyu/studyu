@@ -115,15 +115,8 @@ Future<void> _showAddMeasurementDialog(
       canAddNutrition: !formViewModel.isNutritionEnabled,
     ),
   );
-  if (!context.mounted || selection == null) return;
-
-  if (selection.isBlankSurvey) {
-    formViewModel.onNewSurvey();
+  if (!context.mounted || selection != MeasurementSelection.blankSurvey) {
     return;
   }
-  await formViewModel.addPredefinedMeasurements(
-    includeNutrition: selection.includeNutrition,
-    templates: selection.templates,
-    dayEntries: selection.dayEntries,
-  );
+  formViewModel.onNewSurvey();
 }
