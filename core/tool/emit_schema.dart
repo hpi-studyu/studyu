@@ -144,7 +144,6 @@ const questionTypeEnum = [
 /// Common question base fields shared by all question subtypes.
 Map<String, Schema> _questionBaseProperties() {
   return {
-    'type': {'type': 'string'},
     'id': {'type': 'string'},
     'prompt': _nullable(_type('string')),
     'rationale': _nullable(_type('string')),

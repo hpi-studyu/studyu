@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          cache: false
+      - name: Verify generated schema is current
+        run: |
+          dart run core/tool/emit_schema.dart
+          git diff --exit-code -- core/lib/src/validators/schema/study.schema.json
       - uses: actions/setup-node@v6
         with:
           node-version: 20
@@ -42,7 +49,7 @@ jobs:
           console.log('Fixture root keys:', Object.keys(data));
           console.log('Compiling schema...');
 
-          const ajv = new Ajv({allKeys: true, strict: false});
+          const ajv = new Ajv({allErrors: true, strict: false});
           addFormats(ajv);
           const validate = ajv.compile(schema);
 

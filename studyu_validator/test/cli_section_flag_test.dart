@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:studyu_core/core.dart' show StudyFixtures;
 import 'package:studyu_validator/studyu_validator.dart';
 import 'package:test/test.dart';
 
@@ -211,5 +214,11 @@ void main() {
       expect(r!.errors, isNotEmpty);
       expect(r.errors.first.code, 'SCHEMA_ERROR');
     });
+  });
+
+  test('schema accepts a serialized boolean question', () {
+    final study = StudyFixtures.invalidBrokenEligibilityRef();
+
+    expect(validateJsonSchemaOnly(jsonEncode(study.toJson())).valid, isTrue);
   });
 }

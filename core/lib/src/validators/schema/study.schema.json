@@ -1736,7 +1736,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "boolean"
             },
             "id": {
               "type": "string"
@@ -1774,7 +1775,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "choice"
             },
             "id": {
               "type": "string"
@@ -1823,7 +1825,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "scale"
             },
             "id": {
               "type": "string"
@@ -1896,7 +1899,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "annotatedScale"
             },
             "id": {
               "type": "string"
@@ -1957,7 +1961,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "visualAnalogue"
             },
             "id": {
               "type": "string"
@@ -2027,7 +2032,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "ImageCapturingQuestion"
             },
             "id": {
               "type": "string"
@@ -2065,7 +2071,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "AudioRecordingQuestion"
             },
             "id": {
               "type": "string"
@@ -2107,7 +2114,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "date"
             },
             "id": {
               "type": "string"
@@ -2221,7 +2229,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "freeText"
             },
             "id": {
               "type": "string"
@@ -2282,7 +2291,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "FitbitQuestion"
             },
             "id": {
               "type": "string"
@@ -2332,7 +2342,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "type": "string"
+              "type": "string",
+              "const": "pain"
             },
             "id": {
               "type": "string"

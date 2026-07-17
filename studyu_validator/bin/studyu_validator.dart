@@ -98,7 +98,6 @@ void _printUsage(ArgParser parser) {
 }
 
 void _runValidate(ArgResults command) {
-  final json = _readInput(command);
   final levelStr = command['level'] as String;
   final level = levelStr == 'publish'
       ? ValidationLevel.publish
@@ -111,6 +110,7 @@ void _runValidate(ArgResults command) {
     exit(1);
   }
 
+  final json = _readInput(command);
   ValidationResult result;
   if (schemaOnly) {
     result = validateJsonSchemaOnly(json);

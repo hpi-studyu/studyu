@@ -219,22 +219,16 @@ void main() {
     },
   );
 
-  test(
-    'validate --schema-only --section exits 1 with conflicting-flags stderr',
-    () async {
-      final tmp = await File('/tmp/test_study_conflicting.json').create();
-      await tmp.writeAsString(validStudyJson);
+  test('validate rejects conflicting flags before reading input', () async {
+    final result = await _runCli([
+      'validate',
+      '--schema-only',
+      '--section',
+      'study_info',
+    ]);
 
-      final result = await _runCli([
-        'validate',
-        '--schema-only',
-        '--section',
-        'study_info',
-        tmp.path,
-      ]);
-
-      expect(result.exitCode, 1);
-      expect(result.stderr.toString().contains('--schema-only'), isTrue);
-    },
-  );
+    expect(result.exitCode, 1);
+    expect(result.stderr.toString(), contains('--schema-only'));
+    expect(result.stderr.toString(), isNot(contains('Provide a file path')));
+  });
 }
