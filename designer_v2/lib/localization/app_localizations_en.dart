@@ -1597,7 +1597,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_study_design_measurements_description =>
-      'Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU App on a daily basis. The collected data and results will be available on the Analyze page when the study is launched.';
+      'Define the data that you want to gather from participants during the study, primarily to evaluate the effect of your interventions. Participants can provide data through surveys and specialized tracking tasks in the StudyU App. The collected data and results will be available on the Analyze page when the study is launched.';
 
   @override
   String form_array_measurements_minlength(num count) {
@@ -1606,24 +1606,24 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: 'form_array_measurements_minlength',
       one:
-          'You need to define at least one survey to determine the effect of your intervention(s).',
+          'You need to define at least one measurement to determine the effect of your intervention(s).',
     );
     return '$_temp0';
   }
 
   @override
-  String get form_array_measurements_surveys => 'Surveys';
+  String get form_array_measurements_surveys => 'Measurements';
 
   @override
-  String get form_array_measurements_surveys_new => 'Add survey';
+  String get form_array_measurements_surveys_new => 'Add measurement';
 
   @override
   String get form_array_measurements_surveys_empty_title =>
-      'No surveys defined';
+      'No measurements defined';
 
   @override
   String get form_array_measurements_surveys_empty_description =>
-      'You need to define at least one survey to determine the effect of your intervention(s).';
+      'You need to define at least one measurement to determine the effect of your intervention(s).';
 
   @override
   String get form_field_measurement_survey_title => 'Survey title';
@@ -2716,40 +2716,45 @@ class AppLocalizationsEn extends AppLocalizations {
       'Custom: Define your own sequence pattern to meet specific study requirements.';
 
   @override
-  String get form_measurement_type_select => 'Select Measurement Type';
+  String get form_measurement_type_select => 'Add measurement';
 
   @override
-  String get form_measurement_type_survey => 'Survey';
+  String get form_measurement_type_survey => 'Custom survey';
 
   @override
   String get form_measurement_type_survey_description =>
-      'Collect self-reported data from participants using questions and scales.';
+      'Build a survey using questions and scales.';
 
   @override
-  String get form_measurement_type_template => 'Survey from template';
+  String get form_measurement_type_template => 'Predefined measurements';
 
   @override
-  String get form_measurement_type_template_description =>
-      'Start with a premade survey and edit it for this study.';
+  String get form_measurement_category_all => 'All';
 
   @override
-  String get form_survey_template_title => 'Survey Templates';
+  String get form_measurement_category_nutrition => 'Nutrition';
 
   @override
-  String get form_survey_template_description =>
-      'Apply a premade survey to your study';
-
-  @override
-  String get form_survey_template_empty => 'No templates available';
-
-  @override
-  String get form_survey_template_built_in => 'Built-in';
+  String get form_survey_template_empty =>
+      'No predefined measurements available';
 
   @override
   String get form_survey_template_added => 'Added';
 
   @override
-  String get form_survey_template_apply => 'Apply';
+  String get form_survey_template_already_added => 'Already added';
+
+  @override
+  String get form_survey_template_all_items_added => 'All items already added';
+
+  @override
+  String get form_survey_template_apply => 'Add';
+
+  @override
+  String get form_survey_template_add_selected => 'Add selected';
+
+  @override
+  String get form_survey_template_select_all => 'Select all';
 
   @override
   String get form_survey_template_choose_day => 'Choose day';

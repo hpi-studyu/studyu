@@ -2832,37 +2832,37 @@ abstract class AppLocalizations {
   /// No description provided for @form_study_design_measurements_description.
   ///
   /// In en, this message translates to:
-  /// **'Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU App on a daily basis. The collected data and results will be available on the Analyze page when the study is launched.'**
+  /// **'Define the data that you want to gather from participants during the study, primarily to evaluate the effect of your interventions. Participants can provide data through surveys and specialized tracking tasks in the StudyU App. The collected data and results will be available on the Analyze page when the study is launched.'**
   String get form_study_design_measurements_description;
 
   /// No description provided for @form_array_measurements_minlength.
   ///
   /// In en, this message translates to:
-  /// **'{count,plural, =1{You need to define at least one survey to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}'**
+  /// **'{count,plural, =1{You need to define at least one measurement to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}'**
   String form_array_measurements_minlength(num count);
 
   /// No description provided for @form_array_measurements_surveys.
   ///
   /// In en, this message translates to:
-  /// **'Surveys'**
+  /// **'Measurements'**
   String get form_array_measurements_surveys;
 
   /// No description provided for @form_array_measurements_surveys_new.
   ///
   /// In en, this message translates to:
-  /// **'Add survey'**
+  /// **'Add measurement'**
   String get form_array_measurements_surveys_new;
 
   /// No description provided for @form_array_measurements_surveys_empty_title.
   ///
   /// In en, this message translates to:
-  /// **'No surveys defined'**
+  /// **'No measurements defined'**
   String get form_array_measurements_surveys_empty_title;
 
   /// No description provided for @form_array_measurements_surveys_empty_description.
   ///
   /// In en, this message translates to:
-  /// **'You need to define at least one survey to determine the effect of your intervention(s).'**
+  /// **'You need to define at least one measurement to determine the effect of your intervention(s).'**
   String get form_array_measurements_surveys_empty_description;
 
   /// No description provided for @form_field_measurement_survey_title.
@@ -4632,56 +4632,44 @@ abstract class AppLocalizations {
   /// No description provided for @form_measurement_type_select.
   ///
   /// In en, this message translates to:
-  /// **'Select Measurement Type'**
+  /// **'Add measurement'**
   String get form_measurement_type_select;
 
   /// No description provided for @form_measurement_type_survey.
   ///
   /// In en, this message translates to:
-  /// **'Survey'**
+  /// **'Custom survey'**
   String get form_measurement_type_survey;
 
   /// No description provided for @form_measurement_type_survey_description.
   ///
   /// In en, this message translates to:
-  /// **'Collect self-reported data from participants using questions and scales.'**
+  /// **'Build a survey using questions and scales.'**
   String get form_measurement_type_survey_description;
 
   /// No description provided for @form_measurement_type_template.
   ///
   /// In en, this message translates to:
-  /// **'Survey from template'**
+  /// **'Predefined measurements'**
   String get form_measurement_type_template;
 
-  /// No description provided for @form_measurement_type_template_description.
+  /// No description provided for @form_measurement_category_all.
   ///
   /// In en, this message translates to:
-  /// **'Start with a premade survey and edit it for this study.'**
-  String get form_measurement_type_template_description;
+  /// **'All'**
+  String get form_measurement_category_all;
 
-  /// No description provided for @form_survey_template_title.
+  /// No description provided for @form_measurement_category_nutrition.
   ///
   /// In en, this message translates to:
-  /// **'Survey Templates'**
-  String get form_survey_template_title;
-
-  /// No description provided for @form_survey_template_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Apply a premade survey to your study'**
-  String get form_survey_template_description;
+  /// **'Nutrition'**
+  String get form_measurement_category_nutrition;
 
   /// No description provided for @form_survey_template_empty.
   ///
   /// In en, this message translates to:
-  /// **'No templates available'**
+  /// **'No predefined measurements available'**
   String get form_survey_template_empty;
-
-  /// No description provided for @form_survey_template_built_in.
-  ///
-  /// In en, this message translates to:
-  /// **'Built-in'**
-  String get form_survey_template_built_in;
 
   /// No description provided for @form_survey_template_added.
   ///
@@ -4689,11 +4677,35 @@ abstract class AppLocalizations {
   /// **'Added'**
   String get form_survey_template_added;
 
+  /// No description provided for @form_survey_template_already_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Already added'**
+  String get form_survey_template_already_added;
+
+  /// No description provided for @form_survey_template_all_items_added.
+  ///
+  /// In en, this message translates to:
+  /// **'All items already added'**
+  String get form_survey_template_all_items_added;
+
   /// No description provided for @form_survey_template_apply.
   ///
   /// In en, this message translates to:
-  /// **'Apply'**
+  /// **'Add'**
   String get form_survey_template_apply;
+
+  /// No description provided for @form_survey_template_add_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Add selected'**
+  String get form_survey_template_add_selected;
+
+  /// No description provided for @form_survey_template_select_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get form_survey_template_select_all;
 
   /// No description provided for @form_survey_template_choose_day.
   ///

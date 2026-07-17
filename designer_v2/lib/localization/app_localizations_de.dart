@@ -1616,7 +1616,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_study_design_measurements_description =>
-      'Auf dieser Seite legst du fest, welche Daten im Laufe der Studie erhoben werden sollen - hauptsächlich um den Effekt der Interventionen zu bestimmen. Zur Erhebung der Daten füllen Teilnehmer jeden Tag einen oder mehrere Fragebögen in der StudyU-App aus. Die gesammelten Daten & Ergebnisse sind nach dem Start der Studie auf der Analysieren-Unterseite abrufbar.';
+      'Auf dieser Seite legst du fest, welche Daten im Laufe der Studie erhoben werden sollen, hauptsächlich um den Effekt der Interventionen zu bestimmen. Teilnehmer können Daten über Fragebögen und spezialisierte Erfassungsaufgaben in der StudyU-App bereitstellen. Die gesammelten Daten und Ergebnisse sind nach dem Start der Studie auf der Analysieren-Seite abrufbar.';
 
   @override
   String form_array_measurements_minlength(num count) {
@@ -1625,24 +1625,24 @@ class AppLocalizationsDe extends AppLocalizations {
       locale: localeName,
       other: 'form_array_measurements_minlength',
       one:
-          'Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.',
+          'Du brauchst mindestens eine Messung, um den Effekt der Intervention(en) zu messen.',
     );
     return '$_temp0';
   }
 
   @override
-  String get form_array_measurements_surveys => 'Fragebögen';
+  String get form_array_measurements_surveys => 'Messungen';
 
   @override
-  String get form_array_measurements_surveys_new => 'Neuer Fragebogen';
+  String get form_array_measurements_surveys_new => 'Messung hinzufügen';
 
   @override
   String get form_array_measurements_surveys_empty_title =>
-      'Noch keine Fragebögen erstellt';
+      'Noch keine Messungen erstellt';
 
   @override
   String get form_array_measurements_surveys_empty_description =>
-      'Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.';
+      'Du brauchst mindestens eine Messung, um den Effekt der Intervention(en) zu messen.';
 
   @override
   String get form_field_measurement_survey_title => 'Fragebogen Titel';
@@ -2754,40 +2754,46 @@ class AppLocalizationsDe extends AppLocalizations {
       'Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.';
 
   @override
-  String get form_measurement_type_select => 'Messungstyp auswählen';
+  String get form_measurement_type_select => 'Messung hinzufügen';
 
   @override
-  String get form_measurement_type_survey => 'Fragebogen';
+  String get form_measurement_type_survey => 'Eigener Fragebogen';
 
   @override
   String get form_measurement_type_survey_description =>
-      'Sammle selbstberichtete Daten von Teilnehmern mithilfe von Fragen und Skalen.';
+      'Erstelle einen Fragebogen mit Fragen und Skalen.';
 
   @override
-  String get form_measurement_type_template => 'Fragebogen aus Vorlage';
+  String get form_measurement_type_template => 'Vordefinierte Messungen';
 
   @override
-  String get form_measurement_type_template_description =>
-      'Beginne mit einem vorgefertigten Fragebogen und passe ihn für diese Studie an.';
+  String get form_measurement_category_all => 'Alle';
 
   @override
-  String get form_survey_template_title => 'Fragebogenvorlagen';
+  String get form_measurement_category_nutrition => 'Ernährung';
 
   @override
-  String get form_survey_template_description =>
-      'Füge deiner Studie einen vorgefertigten Fragebogen hinzu';
-
-  @override
-  String get form_survey_template_empty => 'Keine Vorlagen verfügbar';
-
-  @override
-  String get form_survey_template_built_in => 'Integriert';
+  String get form_survey_template_empty =>
+      'Keine vordefinierten Messungen verfügbar';
 
   @override
   String get form_survey_template_added => 'Hinzugefügt';
 
   @override
-  String get form_survey_template_apply => 'Anwenden';
+  String get form_survey_template_already_added => 'Bereits hinzugefügt';
+
+  @override
+  String get form_survey_template_all_items_added =>
+      'Alle Einträge wurden bereits hinzugefügt';
+
+  @override
+  String get form_survey_template_apply => 'Hinzufügen';
+
+  @override
+  String get form_survey_template_add_selected => 'Auswahl hinzufügen';
+
+  @override
+  String get form_survey_template_select_all => 'Alle auswählen';
 
   @override
   String get form_survey_template_choose_day => 'Tag auswählen';

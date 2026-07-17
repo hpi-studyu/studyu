@@ -162,14 +162,14 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Add survey'));
+    await tester.tap(find.text('Add measurement'));
     await tester.pumpAndSettle();
-    expect(find.text('Select Measurement Type'), findsOneWidget);
+    expect(find.text('Custom survey'), findsOneWidget);
 
-    await tester.tap(find.text('Survey'));
+    await tester.tap(find.text('Custom survey'));
     await tester.pump();
 
-    expect(find.text('Select Measurement Type'), findsNothing);
+    expect(find.text('Custom survey'), findsNothing);
     expect(
       measurements.measurementViewModelsCollection.retrievableViewModels,
       hasLength(1),
