@@ -2742,16 +2742,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_survey_template_added => 'Added';
 
   @override
-  String get form_survey_template_already_added => 'Already added';
-
-  @override
-  String get form_survey_template_all_items_added => 'All items already added';
-
-  @override
   String get form_survey_template_apply => 'Add';
 
   @override
-  String get form_survey_template_add_selected => 'Add selected';
+  String form_survey_template_add_selected_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count measurements',
+      one: 'Add 1 measurement',
+      zero: 'Add 0 measurements',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get form_survey_template_select_all => 'Select all';
@@ -2763,12 +2766,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_survey_template_add_and_edit => 'Add and edit';
 
   @override
-  String get form_survey_template_single_help =>
-      'Creates one editable survey with all questions from this template.';
+  String get form_survey_template_single_help => 'Adds 1 editable survey';
 
   @override
-  String get form_survey_template_multi_day_help =>
-      'Each day adds a separate survey scheduled for that study day.';
+  String form_survey_template_multi_day_help(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Adds $count surveys, scheduled one per day',
+      one: 'Adds 1 survey, scheduled for one day',
+    );
+    return '$_temp0';
+  }
 
   @override
   String form_survey_template_day_label(int day) {
@@ -2885,7 +2894,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_measurement_type_nutrition_description =>
-      'Track participant food and drink intake using a structured journal or photo capture.';
+      'Track food and drink intake with a structured journal or photos.';
 
   @override
   String get form_field_nutrition_instructions => 'Instructions';

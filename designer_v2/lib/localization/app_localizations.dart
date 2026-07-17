@@ -4677,29 +4677,17 @@ abstract class AppLocalizations {
   /// **'Added'**
   String get form_survey_template_added;
 
-  /// No description provided for @form_survey_template_already_added.
-  ///
-  /// In en, this message translates to:
-  /// **'Already added'**
-  String get form_survey_template_already_added;
-
-  /// No description provided for @form_survey_template_all_items_added.
-  ///
-  /// In en, this message translates to:
-  /// **'All items already added'**
-  String get form_survey_template_all_items_added;
-
   /// No description provided for @form_survey_template_apply.
   ///
   /// In en, this message translates to:
   /// **'Add'**
   String get form_survey_template_apply;
 
-  /// No description provided for @form_survey_template_add_selected.
+  /// No description provided for @form_survey_template_add_selected_count.
   ///
   /// In en, this message translates to:
-  /// **'Add selected'**
-  String get form_survey_template_add_selected;
+  /// **'{count, plural, =0{Add 0 measurements} =1{Add 1 measurement} other{Add {count} measurements}}'**
+  String form_survey_template_add_selected_count(int count);
 
   /// No description provided for @form_survey_template_select_all.
   ///
@@ -4722,14 +4710,14 @@ abstract class AppLocalizations {
   /// No description provided for @form_survey_template_single_help.
   ///
   /// In en, this message translates to:
-  /// **'Creates one editable survey with all questions from this template.'**
+  /// **'Adds 1 editable survey'**
   String get form_survey_template_single_help;
 
   /// No description provided for @form_survey_template_multi_day_help.
   ///
   /// In en, this message translates to:
-  /// **'Each day adds a separate survey scheduled for that study day.'**
-  String get form_survey_template_multi_day_help;
+  /// **'{count, plural, =1{Adds 1 survey, scheduled for one day} other{Adds {count} surveys, scheduled one per day}}'**
+  String form_survey_template_multi_day_help(int count);
 
   /// No description provided for @form_survey_template_day_label.
   ///
@@ -4900,7 +4888,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_measurement_type_nutrition_description.
   ///
   /// In en, this message translates to:
-  /// **'Track participant food and drink intake using a structured journal or photo capture.'**
+  /// **'Track food and drink intake with a structured journal or photos.'**
   String get form_measurement_type_nutrition_description;
 
   /// No description provided for @form_field_nutrition_instructions.

@@ -70,10 +70,12 @@ class _MeasurementPickerDialogState
   final Set<SurveyTemplate> _selectedTemplates = {};
   final Set<SurveyTemplateDayEntry> _selectedDayEntries = {};
 
-  bool get _hasSelection =>
-      _nutritionSelected ||
-      _selectedTemplates.isNotEmpty ||
-      _selectedDayEntries.isNotEmpty;
+  int get _selectionCount =>
+      (_nutritionSelected ? 1 : 0) +
+      _selectedTemplates.length +
+      _selectedDayEntries.length;
+
+  bool get _hasSelection => _selectionCount > 0;
 
   @override
   void initState() {
@@ -143,7 +145,7 @@ class _MeasurementPickerDialogState
       actionButtons: [
         const DismissButton(),
         PrimaryButton(
-          text: tr.form_survey_template_add_selected,
+          text: tr.form_survey_template_add_selected_count(_selectionCount),
           enabled: _hasSelection,
           onPressed: _hasSelection ? _confirmSelection : null,
         ),
@@ -239,7 +241,7 @@ class _WidePicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(
-          width: 220,
+          width: 176,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -401,23 +403,53 @@ class _MeasurementCard extends StatelessWidget {
             child: child,
           );
 
-    return Opacity(
-      opacity: enabled ? 1 : 0.65,
-      child: Card(
-        margin: EdgeInsets.zero,
-        color: selected
-            ? colorScheme.primaryContainer.withValues(alpha: 0.35)
-            : Colors.white,
-        elevation: 3,
-        shadowColor: Colors.black.withValues(alpha: 0.15),
-        clipBehavior: clipBehavior,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: selected
-              ? BorderSide(color: colorScheme.primary, width: 2)
-              : BorderSide.none,
+    return ExcludeFocus(
+      excluding: !enabled,
+      child: Opacity(
+        opacity: enabled ? 1 : 0.65,
+        child: Card(
+          margin: EdgeInsets.zero,
+          color: selected
+              ? colorScheme.primaryContainer.withValues(alpha: 0.35)
+              : Colors.white,
+          elevation: 3,
+          shadowColor: Colors.black.withValues(alpha: 0.15),
+          clipBehavior: clipBehavior,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: selected
+                ? BorderSide(color: colorScheme.primary, width: 2)
+                : BorderSide.none,
+          ),
+          child: content,
         ),
-        child: content,
+      ),
+    );
+  }
+}
+
+class _AddedBadge extends StatelessWidget {
+  const _AddedBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        child: Text(
+          tr.form_survey_template_added,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: colorScheme.onPrimaryContainer,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
@@ -553,22 +585,19 @@ class _NutritionTemplateItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    tr.form_measurement_type_nutrition,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          tr.form_measurement_type_nutrition,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                      if (!canAdd) const _AddedBadge(),
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Text(tr.form_measurement_type_nutrition_description),
-                  if (!canAdd) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      tr.form_survey_template_already_added,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -655,36 +684,32 @@ class _TemplateItemState extends State<_TemplateItem> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  template.title,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        template.title,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    if (!enabled) const _AddedBadge(),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(template.description),
                 const SizedBox(height: 4),
                 Text(
                   template.isMultiDay
-                      ? tr.form_survey_template_multi_day_help
+                      ? tr.form_survey_template_multi_day_help(
+                          dayEntries.length,
+                        )
                       : tr.form_survey_template_single_help,
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (!enabled) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    template.isMultiDay
-                        ? tr.form_survey_template_all_items_added
-                        : tr.form_survey_template_already_added,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
@@ -729,6 +754,7 @@ class _TemplateItemState extends State<_TemplateItem> {
                   CheckboxListTile(
                     dense: true,
                     tristate: true,
+                    enabled: availableDayEntries.isNotEmpty,
                     selected: anyDaySelected,
                     hoverColor: colorScheme.primaryContainer.withValues(
                       alpha: 0.25,
@@ -786,6 +812,7 @@ class _DayEntryTile extends StatelessWidget {
 
     return CheckboxListTile(
       dense: true,
+      enabled: enabled,
       selected: selected,
       hoverColor: colorScheme.primaryContainer.withValues(alpha: 0.25),
       selectedTileColor: colorScheme.primaryContainer.withValues(alpha: 0.35),
@@ -805,16 +832,9 @@ class _DayEntryTile extends StatelessWidget {
             ),
           ),
           Expanded(child: Text(entry.title, style: theme.textTheme.bodyMedium)),
+          if (!enabled) ...[const SizedBox(width: 8), const _AddedBadge()],
         ],
       ),
-      subtitle: enabled
-          ? null
-          : Text(
-              tr.form_survey_template_already_added,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.primary,
-              ),
-            ),
     );
   }
 }

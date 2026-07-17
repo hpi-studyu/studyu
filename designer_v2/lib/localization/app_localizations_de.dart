@@ -2780,17 +2780,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get form_survey_template_added => 'Hinzugefügt';
 
   @override
-  String get form_survey_template_already_added => 'Bereits hinzugefügt';
-
-  @override
-  String get form_survey_template_all_items_added =>
-      'Alle Einträge wurden bereits hinzugefügt';
-
-  @override
   String get form_survey_template_apply => 'Hinzufügen';
 
   @override
-  String get form_survey_template_add_selected => 'Auswahl hinzufügen';
+  String form_survey_template_add_selected_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Messungen hinzufügen',
+      one: '1 Messung hinzufügen',
+      zero: '0 Messungen hinzufügen',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get form_survey_template_select_all => 'Alle auswählen';
@@ -2803,11 +2805,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_survey_template_single_help =>
-      'Erstellt einen bearbeitbaren Fragebogen mit allen Fragen dieser Vorlage.';
+      'Fügt 1 bearbeitbaren Fragebogen hinzu';
 
   @override
-  String get form_survey_template_multi_day_help =>
-      'Jeder Tag fügt einen eigenen Fragebogen hinzu, der für diesen Studientag geplant ist.';
+  String form_survey_template_multi_day_help(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Fügt $count Fragebögen hinzu, jeweils einen pro Tag geplant',
+      one: 'Fügt 1 Fragebogen hinzu, für einen Tag geplant',
+    );
+    return '$_temp0';
+  }
 
   @override
   String form_survey_template_day_label(int day) {
@@ -2925,7 +2934,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_measurement_type_nutrition_description =>
-      'Verfolge die Nahrungs- und Getränkeaufnahme der Teilnehmer mithilfe eines strukturierten Tagebuchs oder einer Fotoaufnahme.';
+      'Erfasse die Nahrungs- und Getränkeaufnahme mit einem strukturierten Tagebuch oder Fotos.';
 
   @override
   String get form_field_nutrition_instructions => 'Anweisungen';
