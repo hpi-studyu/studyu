@@ -142,10 +142,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_selection_single_why => 'Warum?';
 
   @override
-  String get study_selection_invite_code_hint =>
-      'Einladungscode vorhanden? Stattdessen damit teilnehmen.';
-
-  @override
   String get study_selection_single_reason =>
       'Wenn Sie zur selben Zeit an mehreren Studien teilnehmen würde, könnten die Kombination der Interventionen die Ergebnisse verfälschen.';
 
@@ -166,6 +162,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get study_selection_hidden_studies =>
       'Einige Studien konnten nicht angezeigt werden. Das kann passieren, wenn Ihre App-Version veraltet ist. Bitte aktualisieren Sie die App, um alle verfügbaren Studien zu sehen, oder nehmen Sie an einer der unten angezeigten Studien teil.';
+
+  @override
+  String get study_selection_no_public_studies =>
+      'Derzeit sind keine öffentlichen Studien verfügbar. Wenn Sie einen Einladungscode haben, können Sie trotzdem an einer privaten Studie teilnehmen.';
 
   @override
   String get study_overview_title => 'Übersicht';

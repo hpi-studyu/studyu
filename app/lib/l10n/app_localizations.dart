@@ -326,12 +326,6 @@ abstract class AppLocalizations {
   /// **'Why?'**
   String get study_selection_single_why;
 
-  /// No description provided for @study_selection_invite_code_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Have an invite code? Join with it instead.'**
-  String get study_selection_invite_code_hint;
-
   /// No description provided for @study_selection_single_reason.
   ///
   /// In en, this message translates to:
@@ -367,6 +361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
+
+  /// No description provided for @study_selection_no_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'There are currently no public studies available. If you have an invite code, you can still join a private study.'**
+  String get study_selection_no_public_studies;
 
   /// No description provided for @study_overview_title.
   ///
@@ -1061,7 +1061,7 @@ abstract class AppLocalizations {
   /// No description provided for @invite_code_button.
   ///
   /// In en, this message translates to:
-  /// **'Use invite code'**
+  /// **'Join with an invite code'**
   String get invite_code_button;
 
   /// No description provided for @private_study_invite_code.

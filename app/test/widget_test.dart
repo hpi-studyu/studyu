@@ -95,7 +95,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.widgetWithText(OutlinedButton, 'Use invite code'),
+      find.widgetWithText(OutlinedButton, 'Join with an invite code'),
       findsOneWidget,
     );
     expect(
@@ -140,7 +140,7 @@ void main() {
     expect(find.text('Please select a study.'), findsNothing);
     expect(find.widgetWithText(TextButton, 'Back'), findsNothing);
     expect(
-      find.text('Have an invite code? Join with it instead.'),
+      find.widgetWithText(OutlinedButton, 'Join with an invite code'),
       findsOneWidget,
     );
 
@@ -149,6 +149,28 @@ void main() {
 
     expect(find.byType(InviteCodeDialog), findsOneWidget);
   });
+
+  testWidgets(
+    'study selection shows an alternative when no public studies exist',
+    (tester) async {
+      await tester.pumpWidget(
+        setup(
+          StudySelectionScreen(
+            publicStudies: Future.value(ExtractionSuccess<Study>([])),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NoPublicStudiesWidget), findsOneWidget);
+      expect(
+        find.text(
+          'There are currently no public studies available. If you have an invite code, you can still join a private study.',
+        ),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('invite action opens invite code dialog over welcome', (
     tester,

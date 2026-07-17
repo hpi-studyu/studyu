@@ -62,7 +62,9 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
 }
 
 class StudySelectionScreen extends StatefulWidget {
-  const StudySelectionScreen({super.key});
+  final Future<ExtractionResult<Study>>? publicStudies;
+
+  const StudySelectionScreen({super.key, this.publicStudies});
 
   @override
   State<StudySelectionScreen> createState() => _StudySelectionScreenState();
@@ -70,7 +72,9 @@ class StudySelectionScreen extends StatefulWidget {
 
 class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
-  final publishedStudies = Study.publishedPublicStudies();
+
+  Future<ExtractionResult<Study>> get publishedStudies =>
+      widget.publicStudies ?? Study.publishedPublicStudies();
 
   @override
   Widget build(BuildContext context) {
@@ -107,18 +111,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 ),
               ),
             ),
-            TextButton(
+            OutlinedButton.icon(
               key: const ValueKey('study_selection_invite_code'),
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.bodyMedium,
-              ),
+              icon: const Icon(Icons.vpn_key_outlined),
               onPressed: () => showDialog<void>(
                 context: context,
                 builder: (_) => const InviteCodeDialog(),
               ),
-              child: Text(
-                AppLocalizations.of(context)!.study_selection_invite_code_hint,
-              ),
+              label: Text(AppLocalizations.of(context)!.invite_code_button),
             ),
           ],
         ),
@@ -165,6 +165,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           });
                         });
                       }
+                      if (studies.isEmpty) {
+                        return const NoPublicStudiesWidget();
+                      }
+
                       return ListView.builder(
                         itemCount: studies.length,
                         itemBuilder: (context, index) {
@@ -184,6 +188,34 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                       );
                     },
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NoPublicStudiesWidget extends StatelessWidget {
+  const NoPublicStudiesWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.search_off, size: 48, color: theme.colorScheme.primary),
+            const SizedBox(height: 16),
+            Text(
+              l10n.study_selection_no_public_studies,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge,
             ),
           ],
         ),
