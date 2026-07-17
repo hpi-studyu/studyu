@@ -200,6 +200,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),

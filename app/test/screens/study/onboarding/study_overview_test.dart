@@ -66,10 +66,114 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    expect(find.byType(BackButton), findsNothing);
+    expect(find.byKey(const ValueKey('study_overview_back')), findsOneWidget);
+
     await tester.tap(find.byKey(const ValueKey('study_overview_continue')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('terms_test_screen')), findsOneWidget);
+  });
+
+  testWidgets('regular bottom back clears selection and opens study list', (
+    tester,
+  ) async {
+    final study = Study('study-1', 'owner-1')..title = 'Study';
+    final state = AppState()
+      ..selectedStudy = study
+      ..selectedInterventions = []
+      ..inviteCode = 'invite-1'
+      ..preselectedInterventionIds = ['intervention-1'];
+    final router = GoRouter(
+      initialLocation: '/${RouteNames.studyOverview}',
+      routes: [
+        GoRoute(
+          path: '/${RouteNames.studyOverview}',
+          builder: (_, _) => const StudyOverviewScreen(),
+        ),
+        GoRoute(
+          path: '/${RouteNames.studySelection}',
+          builder: (_, _) => const Scaffold(
+            body: Text(
+              'Study list',
+              key: ValueKey('study_selection_test_screen'),
+            ),
+          ),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: state,
+        child: MaterialApp.router(
+          routerConfig: router,
+          locale: const Locale('en'),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('study_overview_back')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('study_selection_test_screen')),
+      findsOneWidget,
+    );
+    expect(state.selectedStudy, isNull);
+    expect(state.selectedInterventions, isNull);
+    expect(state.inviteCode, isNull);
+    expect(state.preselectedInterventionIds, isNull);
+  });
+
+  testWidgets('pending-link bottom back pops without clearing selection', (
+    tester,
+  ) async {
+    final study = Study('study-1', 'owner-1')..title = 'Study';
+    final state = AppState()
+      ..setPendingDeepLink(study: study, inviteCode: 'invite-1');
+    final router = GoRouter(
+      initialLocation: '/source',
+      routes: [
+        GoRoute(
+          path: '/source',
+          builder: (_, _) => const Scaffold(
+            body: Text('Source', key: ValueKey('source_test_screen')),
+          ),
+        ),
+        GoRoute(
+          path: '/${RouteNames.studyOverview}',
+          builder: (_, _) => const StudyOverviewScreen(),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: state,
+        child: MaterialApp.router(
+          routerConfig: router,
+          locale: const Locale('en'),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    router.push('/${RouteNames.studyOverview}');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('study_overview_back')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('source_test_screen')), findsOneWidget);
+    expect(state.selectedStudy, same(study));
+    expect(state.hasPendingDeepLink, isTrue);
   });
 
   testWidgets('pending link clear does not rebuild with a null study', (

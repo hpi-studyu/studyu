@@ -105,6 +105,7 @@ class _InterventionSelectionScreenState
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
       ),
       body: SingleChildScrollView(

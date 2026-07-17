@@ -105,20 +105,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            if (!returnToStudySelection) {
-              context.pop();
-              return;
-            }
-            appState
-              ..selectedStudy = null
-              ..selectedInterventions = null
-              ..inviteCode = null
-              ..preselectedInterventionIds = null;
-            context.go('/${RouteNames.studySelection}');
-          },
-        ),
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: SingleChildScrollView(
@@ -134,6 +121,19 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        backButtonKey: const ValueKey('study_overview_back'),
+        onBack: () {
+          if (!returnToStudySelection) {
+            context.pop();
+            return;
+          }
+          appState
+            ..selectedStudy = null
+            ..selectedInterventions = null
+            ..inviteCode = null
+            ..preselectedInterventionIds = null;
+          context.go('/${RouteNames.studySelection}');
+        },
         nextButtonKey: const ValueKey('study_overview_continue'),
         onNext: () => _continueOnboarding(context),
       ),
