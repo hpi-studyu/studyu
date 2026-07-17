@@ -78,6 +78,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final choiceWidgets = widget.question.choices
         .map<Widget>(
           (choice) => SelectableButton(
@@ -99,8 +100,10 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
               ? null
               : confirm,
           style: OutlinedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.secondary,
+            backgroundColor: colorScheme.secondary,
             foregroundColor: Colors.white,
+            disabledBackgroundColor: colorScheme.surfaceContainerHighest,
+            disabledForegroundColor: colorScheme.onSurfaceVariant,
           ),
           child: Text(AppLocalizations.of(context)!.confirm),
         ),

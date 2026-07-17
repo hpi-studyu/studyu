@@ -42,7 +42,17 @@ void main() {
       OutlinedButton,
       'Confirm selection',
     );
-    expect(tester.widget<OutlinedButton>(confirmButton).onPressed, isNull);
+    final disabledButton = tester.widget<OutlinedButton>(confirmButton);
+    final colorScheme = Theme.of(tester.element(confirmButton)).colorScheme;
+    expect(disabledButton.onPressed, isNull);
+    expect(
+      disabledButton.style?.foregroundColor?.resolve({WidgetState.disabled}),
+      colorScheme.onSurfaceVariant,
+    );
+    expect(
+      disabledButton.style?.backgroundColor?.resolve({WidgetState.disabled}),
+      colorScheme.surfaceContainerHighest,
+    );
     expect(
       tester
           .widget<ChoiceQuestionWidget>(find.byType(ChoiceQuestionWidget))
