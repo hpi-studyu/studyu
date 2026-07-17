@@ -308,12 +308,6 @@ abstract class AppLocalizations {
   /// **'Study Selection'**
   String get study_selection;
 
-  /// No description provided for @study_selection_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select a study.'**
-  String get study_selection_description;
-
   /// No description provided for @study_selection_single.
   ///
   /// In en, this message translates to:

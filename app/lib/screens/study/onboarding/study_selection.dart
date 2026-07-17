@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -77,8 +76,20 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.goNamed(RouteNames.welcome);
+            }
+          },
+        ),
+        title: Text(AppLocalizations.of(context)!.browse_public_studies),
+      ),
       body: OnboardingPage(
-        title: AppLocalizations.of(context)!.study_selection_description,
+        title: '',
         description: '',
         descriptionWidget: RichText(
           text: TextSpan(
@@ -173,16 +184,6 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        hideNext: true,
-        onBack: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.goNamed(RouteNames.welcome);
-          }
-        },
       ),
     );
   }

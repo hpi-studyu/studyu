@@ -125,6 +125,19 @@ void main() {
     expect(find.byType(TermsScreen), findsNothing);
   });
 
+  testWidgets('study selection uses top app bar navigation', (tester) async {
+    await tester.pumpWidget(setup(const StudySelectionScreen()));
+    await tester.pump();
+
+    expect(
+      find.widgetWithText(AppBar, 'Browse public studies'),
+      findsOneWidget,
+    );
+    expect(find.byType(BackButton), findsOneWidget);
+    expect(find.text('Please select a study.'), findsNothing);
+    expect(find.widgetWithText(TextButton, 'Back'), findsNothing);
+  });
+
   testWidgets('invite action opens invite code dialog over welcome', (
     tester,
   ) async {

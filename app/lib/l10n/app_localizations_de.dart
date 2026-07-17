@@ -132,9 +132,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_selection => 'Studienauswahl';
 
   @override
-  String get study_selection_description => 'Bitte wählen Sie eine Studie aus.';
-
-  @override
   String get study_selection_single =>
       'Sie können zu jeder Zeit maximal an einer Studie teilnehmen.';
 

@@ -132,9 +132,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get study_selection => 'Study Selection';
 
   @override
-  String get study_selection_description => 'Please select a study.';
-
-  @override
   String get study_selection_single =>
       'You can only participate in one study at a time.';
 
