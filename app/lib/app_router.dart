@@ -155,7 +155,8 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.terms}',
         name: RouteNames.terms,
-        builder: (context, state) => const TermsScreen(),
+        builder: (context, state) =>
+            TermsScreen(isPushed: state.extra == true ? true : null),
       ),
       GoRoute(
         path: '/${RouteNames.recoveryPhrase}',

@@ -33,7 +33,10 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<bool> _ensureTermsAccepted(BuildContext context) async {
-    final accepted = await context.push<bool>('/${RouteNames.terms}');
+    final accepted = await context.push<bool>(
+      '/${RouteNames.terms}',
+      extra: true,
+    );
     return context.mounted && accepted == true;
   }
 

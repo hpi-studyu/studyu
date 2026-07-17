@@ -13,7 +13,9 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({super.key});
+  final bool? isPushed;
+
+  const TermsScreen({this.isPushed, super.key});
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
@@ -31,6 +33,10 @@ class _TermsScreenState extends State<TermsScreen> {
 
   bool userCanContinue() {
     return _acceptedTerms && _acceptedPrivacy;
+  }
+
+  bool _hasParentRoute(BuildContext context) {
+    return widget.isPushed ?? context.canPop();
   }
 
   @override
@@ -92,7 +98,7 @@ class _TermsScreenState extends State<TermsScreen> {
     return BottomOnboardingNavigation(
       backButtonKey: const ValueKey('terms_back'),
       onBack: () {
-        if (context.canPop()) {
+        if (_hasParentRoute(context)) {
           context.pop();
         } else {
           context.go('/${RouteNames.welcome}');
@@ -105,7 +111,7 @@ class _TermsScreenState extends State<TermsScreen> {
               if (!success || !mounted) return;
               final route = routeAfterTerms(
                 context.read<AppState>(),
-                canPop: context.canPop(),
+                canPop: _hasParentRoute(context),
               );
               if (route == null) {
                 context.pop(true);
