@@ -16,9 +16,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 @visibleForTesting
 bool shouldReturnToStudySelection(AppState state) => !state.hasPendingDeepLink;
 
-@visibleForTesting
-bool shouldSkipTermsGate(AppState state) => state.hasAcceptedTerms;
-
 class StudyOverviewScreen extends StatefulWidget {
   const StudyOverviewScreen({super.key});
 
@@ -28,7 +25,6 @@ class StudyOverviewScreen extends StatefulWidget {
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Study? study;
-  bool _acceptedTerms = false;
 
   @override
   void initState() {
@@ -37,13 +33,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<bool> _ensureTermsAccepted(BuildContext context) async {
-    if (_acceptedTerms || shouldSkipTermsGate(context.read<AppState>())) {
-      return true;
-    }
     final accepted = await context.push<bool>('/${RouteNames.terms}');
-    if (!context.mounted || accepted != true) return false;
-    _acceptedTerms = true;
-    return true;
+    return context.mounted && accepted == true;
   }
 
   Future<void> _continueOnboarding(BuildContext context) async {

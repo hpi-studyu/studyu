@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -25,5 +26,43 @@ void main() {
       routeAfterTerms(AppState(), canPop: false),
       '/${RouteNames.studySelection}',
     );
+  });
+
+  testWidgets('aligns legal document content in one text column', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: LegalSection(
+            title: 'Terms',
+            description: 'Description',
+            acknowledgment: 'I agree',
+            isChecked: false,
+            onChanged: (_) {},
+            icon: const Icon(Icons.description),
+            pdfUrl: 'https://example.com',
+            pdfUrlLabel: 'Read document',
+          ),
+        ),
+      ),
+    );
+
+    final titleX = tester.getTopLeft(find.text('Terms')).dx;
+    expect(
+      tester.getTopLeft(find.text('Description')).dx,
+      moreOrLessEquals(titleX),
+    );
+    expect(
+      tester.getTopLeft(find.text('Read document')).dx,
+      moreOrLessEquals(titleX),
+    );
+    expect(
+      tester.getCenter(find.byIcon(Icons.description)).dx,
+      lessThan(titleX),
+    );
+    final checkboxX = tester.getCenter(find.byType(Checkbox)).dx;
+    expect(checkboxX, greaterThan(titleX));
+    expect(checkboxX, lessThan(tester.getCenter(find.text('I agree')).dx));
   });
 }

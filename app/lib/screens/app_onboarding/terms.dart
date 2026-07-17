@@ -58,35 +58,25 @@ class _TermsScreenState extends State<TermsScreen> {
         LegalSection(
           title: AppLocalizations.of(context)!.terms,
           description: AppLocalizations.of(context)!.terms_content,
+          acknowledgment: AppLocalizations.of(context)!.terms_agree,
+          isChecked: _acceptedTerms,
+          onChanged: (val) => setState(() => _acceptedTerms = val ?? false),
           icon: const Icon(MdiIcons.fileDocumentEdit),
           pdfUrl: appConfig!.appTerms[appLocale.languageCode],
           pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
         ),
-        const SizedBox(height: 20),
-        CheckboxListTile(
-          title: Text(AppLocalizations.of(context)!.terms_agree),
-          value: _acceptedTerms,
-          onChanged: (val) => setState(() => _acceptedTerms = val ?? false),
-          contentPadding: EdgeInsets.zero,
-          controlAffinity: ListTileControlAffinity.leading,
-        ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         LegalSection(
           title: AppLocalizations.of(context)!.privacy,
           description: AppLocalizations.of(context)!.privacy_content,
+          acknowledgment: AppLocalizations.of(context)!.privacy_agree,
+          isChecked: _acceptedPrivacy,
+          onChanged: (val) => setState(() => _acceptedPrivacy = val ?? false),
           icon: const Icon(MdiIcons.shieldLock),
           pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
           pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
         ),
-        const SizedBox(height: 20),
-        CheckboxListTile(
-          title: Text(AppLocalizations.of(context)!.privacy_agree),
-          value: _acceptedPrivacy,
-          onChanged: (val) => setState(() => _acceptedPrivacy = val ?? false),
-          contentPadding: EdgeInsets.zero,
-          controlAffinity: ListTileControlAffinity.leading,
-        ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         LegalSection(
           title: AppLocalizations.of(context)!.legal_notice,
           description: AppLocalizations.of(context)!.legal_notice_content,
@@ -94,7 +84,6 @@ class _TermsScreenState extends State<TermsScreen> {
           pdfUrl: appConfig.imprint[appLocale.languageCode],
           pdfUrlLabel: AppLocalizations.of(context)!.imprint_read,
         ),
-        const SizedBox(height: 20),
       ],
     );
   }
@@ -114,9 +103,10 @@ class _TermsScreenState extends State<TermsScreen> {
           ? () async {
               final success = await ensureParticipantSignedIn();
               if (!success || !mounted) return;
-              final appState = context.read<AppState>()
-                ..hasAcceptedTerms = true;
-              final route = routeAfterTerms(appState, canPop: context.canPop());
+              final route = routeAfterTerms(
+                context.read<AppState>(),
+                canPop: context.canPop(),
+              );
               if (route == null) {
                 context.pop(true);
               } else {
@@ -134,6 +124,9 @@ class LegalSection extends StatelessWidget {
   final Icon? icon;
   final String? pdfUrl;
   final String? pdfUrlLabel;
+  final String? acknowledgment;
+  final bool? isChecked;
+  final ValueChanged<bool?>? onChanged;
 
   const LegalSection({
     super.key,
@@ -142,34 +135,112 @@ class LegalSection extends StatelessWidget {
     this.icon,
     this.pdfUrl,
     this.pdfUrlLabel,
+    this.acknowledgment,
+    this.isChecked,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-      children: [
-        Text(
-          title!,
-          style: theme.textTheme.titleLarge!.copyWith(
-            color: theme.colorScheme.primary,
-          ),
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 32,
+                  child: IconTheme(
+                    data: IconThemeData(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      size: 24,
+                    ),
+                    child: icon!,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title!,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(0, 40),
+                        ),
+                        onPressed: () async {
+                          final uri = Uri.parse(pdfUrl!);
+                          if (await canLaunchUrl(uri)) {
+                            launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          }
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(pdfUrlLabel!),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.open_in_new, size: 16),
+                          ],
+                        ),
+                      ),
+                      if (acknowledgment != null) ...[
+                        const Divider(height: 16),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 24,
+                              height: 48,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Checkbox(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  value: isChecked,
+                                  onChanged: onChanged,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                acknowledgment!,
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        const SizedBox(height: 20),
-        Text(description!),
-        const SizedBox(height: 20),
-        OutlinedButton.icon(
-          icon: icon,
-          onPressed: () async {
-            final uri = Uri.parse(pdfUrl!);
-            if (await canLaunchUrl(uri)) {
-              launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-          },
-          label: Text(pdfUrlLabel!),
-        ),
-      ],
+      ),
     );
   }
 }
