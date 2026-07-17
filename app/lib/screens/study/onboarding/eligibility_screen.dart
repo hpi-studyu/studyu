@@ -102,7 +102,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
         final firstFailed = criteria.firstWhere(
-          (criterion) => criterion.isViolated(qs),
+          (criterion) => !criterion.isSatisfied(qs),
         );
         activeResult = EligibilityResult(
           qs,
