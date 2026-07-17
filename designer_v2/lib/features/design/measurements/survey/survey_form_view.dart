@@ -37,14 +37,6 @@ class _MeasurementSurveyFormViewState
     extends ConsumerState<MeasurementSurveyFormView> {
   bool isStylingInformationDismissed = true;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.formViewModel.finalizeInitializationBaseline();
-    });
-  }
-
   void onDismissedCallback() => setState(() {
     isStylingInformationDismissed = !isStylingInformationDismissed;
   });
