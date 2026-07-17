@@ -114,10 +114,9 @@ class _TermsScreenState extends State<TermsScreen> {
           ? () async {
               final success = await ensureParticipantSignedIn();
               if (!success || !mounted) return;
-              final route = routeAfterTerms(
-                context.read<AppState>(),
-                canPop: context.canPop(),
-              );
+              final appState = context.read<AppState>()
+                ..hasAcceptedTerms = true;
+              final route = routeAfterTerms(appState, canPop: context.canPop());
               if (route == null) {
                 context.pop(true);
               } else {

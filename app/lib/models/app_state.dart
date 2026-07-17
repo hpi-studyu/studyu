@@ -12,6 +12,7 @@ class AppState with ChangeNotifier {
   List<String>? preselectedInterventionIds;
   StudyNotifications? studyNotifications;
   bool isPreview = false;
+  bool hasAcceptedTerms = false;
   bool showRecoveryPhraseOnDashboard = false;
 
   String? pendingDeepLinkStudyId;

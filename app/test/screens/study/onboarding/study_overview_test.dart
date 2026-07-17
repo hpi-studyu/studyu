@@ -25,6 +25,12 @@ void main() {
     expect(shouldReturnToStudySelection(state), isFalse);
   });
 
+  test('accepted app terms skip the terms gate', () {
+    final state = AppState()..hasAcceptedTerms = true;
+
+    expect(shouldSkipTermsGate(state), isTrue);
+  });
+
   testWidgets('first continue opens terms before study onboarding', (
     tester,
   ) async {
