@@ -185,8 +185,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     ),
     actions: [
       TextButton(
-        onPressed: _finish,
-        child: Text(AppLocalizations.of(context)!.eligible_back),
+        key: const ValueKey('eligibility_failed_back'),
+        onPressed: () => context.pop(),
+        child: Text(AppLocalizations.of(context)!.back),
       ),
     ],
     forceActionsBelow: true,

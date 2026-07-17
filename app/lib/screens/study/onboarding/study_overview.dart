@@ -8,7 +8,6 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
-import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -73,22 +72,13 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
-    final study = context.read<AppState>().selectedStudy;
-    final result = await context.push<EligibilityResult>(
+    await context.push<void>(
       '/${RouteNames.eligibilityCheck}',
       extra: EligibilityScreenArguments(
-        study: study,
+        study: context.read<AppState>().selectedStudy,
         onEligible: navigateToJourney,
       ),
     );
-    if (result == null) return;
-
-    if (!context.mounted) return;
-    if (result.eligible) return;
-
-    await PendingDeepLinkService.clear(context.read<AppState>());
-    if (!context.mounted) return;
-    context.go('/${RouteNames.studySelection}');
   }
 
   @override
@@ -125,7 +115,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
             ..selectedInterventions = null
             ..inviteCode = null
             ..preselectedInterventionIds = null;
-          context.go('/${RouteNames.studySelection}');
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/${RouteNames.studySelection}');
+          }
         },
         nextButtonKey: const ValueKey('study_overview_continue'),
         onNext: () => _continueOnboarding(context),

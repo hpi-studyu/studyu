@@ -182,8 +182,10 @@ void main() {
       ..selectedInterventions = []
       ..inviteCode = 'invite-1'
       ..preselectedInterventionIds = ['intervention-1'];
+    final observer = _PopObserver();
     final router = GoRouter(
-      initialLocation: '/${RouteNames.studyOverview}',
+      initialLocation: '/${RouteNames.studySelection}',
+      observers: [observer],
       routes: [
         GoRoute(
           path: '/${RouteNames.studyOverview}',
@@ -214,6 +216,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    router.push('/${RouteNames.studyOverview}');
+    await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey('study_overview_back')));
     await tester.pumpAndSettle();
@@ -226,6 +230,7 @@ void main() {
     expect(state.selectedInterventions, isNull);
     expect(state.inviteCode, isNull);
     expect(state.preselectedInterventionIds, isNull);
+    expect(observer.popCount, 1);
   });
 
   testWidgets('pending-link bottom back pops without clearing selection', (
@@ -313,4 +318,14 @@ void main() {
 
     expect(tester.takeException(), isNull);
   });
+}
+
+class _PopObserver extends NavigatorObserver {
+  int popCount = 0;
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    popCount++;
+    super.didPop(route, previousRoute);
+  }
 }
