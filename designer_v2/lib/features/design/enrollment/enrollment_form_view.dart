@@ -80,6 +80,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                   subtitle: (option.description) != null
                                       ? TextParagraph(
                                           text: option.description,
+                                          selectable: false,
                                           style: ThemeConfig.bodyTextMuted(
                                             theme,
                                           ),
