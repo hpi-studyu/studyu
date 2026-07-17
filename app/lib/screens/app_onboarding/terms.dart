@@ -12,10 +12,19 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+typedef TermsContinuation = Future<void> Function(BuildContext context);
+
+class TermsScreenArguments {
+  final TermsContinuation onAccepted;
+
+  const TermsScreenArguments({required this.onAccepted});
+}
+
 class TermsScreen extends StatefulWidget {
   final bool? isPushed;
+  final TermsContinuation? onAccepted;
 
-  const TermsScreen({this.isPushed, super.key});
+  const TermsScreen({this.isPushed, this.onAccepted, super.key});
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
@@ -30,6 +39,7 @@ String? routeAfterTerms(AppState state, {required bool canPop}) {
 class _TermsScreenState extends State<TermsScreen> {
   bool _acceptedTerms = kDebugMode;
   bool _acceptedPrivacy = kDebugMode;
+  bool _participantReady = false;
 
   bool userCanContinue() {
     return _acceptedTerms && _acceptedPrivacy;
@@ -107,8 +117,15 @@ class _TermsScreenState extends State<TermsScreen> {
       nextButtonKey: const ValueKey('terms_continue'),
       onNext: userCanContinue()
           ? () async {
-              final success = await ensureParticipantSignedIn();
-              if (!success || !mounted) return;
+              if (!_participantReady) {
+                final success = await ensureParticipantSignedIn();
+                if (!success || !mounted) return;
+                _participantReady = true;
+              }
+              if (widget.onAccepted != null) {
+                await widget.onAccepted!(context);
+                return;
+              }
               final route = routeAfterTerms(
                 context.read<AppState>(),
                 canPop: _hasParentRoute(context),

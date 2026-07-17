@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
@@ -32,16 +33,14 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     study = context.read<AppState>().selectedStudy;
   }
 
-  Future<bool> _ensureTermsAccepted(BuildContext context) async {
-    final accepted = await context.push<bool>(
+  Future<void> _continueOnboarding(BuildContext context) async {
+    await context.push<void>(
       '/${RouteNames.terms}',
-      extra: true,
+      extra: TermsScreenArguments(onAccepted: _continueAfterTerms),
     );
-    return context.mounted && accepted == true;
   }
 
-  Future<void> _continueOnboarding(BuildContext context) async {
-    if (!await _ensureTermsAccepted(context) || !context.mounted) return;
+  Future<void> _continueAfterTerms(BuildContext context) async {
     if (study!.hasEligibilityCheck) {
       await navigateToEligibilityCheck(context);
     } else {
