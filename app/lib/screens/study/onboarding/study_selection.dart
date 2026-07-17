@@ -193,88 +193,97 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text(AppLocalizations.of(context)!.private_study_invite_code),
-    content: TextFormField(
-      controller: _controller,
-      validator: (_) => _errorMessage,
-      autovalidateMode: AutovalidateMode.always,
-      decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.invite_code,
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.private_study_invite_code),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l10n.private_study_invite_code_description),
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _controller,
+            validator: (_) => _errorMessage,
+            autovalidateMode: AutovalidateMode.always,
+            decoration: InputDecoration(labelText: l10n.invite_code),
+          ),
+        ],
       ),
-    ),
-    actions: [
-      OutlinedButton.icon(
-        icon: const Icon(Icons.arrow_forward),
-        label: Text(AppLocalizations.of(context)!.next),
-        onPressed: () async {
-          try {
-            final (invite, study) = await Study.fetchByInviteCode(
-              _controller.text,
-            );
+      actions: [
+        OutlinedButton.icon(
+          icon: const Icon(Icons.arrow_forward),
+          label: Text(AppLocalizations.of(context)!.next),
+          onPressed: () async {
+            try {
+              final (invite, study) = await Study.fetchByInviteCode(
+                _controller.text,
+              );
 
-            if (!mounted) return;
-
-            if (study == null) {
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.invalid_invite_code;
-              });
-              return;
-            }
-
-            setState(() {
-              _errorMessage = null;
-            });
-
-            if (study.isClosed) {
-              if (!context.mounted) return;
-              context.pop();
-              await showStudyClosedDialog(context);
-              return;
-            }
-
-            if (!context.mounted) return;
-            context.pop();
-
-            await navigateToStudyOverview(
-              context,
-              study,
-              inviteCode: _controller.text,
-              preselectedIds: invite?.preselectedInterventionIds,
-            );
-          } catch (e) {
-            if (e is ArgumentError) {
-              // Study.fromJson schema mismatch — the study was authored with a
-              // newer app/schema than this client understands. Signal the user
-              // to update the app rather than mislabeling it as an invalid code.
               if (!mounted) return;
+
+              if (study == null) {
+                setState(() {
+                  _errorMessage = AppLocalizations.of(
+                    context,
+                  )!.invalid_invite_code;
+                });
+                return;
+              }
+
               setState(() {
                 _errorMessage = null;
               });
+
+              if (study.isClosed) {
+                if (!context.mounted) return;
+                context.pop();
+                await showStudyClosedDialog(context);
+                return;
+              }
+
               if (!context.mounted) return;
               context.pop();
-              await showAppOutdatedDialog(context);
-            } else if (e is PostgrestException) {
-              // RPC / network failure while looking up the invite code.
-              if (!mounted) return;
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.error_occurred_with_message(e.message);
-              });
-            } else {
-              if (!mounted) return;
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.invalid_invite_code;
-              });
+
+              await navigateToStudyOverview(
+                context,
+                study,
+                inviteCode: _controller.text,
+                preselectedIds: invite?.preselectedInterventionIds,
+              );
+            } catch (e) {
+              if (e is ArgumentError) {
+                // Study.fromJson schema mismatch — the study was authored with a
+                // newer app/schema than this client understands. Signal the user
+                // to update the app rather than mislabeling it as an invalid code.
+                if (!mounted) return;
+                setState(() {
+                  _errorMessage = null;
+                });
+                if (!context.mounted) return;
+                context.pop();
+                await showAppOutdatedDialog(context);
+              } else if (e is PostgrestException) {
+                // RPC / network failure while looking up the invite code.
+                if (!mounted) return;
+                setState(() {
+                  _errorMessage = AppLocalizations.of(
+                    context,
+                  )!.error_occurred_with_message(e.message);
+                });
+              } else {
+                if (!mounted) return;
+                setState(() {
+                  _errorMessage = AppLocalizations.of(
+                    context,
+                  )!.invalid_invite_code;
+                });
+              }
             }
-          }
-        },
-      ),
-    ],
-  );
+          },
+        ),
+      ],
+    );
+  }
 }

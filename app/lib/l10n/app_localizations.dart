@@ -212,6 +212,12 @@ abstract class AppLocalizations {
   /// **'Take part in a study'**
   String get welcome_find_study_title;
 
+  /// No description provided for @made_with_love_in_potsdam.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with ♥ in Potsdam'**
+  String get made_with_love_in_potsdam;
+
   /// No description provided for @welcome_find_study_description.
   ///
   /// In en, this message translates to:
@@ -1055,8 +1061,14 @@ abstract class AppLocalizations {
   /// No description provided for @private_study_invite_code.
   ///
   /// In en, this message translates to:
-  /// **'Private study invite code'**
+  /// **'Join a study with an invite code'**
   String get private_study_invite_code;
+
+  /// No description provided for @private_study_invite_code_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code shared by your study team.'**
+  String get private_study_invite_code_description;
 
   /// No description provided for @invite_code.
   ///

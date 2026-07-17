@@ -83,6 +83,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Take part in a study'), findsOneWidget);
+    final heading = tester.widget<Text>(find.text('Take part in a study'));
+    expect(heading.style?.fontWeight, isNot(FontWeight.w600));
+    expect(find.text('Made with ♥ in Potsdam'), findsOneWidget);
     expect(
       find.text('Choose a public study or use an invitation.'),
       findsNothing,
@@ -149,6 +152,11 @@ void main() {
 
     expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.byType(InviteCodeDialog), findsOneWidget);
+    expect(find.text('Join a study with an invite code'), findsOneWidget);
+    expect(
+      find.text('Enter the code shared by your study team.'),
+      findsOneWidget,
+    );
     expect(find.byType(TermsScreen), findsNothing);
   });
 

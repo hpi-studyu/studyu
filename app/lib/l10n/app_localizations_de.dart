@@ -77,6 +77,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get welcome_find_study_title => 'An einer Studie teilnehmen';
 
   @override
+  String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';
+
+  @override
   String get welcome_find_study_description =>
       'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
 
@@ -535,7 +538,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get invite_code_button => 'Einladungscode verwenden';
 
   @override
-  String get private_study_invite_code => 'Privater Studien Einladungscode';
+  String get private_study_invite_code =>
+      'Mit Einladungscode an einer Studie teilnehmen';
+
+  @override
+  String get private_study_invite_code_description =>
+      'Geben Sie den Code ein, den Sie vom Studienteam erhalten haben.';
 
   @override
   String get invite_code => 'Einladungscode';

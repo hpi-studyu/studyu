@@ -61,7 +61,6 @@ class WelcomeEntryHub extends StatelessWidget {
                       l10n.welcome_find_study_title,
                       style: theme.textTheme.headlineMedium?.copyWith(
                         color: theme.primaryColor,
-                        fontWeight: FontWeight.w600,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -104,7 +103,9 @@ class WelcomeEntryHub extends StatelessWidget {
                     onPressed: onRestoreAccount,
                     label: Text(l10n.restore_studyu_account),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
+                  const Divider(),
+                  const SizedBox(height: 8),
                   Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 4,
@@ -125,6 +126,14 @@ class WelcomeEntryHub extends StatelessWidget {
                         child: Text(l10n.contact),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.made_with_love_in_potsdam,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                   if (onDebugOnboarding != null) ...[
                     const SizedBox(height: 8),
