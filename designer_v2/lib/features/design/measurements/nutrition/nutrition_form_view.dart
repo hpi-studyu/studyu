@@ -157,8 +157,9 @@ class _CustomMealTypesSection extends StatelessWidget {
                           formControl:
                               formArray.controls[index] as FormControl<String>,
                           decoration: InputDecoration(
-                            hintText:
-                                '${tr.form_field_nutrition_custom_meal_types} ${index + 1}',
+                            hintText: tr.form_field_nutrition_meal_type_label(
+                              index + 1,
+                            ),
                             isDense: true,
                           ),
                           readOnly: isReadonly,
@@ -171,7 +172,7 @@ class _CustomMealTypesSection extends StatelessWidget {
                             size: 20,
                           ),
                           onPressed: () => formArray.removeAt(index),
-                          tooltip: 'Remove',
+                          tooltip: tr.action_remove,
                         ),
                     ],
                   ),

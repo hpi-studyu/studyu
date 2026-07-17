@@ -36,14 +36,14 @@ class SurveyTemplatePickerDialog extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Survey Templates',
+                          tr.form_survey_template_title,
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Apply a premade survey to your study',
+                          tr.form_survey_template_description,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -53,6 +53,7 @@ class SurveyTemplatePickerDialog extends ConsumerWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
+                    tooltip: tr.dialog_close,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
@@ -78,7 +79,7 @@ class SurveyTemplatePickerDialog extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(32),
                         child: Text(
-                          'No templates available',
+                          tr.form_survey_template_empty,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -170,7 +171,7 @@ class _TemplateItemState extends State<_TemplateItem> {
                   padding: const EdgeInsets.only(left: 8),
                   child: Chip(
                     label: Text(
-                      'Built-in',
+                      tr.form_survey_template_built_in,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: colorScheme.onTertiaryContainer,
                       ),
@@ -194,16 +195,16 @@ class _TemplateItemState extends State<_TemplateItem> {
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
-                if (template.isMultiDay) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    tr.form_survey_template_multi_day_help,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
-                    ),
+                const SizedBox(height: 4),
+                Text(
+                  template.isMultiDay
+                      ? tr.form_survey_template_multi_day_help
+                      : tr.form_survey_template_single_help,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
+                ),
               ],
             ),
           ),
@@ -220,7 +221,7 @@ class _TemplateItemState extends State<_TemplateItem> {
               : _isAlreadyAdded
               ? Chip(
                   label: Text(
-                    'Added',
+                    tr.form_survey_template_added,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: colorScheme.onSecondaryContainer,
                     ),
@@ -235,7 +236,7 @@ class _TemplateItemState extends State<_TemplateItem> {
                     widget.formViewModel.applyTemplate(template);
                     widget.onApplied();
                   },
-                  child: const Text('Apply'),
+                  child: Text(tr.form_survey_template_apply),
                 ),
         ),
         // Multi-day expanded list
@@ -274,7 +275,7 @@ class _DayEntryTile extends StatelessWidget {
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 36),
       leading: Text(
-        'Day ${entry.dayIndex + 1}',
+        tr.form_survey_template_day_label(entry.dayIndex + 1),
         style: theme.textTheme.labelMedium?.copyWith(
           color: colorScheme.onSurfaceVariant,
           fontWeight: FontWeight.w600,

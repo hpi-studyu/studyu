@@ -56,9 +56,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                               _showAddMeasurementDialog(context, formViewModel)
                         : null,
                     onNewItemLabel: tr.form_array_measurements_surveys_new,
-                    rowTitle: (viewModel) =>
-                        ((viewModel.formData as dynamic).title as String?) ??
-                        '',
+                    rowTitle: formViewModel.measurementTitle,
                     rowPrefix: (context, viewModel, _) => Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: Icon(
@@ -111,6 +109,7 @@ Future<void> _showAddMeasurementDialog(
 ) async {
   final selection = await showDialog<MeasurementSelection>(
     context: context,
+    animationStyle: AnimationStyle.noAnimation,
     builder: (_) => MeasurementSelectionDialog(
       canAddNutrition: !formViewModel.isNutritionEnabled,
     ),

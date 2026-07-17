@@ -1140,7 +1140,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_section_scheduling_description =>
-      'To improve compliance, you can set a limited window of time for participants to complete the task & send a reminder notification at the specified time.';
+      'Restrict daily access times and set reminder notifications to support timely task completion.';
 
   @override
   String get form_field_has_reminder => 'App reminder';
@@ -1160,7 +1160,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_field_time_restriction_tooltip =>
-      'Provide the hours of the day during which participants need to complete the task. Please note that the task will not \nbe available for completion outside these hours & will be considered as missed for the purpose of data collection.';
+      'Time restriction controls the daily window when participants can complete the task.';
+
+  @override
+  String get form_field_time_restriction_description =>
+      'Tasks are available from 00:00 to 23:59 by default; set a narrower window if needed.';
 
   @override
   String get form_field_time_restriction_start_hint => 'From';
@@ -2729,14 +2733,147 @@ class AppLocalizationsEn extends AppLocalizations {
       'Start with a premade survey and edit it for this study.';
 
   @override
+  String get form_survey_template_title => 'Survey Templates';
+
+  @override
+  String get form_survey_template_description =>
+      'Apply a premade survey to your study';
+
+  @override
+  String get form_survey_template_empty => 'No templates available';
+
+  @override
+  String get form_survey_template_built_in => 'Built-in';
+
+  @override
+  String get form_survey_template_added => 'Added';
+
+  @override
+  String get form_survey_template_apply => 'Apply';
+
+  @override
   String get form_survey_template_choose_day => 'Choose day';
 
   @override
   String get form_survey_template_add_and_edit => 'Add and edit';
 
   @override
+  String get form_survey_template_single_help =>
+      'Creates one editable survey with all questions from this template.';
+
+  @override
   String get form_survey_template_multi_day_help =>
       'Each day adds a separate survey scheduled for that study day.';
+
+  @override
+  String form_survey_template_day_label(int day) {
+    return 'Day $day';
+  }
+
+  @override
+  String get form_survey_schedule_title => 'Occurrence schedule';
+
+  @override
+  String get form_survey_schedule_active => 'One occurrence pattern is active';
+
+  @override
+  String get form_survey_schedule_inactive =>
+      'When occurrence scheduling is off, the survey appears every study day. Built-in food-frequency questionnaires appear once by default.';
+
+  @override
+  String get form_survey_schedule_separation_help =>
+      'Occurrence controls which study days show the survey.';
+
+  @override
+  String get form_survey_schedule_pattern_help =>
+      'Choose one pattern. Selecting another pattern replaces the current one.';
+
+  @override
+  String get form_survey_schedule_specific_days => 'Specific days';
+
+  @override
+  String get form_survey_schedule_every_n_days => 'Every N days';
+
+  @override
+  String get form_survey_schedule_per_cycle => 'Per cycle';
+
+  @override
+  String get form_survey_schedule_select_days => 'Select study days:';
+
+  @override
+  String form_survey_schedule_day_label(int day) {
+    return 'Day $day';
+  }
+
+  @override
+  String get form_survey_schedule_every_n_interval_label => 'Every';
+
+  @override
+  String get form_survey_schedule_days_suffix => 'days';
+
+  @override
+  String get form_survey_schedule_every_n_delay_label =>
+      'Delay first occurrence by';
+
+  @override
+  String get form_survey_schedule_every_n_delay_suffix =>
+      'days after the first study day';
+
+  @override
+  String form_survey_schedule_every_n_delay_help(int totalDays) {
+    return 'With no delay, the first occurrence is on the first study day. The study has $totalDays days.';
+  }
+
+  @override
+  String get form_survey_schedule_per_cycle_delay_label =>
+      'Delay each cycle occurrence by';
+
+  @override
+  String get form_survey_schedule_per_cycle_delay_suffix =>
+      'days after the cycle\'s first day';
+
+  @override
+  String form_survey_schedule_per_cycle_help(
+    int cycleLengthDays,
+    int phasesPerCycle,
+    int phaseDuration,
+  ) {
+    return 'Each cycle is $cycleLengthDays days ($phasesPerCycle phases × $phaseDuration days).';
+  }
+
+  @override
+  String get form_survey_schedule_target_cycles =>
+      'Target cycles (leave empty for all):';
+
+  @override
+  String form_survey_schedule_cycle_label(int cycle) {
+    return 'Cycle $cycle';
+  }
+
+  @override
+  String get form_survey_schedule_include_baseline => 'Include baseline phase';
+
+  @override
+  String get form_survey_schedule_summary_title => 'Schedule summary';
+
+  @override
+  String get form_survey_schedule_summary_empty => 'No matching days';
+
+  @override
+  String form_survey_schedule_summary_days(String days) {
+    return 'Appears on: $days';
+  }
+
+  @override
+  String form_survey_schedule_summary_occurrences(int count, int totalDays) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count occurrences across $totalDays study days',
+      one: '$count occurrence across $totalDays study days',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get form_measurement_type_nutrition => 'Nutrition tracking';

@@ -56,6 +56,20 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   bool get isNutritionEnabled =>
       measurementViewModels.any((vm) => vm is NutritionFormViewModel);
 
+  String measurementTitle(
+    ManagedFormViewModel<IFormDataWithSchedule> viewModel,
+  ) {
+    if (viewModel is MeasurementSurveyFormViewModel) {
+      return viewModel.surveyTitleControl.value ??
+          viewModel.formData?.title ??
+          '';
+    }
+    if (viewModel is NutritionFormViewModel) {
+      return viewModel.titleControl.value ?? viewModel.formData?.title ?? '';
+    }
+    return '';
+  }
+
   @override
   FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [],
@@ -206,7 +220,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   /// Check if a survey with the given [title] is already added.
   bool isSurveyWithTitleAdded(String title) {
-    return measurementViewModels.any((vm) {
+    return measurementViewModelsCollection.retrievableViewModels.any((vm) {
       if (vm is MeasurementSurveyFormViewModel) {
         return vm.formData?.title == title;
       }
@@ -215,8 +229,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   /// Apply a single-task survey template (e.g. FFQ 26-question).
-  void applyTemplate(SurveyTemplate template) {
+  MeasurementSurveyFormViewModel? applyTemplate(SurveyTemplate template) {
     final task = template.buildTask();
+    if (isSurveyWithTitleAdded(task.title ?? '')) return null;
     final formData = MeasurementSurveyFormData.fromDomainModel(task);
     final viewModel = MeasurementSurveyFormViewModel(
       study: study,
@@ -226,6 +241,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
     measurementViewModelsCollection.stage(viewModel);
     onSelectItem(viewModel);
+    return viewModel;
   }
 
   /// Apply a single day entry from a multi-day template (e.g. DHQ3 day 3).
@@ -304,11 +320,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onCancel(ManagedFormViewModel formViewModel, FormMode formMode) {
-    if (formMode != FormMode.create) return;
-
     final typedVm =
         formViewModel as ManagedFormViewModel<IFormDataWithSchedule>;
-    if (!measurementViewModelsCollection.unstage(typedVm)) {
+    if (measurementViewModelsCollection.unstage(typedVm)) return;
+    if (formMode == FormMode.create) {
       measurementViewModelsCollection.remove(typedVm);
     }
   }

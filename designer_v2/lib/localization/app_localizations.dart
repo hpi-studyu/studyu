@@ -2082,7 +2082,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_section_scheduling_description.
   ///
   /// In en, this message translates to:
-  /// **'To improve compliance, you can set a limited window of time for participants to complete the task & send a reminder notification at the specified time.'**
+  /// **'Restrict daily access times and set reminder notifications to support timely task completion.'**
   String get form_section_scheduling_description;
 
   /// No description provided for @form_field_has_reminder.
@@ -2118,8 +2118,14 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_time_restriction_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Provide the hours of the day during which participants need to complete the task. Please note that the task will not \nbe available for completion outside these hours & will be considered as missed for the purpose of data collection.'**
+  /// **'Time restriction controls the daily window when participants can complete the task.'**
   String get form_field_time_restriction_tooltip;
+
+  /// No description provided for @form_field_time_restriction_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks are available from 00:00 to 23:59 by default; set a narrower window if needed.'**
+  String get form_field_time_restriction_description;
 
   /// No description provided for @form_field_time_restriction_start_hint.
   ///
@@ -4653,6 +4659,42 @@ abstract class AppLocalizations {
   /// **'Start with a premade survey and edit it for this study.'**
   String get form_measurement_type_template_description;
 
+  /// No description provided for @form_survey_template_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Survey Templates'**
+  String get form_survey_template_title;
+
+  /// No description provided for @form_survey_template_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply a premade survey to your study'**
+  String get form_survey_template_description;
+
+  /// No description provided for @form_survey_template_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates available'**
+  String get form_survey_template_empty;
+
+  /// No description provided for @form_survey_template_built_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in'**
+  String get form_survey_template_built_in;
+
+  /// No description provided for @form_survey_template_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get form_survey_template_added;
+
+  /// No description provided for @form_survey_template_apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get form_survey_template_apply;
+
   /// No description provided for @form_survey_template_choose_day.
   ///
   /// In en, this message translates to:
@@ -4665,11 +4707,177 @@ abstract class AppLocalizations {
   /// **'Add and edit'**
   String get form_survey_template_add_and_edit;
 
+  /// No description provided for @form_survey_template_single_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Creates one editable survey with all questions from this template.'**
+  String get form_survey_template_single_help;
+
   /// No description provided for @form_survey_template_multi_day_help.
   ///
   /// In en, this message translates to:
   /// **'Each day adds a separate survey scheduled for that study day.'**
   String get form_survey_template_multi_day_help;
+
+  /// No description provided for @form_survey_template_day_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day}'**
+  String form_survey_template_day_label(int day);
+
+  /// No description provided for @form_survey_schedule_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Occurrence schedule'**
+  String get form_survey_schedule_title;
+
+  /// No description provided for @form_survey_schedule_active.
+  ///
+  /// In en, this message translates to:
+  /// **'One occurrence pattern is active'**
+  String get form_survey_schedule_active;
+
+  /// No description provided for @form_survey_schedule_inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'When occurrence scheduling is off, the survey appears every study day. Built-in food-frequency questionnaires appear once by default.'**
+  String get form_survey_schedule_inactive;
+
+  /// No description provided for @form_survey_schedule_separation_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Occurrence controls which study days show the survey.'**
+  String get form_survey_schedule_separation_help;
+
+  /// No description provided for @form_survey_schedule_pattern_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one pattern. Selecting another pattern replaces the current one.'**
+  String get form_survey_schedule_pattern_help;
+
+  /// No description provided for @form_survey_schedule_specific_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific days'**
+  String get form_survey_schedule_specific_days;
+
+  /// No description provided for @form_survey_schedule_every_n_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Every N days'**
+  String get form_survey_schedule_every_n_days;
+
+  /// No description provided for @form_survey_schedule_per_cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Per cycle'**
+  String get form_survey_schedule_per_cycle;
+
+  /// No description provided for @form_survey_schedule_select_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Select study days:'**
+  String get form_survey_schedule_select_days;
+
+  /// No description provided for @form_survey_schedule_day_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day}'**
+  String form_survey_schedule_day_label(int day);
+
+  /// No description provided for @form_survey_schedule_every_n_interval_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get form_survey_schedule_every_n_interval_label;
+
+  /// No description provided for @form_survey_schedule_days_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get form_survey_schedule_days_suffix;
+
+  /// No description provided for @form_survey_schedule_every_n_delay_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Delay first occurrence by'**
+  String get form_survey_schedule_every_n_delay_label;
+
+  /// No description provided for @form_survey_schedule_every_n_delay_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'days after the first study day'**
+  String get form_survey_schedule_every_n_delay_suffix;
+
+  /// No description provided for @form_survey_schedule_every_n_delay_help.
+  ///
+  /// In en, this message translates to:
+  /// **'With no delay, the first occurrence is on the first study day. The study has {totalDays} days.'**
+  String form_survey_schedule_every_n_delay_help(int totalDays);
+
+  /// No description provided for @form_survey_schedule_per_cycle_delay_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Delay each cycle occurrence by'**
+  String get form_survey_schedule_per_cycle_delay_label;
+
+  /// No description provided for @form_survey_schedule_per_cycle_delay_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'days after the cycle\'s first day'**
+  String get form_survey_schedule_per_cycle_delay_suffix;
+
+  /// No description provided for @form_survey_schedule_per_cycle_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Each cycle is {cycleLengthDays} days ({phasesPerCycle} phases × {phaseDuration} days).'**
+  String form_survey_schedule_per_cycle_help(
+    int cycleLengthDays,
+    int phasesPerCycle,
+    int phaseDuration,
+  );
+
+  /// No description provided for @form_survey_schedule_target_cycles.
+  ///
+  /// In en, this message translates to:
+  /// **'Target cycles (leave empty for all):'**
+  String get form_survey_schedule_target_cycles;
+
+  /// No description provided for @form_survey_schedule_cycle_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {cycle}'**
+  String form_survey_schedule_cycle_label(int cycle);
+
+  /// No description provided for @form_survey_schedule_include_baseline.
+  ///
+  /// In en, this message translates to:
+  /// **'Include baseline phase'**
+  String get form_survey_schedule_include_baseline;
+
+  /// No description provided for @form_survey_schedule_summary_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule summary'**
+  String get form_survey_schedule_summary_title;
+
+  /// No description provided for @form_survey_schedule_summary_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching days'**
+  String get form_survey_schedule_summary_empty;
+
+  /// No description provided for @form_survey_schedule_summary_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Appears on: {days}'**
+  String form_survey_schedule_summary_days(String days);
+
+  /// No description provided for @form_survey_schedule_summary_occurrences.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} occurrence across {totalDays} study days} other{{count} occurrences across {totalDays} study days}}'**
+  String form_survey_schedule_summary_occurrences(int count, int totalDays);
 
   /// No description provided for @form_measurement_type_nutrition.
   ///

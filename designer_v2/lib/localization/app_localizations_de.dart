@@ -1154,7 +1154,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_section_scheduling_description =>
-      'Um die Compliance von Teilnehmern zu verbessern, kannst du ein begrenztes Zeitfenster & eine App-Benachrichtigung als Erinnerung definieren.';
+      'Beschränke tägliche Zugriffszeiten und lege Erinnerungsbenachrichtigungen fest, um die rechtzeitige Bearbeitung zu unterstützen.';
 
   @override
   String get form_field_has_reminder => 'Erinnerung';
@@ -1174,7 +1174,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_field_time_restriction_tooltip =>
-      'Gib die Tageszeiten an, zu denen die Aufgabe von Teilnehmern erfüllt werden muss. Die Aufgabe kann außerhalb \ndieses Zeitfensters nicht abgeschlossen werden, d.h. es werden für diesen Tag dann keine Daten erhoben.';
+      'Die Zeitbeschränkung legt das tägliche Zeitfenster fest, in dem Teilnehmer die Aufgabe abschließen können.';
+
+  @override
+  String get form_field_time_restriction_description =>
+      'Aufgaben sind standardmäßig von 00:00 bis 23:59 verfügbar; lege bei Bedarf ein engeres Zeitfenster fest.';
 
   @override
   String get form_field_time_restriction_start_hint => 'Von';
@@ -2767,14 +2771,148 @@ class AppLocalizationsDe extends AppLocalizations {
       'Beginne mit einem vorgefertigten Fragebogen und passe ihn für diese Studie an.';
 
   @override
+  String get form_survey_template_title => 'Fragebogenvorlagen';
+
+  @override
+  String get form_survey_template_description =>
+      'Füge deiner Studie einen vorgefertigten Fragebogen hinzu';
+
+  @override
+  String get form_survey_template_empty => 'Keine Vorlagen verfügbar';
+
+  @override
+  String get form_survey_template_built_in => 'Integriert';
+
+  @override
+  String get form_survey_template_added => 'Hinzugefügt';
+
+  @override
+  String get form_survey_template_apply => 'Anwenden';
+
+  @override
   String get form_survey_template_choose_day => 'Tag auswählen';
 
   @override
   String get form_survey_template_add_and_edit => 'Hinzufügen und bearbeiten';
 
   @override
+  String get form_survey_template_single_help =>
+      'Erstellt einen bearbeitbaren Fragebogen mit allen Fragen dieser Vorlage.';
+
+  @override
   String get form_survey_template_multi_day_help =>
       'Jeder Tag fügt einen eigenen Fragebogen hinzu, der für diesen Studientag geplant ist.';
+
+  @override
+  String form_survey_template_day_label(int day) {
+    return 'Tag $day';
+  }
+
+  @override
+  String get form_survey_schedule_title => 'Zeitplan für das Auftreten';
+
+  @override
+  String get form_survey_schedule_active => 'Ein Auftretensmuster ist aktiv';
+
+  @override
+  String get form_survey_schedule_inactive =>
+      'Wenn die Auftretensplanung deaktiviert ist, wird der Fragebogen an jedem Studientag angezeigt. Integrierte Fragebögen zur Verzehrhäufigkeit erscheinen standardmäßig einmal.';
+
+  @override
+  String get form_survey_schedule_separation_help =>
+      'Das Auftreten bestimmt, an welchen Studientagen der Fragebogen angezeigt wird.';
+
+  @override
+  String get form_survey_schedule_pattern_help =>
+      'Wähle ein Muster. Ein anderes Muster ersetzt das aktuelle.';
+
+  @override
+  String get form_survey_schedule_specific_days => 'Bestimmte Tage';
+
+  @override
+  String get form_survey_schedule_every_n_days => 'Alle N Tage';
+
+  @override
+  String get form_survey_schedule_per_cycle => 'Pro Zyklus';
+
+  @override
+  String get form_survey_schedule_select_days => 'Studientage auswählen:';
+
+  @override
+  String form_survey_schedule_day_label(int day) {
+    return 'Tag $day';
+  }
+
+  @override
+  String get form_survey_schedule_every_n_interval_label => 'Alle';
+
+  @override
+  String get form_survey_schedule_days_suffix => 'Tage';
+
+  @override
+  String get form_survey_schedule_every_n_delay_label =>
+      'Erstes Auftreten verzögern um';
+
+  @override
+  String get form_survey_schedule_every_n_delay_suffix =>
+      'Tage nach dem ersten Studientag';
+
+  @override
+  String form_survey_schedule_every_n_delay_help(int totalDays) {
+    return 'Ohne Verzögerung erfolgt das erste Auftreten am ersten Studientag. Die Studie hat $totalDays Tage.';
+  }
+
+  @override
+  String get form_survey_schedule_per_cycle_delay_label =>
+      'Auftreten in jedem Zyklus verzögern um';
+
+  @override
+  String get form_survey_schedule_per_cycle_delay_suffix =>
+      'Tage nach dem ersten Tag des Zyklus';
+
+  @override
+  String form_survey_schedule_per_cycle_help(
+    int cycleLengthDays,
+    int phasesPerCycle,
+    int phaseDuration,
+  ) {
+    return 'Jeder Zyklus dauert $cycleLengthDays Tage ($phasesPerCycle Phasen × $phaseDuration Tage).';
+  }
+
+  @override
+  String get form_survey_schedule_target_cycles =>
+      'Zielzyklen (leer lassen für alle):';
+
+  @override
+  String form_survey_schedule_cycle_label(int cycle) {
+    return 'Zyklus $cycle';
+  }
+
+  @override
+  String get form_survey_schedule_include_baseline =>
+      'Baseline-Phase einbeziehen';
+
+  @override
+  String get form_survey_schedule_summary_title => 'Zeitplanübersicht';
+
+  @override
+  String get form_survey_schedule_summary_empty => 'Keine passenden Tage';
+
+  @override
+  String form_survey_schedule_summary_days(String days) {
+    return 'Erscheint an: $days';
+  }
+
+  @override
+  String form_survey_schedule_summary_occurrences(int count, int totalDays) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Auftreten an $totalDays Studientagen',
+      one: '$count Auftreten an $totalDays Studientagen',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get form_measurement_type_nutrition => 'Ernährungserfassung';

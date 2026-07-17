@@ -32,6 +32,7 @@ void main() {
     await tester.pump();
 
     expect(formViewModel.customMealTypesControl.controls, hasLength(1));
-    expect(find.text('Custom Meal Types 1'), findsOneWidget);
+    expect(find.text('Meal type 1'), findsOneWidget);
+    expect(find.byTooltip('Remove'), findsOneWidget);
   });
 }
