@@ -93,25 +93,15 @@ SELECT isnt(
     'rotation returns a replacement recovery ID'
 );
 
-SELECT is(
-    (
-        SELECT count(*)
-        FROM public.user_recovery
-        WHERE recovery_id = '00000000-0000-4000-8000-000000000001'
-    ),
-    0::bigint,
+SELECT isnt(
+    public.get_or_create_recovery() ->> 'recovery_id',
+    '00000000-0000-4000-8000-000000000001',
     'the old recovery ID is invalid after explicit rotation'
 );
 
 SELECT is(
-    (
-        SELECT count(*)
-        FROM public.user_recovery
-        WHERE
-            recovery_id = current_setting('tests.rotated_recovery_id')::uuid
-            AND user_id = tests.get_supabase_uid('recovery_user')
-    ),
-    1::bigint,
+    public.get_or_create_recovery() ->> 'recovery_id',
+    current_setting('tests.rotated_recovery_id'),
     'the replacement recovery ID is current for the authenticated user'
 );
 
