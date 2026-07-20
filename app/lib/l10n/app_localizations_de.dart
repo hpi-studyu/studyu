@@ -74,6 +74,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
+  String get welcome_find_study_title => 'An einer Studie teilnehmen';
+
+  @override
+  String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';
+
+  @override
+  String get welcome_find_study_description =>
+      'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
+
+  @override
+  String get browse_public_studies => 'Öffentliche Studien durchsuchen';
+
+  @override
+  String get welcome_returning_participant =>
+      'Sie haben bereits mit StudyU an einer Studie teilgenommen?';
+
+  @override
+  String get restore_studyu_account => 'StudyU-Konto wiederherstellen';
+
+  @override
   String get show_onboarding_again => 'Onboarding erneut ansehen';
 
   @override
@@ -115,9 +135,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_selection => 'Studienauswahl';
 
   @override
-  String get study_selection_description => 'Bitte wählen Sie eine Studie aus.';
-
-  @override
   String get study_selection_single =>
       'Sie können zu jeder Zeit maximal an einer Studie teilnehmen.';
 
@@ -145,6 +162,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get study_selection_hidden_studies =>
       'Einige Studien konnten nicht angezeigt werden. Das kann passieren, wenn Ihre App-Version veraltet ist. Bitte aktualisieren Sie die App, um alle verfügbaren Studien zu sehen, oder nehmen Sie an einer der unten angezeigten Studien teil.';
+
+  @override
+  String get study_selection_no_public_studies =>
+      'Derzeit sind keine öffentlichen Studien verfügbar. Wenn Sie einen Einladungscode haben, können Sie trotzdem an einer privaten Studie teilnehmen.';
 
   @override
   String get study_overview_title => 'Übersicht';
@@ -281,6 +302,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get your_journey => 'Deine Reise';
+
+  @override
+  String get journey_overview_description =>
+      'Sehen Sie sich den Ablauf Ihrer Studie an, bevor Sie fortfahren.';
 
   @override
   String get journey_results_available => 'Ergebnisse verfügbar';
@@ -617,10 +642,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get imprint_read => 'Impressum lesen';
 
   @override
-  String get invite_code_button => 'Einladungscode verwenden';
+  String get invite_code_button => 'Mit einem Einladungscode beitreten';
 
   @override
-  String get private_study_invite_code => 'Privater Studien Einladungscode';
+  String get private_study_invite_code =>
+      'Mit Einladungscode an einer Studie teilnehmen';
+
+  @override
+  String get private_study_invite_code_description =>
+      'Geben Sie den Code ein, den Sie vom Studienteam erhalten haben.';
 
   @override
   String get invite_code => 'Einladungscode';

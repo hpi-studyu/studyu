@@ -74,6 +74,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
+  String get welcome_find_study_title => 'Take part in a study';
+
+  @override
+  String get made_with_love_in_potsdam => 'Made with ♥ in Potsdam';
+
+  @override
+  String get welcome_find_study_description =>
+      'Choose a public study or use an invitation.';
+
+  @override
+  String get browse_public_studies => 'Browse public studies';
+
+  @override
+  String get welcome_returning_participant =>
+      'Already participated with StudyU?';
+
+  @override
+  String get restore_studyu_account => 'Restore StudyU account';
+
+  @override
   String get show_onboarding_again => 'Show onboarding again';
 
   @override
@@ -115,9 +135,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get study_selection => 'Study Selection';
 
   @override
-  String get study_selection_description => 'Please select a study.';
-
-  @override
   String get study_selection_single =>
       'You can only participate in one study at a time.';
 
@@ -145,6 +162,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get study_selection_hidden_studies =>
       'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.';
+
+  @override
+  String get study_selection_no_public_studies =>
+      'There are currently no public studies available. If you have an invite code, you can still join a private study.';
 
   @override
   String get study_overview_title => 'Overview';
@@ -277,6 +298,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get your_journey => 'Your Journey';
+
+  @override
+  String get journey_overview_description =>
+      'Review your study timeline before continuing.';
 
   @override
   String get journey_results_available => 'Results available';
@@ -608,10 +633,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get imprint_read => 'Read Legal Notice';
 
   @override
-  String get invite_code_button => 'Use invite code';
+  String get invite_code_button => 'Join with an invite code';
 
   @override
-  String get private_study_invite_code => 'Private study invite code';
+  String get private_study_invite_code => 'Join a study with an invite code';
+
+  @override
+  String get private_study_invite_code_description =>
+      'Enter the code shared by your study team.';
 
   @override
   String get invite_code => 'Invite code';

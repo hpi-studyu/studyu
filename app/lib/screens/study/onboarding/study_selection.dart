@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -65,7 +62,9 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
 }
 
 class StudySelectionScreen extends StatefulWidget {
-  const StudySelectionScreen({super.key});
+  final Future<ExtractionResult<Study>>? publicStudies;
+
+  const StudySelectionScreen({super.key, this.publicStudies});
 
   @override
   State<StudySelectionScreen> createState() => _StudySelectionScreenState();
@@ -73,42 +72,55 @@ class StudySelectionScreen extends StatefulWidget {
 
 class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
-  final publishedStudies = Study.publishedPublicStudies();
+
+  Future<ExtractionResult<Study>> get publishedStudies =>
+      widget.publicStudies ?? Study.publishedPublicStudies();
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.goNamed(RouteNames.welcome);
+            }
+          },
+        ),
+        title: Text(AppLocalizations.of(context)!.browse_public_studies),
+      ),
       body: OnboardingPage(
-        title: AppLocalizations.of(context)!.study_selection_description,
+        title: '',
         description: '',
-        descriptionWidget: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: AppLocalizations.of(context)!.study_selection_single,
-                style: theme.textTheme.titleSmall,
-              ),
-              TextSpan(text: ' ', style: theme.textTheme.titleSmall),
-              TextSpan(
-                text: AppLocalizations.of(context)!.study_selection_single_why,
-                style: theme.textTheme.titleSmall!.copyWith(
-                  color: theme.primaryColor,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      content: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.study_selection_single_reason,
-                      ),
-                    ),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+        descriptionWidget: Column(
+          children: [
+            StudyOnboardingDescription(
+              text: AppLocalizations.of(context)!.study_selection_single,
+              actionLabel: AppLocalizations.of(
+                context,
+              )!.study_selection_single_why,
+              onAction: () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  content: Text(
+                    AppLocalizations.of(context)!.study_selection_single_reason,
                   ),
+                ),
               ),
-            ],
-          ),
+            ),
+            OutlinedButton.icon(
+              key: const ValueKey('study_selection_invite_code'),
+              icon: const Icon(Icons.vpn_key_outlined),
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (_) => const InviteCodeDialog(),
+              ),
+              label: Text(AppLocalizations.of(context)!.invite_code_button),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -153,6 +165,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           });
                         });
                       }
+                      if (studies.isEmpty) {
+                        return const NoPublicStudiesWidget();
+                      }
+
                       return ListView.builder(
                         itemCount: studies.length,
                         itemBuilder: (context, index) {
@@ -173,33 +189,36 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                     },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Center(
-                child: OutlinedButton.icon(
-                  icon: const Icon(MdiIcons.key),
-                  onPressed: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (_) => const InviteCodeDialog(),
-                    );
-                  },
-                  label: Text(AppLocalizations.of(context)!.invite_code_button),
-                ),
-              ),
-            ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        hideNext: true,
-        onBack: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.goNamed(RouteNames.welcome);
-          }
-        },
+    );
+  }
+}
+
+class NoPublicStudiesWidget extends StatelessWidget {
+  const NoPublicStudiesWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.search_off, size: 48, color: theme.colorScheme.primary),
+            const SizedBox(height: 16),
+            Text(
+              l10n.study_selection_no_public_studies,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -225,88 +244,98 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text(AppLocalizations.of(context)!.private_study_invite_code),
-    content: TextFormField(
-      controller: _controller,
-      validator: (_) => _errorMessage,
-      autovalidateMode: AutovalidateMode.always,
-      decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.invite_code,
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.private_study_invite_code),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l10n.private_study_invite_code_description),
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _controller,
+            autofocus: true,
+            validator: (_) => _errorMessage,
+            autovalidateMode: AutovalidateMode.always,
+            decoration: InputDecoration(labelText: l10n.invite_code),
+          ),
+        ],
       ),
-    ),
-    actions: [
-      OutlinedButton.icon(
-        icon: const Icon(Icons.arrow_forward),
-        label: Text(AppLocalizations.of(context)!.next),
-        onPressed: () async {
-          try {
-            final (invite, study) = await Study.fetchByInviteCode(
-              _controller.text,
-            );
+      actions: [
+        OutlinedButton.icon(
+          icon: const Icon(Icons.arrow_forward),
+          label: Text(AppLocalizations.of(context)!.next),
+          onPressed: () async {
+            try {
+              final (invite, study) = await Study.fetchByInviteCode(
+                _controller.text,
+              );
 
-            if (!mounted) return;
-
-            if (study == null) {
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.invalid_invite_code;
-              });
-              return;
-            }
-
-            setState(() {
-              _errorMessage = null;
-            });
-
-            if (study.isClosed) {
-              if (!context.mounted) return;
-              context.pop();
-              await showStudyClosedDialog(context);
-              return;
-            }
-
-            if (!context.mounted) return;
-            context.pop();
-
-            await navigateToStudyOverview(
-              context,
-              study,
-              inviteCode: _controller.text,
-              preselectedIds: invite?.preselectedInterventionIds,
-            );
-          } catch (e) {
-            if (e is ArgumentError) {
-              // Study.fromJson schema mismatch — the study was authored with a
-              // newer app/schema than this client understands. Signal the user
-              // to update the app rather than mislabeling it as an invalid code.
               if (!mounted) return;
+
+              if (study == null) {
+                setState(() {
+                  _errorMessage = AppLocalizations.of(
+                    context,
+                  )!.invalid_invite_code;
+                });
+                return;
+              }
+
               setState(() {
                 _errorMessage = null;
               });
+
+              if (study.isClosed) {
+                if (!context.mounted) return;
+                context.pop();
+                await showStudyClosedDialog(context);
+                return;
+              }
+
               if (!context.mounted) return;
               context.pop();
-              await showAppOutdatedDialog(context);
-            } else if (e is PostgrestException) {
-              // RPC / network failure while looking up the invite code.
-              if (!mounted) return;
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.error_occurred_with_message(e.message);
-              });
-            } else {
-              if (!mounted) return;
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.invalid_invite_code;
-              });
+
+              await navigateToStudyOverview(
+                context,
+                study,
+                inviteCode: _controller.text,
+                preselectedIds: invite?.preselectedInterventionIds,
+              );
+            } catch (e) {
+              if (e is ArgumentError) {
+                // Study.fromJson schema mismatch — the study was authored with a
+                // newer app/schema than this client understands. Signal the user
+                // to update the app rather than mislabeling it as an invalid code.
+                if (!mounted) return;
+                setState(() {
+                  _errorMessage = null;
+                });
+                if (!context.mounted) return;
+                context.pop();
+                await showAppOutdatedDialog(context);
+              } else if (e is PostgrestException) {
+                // RPC / network failure while looking up the invite code.
+                if (!mounted) return;
+                setState(() {
+                  _errorMessage = AppLocalizations.of(
+                    context,
+                  )!.error_occurred_with_message(e.message);
+                });
+              } else {
+                if (!mounted) return;
+                setState(() {
+                  _errorMessage = AppLocalizations.of(
+                    context,
+                  )!.invalid_invite_code;
+                });
+              }
             }
-          }
-        },
-      ),
-    ],
-  );
+          },
+        ),
+      ],
+    );
+  }
 }

@@ -6,6 +6,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 
 class EligibilityResult {
@@ -184,8 +185,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     ),
     actions: [
       TextButton(
-        onPressed: _finish,
-        child: Text(AppLocalizations.of(context)!.eligible_back),
+        key: const ValueKey('eligibility_failed_back'),
+        onPressed: () => context.pop(),
+        child: Text(AppLocalizations.of(context)!.back),
       ),
     ],
     forceActionsBelow: true,
@@ -197,22 +199,17 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),
-        leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              AppLocalizations.of(context)!.please_answer_eligibility,
-              style: theme.textTheme.titleMedium,
-            ),
+          StudyOnboardingDescription(
+            text: AppLocalizations.of(context)!.please_answer_eligibility,
           ),
           Expanded(
             child: QuestionnaireWidget(

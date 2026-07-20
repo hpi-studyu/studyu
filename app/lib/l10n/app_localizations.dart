@@ -206,6 +206,42 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get get_started;
 
+  /// No description provided for @welcome_find_study_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Take part in a study'**
+  String get welcome_find_study_title;
+
+  /// No description provided for @made_with_love_in_potsdam.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with ♥ in Potsdam'**
+  String get made_with_love_in_potsdam;
+
+  /// No description provided for @welcome_find_study_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a public study or use an invitation.'**
+  String get welcome_find_study_description;
+
+  /// No description provided for @browse_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse public studies'**
+  String get browse_public_studies;
+
+  /// No description provided for @welcome_returning_participant.
+  ///
+  /// In en, this message translates to:
+  /// **'Already participated with StudyU?'**
+  String get welcome_returning_participant;
+
+  /// No description provided for @restore_studyu_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore StudyU account'**
+  String get restore_studyu_account;
+
   /// No description provided for @show_onboarding_again.
   ///
   /// In en, this message translates to:
@@ -278,12 +314,6 @@ abstract class AppLocalizations {
   /// **'Study Selection'**
   String get study_selection;
 
-  /// No description provided for @study_selection_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select a study.'**
-  String get study_selection_description;
-
   /// No description provided for @study_selection_single.
   ///
   /// In en, this message translates to:
@@ -331,6 +361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
+
+  /// No description provided for @study_selection_no_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'There are currently no public studies available. If you have an invite code, you can still join a private study.'**
+  String get study_selection_no_public_studies;
 
   /// No description provided for @study_overview_title.
   ///
@@ -565,6 +601,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your Journey'**
   String get your_journey;
+
+  /// No description provided for @journey_overview_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your study timeline before continuing.'**
+  String get journey_overview_description;
 
   /// No description provided for @journey_results_available.
   ///
@@ -1193,14 +1235,20 @@ abstract class AppLocalizations {
   /// No description provided for @invite_code_button.
   ///
   /// In en, this message translates to:
-  /// **'Use invite code'**
+  /// **'Join with an invite code'**
   String get invite_code_button;
 
   /// No description provided for @private_study_invite_code.
   ///
   /// In en, this message translates to:
-  /// **'Private study invite code'**
+  /// **'Join a study with an invite code'**
   String get private_study_invite_code;
+
+  /// No description provided for @private_study_invite_code_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code shared by your study team.'**
+  String get private_study_invite_code_description;
 
   /// No description provided for @invite_code.
   ///

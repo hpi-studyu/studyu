@@ -7,6 +7,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -27,29 +28,6 @@ class _InterventionSelectionScreenState
   void initState() {
     super.initState();
     selectedStudy = context.read<AppState>().selectedStudy;
-  }
-
-  Widget _buildInterventionSelectionExplanation(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Text(
-            AppLocalizations.of(context)!.please_select_interventions,
-            style: theme.textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(
-              context,
-            )!.please_select_interventions_description,
-            style: theme.textTheme.bodyMedium!.copyWith(
-              color: theme.textTheme.bodySmall!.color,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildInterventionSelectionList() {
@@ -102,9 +80,9 @@ class _InterventionSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
       ),
       body: SingleChildScrollView(
@@ -114,7 +92,14 @@ class _InterventionSelectionScreenState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildInterventionSelectionExplanation(theme),
+                StudyOnboardingDescription(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.please_select_interventions,
+                  supportingText: AppLocalizations.of(
+                    context,
+                  )!.please_select_interventions_description,
+                ),
                 _buildInterventionSelectionList(),
                 const SizedBox(height: 16),
               ],
