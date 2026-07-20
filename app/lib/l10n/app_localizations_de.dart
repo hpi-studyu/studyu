@@ -302,6 +302,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
+  String get study_not_available_for_testing_yet =>
+      'Diese Studie ist noch nicht zum Testen verfügbar.';
+
+  @override
   String get home => 'Home';
 
   @override
