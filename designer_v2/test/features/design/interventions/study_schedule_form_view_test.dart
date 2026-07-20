@@ -24,8 +24,10 @@ void main() {
       ),
     );
 
+    expect(tester.takeException(), isNull);
+
     final cyclesDropdown = find.byWidgetPredicate(
-      (widget) => widget is DropdownButtonFormField<int>,
+      (widget) => widget is DropdownButton<int>,
     );
     expect(cyclesDropdown, findsOneWidget);
 

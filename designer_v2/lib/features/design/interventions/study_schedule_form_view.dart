@@ -162,8 +162,8 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                 children: [
                   SizedBox(
                     width: 70,
-                    child: DropdownButtonFormField<int>(
-                      initialValue: widget.formViewModel.numCyclesControl.value,
+                    child: DropdownButton<int>(
+                      value: widget.formViewModel.numCyclesControl.value,
                       onChanged: widget.formViewModel.numCyclesControl.disabled
                           ? null
                           : (value) {
