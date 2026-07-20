@@ -25,6 +25,12 @@ class Notifications {
   static final inviteCodeClipped = SnackbarIntent(
     message: tr.notification_code_clipboard,
   );
+  static final inviteCodeCopied = SnackbarIntent(
+    message: tr.notification_invite_code_copied,
+  );
+  static final inviteLinkCopied = SnackbarIntent(
+    message: tr.notification_invite_link_copied,
+  );
   static final studyDeleteConfirmation = AlertIntent(
     title: tr.dialog_study_delete_title,
     message: tr.dialog_study_delete_description,
