@@ -127,11 +127,6 @@ class QuestionnaireController extends ChangeNotifier {
     );
   }
 
-  void _clearDraftContextIfUnanswered(String questionId) {
-    if (_answers.answers.containsKey(questionId)) return;
-    _answers.answerMetadata.remove(questionId);
-  }
-
   bool _hasAnswerOrDraft(String questionId) {
     return _answers.answers.containsKey(questionId) ||
         (_drafts[questionId]?.isNotEmpty ?? false);
@@ -314,13 +309,13 @@ class QuestionnaireController extends ChangeNotifier {
 
   void updateFreeTextDraft(String questionId, String value) {
     if (_drafts[questionId] == value) return;
-    if (value.isEmpty) {
-      _drafts.remove(questionId);
-      _clearDraftContextIfUnanswered(questionId);
-    } else {
-      _drafts[questionId] = value;
-      _storeDraftContextIfAbsent(questionId);
+    if (value.isEmpty &&
+        !_drafts.containsKey(questionId) &&
+        !_answers.answers.containsKey(questionId)) {
+      return;
     }
+    _drafts[questionId] = value;
+    _storeDraftContextIfAbsent(questionId);
     notifyListeners();
   }
 
@@ -338,7 +333,7 @@ class QuestionnaireController extends ChangeNotifier {
   FreeTextValidationError? commitFreeTextDraftsFor(
     Iterable<FreeTextQuestion> questions,
   ) {
-    var changed = false;
+    final changedQuestionIds = <String>[];
     for (final question in questions) {
       final draft = _drafts[question.id];
       if (draft == null) continue;
@@ -353,23 +348,26 @@ class QuestionnaireController extends ChangeNotifier {
           preserveCacheContext: true,
         );
         _drafts.remove(question.id);
-        changed = true;
+        changedQuestionIds.add(question.id);
       }
     }
-    if (changed) {
+    if (changedQuestionIds.isNotEmpty) {
       _applyHiddenDefaults();
+      for (final questionId in changedQuestionIds) {
+        _markAnsweredDependentsForReview(questionId);
+      }
       notifyListeners();
     }
     return null;
   }
 
   /// Returns `true` when any [FreeTextQuestion] in [questions] carries a
-  /// non-empty draft that fails validation. Used to suppress the global CTA
-  /// while a visible free-text field has an error.
+  /// draft that fails validation. Used to suppress the global CTA while a
+  /// visible free-text field has an error.
   bool hasInvalidDraftAmong(Iterable<Question> questions) {
     for (final question in questions.whereType<FreeTextQuestion>()) {
       final draft = _drafts[question.id];
-      if (draft == null || draft.isEmpty) continue;
+      if (draft == null) continue;
       if (question.validateResponse(draft) != null) return true;
     }
     return false;
@@ -410,7 +408,7 @@ class QuestionnaireController extends ChangeNotifier {
     for (final q in questions.whereType<FreeTextQuestion>()) {
       if (!hasConditionalDependents(q.id)) continue;
       final draft = _drafts[q.id];
-      if (draft == null || draft.isEmpty) continue;
+      if (draft == null) continue;
       final answer = _answers.answers[q.id];
       if (answer == null ||
           (answer is Answer<String> && answer.response != draft)) {
@@ -448,8 +446,8 @@ class QuestionnaireController extends ChangeNotifier {
 
     for (final question in questionList) {
       final answer = answerFor(question.id);
-      final draft = question is FreeTextQuestion ? draftFor(question.id) : null;
-      final hasDraftInput = draft != null && draft.isNotEmpty;
+      final draft = question is FreeTextQuestion ? _drafts[question.id] : null;
+      final hasDraftInput = draft != null;
       // A draft only counts as "pending" when it differs from the committed
       // answer. A restored draft that mirrors the committed answer is not
       // pending and must not force a Continue CTA.
@@ -465,32 +463,12 @@ class QuestionnaireController extends ChangeNotifier {
 
     if (!hasAnyInput) return QuestionnaireCtaMode.hidden;
 
-    // Only suppress the global CTA when the last question is a free text
-    // with a pending draft — the inline Done button handles it.
-    if (_isLastFreeTextWithDraft(questionList)) {
-      return QuestionnaireCtaMode.hidden;
-    }
-
-    // Non-last free text with a pending draft: show Continue so the user can
-    // commit the draft and advance to the next question.
-    if (hasVisibleDraft) return QuestionnaireCtaMode.continue_;
+    // Inline Done owns every pending free-text commit, including edits to
+    // earlier questions, so never show a competing global CTA.
+    if (hasVisibleDraft) return QuestionnaireCtaMode.hidden;
 
     if (allShownHaveInput) return QuestionnaireCtaMode.complete;
     return QuestionnaireCtaMode.hidden;
-  }
-
-  /// Returns true when the last question in [questionList] is a free text
-  /// question with a pending draft that differs from its committed answer.
-  /// In this case the per‑question Done button handles committing, so the
-  /// global CTA stays hidden to avoid a conflict.
-  bool _isLastFreeTextWithDraft(List<Question> questionList) {
-    final lastQuestion = questionList.last;
-    if (lastQuestion is! FreeTextQuestion) return false;
-    final draft = _drafts[lastQuestion.id];
-    if (draft == null || draft.isEmpty) return false;
-    final answer = answerFor(lastQuestion.id);
-    return answer == null ||
-        (answer is Answer<String> && answer.response != draft);
   }
 
   /// Convenience getter that computes [ctaModeFor] for

@@ -46,10 +46,10 @@ class _TermsScreenState extends State<TermsScreen> {
         :final preselectedInterventionIds,
         :final alreadyEnrolled,
       ):
+        state.selectedStudy = study;
         if (alreadyEnrolled) {
           context.go('/${RouteNames.dashboard}');
         } else {
-          state.selectedStudy = study;
           if (inviteCode != null) {
             state.inviteCode = inviteCode;
             state.preselectedInterventionIds = preselectedInterventionIds;

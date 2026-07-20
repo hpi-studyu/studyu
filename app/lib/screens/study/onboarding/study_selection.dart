@@ -237,6 +237,47 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
     super.dispose();
   }
 
+  Future<void> _submitInviteCode() async {
+    try {
+      final (invite, study) = await Study.fetchByInviteCode(_controller.text);
+
+      if (!mounted) return;
+
+      if (study == null) {
+        setState(() {
+          _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+        });
+        return;
+      }
+
+      setState(() {
+        _errorMessage = null;
+      });
+
+      if (study.isClosed) {
+        if (!context.mounted) return;
+        context.pop();
+        await showStudyClosedDialog(context);
+        return;
+      }
+
+      if (!context.mounted) return;
+      context.pop();
+
+      await navigateToStudyOverview(
+        context,
+        study,
+        inviteCode: _controller.text,
+        preselectedIds: invite?.preselectedInterventionIds,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) => AlertDialog(
     title: Text(AppLocalizations.of(context)!.private_study_invite_code),
@@ -244,6 +285,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
       controller: _controller,
       validator: (_) => _errorMessage,
       autovalidateMode: AutovalidateMode.always,
+      textInputAction: TextInputAction.done,
+      onFieldSubmitted: (_) => unawaited(_submitInviteCode()),
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.invite_code,
       ),
@@ -252,49 +295,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
       OutlinedButton.icon(
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
-        onPressed: () async {
-          final inviteCode = _controller.text;
-          try {
-            final (invite, study) = await Study.fetchByInviteCode(inviteCode);
-
-            if (!mounted) return;
-
-            if (study == null) {
-              setState(() {
-                _errorMessage = AppLocalizations.of(
-                  context,
-                )!.invalid_invite_code;
-              });
-              return;
-            }
-
-            setState(() {
-              _errorMessage = null;
-            });
-
-            if (study.isClosed) {
-              if (!context.mounted) return;
-              context.pop();
-              await showStudyClosedDialog(context);
-              return;
-            }
-
-            if (!context.mounted) return;
-            context.pop();
-
-            await navigateToStudyOverview(
-              context,
-              study,
-              inviteCode: inviteCode,
-              preselectedIds: invite?.preselectedInterventionIds,
-            );
-          } catch (e) {
-            if (!mounted) return;
-            setState(() {
-              _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
-            });
-          }
-        },
+        onPressed: _submitInviteCode,
       ),
     ],
   );
