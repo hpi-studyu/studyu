@@ -47,7 +47,11 @@ class _SettingsState extends State<Settings> {
       );
     }
 
-    dropDownItems.add(const DropdownMenuItem(child: Text('System')));
+    dropDownItems.add(
+      DropdownMenuItem(
+        child: Text(AppLocalizations.of(context)!.use_device_language),
+      ),
+    );
     return dropDownItems;
   }
 
@@ -70,7 +74,9 @@ class _SettingsState extends State<Settings> {
               // General section header
               Text(
                 AppLocalizations.of(context)!.general_section,
-                style: theme.textTheme.titleMedium!.copyWith(),
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: theme.primaryColor,
+                ),
               ),
               const SizedBox(height: 12),
 
@@ -80,6 +86,8 @@ class _SettingsState extends State<Settings> {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
+                      Icon(Icons.language, color: theme.primaryColor),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Text(
                           AppLocalizations.of(context)!.language,
@@ -88,6 +96,10 @@ class _SettingsState extends State<Settings> {
                       ),
                       DropdownButton<Locale>(
                         value: _selectedValue,
+                        style: theme.textTheme.bodyMedium,
+                        hint: Text(
+                          AppLocalizations.of(context)!.use_device_language,
+                        ),
                         underline: const SizedBox(),
                         items: _buildDropdownItems(context),
                         onChanged: (value) {
@@ -101,32 +113,34 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 24),
+
+              Text(
+                AppLocalizations.of(context)!.study_settings_section,
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: theme.primaryColor,
+                ),
+              ),
+              const SizedBox(height: 12),
 
               // Dashboard showcase reset
               Card(
-                margin: const EdgeInsets.only(top: 8),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
+                      Icon(Icons.help_outline, color: theme.primaryColor),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.show_dashboard_showcase_again,
+                          AppLocalizations.of(context)!.dashboard_tour,
                           style: theme.textTheme.bodyMedium!.copyWith(),
                         ),
                       ),
-                      OutlinedButton.icon(
+                      const SizedBox(width: 12),
+                      OutlinedButton(
                         key: const ValueKey(
                           'settings_show_dashboard_showcase_again',
-                        ),
-                        icon: const Icon(Icons.help_outline),
-                        label: Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.show_dashboard_showcase_again,
                         ),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
@@ -136,36 +150,40 @@ class _SettingsState extends State<Settings> {
                           if (!context.mounted) return;
                           context.pop(true);
                         },
+                        child: Text(AppLocalizations.of(context)!.show_again),
                       ),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 8),
+
               // Recovery phrase card
               const RecoveryPhraseWidget(),
+              const SizedBox(height: 8),
 
-              const SizedBox(height: 24),
-
-              // Current study section header
-              Text(
-                AppLocalizations.of(context)!.current_study_section,
-                style: theme.textTheme.titleMedium!.copyWith(
-                  color: theme.primaryColor,
-                ),
-              ),
-
-              SizedBox(
-                width: double.infinity,
-                child: Card(
-                  margin: const EdgeInsets.only(top: 12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      subject!.study.title ?? '',
-                      style: theme.textTheme.bodyMedium,
-                    ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Icon(Icons.science_outlined, color: theme.primaryColor),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(
+                          AppLocalizations.of(context)!.study_information,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                      OutlinedButton(
+                        key: const ValueKey('settings_study_information'),
+                        onPressed: () =>
+                            context.push('/${RouteNames.studyInformation}'),
+                        child: Text(
+                          AppLocalizations.of(context)!.view_study_information,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -207,7 +225,15 @@ class _SettingsState extends State<Settings> {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 6),
+                      Text(
+                        AppLocalizations.of(context)!.leave_study_description,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
 
                       // Leave and delete button
                       FilledButton.tonalIcon(
@@ -223,6 +249,16 @@ class _SettingsState extends State<Settings> {
                             builder: (_) => DeleteAlertDialog(subject: subject),
                           );
                         },
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.delete_study_data_description,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -254,9 +290,7 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
         leading: Icon(Icons.lock_outline, color: theme.primaryColor),
         title: Text(
           AppLocalizations.of(context)!.recovery_phrase_header,
-          style: theme.textTheme.bodyMedium!.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: theme.textTheme.bodyMedium,
         ),
         onExpansionChanged: (expanded) {
           if (expanded && !_hasExpanded) {
@@ -290,55 +324,82 @@ class OptOutAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AlertDialog(
-      title: Text('${AppLocalizations.of(context)!.opt_out}?'),
-      content: RichText(
-        text: TextSpan(
-          style: const TextStyle(color: Colors.black),
-          children: [
-            TextSpan(text: AppLocalizations.of(context)!.soft_delete_desc),
-            TextSpan(
-              text: subject!.study.title,
-              style: TextStyle(
-                color: theme.primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+    final l10n = AppLocalizations.of(context)!;
+    var acknowledged = false;
+
+    return StatefulBuilder(
+      builder: (context, setDialogState) => AlertDialog(
+        title: Text(l10n.leave_study_keep_data_title),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.leave_study_keep_data_body(
+                  subject!.study.title ?? l10n.not_available,
+                ),
               ),
+              const SizedBox(height: 12),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                title: Text(
+                  l10n.acknowledge_consequences,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                value: acknowledged,
+                onChanged: (value) {
+                  setDialogState(() => acknowledged = value ?? false);
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          OutlinedButton(
+            onPressed: context.pop,
+            child: Text(l10n.stay_in_study),
+          ),
+          ElevatedButton.icon(
+            icon: const Icon(MdiIcons.exitToApp),
+            label: Text(l10n.leave_keep_data),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red[700],
+              foregroundColor: Colors.white,
             ),
-            TextSpan(text: AppLocalizations.of(context)!.soft_delete_desc_2),
-          ],
-        ),
+            onPressed: acknowledged
+                ? () async {
+                    try {
+                      await subject!.softDelete();
+                    } on SocketException catch (_) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.no_internet_connection,
+                            ),
+                          ),
+                        );
+                      }
+                      return;
+                    }
+                    await deleteActiveStudyReference();
+                    await FitbitHandler.deleteFitbitCredentials(
+                      subject!.studyId,
+                    );
+                    if (context.mounted) await cancelNotifications(context);
+                    if (context.mounted) {
+                      context.go('/${RouteNames.studySelection}');
+                    }
+                  }
+                : null,
+          ),
+        ],
       ),
-      actions: [
-        ElevatedButton.icon(
-          icon: const Icon(MdiIcons.exitToApp),
-          label: Text(AppLocalizations.of(context)!.opt_out),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
-          onPressed: () async {
-            try {
-              await subject!.softDelete();
-            } on SocketException catch (_) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      AppLocalizations.of(context)!.no_internet_connection,
-                    ),
-                  ),
-                );
-              }
-              return;
-            }
-            await deleteActiveStudyReference();
-            await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
-            if (context.mounted) await cancelNotifications(context);
-            if (context.mounted) {
-              context.go('/${RouteNames.studySelection}');
-            }
-          },
-        ),
-      ],
     );
   }
 }
@@ -349,57 +410,100 @@ class DeleteAlertDialog extends StatelessWidget {
   const DeleteAlertDialog({super.key, required this.subject});
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text('${AppLocalizations.of(context)!.delete_data}?'),
-    content: Text(AppLocalizations.of(context)!.hard_delete_desc),
-    actions: [
-      ElevatedButton.icon(
-        icon: const Icon(Icons.delete),
-        label: Text(AppLocalizations.of(context)!.delete_data),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-        onPressed: () async {
-          try {
-            await subject!.delete();
-          } on SocketException catch (_) {
-            // Device is offline — preserve local data so nothing is lost
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    AppLocalizations.of(context)!.no_internet_connection,
-                  ),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    var acknowledged = false;
+
+    return StatefulBuilder(
+      builder: (context, setDialogState) => AlertDialog(
+        title: Text(l10n.leave_study_delete_data_title),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.leave_study_delete_data_body(
+                  subject!.study.title ?? l10n.not_available,
                 ),
-              );
-            }
-            return;
-          } on PostgrestException catch (e) {
-            if (e.code != 'PGRST116') {
-              // Unexpected DB error — don't clear local data
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.error_occurred_with_message(e.message),
-                    ),
-                  ),
-                );
-              }
-              return;
-            }
-            // PGRST116: subject already deleted from DB — proceed with local cleanup
-          }
-          // Reached when delete succeeded or subject was already gone from DB
-          RestoreAccountService.clearCache();
-          await deleteLocalData();
-          await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
-          if (context.mounted) await cancelNotifications(context);
-          if (context.mounted) {
-            context.go('/${RouteNames.welcome}');
-          }
-        },
+              ),
+              const SizedBox(height: 12),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                title: Text(
+                  l10n.acknowledge_consequences,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                value: acknowledged,
+                onChanged: (value) {
+                  setDialogState(() => acknowledged = value ?? false);
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          OutlinedButton(
+            onPressed: context.pop,
+            child: Text(l10n.stay_in_study),
+          ),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.delete),
+            label: Text(l10n.leave_delete_data),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: acknowledged
+                ? () async {
+                    try {
+                      await subject!.delete();
+                    } on SocketException catch (_) {
+                      // Device is offline — preserve local data so nothing is lost
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.no_internet_connection,
+                            ),
+                          ),
+                        );
+                      }
+                      return;
+                    } on PostgrestException catch (e) {
+                      if (e.code != 'PGRST116') {
+                        // Unexpected DB error — don't clear local data
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.error_occurred_with_message(e.message),
+                              ),
+                            ),
+                          );
+                        }
+                        return;
+                      }
+                      // PGRST116: subject already deleted from DB — proceed with local cleanup
+                    }
+                    // Reached when delete succeeded or subject was already gone from DB
+                    RestoreAccountService.clearCache();
+                    await deleteLocalData();
+                    await FitbitHandler.deleteFitbitCredentials(
+                      subject!.studyId,
+                    );
+                    if (context.mounted) await cancelNotifications(context);
+                    if (context.mounted) {
+                      context.go('/${RouteNames.welcome}');
+                    }
+                  }
+                : null,
+          ),
+        ],
       ),
-    ],
-  );
+    );
+  }
 }
