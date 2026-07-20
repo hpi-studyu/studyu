@@ -160,38 +160,26 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                   tr.form_field_crossover_schedule_num_cycles_tooltip,
               input: Row(
                 children: [
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 70),
-                    child: TextField(
-                      readOnly: widget.formViewModel.numCyclesControl.disabled,
-                      //formControl: widget.formViewModel.numCyclesControl,
-                      onChanged: (value) {
-                        final numCycles = int.tryParse(value);
-                        if (numCycles != null) {
-                          widget.formViewModel.numCyclesControl.value =
-                              numCycles;
-                        }
-                      },
-                      controller: TextEditingController()
-                        ..value = TextEditingValue(
-                          text: widget.formViewModel.numCyclesControl.value
-                              .toString(),
-                          selection: TextSelection.collapsed(
-                            offset: widget.formViewModel.numCyclesControl.value
-                                .toString()
-                                .length,
-                          ),
-                        ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(2),
-                        NumericalRangeFormatter(
-                          min: StudyScheduleControls.kNumCyclesMin,
-                          max: StudyScheduleControls.kNumCyclesMax,
-                        ),
+                  SizedBox(
+                    width: 70,
+                    child: DropdownButtonFormField<int>(
+                      initialValue: widget.formViewModel.numCyclesControl.value,
+                      onChanged: widget.formViewModel.numCyclesControl.disabled
+                          ? null
+                          : (value) {
+                              if (value != null) {
+                                widget.formViewModel.numCyclesControl.value =
+                                    value;
+                              }
+                            },
+                      items: [
+                        for (
+                          var value = StudyScheduleControls.kNumCyclesMin;
+                          value <= StudyScheduleControls.kNumCyclesMax;
+                          value++
+                        )
+                          DropdownMenuItem(value: value, child: Text('$value')),
                       ],
-                      //validationMessages: widget.formViewModel.numCyclesControl.validationMessages,
                     ),
                   ),
                   const SizedBox(width: 8.0),

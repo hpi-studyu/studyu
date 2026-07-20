@@ -8,9 +8,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 void main() {
   setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
 
-  testWidgets('number of cycles handles clamped and empty input', (
-    tester,
-  ) async {
+  testWidgets('number of cycles uses a dropdown from 1 to 9', (tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1200, 1600);
     addTearDown(tester.view.reset);
@@ -26,18 +24,25 @@ void main() {
       ),
     );
 
-    final cyclesField = find.byType(TextField).at(1);
+    final cyclesDropdown = find.byWidgetPredicate(
+      (widget) => widget is DropdownButtonFormField<int>,
+    );
+    expect(cyclesDropdown, findsOneWidget);
 
-    await tester.enterText(cyclesField, '21');
-    await tester.pump();
+    await tester.tap(cyclesDropdown);
+    await tester.pumpAndSettle();
 
-    expect(tester.takeException(), isNull);
-    expect(controls.numCyclesControl.value, 9);
+    expect(
+      tester
+          .widgetList<DropdownMenuItem<int>>(find.byType(DropdownMenuItem<int>))
+          .map((item) => item.value)
+          .toSet(),
+      {1, 2, 3, 4, 5, 6, 7, 8, 9},
+    );
 
-    await tester.enterText(cyclesField, '');
-    await tester.pump();
+    await tester.tap(find.text('9').last);
+    await tester.pumpAndSettle();
 
-    expect(tester.takeException(), isNull);
     expect(controls.numCyclesControl.value, 9);
   });
 }
