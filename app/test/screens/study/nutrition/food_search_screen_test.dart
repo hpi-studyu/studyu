@@ -285,7 +285,7 @@ void main() {
     expect(find.text('Fresh Banana'), findsOneWidget);
   });
 
-  testWidgets('search live region reports loading and the result count', (
+  testWidgets('search renders results while a provider is pending', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
@@ -323,9 +323,38 @@ void main() {
     );
 
     offCompleter.complete(offResult([offFood('Apple'), offFood('Apple Pie')]));
+    await tester.pump();
+
+    expect(find.text('Apple'), findsOneWidget);
+    expect(find.text('Apple Pie'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(
+      find.text('Food search is unavailable. Please try again.'),
+      findsNothing,
+    );
+    expect(
+      find.text('No results found. Try different keywords.'),
+      findsNothing,
+    );
+    expect(find.text('End of results'), findsNothing);
+    expect(
+      tester.getSemantics(status).getSemanticsData(),
+      isA<SemanticsData>()
+          .having(
+            (data) => data.flagsCollection.isLiveRegion,
+            'live region',
+            isTrue,
+          )
+          .having((data) => data.label, 'label', 'Searching databases...'),
+    );
+
     usdaCompleter.complete(usdaResult());
     await tester.pump();
 
+    expect(find.text('Apple'), findsOneWidget);
+    expect(find.text('Apple Pie'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.text('End of results'), findsOneWidget);
     expect(
       tester.getSemantics(status).getSemanticsData(),
       isA<SemanticsData>()

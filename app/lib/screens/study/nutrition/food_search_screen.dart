@@ -1275,12 +1275,16 @@ class _FoodSearchListView extends StatelessWidget {
         : 0; // SizedBox after templates
     const int globalHeaderItems = 2; // header + spacing
     final int contentItems = _getContentItemCount();
-    final int loadingMoreItem = isLoadingMore ? 1 : 0;
+    final int loadingIndicatorItem =
+        (isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty))
+        ? 1
+        : 0;
     final int endOfResultsItem =
         (hasSearched &&
             combinedResults.isNotEmpty &&
             !offHasMore &&
             !usdaHasMore &&
+            !isInitialLoading &&
             !isLoadingMore)
         ? 1
         : 0;
@@ -1296,7 +1300,7 @@ class _FoodSearchListView extends StatelessWidget {
         templatesSpacing +
         globalHeaderItems +
         contentItems +
-        loadingMoreItem +
+        loadingIndicatorItem +
         endOfResultsItem +
         quickActionsHeaderItems +
         quickActionsItem +
@@ -1320,7 +1324,7 @@ class _FoodSearchListView extends StatelessWidget {
   }
 
   int _getContentItemCount() {
-    if (isInitialLoading) return 1;
+    if (isInitialLoading && combinedResults.isEmpty) return 1;
     if (errorMessage != null) return 1;
     if (!hasSearched && searchController.text.isEmpty) return 1;
     if (combinedResults.isEmpty && hasSearched && offSearched && usdaSearched) {
@@ -1402,8 +1406,9 @@ class _FoodSearchListView extends StatelessWidget {
       currentIndex += contentItemCount;
     }
 
-    // Loading more indicator
-    if (isLoadingMore && index == currentIndex++) {
+    // Loading indicator
+    if ((isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty)) &&
+        index == currentIndex++) {
       return const Padding(
         padding: EdgeInsets.all(16),
         child: Center(child: CircularProgressIndicator()),
@@ -1415,6 +1420,7 @@ class _FoodSearchListView extends StatelessWidget {
         combinedResults.isNotEmpty &&
         !offHasMore &&
         !usdaHasMore &&
+        !isInitialLoading &&
         !isLoadingMore &&
         index == currentIndex++) {
       return Padding(
@@ -1457,7 +1463,7 @@ class _FoodSearchListView extends StatelessWidget {
   }
 
   Widget _buildContentItem(int contentIndex) {
-    if (isInitialLoading) {
+    if (isInitialLoading && combinedResults.isEmpty) {
       return _LoadingState(theme: theme);
     }
     if (errorMessage != null) {
