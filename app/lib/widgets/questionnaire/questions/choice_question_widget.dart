@@ -10,6 +10,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final String multiSelectionText;
   final String requiredMultiSelectionText;
   final Answer<List<String>>? initialAnswer;
+  final VoidCallback? onCleared;
 
   const ChoiceQuestionWidget({
     super.key,
@@ -18,6 +19,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
     required this.multiSelectionText,
     required this.requiredMultiSelectionText,
     this.initialAnswer,
+    this.onCleared,
   });
 
   @override
@@ -46,6 +48,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   }
 
   void tapped(Choice choice) {
+    final wasConfirmed = confirmButtonTouched;
     setState(() {
       if (!widget.question.multiple) selected.clear();
       if (selected.contains(choice)) {
@@ -53,7 +56,15 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       } else {
         selected.add(choice);
       }
+      if (widget.question.selectionRequired && selected.isEmpty) {
+        confirmButtonTouched = false;
+      }
     });
+
+    if (widget.question.selectionRequired && selected.isEmpty) {
+      if (wasConfirmed) widget.onCleared?.call();
+      return;
+    }
 
     // Auto-submit for single choice questions or multi-choice on subsequent answers
     if (!widget.question.multiple || confirmButtonTouched) {

@@ -48,6 +48,7 @@ class QuestionContainer extends StatelessWidget {
           question: choiceQuestion,
           onDone: (answer) => onDone(answer, index),
           initialAnswer: initialAnswer as Answer<List<String>>?,
+          onCleared: onCleared,
           multiSelectionText: AppLocalizations.of(
             context,
           )!.eligible_choice_multi_selection,

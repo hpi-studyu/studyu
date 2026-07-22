@@ -5,7 +5,11 @@ import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widge
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
 
-Widget _setup(ChoiceQuestion question, ValueChanged<Answer> onDone) {
+Widget _setup(
+  ChoiceQuestion question,
+  ValueChanged<Answer> onDone, {
+  VoidCallback? onCleared,
+}) {
   return MaterialApp(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -14,6 +18,7 @@ Widget _setup(ChoiceQuestion question, ValueChanged<Answer> onDone) {
       body: ChoiceQuestionWidget(
         question: question,
         onDone: onDone,
+        onCleared: onCleared,
         multiSelectionText: 'Select all that apply (optional)',
         requiredMultiSelectionText:
             'Select all that apply (at least one required)',
@@ -34,9 +39,16 @@ void main() {
     tester,
   ) async {
     Answer? answer;
+    var clearCount = 0;
     final question = _question(selectionRequired: true);
 
-    await tester.pumpWidget(_setup(question, (value) => answer = value));
+    await tester.pumpWidget(
+      _setup(
+        question,
+        (value) => answer = value,
+        onCleared: () => clearCount++,
+      ),
+    );
 
     final confirmButton = find.widgetWithText(
       OutlinedButton,
@@ -65,6 +77,11 @@ void main() {
 
     expect(tester.widget<OutlinedButton>(confirmButton).onPressed, isNotNull);
 
+    await tester.tap(find.text('Confirm selection'));
+    await tester.pump();
+
+    expect(answer?.response, [question.choices.first.id]);
+
     await tester.tap(find.text('A'));
     await tester.pump();
 
@@ -74,13 +91,7 @@ void main() {
     );
     expect(tester.widget<SelectableButton>(firstOption).selected, isFalse);
     expect(tester.widget<OutlinedButton>(confirmButton).onPressed, isNull);
-
-    await tester.tap(find.text('A'));
-    await tester.pump();
-    await tester.tap(find.text('Confirm selection'));
-    await tester.pump();
-
-    expect(answer?.response, [question.choices.first.id]);
+    expect(clearCount, 1);
   });
 
   testWidgets('optional multi-selection can still confirm an empty answer', (
