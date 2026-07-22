@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
+import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
@@ -48,6 +49,7 @@ class QrCodePreviewDialog extends StatelessWidget {
         },
       ),
       actionButtons: [
+        DismissButton(text: tr.dialog_close),
         PrimaryButton(
           text: tr.action_qr_code_download,
           icon: Icons.download,

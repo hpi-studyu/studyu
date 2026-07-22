@@ -243,6 +243,10 @@ void main() {
       var notifyCount = 0;
       controller.addListener(() => notifyCount++);
 
+      controller.updateFreeTextDraft('q1', '');
+      expect(controller.hasDraft('q1'), isFalse);
+      expect(notifyCount, equals(0));
+
       controller.updateFreeTextDraft('q1', 'hello');
       expect(notifyCount, equals(1));
 
@@ -253,6 +257,20 @@ void main() {
       // Different value → notification
       controller.updateFreeTextDraft('q1', 'world');
       expect(notifyCount, equals(2));
+    });
+
+    test('clearing a committed free-text answer preserves an empty draft', () {
+      final q1 = freeTextQuestion('q1', 'Enter text');
+      final controller = QuestionnaireController([q1]);
+      controller.submitAnswer(q1.constructAnswer('hello'));
+
+      controller.updateFreeTextDraft('q1', '');
+
+      expect(controller.hasDraft('q1'), isTrue);
+      expect(controller.draftFor('q1'), isEmpty);
+      expect(controller.answerFor('q1')?.response, 'hello');
+      expect(controller.hasInvalidDraftAmong([q1]), isTrue);
+      expect(controller.ctaModeFor([q1]), QuestionnaireCtaMode.hidden);
     });
 
     // ── Test 7: hidden default answers excluded from buildVisiblePayload ──
@@ -537,6 +555,25 @@ void main() {
         expect(controller.draftFor('q1'), isEmpty);
       },
     );
+
+    test('batch free-text commit invalidates dependents and notifies once', () {
+      final q1 = freeTextQuestion('q1', 'Earlier answer');
+      final q2 = boolQuestion('q2', 'Later answer');
+      final controller = QuestionnaireController([q1, q2]);
+
+      controller.submitAnswer(q1.constructAnswer('old'));
+      controller.submitAnswer(q2.constructAnswer(true));
+      controller.updateFreeTextDraft('q1', 'new');
+
+      var notifyCount = 0;
+      controller.addListener(() => notifyCount++);
+
+      expect(controller.commitFreeTextDraftsFor([q1]), isNull);
+
+      expect(controller.answerFor('q1')?.response, 'new');
+      expect(controller.needsReview('q2'), isTrue);
+      expect(notifyCount, 1);
+    });
 
     // ── Test 14: ctaMode and hasPendingBranchChange ──
 
