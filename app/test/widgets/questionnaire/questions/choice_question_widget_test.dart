@@ -65,11 +65,6 @@ void main() {
 
     expect(tester.widget<OutlinedButton>(confirmButton).onPressed, isNotNull);
 
-    await tester.tap(find.text('Confirm selection'));
-    await tester.pump();
-
-    expect(answer?.response, [question.choices.first.id]);
-
     await tester.tap(find.text('A'));
     await tester.pump();
 
@@ -77,7 +72,15 @@ void main() {
       of: find.text('A'),
       matching: find.byType(SelectableButton),
     );
-    expect(tester.widget<SelectableButton>(firstOption).selected, isTrue);
+    expect(tester.widget<SelectableButton>(firstOption).selected, isFalse);
+    expect(tester.widget<OutlinedButton>(confirmButton).onPressed, isNull);
+
+    await tester.tap(find.text('A'));
+    await tester.pump();
+    await tester.tap(find.text('Confirm selection'));
+    await tester.pump();
+
+    expect(answer?.response, [question.choices.first.id]);
   });
 
   testWidgets('optional multi-selection can still confirm an empty answer', (

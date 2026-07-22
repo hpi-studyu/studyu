@@ -46,12 +46,6 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   }
 
   void tapped(Choice choice) {
-    if (widget.question.selectionRequired &&
-        selected.length == 1 &&
-        selected.contains(choice)) {
-      return;
-    }
-
     setState(() {
       if (!widget.question.multiple) selected.clear();
       if (selected.contains(choice)) {
