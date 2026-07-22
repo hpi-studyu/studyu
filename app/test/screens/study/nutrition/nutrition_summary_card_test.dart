@@ -1,3 +1,5 @@
+import 'dart:ui' show SemanticsAction;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -74,6 +76,55 @@ void main() {
     expect(find.text('0.0g'), findsNWidgets(3));
     expect(find.text('No data yet'), findsNothing);
     expect(find.text('Detailed Nutrients'), findsNothing);
+
+    semantics.dispose();
+  });
+
+  testWidgets('recipe builder empty state is passive and fields are unfilled', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(testApp(const RecipeBuilderScreen()));
+    await tester.pump();
+
+    final emptyState = find.text('No ingredients yet');
+    expect(emptyState, findsOneWidget);
+    expect(
+      find.ancestor(of: emptyState, matching: find.byType(InkWell)),
+      findsNothing,
+    );
+    expect(
+      tester
+          .getSemantics(emptyState)
+          .getSemanticsData()
+          .hasAction(SemanticsAction.tap),
+      isFalse,
+    );
+
+    for (final label in ['Recipe Name *', 'Servings *', 'Description']) {
+      final field = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is TextField && widget.decoration?.labelText == label,
+        ),
+      );
+      expect(field.decoration?.filled, isNot(true));
+      expect(field.decoration?.fillColor, isNull);
+    }
+
+    await tester.tap(find.byTooltip('Quick Add'));
+    await tester.pumpAndSettle();
+
+    for (final label in ['Name *', 'Qty', 'Calories (kcal)']) {
+      final field = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is TextField && widget.decoration?.labelText == label,
+        ),
+      );
+      expect(field.decoration?.filled, isNot(true));
+      expect(field.decoration?.fillColor, isNull);
+    }
 
     semantics.dispose();
   });

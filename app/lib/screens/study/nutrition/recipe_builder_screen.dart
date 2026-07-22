@@ -421,7 +421,6 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
               rawWeightController: _rawWeightController,
               cookedWeightController: _cookedWeightController,
               preparationMethodController: _preparationMethodController,
-              theme: theme,
             ),
 
             const SizedBox(height: 16),
@@ -452,7 +451,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 
             // ========== INGREDIENTS LIST ==========
             if (_ingredients.isEmpty)
-              _EmptyIngredientsState(theme: theme, l10n: l10n)
+              _EmptyIngredientsState(theme: theme)
             else
               ...List.generate(_ingredients.length, (index) {
                 final ingredient = _ingredientFoods[index];
@@ -512,7 +511,6 @@ class _RecipeInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -520,19 +518,10 @@ class _RecipeInfoCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(
-                      alpha: 0.5,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.restaurant_menu,
-                    size: 20,
-                    color: theme.colorScheme.primary,
-                  ),
+                Icon(
+                  Icons.restaurant_menu,
+                  size: 20,
+                  color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -549,7 +538,6 @@ class _RecipeInfoCard extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'Recipe Name *',
                 border: OutlineInputBorder(),
-                filled: true,
                 prefixIcon: Icon(Icons.edit),
               ),
               textCapitalization: TextCapitalization.words,
@@ -569,7 +557,6 @@ class _RecipeInfoCard extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: 'Servings *',
                       border: OutlineInputBorder(),
-                      filled: true,
                       prefixIcon: Icon(Icons.people_outline),
                     ),
                     keyboardType: TextInputType.number,
@@ -594,7 +581,6 @@ class _RecipeInfoCard extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: 'Description',
                       border: OutlineInputBorder(),
-                      filled: true,
                       hintText: 'Optional',
                     ),
                   ),
@@ -612,20 +598,17 @@ class _RecipeMetadataCard extends StatelessWidget {
   final TextEditingController rawWeightController;
   final TextEditingController cookedWeightController;
   final TextEditingController preparationMethodController;
-  final ThemeData theme;
 
   const _RecipeMetadataCard({
     required this.rawWeightController,
     required this.cookedWeightController,
     required this.preparationMethodController,
-    required this.theme,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
         leading: Icon(Icons.science_outlined, color: Colors.grey.shade600),
@@ -772,7 +755,6 @@ class _QuickAddFormState extends State<_QuickAddForm> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: widget.theme.colorScheme.tertiaryContainer.withValues(alpha: 0.5),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -800,13 +782,11 @@ class _QuickAddFormState extends State<_QuickAddForm> {
             // Name field - full width
             TextField(
               controller: widget.nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Name *',
                 hintText: 'e.g., Olive oil',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
                 isDense: true,
-                filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.5),
               ),
               textCapitalization: TextCapitalization.words,
               onSubmitted: (_) => _submitAndFocusNext(),
@@ -822,8 +802,6 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                       labelText: 'Qty',
                       border: OutlineInputBorder(),
                       isDense: true,
-                      filled: true,
-                      fillColor: Color(0x80FFFFFF),
                     ),
                     keyboardType: TextInputType.number,
                     onSubmitted: (_) => _submitAndFocusNext(),
@@ -838,8 +816,6 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                       labelText: 'Calories (kcal)',
                       border: OutlineInputBorder(),
                       isDense: true,
-                      filled: true,
-                      fillColor: Color(0x80FFFFFF),
                     ),
                     keyboardType: TextInputType.number,
                     onSubmitted: (_) => widget.onAdd(),
@@ -872,37 +848,19 @@ class _QuickAddFormState extends State<_QuickAddForm> {
 
 class _EmptyIngredientsState extends StatelessWidget {
   final ThemeData theme;
-  final AppLocalizations l10n;
 
-  const _EmptyIngredientsState({required this.theme, required this.l10n});
+  const _EmptyIngredientsState({required this.theme});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
+    return Card(
+      elevation: 0,
+      child: Padding(
         padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(
-            alpha: 0.3,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
-            width: 2,
-          ),
-        ),
         child: Column(
           children: [
-            Container(
+            Padding(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.5,
-                ),
-                shape: BoxShape.circle,
-              ),
               child: Icon(
                 Icons.restaurant_outlined,
                 size: 32,
@@ -954,23 +912,11 @@ class _IngredientCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Text(
-              '${index + 1}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-              ),
-            ),
+        leading: CircleAvatar(
+          child: Text(
+            '${index + 1}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         title: Text(
