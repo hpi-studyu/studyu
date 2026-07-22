@@ -241,7 +241,7 @@
   "form_field_response_audio_max_duration_label": "Maximum recording duration in seconds",
   "form_field_response_choice_multiple": "Allow multiple selections",
   "form_field_response_choice_multiple_tooltip": "Participants can select more than one answer.",
-  "form_field_response_choice_required": "Require an answer",
+  "form_field_response_choice_required": "Require at least one selection",
   "form_field_response_choice_required_tooltip": "Require the participant to select at least one response option.",
   "form_array_response_options_choice_new": "Add option",
   "form_array_response_options_choice_hint": "Option",

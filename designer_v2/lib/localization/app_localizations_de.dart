@@ -670,7 +670,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Teilnehmende können mehr als eine Antwort auswählen.';
 
   @override
-  String get form_field_response_choice_required => 'Antwort erforderlich';
+  String get form_field_response_choice_required =>
+      'Mindestens eine Auswahl erforderlich';
 
   @override
   String get form_field_response_choice_required_tooltip =>

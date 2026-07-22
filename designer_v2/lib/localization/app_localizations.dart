@@ -1277,7 +1277,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_response_choice_required.
   ///
   /// In en, this message translates to:
-  /// **'Require an answer'**
+  /// **'Require at least one selection'**
   String get form_field_response_choice_required;
 
   /// No description provided for @form_field_response_choice_required_tooltip.

@@ -660,7 +660,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Participants can select more than one answer.';
 
   @override
-  String get form_field_response_choice_required => 'Require an answer';
+  String get form_field_response_choice_required =>
+      'Require at least one selection';
 
   @override
   String get form_field_response_choice_required_tooltip =>
