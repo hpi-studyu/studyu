@@ -1,6 +1,8 @@
 name: studyu_core
 version: 4.9.0
-description: This package contains StudyU models and common functions for the app and designer packages
+description: >-
+  This package contains StudyU models and common functions for the app and
+  designer packages
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 

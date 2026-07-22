@@ -13,6 +13,7 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/study_unavailable_screen.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/theme.dart' as app_theme;
 import 'package:studyu_app/util/dashboard_showcase.dart';
@@ -75,6 +76,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   bool _redirectingToLoading = false;
   bool _isDisposing = false;
 
+  bool get _studyIsAvailable => isStudyAvailableForTesting(subject!.study);
+
   bool get showNextDay =>
       (kDebugMode || context.read<AppState>().isPreview) &&
       !subject!.completedStudy;
@@ -112,10 +115,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        setState(() {
-          scheduleToday = subject!.scheduleFor(DateTime.now());
-        });
-        unawaited(_startDashboardShowcaseIfNeeded());
+        if (subject != null && _studyIsAvailable) {
+          setState(() {
+            scheduleToday = subject!.scheduleFor(DateTime.now());
+          });
+          unawaited(_startDashboardShowcaseIfNeeded());
+        }
       case AppLifecycleState.inactive:
         break;
       case AppLifecycleState.paused:
@@ -131,7 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     subject = context.watch<AppState>().activeSubject;
-    if (subject != null) {
+    if (subject != null && _studyIsAvailable) {
       scheduleToday = subject!.scheduleFor(DateTime.now());
       if (widget.error != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -182,6 +187,10 @@ class _DashboardScreenState extends State<DashboardScreen>
         });
       }
       return const SizedBox.shrink();
+    }
+
+    if (!_studyIsAvailable) {
+      return const StudyUnavailableScreen();
     }
 
     final isPreviewMode = context.read<AppState>().isPreview;

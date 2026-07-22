@@ -596,6 +596,18 @@ abstract class AppLocalizations {
   /// **'Code copied to clipboard'**
   String get notification_code_clipboard;
 
+  /// No description provided for @notification_invite_code_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code copied'**
+  String get notification_invite_code_copied;
+
+  /// No description provided for @notification_invite_link_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link copied'**
+  String get notification_invite_link_copied;
+
   /// No description provided for @action_button_new_study.
   ///
   /// In en, this message translates to:
@@ -4041,6 +4053,12 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get action_delete;
 
+  /// No description provided for @action_delete_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete invite code'**
+  String get action_delete_invite_code;
+
   /// No description provided for @action_remove.
   ///
   /// In en, this message translates to:
@@ -4059,10 +4077,22 @@ abstract class AppLocalizations {
   /// **'Copy to clipboard'**
   String get action_clipboard;
 
+  /// No description provided for @action_copy_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invite code'**
+  String get action_copy_invite_code;
+
+  /// No description provided for @action_copy_invite_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invite link'**
+  String get action_copy_invite_link;
+
   /// No description provided for @action_qr_code_show.
   ///
   /// In en, this message translates to:
-  /// **'Show QR code'**
+  /// **'View QR code'**
   String get action_qr_code_show;
 
   /// No description provided for @action_qr_code_download.
@@ -4074,7 +4104,7 @@ abstract class AppLocalizations {
   /// No description provided for @action_share.
   ///
   /// In en, this message translates to:
-  /// **'Share'**
+  /// **'Share invite link'**
   String get action_share;
 
   /// No description provided for @action_copy_link.

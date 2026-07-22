@@ -301,6 +301,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
+  String get study_not_available_for_testing_yet =>
+      'This study is not available for testing yet.';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -1519,11 +1523,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continue_label => 'Continue';
 
   @override
-  String get restored_answer_needs_review =>
-      'Please review this restored answer.';
+  String get restored_answer_needs_review => 'Restored answer requires review';
 
   @override
-  String get mark_answer_reviewed => 'Mark as reviewed';
+  String get restored_answer_review_description =>
+      'Complete task becomes available after review.';
+
+  @override
+  String get mark_answer_reviewed => 'I\'ve reviewed this answer';
+
+  @override
+  String get answer_reviewed => 'Answer reviewed';
+
+  @override
+  String get review_restored_answer_to_continue =>
+      'Review the restored answer to continue.';
+
+  @override
+  String get complete_task => 'Complete task';
 
   @override
   String get no_internet_connection =>
