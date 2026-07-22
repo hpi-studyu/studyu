@@ -71,126 +71,133 @@ class _ConsentScreenState extends State<ConsentScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.consent),
-        leading: const Icon(MdiIcons.textBoxCheck),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () async {
-              if (kIsWeb) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    elevation: 24,
-                    title: Text(
-                      AppLocalizations.of(context)!.save_not_supported,
-                    ),
-                    content: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.save_not_supported_description,
-                    ),
-                  ),
-                );
-              }
-              final pdfContent = await generatePdfContent();
-              if (!context.mounted) return;
-              final savedFilePath = await savePDF(
-                context,
-                '${subject!.study.title}_consent',
-                pdfContent,
-              );
-              if (savedFilePath != null) {
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.',
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.please_give_consent,
-                        style: theme.textTheme.titleMedium,
+    return Title(
+      title: l10n.consent,
+      color: theme.colorScheme.primary,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.consent),
+          leading: const Icon(MdiIcons.textBoxCheck),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () async {
+                if (kIsWeb) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      elevation: 24,
+                      title: Text(
+                        AppLocalizations.of(context)!.save_not_supported,
                       ),
-                      TextSpan(text: ' ', style: theme.textTheme.titleMedium),
-                      TextSpan(
-                        text: AppLocalizations.of(
+                      content: Text(
+                        AppLocalizations.of(
                           context,
-                        )!.please_give_consent_why,
-                        style: theme.textTheme.titleSmall!.copyWith(
-                          color: theme.primaryColor,
+                        )!.save_not_supported_description,
+                      ),
+                    ),
+                  );
+                }
+                final pdfContent = await generatePdfContent();
+                if (!context.mounted) return;
+                final savedFilePath = await savePDF(
+                  context,
+                  '${subject!.study.title}_consent',
+                  pdfContent,
+                );
+                if (savedFilePath != null) {
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.',
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: AppLocalizations.of(
+                            context,
+                          )!.please_give_consent,
+                          style: theme.textTheme.titleMedium,
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.please_give_consent_reason,
+                        TextSpan(text: ' ', style: theme.textTheme.titleMedium),
+                        TextSpan(
+                          text: AppLocalizations.of(
+                            context,
+                          )!.please_give_consent_why,
+                          style: theme.textTheme.titleSmall!.copyWith(
+                            color: theme.primaryColor,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.please_give_consent_reason,
+                                ),
                               ),
                             ),
-                          ),
-                      ),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
                         ),
-                    itemCount: consentList.length,
-                    itemBuilder: (context, index) {
-                      return ConsentCard(
-                        consent: consentList[index],
-                        isChecked: boxLogic[index],
-                        index: index,
-                        onTapped: onBoxTapped,
-                      );
-                    },
-                    primary: false,
-                    padding: const EdgeInsets.all(20),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Flexible(
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                      itemCount: consentList.length,
+                      itemBuilder: (context, index) {
+                        return ConsentCard(
+                          consent: consentList[index],
+                          isChecked: boxLogic[index],
+                          index: index,
+                          onTapped: onBoxTapped,
+                        );
+                      },
+                      primary: false,
+                      padding: const EdgeInsets.all(20),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        backLabel: AppLocalizations.of(context)!.decline,
-        backIcon: const Icon(Icons.close),
-        onBack: () => context.go('/${RouteNames.studySelection}'),
-        nextLabel: AppLocalizations.of(context)!.accept,
-        nextIcon: const Icon(Icons.check),
-        onNext: boxLogic.every((element) => element) || kDebugMode
-            ? () => context.pop(true)
-            : null,
-        progress: const OnboardingProgress(stage: 2, progress: 2.5),
+        bottomNavigationBar: BottomOnboardingNavigation(
+          backLabel: AppLocalizations.of(context)!.decline,
+          backIcon: const Icon(Icons.close),
+          onBack: () => context.go('/${RouteNames.studySelection}'),
+          nextLabel: AppLocalizations.of(context)!.accept,
+          nextIcon: const Icon(Icons.check),
+          onNext: boxLogic.every((element) => element) || kDebugMode
+              ? () => context.pop(true)
+              : null,
+          progress: const OnboardingProgress(stage: 2, progress: 2.5),
+        ),
       ),
     );
   }
