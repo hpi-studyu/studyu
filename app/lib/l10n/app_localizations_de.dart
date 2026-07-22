@@ -74,6 +74,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
+  String get welcome_find_study_title => 'An einer Studie teilnehmen';
+
+  @override
+  String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';
+
+  @override
+  String get welcome_find_study_description =>
+      'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
+
+  @override
+  String get browse_public_studies => 'Öffentliche Studien durchsuchen';
+
+  @override
+  String get welcome_returning_participant =>
+      'Sie haben bereits mit StudyU an einer Studie teilgenommen?';
+
+  @override
+  String get restore_studyu_account => 'StudyU-Konto wiederherstellen';
+
+  @override
   String get show_onboarding_again => 'Onboarding erneut ansehen';
 
   @override
@@ -115,9 +135,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_selection => 'Studienauswahl';
 
   @override
-  String get study_selection_description => 'Bitte wählen Sie eine Studie aus.';
-
-  @override
   String get study_selection_single =>
       'Sie können zu jeder Zeit maximal an einer Studie teilnehmen.';
 
@@ -145,6 +162,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get study_selection_hidden_studies =>
       'Einige Studien konnten nicht angezeigt werden. Das kann passieren, wenn Ihre App-Version veraltet ist. Bitte aktualisieren Sie die App, um alle verfügbaren Studien zu sehen, oder nehmen Sie an einer der unten angezeigten Studien teil.';
+
+  @override
+  String get study_selection_no_public_studies =>
+      'Derzeit sind keine öffentlichen Studien verfügbar. Wenn Sie einen Einladungscode haben, können Sie trotzdem an einer privaten Studie teilnehmen.';
 
   @override
   String get study_overview_title => 'Übersicht';
@@ -227,7 +248,46 @@ class AppLocalizationsDe extends AppLocalizations {
   String get opt_out => 'Aussteigen';
 
   @override
-  String get delete_data => 'Aussteigen und Daten löschen';
+  String get leave_study_keep_data_title =>
+      'Studie verlassen und Ihre Daten behalten?';
+
+  @override
+  String leave_study_keep_data_body(String studyName) {
+    return 'Sie beenden Ihre Teilnahme an der Studie „$studyName“. Wir behalten die bereits übermittelten Fortschrittsdaten und Antworten. Forschende dürfen Ihre anonymisierten Daten weiterhin verwenden.\n\nNach dem Verlassen können Sie dieser Studienteilnahme nicht erneut beitreten. Ihre früheren Studien bleiben unverändert.';
+  }
+
+  @override
+  String get stay_in_study => 'In der Studie bleiben';
+
+  @override
+  String get acknowledge_consequences =>
+      'Ich habe diese Informationen gelesen und bin mir der Folgen bewusst.';
+
+  @override
+  String get leave_keep_data => 'Verlassen und meine Daten behalten';
+
+  @override
+  String get leave_study_description =>
+      'Beenden Sie Ihre Teilnahme. Ihre bestehenden Studiendaten bleiben erhalten.';
+
+  @override
+  String get delete_data => 'Studie verlassen und meine Daten löschen';
+
+  @override
+  String get leave_study_delete_data_title =>
+      'Studie verlassen und meine Daten löschen?';
+
+  @override
+  String leave_study_delete_data_body(String studyName) {
+    return 'Sie beenden Ihre Teilnahme an der Studie „$studyName“. Wir löschen Ihre Fortschrittsdaten und Antworten für diese Studie dauerhaft von unseren Servern und entfernen die auf diesem Gerät gespeicherten Daten.\n\nDies kann nicht rückgängig gemacht werden. Weder Sie noch Mitglieder des Studienteams können diese Daten danach wiederherstellen.';
+  }
+
+  @override
+  String get leave_delete_data => 'Verlassen und meine Daten löschen';
+
+  @override
+  String get delete_study_data_description =>
+      'Löschen Sie Ihre Studiendaten dauerhaft. Dies kann nicht rückgängig gemacht werden.';
 
   @override
   String get soft_delete_desc => 'Sie werden Ihren Fortschritt in der Studie ';
@@ -242,6 +302,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get your_journey => 'Deine Reise';
+
+  @override
+  String get journey_overview_description =>
+      'Sehen Sie sich den Ablauf Ihrer Studie an, bevor Sie fortfahren.';
 
   @override
   String get journey_results_available => 'Ergebnisse verfügbar';
@@ -327,6 +391,67 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get about => 'Über StudyU';
+
+  @override
+  String get study_information => 'Studieninformationen';
+
+  @override
+  String get study_information_description =>
+      'Teilen Sie diese Angaben nur mit Ihrem Studienteam, wenn Sie dazu aufgefordert werden.';
+
+  @override
+  String get study_name => 'Studienname';
+
+  @override
+  String get study_id => 'Studien-ID';
+
+  @override
+  String get subject_id => 'Subject-ID';
+
+  @override
+  String get study_start_date => 'Studienbeginn';
+
+  @override
+  String get app_version => 'App-Version';
+
+  @override
+  String get platform => 'Plattform';
+
+  @override
+  String get not_available => 'Nicht verfügbar';
+
+  @override
+  String get view_study_information => 'Details anzeigen';
+
+  @override
+  String get email_study_team => 'E-Mail an das Studienteam';
+
+  @override
+  String get study_team_email_unavailable =>
+      'Für diese Studie ist keine Kontakt-E-Mail hinterlegt.';
+
+  @override
+  String get copy_all_information => 'Alle Informationen kopieren';
+
+  @override
+  String value_copied(String label) {
+    return '$label wurde in die Zwischenablage kopiert.';
+  }
+
+  @override
+  String get all_information_copied =>
+      'Alle Informationen wurden in die Zwischenablage kopiert.';
+
+  @override
+  String get participant_information_email_subject =>
+      '[StudyU] Teilnahmeinformationen';
+
+  @override
+  String get participant_information_email_intro =>
+      'Hallo,\n\nich kontaktiere Sie wegen meiner Studienteilnahme. Das sind meine StudyU-Angaben:';
+
+  @override
+  String get email_app_unavailable => 'Es ist keine E-Mail-App verfügbar.';
 
   @override
   String get settings => 'Einstellungen';
@@ -433,6 +558,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get language => 'Sprache';
 
   @override
+  String get use_device_language => 'Gerätesprache verwenden';
+
+  @override
   String get en => 'Englisch';
 
   @override
@@ -518,10 +646,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get imprint_read => 'Impressum lesen';
 
   @override
-  String get invite_code_button => 'Einladungscode verwenden';
+  String get invite_code_button => 'Mit einem Einladungscode beitreten';
 
   @override
-  String get private_study_invite_code => 'Privater Studien Einladungscode';
+  String get private_study_invite_code =>
+      'Mit Einladungscode an einer Studie teilnehmen';
+
+  @override
+  String get private_study_invite_code_description =>
+      'Geben Sie den Code ein, den Sie vom Studienteam erhalten haben.';
 
   @override
   String get invite_code => 'Einladungscode';
@@ -1226,7 +1359,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get go_back => 'Zurück';
 
   @override
-  String get recovery_phrase_header => 'Wiederherstellungsphrase speichern';
+  String get study_settings_section => 'Studieneinstellungen';
+
+  @override
+  String get recovery_phrase_header => 'Wiederherstellungsphrase anzeigen';
 
   @override
   String get copy_to_clipboard => 'In die Zwischenablage kopieren';
@@ -1237,7 +1373,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit in deinen Studieneinstellungen wieder ansehen.\n\nTeile sie niemals mit anderen.';
+      'Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.\n\nTeile sie niemals mit anderen.';
 
   @override
   String get recovery_phrase_save_warning => 'Teile sie niemals mit anderen.';
@@ -1381,7 +1517,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get current_study_section => 'Aktuelle Studie';
 
   @override
-  String get participation_options_section => 'Teilnahmeoptionen';
+  String get participation_options_section => 'Teilnahme verwalten';
 
   @override
   String get share_recovery_text_btn => 'Wiederherstellungstext teilen';
@@ -1540,7 +1676,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
+  String get dashboard_tour => 'Dashboard-Einführung';
+
+  @override
+  String get show_again => 'Tour wiederholen';
 
   @override
   String get free_text_hint => 'Geben Sie Ihre Antwort ein';

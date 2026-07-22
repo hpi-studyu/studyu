@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +10,7 @@ import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -68,10 +68,9 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.consent),
         actions: [
           IconButton(
@@ -121,34 +120,20 @@ class _ConsentScreenState extends State<ConsentScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.please_give_consent,
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      TextSpan(text: ' ', style: theme.textTheme.titleMedium),
-                      TextSpan(
-                        text: AppLocalizations.of(
+                StudyOnboardingDescription(
+                  text: AppLocalizations.of(context)!.please_give_consent,
+                  actionLabel: AppLocalizations.of(
+                    context,
+                  )!.please_give_consent_why,
+                  onAction: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Text(
+                        AppLocalizations.of(
                           context,
-                        )!.please_give_consent_why,
-                        style: theme.textTheme.titleSmall!.copyWith(
-                          color: theme.primaryColor,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.please_give_consent_reason,
-                              ),
-                            ),
-                          ),
+                        )!.please_give_consent_reason,
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 Flexible(

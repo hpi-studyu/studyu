@@ -82,9 +82,24 @@ void main() {
       ..questionnaire.questions = [firstQuestion, lastQuestion]
       ..eligibilityCriteria = [criterion];
     final router = GoRouter(
+      initialLocation: '/terms',
       routes: [
         GoRoute(
-          path: '/',
+          path: '/terms',
+          builder: (context, state) => Scaffold(
+            body: Column(
+              children: [
+                const Text('Terms'),
+                TextButton(
+                  onPressed: () => context.push('/eligibility'),
+                  child: const Text('Continue'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/eligibility',
           builder: (context, state) => EligibilityScreen(study: study),
         ),
       ],
@@ -105,6 +120,17 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    final appBar = tester.widget<AppBar>(find.byType(AppBar));
+    expect(appBar.leading, isNull);
+    expect(
+      find.text(
+        'Please answer a few questions to make sure that you can safely participate in this study.',
+      ),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('yes'));
     await tester.pumpAndSettle();
@@ -124,5 +150,10 @@ void main() {
     expect(find.text('You are not eligible for this study'), findsOneWidget);
     expect(find.text('Criterion not fulfilled'), findsOneWidget);
     expect(find.text('Complete task'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('eligibility_failed_back')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Terms'), findsOneWidget);
   });
 }
