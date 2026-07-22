@@ -54,8 +54,6 @@ void main() {
 
     await tester.tap(find.text('yes'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Complete'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
 
@@ -67,18 +65,21 @@ void main() {
     expect(find.byType(EligibilityScreen), findsOneWidget);
   });
 
-  testWidgets('shows failed eligibility immediately after the answer', (
+  testWidgets('assesses eligibility immediately after the last answer', (
     tester,
   ) async {
-    final question = BooleanQuestion.withId()
+    final firstQuestion = BooleanQuestion.withId()
+      ..id = 'first'
+      ..prompt = 'First question';
+    final lastQuestion = BooleanQuestion.withId()
       ..id = 'eligible'
       ..prompt = 'Do you fulfill the criterion?';
     final criterion = EligibilityCriterion.withId()
       ..reason = 'Criterion not fulfilled'
-      ..condition = (BooleanExpression()..target = question.id);
+      ..condition = (BooleanExpression()..target = lastQuestion.id);
     final study = Study.withId('user')
       ..title = 'Study'
-      ..questionnaire.questions = [question]
+      ..questionnaire.questions = [firstQuestion, lastQuestion]
       ..eligibilityCriteria = [criterion];
     final router = GoRouter(
       routes: [
@@ -105,11 +106,23 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('no'));
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('You are eligible for this study'), findsNothing);
+    expect(find.text('Complete task'), findsNothing);
+
+    await tester.tap(find.text('yes').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('You are eligible for this study'), findsOneWidget);
+    expect(find.text('Complete task'), findsNothing);
+
+    await tester.tap(find.text('no').last);
     await tester.pumpAndSettle();
 
     expect(find.text('You are not eligible for this study'), findsOneWidget);
     expect(find.text('Criterion not fulfilled'), findsOneWidget);
-    expect(find.text('Complete'), findsNothing);
+    expect(find.text('Complete task'), findsNothing);
   });
 }

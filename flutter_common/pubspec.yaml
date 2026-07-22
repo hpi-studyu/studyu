@@ -1,6 +1,7 @@
 name: studyu_flutter_common
 version: 1.10.4
-description: StudyU common flutter components and functions for app and designer
+description: >-
+  StudyU common flutter components and functions for app and designer
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 

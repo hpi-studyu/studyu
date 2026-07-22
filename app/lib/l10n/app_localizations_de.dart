@@ -302,6 +302,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
+  String get study_not_available_for_testing_yet =>
+      'Diese Studie ist noch nicht zum Testen verfügbar.';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -1562,10 +1566,24 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get restored_answer_needs_review =>
-      'Bitte die wiederhergestellte Antwort überprüfen.';
+      'Wiederhergestellte Antwort muss überprüft werden';
 
   @override
-  String get mark_answer_reviewed => 'Als überprüft markieren';
+  String get restored_answer_review_description =>
+      'Die Aufgabe kann erst nach der Überprüfung abgeschlossen werden.';
+
+  @override
+  String get mark_answer_reviewed => 'Ich habe diese Antwort überprüft';
+
+  @override
+  String get answer_reviewed => 'Antwort überprüft';
+
+  @override
+  String get review_restored_answer_to_continue =>
+      'Überprüfe die wiederhergestellte Antwort, um fortzufahren.';
+
+  @override
+  String get complete_task => 'Aufgabe abschließen';
 
   @override
   String get no_internet_connection =>

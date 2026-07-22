@@ -221,6 +221,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
               hideCta: activeResult?.eligible == false,
+              autoComplete: true,
             ),
           ),
           if (activeResult != null) _constructResultBanner(),

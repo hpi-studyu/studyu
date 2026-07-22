@@ -57,13 +57,18 @@ class _TermsScreenState extends State<TermsScreen> {
         :final study,
         :final inviteCode,
         :final preselectedInterventionIds,
+        :final alreadyEnrolled,
       ):
         state.selectedStudy = study;
-        if (inviteCode != null) {
-          state.inviteCode = inviteCode;
-          state.preselectedInterventionIds = preselectedInterventionIds;
+        if (alreadyEnrolled) {
+          context.go('/${RouteNames.dashboard}');
+        } else {
+          if (inviteCode != null) {
+            state.inviteCode = inviteCode;
+            state.preselectedInterventionIds = preselectedInterventionIds;
+          }
+          context.push('/${RouteNames.studyOverview}');
         }
-        context.push('/${RouteNames.studyOverview}');
       case DeepLinkError(type: final errorType, :final errorValue):
         final message = getDeepLinkErrorMessage(
           AppLocalizations.of(context)!,

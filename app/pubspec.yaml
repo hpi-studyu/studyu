@@ -1,6 +1,7 @@
 name: studyu_app
 version: 2.14.0
-description: Partake in digital N-of-1 trials with the innovative StudyU Health App
+description: >-
+  Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
@@ -67,7 +68,8 @@ dependencies:
   xml: ^7.0.1
 
 dev_dependencies:
-  # flutter_launcher_icons: ^0.14.4 # seems deprecated, maybe icons_launcher is an alternative
+  # flutter_launcher_icons: ^0.14.4
+  # Deprecated? icons_launcher may be an alternative.
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
