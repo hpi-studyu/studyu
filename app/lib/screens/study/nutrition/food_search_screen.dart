@@ -155,14 +155,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final generation = ++_searchGeneration;
 
     if (!mounted) return;
-    if (query.isEmpty) {
-      _resetSearchState();
-      return;
-    }
+    _resetSearchState();
+    if (query.isEmpty) return;
 
-    setState(() {
-      _activeQuery = '';
-    });
     _debounceTimer = Timer(
       _debounceDuration,
       () => _searchFood(templateViewModel, query, generation),
@@ -567,6 +562,19 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final templateViewModel = Provider.of<TemplateViewModel>(context);
+    String? searchStatus;
+    if (_isInitialLoading || _isLoadingMore) {
+      searchStatus = l10n.searching_databases;
+    } else if (_errorMessage != null) {
+      searchStatus = _errorMessage;
+    } else if (_hasSearched &&
+        _combinedResults.isEmpty &&
+        _offSearched &&
+        _usdaSearched) {
+      searchStatus = l10n.no_results_found;
+    } else if (_hasSearched && _combinedResults.isNotEmpty) {
+      searchStatus = l10n.food_search_results_count(_combinedResults.length);
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.add_food_title)),
@@ -582,6 +590,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               _searchController.clear();
               _onSearchChanged('', templateViewModel);
             },
+          ),
+          Semantics(
+            liveRegion: true,
+            label: searchStatus,
+            child: const SizedBox.shrink(),
           ),
 
           // Content
@@ -656,7 +669,11 @@ class _SearchBarHeader extends StatelessWidget {
           hintText: l10n.search_food_hint,
           prefixIcon: const Icon(Icons.search),
           suffixIcon: controller.text.isNotEmpty
-              ? IconButton(icon: const Icon(Icons.clear), onPressed: onClear)
+              ? IconButton(
+                  tooltip: MaterialLocalizations.of(context).clearButtonTooltip,
+                  icon: const Icon(Icons.clear),
+                  onPressed: onClear,
+                )
               : null,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)),
           filled: true,

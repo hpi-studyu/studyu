@@ -809,6 +809,14 @@
   "end_of_results": "End of results",
   "no_results_found": "No results found. Try different keywords.",
   "food_search_error": "Food search is unavailable. Please try again.",
+  "food_search_results_count": "{count, plural, =1 {1 result found} other {{count} results found}}",
+  "@food_search_results_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "no_matching_templates": "No matching templates",
   "detailed_nutrition": "Detailed Nutrition",
   "detailed_nutrition_subtitle": "Fiber, Sugar, Sodium",

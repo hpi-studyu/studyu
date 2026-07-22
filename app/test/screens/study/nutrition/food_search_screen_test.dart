@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart' show SemanticsData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:provider/provider.dart';
@@ -89,6 +90,31 @@ void main() {
     );
   });
 
+  testWidgets('clear button exposes the native localized semantics tooltip', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpWidget(foodSearchApp(const Locale('de')));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), 'Apfel');
+    await tester.pump();
+
+    final tooltip = MaterialLocalizations.of(
+      tester.element(find.byType(TextField)),
+    ).clearButtonTooltip;
+    final clearButton = find.widgetWithIcon(IconButton, Icons.clear);
+
+    expect(clearButton, findsOneWidget);
+    expect(find.byTooltip(tooltip), findsOneWidget);
+    expect(
+      tester.getSemantics(clearButton).getSemanticsData().tooltip,
+      tooltip,
+    );
+
+    semantics.dispose();
+  });
+
   testWidgets('debounce searches only the latest text', (tester) async {
     final requests = <SearchRequest>[];
 
@@ -131,6 +157,113 @@ void main() {
       (source: 'off', query: 'apple', page: 1, pageSize: 20),
       (source: 'usda', query: 'apple', page: 1, pageSize: 20),
     ]);
+  });
+
+  testWidgets('changed text removes stale results before debounce', (
+    tester,
+  ) async {
+    final requests = <SearchRequest>[];
+
+    await tester.pumpWidget(
+      foodSearchApp(
+        const Locale('en'),
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) {
+              requests.add((
+                source: 'off',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return Future.value(
+                offResult([
+                  offFood(query == 'apple' ? 'Stale Apple' : 'Fresh Banana'),
+                ]),
+              );
+            },
+        usdaFoodSearch:
+            ({required query, required page, required pageSize}) async {
+              requests.add((
+                source: 'usda',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return usdaResult();
+            },
+      ),
+    );
+    await tester.pump();
+
+    await enterSearch(tester, 'apple');
+    await tester.pump();
+    expect(find.text('Stale Apple'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'banana');
+    await tester.pump(const Duration(milliseconds: 399));
+
+    expect(find.text('Stale Apple'), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(requests.where((request) => request.query == 'banana'), isEmpty);
+
+    await tester.pump(const Duration(milliseconds: 1));
+    await tester.pump();
+    expect(find.text('Fresh Banana'), findsOneWidget);
+  });
+
+  testWidgets('search live region reports loading and the result count', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    final offCompleter = Completer<SearchResult>();
+    final usdaCompleter = Completer<UsdaSearchResponse>();
+
+    await tester.pumpWidget(
+      foodSearchApp(
+        const Locale('en'),
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) =>
+                offCompleter.future,
+        usdaFoodSearch: ({required query, required page, required pageSize}) =>
+            usdaCompleter.future,
+      ),
+    );
+    await tester.pump();
+
+    await enterSearch(tester, 'apple');
+
+    final status = find.byWidgetPredicate(
+      (widget) => widget is Semantics && widget.properties.liveRegion == true,
+      description: 'search status live region',
+    );
+    expect(status, findsOneWidget);
+    expect(
+      tester.getSemantics(status).getSemanticsData(),
+      isA<SemanticsData>()
+          .having(
+            (data) => data.flagsCollection.isLiveRegion,
+            'live region',
+            isTrue,
+          )
+          .having((data) => data.label, 'label', 'Searching databases...'),
+    );
+
+    offCompleter.complete(offResult([offFood('Apple'), offFood('Apple Pie')]));
+    usdaCompleter.complete(usdaResult());
+    await tester.pump();
+
+    expect(
+      tester.getSemantics(status).getSemanticsData(),
+      isA<SemanticsData>()
+          .having(
+            (data) => data.flagsCollection.isLiveRegion,
+            'live region',
+            isTrue,
+          )
+          .having((data) => data.label, 'label', '2 results found'),
+    );
+
+    semantics.dispose();
   });
 
   testWidgets('older initial responses cannot overwrite the current search', (
@@ -365,6 +498,8 @@ void main() {
   testWidgets('successful empty searches show no-result actions', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
+
     await tester.pumpWidget(
       foodSearchApp(
         const Locale('en'),
@@ -391,11 +526,32 @@ void main() {
       find.text('Food search is unavailable. Please try again.'),
       findsNothing,
     );
+
+    final status = find.byWidgetPredicate(
+      (widget) => widget is Semantics && widget.properties.liveRegion == true,
+    );
+    expect(
+      tester.getSemantics(status).getSemanticsData(),
+      isA<SemanticsData>()
+          .having(
+            (data) => data.flagsCollection.isLiveRegion,
+            'live region',
+            isTrue,
+          )
+          .having(
+            (data) => data.label,
+            'label',
+            'No results found. Try different keywords.',
+          ),
+    );
+
+    semantics.dispose();
   });
 
   testWidgets('provider outage shows an error and retry keeps the query', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
     final requests = <SearchRequest>[];
     var offAttempts = 0;
 
@@ -440,6 +596,24 @@ void main() {
       findsNothing,
     );
 
+    final status = find.byWidgetPredicate(
+      (widget) => widget is Semantics && widget.properties.liveRegion == true,
+    );
+    expect(
+      tester.getSemantics(status).getSemanticsData(),
+      isA<SemanticsData>()
+          .having(
+            (data) => data.flagsCollection.isLiveRegion,
+            'live region',
+            isTrue,
+          )
+          .having(
+            (data) => data.label,
+            'label',
+            'Food search is unavailable. Please try again.',
+          ),
+    );
+
     await tester.tap(find.text('Try again'));
     await tester.pump();
     await tester.pump();
@@ -455,6 +629,8 @@ void main() {
       (source: 'off', query: 'apple', page: 1, pageSize: 20),
       (source: 'usda', query: 'apple', page: 1, pageSize: 20),
     ]);
+
+    semantics.dispose();
   });
 
   testWidgets('partial provider success keeps useful results', (tester) async {

@@ -2010,6 +2010,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Food search is unavailable. Please try again.';
 
   @override
+  String food_search_results_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count results found',
+      one: '1 result found',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get no_matching_templates => 'No matching templates';
 
   @override

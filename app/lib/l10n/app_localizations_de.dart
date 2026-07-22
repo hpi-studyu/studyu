@@ -2026,6 +2026,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.';
 
   @override
+  String food_search_results_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Ergebnisse gefunden',
+      one: '1 Ergebnis gefunden',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get no_matching_templates => 'No matching templates';
 
   @override

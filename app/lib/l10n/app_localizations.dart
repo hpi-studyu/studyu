@@ -3797,6 +3797,12 @@ abstract class AppLocalizations {
   /// **'Food search is unavailable. Please try again.'**
   String get food_search_error;
 
+  /// No description provided for @food_search_results_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1 {1 result found} other {{count} results found}}'**
+  String food_search_results_count(int count);
+
   /// No description provided for @no_matching_templates.
   ///
   /// In en, this message translates to:
