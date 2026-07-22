@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
+import 'package:uuid/uuid.dart';
 
 enum TemplateFilter { all, meals, foods, recipes }
 
@@ -182,28 +185,26 @@ class TemplateViewModel extends ChangeNotifier {
   }
 
   FoodEntry _createFoodFromPrototype(FoodEntry prototype, String templateId) {
-    return FoodEntry.withId(
-      entryType: prototype.entryType,
-      name: prototype.name,
-      brandName: prototype.brandName,
-      description: prototype.description,
-      amount: prototype.amount,
-      unit: prototype.unit,
-      servingSizeGrams: prototype.servingSizeGrams,
-      portionReference: prototype.portionReference,
-      portionEstimationMethod: prototype.portionEstimationMethod,
-      portionState: prototype.portionState,
-      yieldFactor: prototype.yieldFactor,
-      ediblePortion: prototype.ediblePortion,
-      nutrition: prototype.nutrition,
-      foodCode: prototype.foodCode,
-      externalId: prototype.externalId,
-      source: prototype.source,
-      confidenceScore: prototype.confidenceScore,
-      templateId: templateId,
-      originalValues: prototype.originalValues,
-      recipeMetadata: prototype.recipeMetadata,
-      recipeIngredients: prototype.recipeIngredients,
-    );
+    final food = _cloneFoodEntry(prototype)
+      ..id = const Uuid().v4()
+      ..originalValues =
+          jsonDecode(jsonEncode(prototype.originalValues))
+              as Map<String, dynamic>
+      ..templateId = templateId
+      ..createdAt = DateTime.now()
+      ..modifiedAt = null
+      ..parentRecipeId = null;
+    food.recipeIngredients = food.recipeIngredients
+        ?.map(
+          (composition) => RecipeComposition.withId(
+            recipeId: food.id,
+            ingredientId: composition.ingredientId,
+            amount: composition.amount,
+            unit: composition.unit,
+            sortOrder: composition.sortOrder,
+          ),
+        )
+        .toList();
+    return food;
   }
 }

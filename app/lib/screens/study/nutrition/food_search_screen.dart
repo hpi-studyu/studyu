@@ -517,7 +517,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _selectTemplate(studyu.SavedFoodTemplate template) {
-    Navigator.pop(context, template.prototype);
+    final templateViewModel = Provider.of<TemplateViewModel>(
+      context,
+      listen: false,
+    );
+    Navigator.pop(context, templateViewModel.applyFoodTemplate(template));
   }
 
   void _navigateToEdit(studyu.FoodEntry foodEntry) {

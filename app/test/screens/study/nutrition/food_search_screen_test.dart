@@ -10,6 +10,8 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
+import 'package:studyu_app/util/template_storage_manager.dart';
+import 'package:studyu_core/core.dart' as studyu;
 
 typedef SearchRequest = ({String source, String query, int page, int pageSize});
 
@@ -86,6 +88,78 @@ void main() {
 
     expect(
       find.text('Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('German USDA outage stays localized and retries Apfel', (
+    tester,
+  ) async {
+    final requests = <SearchRequest>[];
+
+    await tester.pumpWidget(
+      foodSearchApp(
+        const Locale('de'),
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) {
+              requests.add((
+                source: 'off',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return Future.value(offResult());
+            },
+        usdaFoodSearch: ({required query, required page, required pageSize}) {
+          requests.add((
+            source: 'usda',
+            query: query,
+            page: page,
+            pageSize: pageSize,
+          ));
+          throw Exception('offline');
+        },
+      ),
+    );
+    await tester.pump();
+
+    await enterSearch(tester, 'Apfel');
+    await tester.pump();
+
+    expect(requests, [
+      (source: 'off', query: 'Apfel', page: 1, pageSize: 20),
+      (source: 'usda', query: 'Apfel', page: 1, pageSize: 20),
+    ]);
+    expect(
+      find.text(
+        'Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Erneut versuchen'), findsOneWidget);
+    expect(
+      find.text('Food search is unavailable. Please try again.'),
+      findsNothing,
+    );
+    expect(
+      find.text('No results found. Try different keywords.'),
+      findsNothing,
+    );
+
+    await tester.tap(find.text('Erneut versuchen'));
+    await tester.pump();
+    await tester.pump();
+
+    expect(requests, [
+      (source: 'off', query: 'Apfel', page: 1, pageSize: 20),
+      (source: 'usda', query: 'Apfel', page: 1, pageSize: 20),
+      (source: 'off', query: 'Apfel', page: 1, pageSize: 20),
+      (source: 'usda', query: 'Apfel', page: 1, pageSize: 20),
+    ]);
+    expect(
+      find.text(
+        'Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.',
+      ),
       findsOneWidget,
     );
   });
@@ -264,6 +338,101 @@ void main() {
     );
 
     semantics.dispose();
+  });
+
+  testWidgets('branded result details preserve query and scroll on back', (
+    tester,
+  ) async {
+    final requests = <SearchRequest>[];
+
+    await tester.pumpWidget(
+      foodSearchApp(
+        const Locale('en'),
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) async {
+              requests.add((
+                source: 'off',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return offResult(
+                List.generate(
+                  12,
+                  (index) => Product(
+                    productName: 'Apple $index',
+                    barcode: 'apple-$index',
+                    brands: 'Orchard Co',
+                  ),
+                ),
+              );
+            },
+        usdaFoodSearch:
+            ({required query, required page, required pageSize}) async {
+              requests.add((
+                source: 'usda',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return usdaResult();
+            },
+      ),
+    );
+    await tester.pump();
+
+    await enterSearch(tester, 'apple');
+    await tester.pump();
+
+    expect(find.text('Orchard Co'), findsWidgets);
+    await tester.dragUntilVisible(
+      find.text('Apple 8'),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+
+    final scrollable = find.descendant(
+      of: find.byType(ListView),
+      matching: find.byType(Scrollable),
+    );
+    final offsetBeforeDetails = tester
+        .state<ScrollableState>(scrollable)
+        .position
+        .pixels;
+    expect(offsetBeforeDetails, greaterThan(0));
+
+    await tester.tap(find.text('Apple 8'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edit Food'), findsOneWidget);
+    expect(find.byTooltip('Search Food Database'), findsNothing);
+
+    await tester.tap(find.text('Advanced Options'));
+    await tester.pumpAndSettle();
+    final brandField = tester.widget<TextField>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is TextField && widget.decoration?.labelText == 'Brand Name',
+      ),
+    );
+    expect(brandField.controller!.text, 'Orchard Co');
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      'apple',
+    );
+    expect(
+      tester.state<ScrollableState>(scrollable).position.pixels,
+      closeTo(offsetBeforeDetails, 0.1),
+    );
+    expect(requests, [
+      (source: 'off', query: 'apple', page: 1, pageSize: 20),
+      (source: 'usda', query: 'apple', page: 1, pageSize: 20),
+    ]);
   });
 
   testWidgets('older initial responses cannot overwrite the current search', (
@@ -631,6 +800,117 @@ void main() {
     ]);
 
     semantics.dispose();
+  });
+
+  testWidgets('saved food selection applies a fresh template entry', (
+    tester,
+  ) async {
+    final prototype = studyu.FoodEntry(
+      id: 'prototype-food-id',
+      entryType: studyu.FoodEntryType.manualCustom,
+      name: 'Template Apple',
+      brandName: 'Saved Orchard',
+      description: 'Immutable prototype',
+      amount: 2,
+      unit: 'slice',
+      servingSizeGrams: 40,
+      portionReference: '2 slices',
+      portionEstimationMethod: studyu.PortionEstimationMethod.householdMeasure,
+      portionState: studyu.PortionState.asServed,
+      yieldFactor: 0.9,
+      ediblePortion: 0.8,
+      nutrition: studyu.NutritionProfile(
+        energyKcal: 52,
+        protein: 0.3,
+        carbs: 14,
+        fat: 0.2,
+        sugars: 10,
+        fiber: 2.4,
+        saturatedFat: 0,
+        transFat: 0,
+        cholesterol: 0,
+        sodium: 1,
+        waterContent: 34,
+        micros: const {'vitaminC': 4.6},
+      ),
+      foodCode: 'saved-code',
+      externalId: 'saved-external-id',
+      source: studyu.FoodSource.manual,
+      confidenceScore: 0.8,
+      createdAt: DateTime.utc(2025),
+      originalValues: const {'origin': 'saved-template'},
+    );
+    final template = studyu.SavedFoodTemplate(
+      id: 'saved-template-id',
+      userId: 'anonymous',
+      name: 'Saved Apple Template',
+      tags: const ['fruit'],
+      isPublic: false,
+      createdAt: DateTime.utc(2025, 1, 2),
+      prototype: prototype,
+    );
+    await TemplateStorageManager().saveFoodTemplate(template);
+    studyu.FoodEntry? selectedFood;
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () async {
+                  selectedFood = await Navigator.of(context).push(
+                    MaterialPageRoute<studyu.FoodEntry>(
+                      builder: (_) => FoodSearchScreen(
+                        openFoodFactsSearch:
+                            ({
+                              required query,
+                              required page,
+                              required pageSize,
+                            }) async => offResult(),
+                        usdaFoodSearch:
+                            ({
+                              required query,
+                              required page,
+                              required pageSize,
+                            }) async => usdaResult(),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Open food search'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Open food search'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Saved Apple Template'));
+    await tester.pumpAndSettle();
+
+    expect(selectedFood, isNotNull);
+    expect(selectedFood!.id, isNot(prototype.id));
+    expect(selectedFood!.templateId, template.id);
+    expect(selectedFood!.name, prototype.name);
+    expect(selectedFood!.brandName, prototype.brandName);
+    expect(selectedFood!.description, prototype.description);
+    expect(selectedFood!.amount, prototype.amount);
+    expect(selectedFood!.unit, prototype.unit);
+    expect(selectedFood!.servingSizeGrams, prototype.servingSizeGrams);
+    expect(selectedFood!.nutrition.toJson(), prototype.nutrition.toJson());
+    expect(selectedFood!.foodCode, prototype.foodCode);
+    expect(selectedFood!.externalId, prototype.externalId);
+    expect(selectedFood!.source, prototype.source);
+    expect(selectedFood!.confidenceScore, prototype.confidenceScore);
+    expect(selectedFood!.originalValues, prototype.originalValues);
+    expect(prototype.id, 'prototype-food-id');
+    expect(prototype.templateId, isNull);
   });
 
   testWidgets('partial provider success keeps useful results', (tester) async {
