@@ -56,12 +56,10 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       } else {
         selected.add(choice);
       }
-      if (widget.question.selectionRequired && selected.isEmpty) {
-        confirmButtonTouched = false;
-      }
+      if (selected.isEmpty) confirmButtonTouched = false;
     });
 
-    if (widget.question.selectionRequired && selected.isEmpty) {
+    if (selected.isEmpty) {
       if (wasConfirmed) widget.onCleared?.call();
       return;
     }

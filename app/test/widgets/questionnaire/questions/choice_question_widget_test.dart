@@ -115,4 +115,36 @@ void main() {
 
     expect(answer?.response, isEmpty);
   });
+
+  testWidgets(
+    'multi-selection clears confirmed answers regardless of requirement',
+    (tester) async {
+      var clearCount = 0;
+      final question = _question(selectionRequired: false);
+
+      await tester.pumpWidget(
+        _setup(question, (_) {}, onCleared: () => clearCount++),
+      );
+
+      await tester.tap(find.text('A'));
+      await tester.pump();
+      await tester.tap(find.text('Confirm selection'));
+      await tester.pump();
+      await tester.tap(find.text('A'));
+      await tester.pump();
+
+      expect(clearCount, 1);
+      expect(
+        tester
+            .widget<SelectableButton>(
+              find.ancestor(
+                of: find.text('A'),
+                matching: find.byType(SelectableButton),
+              ),
+            )
+            .selected,
+        isFalse,
+      );
+    },
+  );
 }
