@@ -1993,7 +1993,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_for_food => 'Search for Food';
 
   @override
-  String get search_food_description => 'Type above to search global databases';
+  String get search_food_description =>
+      'Try “apple”, “oat milk”, or a brand name.';
 
   @override
   String get searching_databases => 'Searching databases...';
@@ -2003,6 +2004,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_results_found => 'No results found. Try different keywords.';
+
+  @override
+  String get food_search_error =>
+      'Food search is unavailable. Please try again.';
 
   @override
   String get no_matching_templates => 'No matching templates';

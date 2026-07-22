@@ -2009,7 +2009,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get search_for_food => 'Search for Food';
 
   @override
-  String get search_food_description => 'Type above to search global databases';
+  String get search_food_description =>
+      'Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.';
 
   @override
   String get searching_databases => 'Searching databases...';
@@ -2019,6 +2020,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get no_results_found => 'No results found. Try different keywords.';
+
+  @override
+  String get food_search_error =>
+      'Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.';
 
   @override
   String get no_matching_templates => 'No matching templates';

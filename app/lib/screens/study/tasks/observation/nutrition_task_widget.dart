@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -165,14 +164,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                                       true ||
                                   widget.task?.minimumMealsRequired != null))
                             _buildInstructionsCard(context, theme, l10n),
-                          _buildDateDisplayCard(
-                            context,
-                            model,
-                            recall,
-                            theme,
-                            l10n,
-                          ),
-                          const SizedBox(height: 8),
                           _buildMealsSection(
                             context,
                             model,
@@ -339,59 +330,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         ),
       ),
     );
-  }
-
-  Widget _buildDateDisplayCard(
-    BuildContext context,
-    DailyRecallEntryViewModel model,
-    DailyRecall recall,
-    ThemeData theme,
-    AppLocalizations l10n,
-  ) {
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.5,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.today_outlined,
-                size: 18,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              l10n.today,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              _formatFullDate(recall.date),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _formatFullDate(DateTime date) {
-    final locale = Localizations.localeOf(context).toString();
-    return DateFormat.yMMMd(locale).format(date);
   }
 
   Widget _buildMealsSection(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_core/core.dart';
@@ -49,6 +50,17 @@ MealLog skippedMeal({String? reason}) => MealLog(
   companyContext: CompanyContext.family,
   distractionContext: DistractionContext.phone,
   templateId: 'template',
+  foods: [testFood()],
+);
+
+MealLog editableMeal() => MealLog(
+  id: 'editable-meal',
+  mealType: MealType.other,
+  customMealLabel: 'Supper',
+  mealContext: MealContext.home,
+  timestamp: DateTime(2026, 7, 15, 20),
+  timezone: 'UTC',
+  isSkipped: false,
   foods: [testFood()],
 );
 
@@ -150,6 +162,59 @@ void main() {
 
     expect(find.byType(MealEntryScreen), findsNothing);
     expect(find.text('Open meal'), findsOneWidget);
+  });
+
+  testWidgets('food editor hides search and preserves the meal draft', (
+    tester,
+  ) async {
+    await openMealEntry(tester, editableMeal());
+
+    final customLabelField = find
+        .ancestor(
+          of: find.text('Custom Meal Label'),
+          matching: find.byType(TextField),
+        )
+        .first;
+    await tester.enterText(customLabelField, 'Edited supper');
+    await tester.pump();
+
+    await tester.drag(
+      find.byType(SingleChildScrollView),
+      const Offset(0, -250),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FoodEntryScreen), findsOneWidget);
+    expect(find.byTooltip('Search Food Database'), findsNothing);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MealEntryScreen), findsOneWidget);
+    expect(find.text('Edited supper'), findsOneWidget);
+  });
+
+  testWidgets('switching a skipped meal back clears the skip reason', (
+    tester,
+  ) async {
+    MealLog? result;
+    await openMealEntry(
+      tester,
+      skippedMeal(reason: 'Not hungry'),
+      onResult: (value) => result = value,
+    );
+
+    await tester.tap(find.text('Skipped this meal'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.isSkipped, isFalse);
+    expect(result!.skipReason, isNull);
+    expect(result!.foods, hasLength(1));
   });
 
   testWidgets('saving a skipped meal removes contradictory details', (

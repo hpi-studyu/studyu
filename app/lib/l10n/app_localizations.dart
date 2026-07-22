@@ -3770,7 +3770,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_food_description.
   ///
   /// In en, this message translates to:
-  /// **'Type above to search global databases'**
+  /// **'Try “apple”, “oat milk”, or a brand name.'**
   String get search_food_description;
 
   /// No description provided for @searching_databases.
@@ -3790,6 +3790,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No results found. Try different keywords.'**
   String get no_results_found;
+
+  /// No description provided for @food_search_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Food search is unavailable. Please try again.'**
+  String get food_search_error;
 
   /// No description provided for @no_matching_templates.
   ///

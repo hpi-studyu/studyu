@@ -14,10 +14,30 @@ import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
+typedef OpenFoodFactsSearch =
+    Future<SearchResult> Function({
+      required String query,
+      required int page,
+      required int pageSize,
+    });
+typedef UsdaFoodSearch =
+    Future<UsdaSearchResponse> Function({
+      required String query,
+      required int page,
+      required int pageSize,
+    });
+
 class FoodSearchScreen extends StatelessWidget {
   final bool allowRecipes;
+  final OpenFoodFactsSearch? openFoodFactsSearch;
+  final UsdaFoodSearch? usdaFoodSearch;
 
-  const FoodSearchScreen({this.allowRecipes = true, super.key});
+  const FoodSearchScreen({
+    this.allowRecipes = true,
+    this.openFoodFactsSearch,
+    this.usdaFoodSearch,
+    super.key,
+  });
 
   static MaterialPageRoute<studyu.FoodEntry> route({
     bool allowRecipes = true,
@@ -32,15 +52,25 @@ class FoodSearchScreen extends StatelessWidget {
 
     return ChangeNotifierProvider(
       create: (_) => TemplateViewModel(userId: userId),
-      child: _FoodSearchScreenContent(allowRecipes: allowRecipes),
+      child: _FoodSearchScreenContent(
+        allowRecipes: allowRecipes,
+        openFoodFactsSearch: openFoodFactsSearch,
+        usdaFoodSearch: usdaFoodSearch,
+      ),
     );
   }
 }
 
 class _FoodSearchScreenContent extends StatefulWidget {
   final bool allowRecipes;
+  final OpenFoodFactsSearch? openFoodFactsSearch;
+  final UsdaFoodSearch? usdaFoodSearch;
 
-  const _FoodSearchScreenContent({this.allowRecipes = true});
+  const _FoodSearchScreenContent({
+    this.allowRecipes = true,
+    this.openFoodFactsSearch,
+    this.usdaFoodSearch,
+  });
 
   @override
   State<_FoodSearchScreenContent> createState() =>
@@ -71,9 +101,13 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   bool _hasSearched = false;
   String? _errorMessage;
 
-  // Track which sources have been searched
+  // Search identity and provider state
+  int _searchGeneration = 0;
+  String _activeQuery = '';
   bool _offSearched = false;
   bool _usdaSearched = false;
+  bool _offFailed = false;
+  bool _usdaFailed = false;
 
   static const int _pageSize = 20;
 
@@ -115,196 +149,256 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   /// Debounced search - triggers after user stops typing
   void _onSearchChanged(String value, TemplateViewModel templateViewModel) {
     templateViewModel.setSearchQuery(value);
-    if (!mounted) return;
-    setState(() {});
-
     _debounceTimer?.cancel();
 
-    if (value.trim().isEmpty) {
-      if (!mounted) return;
-      setState(() {
-        _combinedResults = [];
-        _hasSearched = false;
-        _errorMessage = null;
-      });
+    final query = value.trim();
+    final generation = ++_searchGeneration;
+
+    if (!mounted) return;
+    if (query.isEmpty) {
+      _resetSearchState();
       return;
     }
 
-    _debounceTimer = Timer(_debounceDuration, () {
-      _searchFood(templateViewModel);
+    setState(() {
+      _activeQuery = '';
+    });
+    _debounceTimer = Timer(
+      _debounceDuration,
+      () => _searchFood(templateViewModel, query, generation),
+    );
+  }
+
+  void _resetSearchState() {
+    setState(() {
+      _combinedResults = [];
+      _offPage = 1;
+      _usdaPage = 1;
+      _offHasMore = true;
+      _usdaHasMore = true;
+      _isInitialLoading = false;
+      _isLoadingMore = false;
+      _hasSearched = false;
+      _errorMessage = null;
+      _activeQuery = '';
+      _offSearched = false;
+      _usdaSearched = false;
+      _offFailed = false;
+      _usdaFailed = false;
     });
   }
 
-  Future<void> _searchFood(TemplateViewModel templateViewModel) async {
-    final query = _searchController.text.trim();
+  Future<void> _searchFood(
+    TemplateViewModel templateViewModel,
+    String query,
+    int generation,
+  ) async {
+    if (!mounted || generation != _searchGeneration) return;
     templateViewModel.setSearchQuery(query);
 
-    if (query.isEmpty) {
-      if (!mounted) return;
-      setState(() {
-        _combinedResults = [];
-        _hasSearched = false;
-        _errorMessage = null;
-      });
-      return;
-    }
-
-    _offPage = 1;
-    _usdaPage = 1;
-    _offHasMore = true;
-    _usdaHasMore = true;
-    _offSearched = false;
-    _usdaSearched = false;
-
-    if (!mounted) return;
     setState(() {
+      _activeQuery = query;
+      _offPage = 1;
+      _usdaPage = 1;
+      _offHasMore = true;
+      _usdaHasMore = true;
+      _offSearched = false;
+      _usdaSearched = false;
+      _offFailed = false;
+      _usdaFailed = false;
       _isInitialLoading = true;
+      _isLoadingMore = false;
       _hasSearched = true;
       _errorMessage = null;
       _combinedResults = [];
     });
 
     await Future.wait([
-      _searchOpenFoodFacts(query, isInitial: true),
-      _searchUsda(query, isInitial: true),
+      _searchOpenFoodFacts(query, page: 1, generation: generation),
+      _searchUsda(query, page: 1, generation: generation),
     ]);
 
-    if (!mounted) return;
+    if (!mounted || generation != _searchGeneration) return;
     setState(() {
       _isInitialLoading = false;
+      if (_combinedResults.isEmpty && (_offFailed || _usdaFailed)) {
+        _errorMessage = AppLocalizations.of(context)!.food_search_error;
+      }
     });
+  }
+
+  void _retrySearch(TemplateViewModel templateViewModel) {
+    _debounceTimer?.cancel();
+    final query = _searchController.text.trim();
+    if (query.isEmpty) return;
+
+    final generation = ++_searchGeneration;
+    _searchFood(templateViewModel, query, generation);
   }
 
   Future<void> _loadMore() async {
     if (_isLoadingMore || _isInitialLoading) return;
     if (!_offHasMore && !_usdaHasMore) return;
 
-    final query = _searchController.text.trim();
-    if (query.isEmpty) return;
+    final query = _activeQuery;
+    if (query.isEmpty || query != _searchController.text.trim()) return;
+
+    final generation = _searchGeneration;
+    final offPage = _offPage;
+    final usdaPage = _usdaPage;
 
     if (!mounted) return;
     setState(() {
       _isLoadingMore = true;
     });
 
-    final futures = <Future>[];
-
+    final futures = <Future<void>>[];
     if (_offHasMore) {
-      futures.add(_searchOpenFoodFacts(query, isInitial: false));
+      futures.add(
+        _searchOpenFoodFacts(query, page: offPage, generation: generation),
+      );
     }
     if (_usdaHasMore) {
-      futures.add(_searchUsda(query, isInitial: false));
+      futures.add(_searchUsda(query, page: usdaPage, generation: generation));
     }
 
     await Future.wait(futures);
 
-    if (!mounted) return;
+    if (!mounted || generation != _searchGeneration) return;
     setState(() {
       _isLoadingMore = false;
     });
   }
 
+  Future<SearchResult> _fetchOpenFoodFacts({
+    required String query,
+    required int page,
+  }) {
+    final search = widget.openFoodFactsSearch;
+    if (search != null) {
+      return search(query: query, page: page, pageSize: _pageSize);
+    }
+
+    return OpenFoodAPIClient.searchProducts(
+      null,
+      ProductSearchQueryConfiguration(
+        parametersList: [
+          SearchTerms(terms: [query]),
+          PageNumber(page: page),
+          const PageSize(size: _pageSize),
+        ],
+        language: OpenFoodFactsLanguage.ENGLISH,
+        fields: [
+          ProductField.NAME,
+          ProductField.BRANDS,
+          ProductField.BARCODE,
+          ProductField.NUTRIMENTS,
+          ProductField.SERVING_SIZE,
+          ProductField.QUANTITY,
+          ProductField.IMAGE_FRONT_SMALL_URL,
+        ],
+        version: ProductQueryVersion.v3,
+      ),
+    );
+  }
+
+  Future<UsdaSearchResponse> _fetchUsda({
+    required String query,
+    required int page,
+  }) {
+    final search = widget.usdaFoodSearch;
+    if (search != null) {
+      return search(query: query, page: page, pageSize: _pageSize);
+    }
+
+    return UsdaApiService.searchFoods(
+      query: query,
+      pageSize: _pageSize,
+      pageNumber: page,
+    );
+  }
+
   Future<void> _searchOpenFoodFacts(
     String query, {
-    required bool isInitial,
+    required int page,
+    required int generation,
   }) async {
     try {
-      final searchResult = await OpenFoodAPIClient.searchProducts(
-        null,
-        ProductSearchQueryConfiguration(
-          parametersList: [
-            SearchTerms(terms: [query]),
-            PageNumber(page: _offPage),
-            const PageSize(size: _pageSize),
-          ],
-          language: OpenFoodFactsLanguage.ENGLISH,
-          fields: [
-            ProductField.NAME,
-            ProductField.BRANDS,
-            ProductField.BARCODE,
-            ProductField.NUTRIMENTS,
-            ProductField.SERVING_SIZE,
-            ProductField.QUANTITY,
-            ProductField.IMAGE_FRONT_SMALL_URL,
-          ],
-          version: ProductQueryVersion.v3,
-        ),
-      );
+      final searchResult = await _fetchOpenFoodFacts(query: query, page: page);
+      if (!mounted || generation != _searchGeneration) return;
 
-      _offSearched = true;
+      final products = searchResult.products ?? const <Product>[];
+      final newResults = products.map((product) {
+        final nutriments = product.nutriments;
+        final calories = nutriments?.getValue(
+          Nutrient.energyKCal,
+          PerSize.oneHundredGrams,
+        );
 
-      if (!mounted) return;
-      if (searchResult.products != null && searchResult.products!.isNotEmpty) {
-        final newResults = searchResult.products!.map((product) {
-          final nutriments = product.nutriments;
-          final calories = nutriments?.getValue(
-            Nutrient.energyKCal,
-            PerSize.oneHundredGrams,
-          );
+        return UnifiedFoodResult(
+          id: product.barcode ?? '',
+          name: product.productName ?? 'Unknown',
+          brand: product.brands,
+          imageUrl: product.imageFrontSmallUrl,
+          calories: calories,
+          source: studyu.FoodSource.openfoodfacts,
+          originalData: product,
+        );
+      }).toList();
 
-          return UnifiedFoodResult(
-            id: product.barcode ?? '',
-            name: product.productName ?? 'Unknown',
-            brand: product.brands,
-            imageUrl: product.imageFrontSmallUrl,
-            calories: calories,
-            source: studyu.FoodSource.openfoodfacts,
-            originalData: product,
-          );
-        }).toList();
-
-        setState(() {
-          _combinedResults.addAll(newResults);
-          _offPage++;
-          _offHasMore = searchResult.products!.length >= _pageSize;
-        });
-      } else {
-        setState(() {
-          _offHasMore = false;
-        });
-      }
-    } catch (e) {
-      _offSearched = true;
-      debugPrint('OpenFoodFacts error: $e');
+      setState(() {
+        _offSearched = true;
+        _offFailed = false;
+        _combinedResults.addAll(newResults);
+        _offPage = page + 1;
+        _offHasMore = products.length >= _pageSize;
+      });
+    } catch (error) {
+      if (!mounted || generation != _searchGeneration) return;
+      debugPrint('OpenFoodFacts error: $error');
+      setState(() {
+        _offSearched = true;
+        _offFailed = true;
+        _offHasMore = false;
+      });
     }
   }
 
-  Future<void> _searchUsda(String query, {required bool isInitial}) async {
+  Future<void> _searchUsda(
+    String query, {
+    required int page,
+    required int generation,
+  }) async {
     try {
-      final searchResult = await UsdaApiService.searchFoods(
-        query: query,
-        pageSize: _pageSize,
-        pageNumber: _usdaPage,
-      );
+      final searchResult = await _fetchUsda(query: query, page: page);
+      if (!mounted || generation != _searchGeneration) return;
 
-      _usdaSearched = true;
+      final newResults = searchResult.foods.map((food) {
+        return UnifiedFoodResult(
+          id: food.fdcId.toString(),
+          name: food.description ?? 'Unknown',
+          brand: food.brandOwner ?? food.brandName,
+          calories: food.energyKcal100g,
+          source: studyu.FoodSource.usda,
+          originalData: food,
+        );
+      }).toList();
 
-      if (!mounted) return;
-      if (searchResult.foods.isNotEmpty) {
-        final newResults = searchResult.foods.map((food) {
-          return UnifiedFoodResult(
-            id: food.fdcId.toString(),
-            name: food.description ?? 'Unknown',
-            brand: food.brandOwner ?? food.brandName,
-            calories: food.energyKcal100g,
-            source: studyu.FoodSource.usda,
-            originalData: food,
-          );
-        }).toList();
-
-        setState(() {
-          _combinedResults.addAll(newResults);
-          _usdaPage++;
-          _usdaHasMore = searchResult.foods.length >= _pageSize;
-        });
-      } else {
-        setState(() {
-          _usdaHasMore = false;
-        });
-      }
-    } catch (e) {
-      _usdaSearched = true;
-      debugPrint('USDA error: $e');
+      setState(() {
+        _usdaSearched = true;
+        _usdaFailed = false;
+        _combinedResults.addAll(newResults);
+        _usdaPage = page + 1;
+        _usdaHasMore = searchResult.foods.length >= _pageSize;
+      });
+    } catch (error) {
+      if (!mounted || generation != _searchGeneration) return;
+      debugPrint('USDA error: $error');
+      setState(() {
+        _usdaSearched = true;
+        _usdaFailed = true;
+        _usdaHasMore = false;
+      });
     }
   }
 
@@ -434,7 +528,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   void _navigateToEdit(studyu.FoodEntry foodEntry) {
     Navigator.push(
       context,
-      FoodEntryScreen.route(existingFood: foodEntry),
+      FoodEntryScreen.route(existingFood: foodEntry, showSearchAction: false),
     ).then((result) {
       if (result != null && mounted) {
         Navigator.pop(context, result);
@@ -443,7 +537,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _addManually() {
-    Navigator.push(context, FoodEntryScreen.route()).then((result) {
+    Navigator.push(
+      context,
+      FoodEntryScreen.route(showSearchAction: false),
+    ).then((result) {
       if (result != null && mounted) {
         Navigator.pop(context, result);
       }
@@ -482,14 +579,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
             l10n: l10n,
             onChanged: (val) => _onSearchChanged(val, templateViewModel),
             onClear: () {
-              _debounceTimer?.cancel();
               _searchController.clear();
-              templateViewModel.setSearchQuery('');
-              setState(() {
-                _combinedResults = [];
-                _hasSearched = false;
-                _errorMessage = null;
-              });
+              _onSearchChanged('', templateViewModel);
             },
           ),
 
@@ -515,6 +606,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onAddManually: _addManually,
               onCreateRecipe: _createRecipe,
               onScanBarcode: _scanBarcode,
+              onRetry: () => _retrySearch(templateViewModel),
               allowRecipes: widget.allowRecipes,
             ),
           ),
@@ -860,17 +952,25 @@ class _LoadingState extends StatelessWidget {
 
 class _ErrorMessage extends StatelessWidget {
   final String message;
+  final VoidCallback onRetry;
 
-  const _ErrorMessage({required this.message});
+  const _ErrorMessage({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(24),
-      child: Text(
-        message,
-        style: const TextStyle(color: Colors.red),
-        textAlign: TextAlign.center,
+      child: Column(
+        children: [
+          Text(
+            message,
+            style: const TextStyle(color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          FilledButton.tonal(onPressed: onRetry, child: Text(l10n.try_again)),
+        ],
       ),
     );
   }
@@ -894,18 +994,49 @@ class _EmptySectionMessage extends StatelessWidget {
   }
 }
 
+class _NoResultsState extends StatelessWidget {
+  final VoidCallback onAddManually;
+  final VoidCallback onCreateRecipe;
+  final bool allowRecipes;
+
+  const _NoResultsState({
+    required this.onAddManually,
+    required this.onCreateRecipe,
+    required this.allowRecipes,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Column(
+        children: [
+          Text(l10n.no_results_found, textAlign: TextAlign.center),
+          const SizedBox(height: 12),
+          FilledButton.tonalIcon(
+            onPressed: onAddManually,
+            icon: const Icon(Icons.edit_note_outlined),
+            label: Text(l10n.add_food_manually),
+          ),
+          if (allowRecipes) ...[
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: onCreateRecipe,
+              icon: const Icon(Icons.menu_book_outlined),
+              label: Text(l10n.create_recipe),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _InitialPrompt extends StatelessWidget {
-  final VoidCallback onManualTap;
-  final VoidCallback onRecipeTap;
-  final VoidCallback onScanTap;
   final ThemeData theme;
 
-  const _InitialPrompt({
-    required this.onManualTap,
-    required this.onRecipeTap,
-    required this.onScanTap,
-    required this.theme,
-  });
+  const _InitialPrompt({required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -941,16 +1072,12 @@ class _InitialPrompt extends StatelessWidget {
 
 class _QuickActionsCard extends StatelessWidget {
   final VoidCallback onManualTap;
-  final VoidCallback onRecipeTap;
   final VoidCallback onScanTap;
-  final bool allowRecipes;
   final ThemeData theme;
 
   const _QuickActionsCard({
     required this.onManualTap,
-    required this.onRecipeTap,
     required this.onScanTap,
-    this.allowRecipes = true,
     required this.theme,
   });
 
@@ -962,17 +1089,6 @@ class _QuickActionsCard extends StatelessWidget {
       color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Column(
         children: [
-          if (allowRecipes) ...[
-            _QuickActionTile(
-              icon: Icons.menu_book_outlined,
-              iconColor: Colors.orange,
-              title: l10n.create_recipe,
-              subtitle: l10n.create_recipe_subtitle,
-              onTap: onRecipeTap,
-              theme: theme,
-            ),
-            const Divider(height: 1, indent: 68),
-          ],
           _QuickActionTile(
             icon: Icons.edit_note_outlined,
             iconColor: Colors.purple,
@@ -1083,6 +1199,7 @@ class _FoodSearchListView extends StatelessWidget {
   final VoidCallback onAddManually;
   final VoidCallback onCreateRecipe;
   final VoidCallback onScanBarcode;
+  final VoidCallback onRetry;
   final bool allowRecipes;
 
   const _FoodSearchListView({
@@ -1105,6 +1222,7 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onAddManually,
     required this.onCreateRecipe,
     required this.onScanBarcode,
+    required this.onRetry,
     this.allowRecipes = true,
   });
 
@@ -1306,9 +1424,7 @@ class _FoodSearchListView extends StatelessWidget {
     if (index == currentIndex++) {
       return _QuickActionsCard(
         onManualTap: onAddManually,
-        onRecipeTap: onCreateRecipe,
         onScanTap: onScanBarcode,
-        allowRecipes: allowRecipes,
         theme: theme,
       );
     }
@@ -1324,18 +1440,17 @@ class _FoodSearchListView extends StatelessWidget {
       return _LoadingState(theme: theme);
     }
     if (errorMessage != null) {
-      return _ErrorMessage(message: errorMessage!);
+      return _ErrorMessage(message: errorMessage!, onRetry: onRetry);
     }
     if (!hasSearched && searchController.text.isEmpty) {
-      return _InitialPrompt(
-        onManualTap: onAddManually,
-        onRecipeTap: onCreateRecipe,
-        onScanTap: onScanBarcode,
-        theme: theme,
-      );
+      return _InitialPrompt(theme: theme);
     }
     if (combinedResults.isEmpty && hasSearched && offSearched && usdaSearched) {
-      return _EmptySectionMessage(message: l10n.no_results_found);
+      return _NoResultsState(
+        onAddManually: onAddManually,
+        onCreateRecipe: onCreateRecipe,
+        allowRecipes: allowRecipes,
+      );
     }
 
     // Results

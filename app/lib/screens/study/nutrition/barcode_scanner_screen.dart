@@ -157,7 +157,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         // Navigate to food entry screen for editing
         final editedFood = await Navigator.push(
           context,
-          FoodEntryScreen.route(existingFood: foodEntry),
+          FoodEntryScreen.route(
+            existingFood: foodEntry,
+            showSearchAction: false,
+          ),
         );
 
         if (editedFood != null && mounted) {
@@ -198,7 +201,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           // Navigate to food entry screen for editing
           final editedFood = await Navigator.push(
             context,
-            FoodEntryScreen.route(existingFood: foodEntry),
+            FoodEntryScreen.route(
+              existingFood: foodEntry,
+              showSearchAction: false,
+            ),
           );
 
           if (editedFood != null && mounted) {

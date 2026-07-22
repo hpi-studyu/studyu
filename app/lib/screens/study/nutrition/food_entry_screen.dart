@@ -14,16 +14,24 @@ class FoodEntryScreen extends StatefulWidget {
   /// Confidence score from AI analysis (0.0 to 1.0).
   /// If provided, shows a banner indicating AI-estimated values.
   final double? confidenceScore;
+  final bool showSearchAction;
 
-  const FoodEntryScreen({this.existingFood, this.confidenceScore, super.key});
+  const FoodEntryScreen({
+    this.existingFood,
+    this.confidenceScore,
+    this.showSearchAction = true,
+    super.key,
+  });
 
   static MaterialPageRoute<FoodEntry> route({
     FoodEntry? existingFood,
     double? confidenceScore,
+    bool showSearchAction = true,
   }) => MaterialPageRoute(
     builder: (_) => FoodEntryScreen(
       existingFood: existingFood,
       confidenceScore: confidenceScore,
+      showSearchAction: showSearchAction,
     ),
   );
 
@@ -165,23 +173,32 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   }
 
   void _saveFood() {
-    if (_formKey.currentState!.validate()) {
-      final nutrition = NutritionProfile(
-        energyKcal: double.tryParse(_energyController.text) ?? 0,
-        protein: double.tryParse(_proteinController.text) ?? 0,
-        carbs: double.tryParse(_carbsController.text) ?? 0,
-        fat: double.tryParse(_fatController.text) ?? 0,
-        sugars: double.tryParse(_sugarsController.text) ?? 0,
-        fiber: double.tryParse(_fiberController.text) ?? 0,
-        saturatedFat: double.tryParse(_saturatedFatController.text) ?? 0,
-        transFat: 0,
-        cholesterol: 0,
-        sodium: double.tryParse(_sodiumController.text) ?? 0,
-        waterContent: 0,
-        micros: {},
-      );
+    final food = _buildFoodEntry();
+    if (food != null) Navigator.of(context).pop(food);
+  }
 
-      final food = FoodEntry.withId(
+  FoodEntry? _buildFoodEntry() {
+    if (!_formKey.currentState!.validate()) return null;
+
+    final existingNutrition = widget.existingFood?.nutrition;
+    final nutrition = NutritionProfile(
+      energyKcal: double.tryParse(_energyController.text) ?? 0,
+      protein: double.tryParse(_proteinController.text) ?? 0,
+      carbs: double.tryParse(_carbsController.text) ?? 0,
+      fat: double.tryParse(_fatController.text) ?? 0,
+      sugars: double.tryParse(_sugarsController.text) ?? 0,
+      fiber: double.tryParse(_fiberController.text) ?? 0,
+      saturatedFat: double.tryParse(_saturatedFatController.text) ?? 0,
+      transFat: existingNutrition?.transFat ?? 0,
+      cholesterol: existingNutrition?.cholesterol ?? 0,
+      sodium: double.tryParse(_sodiumController.text) ?? 0,
+      waterContent: existingNutrition?.waterContent ?? 0,
+      micros: existingNutrition?.micros ?? {},
+    );
+
+    final existingFood = widget.existingFood;
+    if (existingFood == null) {
+      return FoodEntry.withId(
         entryType: _entryType,
         name: _nameController.text,
         brandName: _brandController.text.isEmpty ? null : _brandController.text,
@@ -207,30 +224,10 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         confidenceScore: 1.0,
         originalValues: {},
       );
-
-      Navigator.of(context).pop(food);
     }
-  }
 
-  FoodEntry? _buildFoodEntry() {
-    if (!_formKey.currentState!.validate()) return null;
-
-    final nutrition = NutritionProfile(
-      energyKcal: double.tryParse(_energyController.text) ?? 0,
-      protein: double.tryParse(_proteinController.text) ?? 0,
-      carbs: double.tryParse(_carbsController.text) ?? 0,
-      fat: double.tryParse(_fatController.text) ?? 0,
-      sugars: double.tryParse(_sugarsController.text) ?? 0,
-      fiber: double.tryParse(_fiberController.text) ?? 0,
-      saturatedFat: double.tryParse(_saturatedFatController.text) ?? 0,
-      transFat: 0,
-      cholesterol: 0,
-      sodium: double.tryParse(_sodiumController.text) ?? 0,
-      waterContent: 0,
-      micros: {},
-    );
-
-    return FoodEntry.withId(
+    return FoodEntry(
+      id: existingFood.id,
       entryType: _entryType,
       name: _nameController.text,
       brandName: _brandController.text.isEmpty ? null : _brandController.text,
@@ -252,10 +249,23 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           ? null
           : double.tryParse(_ediblePortionController.text),
       nutrition: nutrition,
-      source: _source,
-      confidenceScore: 1.0,
-      originalValues: {},
+      foodCode: existingFood.foodCode,
+      externalId: existingFood.externalId,
+      source: existingFood.source,
+      confidenceScore: existingFood.confidenceScore,
+      templateId: existingFood.templateId,
+      createdAt: existingFood.createdAt,
+      modifiedAt: DateTime.now(),
+      originalValues: existingFood.originalValues,
+      parentRecipeId: existingFood.parentRecipeId,
+      recipeMetadata: existingFood.recipeMetadata,
+      recipeIngredients: existingFood.recipeIngredients,
     );
+  }
+
+  String? get _productImageUrl {
+    final value = widget.existingFood?.originalValues['image_front_small_url'];
+    return value is String && value.trim().isNotEmpty ? value : null;
   }
 
   Future<void> _saveAsTemplate() async {
@@ -309,20 +319,21 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       appBar: AppBar(
         title: Text(isEditing ? l10n.edit_food_title : l10n.add_food_manually),
         actions: [
-          IconButton(
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                FoodSearchScreen.route(),
-              );
-              if (result != null) {
-                if (!context.mounted) return;
-                Navigator.of(context).pop(result);
-              }
-            },
-            icon: const Icon(Icons.search_outlined),
-            tooltip: l10n.search_food_database,
-          ),
+          if (widget.showSearchAction)
+            IconButton(
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  FoodSearchScreen.route(),
+                );
+                if (result != null) {
+                  if (!context.mounted) return;
+                  Navigator.of(context).pop(result);
+                }
+              },
+              icon: const Icon(Icons.search_outlined),
+              tooltip: l10n.search_food_database,
+            ),
           IconButton(
             icon: const Icon(Icons.bookmark_add_outlined),
             tooltip: l10n.save_as_template,
@@ -351,6 +362,23 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                 theme: theme,
               ),
             if (_isAiAnalyzed) const SizedBox(height: 12),
+
+            if (_productImageUrl case final imageUrl?)
+              Image.network(
+                imageUrl,
+                width: double.infinity,
+                height: 180,
+                fit: BoxFit.cover,
+                semanticLabel: widget.existingFood!.name,
+                frameBuilder: (_, child, _, _) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: child,
+                  ),
+                ),
+                errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              ),
 
             // ========== ESSENTIAL FIELDS ==========
             _EssentialFieldsCard(
@@ -517,8 +545,6 @@ class _EssentialFieldsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -558,7 +584,6 @@ class _EssentialFieldsCard extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: '${l10n.food_name} *',
                 border: const OutlineInputBorder(),
-                filled: true,
                 prefixIcon: const Icon(Icons.edit),
               ),
               autofocus: !isEditing,
@@ -582,7 +607,6 @@ class _EssentialFieldsCard extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: l10n.amount,
                       border: const OutlineInputBorder(),
-                      filled: true,
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -606,7 +630,6 @@ class _EssentialFieldsCard extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: l10n.unit,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       hintText: 'serving, cup, g...',
                     ),
                     validator: (value) {
@@ -627,7 +650,6 @@ class _EssentialFieldsCard extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: l10n.energy_kcal,
                 border: const OutlineInputBorder(),
-                filled: true,
                 prefixIcon: const Icon(Icons.local_fire_department),
                 hintText: '0',
                 suffixText: 'kcal',
@@ -674,7 +696,6 @@ class _EssentialFieldsCard extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: l10n.protein_g,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       hintText: '0',
                       suffixText: 'g',
                       contentPadding: const EdgeInsets.symmetric(
@@ -697,7 +718,6 @@ class _EssentialFieldsCard extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: l10n.carbs_g,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       hintText: '0',
                       suffixText: 'g',
                       contentPadding: const EdgeInsets.symmetric(
@@ -720,7 +740,6 @@ class _EssentialFieldsCard extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: l10n.fat_g,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       hintText: '0',
                       suffixText: 'g',
                       contentPadding: const EdgeInsets.symmetric(
@@ -772,8 +791,6 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
     final theme = Theme.of(context);
 
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
@@ -786,13 +803,15 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade700.withValues(alpha: 0.1),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.1,
+                      ),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Icon(
                       Icons.science_outlined,
                       size: 16,
-                      color: Colors.grey.shade700,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -837,7 +856,6 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.fiber_g,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             hintText: '0',
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -859,7 +877,6 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.sugars_g,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             hintText: '0',
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -885,7 +902,6 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.saturated_fat_g,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             hintText: '0',
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -907,7 +923,6 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.sodium_mg,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             hintText: '0',
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -976,8 +991,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
     final theme = Theme.of(context);
 
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
@@ -990,13 +1003,15 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade700.withValues(alpha: 0.1),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.1,
+                      ),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Icon(
                       Icons.tune_outlined,
                       size: 16,
-                      color: Colors.grey.shade700,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -1041,7 +1056,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     decoration: InputDecoration(
                       labelText: widget.l10n.entry_type,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       isDense: true,
                     ),
                     isExpanded: true,
@@ -1068,7 +1082,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                       decoration: InputDecoration(
                         labelText: widget.l10n.brand_name,
                         border: const OutlineInputBorder(),
-                        filled: true,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -1080,7 +1093,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     decoration: InputDecoration(
                       labelText: widget.l10n.description,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       hintText: widget.l10n.description_hint,
                     ),
                     maxLines: 2,
@@ -1094,7 +1106,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     decoration: InputDecoration(
                       labelText: widget.l10n.serving_size,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       suffixText: 'g',
                     ),
                     keyboardType: TextInputType.number,
@@ -1112,7 +1123,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     decoration: InputDecoration(
                       labelText: widget.l10n.portion_reference,
                       border: const OutlineInputBorder(),
-                      filled: true,
                       hintText: widget.l10n.portion_reference_hint,
                     ),
                   ),
@@ -1127,7 +1137,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.portion_estimation_method,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             isDense: true,
                           ),
                           isExpanded: true,
@@ -1150,7 +1159,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.portion_state,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             isDense: true,
                           ),
                           isExpanded: true,
@@ -1179,7 +1187,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.yield_factor,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             hintText: widget.l10n.yield_factor_hint,
                           ),
                           keyboardType: TextInputType.number,
@@ -1197,7 +1204,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                           decoration: InputDecoration(
                             labelText: widget.l10n.edible_portion,
                             border: const OutlineInputBorder(),
-                            filled: true,
                             hintText: widget.l10n.edible_portion_hint,
                           ),
                           keyboardType: TextInputType.number,

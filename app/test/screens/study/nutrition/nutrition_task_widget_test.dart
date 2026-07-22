@@ -30,13 +30,17 @@ NutritionTask nutritionTask({String? instructions, int? minimumMeals}) =>
       ..minimumMealsRequired = minimumMeals;
 
 void main() {
-  testWidgets('hides blank nutrition instructions', (tester) async {
+  testWidgets('hides blank instructions and the non-interactive date', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       nutritionTaskApp(nutritionTask(instructions: '   ')),
     );
     await tester.pump();
 
     expect(find.text('Instructions'), findsNothing);
+    expect(find.text('Today'), findsNothing);
+    expect(find.byIcon(Icons.today_outlined), findsNothing);
   });
 
   testWidgets('shows nutrition instructions without a collapsed section', (

@@ -642,5 +642,7 @@
   "discard_meal_changes_message": "Ihre Änderungen an dieser Mahlzeit gehen verloren.",
   "enter_skip_reason": "Geben Sie vor dem Speichern einen Grund ein.",
   "add_food_before_saving": "Fügen Sie vor dem Speichern mindestens ein Lebensmittel hinzu.",
-  "meal_context": "Mahlzeitenkontext"
+  "meal_context": "Mahlzeitenkontext",
+  "search_food_description": "Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.",
+  "food_search_error": "Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut."
 }

@@ -138,7 +138,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   Future<void> _editFood(FoodEntry food, int index) async {
     final result = await Navigator.of(
       context,
-    ).push(FoodEntryScreen.route(existingFood: food));
+    ).push(FoodEntryScreen.route(existingFood: food, showSearchAction: false));
     if (result != null) {
       setState(() {
         _meal.foods[index] = result;
@@ -384,6 +384,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           FoodEntryScreen.route(
             existingFood: item.foodEntry,
             confidenceScore: item.confidenceScore,
+            showSearchAction: false,
           ),
         );
         if (editedFood != null && mounted) {
@@ -413,6 +414,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           FoodEntryScreen.route(
             existingFood: item.foodEntry,
             confidenceScore: item.confidenceScore,
+            showSearchAction: false,
           ),
         );
         if (editedFood != null && mounted) {
