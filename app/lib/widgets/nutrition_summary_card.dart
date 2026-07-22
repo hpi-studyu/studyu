@@ -5,8 +5,14 @@ import 'package:studyu_core/core.dart';
 class NutritionSummaryCard extends StatelessWidget {
   final NutritionProfile nutrition;
   final String? title;
+  final String? subtitle;
 
-  const NutritionSummaryCard({required this.nutrition, this.title, super.key});
+  const NutritionSummaryCard({
+    required this.nutrition,
+    this.title,
+    this.subtitle,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,214 +21,135 @@ class NutritionSummaryCard extends StatelessWidget {
     final cardTitle = title ?? l10n.nutrition_summary;
 
     return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        leading: Icon(Icons.pie_chart, color: theme.colorScheme.primary),
+        title: Text(
+          cardTitle,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            if (subtitle != null) ...[
+              Text(subtitle!),
+              const SizedBox(height: 8),
+            ],
+            Wrap(
+              spacing: 12,
+              runSpacing: 8,
               children: [
-                Icon(Icons.pie_chart, color: theme.colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  cardTitle,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.energy_kcal, style: theme.textTheme.bodySmall),
+                    Text(
+                      '${nutrition.energyKcal.toStringAsFixed(0)} kcal',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Calories
-            _buildMainNutrient(
-              context,
-              l10n.energy_kcal,
-              nutrition.energyKcal,
-              'kcal',
-              Icons.local_fire_department,
-              Colors.orange,
-            ),
-
-            const Divider(height: 24),
-
-            // Macronutrients
-            Text(
-              l10n.macronutrients,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            Row(
-              children: [
-                Expanded(
-                  child: _buildMacroNutrient(
-                    context,
-                    l10n.protein_g,
-                    nutrition.protein,
-                    'g',
-                    Colors.blue,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.protein_g, style: theme.textTheme.bodySmall),
+                    Text(
+                      '${nutrition.protein.toStringAsFixed(1)}g',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildMacroNutrient(
-                    context,
-                    l10n.carbs_g,
-                    nutrition.carbs,
-                    'g',
-                    Colors.green,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.carbs_g, style: theme.textTheme.bodySmall),
+                    Text(
+                      '${nutrition.carbs.toStringAsFixed(1)}g',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildMacroNutrient(
-                    context,
-                    l10n.fat_g,
-                    nutrition.fat,
-                    'g',
-                    Colors.purple,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Macronutrient Distribution Chart
-            _buildMacroDistributionBar(context),
-
-            const Divider(height: 24),
-
-            // Additional Nutrients
-            ExpansionTile(
-              title: Text(l10n.detailed_nutrients),
-              leading: const Icon(Icons.more_horiz),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      _buildDetailedNutrient(
-                        l10n.fiber_g,
-                        nutrition.fiber,
-                        'g',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.fat_g, style: theme.textTheme.bodySmall),
+                    Text(
+                      '${nutrition.fat.toStringAsFixed(1)}g',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
-                      _buildDetailedNutrient(
-                        l10n.sugars_g,
-                        nutrition.sugars,
-                        'g',
-                      ),
-                      _buildDetailedNutrient(
-                        l10n.saturated_fat_g,
-                        nutrition.saturatedFat,
-                        'g',
-                      ),
-                      _buildDetailedNutrient(
-                        'Trans Fat',
-                        nutrition.transFat,
-                        'g',
-                      ),
-                      _buildDetailedNutrient(
-                        'Cholesterol',
-                        nutrition.cholesterol,
-                        'mg',
-                      ),
-                      _buildDetailedNutrient(
-                        l10n.sodium_mg,
-                        nutrition.sodium,
-                        'mg',
-                      ),
-                      _buildDetailedNutrient(
-                        'Water Content',
-                        nutrition.waterContent,
-                        'g',
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildMainNutrient(
-    BuildContext context,
-    String label,
-    double value,
-    String unit,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
         children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: color.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w500,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMacroDistributionBar(context),
+                const Divider(height: 24),
+                ExpansionTile(
+                  title: Text(l10n.detailed_nutrients),
+                  leading: const Icon(Icons.more_horiz),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          _buildDetailedNutrient(
+                            l10n.fiber_g,
+                            nutrition.fiber,
+                            'g',
+                          ),
+                          _buildDetailedNutrient(
+                            l10n.sugars_g,
+                            nutrition.sugars,
+                            'g',
+                          ),
+                          _buildDetailedNutrient(
+                            l10n.saturated_fat_g,
+                            nutrition.saturatedFat,
+                            'g',
+                          ),
+                          _buildDetailedNutrient(
+                            'Trans Fat',
+                            nutrition.transFat,
+                            'g',
+                          ),
+                          _buildDetailedNutrient(
+                            'Cholesterol',
+                            nutrition.cholesterol,
+                            'mg',
+                          ),
+                          _buildDetailedNutrient(
+                            l10n.sodium_mg,
+                            nutrition.sodium,
+                            'mg',
+                          ),
+                          _buildDetailedNutrient(
+                            'Water Content',
+                            nutrition.waterContent,
+                            'g',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                '${value.toStringAsFixed(0)} $unit',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMacroNutrient(
-    BuildContext context,
-    String label,
-    double value,
-    String unit,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${value.toStringAsFixed(1)}$unit',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
+              ],
             ),
           ),
         ],

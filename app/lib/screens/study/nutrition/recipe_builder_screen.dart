@@ -5,6 +5,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
@@ -375,6 +376,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 
     final l10n = AppLocalizations.of(context)!;
     final canSave = _nameController.text.isNotEmpty && _ingredients.isNotEmpty;
+    final servingsCount = (double.tryParse(_servingsController.text) ?? 1)
+        .toInt();
 
     return Scaffold(
       appBar: AppBar(
@@ -470,11 +473,11 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 
             // ========== NUTRITION SUMMARY ==========
             if (nutrition != null)
-              _NutritionSummaryCard(
+              NutritionSummaryCard(
                 nutrition: nutrition,
-                theme: theme,
-                servingsCount: (double.tryParse(_servingsController.text) ?? 1)
-                    .toInt(),
+                title: 'Nutrition per Serving',
+                subtitle:
+                    '$servingsCount ${servingsCount == 1 ? 'serving' : 'servings'}',
               ),
 
             // Bottom padding for FAB
@@ -1051,150 +1054,6 @@ class _IngredientCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _NutritionSummaryCard extends StatelessWidget {
-  final NutritionProfile nutrition;
-  final ThemeData theme;
-  final int servingsCount;
-
-  const _NutritionSummaryCard({
-    required this.nutrition,
-    required this.theme,
-    required this.servingsCount,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.restaurant,
-                      size: 20,
-                      color: theme.colorScheme.onPrimaryContainer,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Nutrition per Serving',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  '$servingsCount ${servingsCount == 1 ? 'serving' : 'servings'}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer.withValues(
-                      alpha: 0.7,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                _NutritionChip(
-                  label: 'Calories',
-                  value: '${nutrition.energyKcal.toStringAsFixed(0)} kcal',
-                  icon: Icons.local_fire_department,
-                  theme: theme,
-                  isPrimary: true,
-                ),
-                _NutritionChip(
-                  label: 'Protein',
-                  value: '${nutrition.protein.toStringAsFixed(1)}g',
-                  icon: Icons.egg_alt,
-                  theme: theme,
-                ),
-                _NutritionChip(
-                  label: 'Carbs',
-                  value: '${nutrition.carbs.toStringAsFixed(1)}g',
-                  icon: Icons.bakery_dining,
-                  theme: theme,
-                ),
-                _NutritionChip(
-                  label: 'Fat',
-                  value: '${nutrition.fat.toStringAsFixed(1)}g',
-                  icon: Icons.water_drop,
-                  theme: theme,
-                ),
-                _NutritionChip(
-                  label: 'Fiber',
-                  value: '${nutrition.fiber.toStringAsFixed(1)}g',
-                  icon: Icons.grass,
-                  theme: theme,
-                ),
-                _NutritionChip(
-                  label: 'Sugar',
-                  value: '${nutrition.sugars.toStringAsFixed(1)}g',
-                  icon: Icons.cake,
-                  theme: theme,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NutritionChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final ThemeData theme;
-  final bool isPrimary;
-
-  const _NutritionChip({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.theme,
-    this.isPrimary = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      avatar: Icon(
-        icon,
-        size: 16,
-        color: isPrimary
-            ? theme.colorScheme.onPrimaryContainer
-            : theme.colorScheme.onSurfaceVariant,
-      ),
-      label: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: isPrimary
-              ? theme.colorScheme.onPrimaryContainer
-              : theme.colorScheme.onSurface,
-        ),
-      ),
-      backgroundColor: isPrimary
-          ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
-          : theme.colorScheme.surfaceContainerHighest,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     );
   }
 }
