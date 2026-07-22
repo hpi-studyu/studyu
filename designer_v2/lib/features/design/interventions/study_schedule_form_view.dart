@@ -160,24 +160,29 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
                   tr.form_field_crossover_schedule_num_cycles_tooltip,
               input: Row(
                 children: [
-                  DropdownButton<int>(
-                    value: widget.formViewModel.numCyclesControl.value,
-                    onChanged: widget.formViewModel.numCyclesControl.disabled
-                        ? null
-                        : (value) {
-                            if (value != null) {
-                              widget.formViewModel.numCyclesControl.value =
-                                  value;
-                            }
-                          },
-                    items: [
-                      for (
-                        var value = StudyScheduleControls.kNumCyclesMin;
-                        value <= StudyScheduleControls.kNumCyclesMax;
-                        value++
-                      )
-                        DropdownMenuItem(value: value, child: Text('$value')),
-                    ],
+                  SizedBox(
+                    width: 70,
+                    child: DropdownButtonFormField<int>(
+                      initialValue: widget.formViewModel.numCyclesControl.value,
+                      isExpanded: true,
+                      alignment: Alignment.centerLeft,
+                      onChanged: widget.formViewModel.numCyclesControl.disabled
+                          ? null
+                          : (value) {
+                              if (value != null) {
+                                widget.formViewModel.numCyclesControl.value =
+                                    value;
+                              }
+                            },
+                      items: [
+                        for (
+                          var value = StudyScheduleControls.kNumCyclesMin;
+                          value <= StudyScheduleControls.kNumCyclesMax;
+                          value++
+                        )
+                          DropdownMenuItem(value: value, child: Text('$value')),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 8.0),
                   FormControlLabel(

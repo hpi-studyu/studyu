@@ -26,11 +26,10 @@ void main() {
 
     expect(tester.takeException(), isNull);
 
-    final cyclesDropdown = find.byWidgetPredicate(
-      (widget) => widget is DropdownButton<int>,
-    );
+    final cyclesDropdown = find.byType(DropdownButtonFormField<int>);
     expect(cyclesDropdown, findsOneWidget);
-    expect(tester.getSize(cyclesDropdown).width, lessThan(70));
+    expect(tester.getSize(cyclesDropdown).width, 70);
+    expect(tester.getSize(cyclesDropdown).height, greaterThanOrEqualTo(48));
 
     await tester.tap(cyclesDropdown);
     await tester.pumpAndSettle();
