@@ -7,6 +7,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
@@ -317,6 +318,58 @@ void main() {
 
     expect(find.byType(MealEntryScreen), findsOneWidget);
     expect(find.text('Edited supper'), findsOneWidget);
+  });
+
+  testWidgets('recipe builder return preserves and saves the meal draft', (
+    tester,
+  ) async {
+    final original = editableMeal();
+    MealLog? result;
+    await openMealEntry(tester, original, onResult: (value) => result = value);
+
+    final customLabelField = find
+        .ancestor(
+          of: find.text('Custom Meal Label'),
+          matching: find.byType(TextField),
+        )
+        .first;
+    await tester.enterText(customLabelField, 'Edited supper');
+    await tester.pump();
+
+    final addFoodButton = find.widgetWithText(FilledButton, 'Add Food');
+    await tester.ensureVisible(addFoodButton);
+    await tester.tap(addFoodButton);
+    await tester.pumpAndSettle();
+
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    final recipeResult = navigator.push<FoodEntry>(RecipeBuilderScreen.route());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RecipeBuilderScreen), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(await recipeResult, isNull);
+    expect(find.byType(RecipeBuilderScreen), findsNothing);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MealEntryScreen), findsOneWidget);
+    expect(find.text('Edited supper'), findsOneWidget);
+    expect(find.text('Apple'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.customMealLabel, 'Edited supper');
+    expect(result!.foods, hasLength(1));
+    expect(result!.foods.single.id, 'food');
+    expect(result!.foods.single.name, 'Apple');
+    expect(original.customMealLabel, 'Supper');
+    expect(original.foods, hasLength(1));
   });
 
   testWidgets('template return preserves and saves the meal draft', (
