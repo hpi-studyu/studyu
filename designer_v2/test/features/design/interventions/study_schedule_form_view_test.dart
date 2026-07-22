@@ -30,6 +30,7 @@ void main() {
       (widget) => widget is DropdownButton<int>,
     );
     expect(cyclesDropdown, findsOneWidget);
+    expect(tester.getSize(cyclesDropdown).width, lessThan(70));
 
     await tester.tap(cyclesDropdown);
     await tester.pumpAndSettle();
