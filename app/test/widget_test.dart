@@ -18,6 +18,7 @@ import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
+import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase/supabase.dart';
 
@@ -39,6 +40,13 @@ Widget setup(Widget child, {AppState? appState}) {
           GoRoute(
             path: '/${RouteNames.terms}',
             builder: (_, _) => const TermsScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.studySelection}',
+            builder: (_, _) => const Text(
+              'Study selection',
+              key: ValueKey('study_selection_test_screen'),
+            ),
           ),
           GoRoute(
             path: '/${RouteNames.restoreAccount}',
@@ -70,21 +78,117 @@ void main() {
       supabaseClient: SupabaseClient('https://example.supabase.co', 'test'),
     );
   });
-  testWidgets('Counter increments smoke test', (tester) async {
+  testWidgets('welcome prioritizes study discovery', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Get started'), findsOneWidget);
+    expect(find.text('Take part in a study'), findsOneWidget);
+    final heading = tester.widget<Text>(find.text('Take part in a study'));
+    expect(heading.style?.fontWeight, isNot(FontWeight.w600));
+    expect(find.text('Made with ♥ in Potsdam'), findsOneWidget);
+    expect(
+      find.text('Choose a public study or use an invitation.'),
+      findsNothing,
+    );
+    expect(
+      find.widgetWithText(FilledButton, 'Browse public studies'),
+      findsOneWidget,
+    );
+    expect(
+      find.widgetWithText(OutlinedButton, 'Join with an invite code'),
+      findsOneWidget,
+    );
+    expect(
+      find.widgetWithText(OutlinedButton, 'Restore StudyU account'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('restore account opens restore account route', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Restore account'));
+    await tester.tap(find.text('Restore StudyU account'));
     await tester.pumpAndSettle();
 
     expect(find.byType(RestoreAccountScreen), findsOneWidget);
+  });
+
+  testWidgets('browse action opens study selection directly', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_get_started')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('study_selection_test_screen')),
+      findsOneWidget,
+    );
+    expect(find.byType(TermsScreen), findsNothing);
+  });
+
+  testWidgets('study selection uses top app bar navigation', (tester) async {
+    await tester.pumpWidget(setup(const StudySelectionScreen()));
+    await tester.pump();
+
+    expect(
+      find.widgetWithText(AppBar, 'Browse public studies'),
+      findsOneWidget,
+    );
+    expect(find.byType(BackButton), findsOneWidget);
+    expect(find.text('Please select a study.'), findsNothing);
+    expect(find.widgetWithText(TextButton, 'Back'), findsNothing);
+    expect(
+      find.widgetWithText(OutlinedButton, 'Join with an invite code'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('study_selection_invite_code')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(InviteCodeDialog), findsOneWidget);
+  });
+
+  testWidgets(
+    'study selection shows an alternative when no public studies exist',
+    (tester) async {
+      await tester.pumpWidget(
+        setup(
+          StudySelectionScreen(
+            publicStudies: Future.value(ExtractionSuccess<Study>([])),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NoPublicStudiesWidget), findsOneWidget);
+      expect(
+        find.text(
+          'There are currently no public studies available. If you have an invite code, you can still join a private study.',
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets('invite action opens invite code dialog over welcome', (
+    tester,
+  ) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_use_invite_code')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(find.byType(InviteCodeDialog), findsOneWidget);
+    expect(find.text('Join a study with an invite code'), findsOneWidget);
+    expect(
+      find.text('Enter the code shared by your study team.'),
+      findsOneWidget,
+    );
+    expect(find.byType(TermsScreen), findsNothing);
   });
 
   test('restore account route is registered by name', () {
@@ -151,49 +255,6 @@ void main() {
     expect(shouldMarkDashboardShowcaseCompleted(wasStarted: true), isTrue);
   });
 
-  test('terms continue returns to invite overview when invite is selected', () {
-    final appState = AppState()
-      ..selectedStudy = Study('study-1', 'owner-1')
-      ..inviteCode = 'invite-1';
-
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(appState),
-      '/${RouteNames.studyOverview}',
-    );
-  });
-
-  test('terms continue returns to overview after accepted invite back', () {
-    final appState = AppState()..selectedStudy = Study('study-1', 'owner-1');
-
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(appState),
-      '/${RouteNames.studyOverview}',
-    );
-  });
-
-  test('terms back clears pending invite flow', () {
-    final appState = AppState()
-      ..setPendingDeepLink(
-        study: Study('study-1', 'owner-1'),
-        inviteCode: 'invite-1',
-      );
-
-    expect(shouldClearInviteOnTermsBack(appState), isTrue);
-  });
-
-  test('terms continue opens study selection after invite decline', () {
-    final appState = AppState()
-      ..selectedStudy = Study('study-1', 'owner-1')
-      ..inviteCode = 'invite-1';
-    appState.selectedStudy = null;
-    appState.inviteCode = null;
-
-    expect(
-      routeAfterTermsWithoutPendingDeepLink(appState),
-      '/${RouteNames.studySelection}',
-    );
-  });
-
   test('skips onboarding in debug mode', () {
     expect(
       initialRouteForMissingSubjectRoute(
@@ -205,19 +266,16 @@ void main() {
     );
   });
 
-  testWidgets('debug button opens onboarding', (tester) async {
+  testWidgets('welcome keeps debug controls out of the entry hub', (
+    tester,
+  ) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    final button = find.byKey(const ValueKey('welcome_debug_onboarding'));
-    expect(find.text('Show onboarding'), findsOneWidget);
-
-    await tester.tap(button);
-    await tester.pumpAndSettle();
-
-    final onboarding = find.byKey(const ValueKey('onboarding_test_screen'));
-    expect(onboarding, findsOneWidget);
-    expect(GoRouter.of(tester.element(onboarding)).canPop(), isFalse);
+    expect(
+      find.byKey(const ValueKey('welcome_debug_onboarding')),
+      findsNothing,
+    );
   });
 
   testWidgets('terms back falls back to welcome without previous screen', (
@@ -232,25 +290,33 @@ void main() {
     expect(find.byType(WelcomeScreen), findsOneWidget);
   });
 
-  testWidgets('terms back pops to welcome when available', (tester) async {
-    await tester.pumpWidget(setup(const WelcomeScreen()));
+  testWidgets('terms back preserves pending invite state', (tester) async {
+    final study = Study('study-1', 'owner-1')..title = 'Study';
+    final appState = AppState()
+      ..setPendingDeepLink(study: study, inviteCode: 'invite-1');
+    const overview = Text('Study overview');
+    await tester.pumpWidget(setup(overview, appState: appState));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('welcome_get_started')));
+    GoRouter.of(
+      tester.element(find.byWidget(overview)),
+    ).push('/${RouteNames.terms}');
     await tester.pumpAndSettle();
-    expect(find.byType(TermsScreen), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('terms_back')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(appState.hasPendingDeepLink, isTrue);
+    expect(appState.selectedStudy, same(study));
   });
 
-  testWidgets('about get started replaces about before terms', (tester) async {
+  testWidgets('about get started opens study selection', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('welcome_about')));
+    final about = find.byKey(const ValueKey('welcome_about'));
+    await tester.ensureVisible(about);
+    await tester.tap(about);
     await tester.pumpAndSettle();
     expect(find.byType(AboutScreen), findsOneWidget);
 
@@ -259,12 +325,12 @@ void main() {
     await tester.ensureVisible(find.text('Get started'));
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
-    expect(find.byType(TermsScreen), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('terms_back')));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('study_selection_test_screen')),
+      findsOneWidget,
+    );
+    expect(find.byType(TermsScreen), findsNothing);
     expect(find.byType(AboutScreen), findsNothing);
   });
 }

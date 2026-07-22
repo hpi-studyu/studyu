@@ -17,6 +17,7 @@ import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.da
 import 'package:studyu_app/screens/study/dashboard/contact_tab/faq.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_app/screens/study/dashboard/settings.dart';
+import 'package:studyu_app/screens/study/dashboard/study_information.dart';
 import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/consent.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
@@ -51,6 +52,7 @@ class RouteNames {
   static const String consent = 'consent';
   static const String kickoff = 'kickoff';
   static const String contact = 'contact';
+  static const String studyInformation = 'studyInformation';
   static const String faq = 'faq';
   static const String appSettings = 'settings';
   static const String questionnaire = 'questionnaire';
@@ -184,7 +186,17 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.terms}',
         name: RouteNames.terms,
-        builder: (context, state) => const TermsScreen(),
+        builder: (context, state) {
+          final arguments = state.extra;
+          return TermsScreen(
+            isPushed: arguments == true || arguments is TermsScreenArguments
+                ? true
+                : null,
+            onAccepted: arguments is TermsScreenArguments
+                ? arguments.onAccepted
+                : null,
+          );
+        },
       ),
       GoRoute(
         path: '/${RouteNames.recoveryPhrase}',
@@ -230,6 +242,11 @@ GoRouter createAppRouter({
         path: '/${RouteNames.contact}',
         name: RouteNames.contact,
         builder: (context, state) => const ContactScreen(),
+      ),
+      GoRoute(
+        path: '/${RouteNames.studyInformation}',
+        name: RouteNames.studyInformation,
+        builder: (context, state) => const StudyInformationScreen(),
       ),
       GoRoute(
         path: '/${RouteNames.faq}',

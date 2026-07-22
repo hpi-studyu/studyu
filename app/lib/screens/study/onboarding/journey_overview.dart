@@ -8,6 +8,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -40,7 +41,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
           content: Text(
             AppLocalizations.of(context)!.user_did_not_give_consent,
           ),
-          duration: const Duration(seconds: 30),
         ),
       );
       context.go('/${RouteNames.studySelection}');
@@ -56,14 +56,21 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.your_journey)),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations.of(context)!.your_journey),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                //StudyTile.fromUserStudy(study: study),
+                StudyOnboardingDescription(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.journey_overview_description,
+                ),
                 Timeline(subject: subject),
               ],
             ),
