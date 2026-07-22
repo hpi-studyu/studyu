@@ -436,7 +436,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     final canSave =
@@ -491,6 +490,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                             controller: _skipReasonController,
                             decoration: InputDecoration(
                               labelText: l10n.reason_for_skipping,
+                              errorText: _skipReason?.trim().isNotEmpty == true
+                                  ? null
+                                  : l10n.enter_skip_reason,
                               border: const OutlineInputBorder(),
                             ),
                             onChanged: (value) {
@@ -580,17 +582,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (!canSave) ...[
-                  Text(
-                    _isSkipped
-                        ? l10n.enter_skip_reason
-                        : l10n.add_food_before_saving,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.error,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
@@ -991,6 +982,13 @@ class _EmptyFoodState extends StatelessWidget {
               l10n.tap_to_add_food,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.add_food_before_saving,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.error,
               ),
             ),
           ],

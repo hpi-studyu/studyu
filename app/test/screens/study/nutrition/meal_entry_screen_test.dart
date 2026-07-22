@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
 FoodEntry testFood() => FoodEntry(
@@ -53,6 +57,17 @@ MealLog skippedMeal({String? reason}) => MealLog(
   foods: [testFood()],
 );
 
+MealLog emptyMeal() => MealLog(
+  id: 'empty-meal',
+  mealType: MealType.other,
+  customMealLabel: 'Supper',
+  mealContext: MealContext.home,
+  timestamp: DateTime(2026, 7, 15, 20),
+  timezone: 'UTC',
+  isSkipped: false,
+  foods: [],
+);
+
 MealLog editableMeal() => MealLog(
   id: 'editable-meal',
   mealType: MealType.other,
@@ -70,23 +85,26 @@ Future<void> openMealEntry(
   ValueChanged<MealLog?>? onResult,
 }) async {
   await tester.pumpWidget(
-    MaterialApp(
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      locale: const Locale('en'),
-      home: Builder(
-        builder: (context) => Scaffold(
-          body: Center(
-            child: FilledButton(
-              onPressed: () async {
-                final result = await Navigator.of(context).push<MealLog>(
-                  MaterialPageRoute(
-                    builder: (_) => MealEntryScreen(existingMeal: meal),
-                  ),
-                );
-                onResult?.call(result);
-              },
-              child: const Text('Open meal'),
+    ChangeNotifierProvider(
+      create: (_) => AppState(),
+      child: MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: FilledButton(
+                onPressed: () async {
+                  final result = await Navigator.of(context).push<MealLog>(
+                    MaterialPageRoute(
+                      builder: (_) => MealEntryScreen(existingMeal: meal),
+                    ),
+                  );
+                  onResult?.call(result);
+                },
+                child: const Text('Open meal'),
+              ),
             ),
           ),
         ),
@@ -98,6 +116,8 @@ Future<void> openMealEntry(
 }
 
 void main() {
+  setUp(() => SharedPreferences.setMockInitialValues({}));
+
   test('meal clone does not share nested food metadata', () {
     final original = skippedMeal();
     final clone = cloneMealLog(original);
@@ -121,6 +141,8 @@ void main() {
     expect(find.text('Reason for skipping'), findsOneWidget);
     expect(find.text('Meal Type'), findsNothing);
     expect(find.text('Meal context'), findsNothing);
+    var reasonField = tester.widget<TextField>(find.byType(TextField));
+    expect(reasonField.decoration?.errorText, 'Enter a reason before saving.');
 
     var saveButton = tester.widget<FilledButton>(
       find.widgetWithText(FilledButton, 'Save'),
@@ -130,11 +152,65 @@ void main() {
     await tester.enterText(find.byType(TextField), 'Not hungry');
     await tester.pump();
 
+    reasonField = tester.widget<TextField>(find.byType(TextField));
+    expect(reasonField.decoration?.errorText, isNull);
     saveButton = tester.widget<FilledButton>(
       find.widgetWithText(FilledButton, 'Save'),
     );
     expect(saveButton.onPressed, isNotNull);
   });
+
+  testWidgets(
+    'empty meal keeps validation beside food and does not auto-save',
+    (tester) async {
+      MealLog? result;
+      await openMealEntry(
+        tester,
+        emptyMeal(),
+        onResult: (value) => result = value,
+      );
+
+      final emptyFoodState = find.ancestor(
+        of: find.text('Tap to add food'),
+        matching: find.byType(InkWell),
+      );
+      expect(
+        find.descendant(
+          of: emptyFoodState,
+          matching: find.text('Add at least one food item before saving.'),
+        ),
+        findsOneWidget,
+      );
+      var saveButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Save'),
+      );
+      expect(saveButton.onPressed, isNull);
+
+      await tester.tap(find.text('Skipped this meal'));
+      await tester.pump();
+
+      expect(result, isNull);
+      expect(find.byType(MealEntryScreen), findsOneWidget);
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).decoration?.errorText,
+        'Enter a reason before saving.',
+      );
+      saveButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Save'),
+      );
+      expect(saveButton.onPressed, isNull);
+
+      await tester.enterText(find.byType(TextField), 'Not hungry');
+      await tester.pump();
+
+      expect(result, isNull);
+      expect(find.byType(MealEntryScreen), findsOneWidget);
+      saveButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Save'),
+      );
+      expect(saveButton.onPressed, isNotNull);
+    },
+  );
 
   testWidgets('back asks before discarding changed meal', (tester) async {
     await openMealEntry(tester, skippedMeal());
@@ -194,6 +270,61 @@ void main() {
 
     expect(find.byType(MealEntryScreen), findsOneWidget);
     expect(find.text('Edited supper'), findsOneWidget);
+  });
+
+  testWidgets('template return preserves and saves the meal draft', (
+    tester,
+  ) async {
+    final prototype = FoodEntry.fromJson(testFood().toJson())
+      ..id = 'saved-food-prototype'
+      ..name = 'Saved Pear';
+    await TemplateStorageManager().saveFoodTemplate(
+      SavedFoodTemplate(
+        id: 'saved-food-template',
+        userId: 'anonymous',
+        name: 'Saved Pear Template',
+        isPublic: false,
+        createdAt: DateTime(2026, 7, 15),
+        prototype: prototype,
+      ),
+    );
+    final original = editableMeal();
+    MealLog? result;
+    await openMealEntry(tester, original, onResult: (value) => result = value);
+
+    final customLabelField = find
+        .ancestor(
+          of: find.text('Custom Meal Label'),
+          matching: find.byType(TextField),
+        )
+        .first;
+    await tester.enterText(customLabelField, 'Edited supper');
+    await tester.pump();
+    await tester.ensureVisible(find.byTooltip('From Template'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('From Template'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Saved Pear Template'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edited supper'), findsOneWidget);
+    expect(find.text('Apple'), findsOneWidget);
+    expect(find.text('Saved Pear'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.customMealLabel, 'Edited supper');
+    expect(result!.foods, hasLength(2));
+    expect(result!.foods.first.id, 'food');
+    expect(result!.foods.first.name, 'Apple');
+    expect(result!.foods.last.id, isNot(prototype.id));
+    expect(result!.foods.last.name, 'Saved Pear');
+    expect(result!.foods.last.templateId, 'saved-food-template');
+    expect(original.customMealLabel, 'Supper');
+    expect(original.foods, hasLength(1));
   });
 
   testWidgets('switching a skipped meal back clears the skip reason', (
