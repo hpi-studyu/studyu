@@ -43,6 +43,22 @@ void main() {
     expect(find.byIcon(Icons.today_outlined), findsNothing);
   });
 
+  testWidgets('empty meal surface is a passive native card', (tester) async {
+    await tester.pumpWidget(nutritionTaskApp(nutritionTask()));
+    await tester.pump();
+
+    final emptyLabel = find.text('No meals recorded yet');
+    final emptyCard = find.byType(Card);
+
+    expect(emptyLabel, findsOneWidget);
+    expect(emptyCard, findsOneWidget);
+    expect(tester.widget<Card>(emptyCard).color, isNull);
+    expect(
+      find.ancestor(of: emptyLabel, matching: find.byType(InkWell)),
+      findsNothing,
+    );
+  });
+
   testWidgets('shows nutrition instructions without a collapsed section', (
     tester,
   ) async {

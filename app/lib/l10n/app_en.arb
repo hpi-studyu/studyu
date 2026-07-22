@@ -828,7 +828,7 @@
   "no_data_yet": "No data yet",
   "start_tracking_nutrition": "Start tracking your nutrition by adding meals",
   "photoRecallTitle": "Photo Recall",
-  "photoRecallSubtitle": "View photos from around this time",
+  "photoRecallSubtitle": "Use photos from around this time to remember what you ate.",
   "photoRecallPermissionNeeded": "Tap to enable photo access",
   "photoRecallPermissionTitle": "Enable Photo Access",
   "photoRecallPermissionDescription": "Access to your photos helps you recall what you ate. Photos are only displayed on your device.",

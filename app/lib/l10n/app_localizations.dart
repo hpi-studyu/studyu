@@ -3872,7 +3872,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoRecallSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'View photos from around this time'**
+  /// **'Use photos from around this time to remember what you ate.'**
   String get photoRecallSubtitle;
 
   /// No description provided for @photoRecallPermissionNeeded.

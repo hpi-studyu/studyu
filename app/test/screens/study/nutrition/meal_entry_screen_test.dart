@@ -174,6 +174,15 @@ void main() {
         of: find.text('Tap to add food'),
         matching: find.byType(InkWell),
       );
+      expect(emptyFoodState, findsOneWidget);
+      expect(tester.widget<InkWell>(emptyFoodState).onTap, isNotNull);
+      expect(
+        find.ancestor(
+          of: find.text('Tap to add food'),
+          matching: find.byType(Card),
+        ),
+        findsOneWidget,
+      );
       expect(
         find.descendant(
           of: emptyFoodState,
@@ -211,6 +220,44 @@ void main() {
       expect(saveButton.onPressed, isNotNull);
     },
   );
+
+  testWidgets('meal fields cards and chips use native theme defaults', (
+    tester,
+  ) async {
+    await openMealEntry(tester, editableMeal());
+
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is TextField &&
+            (widget.decoration?.filled == true ||
+                widget.decoration?.fillColor != null),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DropdownButtonFormField &&
+            (widget.decoration.filled == true ||
+                widget.decoration.fillColor != null),
+      ),
+      findsNothing,
+    );
+
+    for (final chip in tester.widgetList<FilterChip>(find.byType(FilterChip))) {
+      expect(chip.backgroundColor, isNull);
+      expect(chip.selectedColor, isNull);
+      expect(chip.checkmarkColor, isNull);
+    }
+
+    for (final label in ['Meal Type', 'Time', 'Apple', 'Photo Recall']) {
+      final card = tester.widget<Card>(
+        find.ancestor(of: find.text(label), matching: find.byType(Card)).first,
+      );
+      expect(card.color, isNull);
+    }
+  });
 
   testWidgets('back asks before discarding changed meal', (tester) async {
     await openMealEntry(tester, skippedMeal());

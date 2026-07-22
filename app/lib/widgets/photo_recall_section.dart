@@ -109,8 +109,6 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
 
   Widget _buildCollapsedCard(ThemeData theme, AppLocalizations l10n) {
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: InkWell(
         onTap: () => setState(() => _isExpanded = true),
         borderRadius: BorderRadius.circular(12),
@@ -121,9 +119,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.secondaryContainer.withValues(
-                    alpha: 0.5,
-                  ),
+                  color: theme.colorScheme.secondaryContainer,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -168,8 +164,6 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
 
   Widget _buildExpandedCard(ThemeData theme, AppLocalizations l10n) {
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -184,9 +178,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer.withValues(
-                        alpha: 0.5,
-                      ),
+                      color: theme.colorScheme.secondaryContainer,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -304,36 +296,34 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
   }
 
   Widget _buildEmptyState(ThemeData theme, AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.hide_image_outlined,
-            size: 48,
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.photoRecallNoPhotos,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l10n.photoRecallNoPhotosSubtitle,
-            style: theme.textTheme.bodySmall?.copyWith(
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            Icon(
+              Icons.hide_image_outlined,
+              size: 48,
               color: theme.colorScheme.onSurfaceVariant,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 12),
+            Text(
+              l10n.photoRecallNoPhotos,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.photoRecallNoPhotosSubtitle,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

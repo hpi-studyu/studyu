@@ -2071,7 +2071,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get photoRecallTitle => 'Foto-Erinnerung';
 
   @override
-  String get photoRecallSubtitle => 'Fotos von dieser Zeit ansehen';
+  String get photoRecallSubtitle =>
+      'Nutzen Sie Fotos aus dieser Zeit, um sich daran zu erinnern, was Sie gegessen haben.';
 
   @override
   String get photoRecallPermissionNeeded =>

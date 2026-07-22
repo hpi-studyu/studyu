@@ -612,7 +612,7 @@
   "rename_template": "Vorlage umbenennen",
   "new_name": "Neuer Name",
   "photoRecallTitle": "Foto-Erinnerung",
-  "photoRecallSubtitle": "Fotos von dieser Zeit ansehen",
+  "photoRecallSubtitle": "Nutzen Sie Fotos aus dieser Zeit, um sich daran zu erinnern, was Sie gegessen haben.",
   "photoRecallPermissionNeeded": "Tippen, um Fotozugriff zu aktivieren",
   "photoRecallPermissionTitle": "Fotozugriff aktivieren",
   "photoRecallPermissionDescription": "Der Zugriff auf Ihre Fotos hilft Ihnen, sich an das Gegessene zu erinnern. Fotos werden nur auf Ihrem Gerät angezeigt.",

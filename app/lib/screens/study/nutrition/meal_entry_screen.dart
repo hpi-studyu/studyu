@@ -471,7 +471,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
-                elevation: 0,
                 child: Padding(
                   padding: const EdgeInsets.all(4),
                   child: Column(
@@ -624,8 +623,6 @@ class _MealTypeSelector extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Card(
-        elevation: 0,
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -679,7 +676,6 @@ class _MealTypeSelector extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      filled: true,
                     ),
                     onChanged: onCustomLabelChanged,
                   ),
@@ -724,28 +720,12 @@ class _MealTypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return FilterChip(
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onSelect(),
-      backgroundColor: theme.colorScheme.surface,
-      selectedColor: theme.colorScheme.primaryContainer,
-      checkmarkColor: theme.colorScheme.onPrimaryContainer,
       labelStyle: TextStyle(
-        color: isSelected
-            ? theme.colorScheme.onPrimaryContainer
-            : theme.colorScheme.onSurfaceVariant,
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isSelected
-              ? theme.colorScheme.primary
-              : theme.colorScheme.outline.withValues(alpha: 0.5),
-        ),
       ),
     );
   }
@@ -766,8 +746,6 @@ class _TimeSelector extends StatelessWidget {
       onTap: onSelectTime,
       borderRadius: BorderRadius.circular(16),
       child: Card(
-        elevation: 0,
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -775,9 +753,7 @@ class _TimeSelector extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withValues(
-                    alpha: 0.5,
-                  ),
+                  color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -937,61 +913,53 @@ class _EmptyFoodState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onAddFood,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(
-            alpha: 0.3,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
-            width: 2,
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.5,
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onAddFood,
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    size: 36,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.add_circle_outline,
-                size: 36,
-                color: theme.colorScheme.primary,
-              ),
+                const SizedBox(height: 12),
+                Text(
+                  l10n.add_food,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.tap_to_add_food,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.add_food_before_saving,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              l10n.add_food,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              l10n.tap_to_add_food,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.add_food_before_saving,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -1026,8 +994,6 @@ class _FoodCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -1190,8 +1156,6 @@ class _MealOptionsCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -1223,7 +1187,6 @@ class _MealOptionsCard extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  filled: true,
                 ),
                 onChanged: onLocationDescriptionChanged,
               ),
@@ -1328,7 +1291,6 @@ class _DropdownField<T> extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        filled: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
       items: items

@@ -298,7 +298,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     final instructions = widget.task?.instructions?.trim();
 
     return Card(
-      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -550,42 +549,42 @@ class _EmptyMealsState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.restaurant_outlined,
-              size: 32,
-              color: theme.colorScheme.primary,
-            ),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.restaurant_outlined,
+                  size: 32,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                l10n.no_meals_recorded,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                l10n.tap_to_add_first_meal,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.no_meals_recorded,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l10n.tap_to_add_first_meal,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -617,8 +616,6 @@ class _MealCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
