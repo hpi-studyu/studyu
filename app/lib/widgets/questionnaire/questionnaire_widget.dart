@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -22,6 +23,8 @@ class QuestionnaireWidget extends StatefulWidget {
   /// When true, the global CTA shows a loading spinner and is disabled.
   /// The parent sets this while it processes a completed submission.
   final bool isSubmitting;
+  final bool hideCta;
+  final bool autoComplete;
 
   const QuestionnaireWidget(
     this.questions, {
@@ -32,6 +35,8 @@ class QuestionnaireWidget extends StatefulWidget {
     this.onComplete,
     this.shouldContinue,
     this.isSubmitting = false,
+    this.hideCta = false,
+    this.autoComplete = false,
     super.key,
   });
 
@@ -44,16 +49,23 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
   final List<GlobalKey> questionKeys = <GlobalKey>[];
   final _scrollController = ScrollController();
+  final _completeButtonFocusNode = FocusNode(
+    debugLabel: 'questionnaire_complete',
+  );
   bool _isProgrammaticScroll = false;
 
   // Stable keys reused across rebuilds to preserve widget state.
   final Map<String, GlobalKey> _containerKeys = {};
   final Map<String, GlobalKey<FreeTextQuestionWidgetState>> _freeTextKeys = {};
   final Set<String> _shownReviewErrors = {};
+  final Set<String> _reviewedAnswerIds = {};
 
   QuestionnaireState? validateSyncAndBuildPayload() {
     final containersAtClick = List<QuestionContainer>.of(shownQuestions);
     final renderKeysAtClick = List<GlobalKey>.of(questionKeys);
+    final visibleBeforeCommit = _controller.visibleQuestions
+        .map((question) => question.id)
+        .toList(growable: false);
 
     // Commit all visible free-text drafts. The controller validates drafts
     // and returns the first validation error, or null if all are valid.
@@ -82,19 +94,36 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       }
     }
 
-    // Check non-free-text questions have answers.
-    int? firstInvalidIndex;
-    for (int i = 0; i < containersAtClick.length; i++) {
-      final questionId = containersAtClick[i].question.id;
-      final isFreeText = containersAtClick[i].question is FreeTextQuestion;
-      if (!isFreeText && _controller.answerFor(questionId) == null) {
-        firstInvalidIndex = i;
-        break;
-      }
+    final visibleAfterCommit = _controller.visibleQuestions;
+    final visibleAfterCommitIds = visibleAfterCommit
+        .map((question) => question.id)
+        .toList(growable: false);
+
+    // Applying a branch change is a progression step, not completion. Rebuild
+    // first so newly required questions are rendered before another attempt.
+    if (!listEquals(visibleBeforeCommit, visibleAfterCommitIds)) {
+      setState(() => _rebuildShownQuestionsFromController());
+      _controller.markRestoredVisibleAnswersNeedingReview(
+        visibleBeforeCommit.toSet(),
+      );
+      _scrollToNewQuestion();
+      return null;
     }
 
-    if (firstInvalidIndex != null) {
-      _scrollToQuestion(renderKeysAtClick[firstInvalidIndex]);
+    final firstUnanswered = visibleAfterCommit.indexWhere(
+      (question) => _controller.answerFor(question.id) == null,
+    );
+    if (firstUnanswered >= 0) {
+      final questionId = visibleAfterCommit[firstUnanswered].id;
+      final shownIndex = containersAtClick.indexWhere(
+        (container) => container.question.id == questionId,
+      );
+      if (shownIndex >= 0) {
+        _scrollToQuestion(renderKeysAtClick[shownIndex]);
+      } else {
+        setState(() => _rebuildShownQuestionsFromController());
+        _scrollToNewQuestion();
+      }
       return null;
     }
 
@@ -166,6 +195,19 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     widget.onComplete?.call(result);
   }
 
+  bool _autoCompleteIfReady() {
+    if (!widget.autoComplete ||
+        _controller.ctaModeFor(shownQuestions.map((c) => c.question)) !=
+            QuestionnaireCtaMode.complete) {
+      return false;
+    }
+
+    final payload = validateSyncAndBuildPayload();
+    if (payload == null) return false;
+    _finishQuestionnaire(payload);
+    return true;
+  }
+
   void _handleGlobalCtaPressed() {
     // Capture CTA mode before committing — a "Continue" press must never
     // submit; it only advances and reveals the next step.
@@ -195,7 +237,10 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _onQuestionCleared(String questionId) {
     _controller.removeAnswer(questionId);
-    setState(() => _rebuildShownQuestionsFromController(revealNext: false));
+    setState(() {
+      _reviewedAnswerIds.remove(questionId);
+      _rebuildShownQuestionsFromController(revealNext: false);
+    });
     _finishQuestionnaire(null);
   }
 
@@ -293,6 +338,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int _) {
+    _reviewedAnswerIds.remove(answer.question);
     _controller.submitAnswer(answer);
 
     // Check shouldContinue before revealing new questions in the UI.
@@ -315,13 +361,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     _controller.markRestoredVisibleAnswersNeedingReview(visibleBeforeRebuild);
 
     if (_controller.allVisibleQuestionsAnswered) {
-      _scrollToNewQuestion();
-    } else {
-      if (_controller.hasConditionalDependents(answer.question)) {
-        _finishQuestionnaire(null);
-      }
-      _scrollToNewQuestion();
+      if (_autoCompleteIfReady()) return;
+    } else if (_controller.hasConditionalDependents(answer.question)) {
+      _finishQuestionnaire(null);
     }
+    _scrollToNewQuestion();
   }
 
   void _scrollToNewQuestion() {
@@ -383,6 +427,7 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _completeButtonFocusNode.dispose();
     _controller.removeListener(_onControllerChanged);
     _controller.dispose();
     super.dispose();
@@ -412,7 +457,10 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     final ctaMode = _controller.ctaModeFor(
       shownQuestions.map((c) => c.question),
     );
-    final showCta = ctaMode != QuestionnaireCtaMode.hidden;
+    final showCta =
+        !widget.autoComplete &&
+        !widget.hideCta &&
+        ctaMode != QuestionnaireCtaMode.hidden;
 
     return Column(
       children: [
@@ -439,7 +487,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                       children: [
                         question,
                         if (_controller.needsReview(question.question.id))
-                          _buildReviewRequiredBanner(question.question.id),
+                          _buildReviewRequiredNotice(question.question.id)
+                        else if (_reviewedAnswerIds.contains(
+                          question.question.id,
+                        ))
+                          _buildAnswerReviewedNotice(),
                       ],
                     ),
                   ),
@@ -456,56 +508,105 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     );
   }
 
-  Widget _buildReviewRequiredBanner(String questionId) {
-    final l10n = AppLocalizations.of(context)!;
-    final showError = _shownReviewErrors.contains(questionId);
+  void _markAnswerReviewed(String questionId) {
+    _controller.markReviewed(questionId);
+    setState(() {
+      _shownReviewErrors.remove(questionId);
+      _reviewedAnswerIds.add(questionId);
+    });
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Card(
-        color: showError ? Colors.red.shade50 : Colors.amber.shade50,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    showError ? Icons.error_outline : Icons.info_outline,
-                    color: showError
-                        ? Colors.red.shade700
-                        : const Color(0xFF92400E),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      l10n.restored_answer_needs_review,
-                      style: TextStyle(
-                        color: showError
-                            ? Colors.red.shade900
-                            : const Color(0xFF92400E),
-                        fontWeight: FontWeight.w600,
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _controller.visibleAnswersNeedReview()) return;
+      if (_autoCompleteIfReady()) return;
+      if (_completeButtonFocusNode.context != null) {
+        _completeButtonFocusNode.requestFocus();
+      }
+    });
+  }
+
+  Widget _buildReviewRequiredNotice(String questionId) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.amber.shade50,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(Icons.restore_outlined, size: 18),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.restored_answer_needs_review,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            l10n.restored_answer_review_description,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                FilledButton.icon(
+                  onPressed: () => _markAnswerReviewed(questionId),
+                  style: FilledButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton.icon(
-                  onPressed: () {
-                    setState(() => _shownReviewErrors.remove(questionId));
-                    _controller.markReviewed(questionId);
-                  },
                   icon: const Icon(Icons.check),
                   label: Text(l10n.mark_answer_reviewed),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnswerReviewedNotice() {
+    final l10n = AppLocalizations.of(context)!;
+    final color = Theme.of(context).colorScheme.primary;
+
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        child: Row(
+          children: [
+            Icon(Icons.check_circle_outline, size: 18, color: color),
+            const SizedBox(width: 8),
+            Text(
+              l10n.answer_reviewed,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -514,34 +615,57 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   Widget _buildCtaBar(QuestionnaireCtaMode mode) {
     final l10n = AppLocalizations.of(context)!;
     final isContinue = mode == QuestionnaireCtaMode.continue_;
-    final label = isContinue ? l10n.continue_label : l10n.complete;
+    final label = isContinue ? l10n.continue_label : l10n.complete_task;
     final backgroundColor = isContinue ? Colors.orange.shade700 : Colors.green;
     final isSubmitting = widget.isSubmitting;
+    final needsReview = !isContinue && _controller.visibleAnswersNeedReview();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Center(
-        child: ElevatedButton.icon(
-          icon: isSubmitting
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-              : Icon(isContinue ? Icons.arrow_forward : Icons.check),
-          label: Text(label),
-          onPressed: isSubmitting ? null : _handleGlobalCtaPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor,
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: backgroundColor.withValues(alpha: 0.7),
-            disabledForegroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ElevatedButton.icon(
+            icon: isSubmitting
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : Icon(isContinue ? Icons.arrow_forward : Icons.check),
+            label: Text(label),
+            focusNode: isContinue ? null : _completeButtonFocusNode,
+            onPressed: isSubmitting || needsReview
+                ? null
+                : _handleGlobalCtaPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: backgroundColor,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: colorScheme.onSurface.withValues(
+                alpha: 0.12,
+              ),
+              disabledForegroundColor: colorScheme.onSurface.withValues(
+                alpha: 0.38,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
           ),
-        ),
+          if (needsReview) ...[
+            const SizedBox(height: 8),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                l10n.review_restored_answer_to_continue,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

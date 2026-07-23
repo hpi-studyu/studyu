@@ -277,6 +277,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_code_clipboard => 'Code copied to clipboard';
 
   @override
+  String get notification_invite_code_copied => 'Invite code copied';
+
+  @override
+  String get notification_invite_link_copied => 'Invite link copied';
+
+  @override
   String get action_button_new_study => 'New study';
 
   @override
@@ -2419,6 +2425,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_delete => 'Delete';
 
   @override
+  String get action_delete_invite_code => 'Delete invite code';
+
+  @override
   String get action_remove => 'Remove';
 
   @override
@@ -2428,13 +2437,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_clipboard => 'Copy to clipboard';
 
   @override
-  String get action_qr_code_show => 'Show QR code';
+  String get action_copy_invite_code => 'Copy invite code';
+
+  @override
+  String get action_copy_invite_link => 'Copy invite link';
+
+  @override
+  String get action_qr_code_show => 'View QR code';
 
   @override
   String get action_qr_code_download => 'Download QR code';
 
   @override
-  String get action_share => 'Share';
+  String get action_share => 'Share invite link';
 
   @override
   String get action_copy_link => 'Copy link';

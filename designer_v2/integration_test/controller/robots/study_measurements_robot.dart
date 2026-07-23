@@ -21,14 +21,14 @@ class StudyMeasurementsRobot {
     await $(PrimaryButton)
         .which<PrimaryButton>((widget) => widget.text == tr.dialog_save)
         .last
-        .tap(settlePolicy: SettlePolicy.noSettle);
+        .tap();
   }
 
   Future<void> tapSaveSurveyQuestionButton() async {
     await $(PrimaryButton)
         .which<PrimaryButton>((widget) => widget.text == tr.dialog_save)
         .last
-        .tap(settlePolicy: SettlePolicy.noSettle);
+        .tap();
   }
 
   Future<void> enterSurveyName(String surveyName) async {

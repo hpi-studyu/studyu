@@ -31,10 +31,14 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _hasInteracted = false;
   bool _donePressed = false;
+  String? _submittedValue;
+
   @override
   void initState() {
     super.initState();
     final initialValue = widget.initialAnswer?.response;
+    _submittedValue = initialValue;
+    _donePressed = initialValue != null;
     if (initialValue != null) {
       _textFieldController.text = initialValue;
       widget.onDraftChanged?.call(widget.question.id, initialValue);
@@ -99,13 +103,10 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
     FocusScope.of(context).unfocus();
     widget.onDone?.call(widget.question.constructAnswer(value));
-    setState(() => _donePressed = true);
-  }
-
-  bool get _hasEditedCommittedAnswer {
-    final committedValue = widget.initialAnswer?.response;
-    return committedValue != null &&
-        _textFieldController.text != committedValue;
+    setState(() {
+      _submittedValue = value;
+      _donePressed = true;
+    });
   }
 
   TextInputType _getKeyboardType() {
@@ -128,8 +129,6 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   Widget build(BuildContext context) {
     final question = widget.question;
     final l10n = AppLocalizations.of(context)!;
-    final showDoneButton =
-        !_donePressed && (widget.isLastQuestion || _hasEditedCommittedAnswer);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -149,8 +148,9 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           onChanged: (value) {
             widget.onDraftChanged?.call(widget.question.id, value);
             _handleInteraction();
-            if (_donePressed) {
-              setState(() => _donePressed = false);
+            final donePressed = value == _submittedValue;
+            if (_donePressed != donePressed) {
+              setState(() => _donePressed = donePressed);
             }
           },
           onFieldSubmitted: (_) {
@@ -181,7 +181,7 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
         ),
         const SizedBox(height: 12),
-        if (showDoneButton)
+        if ((widget.isLastQuestion || _submittedValue != null) && !_donePressed)
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(

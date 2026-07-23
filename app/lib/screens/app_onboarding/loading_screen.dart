@@ -35,10 +35,13 @@ class SubjectDeletedException implements Exception {
 @visibleForTesting
 String initialRouteForMissingSubjectRoute({
   required bool isPreview,
+  required bool isDebugMode,
   required bool onBoarded,
 }) {
   if (isPreview) return '/${RouteNames.terms}';
-  return onBoarded ? '/${RouteNames.welcome}' : '/${RouteNames.onboarding}';
+  return onBoarded || isDebugMode
+      ? '/${RouteNames.welcome}'
+      : '/${RouteNames.onboarding}';
 }
 
 class LoadingScreen extends StatefulWidget {
@@ -366,6 +369,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (subject != null) {
       subject = await Cache.synchronize(subject);
       if (!mounted) return;
+      if (!isStudyAvailableForTesting(subject.study)) {
+        context.go('/${RouteNames.studyUnavailable}');
+        return;
+      }
       state.activeSubject = subject;
       state.init(context);
       context.go('/${RouteNames.dashboard}');
@@ -389,6 +396,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     final route = initialRouteForMissingSubjectRoute(
       isPreview: state.isPreview,
+      isDebugMode: kDebugMode,
       onBoarded: await SecureStorage.readBool('onboarded') ?? false,
     );
 
@@ -715,12 +723,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
         _iFrameHelper.postPreviewStatus(status: 'loaded');
       }
     }
-  }
-
-  @override
-  void dispose() {
-    IFrameHelper.cancelSubscription();
-    super.dispose();
   }
 
   @override

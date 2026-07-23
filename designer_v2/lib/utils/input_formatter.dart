@@ -17,10 +17,18 @@ class NumericalRangeFormatter extends TextInputFormatter {
     if (newValue.text == '') {
       return newValue;
     } else if (min != null && int.parse(newValue.text) < min!) {
-      return newValue.copyWith(text: min.toString());
+      final text = min.toString();
+      return TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
     } else {
       if (max != null && int.parse(newValue.text) > max!) {
-        return newValue.copyWith(text: max.toString());
+        final text = max.toString();
+        return TextEditingValue(
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
       }
       return newValue;
     }
