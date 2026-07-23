@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -5,6 +7,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/food_analysis_service.dart';
 import 'package:studyu_app/services/photo_gallery_service.dart';
@@ -50,6 +53,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   String? _customMealLabel;
   String? _locationDescription;
   String? _skipReason;
+  late final String _initialMealSnapshot;
+  bool _allowPop = false;
 
   late TextEditingController _customMealLabelController;
   late TextEditingController _locationDescriptionController;
@@ -65,7 +70,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   void initState() {
     super.initState();
     if (widget.existingMeal != null) {
-      _meal = widget.existingMeal!;
+      _meal = cloneMealLog(widget.existingMeal!);
       _mealType = _meal.mealType;
       _mealContext = _meal.mealContext;
       _timestamp = _meal.timestamp;
@@ -97,6 +102,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       text: _locationDescription ?? '',
     );
     _skipReasonController = TextEditingController(text: _skipReason ?? '');
+    _initialMealSnapshot = _mealSnapshot;
   }
 
   @override
@@ -146,22 +152,61 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     });
   }
 
-  void _saveMeal() {
-    _meal = MealLog(
+  MealLog _buildMeal({bool normalizeSkipped = false}) {
+    final clearDetails = normalizeSkipped && _isSkipped;
+    return MealLog(
       id: _meal.id,
       mealType: _mealType,
-      customMealLabel: _customMealLabel,
+      customMealLabel: clearDetails ? null : _customMealLabel,
       mealContext: _mealContext,
-      locationDescription: _locationDescription,
+      locationDescription: clearDetails ? null : _locationDescription,
       timestamp: _timestamp,
-      timezone: DateTime.now().timeZoneName,
+      timezone: _meal.timezone,
       isSkipped: _isSkipped,
-      skipReason: _skipReason,
-      companyContext: _companyContext,
-      distractionContext: _distractionContext,
-      foods: _meal.foods,
+      skipReason: normalizeSkipped && !_isSkipped ? null : _skipReason?.trim(),
+      companyContext: clearDetails ? null : _companyContext,
+      distractionContext: clearDetails ? null : _distractionContext,
+      templateId: clearDetails ? null : _meal.templateId,
+      foods: clearDetails ? [] : _meal.foods,
     );
-    Navigator.of(context).pop(_meal);
+  }
+
+  String get _mealSnapshot => jsonEncode(_buildMeal().toJson());
+
+  bool get _hasUnsavedChanges => _mealSnapshot != _initialMealSnapshot;
+
+  void _pop([MealLog? result]) {
+    setState(() => _allowPop = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Navigator.of(context).pop(result);
+    });
+  }
+
+  void _saveMeal() {
+    _meal = _buildMeal(normalizeSkipped: true);
+    _pop(_meal);
+  }
+
+  Future<void> _confirmDiscard() async {
+    final l10n = AppLocalizations.of(context)!;
+    final shouldDiscard = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.discard_meal_changes_title),
+        content: Text(l10n.discard_meal_changes_message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.discard),
+          ),
+        ],
+      ),
+    );
+    if (shouldDiscard == true && mounted) _pop();
   }
 
   Future<void> _selectTime() async {
@@ -201,6 +246,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   Future<void> _saveAsTemplate() async {
+    if (_isSkipped) return;
+
     final l10n = AppLocalizations.of(context)!;
     final appState = Provider.of<AppState>(context, listen: false);
     final userId = appState.activeSubject?.id ?? 'anonymous';
@@ -216,7 +263,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveMealAsTemplate(
         name: result.name,
-        meal: _meal,
+        meal: _buildMeal(),
         tags: result.tags,
       );
       if (mounted) {
@@ -392,92 +439,121 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     final canSave =
         (!_isSkipped && _meal.foods.isNotEmpty) ||
-        (_isSkipped && _skipReason != null && _skipReason!.isNotEmpty);
+        (_isSkipped && _skipReason?.trim().isNotEmpty == true);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.meal_entry_title),
-        actions: [
-          if (_meal.foods.isNotEmpty)
-            IconButton(
-              icon: _isSavingTemplate
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.bookmark_add_outlined),
-              tooltip: l10n.save_as_template,
-              onPressed: _isSavingTemplate ? null : _saveAsTemplate,
-            ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _MealTypeSelector(
-                    mealType: _mealType,
-                    customMealLabel: _customMealLabel,
-                    customMealLabelController: _customMealLabelController,
-                    customMealTypes: widget.task?.customMealTypes,
-                    onMealTypeChanged: (value) {
-                      setState(() => _mealType = value);
-                    },
-                    onCustomLabelChanged: (value) {
-                      setState(() => _customMealLabel = value);
-                    },
+    return PopScope(
+      canPop: _allowPop || !_hasUnsavedChanges,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmDiscard();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.meal_entry_title),
+          actions: [
+            if (_meal.foods.isNotEmpty && !_isSkipped)
+              IconButton(
+                icon: _isSavingTemplate
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.bookmark_add_outlined),
+                tooltip: l10n.save_as_template,
+                onPressed: _isSavingTemplate ? null : _saveAsTemplate,
+              ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Column(
+                    children: [
+                      SwitchListTile(
+                        title: Text(l10n.skipped_this_meal),
+                        value: _isSkipped,
+                        onChanged: (value) {
+                          setState(() => _isSkipped = value);
+                        },
+                      ),
+                      if (_isSkipped)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                          child: TextField(
+                            controller: _skipReasonController,
+                            decoration: InputDecoration(
+                              labelText: l10n.reason_for_skipping,
+                              border: const OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                              setState(() => _skipReason = value);
+                            },
+                          ),
+                        ),
+                    ],
                   ),
+                ),
+              ),
+              if (!_isSkipped) ...[
+                const SizedBox(height: 16),
+                _MealTypeSelector(
+                  mealType: _mealType,
+                  customMealLabel: _customMealLabel,
+                  customMealLabelController: _customMealLabelController,
+                  customMealTypes: widget.task?.customMealTypes,
+                  onMealTypeChanged: (value) {
+                    setState(() => _mealType = value);
+                  },
+                  onCustomLabelChanged: (value) {
+                    setState(() => _customMealLabel = value);
+                  },
+                ),
+                const SizedBox(height: 16),
+                _TimeSelector(timestamp: _timestamp, onSelectTime: _selectTime),
+                const SizedBox(height: 16),
+                _FoodListSection(
+                  meal: _meal,
+                  isSkipped: false,
+                  onAddFood: _addFood,
+                  onAddFoodFromTemplate: _addFoodFromTemplate,
+                  onEditFood: _editFood,
+                  onRemoveFood: _removeFood,
+                  onSaveFoodAsTemplate: _saveFoodAsTemplate,
+                  isSavingFoodTemplate: _isSavingFoodTemplate,
+                ),
+                const SizedBox(height: 16),
+                PhotoRecallSection(
+                  mealTime: _timestamp,
+                  onPhotoTap: (photo) {
+                    PhotoViewerDialog.show(
+                      context,
+                      photoId: photo.id,
+                      photoDate: photo.createDateTime,
+                      onAnalyze: () => _analyzeAndAddFood(photo),
+                    );
+                  },
+                  onAnalyzePhoto: _analyzeAndAddFood,
+                  analyzingPhotoId: _analyzingPhotoId,
+                ),
+                if (_meal.foods.isNotEmpty) ...[
                   const SizedBox(height: 16),
-                  _TimeSelector(
-                    timestamp: _timestamp,
-                    onSelectTime: _selectTime,
-                  ),
-                  const SizedBox(height: 16),
-                  _FoodListSection(
-                    meal: _meal,
-                    isSkipped: _isSkipped,
-                    onAddFood: _addFood,
-                    onAddFoodFromTemplate: _addFoodFromTemplate,
-                    onEditFood: _editFood,
-                    onRemoveFood: _removeFood,
-                    onSaveFoodAsTemplate: _saveFoodAsTemplate,
-                    isSavingFoodTemplate: _isSavingFoodTemplate,
-                  ),
-                  if (_meal.foods.isNotEmpty && !_isSkipped) ...[
-                    const SizedBox(height: 16),
-                    MealNutritionSummaryCard(meal: _meal),
-                  ],
-                  const SizedBox(height: 16),
-                  PhotoRecallSection(
-                    mealTime: _timestamp,
-                    onPhotoTap: (photo) {
-                      PhotoViewerDialog.show(
-                        context,
-                        photoId: photo.id,
-                        photoDate: photo.createDateTime,
-                        onAnalyze: () => _analyzeAndAddFood(photo),
-                      );
-                    },
-                    onAnalyzePhoto: _analyzeAndAddFood,
-                    analyzingPhotoId: _analyzingPhotoId,
-                  ),
-                  const SizedBox(height: 16),
+                  MealNutritionSummaryCard(meal: _meal),
+                ],
+                const SizedBox(height: 16),
+                if (widget.task?.collectMealContext ?? true)
                   _MealOptionsCard(
-                    showMealContext: widget.task?.collectMealContext ?? true,
                     mealContext: _mealContext,
                     companyContext: _companyContext,
                     distractionContext: _distractionContext,
                     locationDescription: _locationDescription,
                     locationDescriptionController:
                         _locationDescriptionController,
-                    isSkipped: _isSkipped,
-                    skipReason: _skipReason,
-                    skipReasonController: _skipReasonController,
                     onMealContextChanged: (value) {
                       setState(() => _mealContext = value);
                     },
@@ -490,29 +566,42 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     onLocationDescriptionChanged: (value) {
                       setState(() => _locationDescription = value);
                     },
-                    onSkippedChanged: (value) {
-                      setState(() => _isSkipped = value);
-                    },
-                    onSkipReasonChanged: (value) {
-                      setState(() => _skipReason = value);
-                    },
                   ),
-                  const SizedBox(height: 80),
+              ],
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!canSave) ...[
+                  Text(
+                    _isSkipped
+                        ? l10n.enter_skip_reason
+                        : l10n.add_food_before_saving,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                 ],
-              ),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: canSave ? _saveMeal : null,
+                    icon: const Icon(Icons.check),
+                    label: Text(l10n.save),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
-      floatingActionButton: canSave
-          ? FloatingActionButton.extended(
-              onPressed: _saveMeal,
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-              icon: const Icon(Icons.check),
-              label: Text(l10n.save),
-            )
-          : null,
     );
   }
 }
@@ -1073,38 +1162,26 @@ class _FoodCard extends StatelessWidget {
 }
 
 class _MealOptionsCard extends StatelessWidget {
-  final bool showMealContext;
   final MealContext mealContext;
   final CompanyContext? companyContext;
   final DistractionContext? distractionContext;
   final String? locationDescription;
   final TextEditingController locationDescriptionController;
-  final bool isSkipped;
-  final String? skipReason;
-  final TextEditingController skipReasonController;
   final ValueChanged<MealContext> onMealContextChanged;
   final ValueChanged<CompanyContext?> onCompanyContextChanged;
   final ValueChanged<DistractionContext?> onDistractionContextChanged;
   final ValueChanged<String> onLocationDescriptionChanged;
-  final ValueChanged<bool> onSkippedChanged;
-  final ValueChanged<String> onSkipReasonChanged;
 
   const _MealOptionsCard({
-    this.showMealContext = true,
     required this.mealContext,
     required this.companyContext,
     required this.distractionContext,
     required this.locationDescription,
     required this.locationDescriptionController,
-    required this.isSkipped,
-    required this.skipReason,
-    required this.skipReasonController,
     required this.onMealContextChanged,
     required this.onCompanyContextChanged,
     required this.onDistractionContextChanged,
     required this.onLocationDescriptionChanged,
-    required this.onSkippedChanged,
-    required this.onSkipReasonChanged,
   });
 
   @override
@@ -1121,79 +1198,56 @@ class _MealOptionsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l10n.details,
+              l10n.meal_context,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
-            if (showMealContext) ...[
-              const SizedBox(height: 12),
-              _DropdownField<MealContext>(
-                label: l10n.where_did_you_eat,
-                value: mealContext,
-                items: MealContext.values,
-                itemLabel: (context) => _getMealContextLabel(context, l10n),
-                onChanged: (value) {
-                  if (value != null) onMealContextChanged(value);
-                },
-              ),
-              if (mealContext == MealContext.other) ...[
-                const SizedBox(height: 12),
-                TextField(
-                  controller: locationDescriptionController,
-                  decoration: InputDecoration(
-                    labelText: l10n.location_description,
-                    hintText: l10n.location_description_hint,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    filled: true,
-                  ),
-                  onChanged: onLocationDescriptionChanged,
-                ),
-              ],
-              const SizedBox(height: 12),
-              _DropdownField<CompanyContext?>(
-                label: l10n.who_were_you_with,
-                value: companyContext,
-                items: const [null, ...CompanyContext.values],
-                itemLabel: (context) => context == null
-                    ? l10n.not_specified
-                    : _getCompanyContextLabel(context, l10n),
-                onChanged: onCompanyContextChanged,
-              ),
-              const SizedBox(height: 12),
-              _DropdownField<DistractionContext?>(
-                label: l10n.distractions_during_meal,
-                value: distractionContext,
-                items: const [null, ...DistractionContext.values],
-                itemLabel: (context) => context == null
-                    ? l10n.not_specified
-                    : _getDistractionContextLabel(context, l10n),
-                onChanged: onDistractionContextChanged,
-              ),
-            ],
             const SizedBox(height: 12),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.skipped_this_meal),
-              value: isSkipped,
-              onChanged: onSkippedChanged,
+            _DropdownField<MealContext>(
+              label: l10n.where_did_you_eat,
+              value: mealContext,
+              items: MealContext.values,
+              itemLabel: (context) => _getMealContextLabel(context, l10n),
+              onChanged: (value) {
+                if (value != null) onMealContextChanged(value);
+              },
             ),
-            if (isSkipped) ...[
-              const SizedBox(height: 8),
+            if (mealContext == MealContext.other) ...[
+              const SizedBox(height: 12),
               TextField(
-                controller: skipReasonController,
+                controller: locationDescriptionController,
                 decoration: InputDecoration(
-                  labelText: l10n.reason_for_skipping,
+                  labelText: l10n.location_description,
+                  hintText: l10n.location_description_hint,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
                 ),
-                onChanged: onSkipReasonChanged,
+                onChanged: onLocationDescriptionChanged,
               ),
             ],
+            const SizedBox(height: 12),
+            _DropdownField<CompanyContext?>(
+              label: l10n.who_were_you_with,
+              value: companyContext,
+              items: const [null, ...CompanyContext.values],
+              itemLabel: (context) => context == null
+                  ? l10n.not_specified
+                  : _getCompanyContextLabel(context, l10n),
+              onChanged: onCompanyContextChanged,
+            ),
+            const SizedBox(height: 12),
+            _DropdownField<DistractionContext?>(
+              label: l10n.distractions_during_meal,
+              value: distractionContext,
+              items: const [null, ...DistractionContext.values],
+              itemLabel: (context) => context == null
+                  ? l10n.not_specified
+                  : _getDistractionContextLabel(context, l10n),
+              onChanged: onDistractionContextChanged,
+            ),
           ],
         ),
       ),

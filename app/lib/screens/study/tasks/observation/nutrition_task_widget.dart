@@ -146,7 +146,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               }
             },
             child: Scaffold(
-              appBar: _buildAppBar(context, model, l10n, theme),
+              appBar: _buildAppBar(context, model, l10n),
               body: Column(
                 children: [
                   Expanded(
@@ -161,7 +161,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                             const SizedBox(height: 16),
                           ],
                           if (model.isInTaskMode &&
-                              (widget.task?.instructions != null ||
+                              (widget.task?.instructions?.trim().isNotEmpty ==
+                                      true ||
                                   widget.task?.minimumMealsRequired != null))
                             _buildInstructionsCard(context, theme, l10n),
                           _buildDateDisplayCard(
@@ -254,15 +255,10 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     BuildContext context,
     DailyRecallEntryViewModel model,
     AppLocalizations l10n,
-    ThemeData theme,
   ) {
+    final theme = Theme.of(context);
     return AppBar(
-      title: Text(
-        widget.task?.title ?? l10n.daily_food_diary,
-        style: theme.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      title: Text(widget.task?.title ?? l10n.daily_food_diary),
       bottom: model.lastSaveTime != null
           ? PreferredSize(
               preferredSize: const Size.fromHeight(32),
@@ -308,68 +304,39 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     ThemeData theme,
     AppLocalizations l10n,
   ) {
+    final instructions = widget.task?.instructions?.trim();
+
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: ExpansionTile(
-        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.info_outline,
-            size: 20,
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
-        ),
-        title: Text(
-          l10n.instructions,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        children: [
-          Text(
-            widget.task?.instructions ?? l10n.nutrition_instructions_default,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          if (widget.task?.minimumMealsRequired != null) ...[
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.5,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.info_outline, color: theme.colorScheme.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.restaurant_menu,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.min_meals_required(widget.task!.minimumMealsRequired!),
-                    style: TextStyle(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
+                  Text(l10n.instructions, style: theme.textTheme.titleMedium),
+                  if (instructions?.isNotEmpty == true) ...[
+                    const SizedBox(height: 8),
+                    Text(instructions!),
+                  ],
+                  if (widget.task?.minimumMealsRequired != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.min_meals_required(
+                        widget.task!.minimumMealsRequired!,
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -589,6 +556,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   }
 
   Future<void> _saveMealAsTemplate(BuildContext context, MealLog meal) async {
+    if (meal.isSkipped) return;
+
     final l10n = AppLocalizations.of(context)!;
     final appState = Provider.of<AppState>(context, listen: false);
     final userId = appState.activeSubject?.id ?? 'anonymous';
@@ -765,7 +734,7 @@ class _MealCard extends StatelessWidget {
                       label: l10n.edit,
                     ),
                   ),
-                  if (meal.foods.isNotEmpty)
+                  if (meal.foods.isNotEmpty && !meal.isSkipped)
                     PopupMenuItem(
                       value: 'save_template',
                       child: _PopupMenuItem(

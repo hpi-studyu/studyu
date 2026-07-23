@@ -1,14 +1,7 @@
+import 'dart:convert';
+
 import 'package:studyu_core/core.dart';
 
-String getEntryTypeLabel(FoodEntryType type) {
-  switch (type) {
-    case FoodEntryType.singleIngredient:
-      return 'Single Ingredient';
-    case FoodEntryType.recipe:
-      return 'Recipe';
-    case FoodEntryType.brandedProduct:
-      return 'Branded Product';
-    case FoodEntryType.manualCustom:
-      return 'Manual Entry';
-  }
-}
+MealLog cloneMealLog(MealLog meal) => MealLog.fromJson(
+  jsonDecode(jsonEncode(meal.toJson())) as Map<String, dynamic>,
+);

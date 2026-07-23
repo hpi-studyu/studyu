@@ -1590,6 +1590,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save => 'Save';
 
   @override
+  String get discard => 'Verwerfen';
+
+  @override
+  String get discard_meal_changes_title =>
+      'Änderungen an der Mahlzeit verwerfen?';
+
+  @override
+  String get discard_meal_changes_message =>
+      'Ihre Änderungen an dieser Mahlzeit gehen verloren.';
+
+  @override
+  String get enter_skip_reason =>
+      'Geben Sie vor dem Speichern einen Grund ein.';
+
+  @override
+  String get add_food_before_saving =>
+      'Fügen Sie vor dem Speichern mindestens ein Lebensmittel hinzu.';
+
+  @override
   String get meal_information => 'Meal Information';
 
   @override
@@ -1652,34 +1671,34 @@ class AppLocalizationsDe extends AppLocalizations {
   String get context_other => 'Other';
 
   @override
-  String get company_alone => '👤 Alone';
+  String get company_alone => 'Alone';
 
   @override
-  String get company_family => '👨‍👩‍👧‍👦 Family';
+  String get company_family => 'Family';
 
   @override
-  String get company_friends => '👥 Friends';
+  String get company_friends => 'Friends';
 
   @override
-  String get company_colleagues => '💼 Colleagues';
+  String get company_colleagues => 'Colleagues';
 
   @override
-  String get company_other => '🤝 Other';
+  String get company_other => 'Other';
 
   @override
-  String get distraction_none => '🧘 None';
+  String get distraction_none => 'None';
 
   @override
-  String get distraction_tv => '📺 TV';
+  String get distraction_tv => 'TV';
 
   @override
-  String get distraction_phone => '📱 Phone';
+  String get distraction_phone => 'Phone';
 
   @override
-  String get distraction_work => '💻 Work';
+  String get distraction_work => 'Work';
 
   @override
-  String get distraction_other => '📖 Other';
+  String get distraction_other => 'Other';
 
   @override
   String get food_entry_title => 'Food Entry';
@@ -1779,16 +1798,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enter_serving_size => 'Please enter serving size';
 
   @override
-  String get entry_type_single_ingredient => '🥕 Single Ingredient';
+  String get entry_type_single_ingredient => 'Single Ingredient';
 
   @override
-  String get entry_type_recipe => '📖 Recipe';
+  String get entry_type_recipe => 'Recipe';
 
   @override
-  String get entry_type_branded_product => '🏷️ Branded Product';
+  String get entry_type_branded_product => 'Branded Product';
 
   @override
-  String get entry_type_manual_entry => '✏️ Manual Entry';
+  String get entry_type_manual_entry => 'Manual Entry';
 
   @override
   String get portion_method_household => 'Household Measure';
@@ -2018,6 +2037,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get details => 'Details';
+
+  @override
+  String get meal_context => 'Mahlzeitenkontext';
 
   @override
   String get search_food_database => 'Search Food Database';
