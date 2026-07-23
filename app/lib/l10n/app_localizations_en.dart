@@ -74,6 +74,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
+  String get welcome_find_study_title => 'Take part in a study';
+
+  @override
+  String get made_with_love_in_potsdam => 'Made with ♥ in Potsdam';
+
+  @override
+  String get welcome_find_study_description =>
+      'Choose a public study or use an invitation.';
+
+  @override
+  String get browse_public_studies => 'Browse public studies';
+
+  @override
+  String get welcome_returning_participant =>
+      'Already participated with StudyU?';
+
+  @override
+  String get restore_studyu_account => 'Restore StudyU account';
+
+  @override
   String get show_onboarding_again => 'Show onboarding again';
 
   @override
@@ -115,9 +135,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get study_selection => 'Study Selection';
 
   @override
-  String get study_selection_description => 'Please select a study.';
-
-  @override
   String get study_selection_single =>
       'You can only participate in one study at a time.';
 
@@ -145,6 +162,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get study_selection_hidden_studies =>
       'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.';
+
+  @override
+  String get study_selection_no_public_studies =>
+      'There are currently no public studies available. If you have an invite code, you can still join a private study.';
 
   @override
   String get study_overview_title => 'Overview';
@@ -225,7 +246,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get opt_out => 'Leave study';
 
   @override
-  String get delete_data => 'Leave study and delete all data';
+  String get leave_study_keep_data_title => 'Leave study and keep your data?';
+
+  @override
+  String leave_study_keep_data_body(String studyName) {
+    return 'You will stop participating in the study “$studyName”. We will keep the progress and responses you have already submitted, and researchers may continue to use your anonymized data.\n\nYou cannot rejoin this participation after leaving. Your previous studies will not be affected.';
+  }
+
+  @override
+  String get stay_in_study => 'Stay in study';
+
+  @override
+  String get acknowledge_consequences =>
+      'I have read this information and understand the consequences.';
+
+  @override
+  String get leave_keep_data => 'Leave and keep my data';
+
+  @override
+  String get leave_study_description =>
+      'Stop participating. Your existing study data will be retained.';
+
+  @override
+  String get delete_data => 'Leave study and delete my data';
+
+  @override
+  String get leave_study_delete_data_title => 'Leave study and delete my data?';
+
+  @override
+  String leave_study_delete_data_body(String studyName) {
+    return 'You will stop participating in the study “$studyName”. We will permanently delete your progress and responses for this study from our servers and remove its saved data from this device.\n\nThis cannot be undone. Neither you nor anyone from the study team will be able to recover this data.';
+  }
+
+  @override
+  String get leave_delete_data => 'Leave and delete my data';
+
+  @override
+  String get delete_study_data_description =>
+      'Permanently delete your study data. This cannot be undone.';
 
   @override
   String get soft_delete_desc => 'You will lose your progress in ';
@@ -240,6 +298,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get your_journey => 'Your Journey';
+
+  @override
+  String get journey_overview_description =>
+      'Review your study timeline before continuing.';
 
   @override
   String get journey_results_available => 'Results available';
@@ -325,6 +387,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get about => 'About';
+
+  @override
+  String get study_information => 'Study information';
+
+  @override
+  String get study_information_description =>
+      'Only share these details with your study team when they ask for them.';
+
+  @override
+  String get study_name => 'Study name';
+
+  @override
+  String get study_id => 'Study ID';
+
+  @override
+  String get subject_id => 'Subject ID';
+
+  @override
+  String get study_start_date => 'Study start date';
+
+  @override
+  String get app_version => 'App version';
+
+  @override
+  String get platform => 'Platform';
+
+  @override
+  String get not_available => 'Not available';
+
+  @override
+  String get view_study_information => 'View details';
+
+  @override
+  String get email_study_team => 'Email study team';
+
+  @override
+  String get study_team_email_unavailable => 'This study has no contact email.';
+
+  @override
+  String get copy_all_information => 'Copy all information';
+
+  @override
+  String value_copied(String label) {
+    return '$label copied to clipboard.';
+  }
+
+  @override
+  String get all_information_copied => 'All information copied to clipboard.';
+
+  @override
+  String get participant_information_email_subject =>
+      '[StudyU] Participant information';
+
+  @override
+  String get participant_information_email_intro =>
+      'Hello,\n\nI am contacting you about my participation in the study. These are my StudyU details:';
+
+  @override
+  String get email_app_unavailable => 'No email app is available.';
 
   @override
   String get settings => 'Settings';
@@ -430,6 +551,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
+  String get use_device_language => 'Use device language';
+
+  @override
   String get en => 'English';
 
   @override
@@ -470,6 +594,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enough_data => 'Enough data';
 
   @override
+  String get legal_documents => 'Legal Documents';
+
+  @override
+  String get legal_documents_description =>
+      'Please read and accept the terms of use and privacy policy before continuing.';
+
+  @override
   String get terms => 'Terms of Use';
 
   @override
@@ -477,7 +608,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get terms_content =>
-      'The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.';
+      'The terms of use give an overview on the purpose and use of the StudyU app.';
 
   @override
   String get terms_agree => 'I have read and agree to the terms of use';
@@ -490,19 +621,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy_content =>
-      'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.';
+      'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have.';
 
   @override
   String get privacy_agree => 'I have read and agree to the privacy policy';
 
   @override
+  String get legal_notice => 'Legal Notice';
+
+  @override
+  String get legal_notice_content =>
+      'The legal notice shows who is responsible for StudyU and how you can contact us.';
+
+  @override
   String get imprint_read => 'Read Legal Notice';
 
   @override
-  String get invite_code_button => 'Use invite code';
+  String get invite_code_button => 'Join with an invite code';
 
   @override
-  String get private_study_invite_code => 'Private study invite code';
+  String get private_study_invite_code => 'Join a study with an invite code';
+
+  @override
+  String get private_study_invite_code_description =>
+      'Enter the code shared by your study team.';
 
   @override
   String get invite_code => 'Invite code';
@@ -1202,11 +1344,146 @@ class AppLocalizationsEn extends AppLocalizations {
   String get go_back => 'Go back';
 
   @override
+  String get study_settings_section => 'Study settings';
+
+  @override
+  String get recovery_phrase_header => 'View recovery phrase';
+
+  @override
+  String get copy_to_clipboard => 'Copy to clipboard';
+
+  @override
+  String get copied_to_clipboard =>
+      'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.';
+
+  @override
+  String get recovery_phrase_save_hint =>
+      'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.\n\nNever share them with anyone.';
+
+  @override
+  String get recovery_phrase_save_warning => 'Never share them with anyone.';
+
+  @override
+  String get show_recovery_phrase => 'Show Recovery Phrase';
+
+  @override
+  String get recovery_phrase_list_header => 'Your recovery phrase';
+
+  @override
+  String get recovery_phrase_list_helper =>
+      'Make sure you save all 13 words in this exact order.';
+
+  @override
+  String get recovery_phrase_saved_confirmation =>
+      'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.';
+
+  @override
+  String get continue_to_study => 'Continue to study';
+
+  @override
+  String get restore_account => 'Restore account';
+
+  @override
+  String get enter_recovery_phrase => 'Enter your recovery phrase';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get invalid_recovery_phrase =>
+      'This recovery phrase does not match an account. Make sure all 13 words are in the right order.';
+
+  @override
+  String get recovery_phrase_too_many_words =>
+      'Recovery phrases have 13 words. Remove extra words to continue.';
+
+  @override
+  String recovery_successful(String id) {
+    return 'Recovery successful! ID: $id';
+  }
+
+  @override
   String get deep_link_error_title => 'Error';
 
   @override
   String deep_link_study_not_found(String studyId) {
     return 'Study with ID $studyId not found or not available';
+  }
+
+  @override
+  String get recovery_in_progress => 'Recovering your account...';
+
+  @override
+  String get recovery_failed =>
+      'Recovery failed. Please check your recovery phrase and try again.';
+
+  @override
+  String get recovery_user_not_found =>
+      'No account found with this recovery phrase.';
+
+  @override
+  String get recovery_network_error =>
+      'Network error. Please check your connection and try again.';
+
+  @override
+  String get restore_account_description =>
+      'Restore your account on this device with the recovery phrase you saved before joining a study.';
+
+  @override
+  String get restore_account_help_title => 'Restore with your recovery phrase';
+
+  @override
+  String get restore_account_help_1 => 'Enter all 13 words in order';
+
+  @override
+  String get restore_account_help_2 =>
+      'You can type or paste the phrase manually';
+
+  @override
+  String get share_recovery => 'Share Recovery';
+
+  @override
+  String get share_as_text => 'Share as Text';
+
+  @override
+  String get download_recovery => 'Download Recovery';
+
+  @override
+  String get download_as_text => 'Download as Text File';
+
+  @override
+  String get file_saved => 'File saved successfully';
+
+  @override
+  String get file_save_error => 'Error saving file';
+
+  @override
+  String get share_btn => 'Share';
+
+  @override
+  String get copy_btn => 'Copy';
+
+  @override
+  String get download_btn => 'Download';
+
+  @override
+  String get general_section => 'General';
+
+  @override
+  String get current_study_section => 'Current study';
+
+  @override
+  String get participation_options_section => 'Manage participation';
+
+  @override
+  String get share_recovery_text_btn => 'Share Recovery Text';
+
+  @override
+  String get recovery_phrase_load_error => 'Failed to load recovery phrase';
+
+  @override
+  String share_error(String error) {
+    return 'Error sharing: $error';
   }
 
   @override
@@ -1231,6 +1508,12 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'You are currently enrolled in:\n$currentStudy\n\nThe deep link points to:\n$targetStudy\n\nYou can return to your current study (recommended) or continue to leave it and switch.';
   }
+
+  @override
+  String get deep_link_switch_open_settings => 'Open Settings';
+
+  @override
+  String get deep_link_switch_continue_study => 'Continue Study';
 
   @override
   String get deep_link_switch_primary_return => 'Return to current study';
@@ -1346,7 +1629,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get show_dashboard_showcase_again => 'Show dashboard tour again';
+  String get dashboard_tour => 'Dashboard walkthrough';
+
+  @override
+  String get show_again => 'Replay tour';
 
   @override
   String get free_text_hint => 'Enter your answer';

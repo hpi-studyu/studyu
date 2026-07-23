@@ -5,12 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+@visibleForTesting
+bool shouldReturnToStudySelection(AppState state) => !state.hasPendingDeepLink;
 
 class StudyOverviewScreen extends StatefulWidget {
   const StudyOverviewScreen({super.key});
@@ -28,12 +32,23 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     study = context.read<AppState>().selectedStudy;
   }
 
+  Future<void> _continueOnboarding(BuildContext context) async {
+    await context.push<void>(
+      '/${RouteNames.terms}',
+      extra: TermsScreenArguments(onAccepted: _continueAfterTerms),
+    );
+  }
+
+  Future<void> _continueAfterTerms(BuildContext context) async {
+    if (study!.hasEligibilityCheck) {
+      await navigateToEligibilityCheck(context);
+    } else {
+      await navigateToJourney(context);
+    }
+  }
+
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
-    if (Supabase.instance.client.auth.currentUser == null) {
-      context.push('/${RouteNames.terms}');
-      return;
-    }
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy!,
@@ -57,26 +72,23 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
-    final study = context.read<AppState>().selectedStudy;
-    final result = await context.push<EligibilityResult>(
+    await context.push<void>(
       '/${RouteNames.eligibilityCheck}',
-      extra: study,
+      extra: EligibilityScreenArguments(
+        study: context.read<AppState>().selectedStudy,
+        onEligible: navigateToJourney,
+      ),
     );
-    if (result == null) return;
-
-    if (!context.mounted) return;
-    if (result.eligible) {
-      navigateToJourney(context);
-    } else {
-      context.pop();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
+    final returnToStudySelection = shouldReturnToStudySelection(appState);
+
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(MdiIcons.textLong),
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: SingleChildScrollView(
@@ -92,9 +104,25 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: context.watch<AppState>().selectedStudy!.hasEligibilityCheck
-            ? () => navigateToEligibilityCheck(context)
-            : () => navigateToJourney(context),
+        backButtonKey: const ValueKey('study_overview_back'),
+        onBack: () {
+          if (!returnToStudySelection) {
+            context.pop();
+            return;
+          }
+          appState
+            ..selectedStudy = null
+            ..selectedInterventions = null
+            ..inviteCode = null
+            ..preselectedInterventionIds = null;
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/${RouteNames.studySelection}');
+          }
+        },
+        nextButtonKey: const ValueKey('study_overview_continue'),
+        onNext: () => _continueOnboarding(context),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -214,6 +215,7 @@ class StudySwitchDialogs {
     }
 
     await currentSubject.delete();
+    RestoreAccountService.clearCache();
     await deleteLocalData();
     await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
     if (context.mounted) {

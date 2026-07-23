@@ -6,7 +6,6 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 

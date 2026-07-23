@@ -8,6 +8,8 @@ import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/onboarding_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/recovery_phrase_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/study_unavailable_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
@@ -15,6 +17,7 @@ import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.da
 import 'package:studyu_app/screens/study/dashboard/contact_tab/faq.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_app/screens/study/dashboard/settings.dart';
+import 'package:studyu_app/screens/study/dashboard/study_information.dart';
 import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/consent.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
@@ -27,7 +30,6 @@ import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/screens/study/report/report_history.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart';
 
 /// Route name constants
 class RouteNames {
@@ -39,8 +41,10 @@ class RouteNames {
   static const String dashboard = 'dashboard';
   static const String welcome = 'welcome';
   static const String onboarding = 'onboarding';
-  static const String about = 'about';
   static const String terms = 'terms';
+  static const String recoveryPhrase = 'recoveryPhrase';
+  static const String restoreAccount = 'restoreAccount';
+  static const String about = 'about';
   static const String studySelection = 'studySelection';
   static const String studyOverview = 'studyOverview';
   static const String interventionSelection = 'interventionSelection';
@@ -48,6 +52,7 @@ class RouteNames {
   static const String consent = 'consent';
   static const String kickoff = 'kickoff';
   static const String contact = 'contact';
+  static const String studyInformation = 'studyInformation';
   static const String faq = 'faq';
   static const String appSettings = 'settings';
   static const String questionnaire = 'questionnaire';
@@ -181,7 +186,27 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.terms}',
         name: RouteNames.terms,
-        builder: (context, state) => const TermsScreen(),
+        builder: (context, state) {
+          final arguments = state.extra;
+          return TermsScreen(
+            isPushed: arguments == true || arguments is TermsScreenArguments
+                ? true
+                : null,
+            onAccepted: arguments is TermsScreenArguments
+                ? arguments.onAccepted
+                : null,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/${RouteNames.recoveryPhrase}',
+        name: RouteNames.recoveryPhrase,
+        builder: (context, state) => const RecoveryPhraseScreen(),
+      ),
+      GoRoute(
+        path: '/${RouteNames.restoreAccount}',
+        name: RouteNames.restoreAccount,
+        builder: (context, state) => const RestoreAccountScreen(),
       ),
       GoRoute(
         path: '/${RouteNames.studySelection}',
@@ -219,6 +244,11 @@ GoRouter createAppRouter({
         builder: (context, state) => const ContactScreen(),
       ),
       GoRoute(
+        path: '/${RouteNames.studyInformation}',
+        name: RouteNames.studyInformation,
+        builder: (context, state) => const StudyInformationScreen(),
+      ),
+      GoRoute(
         path: '/${RouteNames.faq}',
         name: RouteNames.faq,
         builder: (context, state) => const FAQ(),
@@ -252,8 +282,14 @@ GoRouter createAppRouter({
         path: '/${RouteNames.eligibilityCheck}',
         name: RouteNames.eligibilityCheck,
         builder: (context, state) {
-          final study = state.extra as Study?;
-          return EligibilityScreen(study: study);
+          final extra = state.extra;
+          if (extra is EligibilityScreenArguments) {
+            return EligibilityScreen(
+              study: extra.study,
+              onEligible: extra.onEligible,
+            );
+          }
+          return EligibilityScreen(study: extra as Study?);
         },
       ),
       GoRoute(
