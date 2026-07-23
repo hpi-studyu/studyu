@@ -2,7 +2,7 @@ BEGIN;
 
 /*
  * User Recovery Table Migration
- * 
+ *
  * Creates a separate table for recovery IDs to decouple recovery phrases from user IDs.
  * This prevents potential session hijacking if user IDs are accidentally shared.
  */
@@ -10,7 +10,7 @@ BEGIN;
 -- Create the user_recovery table
 CREATE TABLE IF NOT EXISTS public.user_recovery (
     recovery_id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id uuid NOT NULL UNIQUE REFERENCES public.user(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL UNIQUE REFERENCES public.user (id) ON DELETE CASCADE,
     created_at timestamptz DEFAULT now() NOT NULL
 );
 
@@ -23,10 +23,10 @@ ALTER TABLE public.user_recovery ENABLE ROW LEVEL SECURITY;
 
 -- Users can only see their own recovery entry
 CREATE POLICY "Users can view their own recovery entry"
-    ON public.user_recovery
-    FOR SELECT
-    TO authenticated
-    USING (user_id = auth.uid());
+ON public.user_recovery
+FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
 
 /*
  * Function to get or create a recovery ID for the current user.
@@ -85,6 +85,46 @@ GRANT EXECUTE ON FUNCTION public.get_or_create_recovery() TO authenticated;
 COMMENT ON FUNCTION public.get_or_create_recovery() IS 'Gets existing recovery_id or creates one for the current authenticated user.';
 
 /*
+ * Replaces the current authenticated user's recovery ID.
+ */
+CREATE OR REPLACE FUNCTION public.rotate_recovery_id()
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_user_id uuid := auth.uid();
+    v_recovery_id uuid;
+BEGIN
+    IF v_user_id IS NULL THEN
+        RAISE EXCEPTION 'Not authenticated' USING ERRCODE = '42501';
+    END IF;
+
+    SELECT recovery_id INTO v_recovery_id
+    FROM public.user_recovery
+    WHERE user_id = v_user_id
+    FOR UPDATE;
+
+    IF v_recovery_id IS NULL THEN
+        RAISE EXCEPTION 'Recovery ID not found' USING ERRCODE = 'P0002';
+    END IF;
+
+    UPDATE public.user_recovery
+    SET recovery_id = gen_random_uuid()
+    WHERE user_id = v_user_id
+    RETURNING recovery_id INTO v_recovery_id;
+
+    RETURN v_recovery_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.rotate_recovery_id() FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.rotate_recovery_id() TO authenticated;
+
+COMMENT ON FUNCTION public.rotate_recovery_id() IS 'Replaces the recovery_id for the current authenticated user.';
+
+/*
  * Updated account recovery function that uses recovery_id instead of user_id.
  *
  * @param p_recovery_id - The UUID of the recovery entry (decoded from 13-word recovery phrase)
@@ -114,7 +154,8 @@ BEGIN
     -- 1. Look up user_id from recovery table
     SELECT user_id INTO v_user_id
     FROM public.user_recovery
-    WHERE recovery_id = p_recovery_id;
+    WHERE recovery_id = p_recovery_id
+    FOR UPDATE;
     
     IF v_user_id IS NULL THEN
         RETURN jsonb_build_object(
@@ -165,7 +206,7 @@ BEGIN
         ss.id DESC                               -- Deterministic ordering for identical dates
     LIMIT 1;
 
-    -- 6. Return success with credentials and optional subject_id
+    -- 6. Return success with credentials and optional subject ID.
     RETURN jsonb_build_object(
         'success', true,
         'email', v_user_email,
@@ -188,7 +229,7 @@ $$;
 -- (anon is required since users call this before authentication)
 GRANT EXECUTE ON FUNCTION public.recover_account(uuid) TO anon, authenticated;
 
-COMMENT ON FUNCTION public.recover_account(uuid) IS 
+COMMENT ON FUNCTION public.recover_account(uuid) IS
 'Recovers user account by looking up user via recovery_id, generating new password, and finding latest active study.';
 
 COMMIT;

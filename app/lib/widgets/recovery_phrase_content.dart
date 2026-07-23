@@ -12,6 +12,7 @@ class RecoveryPhraseContent extends StatefulWidget {
   final bool showConfirmation;
   final bool showSaveHint;
   final bool showSuccessFeedback;
+  final bool showRotation;
 
   const RecoveryPhraseContent({
     super.key,
@@ -22,6 +23,7 @@ class RecoveryPhraseContent extends StatefulWidget {
     this.showConfirmation = true,
     this.showSaveHint = false,
     this.showSuccessFeedback = true,
+    this.showRotation = true,
   });
 
   @override
@@ -31,6 +33,7 @@ class RecoveryPhraseContent extends StatefulWidget {
 class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
   late List<String>? _phrase = widget.initialPhrase;
   late bool _isLoading = widget.initialPhrase == null;
+  bool _isRotating = false;
   String? _error;
 
   List<String>? get phrase => _phrase;
@@ -103,6 +106,71 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
     }
   }
 
+  Future<void> _confirmRotation() async {
+    var acknowledged = false;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final l10n = AppLocalizations.of(context)!;
+          return AlertDialog(
+            title: Text(l10n.recovery_phrase_rotate_dialog_title),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l10n.recovery_phrase_rotate_dialog_description),
+                  const SizedBox(height: 16),
+                  CheckboxListTile(
+                    contentPadding: EdgeInsets.zero,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Text(l10n.recovery_phrase_rotate_acknowledgement),
+                    value: acknowledged,
+                    onChanged: (value) =>
+                        setDialogState(() => acknowledged = value ?? false),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: Text(l10n.cancel),
+              ),
+              TextButton(
+                onPressed: acknowledged
+                    ? () => Navigator.pop(dialogContext, true)
+                    : null,
+                child: Text(l10n.recovery_phrase_rotate_confirm),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isRotating = true);
+    final phrase = await RestoreAccountService.rotateRecoveryPhrase();
+    if (!mounted) return;
+
+    setState(() {
+      _isRotating = false;
+      if (phrase != null) _phrase = phrase;
+    });
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          phrase == null
+              ? l10n.recovery_phrase_rotate_error
+              : l10n.recovery_phrase_rotate_success,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -152,6 +220,18 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
         if (widget.useGridLayout) _buildPhraseGrid() else _buildPhraseChips(),
         const SizedBox(height: 16),
         _buildActionButtons(),
+        if (widget.showRotation) ...[
+          const SizedBox(height: 8),
+          Center(
+            child: OutlinedButton.icon(
+              onPressed: _isRotating ? null : _confirmRotation,
+              icon: const Icon(Icons.refresh),
+              label: Text(
+                AppLocalizations.of(context)!.recovery_phrase_rotate_button,
+              ),
+            ),
+          ),
+        ],
         if (widget.showConfirmation) ...[
           const SizedBox(height: 16),
           CheckboxListTile(

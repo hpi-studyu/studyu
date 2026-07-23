@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:js_interop' as js;
-import 'dart:js_interop_unsafe';
 import 'dart:ui_web' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:web/web.dart' as web;
@@ -111,9 +110,10 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
+  final String serializedSession;
   bool _isListening = false;
 
-  WebController(super.baseSrc, super.studyId) {
+  WebController(super.baseSrc, super.studyId, this.serializedSession) {
     super.frameWidget = Container();
     routeInformation = RouteInformation(null, null, null, null);
   }
@@ -247,9 +247,11 @@ class WebController extends PlatformController {
     return;
   }
 
-  @override
-  void openNewPage() {
-    js.globalContext.callMethod('open'.toJS, previewSrc.toJS);
+  String? get _appOrigin {
+    final uri = Uri.tryParse(baseSrc);
+    return uri == null || !uri.hasScheme || uri.host.isEmpty
+        ? null
+        : uri.origin;
   }
 
   @override
@@ -257,13 +259,34 @@ class WebController extends PlatformController {
     if (_isListening) return;
     _isListening = true;
     web.window.onMessage.listen((event) {
+      final appOrigin = _appOrigin;
+      final frameWindow = iFrameElement.contentWindow;
+      if (appOrigin == null ||
+          event.origin != appOrigin ||
+          frameWindow == null ||
+          event.source != frameWindow) {
+        return;
+      }
+
       final data = event.data.dartify();
+      if (isPreviewSessionRequest(data)) {
+        frameWindow.postMessage(
+          createPreviewSessionMessage(serializedSession).toJS,
+          appOrigin.toJS,
+        );
+        return;
+      }
       if (data is String) {
         try {
           final parsed = jsonDecode(data);
           if (parsed is Map<String, dynamic> &&
-              parsed['type'] == 'previewStatus') {
-            final status = parsed['status'] as String?;
+              parsed['type'] == 'previewStatus' &&
+              parsed.keys.every(
+                (key) => const {'type', 'status', 'message'}.contains(key),
+              ) &&
+              parsed['status'] is String &&
+              (parsed['message'] == null || parsed['message'] is String)) {
+            final status = parsed['status'] as String;
             switch (status) {
               case 'loading':
                 onLoading?.call();
@@ -301,10 +324,9 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    iFrameElement.contentWindow?.postMessage(
-      message.toJS,
-      (env.appUrl ?? '').toJS,
-    );
+    final appOrigin = _appOrigin;
+    if (appOrigin == null) return;
+    iFrameElement.contentWindow?.postMessage(message.toJS, appOrigin.toJS);
   }
 
   @override

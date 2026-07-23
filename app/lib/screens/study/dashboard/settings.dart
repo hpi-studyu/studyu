@@ -156,10 +156,10 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-
-              // Recovery phrase card
-              const RecoveryPhraseWidget(),
+              if (context.watch<AppState>().showParticipantRecovery) ...[
+                const SizedBox(height: 8),
+                const RecoveryPhraseWidget(),
+              ],
               const SizedBox(height: 8),
 
               Card(

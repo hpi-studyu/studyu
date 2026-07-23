@@ -1378,6 +1378,31 @@ class AppLocalizationsEn extends AppLocalizations {
       'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.';
 
   @override
+  String get recovery_phrase_rotate_button => 'Reissue recovery phrase';
+
+  @override
+  String get recovery_phrase_rotate_dialog_title => 'Reissue recovery phrase?';
+
+  @override
+  String get recovery_phrase_rotate_dialog_description =>
+      'Your current recovery phrase will immediately stop working. You must save the new phrase to recover your account in the future.';
+
+  @override
+  String get recovery_phrase_rotate_acknowledgement =>
+      'I understand that my current recovery phrase will immediately stop working.';
+
+  @override
+  String get recovery_phrase_rotate_confirm => 'Reissue phrase';
+
+  @override
+  String get recovery_phrase_rotate_success =>
+      'A new recovery phrase has been issued. Save it now.';
+
+  @override
+  String get recovery_phrase_rotate_error =>
+      'Could not issue a new recovery phrase. Please try again.';
+
+  @override
   String get continue_to_study => 'Continue to study';
 
   @override

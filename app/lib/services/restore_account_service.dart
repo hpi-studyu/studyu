@@ -34,6 +34,7 @@ class RestoreAccountService {
   static String? _cachedRecoveryId;
   static String? _cachedUserId;
   static Future<String?> Function() _recoveryIdGetter = _fetchRecoveryId;
+  static Future<String?> Function() _recoveryIdRotator = _rotateRecoveryId;
   static String? Function() _currentUserIdGetter = _currentUserId;
 
   static void clearCache() {
@@ -56,6 +57,22 @@ class RestoreAccountService {
   @visibleForTesting
   static void debugResetRecoveryIdGetterForTesting() {
     _recoveryIdGetter = _fetchRecoveryId;
+  }
+
+  @visibleForTesting
+  static Future<String?> Function() get debugRecoveryIdRotatorForTesting =>
+      _recoveryIdRotator;
+
+  @visibleForTesting
+  static set debugRecoveryIdRotatorForTesting(
+    Future<String?> Function() rotator,
+  ) {
+    _recoveryIdRotator = rotator;
+  }
+
+  @visibleForTesting
+  static void debugResetRecoveryIdRotatorForTesting() {
+    _recoveryIdRotator = _rotateRecoveryId;
   }
 
   @visibleForTesting
@@ -150,6 +167,36 @@ class RestoreAccountService {
       }
     } catch (e) {
       StudyULogger.warning('Error getting recovery_id: $e');
+      return null;
+    }
+  }
+
+  static Future<List<String>?> rotateRecoveryPhrase() async {
+    clearCache();
+    final recoveryId = await _recoveryIdRotator();
+    final sanitizedId = recoveryId == null ? null : _sanitizeUuid(recoveryId);
+    if (sanitizedId == null) return null;
+
+    try {
+      final phrase = encode(BigInt.parse(sanitizedId, radix: 16));
+      _cachedRecoveryId = recoveryId;
+      _cachedPhrase = phrase;
+      _cachedUserId = _currentUserIdGetter();
+      return phrase;
+    } on FormatException catch (e) {
+      StudyULogger.warning('Failed to parse rotated recovery ID: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> _rotateRecoveryId() async {
+    try {
+      final response = await Supabase.instance.client.rpc('rotate_recovery_id');
+      if (response is String) return response;
+      StudyULogger.warning('Unexpected rotate_recovery_id response');
+      return null;
+    } catch (e) {
+      StudyULogger.warning('Error rotating recovery_id: $e');
       return null;
     }
   }
