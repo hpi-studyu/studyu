@@ -208,8 +208,8 @@ class StudyRecruitController extends _$StudyRecruitController
         .availableActions(model)
         .where(
           (action) =>
-              action.type == ModelActionType.share ||
-              action.type == ModelActionType.clipboard,
+              action.type == ModelActionType.clipboard ||
+              action.type == ModelActionType.share,
         )
         .toList();
     return withIcons(actions, modelActionIcons);
