@@ -13,13 +13,12 @@ For questionnaire tasks, `resultProperty.property` must be a question ID whose a
 
 
 <!-- GENERATED:FIELDS START -->
-
-| Field            | Type                                                | Required | Description                                             |
-|------------------|-----------------------------------------------------|----------|---------------------------------------------------------|
-| `type`           | `String`                                            | Yes      | Fixed value `numeric`.                                  |
-| `id`             | `String`                                            | Yes      | Unique result identifier (UUID).                        |
-| `filename`       | `String`                                            | No       | CSV export filename for this result type.               |
-| `resultProperty` | [`DataReference<num>`](../shared/data-reference.md) | Yes      | Reference to the numeric property this result captures. |
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | `String` | Yes | Fixed value `numeric`. |
+| `id` | `String` | Yes | Unique result identifier (UUID). |
+| `filename` | `String` | No | CSV export filename for this result type. |
+| `resultProperty` | [`DataReference<num>`](../shared/data-reference.md) | Yes | Reference to the numeric property this result captures. |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

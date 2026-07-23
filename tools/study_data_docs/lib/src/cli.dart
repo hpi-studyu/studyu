@@ -189,7 +189,7 @@ Future<void> runCheck({
       }
 
       // 4b. FIELDS block drift.
-      if (pageMeta.generatedFields && entries.any((e) => e.generatedFields)) {
+      if (entries.any((entry) => entry.generatedFields)) {
         final expectedBlocks = buildExpectedFieldBlocks(
           scopeEntries: entries,
           classes: classes,
@@ -244,6 +244,10 @@ Future<void> runCheck({
             );
           }
         }
+      } else if (extractBlock(existing, 'FIELDS') != null) {
+        errors.add(
+          '$pagePath: unexpected GENERATED:FIELDS block; page scope disables field generation.',
+        );
       }
 
       // 4e. DISCRIMINATORS block drift.

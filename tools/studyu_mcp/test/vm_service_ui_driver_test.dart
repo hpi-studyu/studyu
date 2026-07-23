@@ -10,6 +10,13 @@ void main() {
       );
     });
 
+    test('normalizes a trailing slash without creating a double slash', () {
+      expect(
+        normalizeVmServiceUri('http://127.0.0.1:1234/token=/'),
+        'ws://127.0.0.1:1234/token=/ws',
+      );
+    });
+
     test('accepts loopback WebSocket URIs', () {
       expect(
         normalizeVmServiceUri('ws://localhost:1234/token=/ws'),

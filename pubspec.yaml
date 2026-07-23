@@ -8,7 +8,7 @@ workspace:
   - flutter_common
   - app
   - designer_v2
-  - studyu_validator
+  - tools/studyu_validator
   - tools/study_data_docs
   - tools/studyu_mcp
 dev_dependencies:
@@ -83,13 +83,9 @@ melos:
         dart run tools/study_data_docs/bin/study_data_docs.dart --check
       description: Checks StudyU core study-data markdown docs are up to date
 
-    docs:study-data:schema:
-      run: |
-        dart run core/tool/emit_schema.dart
-      description: regenerate core/lib/src/validators/schema/study.schema.json
-
     qualitycheck:
       run: |
+        set -e
         rtk_prefix=""
         if command -v rtk >/dev/null 2>&1; then
           rtk_prefix="rtk "

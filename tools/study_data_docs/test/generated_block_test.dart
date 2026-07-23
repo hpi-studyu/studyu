@@ -181,7 +181,6 @@ void main() {
       const meta = PageMeta(
         path: 'schedules/task-schedule.md',
         title: 'Schedule',
-        classes: ['Schedule', 'CompletionPeriod'],
         fields: {
           'completionPeriods': FieldMeta(
             name: 'completionPeriods',
@@ -281,7 +280,6 @@ void main() {
       const meta = PageMeta(
         path: 'questionnaire/question-types/body-pain.md',
         title: 'Body Pain Models',
-        classes: ['BodyPain', 'BodyPart', 'Body', 'PainType'],
         fields: {
           'painLevel': FieldMeta(
             name: 'painLevel',

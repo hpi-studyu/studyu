@@ -129,6 +129,9 @@ String normalizeVmServiceUri(String value) {
   if (!{'localhost', '127.0.0.1', '::1'}.contains(uri.host.toLowerCase())) {
     throw const FormatException('VM service URI must use a loopback host.');
   }
-  final path = uri.path.endsWith('/ws') ? uri.path : '${uri.path}/ws';
+  final basePath = uri.path.endsWith('/')
+      ? uri.path.substring(0, uri.path.length - 1)
+      : uri.path;
+  final path = basePath.endsWith('/ws') ? basePath : '$basePath/ws';
   return uri.replace(scheme: scheme, path: path).toString();
 }

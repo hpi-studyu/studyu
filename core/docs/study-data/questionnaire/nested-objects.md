@@ -34,11 +34,10 @@ Use `Annotation` objects in scale questions that need labelled values.
 - `annotation`: label shown for that value.
 
 <!-- GENERATED:FIELDS START -->
-
-| Field        | Type     | Required | Default | Description                                      |
-|--------------|----------|----------|---------|--------------------------------------------------|
-| `id`         | `String` | Yes      | -       | Unique choice identifier used in choice answers. |
-| `text`       | `String` | No       | `''`    | Participant-facing choice label.                 |
-| `value`      | `int`    | No       | `0`     | Numeric scale value that receives an annotation. |
-| `annotation` | `String` | No       | `''`    | Label shown for the annotated scale value.       |
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `id` | `String` | Yes | - | Unique choice identifier used in choice answers. |
+| `text` | `String` | No | `''` | Participant-facing choice label. |
+| `value` | `int` | No | `0` | Numeric scale value that receives an annotation. |
+| `annotation` | `String` | No | `''` | Label shown for the annotated scale value. |
 <!-- GENERATED:FIELDS END -->

@@ -1,4 +1,5 @@
 import 'package:studyu_core/src/models/observations/tasks/questionnaire_task.dart';
+import 'package:studyu_core/src/models/questionnaire/questions/boolean_question.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/validators/validation_result.dart';
 import 'package:studyu_core/src/validators/validators/observations_validator.dart';
@@ -44,6 +45,41 @@ void main() {
       );
     },
   );
+
+  test('validates questionnaire content inside observations', () {
+    final observation = _obs('obs')
+      ..questions.questions = [BooleanQuestion.withId()..prompt = ''];
+
+    final result = validateObservations(
+      _studyWithObs([observation]),
+      ValidationLevel.publish,
+    );
+
+    expect(
+      result.errors.any((error) => error.code == 'question.prompt_required'),
+      isTrue,
+    );
+  });
+
+  test('detects duplicate question IDs across observation questionnaires', () {
+    final first = _obs('first')
+      ..questions.questions = [BooleanQuestion.withId()..id = 'shared'];
+    final second = _obs('second')
+      ..questions.questions = [BooleanQuestion.withId()..id = 'shared'];
+
+    final result = validateObservations(
+      _studyWithObs([first, second]),
+      ValidationLevel.draft,
+    );
+
+    expect(
+      result.errors.any(
+        (error) =>
+            error.code == 'questionnaire.duplicate_question_id_cross_context',
+      ),
+      isTrue,
+    );
+  });
 
   test(
     'three observations: first and third share ID -> one error at index 2',

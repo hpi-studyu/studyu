@@ -1,4 +1,3 @@
-import 'package:studyu_core/src/models/observations/tasks/questionnaire_task.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/validators/validation_result.dart';
 import 'package:studyu_core/src/validators/validators/consent_validator.dart';
@@ -12,42 +11,14 @@ import 'package:studyu_core/src/validators/validators/study_info_validator.dart'
 
 export 'validation_result.dart';
 
-ValidationResult validateStudy(Study study, ValidationLevel level) {
-  // Collect screener IDs for cross-context duplicate check (fact 14)
-  final screenerIds = study.questionnaire.questions.map((q) => q.id).toSet();
-
-  // Validate the screener questionnaire
-  final screenerResult = validateQuestionnaire(
-    study.questionnaire,
-    r'$.questionnaire',
-    level,
-  );
-
-  // Validate each observation that has questions (QuestionnaireTask only)
-  final obsResults = <ValidationResult>[];
-  for (var i = 0; i < study.observations.length; i++) {
-    final obs = study.observations[i];
-    if (obs is QuestionnaireTask) {
-      obsResults.add(
-        validateQuestionnaire(
-          obs.questions,
-          '\$.observations[$i].questions',
-          level,
-          knownIds: screenerIds,
-        ),
-      );
-    }
-  }
-
-  return ValidationResult.merge([
-    validateStudyInfo(study, level),
-    validateInterventions(study, level),
-    screenerResult,
-    ...obsResults,
-    validateSchedule(study, level),
-    validateConsent(study, level),
-    validateObservations(study, level),
-    validateReport(study, level),
-    validateEligibilityConsent(study, level),
-  ]);
-}
+ValidationResult validateStudy(Study study, ValidationLevel level) =>
+    ValidationResult.merge([
+      validateStudyInfo(study, level),
+      validateInterventions(study, level),
+      validateQuestionnaire(study.questionnaire, r'$.questionnaire', level),
+      validateSchedule(study, level),
+      validateConsent(study, level),
+      validateObservations(study, level),
+      validateReport(study, level),
+      validateEligibilityConsent(study, level),
+    ]);

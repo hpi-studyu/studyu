@@ -231,24 +231,33 @@ const List<PageScopeEntry> kPageScope = [
   PageScopeEntry(
     className: 'BooleanExpression',
     pagePath: 'shared/expressions.md',
+    generatedFields: false,
   ),
   PageScopeEntry(
     className: 'ChoiceExpression',
     pagePath: 'shared/expressions.md',
+    generatedFields: false,
   ),
   PageScopeEntry(
     className: 'NumericExpression',
     pagePath: 'shared/expressions.md',
+    generatedFields: false,
   ),
   PageScopeEntry(
     className: 'TextExpression',
     pagePath: 'shared/expressions.md',
+    generatedFields: false,
   ),
   PageScopeEntry(
     className: 'CompositeExpression',
     pagePath: 'shared/expressions.md',
+    generatedFields: false,
   ),
-  PageScopeEntry(className: 'NotExpression', pagePath: 'shared/expressions.md'),
+  PageScopeEntry(
+    className: 'NotExpression',
+    pagePath: 'shared/expressions.md',
+    generatedFields: false,
+  ),
 ];
 
 /// Returns the [PageScopeEntry] for [className], or null if excluded.

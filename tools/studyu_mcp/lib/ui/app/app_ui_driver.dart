@@ -30,6 +30,9 @@ class StudyUAppUiDriver {
     return (decoded['studies'] as List?) ?? [];
   }
 
-  Future<void> openStudy(String studyId) =>
-      _driver.tapByValueKey('study_tile_$studyId');
+  Future<void> openStudy(String studyId) => StudyUAppUiFlow(
+    waitForKey: _driver.waitForValueKey,
+    tapKey: _driver.tapByValueKey,
+    readScreen: _driver.readScreen,
+  ).openStudy(studyId);
 }

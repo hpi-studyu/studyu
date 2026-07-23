@@ -34,7 +34,6 @@ void main() {
 pages:
   study/index.md:
     title: Study
-    classes: [Study]
     fields:
       id: Unique identifier.
       title: Display title.
@@ -47,25 +46,11 @@ pages:
       expect(page.fields['title']!.description, 'Display title.');
     });
 
-    test('parses generatedFields: false', () {
-      final path = writeMeta('''
-pages:
-  questionnaire/index.md:
-    title: Questionnaire
-    classes: [StudyUQuestionnaire]
-    generated_fields: false
-    fields: {}
-''');
-      final meta = DocMetadata.load(path);
-      expect(meta.page('questionnaire/index.md')!.generatedFields, isFalse);
-    });
-
     test('parses ignoredFields', () {
       final path = writeMeta('''
 pages:
   study/index.md:
     title: Study
-    classes: [Study]
     ignored_fields: [published, createdAt]
     fields: {}
 ''');
@@ -81,7 +66,6 @@ pages:
 pages:
   study/index.md:
     title: Study
-    classes: [Study]
     links:
       - study/contact.md
     fields: {}
@@ -97,7 +81,6 @@ type_links:
 pages:
   study/index.md:
     title: Study
-    classes: [Study]
     fields: {}
 ''');
       final meta = DocMetadata.load(path);
@@ -112,7 +95,6 @@ pages:
 pages:
   shared/data-reference.md:
     title: Data Reference
-    classes: [DataReference]
     fields:
       task: Task ID.
       extra:
@@ -136,7 +118,6 @@ manual_pages:
       final meta = DocMetadata.load(path);
       expect(meta.manualPagePaths, contains('shared/enums.md'));
       expect(meta.page('shared/enums.md')!.manual, isTrue);
-      expect(meta.page('shared/enums.md')!.generatedFields, isFalse);
     });
   });
 
@@ -148,7 +129,6 @@ type_links:
 pages:
   shared/data-reference.md:
     title: Data Reference
-    classes: [DataReference]
     fields:
       extra:
         description: Extra virtual field.

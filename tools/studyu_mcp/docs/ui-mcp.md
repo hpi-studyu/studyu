@@ -34,6 +34,21 @@ fvm exec melos run mcp:studyu
 You can also pass the URI to the `connect` tool. Connections are restricted to
 `localhost`, `127.0.0.1`, and `::1`.
 
+## Study validation tool
+
+### `validate_study_json`
+
+Validates a JSON string with the standalone StudyU schema and typed core
+validators. `level` defaults to `draft`; `section` is optional.
+
+```json
+{
+  "json": "{...}",
+  "level": "publish",
+  "section": "observations"
+}
+```
+
 ## General UI tools
 
 ### `connect`
@@ -120,7 +135,11 @@ Example output:
       "description": "This is a Demo Study.",
       "status": "running",
       "participation": "open",
-      "registryPublished": true
+      "registryPublished": true,
+      "validation": {
+        "draft": {"valid": true, "errors": [], "warnings": []},
+        "publish": {"valid": true, "errors": [], "warnings": []}
+      }
     }
   ]
 }

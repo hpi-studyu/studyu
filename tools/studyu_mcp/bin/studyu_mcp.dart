@@ -6,6 +6,7 @@ import 'package:studyu_mcp/ui/app/app_ui_driver.dart';
 import 'package:studyu_mcp/ui/app/app_ui_flow.dart';
 import 'package:studyu_mcp/ui/designer/designer_ui_screen.dart';
 import 'package:studyu_mcp/ui/vm_service_ui_driver.dart';
+import 'package:studyu_mcp/validation_tools.dart';
 
 Future<void> main() async {
   final server = Server(
@@ -40,6 +41,7 @@ Future<void> main() async {
   );
 
   addStudyUAppTools(server, appDriver);
+  addStudyValidationTools(server);
   _addGeneralUiTools(server, driver);
 
   final transportResult = McpServer.createStdioTransport();

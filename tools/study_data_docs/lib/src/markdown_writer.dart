@@ -102,8 +102,6 @@ Map<String, List<FieldRow>> _buildFieldBlocks({
   required Map<String, String> typeLinks,
   required String currentPagePath,
 }) {
-  if (!meta.generatedFields) return const {};
-
   final classesByName = {for (final cls in classes) cls.name: cls};
   final result = <String, List<FieldRow>>{};
 

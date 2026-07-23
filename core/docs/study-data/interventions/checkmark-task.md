@@ -6,15 +6,14 @@
 
 
 <!-- GENERATED:FIELDS START -->
-
-| Field      | Type                                        | Required | Description                  |
-|------------|---------------------------------------------|----------|------------------------------|
-| `type`     | `String`                                    | Yes      | Fixed value `checkmark`.     |
-| `id`       | `String`                                    | Yes      | Unique task identifier.      |
-| `title`    | `String?`                                   | No       | Short display title.         |
-| `header`   | `String?`                                   | No       | Optional header text.        |
-| `footer`   | `String?`                                   | No       | Optional footer text.        |
-| `schedule` | [`Schedule`](../schedules/task-schedule.md) | No       | When this task is presented. |
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | `String` | Yes | Fixed value `checkmark`. |
+| `id` | `String` | Yes | Unique task identifier. |
+| `title` | `String?` | No | Short display title. |
+| `header` | `String?` | No | Optional header text. |
+| `footer` | `String?` | No | Optional footer text. |
+| `schedule` | [`Schedule`](../schedules/task-schedule.md) | No | When this task is presented. |
 <!-- GENERATED:FIELDS END -->
 
 <!-- GENERATED:DISCRIMINATORS START -->

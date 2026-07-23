@@ -38,21 +38,17 @@ class FieldMeta {
 class PageMeta {
   final String path; // relative to core/docs/study-data/
   final String title;
-  final List<String> classes;
   final Map<String, FieldMeta> fields;
   final List<String> ignoredFields;
   final List<String> links; // canonical page paths this page links to
-  final bool generatedFields;
   final bool manual;
 
   const PageMeta({
     required this.path,
     required this.title,
-    required this.classes,
     this.fields = const {},
     this.ignoredFields = const [],
     this.links = const [],
-    this.generatedFields = true,
     this.manual = false,
   });
 }
@@ -98,10 +94,8 @@ class DocMetadata {
         final data = entry.value as YamlMap;
 
         final title = data['title'] as String? ?? '';
-        final classes = _stringList(data['classes']);
         final ignoredFields = _stringList(data['ignored_fields']);
         final links = _stringList(data['links']);
-        final generatedFields = data['generated_fields'] as bool? ?? true;
 
         final fields = <String, FieldMeta>{};
         final fieldsNode = data['fields'];
@@ -131,11 +125,9 @@ class DocMetadata {
         pages[pagePath] = PageMeta(
           path: pagePath,
           title: title,
-          classes: classes,
           fields: fields,
           ignoredFields: ignoredFields,
           links: links,
-          generatedFields: generatedFields,
         );
       }
     }
@@ -149,8 +141,6 @@ class DocMetadata {
         pages[pagePath] = PageMeta(
           path: pagePath,
           title: data['title'] as String? ?? '',
-          classes: const [],
-          generatedFields: false,
           manual: true,
         );
       }
@@ -207,13 +197,6 @@ void writeMetadataStubs({
 
     buf.writeln('  ${p.posix.normalize(path)}:');
     buf.writeln('    title: ${_yamlString(page.title)}');
-    if (page.classes.isNotEmpty) {
-      buf.writeln('    classes: [${page.classes.join(', ')}]');
-    }
-
-    if (!page.generatedFields) {
-      buf.writeln('    generated_fields: false');
-    }
     if (page.ignoredFields.isNotEmpty) {
       buf.writeln('    ignored_fields: [${page.ignoredFields.join(', ')}]');
     }

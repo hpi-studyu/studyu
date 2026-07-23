@@ -7,11 +7,11 @@ Current scope:
 - UI automation for the participant app and Designer v2 through Flutter Driver / VM service.
 - Reusable UI flow helpers for integration tests.
 - MCP tools for LLM-driven app navigation.
+- Study JSON validation backed by the standalone validator and typed core checks.
 
 Planned scope:
 
 - Study creation helpers.
-- Study validation helpers.
 - Combined study creation and UI testing workflows.
 
 ## Package layout
@@ -21,6 +21,7 @@ tools/studyu_mcp/
   bin/
     studyu_mcp.dart              # MCP server entrypoint
   lib/
+    validation_tools.dart        # Study JSON validation MCP tool
     ui/
       ui_driver.dart             # General UI contracts
       vm_service_ui_driver.dart  # Flutter Driver / VM service adapter

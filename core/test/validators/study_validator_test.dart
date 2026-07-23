@@ -1,4 +1,5 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/testing.dart';
 import 'package:test/test.dart';
 
 void main() {

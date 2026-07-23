@@ -1,5 +1,3 @@
-export 'src/fixtures/participant_fixtures.dart';
-export 'src/fixtures/study_fixtures.dart';
 export 'src/models/models.dart';
 export 'src/util/analytics.dart';
 export 'src/util/util.dart';
@@ -9,6 +7,7 @@ export 'src/validators/validators/consent_validator.dart';
 export 'src/validators/validators/eligibility_consent_validator.dart';
 export 'src/validators/validators/interventions_validator.dart';
 export 'src/validators/validators/observations_validator.dart';
+export 'src/validators/validators/question_type_validator.dart';
 export 'src/validators/validators/questionnaire_validator.dart';
 export 'src/validators/validators/report_validator.dart';
 export 'src/validators/validators/schedule_validator.dart';

@@ -1,35 +1,6 @@
-// Generates core/lib/src/validators/schema/study.schema.json from the committed
-// model serializers.  The schema mirrors the canonical generated `.g.dart`
-// contract plus the explicit runtime/join keys consumed manually in
-// `Study.fromJson`.  It intentionally does **not** encode handwritten legacy
-// migration shapes (DateQuestion old dateFormatPreset, QuestionConditional
-// single-expression wrapping); those stay in the Dart logic layer.
-//
-// Invoke:  dart run core/tool/emit_schema.dart
-//
-// The fixture `valid_study.json` is strict JSON with no inline comment because
-// both dart:convert and ajv must parse it.  Portability is documented here and
-// in the workflow step name, not inside the JSON file.
+// Authored Study JSON Schema. Keep serializer compatibility observable in tests.
 
 import 'dart:convert';
-import 'dart:io';
-
-/// Returns the `core/` package root by walking upward from the script URI.
-Directory _resolveCoreRoot() {
-  // Platform.script is a file: URI pointing at the compiled script.
-  // We resolve from the source path via the script URI path.
-  final scriptPath = Platform.script.toFilePath();
-  // script is at core/tool/emit_schema.dart  ->  core root is parent
-  final scriptDir = File(scriptPath).parent;
-  return scriptDir.parent;
-}
-
-String get _coreRoot => _resolveCoreRoot().path;
-
-String get _schemaOutputPath {
-  final root = _coreRoot;
-  return '$root/lib/src/validators/schema/study.schema.json';
-}
 
 // ---------------------------------------------------------------------------
 // Schema building blocks
@@ -48,7 +19,7 @@ Schema _enumValues(List<String> values) => {'type': 'string', 'enum': values};
 Schema _listOf(Schema items) => {'type': 'array', 'items': items};
 
 /// A nullable field schema — Draft 7 allows null via `type` arrays:
-/// `{"type": ["string", "null"]}`.  Because the emitter sets
+/// `{"type": ["string", "null"]}`. Because the schema sets
 /// `additionalProperties: false` everywhere, optional fields are simply
 /// absent from `required`.
 Schema _nullable(Schema inner) {
@@ -438,6 +409,7 @@ void _addDefinitions(Map<String, Schema> definitions) {
       'result_type': {'type': 'string'},
       'result': _ref('Result'),
       'completed_at': _nullable(_dateTime()),
+      'started_at': _nullable(_dateTime()),
     },
     'required': [
       'subject_id',
@@ -450,13 +422,24 @@ void _addDefinitions(Map<String, Schema> definitions) {
 
   // ---- Result ---------------------------------------------------------
   definitions['Result'] = {
-    'type': 'object',
-    'additionalProperties': false,
-    'properties': {
-      'type': {'type': 'string'},
-      'periodId': _nullable(_type('string')),
-    },
-    'required': ['type'],
+    'oneOf': [
+      _discriminated(
+        constValue: 'QuestionnaireState',
+        properties: {
+          'periodId': _nullable(_type('string')),
+          'result': _listOf(_type('object')),
+        },
+        required: ['result'],
+      ),
+      _discriminated(
+        constValue: 'bool',
+        properties: {
+          'periodId': _nullable(_type('string')),
+          'result': _type('boolean'),
+        },
+        required: ['result'],
+      ),
+    ],
   };
 
   // ---- QuestionConditional --------------------------------------------
@@ -475,7 +458,6 @@ void _addDefinitions(Map<String, Schema> definitions) {
       _notExpressionSchema(),
       _numericExpressionSchema(),
       _textExpressionSchema(),
-      _compositeExpressionSchema(),
     ],
   };
 
@@ -909,15 +891,12 @@ Schema _questionVariantSchema(String questionTypeConst) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
-
-void main(List<String> arguments) {
+/// The authored Study JSON Schema used by the standalone validator.
+Map<String, dynamic> buildStudySchema() {
   final definitions = <String, Schema>{};
   _addDefinitions(definitions);
 
-  final schema = <String, dynamic>{
+  return <String, dynamic>{
     r'$schema': 'http://json-schema.org/draft-07/schema#',
     r'$id': 'https://studyu.health/schemas/study.schema.json',
     'title': 'Study',
@@ -927,13 +906,7 @@ void main(List<String> arguments) {
     'properties': definitions['Study']!['properties'] as Map<String, dynamic>,
     'required': definitions['Study']!['required'] as List<String>,
   };
-
-  const encoder = JsonEncoder.withIndent('  ');
-  final json = encoder.convert(schema);
-
-  final outFile = File(_schemaOutputPath);
-  outFile.parent.createSync(recursive: true);
-  outFile.writeAsStringSync('$json\n');
-
-  stdout.writeln('Wrote schema to $_schemaOutputPath');
 }
+
+String studySchemaText() =>
+    const JsonEncoder.withIndent('  ').convert(buildStudySchema());

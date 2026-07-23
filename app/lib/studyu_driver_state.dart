@@ -29,5 +29,9 @@ class StudyUDriverState {
     'status': study.status.name,
     'participation': study.participation.name,
     'registryPublished': study.registryPublished,
+    'validation': {
+      'draft': validateStudy(study, ValidationLevel.draft).toJson(),
+      'publish': validateStudy(study, ValidationLevel.publish).toJson(),
+    },
   };
 }

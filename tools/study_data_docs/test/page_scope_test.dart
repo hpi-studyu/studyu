@@ -97,6 +97,15 @@ void main() {
       expect(entry!.dispatcherField, 'type');
     });
 
+    test('expression page owns its exceptional no-fields behavior', () {
+      expect(
+        entriesForPage(
+          'shared/expressions.md',
+        ).every((entry) => !entry.generatedFields),
+        isTrue,
+      );
+    });
+
     test('Expression excludes composite from dispatcher docs', () {
       final entry = scopeFor('Expression');
       expect(entry, isNotNull);

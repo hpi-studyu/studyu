@@ -1,4 +1,7 @@
+import 'package:studyu_core/src/models/expressions/types/boolean_expression.dart';
+import 'package:studyu_core/src/models/expressions/types/composite_expression.dart';
 import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 import 'package:studyu_core/src/models/questionnaire/questionnaire.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/boolean_question.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/choice_question.dart';
@@ -49,6 +52,29 @@ void main() {
         ValidationLevel.draft,
       );
       expect(r.valid, isTrue);
+    });
+
+    test('allows a conditional to reference a later question', () {
+      final first = _boolQ('first')
+        ..conditional = QuestionConditional.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [BooleanExpression()..target = 'later'],
+          ),
+        );
+
+      final result = validateQuestionnaire(
+        _questionnaire([first, _boolQ('later')]),
+        r'$.questionnaire',
+        ValidationLevel.draft,
+      );
+
+      expect(
+        result.errors.where(
+          (error) => error.code == 'question.conditional_target_missing',
+        ),
+        isEmpty,
+      );
     });
 
     test('question with blank prompt fails at publish', () {

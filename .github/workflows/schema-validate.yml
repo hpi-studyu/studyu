@@ -4,8 +4,10 @@ on:
   push:
     paths:
       - core/**
+      - tools/studyu_validator/**
       - .github/workflows/schema-validate.yml
       - pubspec.yaml
+      - pubspec.lock
   workflow_dispatch:
 
 jobs:
@@ -16,50 +18,34 @@ jobs:
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
           cache: false
-      - name: Verify generated schema is current
-        run: |
-          dart run core/tool/emit_schema.dart
-          git diff --exit-code -- core/lib/src/validators/schema/study.schema.json
+      - name: Install workspace dependencies
+        run: dart pub get
+      - name: Test schema and serializer compatibility
+        working-directory: tools/studyu_validator
+        run: dart test
       - uses: actions/setup-node@v6
         with:
           node-version: 20
-      - name: Install ajv and ajv-formats
-        run: npm install ajv ajv-formats
-      - name: Validate portable fixture against study.schema.json
+      - name: Validate portable fixture with AJV
         run: |
+          dart run \
+            tools/studyu_validator/bin/studyu_validator.dart schema \
+            > /tmp/study.schema.json
+          npm install ajv ajv-formats
           node -e "
           const Ajv = require('ajv');
           const addFormats = require('ajv-formats');
           const fs = require('fs');
-
-          const schemaPath = './core/lib/src/validators/schema/study.schema.json';
-          const fixturePath = './core/lib/src/validators/schema/fixtures/valid_study.json';
-
-          console.log('Schema:', schemaPath);
-          console.log('Fixture:', fixturePath);
-
-          const schemaRaw = fs.readFileSync(schemaPath, 'utf8');
-          const fixtureRaw = fs.readFileSync(fixturePath, 'utf8');
-          const schema = JSON.parse(schemaRaw);
-          const data = JSON.parse(fixtureRaw);
-
-          console.log('Schema \$schema:', schema['\$schema']);
-          console.log('Schema definitions:', Object.keys(schema.definitions || {}).length, 'types');
-          console.log('Schema root properties:', Object.keys(schema.properties || {}).length, 'keys');
-          console.log('Fixture root keys:', Object.keys(data));
-          console.log('Compiling schema...');
-
+          const schemaPath = '/tmp/study.schema.json';
+          const fixturePath =
+            'tools/studyu_validator/test/fixtures/valid_study.json';
+          const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+          const data = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
           const ajv = new Ajv({allErrors: true, strict: false});
           addFormats(ajv);
           const validate = ajv.compile(schema);
-
-          console.log('Schema compiled. Validating fixture...');
-          const valid = validate(data);
-
-          if (!valid) {
-            console.error('VALIDATION FAILED:', JSON.stringify(validate.errors, null, 2));
+          if (!validate(data)) {
+            console.error(JSON.stringify(validate.errors, null, 2));
             process.exit(1);
           }
-
-          console.log('Result: Fixture is valid against study.schema.json');
           "

@@ -6,9 +6,7 @@ Study data docs describe the JSON-serialisable models used to define, schedule, 
 
 ## Minimal Study JSON
 
-This example defines one invite-only study with one consent item, one intervention arm, one
-scheduled questionnaire observation, one conditional question, one numeric result, and one report
-section.
+This example defines one invite-only study with one consent item, one intervention arm, one scheduled questionnaire observation, one conditional question, one numeric result, and one report section.
 
 ```json
 {
@@ -109,8 +107,7 @@ section.
 }
 ```
 
-`DataReference.task` points to a task ID. `DataReference.property` points to a question ID inside
-that task.
+`DataReference.task` points to a task ID. `DataReference.property` points to a question ID inside that task.
 
 ## Pages
 

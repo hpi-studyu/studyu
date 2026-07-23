@@ -1,7 +1,5 @@
 # Study data documentation metadata.
 # - title: Display title for the page (must match the first H1 heading).
-# - classes: Dart classes documented on this page.
-# - generated_fields: Set to false for classes with hand-written fromJson.
 # - ignored_fields: Field names to skip in drift checks (runtime, Supabase-join, or UI-only).
 # - links: Canonical page paths this page links to.
 # - fields: Field descriptions keyed by Dart field name. Use {} for abstract/discriminator pages.
@@ -23,7 +21,6 @@ type_links:
 pages:
   study/index.md:
     title: Study
-    classes: [Study]
     ignored_fields: [published, fitbitCredentials, participantCount, endedCount, activeSubjectCount, missedDays, repo, invites, participants, participantsProgress, createdAt]
     fields:
       id: Unique study identifier (UUID).
@@ -56,7 +53,6 @@ pages:
 
   study/contact.md:
     title: Contact
-    classes: [Contact]
     fields:
       organization: Name of the affiliated organization or institution.
       institutionalReviewBoard: Name of the ethics/IRB board that approved the study.
@@ -69,7 +65,6 @@ pages:
 
   study/eligibility.md:
     title: Eligibility Criterion
-    classes: [EligibilityCriterion]
     fields:
       id: Unique criterion identifier (UUID).
       reason: Human-readable explanation of why this criterion exists.
@@ -77,7 +72,6 @@ pages:
 
   study/consent.md:
     title: Consent Item
-    classes: [ConsentItem]
     fields:
       id: Unique consent item identifier (UUID).
       title: Short title displayed above the consent text.
@@ -86,13 +80,10 @@ pages:
 
   questionnaire/index.md:
     title: StudyUQuestionnaire
-    classes: [StudyUQuestionnaire, Question]
-    generated_fields: false
     fields: {}
 
   questionnaire/question-types/boolean.md:
     title: Boolean Question
-    classes: [BooleanQuestion]
     fields:
       type: Fixed value `boolean`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -102,7 +93,6 @@ pages:
 
   questionnaire/question-types/choice.md:
     title: Choice Question
-    classes: [ChoiceQuestion]
     fields:
       type: Fixed value `choice`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -114,7 +104,6 @@ pages:
 
   questionnaire/question-types/scale.md:
     title: Scale Question
-    classes: [ScaleQuestion]
     fields:
       type: Fixed value `scale`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -134,7 +123,6 @@ pages:
 
   questionnaire/question-types/annotated-scale.md:
     title: Annotated Scale Question
-    classes: [AnnotatedScaleQuestion]
     fields:
       type: Fixed value `annotatedScale`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -152,7 +140,6 @@ pages:
 
   questionnaire/question-types/visual-analogue.md:
     title: Visual Analogue Question
-    classes: [VisualAnalogueQuestion]
     fields:
       type: Fixed value `visualAnalogue`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -173,7 +160,6 @@ pages:
 
   questionnaire/question-types/image-capturing.md:
     title: Image Capturing Question
-    classes: [ImageCapturingQuestion]
     fields:
       type: Fixed value `ImageCapturingQuestion`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -183,7 +169,6 @@ pages:
 
   questionnaire/question-types/audio-recording.md:
     title: Audio Recording Question
-    classes: [AudioRecordingQuestion]
     fields:
       type: Fixed value `AudioRecordingQuestion`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -194,7 +179,6 @@ pages:
 
   questionnaire/question-types/date.md:
     title: Date Question
-    classes: [DateQuestion]
     fields:
       type: Fixed value `date`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -214,7 +198,6 @@ pages:
 
   questionnaire/question-types/free-text.md:
     title: Free Text Question
-    classes: [FreeTextQuestion]
     fields:
       type: Fixed value `freeText`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -227,7 +210,6 @@ pages:
 
   questionnaire/question-types/fitbit.md:
     title: Fitbit Question
-    classes: [FitbitQuestion]
     fields:
       type: Fixed value `FitbitQuestion`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -238,7 +220,6 @@ pages:
 
   questionnaire/question-types/pain.md:
     title: Pain Question
-    classes: [PainQuestion]
     fields:
       type: Fixed value `pain`.
       id: Stable question identifier used by answers, conditions, and data references.
@@ -248,7 +229,6 @@ pages:
 
   questionnaire/question-types/body-pain.md:
     title: Body Pain Models
-    classes: [BodyPain, BodyPart, Body, PainType]
     fields:
       painLevel: Numeric pain intensity value for a body part.
       type: Pain type identifier string.
@@ -260,7 +240,6 @@ pages:
 
   observations/questionnaire-task.md:
     title: Questionnaire Task
-    classes: [QuestionnaireTask]
     fields:
       type: Fixed value `questionnaire`.
       id: Unique task identifier.
@@ -272,7 +251,6 @@ pages:
 
   interventions/intervention.md:
     title: Intervention
-    classes: [Intervention]
     fields:
       id: Unique intervention identifier (UUID).
       name: Display name of the intervention arm.
@@ -282,7 +260,6 @@ pages:
 
   interventions/checkmark-task.md:
     title: Checkmark Task
-    classes: [CheckmarkTask]
     fields:
       type: Fixed value `checkmark`.
       id: Unique task identifier.
@@ -293,7 +270,6 @@ pages:
 
   schedules/task-schedule.md:
     title: Schedule
-    classes: [ Schedule, CompletionPeriod ]
     fields:
       completionPeriods: Time windows within a day during which the task can be completed.
       reminders: Optional reminder times for this task.
@@ -303,7 +279,6 @@ pages:
 
   schedules/study-schedule.md:
     title: Study Schedule
-    classes: [StudySchedule]
     fields:
       numberOfCycles: How many A/B cycles the study runs.
       phaseDuration: Length of each intervention phase in days.
@@ -313,7 +288,6 @@ pages:
 
   invites/study-invite.md:
     title: Study Invite
-    classes: [StudyInvite]
     fields:
       code: Invite code participants enter to enrol.
       studyId: ID of the study this invite belongs to.
@@ -321,7 +295,6 @@ pages:
 
   participants/study-subject.md:
     title: Study Subject
-    classes: [StudySubject]
     ignored_fields: [study, progress]
     fields:
       id: Unique participant identifier (UUID).
@@ -334,7 +307,6 @@ pages:
 
   participants/subject-progress.md:
     title: Subject Progress
-    classes: [SubjectProgress]
     ignored_fields: [startedAt]
     fields:
       completedAt: UTC timestamp when the task was completed.
@@ -346,7 +318,6 @@ pages:
 
   reports/report-specification.md:
     title: Report Specification
-    classes: [ReportSpecification]
     fields:
       primary: The main highlighted report section shown at the top.
       secondary: Additional report sections shown below the primary section.
@@ -359,7 +330,6 @@ pages:
 
   reports/sections/average.md:
     title: Average Section
-    classes: [AverageSection]
     fields:
       type: Fixed value `average`.
       id: Unique section identifier (UUID).
@@ -370,7 +340,6 @@ pages:
 
   reports/sections/linear-regression.md:
     title: Linear Regression Section
-    classes: [LinearRegressionSection]
     fields:
       type: Fixed value `linearRegression`.
       id: Unique section identifier (UUID).
@@ -382,7 +351,6 @@ pages:
 
   reports/sections/textual-summary.md:
     title: Textual Summary Section
-    classes: [TextualSummarySection]
     fields:
       type: Fixed value `textual_summary`.
       id: Unique section identifier (UUID).
@@ -392,7 +360,6 @@ pages:
 
   reports/sections/gauge-comparison.md:
     title: Gauge Comparison Section
-    classes: [GaugeComparisonSection]
     fields:
       type: Fixed value `gauge_comparison`.
       id: Unique section identifier (UUID).
@@ -402,7 +369,6 @@ pages:
 
   reports/sections/descriptive-stats.md:
     title: Descriptive Stats Section
-    classes: [DescriptiveStatsSection]
     fields:
       type: Fixed value `descriptive_stats`.
       id: Unique section identifier (UUID).
@@ -412,7 +378,6 @@ pages:
 
   results/intervention-result.md:
     title: Intervention Result
-    classes: [InterventionResult]
     fields:
       type: Fixed value `intervention`.
       id: Unique result identifier (UUID).
@@ -420,7 +385,6 @@ pages:
 
   results/numeric-result.md:
     title: Numeric Result
-    classes: [NumericResult]
     fields:
       type: Fixed value `numeric`.
       id: Unique result identifier (UUID).
@@ -429,7 +393,6 @@ pages:
 
   questionnaire/nested-objects.md:
     title: Questionnaire Nested Objects
-    classes: [ Choice, Annotation ]
     fields:
       id: Unique choice identifier used in choice answers.
       text: Participant-facing choice label.
@@ -438,22 +401,17 @@ pages:
 
   shared/question-conditional.md:
     title: Question Conditional
-    classes: [ QuestionConditional ]
-    generated_fields: false
     fields: { }
 
 
   shared/data-reference.md:
     title: Data Reference
-    classes: [DataReference]
     fields:
       task: ID of the task this reference points to.
       property: Name of the specific property within the task result to reference.
 
   shared/expressions.md:
     title: Expressions
-    classes: [Expression, BooleanExpression, ChoiceExpression, NumericExpression, TextExpression, CompositeExpression, NotExpression]
-    generated_fields: false
     fields: {}
 
 

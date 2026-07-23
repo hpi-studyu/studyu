@@ -11,7 +11,7 @@ dependencies:
   args: ^2.5.0
   json_schema: ^5.2.2
   studyu_core:
-    path: ../core
+    path: ../../core
 
 dev_dependencies:
   test: ^1.25.15

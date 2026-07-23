@@ -9,11 +9,12 @@ ValidationResult validateQuestionnaire(
   Set<String>? knownIds,
 }) {
   final errors = <ValidationError>[];
+  final allIds = questionnaire.questions.map((question) => question.id).toSet();
   final seenIds = <String>{};
 
   for (var i = 0; i < questionnaire.questions.length; i++) {
     final q = questionnaire.questions[i];
-    if (seenIds.contains(q.id)) {
+    if (!seenIds.add(q.id)) {
       errors.add(
         ValidationError(
           code: 'questionnaire.duplicate_question_id',
@@ -23,16 +24,15 @@ ValidationResult validateQuestionnaire(
         ),
       );
     }
-    seenIds.add(q.id);
 
-    // Per-type validation
-    final questionResult = validateQuestion(q, '$context[$i]', level, seenIds);
+    // Per-type validation uses the complete set so forward references work.
+    final questionResult = validateQuestion(q, '$context[$i]', level, allIds);
     errors.addAll(questionResult.errors);
   }
 
   // Fact 14 — cross-context duplicate ID check
   if (knownIds != null) {
-    for (final id in seenIds) {
+    for (final id in allIds) {
       if (knownIds.contains(id)) {
         errors.add(
           ValidationError(

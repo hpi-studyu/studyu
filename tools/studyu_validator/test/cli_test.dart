@@ -74,7 +74,7 @@ const schemaInvalidJson = '''
 
 String _workdir() => Directory.current.path.endsWith('studyu_validator')
     ? Directory.current.path
-    : '${Directory.current.path}/studyu_validator';
+    : '${Directory.current.path}/tools/studyu_validator';
 
 Future<ProcessResult> _runCli(List<String> args) => Process.run('dart', [
   'run',

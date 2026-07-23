@@ -19,6 +19,19 @@ class StudyUAppUiFlow {
   final Duration routeTimeout;
   final Duration finalTimeout;
 
+  Future<void> openStudy(String studyId) async {
+    await _tapKey('study_tile_$studyId');
+    if (!await _waitForKey(
+      StudyUAppKey.studyOverviewScreen,
+      timeout: finalTimeout,
+    )) {
+      final current = await _readCurrentScreen();
+      throw StateError(
+        'Study overview did not become visible after opening "$studyId". Current screen: ${current.screen}. Visible keys: ${current.visibleKeys.join(', ')}',
+      );
+    }
+  }
+
   Future<void> completeOnboardingToStudyList() async {
     final snapshot = await _readCurrentScreen();
     switch (snapshot.screen) {
@@ -67,8 +80,18 @@ class StudyUAppUiFlow {
   }
 
   Future<void> _acceptTerms() async {
-    await _tapIfPresent(StudyUAppKey.termsCheckbox);
-    await _tapIfPresent(StudyUAppKey.privacyCheckbox);
+    if (!await _waitForKey(
+      StudyUAppKey.termsCheckboxChecked,
+      timeout: shortTimeout,
+    )) {
+      await _tapIfPresent(StudyUAppKey.termsCheckbox);
+    }
+    if (!await _waitForKey(
+      StudyUAppKey.privacyCheckboxChecked,
+      timeout: shortTimeout,
+    )) {
+      await _tapIfPresent(StudyUAppKey.privacyCheckbox);
+    }
     await _tapIfPresent(StudyUAppKey.termsContinue);
   }
 
@@ -98,7 +121,9 @@ abstract final class StudyUAppKey {
   static const onboardingDone = 'onboarding_done';
   static const welcomeGetStarted = 'welcome_get_started';
   static const termsCheckbox = 'terms_checkbox';
+  static const termsCheckboxChecked = 'terms_checkbox_checked';
   static const privacyCheckbox = 'privacy_checkbox';
+  static const privacyCheckboxChecked = 'privacy_checkbox_checked';
   static const termsContinue = 'terms_continue';
   static const studySelectionList = 'study_selection_list';
   static const studySelectionInviteCode = 'study_selection_invite_code';
@@ -118,7 +143,9 @@ abstract final class StudyUAppKey {
     onboardingDone,
     welcomeGetStarted,
     termsCheckbox,
+    termsCheckboxChecked,
     privacyCheckbox,
+    privacyCheckboxChecked,
     termsContinue,
     studySelectionList,
     studySelectionInviteCode,
