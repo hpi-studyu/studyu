@@ -49,6 +49,18 @@ void main() {
     expect(formatWithSingleFormatter(formatters!.single, '-1').text, '-1');
   });
 
+  test('numeric free-text threshold keyboard allows signed input', () {
+    final viewModel = viewModelWithQuestion(
+      freeTextQuestion('q1', textType: FreeTextQuestionType.numeric),
+    );
+    viewModel.comparatorControl.value = NumericComparator.lessThan;
+
+    expect(
+      freeTextThresholdKeyboardType(viewModel),
+      const TextInputType.numberWithOptions(signed: true),
+    );
+  });
+
   test(
     'non-numeric free-text length threshold formatter rejects minus sign',
     () {
@@ -62,4 +74,11 @@ void main() {
       expect(formatWithSingleFormatter(formatters!.single, '-1').text, '');
     },
   );
+
+  test('non-numeric free-text length threshold keyboard stays unsigned', () {
+    final viewModel = viewModelWithQuestion(freeTextQuestion('q1'));
+    viewModel.comparatorControl.value = TextComparator.lengthLessThan;
+
+    expect(freeTextThresholdKeyboardType(viewModel), TextInputType.number);
+  });
 }

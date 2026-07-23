@@ -405,9 +405,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case FreeTextQuestion.questionType:
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
-          keyboardType: conditionVm.selectedComparatorUsesNumericThreshold
-              ? TextInputType.number
-              : TextInputType.text,
+          keyboardType: freeTextThresholdKeyboardType(conditionVm),
           inputFormatters: freeTextThresholdInputFormatters(conditionVm),
           decoration: InputDecoration(
             labelText: tr.form_array_question_visibility_logic_value_title,
@@ -460,4 +458,16 @@ List<TextInputFormatter>? freeTextThresholdInputFormatters(
           : RegExp(r'^\d*'),
     ),
   ];
+}
+
+TextInputType freeTextThresholdKeyboardType(
+  ConditionRowFormViewModel conditionVm,
+) {
+  if (!conditionVm.selectedComparatorUsesNumericThreshold) {
+    return TextInputType.text;
+  }
+
+  return conditionVm.selectedQuestionAllowsSignedNumericThreshold
+      ? const TextInputType.numberWithOptions(signed: true)
+      : TextInputType.number;
 }
