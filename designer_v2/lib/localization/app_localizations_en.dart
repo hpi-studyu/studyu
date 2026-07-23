@@ -592,7 +592,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose the response type that best matches your question and define the response options according to the data you want to collect.';
 
   @override
-  String get question_type_choice => 'Multiple choice';
+  String get question_type_choice => 'Choice';
 
   @override
   String get question_type_free_text => 'Free text';
@@ -659,11 +659,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Maximum recording duration in seconds';
 
   @override
-  String get form_field_response_choice_multiple => 'Select multiple';
+  String get form_field_response_choice_multiple => 'Allow multiple selections';
 
   @override
   String get form_field_response_choice_multiple_tooltip =>
-      'Allow the participant to select multiple response options. Otherwise only a single option can be selected.';
+      'Participants can select more than one answer.';
+
+  @override
+  String get form_field_response_choice_required =>
+      'Require at least one selection';
+
+  @override
+  String get form_field_response_choice_required_tooltip =>
+      'Require the participant to select at least one response option.';
 
   @override
   String get form_array_response_options_choice_new => 'Add option';

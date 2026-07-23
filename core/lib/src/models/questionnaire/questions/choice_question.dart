@@ -11,6 +11,8 @@ class ChoiceQuestion extends Question<List<String>> {
   static const String questionType = 'choice';
 
   bool multiple = false;
+  @JsonKey(defaultValue: false)
+  bool selectionRequired = false;
   List<Choice> choices = [];
 
   ChoiceQuestion() : super(questionType);

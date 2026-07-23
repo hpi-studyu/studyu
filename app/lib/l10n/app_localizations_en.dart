@@ -537,7 +537,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eligible_back => 'Back to study selection';
 
   @override
-  String get eligible_choice_multi_selection => 'Select all that apply';
+  String get eligible_choice_multi_selection =>
+      'Select all that apply (optional)';
+
+  @override
+  String get eligible_choice_multi_selection_required =>
+      'Select all that apply (at least one required)';
 
   @override
   String get report_overview => 'Report overview';

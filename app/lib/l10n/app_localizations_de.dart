@@ -543,7 +543,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eligible_choice_multi_selection =>
-      'Alle zutreffenden Antworten auswählen';
+      'Alle zutreffenden Antworten auswählen (optional)';
+
+  @override
+  String get eligible_choice_multi_selection_required =>
+      'Alle zutreffenden Antworten auswählen (mindestens eine erforderlich)';
 
   @override
   String get report_overview => 'Ergebnisübersicht';

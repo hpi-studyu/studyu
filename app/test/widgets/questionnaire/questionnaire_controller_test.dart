@@ -52,6 +52,44 @@ void main() {
       expect(controller.visibleQuestions.first.id, equals('q1'));
     });
 
+    test('empty optional choice answers drive choice visibility', () {
+      final q1 = ChoiceQuestion.withId()
+        ..id = 'q1'
+        ..prompt = 'Select any'
+        ..multiple = true
+        ..choices = [Choice.withText(id: 'a', text: 'A')];
+      final q2 = boolQuestion('q2', 'Shown when A is selected')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [
+              ChoiceExpression()
+                ..target = q1.id
+                ..choices = {'a'},
+            ],
+          ),
+        );
+      final q3 = boolQuestion('q3', 'Shown when A is not selected')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [
+              NotExpression()
+                ..expression = (ChoiceExpression()
+                  ..target = q1.id
+                  ..choices = {'a'}),
+            ],
+          ),
+        );
+      final controller = QuestionnaireController([q1, q2, q3]);
+
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+      controller.submitAnswer(q1.constructAnswer([]));
+
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1', 'q3']);
+    });
+
     // ── Test 2: hidden answers stored but excluded from payload ──
 
     test('hidden answers remain cached but excluded from payload', () {

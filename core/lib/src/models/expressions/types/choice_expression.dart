@@ -22,12 +22,9 @@ class ChoiceExpression extends ValueExpression<dynamic> {
   @override
   bool checkValue(dynamic value) {
     if (value is List) {
-      if (value.isEmpty) {
-        // todo workaround until not expression is implemented for V2
-        return true;
-      } else {
-        return value.any((element) => choices.contains(element));
-      }
+      // Legacy eligibility criteria use an empty set to mean no selection.
+      if (choices.isEmpty) return value.isEmpty;
+      return value.any((element) => choices.contains(element));
     }
     return choices.contains(value);
   }
