@@ -42,8 +42,15 @@ class StudyRecruitScreen extends StudyPageWidget {
   static const _paginationSpacing = 8.0;
   static const _paginationGroupSpacing = 16.0;
   static const _paginationButtonSize = 40.0;
-  static const _footerDropdownWidth = 88.0;
+  static const _footerDropdownWidth = 64.0;
   static const _footerDropdownHeight = 40.0;
+  static const _footerDropdownBorderRadius = 50.0;
+  static const _footerDropdownHorizontalPadding = 10.0;
+  static const _footerDropdownIconSize = 20.0;
+  static const _footerDropdownSplashRadius = 18.0;
+  static const _footerDropdownMenuWidth = 96.0;
+  static const _footerDropdownMenuItemHeight = 48.0;
+  static const _footerDropdownMenuElevation = 5.0;
   static const _feedbackBorderRadius = 8.0;
   static const _loadingIndicatorHeight = 3.0;
   static const _inviteCodePageSizes = [15, 25, 50, 100];
@@ -302,30 +309,78 @@ class StudyRecruitScreen extends StudyPageWidget {
       children: [
         Text(tr.code_list_rows_per_page, style: theme.textTheme.bodyLarge),
         const SizedBox(width: _paginationSpacing),
-        SizedBox(
-          width: _footerDropdownWidth,
-          height: _footerDropdownHeight,
-          child: DropdownButtonFormField<int>(
-            initialValue: state.inviteCodePageSize,
-            isExpanded: true,
-            items: _inviteCodePageSizes
-                .map(
-                  (pageSize) => DropdownMenuItem<int>(
+        Theme(
+          data: theme.copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+          ),
+          child: Container(
+            width: _footerDropdownWidth,
+            height: _footerDropdownHeight,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(_footerDropdownBorderRadius),
+              ),
+              border: Border.all(color: theme.colorScheme.outline),
+            ),
+            child: PopupMenuButton<int>(
+              enabled: !isPaginationDisabled,
+              tooltip: '',
+              padding: EdgeInsets.zero,
+              splashRadius: _footerDropdownSplashRadius,
+              elevation: _footerDropdownMenuElevation,
+              shadowColor: theme.shadowColor,
+              surfaceTintColor: Colors.transparent,
+              color: theme.colorScheme.surface,
+              constraints: const BoxConstraints.tightFor(
+                width: _footerDropdownMenuWidth,
+              ),
+              menuPadding: EdgeInsets.zero,
+              onSelected: controller.setInviteCodePageSize,
+              itemBuilder: (context) => [
+                for (final pageSize in _inviteCodePageSizes)
+                  PopupMenuItem<int>(
                     value: pageSize,
-                    child: Text(pageSize.toString()),
+                    padding: EdgeInsets.zero,
+                    child: Container(
+                      width: double.infinity,
+                      height: _footerDropdownMenuItemHeight,
+                      alignment: Alignment.center,
+                      color: pageSize == state.inviteCodePageSize
+                          ? theme.colorScheme.surfaceContainerHighest
+                          : Colors.transparent,
+                      child: Text(
+                        pageSize.toString(),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
                   ),
-                )
-                .toList(),
-            onChanged: isPaginationDisabled
-                ? null
-                : (pageSize) {
-                    if (pageSize == null) return;
-                    controller.setInviteCodePageSize(pageSize);
-                  },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 14),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24)),
+              ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: _footerDropdownHorizontalPadding,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        state.inviteCodePageSize.toString(),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: _footerDropdownIconSize,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

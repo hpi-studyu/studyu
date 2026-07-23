@@ -1109,6 +1109,9 @@
   "filter_button_advanced": "Configure Filters...",
   "filter_button_clear": "Clear filter",
   "filter_button_main": "Filter",
+  "code_list_no_results_title": "No matching invite codes",
+  "code_list_no_results_description": "Try changing search or filters to see more invite codes.",
+  "code_list_clear_filters": "Clear filters",
   "code_list_search_hint": "Search invite codes",
   "code_list_active_count": "{count} active invite codes",
   "@code_list_active_count": {

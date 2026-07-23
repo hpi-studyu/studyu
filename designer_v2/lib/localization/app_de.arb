@@ -1109,6 +1109,9 @@
   "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
   "filter_button_main": "Filtern",
+  "code_list_no_results_title": "Keine passenden Einladungscodes",
+  "code_list_no_results_description": "Ändere Suche oder Filter, um mehr Einladungscodes zu sehen.",
+  "code_list_clear_filters": "Filter zurücksetzen",
   "code_list_search_hint": "Einladungscodes suchen",
   "code_list_active_count": "{count} aktive Einladungscodes",
   "@code_list_active_count": {

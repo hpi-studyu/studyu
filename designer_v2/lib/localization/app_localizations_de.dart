@@ -2972,6 +2972,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filter_button_main => 'Filtern';
 
   @override
+  String get code_list_no_results_title => 'Keine passenden Einladungscodes';
+
+  @override
+  String get code_list_no_results_description =>
+      'Ändere Suche oder Filter, um mehr Einladungscodes zu sehen.';
+
+  @override
+  String get code_list_clear_filters => 'Filter zurücksetzen';
+
+  @override
   String get code_list_search_hint => 'Einladungscodes suchen';
 
   @override

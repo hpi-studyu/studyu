@@ -2934,6 +2934,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filter_button_main => 'Filter';
 
   @override
+  String get code_list_no_results_title => 'No matching invite codes';
+
+  @override
+  String get code_list_no_results_description =>
+      'Try changing search or filters to see more invite codes.';
+
+  @override
+  String get code_list_clear_filters => 'Clear filters';
+
+  @override
   String get code_list_search_hint => 'Search invite codes';
 
   @override

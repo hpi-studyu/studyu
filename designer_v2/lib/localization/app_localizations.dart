@@ -5049,6 +5049,24 @@ abstract class AppLocalizations {
   /// **'Filter'**
   String get filter_button_main;
 
+  /// No description provided for @code_list_no_results_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching invite codes'**
+  String get code_list_no_results_title;
+
+  /// No description provided for @code_list_no_results_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Try changing search or filters to see more invite codes.'**
+  String get code_list_no_results_description;
+
+  /// No description provided for @code_list_clear_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get code_list_clear_filters;
+
   /// No description provided for @code_list_search_hint.
   ///
   /// In en, this message translates to:
