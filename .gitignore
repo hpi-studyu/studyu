@@ -176,4 +176,8 @@ interview/
 
 # Local git worktrees
 .worktrees/
+
+# Local subagent artifacts
+.pi-subagents/
+
 .vscode/settings.json
