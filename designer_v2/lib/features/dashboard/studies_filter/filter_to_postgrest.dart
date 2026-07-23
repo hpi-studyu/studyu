@@ -73,16 +73,16 @@ String _renderCondition(FilterCondition condition, User currentUser) {
   final op = condition.operator;
   final value = condition.value;
 
-  final isStringColumn = _isStringProperty(property);
+  final supportsIlike = property == StudyProperty.title;
 
   switch (op) {
     case FilterOperator.equals:
-      if (isStringColumn) {
+      if (supportsIlike) {
         return '$column.ilike.${_formatLikePattern(value, exact: true)}';
       }
       return '$column.eq.${_formatValue(value)}';
     case FilterOperator.notEquals:
-      if (isStringColumn) {
+      if (supportsIlike) {
         return '$column.not.ilike.${_formatLikePattern(value, exact: true)}';
       }
       return '$column.neq.${_formatValue(value)}';
@@ -118,18 +118,6 @@ String _renderCondition(FilterCondition condition, User currentUser) {
         Duration(days: value.toInt()),
       );
       return '$column.gte.${since.toIso8601String()}';
-  }
-}
-
-bool _isStringProperty(StudyProperty property) {
-  switch (property) {
-    case StudyProperty.title:
-    case StudyProperty.status:
-    case StudyProperty.participation:
-    case StudyProperty.resultSharing:
-      return true;
-    default:
-      return false;
   }
 }
 

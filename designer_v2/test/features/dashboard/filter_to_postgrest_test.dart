@@ -33,7 +33,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'status.ilike."running"',
+        'status.eq."running"',
       );
     });
 
@@ -54,7 +54,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'and(status.ilike."running",study_participant_count.gt.5)',
+        'and(status.eq."running",study_participant_count.gt.5)',
       );
     });
 
@@ -76,7 +76,7 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'or(registry_published.eq.true,result_sharing.ilike."public")',
+        'or(registry_published.eq.true,result_sharing.eq."public")',
       );
     });
 
@@ -107,7 +107,55 @@ void main() {
       );
       expect(
         buildPostgrestFilterExpression(group, _user()),
-        'and(status.ilike."running",or(active_subject_count.lt.2,study_participant_count.lt.5))',
+        'and(status.eq."running",or(active_subject_count.lt.2,study_participant_count.lt.5))',
+      );
+    });
+
+    test('enum notEquals uses neq', () {
+      final group = FilterGroup(
+        children: [
+          FilterCondition(
+            property: StudyProperty.status,
+            operator: FilterOperator.notEquals,
+            value: 'running',
+          ),
+        ],
+      );
+      expect(
+        buildPostgrestFilterExpression(group, _user()),
+        'status.neq."running"',
+      );
+    });
+
+    test('title equals remains case-insensitive', () {
+      final group = FilterGroup(
+        children: [
+          FilterCondition(
+            property: StudyProperty.title,
+            operator: FilterOperator.equals,
+            value: 'Sleep Study',
+          ),
+        ],
+      );
+      expect(
+        buildPostgrestFilterExpression(group, _user()),
+        'title.ilike."Sleep Study"',
+      );
+    });
+
+    test('title notEquals remains case-insensitive', () {
+      final group = FilterGroup(
+        children: [
+          FilterCondition(
+            property: StudyProperty.title,
+            operator: FilterOperator.notEquals,
+            value: 'Sleep Study',
+          ),
+        ],
+      );
+      expect(
+        buildPostgrestFilterExpression(group, _user()),
+        'title.not.ilike."Sleep Study"',
       );
     });
 
