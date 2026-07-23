@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_flutter_common/src/utils/storage.dart';
@@ -110,6 +111,9 @@ List<String> loadSupabaseUrls() {
         'No STUDYU_SUPABASE_URLS or STUDYU_SUPABASE_URL environment variable found',
       );
     }
+    debugPrint(
+      '⚠️ Warning: Using deprecated STUDYU_SUPABASE_URL environment variable. Please migrate to STUDYU_SUPABASE_URLS.',
+    );
     urls = [urlEnv.trim()];
   } else if (urlEnv != null && urlEnv.isNotEmpty) {
     // include STUDYU_SUPABASE_URL if it's not already in STUDYU_SUPABASE_URLS
@@ -140,9 +144,10 @@ Future<String> findWorkingSupabaseUrl(
             onTimeout: () =>
                 throw TimeoutException('Connection timeout after 5 seconds'),
           );
+      debugPrint("✅ Connected to Supabase at $url");
       return url;
-    } catch (_) {
-      // Try the next configured Supabase URL.
+    } catch (e) {
+      debugPrint("⚠️ Failed to connect to $url: $e");
     }
   }
 

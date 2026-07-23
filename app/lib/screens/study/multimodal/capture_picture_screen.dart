@@ -134,7 +134,8 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
     XFile image;
     try {
       image = await cameraController.takePicture();
-    } on Exception {
+    } on Exception catch (e) {
+      debugPrint("Failed to take picture: $e");
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.camera_error)),

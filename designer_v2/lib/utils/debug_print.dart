@@ -1,6 +1,12 @@
 import 'dart:developer';
+import 'package:flutter/foundation.dart';
 
-/// Uses Dart's developer log without relying on Flutter debug printing.
+/// Attempts to print a message using Flutter's debugPrint (only available in widgets)
+/// and falls back to Dart's built-in log
 void debugLog(String message) {
-  log(message);
+  try {
+    debugPrint(message);
+  } catch (e) {
+    log(message);
+  }
 }

@@ -165,6 +165,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             is ExtractionFailedException<Study>) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (_hiddenStudies) return;
+                            debugPrint(
+                              '${extractionResult.notExtracted.length} studies could not be extracted.',
+                            );
                             setState(() {
                               _hiddenStudies = true;
                             });

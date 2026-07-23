@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show listEquals;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -339,6 +339,11 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _onQuestionDone(Answer answer, int _) {
     _reviewedAnswerIds.remove(answer.question);
+    if (kDebugMode) {
+      debugPrint(
+        "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
+      );
+    }
     _controller.submitAnswer(answer);
 
     // Check shouldContinue before revealing new questions in the UI.
