@@ -2,12 +2,12 @@
 <!-- Explain the change, motivation, and link related issues (e.g., Fixes #123) -->
 
 ## Visuals
-<!-- REQUIRED: Attach a screenshot for static changes or a screen recording for interactive changes -->
+<!-- Attach a screenshot for static UI changes or a screen recording for interactive UI changes. Remove this section when the PR has no visual impact. -->
 
 ## Testing Steps
 <!-- Provide step-by-step instructions so reviewers can verify this change locally -->
 
 ### PR Checklist
-- [ ] `fvm exec melos run qualitycheck` passes
-- [ ] Screenshot or video of the changes attached
-- [ ] Description links related issues
+- [ ] `fvm exec melos qualitycheck` passes
+- [ ] Screenshot or video attached, or this item removed for non-visual changes
+- [ ] Description links related issues, or this item removed when no issue exists

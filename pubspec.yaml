@@ -12,12 +12,16 @@ workspace:
   - tools/study_data_docs
   - tools/studyu_mcp
 dev_dependencies:
-  melos: ^8.0.0
+  melos: ^8.2.0
 
 melos:
   repository: https://github.com/hpi-studyu/studyu
   sdkPath: .fvm/flutter_sdk
   scripts:
+    setup:
+      run: git config core.hooksPath .githooks
+      description: Configure git to use the project's tracked hooks in .githooks/
+
     fix:
       run: |
         melos exec -c 6 -- \
@@ -65,13 +69,9 @@ melos:
         if command -v rtk >/dev/null 2>&1; then
           rtk_prefix="rtk "
         fi
-        melos exec -c 1 --fail-fast -- \
+        melos exec -c 1 --fail-fast --scope studyu_core --scope studyu_designer_v2 -- \
           "${rtk_prefix}dart run build_runner build"
       description: Generate files with build_runner
-      packageFilters:
-        scope:
-          - 'studyu_core'
-          - 'studyu_designer_v2'
 
     docs:study-data:write:
       run: |
@@ -95,17 +95,17 @@ melos:
           rtk_prefix="rtk "
         fi
         if [ "$CI" != "true" ]; then
-          fvm install
+          ${rtk_prefix}fvm install
         fi
-        melos format
-        melos generate
-        melos docs:study-data:check
+        ${rtk_prefix}melos format
+        ${rtk_prefix}melos generate
+        ${rtk_prefix}melos docs:study-data:check
         if [ "$CI" = "true" ]; then
           ${rtk_prefix}dart analyze
           ${rtk_prefix}flutter analyze
         else
-          fvm exec ${rtk_prefix}dart analyze
-          fvm exec ${rtk_prefix}flutter analyze
+          ${rtk_prefix}fvm exec dart analyze
+          ${rtk_prefix}fvm exec flutter analyze
         fi
       description: Run format, generate, and analyze checks
 

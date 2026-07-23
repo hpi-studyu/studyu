@@ -79,88 +79,90 @@ class _StudyTitleConfirmationDialogState
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return StandardDialog(
-      titleText: widget.title,
-      body: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SelectableText(widget.description),
-            ...widget.additionalContent,
-            if (widget.confirmationCheckboxes.isNotEmpty) ...[
-              const SizedBox(height: 16.0),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: Column(
-                    children: [
-                      for (final checkbox in widget.confirmationCheckboxes)
-                        CheckboxListTile(
-                          key: checkbox.key,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
+    return SelectionArea(
+      child: StandardDialog(
+        titleText: widget.title,
+        body: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SelectableText(widget.description),
+              ...widget.additionalContent,
+              if (widget.confirmationCheckboxes.isNotEmpty) ...[
+                const SizedBox(height: 16.0),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: colorScheme.outlineVariant),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Column(
+                      children: [
+                        for (final checkbox in widget.confirmationCheckboxes)
+                          CheckboxListTile(
+                            key: checkbox.key,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                            ),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            value: _checkedConfirmationKeys.contains(
+                              checkbox.key,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                if (value ?? false) {
+                                  _checkedConfirmationKeys.add(checkbox.key);
+                                } else {
+                                  _checkedConfirmationKeys.remove(checkbox.key);
+                                }
+                              });
+                            },
+                            title: checkbox.label,
                           ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: _checkedConfirmationKeys.contains(
-                            checkbox.key,
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value ?? false) {
-                                _checkedConfirmationKeys.add(checkbox.key);
-                              } else {
-                                _checkedConfirmationKeys.remove(checkbox.key);
-                              }
-                            });
-                          },
-                          title: checkbox.label,
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
+              ],
+              const SizedBox(height: 16.0),
+              SelectableText(widget.instruction),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                key: widget.textFieldKey,
+                controller: _studyTitleController,
+                decoration: InputDecoration(labelText: widget.textFieldLabel),
+                validator: (value) {
+                  if (value == null || value != _studyTitle) {
+                    return tr.dialog_study_title_mismatch;
+                  }
+                  return null;
+                },
               ),
             ],
-            const SizedBox(height: 16.0),
-            SelectableText(widget.instruction),
-            const SizedBox(height: 16.0),
-            TextFormField(
-              key: widget.textFieldKey,
-              controller: _studyTitleController,
-              decoration: InputDecoration(labelText: widget.textFieldLabel),
-              validator: (value) {
-                if (value == null || value != _studyTitle) {
-                  return tr.dialog_study_title_mismatch;
+          ),
+        ),
+        actionButtons: [
+          const DismissButton(),
+          if (!widget.hideConfirmUntilValid || _canConfirm)
+            PrimaryButton(
+              text: widget.confirmLabel,
+              icon: null,
+              enabled: _canConfirm,
+              backgroundColor: widget.destructive ? colorScheme.error : null,
+              foregroundColor: widget.destructive ? colorScheme.onError : null,
+              onPressedFuture: () async {
+                if (_formKey.currentState!.validate()) {
+                  await widget.onConfirmed();
                 }
-                return null;
               },
             ),
-          ],
-        ),
+        ],
+        maxWidth: 650,
+        minWidth: 610,
+        minHeight: 200,
       ),
-      actionButtons: [
-        const DismissButton(),
-        if (!widget.hideConfirmUntilValid || _canConfirm)
-          PrimaryButton(
-            text: widget.confirmLabel,
-            icon: null,
-            enabled: _canConfirm,
-            backgroundColor: widget.destructive ? colorScheme.error : null,
-            foregroundColor: widget.destructive ? colorScheme.onError : null,
-            onPressedFuture: () async {
-              if (_formKey.currentState!.validate()) {
-                await widget.onConfirmed();
-              }
-            },
-          ),
-      ],
-      maxWidth: 650,
-      minWidth: 610,
-      minHeight: 200,
     );
   }
 }

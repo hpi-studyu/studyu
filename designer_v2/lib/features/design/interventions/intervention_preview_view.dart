@@ -15,19 +15,21 @@ class InterventionPreview extends ConsumerWidget {
       color: Theme.of(
         context,
       ).colorScheme.primaryContainer.withValues(alpha: 0.25),
-      child: Column(
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Stack(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 50),
-                  PreviewFrame(routeArgs.studyId, routeArgs: routeArgs),
-                ],
-              ),
-              previewBanner(ref, routeArgs.studyId) ?? const SizedBox.shrink(),
-            ],
+          Positioned.fill(
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                Expanded(
+                  child: PreviewFrame(routeArgs.studyId, routeArgs: routeArgs),
+                ),
+              ],
+            ),
           ),
+          if (previewBanner(ref, routeArgs.studyId) case final banner?)
+            Positioned(top: 0, left: 0, right: 0, child: banner),
         ],
       ),
     );

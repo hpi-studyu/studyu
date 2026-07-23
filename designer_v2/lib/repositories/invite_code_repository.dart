@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -10,6 +13,7 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
@@ -64,47 +68,146 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     return true;
   }
 
+  /// Generate the deep link URL for an invite code
+  String generateInviteDeepLink(String code) {
+    return env.generateAppDeepLink('invite/$code');
+  }
+
   @override
   List<ModelAction> availableActions(StudyInvite model) {
-    final actions = [
+    final deepLink = generateInviteDeepLink(model.code);
+    final List<ModelAction> actions = [
       ModelAction(
         type: ModelActionType.clipboard,
-        label: ModelActionType.clipboard.string,
-        onExecute: () => {
-          ref
-              .read(clipboardServiceProvider)
-              .copy(model.code)
-              .then(
-                (value) => ref
-                    .read(notificationServiceProvider)
-                    .show(Notifications.inviteCodeClipped),
-              ),
+        label: tr.action_copy_invite_code,
+        onExecute: () => _copy(model.code, Notifications.inviteCodeCopied),
+      ),
+      ModelAction(
+        type: ModelActionType.share,
+        label: ModelActionType.share.string,
+        onExecute: () {},
+        onExecuteWithContext: (context) {
+          _showSharePopup(context, deepLink, model.code);
         },
       ),
       ModelAction(
-        type: ModelActionType.delete,
-        label: ModelActionType.delete.string,
-        confirmation: ModelActionConfirmations.delete(
-          subject: tr.dialog_subject_invite_code,
-        ),
-        onExecute: () async {
-          await delete(getKey(model));
-          ref
-              .read(routerProvider)
-              .dispatch(RoutingIntents.studyRecruit(model.studyId));
-          await Future.delayed(
-            const Duration(milliseconds: 200),
-            () => ref
-                .read(notificationServiceProvider)
-                .show(Notifications.inviteCodeDeleted),
-          );
+        type: ModelActionType.copyLink,
+        label: tr.action_copy_invite_link,
+        onExecute: () => _copy(deepLink, Notifications.inviteLinkCopied),
+      ),
+      ModelAction(
+        type: ModelActionType.qrCodeShow,
+        label: ModelActionType.qrCodeShow.string,
+        onExecute: () {},
+        onExecuteWithContext: (context) {
+          _showQrCode(context, deepLink, model.code);
         },
-        isAvailable: study.isOwner(authRepository.currentUser),
-        isDestructive: true,
       ),
     ];
 
-    return actions.where((action) => action.isAvailable).toList();
+    if (study.isOwner(authRepository.currentUser)) {
+      actions.addAll([
+        ModelAction.addSeparator(),
+        ModelAction(
+          type: ModelActionType.delete,
+          label: tr.action_delete_invite_code,
+          confirmation: ModelActionConfirmations.delete(
+            subject: tr.dialog_subject_invite_code,
+          ),
+          onExecute: () async {
+            await delete(getKey(model));
+            ref
+                .read(routerProvider)
+                .dispatch(RoutingIntents.studyRecruit(model.studyId));
+            await Future.delayed(
+              const Duration(milliseconds: 200),
+              () => ref
+                  .read(notificationServiceProvider)
+                  .show(Notifications.inviteCodeDeleted),
+            );
+          },
+          isDestructive: true,
+        ),
+      ]);
+    }
+
+    return actions;
+  }
+
+  Future<void> _copy(String value, SnackbarIntent notification) async {
+    await ref.read(clipboardServiceProvider).copy(value);
+    ref.read(notificationServiceProvider).show(notification);
+  }
+
+  void _showSharePopup(BuildContext context, String deepLink, String filename) {
+    final effectiveContext = context;
+
+    // Determine where to render the popup based on the clicked element
+    final RenderBox button = context.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset(0, button.size.height), ancestor: overlay),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme.labelMedium!;
+    final iconColorDefault =
+        theme.iconTheme.color?.withValues(alpha: 0.7) ?? Colors.grey;
+
+    showMenu<String>(
+      context: context,
+      position: position,
+      elevation: 5,
+      items: [
+        PopupMenuItem<String>(
+          value: 'copy_link',
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            horizontalTitleGap: 4.0,
+            leading: Icon(
+              Icons.link_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: iconColorDefault,
+            ),
+            title: Text(tr.action_copy_invite_link, style: textTheme),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'qr_code',
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            horizontalTitleGap: 4.0,
+            leading: Icon(
+              Icons.qr_code_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: iconColorDefault,
+            ),
+            title: Text(ModelActionType.qrCodeShow.string, style: textTheme),
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'copy_link') {
+        _copy(deepLink, Notifications.inviteLinkCopied);
+      } else if (value == 'qr_code' && effectiveContext.mounted) {
+        _showQrCode(effectiveContext, deepLink, filename);
+      }
+    });
+  }
+
+  void _showQrCode(BuildContext context, String deepLink, String filename) {
+    showDialog(
+      context: context,
+      builder: (ctx) => QrCodePreviewDialog(data: deepLink, filename: filename),
+    );
   }
 }
 
@@ -175,6 +278,7 @@ class InviteCodeRepositoryDelegate
     final deleteOperation = OptimisticUpdate(
       applyOptimistic: () {
         study.invites!.remove(model);
+        /*study.invites!.removeWhere((i) => i.code == model.code);*/
         studyRepository.upsertLocally(study);
       },
       apply: () => apiClient.deleteStudyInvite(model),

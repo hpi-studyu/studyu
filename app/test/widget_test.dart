@@ -7,10 +7,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
@@ -19,16 +20,35 @@ import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 Widget setup(Widget child) {
   return ChangeNotifierProvider(
     create: (_) => AppState(),
-    child: MaterialApp(
+    child: MaterialApp.router(
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       locale: const Locale('en'),
-      home: child,
-      routes: {
-        Routes.about: (_) => const AboutScreen(),
-        Routes.terms: (_) => const TermsScreen(),
-        Routes.welcome: (_) => const WelcomeScreen(),
-      },
+      routerConfig: GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(path: '/', builder: (_, _) => child),
+          GoRoute(
+            path: '/${RouteNames.about}',
+            builder: (_, _) => const AboutScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.terms}',
+            builder: (_, _) => const TermsScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.welcome}',
+            builder: (_, _) => const WelcomeScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.onboarding}',
+            builder: (_, _) => const Text(
+              'Onboarding',
+              key: ValueKey('onboarding_test_screen'),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -43,34 +63,73 @@ void main() {
 
   test('opens welcome screen when tour is completed without preview', () {
     expect(
-      initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: true),
-      Routes.welcome,
+      initialRouteForMissingSubjectRoute(
+        isPreview: false,
+        isDebugMode: false,
+        onBoarded: true,
+      ),
+      '/${RouteNames.welcome}',
     );
   });
 
   test('opens onboarding when tour is not completed', () {
     expect(
-      initialRouteForMissingSubjectRoute(isPreview: false, onBoarded: false),
-      Routes.onboarding,
+      initialRouteForMissingSubjectRoute(
+        isPreview: false,
+        isDebugMode: false,
+        onBoarded: false,
+      ),
+      '/${RouteNames.onboarding}',
     );
   });
 
   test('keeps designer preview on study terms', () {
     expect(
-      initialRouteForMissingSubjectRoute(isPreview: true, onBoarded: true),
-      Routes.terms,
+      initialRouteForMissingSubjectRoute(
+        isPreview: true,
+        isDebugMode: false,
+        onBoarded: false,
+      ),
+      '/${RouteNames.terms}',
     );
   });
 
-  testWidgets('terms back is disabled without previous screen', (tester) async {
+  test('skips onboarding in debug mode', () {
+    expect(
+      initialRouteForMissingSubjectRoute(
+        isPreview: false,
+        isDebugMode: true,
+        onBoarded: false,
+      ),
+      '/${RouteNames.welcome}',
+    );
+  });
+
+  testWidgets('debug button opens onboarding', (tester) async {
+    await tester.pumpWidget(setup(const WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    final button = find.byKey(const ValueKey('welcome_debug_onboarding'));
+    expect(find.text('Show onboarding'), findsOneWidget);
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    final onboarding = find.byKey(const ValueKey('onboarding_test_screen'));
+    expect(onboarding, findsOneWidget);
+    expect(GoRouter.of(tester.element(onboarding)).canPop(), isFalse);
+  });
+
+  testWidgets('terms back falls back to welcome without previous screen', (
+    tester,
+  ) async {
     await tester.pumpWidget(setup(const TermsScreen()));
     await tester.pump();
 
-    final back = tester.widget<TextButton>(
-      find.byKey(const ValueKey('terms_back')),
-    );
+    await tester.tap(find.byKey(const ValueKey('terms_back')));
+    await tester.pumpAndSettle();
 
-    expect(back.onPressed, isNull);
+    expect(find.byType(WelcomeScreen), findsOneWidget);
   });
 
   testWidgets('terms back pops to welcome when available', (tester) async {

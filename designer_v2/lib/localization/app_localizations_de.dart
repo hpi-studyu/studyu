@@ -283,6 +283,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Code wurde in die Zwischenablage kopiert';
 
   @override
+  String get notification_invite_code_copied => 'Teilnahmecode kopiert';
+
+  @override
+  String get notification_invite_link_copied => 'Einladungslink kopiert';
+
+  @override
   String get action_button_new_study => 'Neue Studie';
 
   @override
@@ -2090,11 +2096,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get code_list_section_title => 'Teilnahmecodes';
 
   @override
-  String get code_public_disabled => 'Teilnahmecodes deaktiviert';
+  String get code_public_disabled => 'Öffentliche Rekrutierung';
 
   @override
   String get code_public_disabled_description =>
-      'Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung für diese Studie aktiviert ist. Alle Teilnehmer können ohne Teilnahmecodes beitreten.';
+      'Teilnehmer können dieser Studie einfach über die untenstehenden Links, durch Scannen des QR-Codes oder über die öffentliche Studienliste der App beitreten. Beachten Sie, dass Teilnahmecodes hier nicht verfügbar sind, da sie ausschließlich für private Studien verwendet werden.';
 
   @override
   String get code_list_empty_title => 'Noch keine Teilnehmer eingeladen';
@@ -2257,6 +2263,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden';
 
   @override
+  String get banner_text_study_recruit_draft =>
+      'Solange die Studie noch nicht live ist, funktionieren die Links auf dieser Seite noch nicht.';
+
+  @override
   String get banner_text_study_analyze_draft =>
       'Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf den Daten aus den Testläufen der Studie.\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.';
 
@@ -2404,6 +2414,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_delete => 'Löschen';
 
   @override
+  String get action_delete_invite_code => 'Teilnahmecode löschen';
+
+  @override
   String get action_remove => 'Entfernen';
 
   @override
@@ -2411,6 +2424,24 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get action_clipboard => 'In Zwischenablage kopieren';
+
+  @override
+  String get action_copy_invite_code => 'Teilnahmecode kopieren';
+
+  @override
+  String get action_copy_invite_link => 'Einladungslink kopieren';
+
+  @override
+  String get action_qr_code_show => 'QR-Code anzeigen';
+
+  @override
+  String get action_qr_code_download => 'QR-Code herunterladen';
+
+  @override
+  String get action_share => 'Einladungslink teilen';
+
+  @override
+  String get action_copy_link => 'Link kopieren';
 
   @override
   String get action_reportPrimary => 'Als Primärauswertung setzen';

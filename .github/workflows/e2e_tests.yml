@@ -6,6 +6,8 @@ on:
       - ".github/workflows/e2e_tests.yml"
       - ".github/workflows/init-workspace/action.yml"
       - 'app/**'
+      - 'supabase/**'
+      - 'scripts/reset-test-db.sh'
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
@@ -42,10 +44,6 @@ jobs:
           dart pub global activate melos
           melos bootstrap
 
-      - name: Prepare Supabase CI Seed
-        run: |
-          cp supabase/seed-ci.sql supabase/seed.sql
-
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v2
         with:
@@ -54,6 +52,9 @@ jobs:
       - name: Start Supabase
         run: |
           supabase start -x studio,imgproxy
+
+      - name: Reset Supabase database
+        run: ./scripts/reset-test-db.sh --yes
 
       - name: Configure local StudyU environment
         run: |

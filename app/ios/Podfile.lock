@@ -2,21 +2,27 @@ PODS:
   - Flutter (1.0.0)
   - flutter_web_auth_2 (3.0.0):
     - Flutter
+  - stack_deferred_link (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
+  - stack_deferred_link (from `.symlinks/plugins/stack_deferred_link/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_web_auth_2:
     :path: ".symlinks/plugins/flutter_web_auth_2/ios"
+  stack_deferred_link:
+    :path: ".symlinks/plugins/stack_deferred_link/ios"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_web_auth_2: 5c8d9dcd7848b5a9efb086d24e7a9adcae979c80
+  stack_deferred_link: 2a2526cfb01ed27b8c114719f7850d605ba6d897
 
-PODFILE CHECKSUM: 7f07ebef3a0a0adf5e89297b9e35e16dccabab6a
+PODFILE CHECKSUM: b00a565d52284bcdd04d643f399531a35b02c2c4
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

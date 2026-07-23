@@ -596,6 +596,18 @@ abstract class AppLocalizations {
   /// **'Code copied to clipboard'**
   String get notification_code_clipboard;
 
+  /// No description provided for @notification_invite_code_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code copied'**
+  String get notification_invite_code_copied;
+
+  /// No description provided for @notification_invite_link_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link copied'**
+  String get notification_invite_link_copied;
+
   /// No description provided for @action_button_new_study.
   ///
   /// In en, this message translates to:
@@ -3582,13 +3594,13 @@ abstract class AppLocalizations {
   /// No description provided for @code_public_disabled.
   ///
   /// In en, this message translates to:
-  /// **'Invite codes disabled'**
+  /// **'Public Recruitment'**
   String get code_public_disabled;
 
   /// No description provided for @code_public_disabled_description.
   ///
   /// In en, this message translates to:
-  /// **'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.'**
+  /// **'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.'**
   String get code_public_disabled_description;
 
   /// No description provided for @code_list_empty_title.
@@ -3855,6 +3867,12 @@ abstract class AppLocalizations {
   /// **'A survey is completed, if all of its tasks have been completed for that day'**
   String get monitoring_table_completed_surveys_header_tooltip;
 
+  /// No description provided for @banner_text_study_recruit_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Because this study has not been launched yet, the links on this page will not work yet.'**
+  String get banner_text_study_recruit_draft;
+
   /// No description provided for @banner_text_study_analyze_draft.
   ///
   /// In en, this message translates to:
@@ -4035,6 +4053,12 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get action_delete;
 
+  /// No description provided for @action_delete_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete invite code'**
+  String get action_delete_invite_code;
+
   /// No description provided for @action_remove.
   ///
   /// In en, this message translates to:
@@ -4052,6 +4076,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy to clipboard'**
   String get action_clipboard;
+
+  /// No description provided for @action_copy_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invite code'**
+  String get action_copy_invite_code;
+
+  /// No description provided for @action_copy_invite_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invite link'**
+  String get action_copy_invite_link;
+
+  /// No description provided for @action_qr_code_show.
+  ///
+  /// In en, this message translates to:
+  /// **'View QR code'**
+  String get action_qr_code_show;
+
+  /// No description provided for @action_qr_code_download.
+  ///
+  /// In en, this message translates to:
+  /// **'Download QR code'**
+  String get action_qr_code_download;
+
+  /// No description provided for @action_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share invite link'**
+  String get action_share;
+
+  /// No description provided for @action_copy_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get action_copy_link;
 
   /// No description provided for @action_reportPrimary.
   ///
