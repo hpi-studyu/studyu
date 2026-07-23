@@ -3,6 +3,24 @@ import 'package:flutter/services.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
+const _filterMenuWidth = 360.0;
+const _filterMenuBorderRadius = 16.0;
+const _filterMenuBorderAlpha = 0.6;
+const _filterMenuShadowAlpha = 0.08;
+const _filterMenuShadowBlurRadius = 14.0;
+const _filterMenuShadowOffsetY = 4.0;
+const _filterMenuTopPadding = 5.0;
+const _filterMenuPadding = 16.0;
+const _filterMenuSectionSpacing = 12.0;
+const _filterMenuHeaderSpacing = 16.0;
+const _filterButtonCornerRadius = 16.0;
+const _filterButtonIconSize = 18.0;
+const _filterButtonHorizontalPadding = 14.0;
+const _filterButtonVerticalPadding = 10.0;
+const _filterButtonMinHeight = 40.0;
+const _filterButtonActiveBackgroundAlpha = 0.45;
+const _filterButtonActiveBorderAlpha = 0.35;
+
 class InviteCodeFilterButton extends StatefulWidget {
   const InviteCodeFilterButton({
     required this.filters,
@@ -65,29 +83,31 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
       ),
       menuChildren: [
         Padding(
-          padding: const EdgeInsets.only(top: 5),
+          padding: const EdgeInsets.only(top: _filterMenuTopPadding),
           child: Material(
             type: MaterialType.transparency,
             child: Container(
-              width: 360,
+              width: _filterMenuWidth,
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(_filterMenuBorderRadius),
                 border: Border.all(
                   color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.6,
+                    alpha: _filterMenuBorderAlpha,
                   ),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 14,
-                    offset: const Offset(0, 4),
+                    color: Colors.black.withValues(
+                      alpha: _filterMenuShadowAlpha,
+                    ),
+                    blurRadius: _filterMenuShadowBlurRadius,
+                    offset: const Offset(0, _filterMenuShadowOffsetY),
                   ),
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(_filterMenuPadding),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,7 +116,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                       'Filter invite codes'.hardcoded,
                       style: theme.textTheme.titleSmall,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: _filterMenuHeaderSpacing),
                     DropdownButtonFormField<InviteCodeEnrolledFilter>(
                       initialValue: _draft.enrolled,
                       decoration: const InputDecoration(
@@ -117,7 +137,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                         );
                       },
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: _filterMenuSectionSpacing),
                     Row(
                       children: [
                         Expanded(
@@ -132,7 +152,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: _filterMenuSectionSpacing),
                         Expanded(
                           child: TextFormField(
                             controller: _enrolledMaxController,
@@ -147,7 +167,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: _filterMenuSectionSpacing),
                     DropdownButtonFormField<InviteCodeInterventionFilter>(
                       initialValue: _draft.intervention,
                       decoration: const InputDecoration(
@@ -168,43 +188,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                         );
                       },
                     ),
-                    const SizedBox(height: 12),
-                    _DateRangeRow(
-                      title: 'Created'.hardcoded,
-                      from: _draft.createdFrom,
-                      to: _draft.createdTo,
-                      onPickFrom: () => _pickDate(
-                        initial: _draft.createdFrom,
-                        onSelected: (value) => setState(
-                          () => _draft = _draft.copyWith(createdFrom: value),
-                        ),
-                      ),
-                      onPickTo: () => _pickDate(
-                        initial: _draft.createdTo,
-                        onSelected: (value) => setState(
-                          () => _draft = _draft.copyWith(createdTo: value),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _DateRangeRow(
-                      title: 'Updated'.hardcoded,
-                      from: _draft.updatedFrom,
-                      to: _draft.updatedTo,
-                      onPickFrom: () => _pickDate(
-                        initial: _draft.updatedFrom,
-                        onSelected: (value) => setState(
-                          () => _draft = _draft.copyWith(updatedFrom: value),
-                        ),
-                      ),
-                      onPickTo: () => _pickDate(
-                        initial: _draft.updatedTo,
-                        onSelected: (value) => setState(
-                          () => _draft = _draft.copyWith(updatedTo: value),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: _filterMenuHeaderSpacing),
                     Row(
                       children: [
                         TextButton(
@@ -250,7 +234,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
         return OutlinedButton.icon(
           icon: Icon(
             Icons.filter_list_rounded,
-            size: 18,
+            size: _filterButtonIconSize,
             color: theme.colorScheme.primary,
           ),
           label: Text(
@@ -262,16 +246,25 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
           ),
           style: OutlinedButton.styleFrom(
             backgroundColor: isActive
-                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.45)
+                ? theme.colorScheme.primaryContainer.withValues(
+                    alpha: _filterButtonActiveBackgroundAlpha,
+                  )
                 : theme.colorScheme.surface,
             side: BorderSide(
               color: isActive
-                  ? theme.colorScheme.primary.withValues(alpha: 0.35)
+                  ? theme.colorScheme.primary.withValues(
+                      alpha: _filterButtonActiveBorderAlpha,
+                    )
                   : theme.colorScheme.outlineVariant,
             ),
-            shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            minimumSize: const Size(0, 40),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_filterButtonCornerRadius),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: _filterButtonHorizontalPadding,
+              vertical: _filterButtonVerticalPadding,
+            ),
+            minimumSize: const Size(0, _filterButtonMinHeight),
           ),
           onPressed: () {
             if (controller.isOpen) {
@@ -284,22 +277,6 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
         );
       },
     );
-  }
-
-  Future<void> _pickDate({
-    required DateTime? initial,
-    required ValueChanged<DateTime> onSelected,
-  }) async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(now.year + 5),
-      initialDate: initial ?? now,
-    );
-    if (picked != null) {
-      onSelected(DateTime(picked.year, picked.month, picked.day));
-    }
   }
 
   int? _parseInt(String value) {
@@ -332,55 +309,5 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
       InviteCodeInterventionFilter.interventionA => 'Intervention A'.hardcoded,
       InviteCodeInterventionFilter.interventionB => 'Intervention B'.hardcoded,
     };
-  }
-}
-
-class _DateRangeRow extends StatelessWidget {
-  const _DateRangeRow({
-    required this.title,
-    required this.from,
-    required this.to,
-    required this.onPickFrom,
-    required this.onPickTo,
-  });
-
-  final String title;
-  final DateTime? from;
-  final DateTime? to;
-  final VoidCallback onPickFrom;
-  final VoidCallback onPickTo;
-
-  @override
-  Widget build(BuildContext context) {
-    final localizations = MaterialLocalizations.of(context);
-    String format(DateTime? value, String emptyLabel) {
-      if (value == null) return emptyLabel;
-      return localizations.formatShortDate(value);
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: onPickFrom,
-                child: Text(format(from, 'From'.hardcoded)),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: onPickTo,
-                child: Text(format(to, 'To'.hardcoded)),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 }

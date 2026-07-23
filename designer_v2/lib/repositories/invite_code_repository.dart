@@ -31,8 +31,8 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
     required int limit,
     String? query,
     InviteCodeFilters filters = const InviteCodeFilters(),
-    InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
-    bool ascending = false,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
+    bool ascending = true,
   });
 
   Future<int> count({
@@ -96,8 +96,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     required int limit,
     String? query,
     InviteCodeFilters filters = const InviteCodeFilters(),
-    InviteCodesSortColumn sortBy = InviteCodesSortColumn.createdAt,
-    bool ascending = false,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
+    bool ascending = true,
   }) async {
     final invites = await apiClient.fetchStudyInvitesPage(
       studyId,

@@ -361,14 +361,6 @@ class StudyUApiClient extends SupabaseClientDependant
         request
             .order('study_invite_participant_count', ascending: ascending)
             .order('code', ascending: true),
-      InviteCodesSortColumn.createdAt => request.order(
-        'created_at',
-        ascending: ascending,
-      ),
-      InviteCodesSortColumn.updatedAt => request.order(
-        'updated_at',
-        ascending: ascending,
-      ),
     };
   }
 
