@@ -2100,9 +2100,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_header_actions => 'Actions';
 
   @override
-  String get code_list_header_updated_at => 'Updated';
-
-  @override
   String get action_button_code_new => 'New code';
 
   @override

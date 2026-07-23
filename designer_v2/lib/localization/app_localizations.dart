@@ -3639,12 +3639,6 @@ abstract class AppLocalizations {
   /// **'Actions'**
   String get code_list_header_actions;
 
-  /// No description provided for @code_list_header_updated_at.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated'**
-  String get code_list_header_updated_at;
-
   /// No description provided for @action_button_code_new.
   ///
   /// In en, this message translates to:

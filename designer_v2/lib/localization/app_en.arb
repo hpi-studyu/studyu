@@ -809,7 +809,6 @@
   "code_list_empty_description": "Add participants to your study via invite codes.",
   "code_list_header_code": "Code",
   "code_list_header_actions": "Actions",
-  "code_list_header_updated_at": "Updated",
   "action_button_code_new": "New code",
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Participant details",
