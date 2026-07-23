@@ -252,6 +252,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         get(modelId)?.markWithError(e);
         emitError(modelStreamControllers[modelId], e, stackTrace);
       },
+      rethrowErrors: true,
       runOptimistically: runOptimistically,
       completeFutureOptimistically: runOptimistically,
     );
