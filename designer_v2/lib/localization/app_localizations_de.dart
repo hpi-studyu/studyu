@@ -283,6 +283,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Code wurde in die Zwischenablage kopiert';
 
   @override
+  String get notification_invite_code_copied => 'Teilnahmecode kopiert';
+
+  @override
+  String get notification_invite_link_copied => 'Einladungslink kopiert';
+
+  @override
   String get action_button_new_study => 'Neue Studie';
 
   @override
@@ -2412,6 +2418,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_delete => 'Löschen';
 
   @override
+  String get action_delete_invite_code => 'Teilnahmecode löschen';
+
+  @override
   String get action_remove => 'Entfernen';
 
   @override
@@ -2421,13 +2430,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_clipboard => 'In Zwischenablage kopieren';
 
   @override
+  String get action_copy_invite_code => 'Teilnahmecode kopieren';
+
+  @override
+  String get action_copy_invite_link => 'Einladungslink kopieren';
+
+  @override
   String get action_qr_code_show => 'QR-Code anzeigen';
 
   @override
   String get action_qr_code_download => 'QR-Code herunterladen';
 
   @override
-  String get action_share => 'Teilen';
+  String get action_share => 'Einladungslink teilen';
 
   @override
   String get action_copy_link => 'Link kopieren';

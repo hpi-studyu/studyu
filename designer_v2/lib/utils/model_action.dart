@@ -164,6 +164,7 @@ enum ModelActionType {
   remove, // same semantics as delete
   duplicate,
   clipboard,
+  copyLink,
   share,
   qrCodeShow,
   qrCodeDownload,
@@ -184,6 +185,8 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.action_duplicate;
       case ModelActionType.clipboard:
         return tr.action_clipboard;
+      case ModelActionType.copyLink:
+        return tr.action_copy_link;
       case ModelActionType.share:
         return tr.action_share;
       case ModelActionType.qrCodeShow:
@@ -202,6 +205,7 @@ Map<ModelActionType, IconData> modelActionIcons = {
   ModelActionType.remove: Icons.close_rounded,
   ModelActionType.duplicate: Icons.file_copy_rounded,
   ModelActionType.clipboard: Icons.copy_rounded,
+  ModelActionType.copyLink: Icons.link_rounded,
   ModelActionType.share: Icons.ios_share_rounded,
   ModelActionType.qrCodeShow: Icons.qr_code_rounded,
   ModelActionType.qrCodeDownload: Icons.download_rounded,

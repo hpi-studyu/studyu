@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/onboarding_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/study_unavailable_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
@@ -32,6 +35,7 @@ class RouteNames {
   static const String preview = 'preview';
   static const String appOutdated = 'appOutdated';
   static const String appErrorScreen = 'appError';
+  static const String studyUnavailable = 'studyUnavailable';
   static const String dashboard = 'dashboard';
   static const String welcome = 'welcome';
   static const String onboarding = 'onboarding';
@@ -56,6 +60,9 @@ class RouteNames {
   static const String invite = 'invite';
   static const String study = 'study';
 }
+
+bool isStudyAvailableForTesting(Study study) =>
+    study.interventions.length >= StudySchedule.numberOfInterventions;
 
 /// Creates and configures the GoRouter instance for the app
 GoRouter createAppRouter({
@@ -86,6 +93,23 @@ GoRouter createAppRouter({
           }
         }
       }
+
+      final appState = context.read<AppState>();
+      final study = switch (state.uri.path) {
+        '/${RouteNames.studyOverview}' ||
+        '/${RouteNames.interventionSelection}' ||
+        '/${RouteNames.eligibilityCheck}' => appState.selectedStudy,
+        '/${RouteNames.journey}' ||
+        '/${RouteNames.consent}' ||
+        '/${RouteNames.kickoff}' ||
+        '/${RouteNames.dashboard}' =>
+          appState.activeSubject?.study ?? appState.selectedStudy,
+        _ => null,
+      };
+      if (study != null && !isStudyAvailableForTesting(study)) {
+        return '/${RouteNames.studyUnavailable}';
+      }
+
       // Remove splash screen when navigating away from loading screen
       if (state.uri.path != '/${RouteNames.loading}') {
         FlutterNativeSplash.remove();
@@ -125,6 +149,11 @@ GoRouter createAppRouter({
             reason: arguments.reason,
           );
         },
+      ),
+      GoRoute(
+        path: '/${RouteNames.studyUnavailable}',
+        name: RouteNames.studyUnavailable,
+        builder: (context, state) => const StudyUnavailableScreen(),
       ),
       GoRoute(
         path: '/${RouteNames.dashboard}',
