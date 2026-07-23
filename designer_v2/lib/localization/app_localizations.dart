@@ -1058,6 +1058,18 @@ abstract class AppLocalizations {
   /// **'invite code'**
   String get dialog_subject_invite_code;
 
+  /// No description provided for @dialog_delete_invite_code_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete invite code {code}?'**
+  String dialog_delete_invite_code_title(Object code);
+
+  /// No description provided for @dialog_delete_invite_code_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone with this code will no longer be able to use it.'**
+  String get dialog_delete_invite_code_message;
+
   /// No description provided for @dialog_subject_fitbit_credentials.
   ///
   /// In en, this message translates to:
@@ -3621,6 +3633,12 @@ abstract class AppLocalizations {
   /// **'Code'**
   String get code_list_header_code;
 
+  /// No description provided for @code_list_header_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get code_list_header_actions;
+
   /// No description provided for @code_list_header_updated_at.
   ///
   /// In en, this message translates to:
@@ -4064,6 +4082,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete invite code'**
   String get action_delete_invite_code;
+
+  /// No description provided for @action_delete_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete code'**
+  String get action_delete_code;
 
   /// No description provided for @action_remove.
   ///
@@ -5037,17 +5061,53 @@ abstract class AppLocalizations {
   /// **'{count} active invite codes'**
   String code_list_active_count(int count);
 
+  /// No description provided for @code_list_total_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} total'**
+  String code_list_total_count(int count);
+
   /// No description provided for @code_list_page_size.
   ///
   /// In en, this message translates to:
   /// **'Rows'**
   String get code_list_page_size;
 
+  /// No description provided for @code_list_rows_per_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows per page:'**
+  String get code_list_rows_per_page;
+
   /// No description provided for @code_list_page.
   ///
   /// In en, this message translates to:
   /// **'Page {page}'**
   String code_list_page(int page);
+
+  /// No description provided for @code_list_page_range.
+  ///
+  /// In en, this message translates to:
+  /// **'{start}–{end} of {count}'**
+  String code_list_page_range(int start, int end, int count);
+
+  /// No description provided for @code_list_page_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading {start}–{end}...'**
+  String code_list_page_loading(int start, int end);
+
+  /// No description provided for @code_list_page_fetch_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t load the next page. Check your connection and try again.'**
+  String get code_list_page_fetch_error;
+
+  /// No description provided for @code_list_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get code_list_retry;
 
   /// No description provided for @code_list_previous_page.
   ///

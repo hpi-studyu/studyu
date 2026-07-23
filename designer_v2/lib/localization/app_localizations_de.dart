@@ -550,6 +550,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dialog_subject_invite_code => 'Teilnahmecode';
 
   @override
+  String dialog_delete_invite_code_title(Object code) {
+    return 'Teilnahmecode $code löschen?';
+  }
+
+  @override
+  String get dialog_delete_invite_code_message =>
+      'Jeder mit diesem Code kann ihn danach nicht mehr verwenden.';
+
+  @override
   String get dialog_subject_fitbit_credentials => 'Fitbit-Zugangsdaten';
 
   @override
@@ -2113,6 +2122,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get code_list_header_code => 'Code';
 
   @override
+  String get code_list_header_actions => 'Aktionen';
+
+  @override
   String get code_list_header_updated_at => 'Aktualisiert';
 
   @override
@@ -2418,6 +2430,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get action_delete_invite_code => 'Teilnahmecode löschen';
+
+  @override
+  String get action_delete_code => 'Code löschen';
 
   @override
   String get action_remove => 'Entfernen';
@@ -2965,12 +2980,37 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String code_list_total_count(int count) {
+    return '$count insgesamt';
+  }
+
+  @override
   String get code_list_page_size => 'Zeilen';
+
+  @override
+  String get code_list_rows_per_page => 'Zeilen pro Seite:';
 
   @override
   String code_list_page(int page) {
     return 'Seite $page';
   }
+
+  @override
+  String code_list_page_range(int start, int end, int count) {
+    return '$start–$end von $count';
+  }
+
+  @override
+  String code_list_page_loading(int start, int end) {
+    return '$start–$end wird geladen...';
+  }
+
+  @override
+  String get code_list_page_fetch_error =>
+      'Nächste Seite konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.';
+
+  @override
+  String get code_list_retry => 'Erneut versuchen';
 
   @override
   String get code_list_previous_page => 'Vorherige Seite';

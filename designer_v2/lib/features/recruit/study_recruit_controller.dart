@@ -49,12 +49,35 @@ class StudyRecruitController extends _$StudyRecruitController
   }) async {
     if (pageIndex < 0) return;
     final token = ++_fetchToken;
+    final hasVisibleInvites =
+        state.invites is AsyncData<List<StudyInvite>?> &&
+        ((state.invites as AsyncData<List<StudyInvite>?>).value?.isNotEmpty ??
+            false);
     if (showLoading) {
-      state = state.copyWith(invites: const AsyncValue.loading());
+      if (hasVisibleInvites) {
+        state = state.copyWith(
+          paginationStatus: InviteCodePaginationStatus.loading,
+          pendingInviteCodePageIndex: pageIndex,
+          clearPaginationError: true,
+        );
+      } else {
+        state = state.copyWith(
+          invites: const AsyncValue.loading(),
+          paginationStatus: InviteCodePaginationStatus.idle,
+          clearPendingInviteCodePageIndex: true,
+          clearPaginationError: true,
+        );
+      }
+    } else {
+      state = state.copyWith(
+        paginationStatus: InviteCodePaginationStatus.loading,
+        pendingInviteCodePageIndex: pageIndex,
+        clearPaginationError: true,
+      );
     }
 
-    final query = state.inviteCodeSearchQuery.trim();
-    final effectiveQuery = query.isEmpty ? null : query;
+    final trimmedQuery = state.inviteCodeSearchQuery.trim();
+    final query = trimmedQuery.isEmpty ? null : trimmedQuery;
     final filters = state.inviteCodeFilters.normalized();
     final offset = pageIndex * state.inviteCodePageSize;
 
@@ -63,15 +86,12 @@ class StudyRecruitController extends _$StudyRecruitController
         state.inviteCodeRepository.fetchPage(
           offset: offset,
           limit: state.inviteCodePageSize,
-          query: effectiveQuery,
+          query: query,
           filters: filters,
           sortBy: state.inviteCodeSortColumn,
           ascending: state.inviteCodeSortAscending,
         ),
-        state.inviteCodeRepository.count(
-          query: effectiveQuery,
-          filters: filters,
-        ),
+        state.inviteCodeRepository.count(query: query, filters: filters),
       ]);
 
       if (token != _fetchToken) return;
@@ -83,14 +103,28 @@ class StudyRecruitController extends _$StudyRecruitController
         inviteCodePageIndex: pageIndex,
         inviteCodeCount: inviteCount,
         hasNextInviteCodePage: offset + invites.length < inviteCount,
+        paginationStatus: InviteCodePaginationStatus.idle,
+        clearPendingInviteCodePageIndex: true,
+        clearPaginationError: true,
       );
     } catch (error, stackTrace) {
       if (token != _fetchToken) return;
-      state = state.copyWith(
-        invites: AsyncValue.error(error, stackTrace),
-        inviteCodeCount: 0,
-        hasNextInviteCodePage: false,
-      );
+      if (hasVisibleInvites) {
+        state = state.copyWith(
+          paginationStatus: InviteCodePaginationStatus.error,
+          pendingInviteCodePageIndex: pageIndex,
+          paginationError: error,
+        );
+      } else {
+        state = state.copyWith(
+          invites: AsyncValue.error(error, stackTrace),
+          inviteCodeCount: 0,
+          hasNextInviteCodePage: false,
+          paginationStatus: InviteCodePaginationStatus.idle,
+          clearPendingInviteCodePageIndex: true,
+          clearPaginationError: true,
+        );
+      }
     }
   }
 
@@ -103,17 +137,43 @@ class StudyRecruitController extends _$StudyRecruitController
     });
   }
 
-  Future<void> showInviteCode(String code) async {
-    _searchDebounce?.cancel();
-    state = state.copyWith(inviteCodeSearchQuery: code);
-    await loadInviteCodePage(0);
-  }
-
   Future<void> setInviteCodeFilters(InviteCodeFilters filters) async {
     final normalized = filters.normalized();
     if (normalized == state.inviteCodeFilters) return;
     state = state.copyWith(inviteCodeFilters: normalized);
     await loadInviteCodePage(0);
+  }
+
+  Future<void> setInviteCodeSorting(InviteCodesSortColumn column) async {
+    final isSameColumn = state.inviteCodeSortColumn == column;
+    final ascending = !isSameColumn || !state.inviteCodeSortAscending;
+    state = state.copyWith(
+      inviteCodeSortColumn: column,
+      inviteCodeSortAscending: ascending,
+    );
+    await loadInviteCodePage(0);
+  }
+
+  Future<void> setInviteCodePageSize(int pageSize) async {
+    if (pageSize == state.inviteCodePageSize) return;
+    state = state.copyWith(inviteCodePageSize: pageSize);
+    await loadInviteCodePage(0);
+  }
+
+  Future<void> loadPreviousInviteCodePage() async {
+    if (!state.hasPreviousInviteCodePage) return;
+    await loadInviteCodePage(state.inviteCodePageIndex - 1);
+  }
+
+  Future<void> loadNextInviteCodePage() async {
+    if (!state.hasComputedNextInviteCodePage) return;
+    await loadInviteCodePage(state.inviteCodePageIndex + 1);
+  }
+
+  Future<void> retryInviteCodePageLoad() async {
+    final pendingPageIndex =
+        state.pendingInviteCodePageIndex ?? state.inviteCodePageIndex;
+    await loadInviteCodePage(pendingPageIndex);
   }
 
   Future<void> showCreatedInviteCode(StudyInvite invite) async {
@@ -134,13 +194,15 @@ class StudyRecruitController extends _$StudyRecruitController
         invite,
         ...currentInvites.where((item) => item.code != invite.code),
       ];
-      final visibleInvites = updatedInvites
-          .take(state.inviteCodePageSize)
-          .toList();
       state = state.copyWith(
-        invites: AsyncValue.data(visibleInvites),
+        invites: AsyncValue.data(
+          updatedInvites.take(state.inviteCodePageSize).toList(),
+        ),
         inviteCodeCount: state.inviteCodeCount + 1,
         hasNextInviteCodePage: updatedInvites.length > state.inviteCodePageSize,
+        paginationStatus: InviteCodePaginationStatus.idle,
+        clearPendingInviteCodePageIndex: true,
+        clearPaginationError: true,
       );
     } else if (query.isEmpty && canOptimisticallyInsert) {
       state = state.copyWith(inviteCodeCount: state.inviteCodeCount + 1);
@@ -151,32 +213,6 @@ class StudyRecruitController extends _$StudyRecruitController
         loadInviteCodePage(state.inviteCodePageIndex, showLoading: false),
       );
     });
-  }
-
-  Future<void> setInviteCodePageSize(int pageSize) async {
-    if (pageSize == state.inviteCodePageSize) return;
-    state = state.copyWith(inviteCodePageSize: pageSize);
-    await loadInviteCodePage(0);
-  }
-
-  Future<void> setInviteCodeSorting(InviteCodesSortColumn column) async {
-    final isSameColumn = state.inviteCodeSortColumn == column;
-    final ascending = !isSameColumn || !state.inviteCodeSortAscending;
-    state = state.copyWith(
-      inviteCodeSortColumn: column,
-      inviteCodeSortAscending: ascending,
-    );
-    await loadInviteCodePage(0);
-  }
-
-  Future<void> loadNextInviteCodePage() async {
-    if (!state.hasComputedNextInviteCodePage) return;
-    await loadInviteCodePage(state.inviteCodePageIndex + 1);
-  }
-
-  Future<void> loadPreviousInviteCodePage() async {
-    if (!state.hasPreviousInviteCodePage) return;
-    await loadInviteCodePage(state.inviteCodePageIndex - 1);
   }
 
   Intervention? getIntervention(String interventionId) {
@@ -193,11 +229,8 @@ class StudyRecruitController extends _$StudyRecruitController
   List<ModelAction> availableActions(StudyInvite model) {
     final actions = state.inviteCodeRepository
         .availableActions(model)
-        .where(
-          (action) =>
-              action.type != ModelActionType.share &&
-              action.type != ModelActionType.clipboard,
-        )
+        .where((action) => action.type != ModelActionType.share)
+        .where((action) => action.type != ModelActionType.clipboard)
         .map(_withPageRefresh)
         .toList();
     return withIcons(actions, modelActionIcons);
@@ -227,15 +260,13 @@ class StudyRecruitController extends _$StudyRecruitController
       isDestructive: action.isDestructive,
       isChecked: action.isChecked,
       showBadge: action.showBadge,
-      onExecute: () {
-        action.onExecute();
-        Future.delayed(
-          const Duration(milliseconds: 300),
-          () => unawaited(
-            loadInviteCodePage(state.inviteCodePageIndex, showLoading: false),
-          ),
-        );
+      confirmation: action.confirmation,
+      onExecute: () async {
+        await action.onExecute();
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        await loadInviteCodePage(state.inviteCodePageIndex, showLoading: false);
       },
+      onExecuteWithContext: action.onExecuteWithContext,
     );
   }
 }

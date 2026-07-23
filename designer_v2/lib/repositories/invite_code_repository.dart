@@ -109,7 +109,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       ascending: ascending,
     );
     for (final invite in invites) {
-      upsertLocally(invite);
+      final wrappedInvite = upsertLocally(invite);
+      wrappedInvite.markAsFetched();
     }
     emitUpdate();
     return invites;
@@ -160,12 +161,16 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         ModelAction.addSeparator(),
         ModelAction(
           type: ModelActionType.delete,
-          label: tr.action_delete_invite_code,
-          confirmation: ModelActionConfirmations.delete(
-            subject: tr.dialog_subject_invite_code,
+          label: tr.action_delete_code,
+          confirmation: ModelActionConfirmation(
+            title: tr.dialog_delete_invite_code_title(
+              _formattedDeleteCode(model.code),
+            ),
+            message: tr.dialog_delete_invite_code_message,
+            confirmLabel: tr.action_delete_code,
           ),
           onExecute: () async {
-            await delete(getKey(model));
+            await delete(getKey(model), runOptimistically: false);
             ref
                 .read(routerProvider)
                 .dispatch(RoutingIntents.studyRecruit(model.studyId));
@@ -187,6 +192,14 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Future<void> _copy(String value, SnackbarIntent notification) async {
     await ref.read(clipboardServiceProvider).copy(value);
     ref.read(notificationServiceProvider).show(notification);
+  }
+
+  String _formattedDeleteCode(String code) {
+    const visiblePrefixLength = 8;
+    if (code.length <= visiblePrefixLength) {
+      return code;
+    }
+    return '${code.substring(0, visiblePrefixLength)}...';
   }
 
   void _showSharePopup(BuildContext context, String deepLink, String filename) {
@@ -302,6 +315,7 @@ class InviteCodeRepositoryDelegate
       },
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
+      completeFutureOptimistically: false,
     );
 
     return saveOperation.execute().then((_) => model);
@@ -319,6 +333,7 @@ class InviteCodeRepositoryDelegate
       rollback: () {},
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
+      completeFutureOptimistically: false,
     );
 
     return deleteOperation.execute();

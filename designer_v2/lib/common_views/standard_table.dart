@@ -22,7 +22,7 @@ typedef StandardTableCellsBuilder<T> =
       Set<WidgetState> states,
     );
 
-enum StandardTableStyle { plain, material }
+enum StandardTableStyle { plain, material, flat }
 
 /// Default descriptor for a table column
 class StandardTableColumn {
@@ -445,9 +445,14 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     final theme = Theme.of(context);
     final rowIsHovered = states.contains(WidgetState.hovered);
     final rowIsPressed = states.contains(WidgetState.pressed);
-    final rowColor = (widget.rowStyle == StandardTableStyle.material)
-        ? theme.colorScheme.onPrimary
-        : Colors.transparent;
+    final rowColor = switch (widget.rowStyle) {
+      StandardTableStyle.material => theme.colorScheme.onPrimary,
+      StandardTableStyle.flat =>
+        rowIsHovered || rowIsPressed
+            ? theme.colorScheme.primaryContainer.withValues(alpha: 0.18)
+            : Colors.transparent,
+      StandardTableStyle.plain => Colors.transparent,
+    };
 
     Widget decorateCellInteractions(Widget child, {bool disableOnTap = false}) {
       return MouseEventsRegion(
@@ -560,7 +565,22 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
               color: theme.colorScheme.onPrimary,
             ),
           )
-        : TableRow(key: ObjectKey(item), children: dataCells);
+        : TableRow(
+            key: ObjectKey(item),
+            children: dataCells,
+            decoration: widget.rowStyle == StandardTableStyle.flat
+                ? BoxDecoration(
+                    color: rowColor,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.colorScheme.outlineVariant.withValues(
+                          alpha: 0.9,
+                        ),
+                      ),
+                    ),
+                  )
+                : null,
+          );
   }
 
   Widget _buildActionMenu(BuildContext context, List<ModelAction> actions) {

@@ -15,7 +15,6 @@ import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/features/recruit/invite_code_filter_button.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
@@ -23,7 +22,6 @@ import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dar
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
@@ -33,7 +31,21 @@ typedef InterventionProvider = Intervention? Function(String id);
 class StudyRecruitScreen extends StudyPageWidget {
   const StudyRecruitScreen(super.studyId, {super.key});
 
-  static const _searchFieldWidth = 280.0;
+  static const _searchFieldWidth = 300.0;
+  static const _sectionSpacing = 24.0;
+  static const _headerControlSpacing = 16.0;
+  static const _titleSubtitleSpacing = 4.0;
+  static const _footerTopSpacing = 24.0;
+  static const _feedbackBottomSpacing = 24.0;
+  static const _feedbackHorizontalPadding = 24.0;
+  static const _feedbackVerticalPadding = 18.0;
+  static const _paginationSpacing = 8.0;
+  static const _paginationGroupSpacing = 16.0;
+  static const _paginationButtonSize = 40.0;
+  static const _footerDropdownWidth = 88.0;
+  static const _footerDropdownHeight = 40.0;
+  static const _feedbackBorderRadius = 8.0;
+  static const _loadingIndicatorHeight = 3.0;
   static const _inviteCodePageSizes = [15, 25, 50, 100];
 
   @override
@@ -49,7 +61,7 @@ class StudyRecruitScreen extends StudyPageWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _inviteCodesSectionHeader(context, ref),
-                const SizedBox(height: 24.0),
+                const SizedBox(height: _sectionSpacing),
                 _inviteCodesContent(context, ref, state, controller),
               ],
             )
@@ -74,20 +86,16 @@ class StudyRecruitScreen extends StudyPageWidget {
     return state.invites.when(
       data: (studyInvites) {
         if (studyInvites == null || studyInvites.isEmpty) {
-          final hasActiveFilters =
-              state.inviteCodeSearchQuery.trim().isNotEmpty ||
-              !state.inviteCodeFilters.isEmpty;
-          if (hasActiveFilters) {
+          final hasSearchQuery = state.inviteCodeSearchQuery.trim().isNotEmpty;
+          if (hasSearchQuery) {
             return Padding(
-              padding: const EdgeInsets.only(top: 24),
+              padding: const EdgeInsets.only(top: _sectionSpacing),
               child: EmptyBody(
                 icon: Icons.filter_alt_off_rounded,
-                title: 'No matching invite codes'.hardcoded,
-                description:
-                    'Try changing search or filters to see more invite codes.'
-                        .hardcoded,
+                title: tr.code_list_no_results_title,
+                description: tr.code_list_no_results_description,
                 button: SecondaryButton(
-                  text: 'Clear filters'.hardcoded,
+                  text: tr.code_list_clear_filters,
                   onPressed: () async {
                     await controller.setInviteCodeSearchQuery('');
                     await controller.setInviteCodeFilters(
@@ -111,6 +119,8 @@ class StudyRecruitScreen extends StudyPageWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (state.isPageTransitionLoading)
+              const LinearProgressIndicator(minHeight: _loadingIndicatorHeight),
             StudyInvitesTable(
               invites: studyInvites,
               onSelect: _onSelectInvite(context, ref),
@@ -122,9 +132,12 @@ class StudyRecruitScreen extends StudyPageWidget {
               sortColumn: state.inviteCodeSortColumn,
               sortAscending: state.inviteCodeSortAscending,
               onSortColumn: controller.setInviteCodeSorting,
-              firstRowNumber: state.inviteCodeFirstRowNumber,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: _footerTopSpacing),
+            if (state.hasPaginationError) ...[
+              _inviteCodePaginationFeedback(context, state, controller),
+              const SizedBox(height: _feedbackBottomSpacing),
+            ],
             _inviteCodePaginationControls(context, state, controller),
           ],
         );
@@ -173,31 +186,36 @@ class StudyRecruitScreen extends StudyPageWidget {
 
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
-    final controller = ref.watch(
-      studyRecruitControllerProvider(studyId).notifier,
-    );
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SelectableText(
-          tr.code_list_section_title,
-          style: Theme.of(context).textTheme.headlineSmall,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectableText(
+              tr.code_list_section_title,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: _titleSubtitleSpacing),
+            Text(
+              tr.code_list_total_count(state.inviteCodeCount),
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
         ),
-        Container(width: 32.0),
-        _newInviteCodeButton(context, ref),
         const Spacer(),
-        InviteCodeFilterButton(
-          filters: state.inviteCodeFilters,
-          onApply: controller.setInviteCodeFilters,
-        ),
-        const SizedBox(width: 12),
         SizedBox(
           width: _searchFieldWidth,
           child: Search(
             hintText: tr.code_list_search_hint,
             initialText: state.inviteCodeSearchQuery,
-            onQueryChanged: controller.setInviteCodeSearchQuery,
+            onQueryChanged: ref
+                .read(studyRecruitControllerProvider(studyId).notifier)
+                .setInviteCodeSearchQuery,
           ),
         ),
+        const SizedBox(width: _headerControlSpacing),
+        _newInviteCodeButton(context, ref),
       ],
     );
   }
@@ -279,52 +297,138 @@ class StudyRecruitScreen extends StudyPageWidget {
     StudyRecruitController controller,
   ) {
     final theme = Theme.of(context);
+    final isPaginationDisabled = state.isPageTransitionLoading;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        Text(tr.code_list_rows_per_page, style: theme.textTheme.bodyLarge),
+        const SizedBox(width: _paginationSpacing),
+        SizedBox(
+          width: _footerDropdownWidth,
+          height: _footerDropdownHeight,
+          child: DropdownButtonFormField<int>(
+            initialValue: state.inviteCodePageSize,
+            isExpanded: true,
+            items: _inviteCodePageSizes
+                .map(
+                  (pageSize) => DropdownMenuItem<int>(
+                    value: pageSize,
+                    child: Text(pageSize.toString()),
+                  ),
+                )
+                .toList(),
+            onChanged: isPaginationDisabled
+                ? null
+                : (pageSize) {
+                    if (pageSize == null) return;
+                    controller.setInviteCodePageSize(pageSize);
+                  },
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(24)),
+              ),
+            ),
+          ),
+        ),
+        const Spacer(),
         Text(
-          tr.code_list_active_count(state.inviteCodeCount),
-          style: theme.textTheme.bodySmall,
+          _inviteCodePaginationSummary(state),
+          style: theme.textTheme.bodyLarge,
         ),
-        const SizedBox(width: 16),
-        Text(tr.code_list_page_size, style: theme.textTheme.bodySmall),
-        const SizedBox(width: 8),
-        DropdownButton<int>(
-          value: state.inviteCodePageSize,
-          items: _inviteCodePageSizes
-              .map(
-                (pageSize) => DropdownMenuItem<int>(
-                  value: pageSize,
-                  child: Text(pageSize.toString()),
-                ),
-              )
-              .toList(),
-          onChanged: (pageSize) {
-            if (pageSize == null) return;
-            controller.setInviteCodePageSize(pageSize);
-          },
-        ),
-        const SizedBox(width: 16),
-        Text(
-          '${tr.code_list_page(state.inviteCodePageIndex + 1)} / ${state.inviteCodeTotalPages}',
-          style: theme.textTheme.bodySmall,
-        ),
-        const SizedBox(width: 8),
+        const SizedBox(width: _paginationGroupSpacing),
         IconButton(
-          onPressed: state.hasPreviousInviteCodePage
+          onPressed: state.hasPreviousInviteCodePage && !isPaginationDisabled
               ? controller.loadPreviousInviteCodePage
               : null,
           icon: const Icon(Icons.chevron_left_rounded),
           tooltip: MaterialLocalizations.of(context).previousPageTooltip,
+          style: IconButton.styleFrom(
+            shape: const CircleBorder(),
+            minimumSize: const Size.square(_paginationButtonSize),
+            side: BorderSide(color: theme.colorScheme.primary),
+          ),
         ),
+        const SizedBox(width: _paginationSpacing),
         IconButton(
-          onPressed: state.hasComputedNextInviteCodePage
+          onPressed:
+              state.hasComputedNextInviteCodePage && !isPaginationDisabled
               ? controller.loadNextInviteCodePage
               : null,
           icon: const Icon(Icons.chevron_right_rounded),
           tooltip: MaterialLocalizations.of(context).nextPageTooltip,
+          style: IconButton.styleFrom(
+            shape: const CircleBorder(),
+            minimumSize: const Size.square(_paginationButtonSize),
+            side: BorderSide(color: theme.colorScheme.primary),
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _inviteCodePaginationFeedback(
+    BuildContext context,
+    StudyRecruitControllerState state,
+    StudyRecruitController controller,
+  ) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: _feedbackHorizontalPadding,
+              vertical: _feedbackVerticalPadding,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.errorContainer.withValues(alpha: 0.65),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(_feedbackBorderRadius),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.error_outline_rounded,
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    tr.code_list_page_fetch_error,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onErrorContainer,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: _paginationGroupSpacing),
+        SecondaryButton(
+          text: tr.code_list_retry,
+          icon: null,
+          onPressed: controller.retryInviteCodePageLoad,
+        ),
+      ],
+    );
+  }
+
+  String _inviteCodePaginationSummary(StudyRecruitControllerState state) {
+    if (state.inviteCodeCount == 0) {
+      return tr.code_list_page_range(0, 0, 0);
+    }
+    if (state.isPageTransitionLoading) {
+      return tr.code_list_page_loading(
+        state.pendingInviteCodeRangeStart,
+        state.pendingInviteCodeRangeEnd,
+      );
+    }
+    return tr.code_list_page_range(
+      state.inviteCodeRangeStart,
+      state.inviteCodeRangeEnd,
+      state.inviteCodeCount,
     );
   }
 
