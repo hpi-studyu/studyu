@@ -521,7 +521,7 @@ void main() {
     expect(find.text('Cereal'), findsOneWidget);
     expect(find.text('Toast'), findsOneWidget);
     expect(find.textContaining('Breakfast •'), findsNothing);
-    expect(find.byIcon(Icons.wb_sunny_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.breakfast_dining_outlined), findsOneWidget);
   });
 
   testWidgets('meal groups keep the original category icons and colors', (
@@ -545,7 +545,7 @@ void main() {
     await tester.pump();
 
     expect(
-      tester.widget<Icon>(find.byIcon(Icons.wb_sunny_outlined)).color,
+      tester.widget<Icon>(find.byIcon(Icons.breakfast_dining_outlined)).color,
       Colors.amber,
     );
     expect(

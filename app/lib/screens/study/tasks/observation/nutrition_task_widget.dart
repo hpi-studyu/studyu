@@ -517,7 +517,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       case MealType.breakfast:
         return _MealTimelineCategory(
           key: 'breakfast',
-          icon: Icons.wb_sunny_outlined,
+          icon: Icons.breakfast_dining_outlined,
           color: Colors.amber,
           label: l10n.meal_type_breakfast,
         );
