@@ -170,10 +170,12 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   Future<void> _addFood() async {
-    final result = await Navigator.of(context).push(
-      FoodSearchScreen.route(allowRecipes: widget.task?.allowRecipes ?? true),
+    final result = await FoodSearchScreen.show(
+      context,
+      mealLabel: _mealLabel,
+      allowRecipes: widget.task?.allowRecipes ?? true,
     );
-    if (result != null) {
+    if (result != null && mounted) {
       setState(() {
         _meal.foods.add(result);
       });

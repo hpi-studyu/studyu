@@ -750,6 +750,9 @@ void main() {
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
 
+    expect(find.byType(BottomSheet), findsOneWidget);
+    expect(find.text('Add food to Edited supper'), findsOneWidget);
+
     final navigator = tester.state<NavigatorState>(find.byType(Navigator));
     final recipeResult = navigator.push<FoodEntry>(RecipeBuilderScreen.route());
     await tester.pumpAndSettle();
@@ -762,7 +765,7 @@ void main() {
     expect(await recipeResult, isNull);
     expect(find.byType(RecipeBuilderScreen), findsNothing);
 
-    await tester.pageBack();
+    await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
     expect(find.byType(MealEntryScreen), findsOneWidget);

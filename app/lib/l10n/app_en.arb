@@ -795,6 +795,14 @@
   "tap_to_add_first_meal": "Tap the button above to add your first meal",
   "tap_to_add_food": "Tap to add food",
   "add_food_title": "Add Food",
+  "add_food_to_meal": "Add food to {meal}",
+  "@add_food_to_meal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
   "edit_food_title": "Edit Food",
   "add_food_manually": "Add Food Manually",
   "basic_information": "Basic Information",

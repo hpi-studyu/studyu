@@ -32,6 +32,33 @@ Widget foodSearchApp(
   ),
 );
 
+Widget foodSearchModalApp({
+  required String mealLabel,
+  OpenFoodFactsSearch? openFoodFactsSearch,
+  UsdaFoodSearch? usdaFoodSearch,
+}) => ChangeNotifierProvider(
+  create: (_) => AppState(),
+  child: MaterialApp(
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    home: Builder(
+      builder: (context) => Scaffold(
+        body: Center(
+          child: FilledButton(
+            onPressed: () => FoodSearchScreen.show(
+              context,
+              mealLabel: mealLabel,
+              openFoodFactsSearch: openFoodFactsSearch,
+              usdaFoodSearch: usdaFoodSearch,
+            ),
+            child: const Text('Open search'),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
 SearchResult offResult([List<Product> products = const []]) =>
     SearchResult(products: products);
 
@@ -90,6 +117,72 @@ void main() {
       find.text('Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('modal keeps contextual search state across nested details', (
+    tester,
+  ) async {
+    final requests = <SearchRequest>[];
+    await tester.pumpWidget(
+      foodSearchModalApp(
+        mealLabel: 'Snack',
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) async {
+              requests.add((
+                source: 'off',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return offResult([offFood('Apple')]);
+            },
+        usdaFoodSearch:
+            ({required query, required page, required pageSize}) async {
+              requests.add((
+                source: 'usda',
+                query: query,
+                page: page,
+                pageSize: pageSize,
+              ));
+              return usdaResult();
+            },
+      ),
+    );
+
+    await tester.tap(find.text('Open search'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BottomSheet), findsOneWidget);
+    expect(find.text('Add food to Snack'), findsOneWidget);
+    expect(
+      tester.getSize(find.byType(FoodSearchScreen)).height,
+      greaterThan(500),
+    );
+
+    await enterSearch(tester, 'apple');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edit Food'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Add food to Snack'), findsOneWidget);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      'apple',
+    );
+    expect(requests, [
+      (source: 'off', query: 'apple', page: 1, pageSize: 20),
+      (source: 'usda', query: 'apple', page: 1, pageSize: 20),
+    ]);
+
+    await tester.tap(find.byType(CloseButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Open search'), findsOneWidget);
+    expect(find.byType(FoodSearchScreen), findsNothing);
   });
 
   testWidgets('German USDA outage stays localized and retries Apfel', (
@@ -891,23 +984,21 @@ void main() {
             builder: (context) => Scaffold(
               body: TextButton(
                 onPressed: () async {
-                  selectedFood = await Navigator.of(context).push(
-                    MaterialPageRoute<studyu.FoodEntry>(
-                      builder: (_) => FoodSearchScreen(
-                        openFoodFactsSearch:
-                            ({
-                              required query,
-                              required page,
-                              required pageSize,
-                            }) async => offResult(),
-                        usdaFoodSearch:
-                            ({
-                              required query,
-                              required page,
-                              required pageSize,
-                            }) async => usdaResult(),
-                      ),
-                    ),
+                  selectedFood = await FoodSearchScreen.show(
+                    context,
+                    mealLabel: 'Snack',
+                    openFoodFactsSearch:
+                        ({
+                          required query,
+                          required page,
+                          required pageSize,
+                        }) async => offResult(),
+                    usdaFoodSearch:
+                        ({
+                          required query,
+                          required page,
+                          required pageSize,
+                        }) async => usdaResult(),
                   );
                 },
                 child: const Text('Open food search'),
@@ -920,6 +1011,7 @@ void main() {
 
     await tester.tap(find.text('Open food search'));
     await tester.pumpAndSettle();
+    expect(find.text('Add food to Snack'), findsOneWidget);
     await tester.tap(find.text('Saved Apple Template'));
     await tester.pumpAndSettle();
 

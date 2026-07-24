@@ -29,11 +29,13 @@ typedef UsdaFoodSearch =
 
 class FoodSearchScreen extends StatelessWidget {
   final bool allowRecipes;
+  final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
 
   const FoodSearchScreen({
     this.allowRecipes = true,
+    this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
     super.key,
@@ -45,6 +47,27 @@ class FoodSearchScreen extends StatelessWidget {
     builder: (_) => FoodSearchScreen(allowRecipes: allowRecipes),
   );
 
+  static Future<studyu.FoodEntry?> show(
+    BuildContext context, {
+    required String mealLabel,
+    bool allowRecipes = true,
+    OpenFoodFactsSearch? openFoodFactsSearch,
+    UsdaFoodSearch? usdaFoodSearch,
+  }) => showModalBottomSheet<studyu.FoodEntry>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) => FractionallySizedBox(
+      heightFactor: 0.96,
+      child: FoodSearchScreen(
+        allowRecipes: allowRecipes,
+        mealLabel: mealLabel,
+        openFoodFactsSearch: openFoodFactsSearch,
+        usdaFoodSearch: usdaFoodSearch,
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context, listen: false);
@@ -54,6 +77,7 @@ class FoodSearchScreen extends StatelessWidget {
       create: (_) => TemplateViewModel(userId: userId),
       child: _FoodSearchScreenContent(
         allowRecipes: allowRecipes,
+        mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
       ),
@@ -63,11 +87,13 @@ class FoodSearchScreen extends StatelessWidget {
 
 class _FoodSearchScreenContent extends StatefulWidget {
   final bool allowRecipes;
+  final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
 
   const _FoodSearchScreenContent({
     this.allowRecipes = true,
+    this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
   });
@@ -581,7 +607,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.add_food_title)),
+      appBar: AppBar(
+        leading: widget.mealLabel == null ? null : const CloseButton(),
+        title: Text(
+          widget.mealLabel == null
+              ? l10n.add_food_title
+              : l10n.add_food_to_meal(widget.mealLabel!),
+        ),
+      ),
       body: Column(
         children: [
           // Search Bar

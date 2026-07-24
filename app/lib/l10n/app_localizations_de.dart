@@ -1982,6 +1982,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get add_food_title => 'Add Food';
 
   @override
+  String add_food_to_meal(String meal) {
+    return 'Lebensmittel zu $meal hinzufügen';
+  }
+
+  @override
   String get edit_food_title => 'Edit Food';
 
   @override

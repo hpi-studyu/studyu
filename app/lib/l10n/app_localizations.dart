@@ -3713,6 +3713,12 @@ abstract class AppLocalizations {
   /// **'Add Food'**
   String get add_food_title;
 
+  /// No description provided for @add_food_to_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food to {meal}'**
+  String add_food_to_meal(String meal);
+
   /// No description provided for @edit_food_title.
   ///
   /// In en, this message translates to:

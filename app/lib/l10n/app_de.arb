@@ -657,5 +657,6 @@
   "meal_category_snacks": "Snacks",
   "meal_category_other": "Weitere Mahlzeiten",
   "no_foods_added": "Keine Lebensmittel hinzugefügt",
-  "log_food": "Lebensmittel eintragen"
+  "log_food": "Lebensmittel eintragen",
+  "add_food_to_meal": "Lebensmittel zu {meal} hinzufügen"
 }

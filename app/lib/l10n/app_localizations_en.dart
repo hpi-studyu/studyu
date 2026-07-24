@@ -1967,6 +1967,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_food_title => 'Add Food';
 
   @override
+  String add_food_to_meal(String meal) {
+    return 'Add food to $meal';
+  }
+
+  @override
   String get edit_food_title => 'Edit Food';
 
   @override
