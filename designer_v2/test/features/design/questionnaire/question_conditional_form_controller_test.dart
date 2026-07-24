@@ -3,8 +3,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
+import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 void main() {
+  setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
+
   late FormControl<QuestionConditional<dynamic>?> conditionalControl;
 
   FreeTextQuestion freeTextQuestion(
@@ -23,6 +27,27 @@ void main() {
     );
     viewModel.addCondition();
     viewModel.conditionModels.single.questionIdControl.value = question.id;
+    return viewModel;
+  }
+
+  ConditionalQuestionFormViewModel viewModelWithInitialExpression(
+    Question question,
+    Expression expression,
+  ) {
+    ConditionRowFormViewModel.availableQuestions = [question];
+    conditionalControl = FormControl<QuestionConditional<dynamic>?>(
+      value: QuestionConditional.withCondition(
+        CompositeExpression(
+          logicType: LogicType.and,
+          expressions: [expression],
+        ),
+      ),
+    );
+    final viewModel = ConditionalQuestionFormViewModel(
+      currentQuestionId: 'current-question',
+      questionConditionalControl: conditionalControl,
+    );
+    viewModel.setControlsFrom(null);
     return viewModel;
   }
 
@@ -75,6 +100,15 @@ void main() {
         );
         final condition = viewModel.conditionModels.single;
 
+        expect(
+          condition.availableComparators.map((option) => option.value),
+          isNot(contains(TextComparator.contains)),
+        );
+        expect(
+          condition.availableComparators.map((option) => option.value),
+          isNot(contains(TextComparator.doesNotContain)),
+        );
+
         condition.comparatorControl.value = NumericComparator.greaterThan;
         condition.valueControl.value = '5';
 
@@ -86,5 +120,72 @@ void main() {
         expect(expression.toJson(), containsPair('target', 'q1'));
       },
     );
+
+    for (final comparator in [TextComparator.equal, TextComparator.notEqual]) {
+      test('migrates legacy numeric free-text $comparator on load', () {
+        final question = freeTextQuestion(
+          'q1',
+          textType: FreeTextQuestionType.numeric,
+        );
+        final legacyExpression = TextExpression(
+          comparator: comparator,
+          value: '5',
+        )..target = question.id;
+
+        final viewModel = viewModelWithInitialExpression(
+          question,
+          legacyExpression,
+        );
+        final expectedComparator = comparator == TextComparator.equal
+            ? NumericComparator.equal
+            : NumericComparator.notEqual;
+
+        expect(
+          viewModel.conditionModels.single.comparatorControl.value,
+          expectedComparator,
+        );
+        final savedExpression =
+            conditionalControl.value!.condition.expressions.single;
+        expect(savedExpression, isA<NumericExpression>());
+        expect(
+          (savedExpression as NumericExpression).comparator,
+          expectedComparator,
+        );
+        expect(savedExpression.value, 5);
+        expect(savedExpression.target, question.id);
+      });
+    }
+
+    for (final comparator in [
+      TextComparator.contains,
+      TextComparator.doesNotContain,
+    ]) {
+      test('preserves legacy numeric free-text $comparator on load', () {
+        final question = freeTextQuestion(
+          'q1',
+          textType: FreeTextQuestionType.numeric,
+        );
+        final legacyExpression = TextExpression(
+          comparator: comparator,
+          value: '5',
+        )..target = question.id;
+
+        final viewModel = viewModelWithInitialExpression(
+          question,
+          legacyExpression,
+        );
+        final condition = viewModel.conditionModels.single;
+
+        expect(condition.comparatorControl.value, comparator);
+        expect(
+          condition.availableComparators.map((option) => option.value),
+          contains(comparator),
+        );
+        final savedExpression =
+            conditionalControl.value!.condition.expressions.single;
+        expect(savedExpression, isA<TextExpression>());
+        expect(savedExpression.toJson(), legacyExpression.toJson());
+      });
+    }
   });
 }

@@ -195,6 +195,16 @@ class ConditionRowFormViewModel
               NumericComparator.lessThanOrEqual,
               NumericComparator.lessThanOrEqual.stringSymbol,
             ),
+            if (comparatorControl.value == TextComparator.contains)
+              FormControlOption(
+                TextComparator.contains,
+                tr.form_array_question_visibility_logic_contains,
+              ),
+            if (comparatorControl.value == TextComparator.doesNotContain)
+              FormControlOption(
+                TextComparator.doesNotContain,
+                tr.form_array_question_visibility_logic_does_not_contain,
+              ),
           ];
         }
         return [
@@ -399,6 +409,13 @@ class ConditionRowFormViewModel
         final freeTextQuestion = selectedQ as FreeTextQuestion;
         if (value == null) return null;
         if (freeTextQuestion.textType == FreeTextQuestionType.numeric) {
+          if (comparator == TextComparator.contains ||
+              comparator == TextComparator.doesNotContain) {
+            return TextExpression(
+              comparator: comparator as TextComparator,
+              value: value.toString(),
+            )..target = questionId;
+          }
           if (value is String) {
             value = num.tryParse(value);
           }
@@ -466,7 +483,9 @@ class ConditionRowFormViewModel
     }
 
     return switch (comparator) {
+      TextComparator.equal ||
       TextComparator.lengthEqual => NumericComparator.equal,
+      TextComparator.notEqual ||
       TextComparator.lengthNotEqual => NumericComparator.notEqual,
       TextComparator.lengthGreaterThan => NumericComparator.greaterThan,
       TextComparator.lengthLessThan => NumericComparator.lessThan,
