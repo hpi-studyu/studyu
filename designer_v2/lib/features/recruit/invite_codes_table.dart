@@ -238,7 +238,8 @@ class StudyInvitesTable extends StatelessWidget {
     }
 
     Widget buildInterventionCell(Intervention? intervention) {
-      final label = intervention?.name ??
+      final label =
+          intervention?.name ??
           tr.form_field_preconfigured_schedule_intervention_default;
       final style = intervention != null ? null : defaultInterventionTextStyle;
       return Tooltip(
