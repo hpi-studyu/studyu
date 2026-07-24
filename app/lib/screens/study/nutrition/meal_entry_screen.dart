@@ -1409,6 +1409,7 @@ class _FoodCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     final (icon, color) = _getFoodIconAndColor(food.entryType);
+    final imageUrl = _getFoodImageUrl(food);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -1426,7 +1427,17 @@ class _FoodCard extends StatelessWidget {
                   color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Center(child: Icon(icon, size: 22, color: color)),
+                child: imageUrl == null
+                    ? Center(child: Icon(icon, size: 22, color: color))
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) =>
+                              Center(child: Icon(icon, size: 22, color: color)),
+                        ),
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -1477,6 +1488,19 @@ class _FoodCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? _getFoodImageUrl(FoodEntry food) {
+    for (final key in [
+      'image_front_small_url',
+      'image_front_url',
+      'image_url',
+      'imageUrl',
+    ]) {
+      final value = food.originalValues[key];
+      if (value is String && value.trim().isNotEmpty) return value;
+    }
+    return null;
   }
 
   (IconData, Color) _getFoodIconAndColor(FoodEntryType entryType) {
