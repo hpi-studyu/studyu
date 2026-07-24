@@ -665,6 +665,8 @@
   "add_food_before_saving": "Add at least one food item before saving.",
   "meal_information": "Meal Information",
   "meal_type_label": "Meal Type",
+  "meal_details": "Meal details",
+  "apply": "Apply",
   "custom_meal_label": "Custom Meal Label",
   "time": "Time",
   "where_did_you_eat": "Where did you eat?",

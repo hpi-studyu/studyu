@@ -1645,6 +1645,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get meal_type_label => 'Meal Type';
 
   @override
+  String get meal_details => 'Mahlzeitendetails';
+
+  @override
+  String get apply => 'Übernehmen';
+
+  @override
   String get custom_meal_label => 'Custom Meal Label';
 
   @override

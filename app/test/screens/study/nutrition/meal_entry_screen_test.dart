@@ -69,10 +69,10 @@ MealLog emptyMeal() => MealLog(
   foods: [],
 );
 
-MealLog editableMeal() => MealLog(
+MealLog editableMeal({String? customMealLabel = 'Supper'}) => MealLog(
   id: 'editable-meal',
   mealType: MealType.other,
-  customMealLabel: 'Supper',
+  customMealLabel: customMealLabel,
   mealContext: MealContext.home,
   timestamp: DateTime(2026, 7, 15, 20),
   timezone: 'UTC',
@@ -83,6 +83,7 @@ MealLog editableMeal() => MealLog(
 Future<void> openMealEntry(
   WidgetTester tester,
   MealLog meal, {
+  NutritionTask? task,
   ValueChanged<MealLog?>? onResult,
   ValueChanged<MealEntryResult?>? onEntryResult,
 }) async {
@@ -101,7 +102,8 @@ Future<void> openMealEntry(
                   final result = await Navigator.of(context)
                       .push<MealEntryResult>(
                         MaterialPageRoute(
-                          builder: (_) => MealEntryScreen(existingMeal: meal),
+                          builder: (_) =>
+                              MealEntryScreen(existingMeal: meal, task: task),
                         ),
                       );
                   onEntryResult?.call(result);
@@ -119,6 +121,22 @@ Future<void> openMealEntry(
   );
   await tester.tap(find.text('Open meal'));
   await tester.pumpAndSettle();
+}
+
+Future<void> selectMealType(
+  WidgetTester tester,
+  String label, {
+  String? customLabel,
+}) async {
+  await tester.tap(find.text('Meal Type'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(label).last);
+  await tester.pumpAndSettle();
+  if (customLabel != null) {
+    await tester.enterText(find.byType(TextField).last, customLabel);
+    await tester.tap(find.text('Apply'));
+    await tester.pumpAndSettle();
+  }
 }
 
 void main() {
@@ -153,12 +171,8 @@ void main() {
     );
     await tester.pump();
 
-    expect(
-      tester
-          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Dinner'))
-          .selected,
-      isTrue,
-    );
+    expect(find.text('Meal Type'), findsOneWidget);
+    expect(find.text('Dinner'), findsWidgets);
     expect(
       find.descendant(of: find.byType(AppBar), matching: find.text('Dinner')),
       findsOneWidget,
@@ -185,12 +199,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(
-      tester
-          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Other'))
-          .selected,
-      isTrue,
-    );
+    expect(find.text('Meal Type'), findsOneWidget);
     expect(find.text('Late bite'), findsWidgets);
     expect(
       find.descendant(
@@ -221,12 +230,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(
-      tester
-          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Other'))
-          .selected,
-      isTrue,
-    );
+    expect(find.text('Meal Type'), findsOneWidget);
     expect(find.text('Supper'), findsWidgets);
     expect(
       find.descendant(of: find.byType(AppBar), matching: find.text('Supper')),
@@ -245,8 +249,7 @@ void main() {
       onEntryResult: (value) => result = value,
     );
 
-    await tester.tap(find.widgetWithText(FilterChip, 'Dinner'));
-    await tester.pump();
+    await selectMealType(tester, 'Dinner');
 
     expect(
       find.descendant(of: find.byType(AppBar), matching: find.text('Dinner')),
@@ -264,6 +267,216 @@ void main() {
     final savedMeal = (result! as SavedMealEntryResult).meal;
     expect(savedMeal.mealType, MealType.dinner);
     expect(savedMeal.customMealLabel, isNull);
+  });
+
+  testWidgets('meal type sheet uses task-specific choices', (tester) async {
+    MealEntryResult? result;
+    final task = NutritionTask.withId()
+      ..customMealTypes = ['Morning meal', 'Evening snack', 'Other'];
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      task: task,
+      onEntryResult: (value) => result = value,
+    );
+
+    await tester.tap(find.text('Meal Type'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Morning meal'), findsOneWidget);
+    expect(find.text('Evening snack'), findsOneWidget);
+    expect(find.text('Other'), findsOneWidget);
+    expect(find.text('Breakfast'), findsNothing);
+
+    await tester.tap(find.text('Evening snack'));
+    await tester.pumpAndSettle();
+    expect(find.text('Evening snack'), findsWidgets);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    final meal = (result! as SavedMealEntryResult).meal;
+    expect(meal.mealType, MealType.other);
+    expect(meal.customMealLabel, 'Evening snack');
+  });
+
+  testWidgets('custom meal choices represent an existing generic Other', (
+    tester,
+  ) async {
+    final task = NutritionTask.withId()
+      ..customMealTypes = ['Morning meal', 'Evening snack'];
+    await openMealEntry(
+      tester,
+      editableMeal(customMealLabel: null),
+      task: task,
+    );
+
+    await tester.tap(find.text('Meal Type'));
+    await tester.pumpAndSettle();
+
+    final otherTile = tester.widget<ListTile>(
+      find.widgetWithText(ListTile, 'Other').last,
+    );
+    expect((otherTile.leading! as Icon).icon, Icons.radio_button_checked);
+    expect(find.text('Breakfast'), findsNothing);
+  });
+
+  testWidgets('custom meal choices can save generic Other', (tester) async {
+    MealEntryResult? result;
+    final task = NutritionTask.withId()
+      ..customMealTypes = ['Morning meal', 'Evening snack'];
+    await openMealEntry(
+      tester,
+      editableMeal(customMealLabel: 'Morning meal'),
+      task: task,
+      onEntryResult: (value) => result = value,
+    );
+
+    await tester.tap(find.text('Meal Type'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ListTile, 'Other').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Other'), findsWidgets);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    final meal = (result! as SavedMealEntryResult).meal;
+    expect(meal.mealType, MealType.other);
+    expect(meal.customMealLabel, isEmpty);
+  });
+
+  testWidgets('meal details apply atomically and dismissal discards edits', (
+    tester,
+  ) async {
+    MealEntryResult? result;
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      onEntryResult: (value) => result = value,
+    );
+
+    await tester.ensureVisible(find.text('Meal details'));
+    await tester.tap(find.text('Meal details'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DropdownButtonFormField &&
+            widget.decoration.labelText == 'Who were you with?',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Family').last);
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(BottomSheet), const Offset(0, 600));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Family'), findsNothing);
+    expect(find.text('Home'), findsOneWidget);
+
+    await tester.tap(find.text('Meal details'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DropdownButtonFormField &&
+            widget.decoration.labelText == 'Who were you with?',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Family').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Family'), findsNothing);
+    expect(find.text('Home'), findsOneWidget);
+
+    await tester.tap(find.text('Meal details'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DropdownButtonFormField &&
+            widget.decoration.labelText == 'Who were you with?',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Family').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apply'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Home • Family'), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+    expect(
+      (result! as SavedMealEntryResult).meal.companyContext,
+      CompanyContext.family,
+    );
+  });
+
+  testWidgets('meal details clear a hidden location description', (
+    tester,
+  ) async {
+    MealEntryResult? result;
+    await openMealEntry(
+      tester,
+      MealLog(
+        id: 'location-meal',
+        mealType: MealType.dinner,
+        mealContext: MealContext.other,
+        locationDescription: 'Park',
+        timestamp: DateTime(2026, 7, 15, 20),
+        timezone: 'UTC',
+        isSkipped: false,
+        foods: [testFood()],
+      ),
+      onEntryResult: (value) => result = value,
+    );
+
+    await tester.ensureVisible(find.text('Meal details'));
+    await tester.tap(find.text('Meal details'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DropdownButtonFormField &&
+            widget.decoration.labelText == 'Where did you eat?',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apply'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Meal details'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DropdownButtonFormField &&
+            widget.decoration.labelText == 'Where did you eat?',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Other').last);
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller?.text,
+      isEmpty,
+    );
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    final meal = (result! as SavedMealEntryResult).meal;
+    expect(meal.mealContext, MealContext.home);
+    expect(meal.locationDescription, isNull);
   });
 
   testWidgets('skipped meal only asks for a reason and keeps save visible', (
@@ -465,8 +678,7 @@ void main() {
 
   testWidgets('save and leave keeps an invalid meal open', (tester) async {
     await openMealEntry(tester, emptyMeal());
-    await tester.tap(find.widgetWithText(FilterChip, 'Dinner'));
-    await tester.pump();
+    await selectMealType(tester, 'Dinner');
 
     await tester.pageBack();
     await tester.pumpAndSettle();
@@ -507,14 +719,7 @@ void main() {
   ) async {
     await openMealEntry(tester, editableMeal());
 
-    final customLabelField = find
-        .ancestor(
-          of: find.text('Custom Meal Label'),
-          matching: find.byType(TextField),
-        )
-        .first;
-    await tester.enterText(customLabelField, 'Edited supper');
-    await tester.pump();
+    await selectMealType(tester, 'Other', customLabel: 'Edited supper');
 
     await tester.ensureVisible(find.text('Apple'));
     await tester.pumpAndSettle();
@@ -538,14 +743,7 @@ void main() {
     MealLog? result;
     await openMealEntry(tester, original, onResult: (value) => result = value);
 
-    final customLabelField = find
-        .ancestor(
-          of: find.text('Custom Meal Label'),
-          matching: find.byType(TextField),
-        )
-        .first;
-    await tester.enterText(customLabelField, 'Edited supper');
-    await tester.pump();
+    await selectMealType(tester, 'Other', customLabel: 'Edited supper');
 
     final addFoodButton = find.widgetWithText(FilledButton, 'Add Food');
     await tester.ensureVisible(addFoodButton);
@@ -603,14 +801,7 @@ void main() {
     MealLog? result;
     await openMealEntry(tester, original, onResult: (value) => result = value);
 
-    final customLabelField = find
-        .ancestor(
-          of: find.text('Custom Meal Label'),
-          matching: find.byType(TextField),
-        )
-        .first;
-    await tester.enterText(customLabelField, 'Edited supper');
-    await tester.pump();
+    await selectMealType(tester, 'Other', customLabel: 'Edited supper');
     await tester.ensureVisible(find.byTooltip('From Template'));
     await tester.pumpAndSettle();
 

@@ -145,10 +145,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final breakfastChip = tester.widget<FilterChip>(
-      find.widgetWithText(FilterChip, 'Breakfast'),
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Breakfast'),
+      ),
+      findsOneWidget,
     );
-    expect(breakfastChip.selected, isTrue);
   });
 
   testWidgets('custom meal rows preselect and persist their configured label', (
@@ -183,10 +186,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      tester
-          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Morning meal'))
-          .selected,
-      isTrue,
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Morning meal'),
+      ),
+      findsOneWidget,
     );
 
     await tester.ensureVisible(find.text('Add Food'));

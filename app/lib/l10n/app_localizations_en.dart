@@ -1630,6 +1630,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meal_type_label => 'Meal Type';
 
   @override
+  String get meal_details => 'Meal details';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
   String get custom_meal_label => 'Custom Meal Label';
 
   @override
