@@ -114,7 +114,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   late TextEditingController _skipReasonController;
 
   bool _isSavingTemplate = false;
-  String? _analyzingPhotoId;
 
   final PhotoGalleryService _photoService = PhotoGalleryService();
 
@@ -559,10 +558,90 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
+  Future<void> _showPhotoRecall() => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    showDragHandle: true,
+    builder: (sheetContext) {
+      String? analyzingPhotoId;
+
+      return StatefulBuilder(
+        builder: (context, setSheetState) {
+          Future<void> analyzePhoto(PhotoReference photo) async {
+            if (!sheetContext.mounted) return;
+            setSheetState(() => analyzingPhotoId = photo.id);
+            await _analyzeAndAddFood(photo);
+            if (sheetContext.mounted) {
+              setSheetState(() => analyzingPhotoId = null);
+            }
+          }
+
+          final l10n = AppLocalizations.of(context)!;
+          return FractionallySizedBox(
+            heightFactor: 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 8, 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.photoRecallTitle,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              l10n.photoRecallSubtitle,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).closeButtonTooltip,
+                        onPressed: () => Navigator.of(sheetContext).pop(),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: PhotoRecallSection(
+                      mealTime: _timestamp,
+                      onPhotoTap: (photo) {
+                        PhotoViewerDialog.show(
+                          context,
+                          photoId: photo.id,
+                          photoDate: photo.createDateTime,
+                          onAnalyze: () => analyzePhoto(photo),
+                        );
+                      },
+                      onAnalyzePhoto: analyzePhoto,
+                      analyzingPhotoId: analyzingPhotoId,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+
   Future<void> _analyzeAndAddFood(PhotoReference photo) async {
     final l10n = AppLocalizations.of(context)!;
-
-    setState(() => _analyzingPhotoId = photo.id);
 
     try {
       // Get the full image bytes
@@ -618,15 +697,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       // Handle single item directly
       if (result.items.length == 1) {
         final item = result.items.first;
-        final editedFood = await Navigator.of(context).push<FoodEntry>(
-          FoodEntryScreen.route(
-            existingFood: item.foodEntry,
-            confidenceScore: item.confidenceScore,
-            showSearchAction: false,
-          ),
+        final food = await FoodQuantitySheet.show(
+          context,
+          food: item.foodEntry,
+          mealLabel: _mealLabel,
         );
-        if (editedFood != null && mounted) {
-          setState(() => _meal.foods.add(editedFood));
+        if (food != null && mounted) {
+          setState(() => _meal.foods.add(food));
         }
         return;
       }
@@ -648,15 +725,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       // Add each selected food
       for (final item in selectedItems) {
         if (!mounted) return;
-        final editedFood = await Navigator.of(context).push<FoodEntry>(
-          FoodEntryScreen.route(
-            existingFood: item.foodEntry,
-            confidenceScore: item.confidenceScore,
-            showSearchAction: false,
-          ),
+        final food = await FoodQuantitySheet.show(
+          context,
+          food: item.foodEntry,
+          mealLabel: _mealLabel,
         );
-        if (editedFood != null && mounted) {
-          setState(() => _meal.foods.add(editedFood));
+        if (food != null && mounted) {
+          setState(() => _meal.foods.add(food));
         }
       }
     } catch (e) {
@@ -664,10 +739,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _analyzingPhotoId = null);
       }
     }
   }
@@ -761,18 +832,11 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 const SizedBox(height: 8),
                 _TimeSelector(timestamp: _timestamp, onSelectTime: _selectTime),
                 const SizedBox(height: 16),
-                PhotoRecallSection(
-                  mealTime: _timestamp,
-                  onPhotoTap: (photo) {
-                    PhotoViewerDialog.show(
-                      context,
-                      photoId: photo.id,
-                      photoDate: photo.createDateTime,
-                      onAnalyze: () => _analyzeAndAddFood(photo),
-                    );
-                  },
-                  onAnalyzePhoto: _analyzeAndAddFood,
-                  analyzingPhotoId: _analyzingPhotoId,
+                _SettingsRow(
+                  icon: Icons.photo_library_outlined,
+                  label: l10n.photoRecallTitle,
+                  value: l10n.photoRecallSubtitle,
+                  onTap: _showPhotoRecall,
                 ),
                 if (_meal.foods.isNotEmpty) ...[
                   const SizedBox(height: 16),

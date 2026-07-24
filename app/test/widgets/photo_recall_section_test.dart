@@ -15,12 +15,15 @@ Widget _testApp(Locale locale) => MaterialApp(
 );
 
 void main() {
+  var permissionState = PermissionState.authorized;
+
   setUp(() {
+    permissionState = PermissionState.authorized;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(_photoManagerChannel, (call) async {
           switch (call.method) {
             case 'getPermissionState':
-              return PermissionState.authorized.index;
+              return permissionState.index;
             case 'getAssetPathList':
               return <dynamic>[];
           }
@@ -33,59 +36,52 @@ void main() {
         .setMockMethodCallHandler(_photoManagerChannel, null);
   });
 
-  testWidgets(
-    'uses direct copy and keeps photo surfaces interactive or passive',
-    (tester) async {
-      await tester.pumpWidget(_testApp(const Locale('en')));
-      await tester.pumpAndSettle();
+  testWidgets('keeps the empty gallery passive', (tester) async {
+    await tester.pumpWidget(_testApp(const Locale('en')));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.text('Use photos from around this time to remember what you ate.'),
-        findsOneWidget,
-      );
-      final collapsedAction = find.ancestor(
-        of: find.text('Photo Recall'),
-        matching: find.byType(InkWell),
-      );
-      expect(collapsedAction, findsOneWidget);
-      expect(tester.widget<InkWell>(collapsedAction).onTap, isNotNull);
-      expect(
-        tester
-            .widget<Card>(
-              find
-                  .ancestor(
-                    of: find.text('Photo Recall'),
-                    matching: find.byType(Card),
-                  )
-                  .first,
-            )
-            .color,
-        isNull,
-      );
+    final emptyLabel = find.text('No photos found');
+    expect(emptyLabel, findsOneWidget);
+    expect(
+      find.ancestor(of: emptyLabel, matching: find.byType(Card)),
+      findsOneWidget,
+    );
+    expect(
+      find.ancestor(of: emptyLabel, matching: find.byType(InkWell)),
+      findsNothing,
+    );
+  });
 
-      await tester.tap(find.text('Photo Recall'));
-      await tester.pumpAndSettle();
+  testWidgets('keeps permission explanation and request in the content', (
+    tester,
+  ) async {
+    permissionState = PermissionState.denied;
 
-      final emptyLabel = find.text('No photos found');
-      expect(emptyLabel, findsOneWidget);
-      expect(
-        find.ancestor(of: emptyLabel, matching: find.byType(Card)),
-        findsWidgets,
-      );
-      expect(
-        find.ancestor(of: emptyLabel, matching: find.byType(InkWell)),
-        findsNothing,
-      );
-    },
-  );
+    await tester.pumpWidget(_testApp(const Locale('en')));
+    await tester.pumpAndSettle();
 
-  testWidgets('uses natural German photo recall copy', (tester) async {
+    expect(find.text('Enable Photo Access'), findsOneWidget);
+    expect(
+      find.text(
+        'Access to your photos helps you recall what you ate. Photos are only displayed on your device.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.widgetWithText(FilledButton, 'Grant Permission'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('uses natural German permission copy', (tester) async {
+    permissionState = PermissionState.denied;
+
     await tester.pumpWidget(_testApp(const Locale('de')));
     await tester.pumpAndSettle();
 
     expect(
       find.text(
-        'Nutzen Sie Fotos aus dieser Zeit, um sich daran zu erinnern, was Sie gegessen haben.',
+        'Der Zugriff auf Ihre Fotos hilft Ihnen, sich an das Gegessene zu erinnern. Fotos werden nur auf Ihrem Gerät angezeigt.',
       ),
       findsOneWidget,
     );

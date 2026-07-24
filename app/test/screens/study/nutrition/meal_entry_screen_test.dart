@@ -1,5 +1,9 @@
+import 'dart:ui' show SemanticsAction;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -624,6 +628,65 @@ void main() {
       );
       expect(card.color, isNull);
     }
+  });
+
+  testWidgets('opens Photo Recall in a sheet and preserves the meal draft', (
+    tester,
+  ) async {
+    const channel = MethodChannel('com.fluttercandies/photo_manager');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+          switch (call.method) {
+            case 'getPermissionState':
+              return PermissionState.authorized.index;
+            case 'getAssetPathList':
+              return <dynamic>[];
+          }
+          return null;
+        });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, null),
+    );
+
+    MealEntryResult? result;
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      onEntryResult: (value) => result = value,
+    );
+    await selectMealType(tester, 'Dinner');
+
+    final semantics = tester.ensureSemantics();
+    final photoRecallRow = find.ancestor(
+      of: find.text('Photo Recall'),
+      matching: find.byType(ListTile),
+    );
+    expect(photoRecallRow, findsOneWidget);
+    expect(
+      tester
+          .getSemantics(photoRecallRow)
+          .getSemanticsData()
+          .hasAction(SemanticsAction.tap),
+      isTrue,
+    );
+    semantics.dispose();
+
+    await tester.tap(photoRecallRow);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BottomSheet), findsOneWidget);
+    expect(find.text('No photos found'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
+    expect(find.byType(BottomSheet), findsNothing);
+
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isA<SavedMealEntryResult>());
+    expect((result! as SavedMealEntryResult).meal.mealType, MealType.dinner);
   });
 
   testWidgets('back offers save discard and continue actions', (tester) async {
