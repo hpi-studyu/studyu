@@ -286,7 +286,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_new_study => 'New study';
 
   @override
+  String get action_button_retry => 'Retry';
+
+  @override
   String get search => 'Search';
+
+  @override
+  String get navlink_all_studies => 'All Studies';
 
   @override
   String get studies_list_header_title => 'Title';
@@ -316,11 +322,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modify_query => 'Modify your query';
 
   @override
+  String studies_count_total(int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total studies',
+      one: '1 study',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studies_count_filtered(int visible, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total studies',
+      one: '1 study',
+    );
+    return '$visible of $_temp0';
+  }
+
+  @override
+  String get studies_filter_server_side_unsupported =>
+      'This filter can\'t be used here right now. Clear the filter and try again.';
+
+  @override
   String get studies_empty => 'You don\'t have any studies yet';
 
   @override
   String get studies_empty_description =>
       'Build your own study from scratch or create a new draft copy from an already published study!';
+
+  @override
+  String get studies_empty_public => 'No public studies found';
+
+  @override
+  String get studies_empty_public_description =>
+      'There are no studies in the public registry matching your current filters.';
+
+  @override
+  String get studies_empty_shared => 'No shared studies found';
+
+  @override
+  String get studies_empty_shared_description =>
+      'No studies have been shared with you yet.';
+
+  @override
+  String get studies_end_of_list => 'That\'s all for now.';
+
+  @override
+  String get studies_load_failed => 'Couldn\'t load studies. Try again.';
 
   @override
   String get navlink_learn => 'Learn';
@@ -2954,4 +3006,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filter';
+
+  @override
+  String get dashboard_end_of_list => 'You\'ve reached the end.';
+
+  @override
+  String get dashboard_retry => 'Retry';
+
+  @override
+  String get dashboard_filter_unsupported =>
+      'This filter is not compatible with server-side search. Please reset the filter.';
+
+  @override
+  String get dashboard_reset_filter => 'Reset filter';
+
+  @override
+  String get dashboard_load_error => 'Failed to load studies.';
+
+  @override
+  String get all_studies => 'All Studies';
+
+  @override
+  String get studies_filter_add_filter => 'Add filter';
+
+  @override
+  String get studies_filter_remove_filter => 'Remove filter';
 }

@@ -3,28 +3,34 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('deleteStudy removes child rows before deleting the study', () {
-    final source = File('lib/repositories/api_client.dart').readAsStringSync();
-    final deleteStart = source.indexOf(
-      'Future<void> deleteStudy(Study study) async',
-    );
-    final deleteEnd = source.indexOf('\n  }', deleteStart);
+  test(
+    'deleteStudy tries direct study delete before legacy cleanup fallback',
+    () {
+      final source = File(
+        'lib/repositories/api_client.dart',
+      ).readAsStringSync();
+      final deleteStart = source.indexOf(
+        'Future<void> deleteStudy(Study study) async',
+      );
+      final deleteEnd = source.indexOf('\n  }', deleteStart);
 
-    expect(deleteStart, isNonNegative);
-    expect(deleteEnd, isNonNegative);
+      expect(deleteStart, isNonNegative);
+      expect(deleteEnd, isNonNegative);
 
-    final deleteSource = source.substring(deleteStart, deleteEnd);
+      final deleteSource = source.substring(deleteStart, deleteEnd);
 
-    expect(deleteSource, contains('_deleteStudyDependents(study.id)'));
-    expect(deleteSource, contains('study.delete()'));
-    expect(
-      deleteSource.indexOf('_deleteStudyDependents(study.id)'),
-      lessThan(deleteSource.indexOf('study.delete()')),
-      reason:
-          'Study deletion must remove dependent rows first so databases without '
-          'ON DELETE CASCADE do not reject deletion via study_invite_studyId_fkey.',
-    );
-  });
+      expect(deleteSource, contains('study.delete()'));
+      expect(deleteSource, contains('_deleteStudyDependents(study.id)'));
+      expect(deleteSource, contains('_isMissingStudyCascade(error)'));
+      expect(
+        deleteSource.indexOf('await study.delete();'),
+        lessThan(deleteSource.indexOf('_deleteStudyDependents(study.id)')),
+        reason:
+            'Study deletion should use database cascade first and only fall back '
+            'to manual child cleanup for legacy foreign key setups.',
+      );
+    },
+  );
 
   test('dependent cleanup includes invite codes and participant rows', () {
     final source = File('lib/repositories/api_client.dart').readAsStringSync();
@@ -42,5 +48,19 @@ void main() {
     expect(cleanupSource, contains('Repo.tableName'));
     expect(cleanupSource, contains('SubjectProgress.tableName'));
     expect(cleanupSource, contains("eq('study_id', studyId)"));
+  });
+
+  test('legacy cleanup fallback only handles foreign key violations', () {
+    final source = File('lib/repositories/api_client.dart').readAsStringSync();
+
+    expect(source, contains("foreignKeyViolation = '23503'"));
+    expect(
+      source,
+      contains('bool _isMissingStudyCascade(PostgrestException error)'),
+    );
+    expect(
+      source,
+      contains('error.code == PostgrestErrorCodes.foreignKeyViolation'),
+    );
   });
 }

@@ -99,7 +99,9 @@
   "notification_invite_link_copied": "Invite link copied",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "New study",
+  "action_button_retry": "Retry",
   "search": "Search",
+  "navlink_all_studies": "All Studies",
   "studies_list_header_title": "Title",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Participation",
@@ -109,8 +111,34 @@
   "studies_list_header_participants_completed": "Completed",
   "studies_not_found": "No Studies found",
   "modify_query": "Modify your query",
+  "studies_count_total": "{total, plural, =1{1 study} other{{total} studies}}",
+  "@studies_count_total": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_count_filtered": "{visible} of {total, plural, =1{1 study} other{{total} studies}}",
+  "@studies_count_filtered": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_filter_server_side_unsupported": "This filter can't be used here right now. Clear the filter and try again.",
   "studies_empty": "You don't have any studies yet",
   "studies_empty_description": "Build your own study from scratch or create a new draft copy from an already published study!",
+  "studies_empty_public": "No public studies found",
+  "studies_empty_public_description": "There are no studies in the public registry matching your current filters.",
+  "studies_empty_shared": "No shared studies found",
+  "studies_empty_shared_description": "No studies have been shared with you yet.",
+  "studies_end_of_list": "That's all for now.",
+  "studies_load_failed": "Couldn't load studies. Try again.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Learn",
   "navlink_study_design": "Design",
@@ -1108,5 +1136,13 @@
   "filter_section_custom_presets": "Custom Presets",
   "filter_button_advanced": "Configure Filters...",
   "filter_button_clear": "Clear filter",
-  "filter_button_main": "Filter"
+  "filter_button_main": "Filter",
+  "dashboard_end_of_list": "You've reached the end.",
+  "dashboard_retry": "Retry",
+  "dashboard_filter_unsupported": "This filter is not compatible with server-side search. Please reset the filter.",
+  "dashboard_reset_filter": "Reset filter",
+  "dashboard_load_error": "Failed to load studies.",
+  "all_studies": "All Studies",
+  "studies_filter_add_filter": "Add filter",
+  "studies_filter_remove_filter": "Remove filter"
 }

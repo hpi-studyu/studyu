@@ -8,6 +8,7 @@
 <!-- Provide step-by-step instructions so reviewers can verify this change locally -->
 
 ### PR Checklist
-- [ ] `fvm exec melos qualitycheck` passes
-- [ ] Screenshot or video attached, or this item removed for non-visual changes
-- [ ] Description links related issues, or this item removed when no issue exists
+- [ ] `fvm exec melos run qualitycheck` passes
+- [ ] No new hardcoded user-facing strings were introduced; new UI copy is localized
+- [ ] Screenshot or video of the changes attached
+- [ ] Description links related issues

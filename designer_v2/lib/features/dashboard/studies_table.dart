@@ -44,6 +44,8 @@ class StudiesTableColumnSize {
 }
 
 class StudiesTable extends StatelessWidget {
+  static const _loadMorePrefetchThreshold = 5;
+
   const StudiesTable({
     required this.studies,
     required this.onSelect,
@@ -51,6 +53,12 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
+    this.isLoadingMore = false,
+    this.hasMore = false,
+    this.advancedFilterUnsupported = false,
+    this.loadError,
+    this.onRetry,
+    this.onLoadMore,
     this.itemHeight = 60.0,
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
@@ -74,9 +82,21 @@ class StudiesTable extends StatelessWidget {
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
+  final bool isLoadingMore;
+  final bool hasMore;
+  final bool advancedFilterUnsupported;
+  final Object? loadError;
+  final VoidCallback? onRetry;
+  final Future<void> Function()? onLoadMore;
 
   @override
   Widget build(BuildContext context) {
+    if (advancedFilterUnsupported) {
+      return _AdvancedFilterUnsupportedNotice(onRetry: onRetry);
+    }
+    if (studies.isEmpty && loadError != null) {
+      return _LoadErrorNotice(error: loadError!, onRetry: onRetry);
+    }
     if (studies.isEmpty) {
       return emptyWidget;
     }
@@ -106,7 +126,7 @@ class StudiesTable extends StatelessWidget {
             10;
 
         // Calculate the minimum status column width
-        int maxStatusLength = "Entwurf".length;
+        int maxStatusLength = tr.study_status_draft.length;
         maxStatusLength = max(
           maxStatusLength,
           tr.studies_list_header_status.length,
@@ -234,30 +254,57 @@ class StudiesTable extends StatelessWidget {
               ),
             ),
             SizedBox(height: rowSpacing),
-            ListView.builder(
-              key: const ValueKey('studies_table_rows'),
-              itemCount: studies.length,
-              itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final item = studies[index];
-                return StudiesTableItem(
-                  key: ValueKey('study_row_${item.id}'),
-                  study: item,
-                  columnSizes: columnDefinitionsMap.values.toList(),
-                  actions: getActions(item),
-                  isPinned: pinnedStudies.contains(item.id),
-                  itemHeight: itemHeight,
-                  rowSpacing: rowSpacing,
-                  columnSpacing: columnSpacing,
-                  onPinnedChanged: (study, pinned) {
-                    pinnedStudies.contains(item.id)
-                        ? dashboardController.pinOffStudy(item.id)
-                        : dashboardController.pinStudy(item.id);
+            Expanded(
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(
+                  context,
+                ).copyWith(scrollbars: false),
+                child: ListView.builder(
+                  key: const ValueKey('studies_table_rows'),
+                  prototypeItem: StudiesTableItem.prototype(
+                    columnSizes: columnDefinitionsMap.values.toList(),
+                    itemHeight: itemHeight,
+                    itemPadding: itemPadding,
+                    rowSpacing: rowSpacing,
+                    columnSpacing: columnSpacing,
+                  ),
+                  itemCount: studies.length + (_showsFooter ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index >= studies.length) {
+                      return _buildFooter(context);
+                    }
+
+                    if (hasMore &&
+                        !isLoadingMore &&
+                        index >= studies.length - _loadMorePrefetchThreshold) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        onLoadMore?.call();
+                      });
+                    }
+
+                    final item = studies[index];
+                    return RepaintBoundary(
+                      child: StudiesTableItem(
+                        key: ValueKey('study_row_${item.id}'),
+                        study: item,
+                        columnSizes: columnDefinitionsMap.values.toList(),
+                        actions: getActions(item),
+                        isPinned: pinnedStudies.contains(item.id),
+                        itemHeight: itemHeight,
+                        itemPadding: itemPadding,
+                        rowSpacing: rowSpacing,
+                        columnSpacing: columnSpacing,
+                        onPinnedChanged: (study, pinned) {
+                          pinnedStudies.contains(item.id)
+                              ? dashboardController.pinOffStudy(item.id)
+                              : dashboardController.pinStudy(item.id);
+                        },
+                        onTap: (study) => onSelect.call(study),
+                      ),
+                    );
                   },
-                  onTap: (study) => onSelect.call(study),
-                );
-              },
+                ),
+              ),
             ),
           ],
         );
@@ -309,6 +356,120 @@ class StudiesTable extends StatelessWidget {
               );
             }
           : null,
+    );
+  }
+
+  bool get _showsFooter => isLoadingMore || loadError != null || !hasMore;
+
+  Widget _buildFooter(BuildContext context) {
+    if (isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    if (loadError != null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: TextButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(tr.action_button_retry),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(top: rowSpacing, bottom: rowSpacing),
+      child: Center(
+        child: Text(
+          tr.studies_end_of_list,
+          textAlign: TextAlign.center,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+        ),
+      ),
+    );
+  }
+}
+
+class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
+  const _AdvancedFilterUnsupportedNotice({required this.onRetry});
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.filter_alt_off_outlined,
+              color: Theme.of(context).hintColor,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              tr.studies_filter_server_side_unsupported,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            if (onRetry != null) ...[
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: onRetry,
+                child: Text(tr.filter_button_clear),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadErrorNotice extends StatelessWidget {
+  const _LoadErrorNotice({required this.error, required this.onRetry});
+  final Object error;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline),
+            const SizedBox(height: 8),
+            Text(
+              tr.studies_load_failed,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            if (onRetry != null) ...[
+              const SizedBox(height: 8),
+              TextButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh),
+                label: Text(tr.action_button_retry),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

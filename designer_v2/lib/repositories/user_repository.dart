@@ -25,6 +25,20 @@ abstract class IUserRepository {
     String? presetId,
     FilterGroup? filterGroup,
   });
+
+  /// Active sort column + direction for the given dashboard page.
+  /// `sortColumn` is the [StudiesTableColumn] enum name (e.g. `'createdAt'`);
+  /// callers map it back to the enum value. Returns `(null, null)` when the
+  /// user has not set a sort yet, in which case defaults apply.
+  ({String? sortColumn, bool? sortAscending}) getActiveSort(String page);
+
+  /// Persists the sort selection for the given dashboard page. Fire-and-forget
+  /// from the controller — failure to save should not block UI updates.
+  Future<StudyUUser> saveActiveSort({
+    required String page,
+    required String sortColumn,
+    required bool sortAscending,
+  });
 }
 
 enum PreferenceAction { pin, pinOff }
@@ -159,6 +173,44 @@ class UserRepository implements IUserRepository {
         : null;
 
     return (presetId: presetId, filterGroup: filterGroup);
+  }
+
+  @override
+  ({String? sortColumn, bool? sortAscending}) getActiveSort(String page) {
+    final filtering = user.preferences.studyFiltering;
+    final activeSort = filtering['active_sort'] as Map?;
+    if (activeSort == null) return (sortColumn: null, sortAscending: null);
+
+    final pageSort = activeSort[page] as Map?;
+    if (pageSort == null) return (sortColumn: null, sortAscending: null);
+
+    return (
+      sortColumn: pageSort['sort_column'] as String?,
+      sortAscending: pageSort['sort_ascending'] as bool?,
+    );
+  }
+
+  @override
+  Future<StudyUUser> saveActiveSort({
+    required String page,
+    required String sortColumn,
+    required bool sortAscending,
+  }) {
+    final filtering = Map<String, dynamic>.from(
+      user.preferences.studyFiltering,
+    );
+    final activeSort = Map<String, dynamic>.from(
+      filtering['active_sort'] as Map? ?? {},
+    );
+
+    activeSort[page] = {
+      'sort_column': sortColumn,
+      'sort_ascending': sortAscending,
+    };
+
+    filtering['active_sort'] = activeSort;
+    user.preferences.studyFiltering = filtering;
+    return saveUser();
   }
 
   Future<StudyUUser> _updateStudyFiltering(String key, dynamic value) {
