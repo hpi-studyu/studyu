@@ -1651,6 +1651,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save => 'Speichern';
 
   @override
+  String get new_item => 'Neu';
+
+  @override
   String get discard => 'Verwerfen';
 
   @override
@@ -1799,6 +1802,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_name => 'Food Name *';
 
   @override
+  String get nutrition_values_are_for => 'Nährwerte gelten für';
+
+  @override
   String get brand_name => 'Brand Name';
 
   @override
@@ -1863,6 +1869,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get fat_g => 'Fat (g)';
 
   @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbohydrate => 'Kohlenhydrate';
+
+  @override
+  String get fat => 'Fett';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
   String get saturated_fat_g => 'Sat. Fat (g)';
 
   @override
@@ -1920,10 +1938,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get portion_state_as_served => 'As Served';
 
   @override
-  String get my_templates => 'Gespeicherte Elemente';
+  String get my_templates => 'Meine Elemente';
 
   @override
-  String get manage_saved_items => 'Gespeicherte Elemente verwalten';
+  String get manage_saved_items => 'Verwalten';
 
   @override
   String get adjust_quantity => 'Menge anpassen';
@@ -1932,7 +1950,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get duplicate => 'Duplizieren';
 
   @override
-  String get save_as_template => 'Gespeichertes Element hinzufügen';
+  String get save_as_template => 'Zu meinen Elementen hinzufügen';
 
   @override
   String get save_meal_template => 'Mahlzeit speichern';
@@ -1953,57 +1971,93 @@ class AppLocalizationsDe extends AppLocalizations {
   String get template_tags_hint => 'Frühstück, schnell, gesund';
 
   @override
-  String get template_saved => 'Gespeichertes Element hinzugefügt';
+  String get template_saved => 'Zu meinen Elementen hinzugefügt';
 
   @override
-  String get select_meal_template => 'Gespeicherte Mahlzeiten';
+  String get select_meal_template => 'Meine Mahlzeiten';
 
   @override
-  String get select_food_template => 'Gespeicherte Lebensmittel';
+  String get select_food_template => 'Meine Lebensmittel';
 
   @override
-  String get search_templates => 'Gespeicherte Elemente suchen...';
+  String get search_templates => 'Meine Elemente durchsuchen...';
 
   @override
-  String get no_templates_saved => 'Noch keine gespeicherten Elemente';
+  String get no_templates_saved => 'Noch keine Elemente';
 
   @override
   String get save_templates_hint =>
       'Speichern Sie Ihre Lieblingsmahlzeiten und Lebensmittel für schnellen Zugriff';
 
   @override
-  String get from_template => 'Aus gespeichertem Element';
+  String get from_template => 'Aus meinen Elementen';
 
   @override
   String get add_new_food => 'Neues Lebensmittel hinzufügen';
 
   @override
-  String get delete_template => 'Gespeichertes Element löschen';
+  String get delete_template => 'Element löschen';
 
   @override
   String get delete_template_confirmation =>
-      'Möchten Sie dieses gespeicherte Element wirklich löschen?';
+      'Möchten Sie dieses Element wirklich löschen?';
 
   @override
   String get filter_all => 'Alle';
 
   @override
-  String get filter_meals => 'Gespeicherte Mahlzeiten';
+  String get filter_meals => 'Mahlzeiten';
 
   @override
-  String get filter_foods => 'Gespeicherte Lebensmittel';
+  String get filter_foods => 'Lebensmittel';
 
   @override
-  String get filter_recipes => 'Gespeicherte Rezepte';
+  String get filter_recipes => 'Rezepte';
 
   @override
   String items_count(int count) {
-    return '$count Elemente';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Elemente',
+      one: '1 Element',
+    );
+    return '$_temp0';
   }
 
   @override
   String kcal_value(String value) {
     return '$value kcal';
+  }
+
+  @override
+  String kcal_per_serving(String value) {
+    return '$value kcal / Portion';
+  }
+
+  @override
+  String servings_value(String value) {
+    return '$value Portionen';
+  }
+
+  @override
+  String get custom => 'Benutzerdefiniert';
+
+  @override
+  String get database => 'Datenbank';
+
+  @override
+  String get no_recent_items => 'Noch keine kürzlich verwendeten Elemente';
+
+  @override
+  String get brand => 'Marke';
+
+  @override
+  String get calorie_basis_100g => 'pro 100 g';
+
+  @override
+  String calorie_basis_grams(String grams) {
+    return 'pro $grams g';
   }
 
   @override
@@ -2016,7 +2070,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get template_type_recipe => 'Rezept';
 
   @override
-  String get rename_template => 'Gespeichertes Element umbenennen';
+  String get rename_template => 'Element umbenennen';
 
   @override
   String get new_name => 'Neuer Name';
@@ -2078,6 +2132,14 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get save_to_my_items => 'Für später in Meine Elemente speichern';
+
+  @override
+  String save_and_add_to_meal(String meal) {
+    return 'Speichern und zu $meal hinzufügen';
+  }
+
+  @override
   String get edit_food_title => 'Edit Food';
 
   @override
@@ -2108,10 +2170,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get more_options => 'Weitere Optionen';
 
   @override
-  String get search_food_hint => 'Search food (e.g., \"apple\", \"chicken\")';
+  String get search_food_hint =>
+      'Lebensmittel, Mahlzeiten, Rezepte oder Marken suchen';
 
   @override
-  String get my_saved_items => 'Gespeicherte Elemente';
+  String get my_saved_items => 'Meine Elemente';
 
   @override
   String get recent_foods => 'Zuletzt verwendet';
@@ -2120,7 +2183,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get frequently_used_foods => 'Häufig verwendet';
 
   @override
-  String get global_database => 'Global Database';
+  String get global_database => 'Datenbank';
 
   @override
   String get quick_actions => 'Quick Actions';
@@ -2132,13 +2195,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get create_recipe_subtitle => 'Build from multiple ingredients';
 
   @override
-  String get add_manually => 'Add Manually';
+  String get add_manually => 'Lebensmittel manuell hinzufügen';
 
   @override
   String get add_manually_subtitle => 'Enter nutrition facts yourself';
 
   @override
-  String get scan_barcode => 'Scan Barcode';
+  String get scan_barcode => 'Barcode scannen';
 
   @override
   String get scan_barcode_subtitle => 'Find packaged products quickly';
@@ -2151,13 +2214,19 @@ class AppLocalizationsDe extends AppLocalizations {
       'Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.';
 
   @override
-  String get searching_databases => 'Searching databases...';
+  String get searching_databases => 'Datenbanken werden durchsucht...';
 
   @override
   String get end_of_results => 'End of results';
 
   @override
-  String get no_results_found => 'No results found. Try different keywords.';
+  String get no_results_found =>
+      'Keine Ergebnisse gefunden. Versuchen Sie andere Suchbegriffe.';
+
+  @override
+  String create_food_from_search(String query) {
+    return 'Nicht gefunden? „$query“ manuell erstellen';
+  }
 
   @override
   String get food_search_error =>
@@ -2175,7 +2244,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get no_matching_templates => 'Keine passenden gespeicherten Elemente';
+  String get no_matching_templates => 'Keine passenden Elemente';
 
   @override
   String get detailed_nutrition => 'Detailed Nutrition';

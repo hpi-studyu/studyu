@@ -568,32 +568,32 @@
       }
     }
   },
-  "my_templates": "Gespeicherte Elemente",
-  "manage_saved_items": "Gespeicherte Elemente verwalten",
+  "my_templates": "Meine Elemente",
+  "manage_saved_items": "Verwalten",
   "adjust_quantity": "Menge anpassen",
   "duplicate": "Duplizieren",
-  "save_as_template": "Gespeichertes Element hinzufügen",
+  "save_as_template": "Zu meinen Elementen hinzufügen",
   "save_meal_template": "Mahlzeit speichern",
   "save_food_template": "Lebensmittel speichern",
   "save_recipe_template": "Rezept speichern",
   "template_name": "Name",
   "template_tags_optional": "Tags (optional)",
   "template_tags_hint": "Frühstück, schnell, gesund",
-  "template_saved": "Gespeichertes Element hinzugefügt",
-  "select_meal_template": "Gespeicherte Mahlzeiten",
-  "select_food_template": "Gespeicherte Lebensmittel",
-  "search_templates": "Gespeicherte Elemente suchen...",
-  "no_templates_saved": "Noch keine gespeicherten Elemente",
+  "template_saved": "Zu meinen Elementen hinzugefügt",
+  "select_meal_template": "Meine Mahlzeiten",
+  "select_food_template": "Meine Lebensmittel",
+  "search_templates": "Meine Elemente durchsuchen...",
+  "no_templates_saved": "Noch keine Elemente",
   "save_templates_hint": "Speichern Sie Ihre Lieblingsmahlzeiten und Lebensmittel für schnellen Zugriff",
-  "from_template": "Aus gespeichertem Element",
+  "from_template": "Aus meinen Elementen",
   "add_new_food": "Neues Lebensmittel hinzufügen",
-  "delete_template": "Gespeichertes Element löschen",
-  "delete_template_confirmation": "Möchten Sie dieses gespeicherte Element wirklich löschen?",
+  "delete_template": "Element löschen",
+  "delete_template_confirmation": "Möchten Sie dieses Element wirklich löschen?",
   "filter_all": "Alle",
-  "filter_meals": "Gespeicherte Mahlzeiten",
-  "filter_foods": "Gespeicherte Lebensmittel",
-  "filter_recipes": "Gespeicherte Rezepte",
-  "items_count": "{count} Elemente",
+  "filter_meals": "Mahlzeiten",
+  "filter_foods": "Lebensmittel",
+  "filter_recipes": "Rezepte",
+  "items_count": "{count, plural, =1 {1 Element} other {{count} Elemente}}",
   "@items_count": {
     "placeholders": {
       "count": {
@@ -609,10 +609,39 @@
       }
     }
   },
+  "kcal_per_serving": "{value} kcal / Portion",
+  "@kcal_per_serving": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "servings_value": "{value} Portionen",
+  "@servings_value": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "custom": "Benutzerdefiniert",
+  "database": "Datenbank",
+  "no_recent_items": "Noch keine kürzlich verwendeten Elemente",
+  "brand": "Marke",
+  "calorie_basis_100g": "pro 100 g",
+  "calorie_basis_grams": "pro {grams} g",
+  "@calorie_basis_grams": {
+    "placeholders": {
+      "grams": {
+        "type": "String"
+      }
+    }
+  },
   "template_type_meal": "Mahlzeit",
   "template_type_food": "Lebensmittel",
   "template_type_recipe": "Rezept",
-  "rename_template": "Gespeichertes Element umbenennen",
+  "rename_template": "Element umbenennen",
   "new_name": "Neuer Name",
   "photoRecallTitle": "Foto-Erinnerung",
   "photoRecallSubtitle": "Nutzen Sie Fotos aus dieser Zeit, um sich daran zu erinnern, was Sie gegessen haben.",
@@ -665,6 +694,8 @@
   "photo_recall_time_required_message": "Photo Recall benötigt eine Mahlzeitzeit, um Fotos aus diesem Zeitraum zu finden.",
   "set_time": "Zeit festlegen",
   "save": "Speichern",
+  "nutrition_values_are_for": "Nährwerte gelten für",
+  "new_item": "Neu",
   "discard": "Verwerfen",
   "discard_meal_changes_title": "Mahlzeit verlassen?",
   "discard_meal_changes_message": "Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie die Mahlzeit weiter.",
@@ -679,13 +710,27 @@
   "meal_context": "Mahlzeitenkontext",
   "meal_details": "Mahlzeitendetails",
   "apply": "Übernehmen",
+  "search_food_hint": "Lebensmittel, Mahlzeiten, Rezepte oder Marken suchen",
   "recent_foods": "Zuletzt verwendet",
   "frequently_used_foods": "Häufig verwendet",
-  "my_saved_items": "Gespeicherte Elemente",
+  "my_saved_items": "Meine Elemente",
+  "global_database": "Datenbank",
+  "add_manually": "Lebensmittel manuell hinzufügen",
+  "scan_barcode": "Barcode scannen",
+  "searching_databases": "Datenbanken werden durchsucht...",
+  "no_results_found": "Keine Ergebnisse gefunden. Versuchen Sie andere Suchbegriffe.",
+  "create_food_from_search": "Nicht gefunden? „{query}“ manuell erstellen",
+  "@create_food_from_search": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
   "search_food_description": "Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.",
   "food_search_error": "Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.",
   "food_search_results_count": "{count, plural, =1 {1 Ergebnis gefunden} other {{count} Ergebnisse gefunden}}",
-  "no_matching_templates": "Keine passenden gespeicherten Elemente",
+  "no_matching_templates": "Keine passenden Elemente",
   "meal_category_snacks": "Snacks",
   "meal_category_other": "Weitere Mahlzeiten",
   "no_foods_added": "Keine Lebensmittel hinzugefügt",
@@ -700,6 +745,19 @@
   "food_quantity_carbs": "Kohlenhydrate",
   "food_quantity_fat": "Fett",
   "food_quantity_add_to_meal": "Zu {meal} hinzufügen",
+  "save_to_my_items": "Für später in Meine Elemente speichern",
+  "save_and_add_to_meal": "Speichern und zu {meal} hinzufügen",
+  "@save_and_add_to_meal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "protein": "Protein",
+  "carbohydrate": "Kohlenhydrate",
+  "fat": "Fett",
+  "optional": "Optional",
   "meal_type_breakfast": "Frühstück",
   "meal_type_lunch": "Mittagessen",
   "meal_type_dinner": "Abendessen",

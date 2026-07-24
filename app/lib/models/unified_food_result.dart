@@ -9,6 +9,9 @@ class UnifiedFoodResult {
   final String? brand;
   final String? imageUrl;
   final double? calories;
+
+  /// Grams represented by [calories], when the source provides a known basis.
+  final double? calorieBasisGrams;
   final FoodSource source;
 
   /// Holds [Product] (from OpenFoodFacts) or [UsdaFoodItem] (from App)
@@ -20,6 +23,7 @@ class UnifiedFoodResult {
     this.brand,
     this.imageUrl,
     this.calories,
+    this.calorieBasisGrams,
     required this.source,
     required this.originalData,
   });

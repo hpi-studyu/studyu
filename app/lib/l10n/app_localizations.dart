@@ -3071,6 +3071,12 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
+  /// No description provided for @new_item.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get new_item;
+
   /// No description provided for @discard.
   ///
   /// In en, this message translates to:
@@ -3353,6 +3359,12 @@ abstract class AppLocalizations {
   /// **'Food Name *'**
   String get food_name;
 
+  /// No description provided for @nutrition_values_are_for.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition values are for'**
+  String get nutrition_values_are_for;
+
   /// No description provided for @brand_name.
   ///
   /// In en, this message translates to:
@@ -3479,6 +3491,30 @@ abstract class AppLocalizations {
   /// **'Fat (g)'**
   String get fat_g;
 
+  /// No description provided for @protein.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get protein;
+
+  /// No description provided for @carbohydrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbohydrate'**
+  String get carbohydrate;
+
+  /// No description provided for @fat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get fat;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
   /// No description provided for @saturated_fat_g.
   ///
   /// In en, this message translates to:
@@ -3596,13 +3632,13 @@ abstract class AppLocalizations {
   /// No description provided for @my_templates.
   ///
   /// In en, this message translates to:
-  /// **'Saved items'**
+  /// **'My items'**
   String get my_templates;
 
   /// No description provided for @manage_saved_items.
   ///
   /// In en, this message translates to:
-  /// **'Manage saved items'**
+  /// **'Manage'**
   String get manage_saved_items;
 
   /// No description provided for @adjust_quantity.
@@ -3620,7 +3656,7 @@ abstract class AppLocalizations {
   /// No description provided for @save_as_template.
   ///
   /// In en, this message translates to:
-  /// **'Add saved item'**
+  /// **'Add to My items'**
   String get save_as_template;
 
   /// No description provided for @save_meal_template.
@@ -3662,31 +3698,31 @@ abstract class AppLocalizations {
   /// No description provided for @template_saved.
   ///
   /// In en, this message translates to:
-  /// **'Saved item added'**
+  /// **'Added to My items'**
   String get template_saved;
 
   /// No description provided for @select_meal_template.
   ///
   /// In en, this message translates to:
-  /// **'Saved meals'**
+  /// **'My meals'**
   String get select_meal_template;
 
   /// No description provided for @select_food_template.
   ///
   /// In en, this message translates to:
-  /// **'Saved foods'**
+  /// **'My foods'**
   String get select_food_template;
 
   /// No description provided for @search_templates.
   ///
   /// In en, this message translates to:
-  /// **'Search saved items...'**
+  /// **'Search My items...'**
   String get search_templates;
 
   /// No description provided for @no_templates_saved.
   ///
   /// In en, this message translates to:
-  /// **'No saved items yet'**
+  /// **'No items yet'**
   String get no_templates_saved;
 
   /// No description provided for @save_templates_hint.
@@ -3698,7 +3734,7 @@ abstract class AppLocalizations {
   /// No description provided for @from_template.
   ///
   /// In en, this message translates to:
-  /// **'From saved item'**
+  /// **'From My items'**
   String get from_template;
 
   /// No description provided for @add_new_food.
@@ -3710,13 +3746,13 @@ abstract class AppLocalizations {
   /// No description provided for @delete_template.
   ///
   /// In en, this message translates to:
-  /// **'Delete saved item'**
+  /// **'Delete item'**
   String get delete_template;
 
   /// No description provided for @delete_template_confirmation.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this saved item?'**
+  /// **'Are you sure you want to delete this item?'**
   String get delete_template_confirmation;
 
   /// No description provided for @filter_all.
@@ -3728,25 +3764,25 @@ abstract class AppLocalizations {
   /// No description provided for @filter_meals.
   ///
   /// In en, this message translates to:
-  /// **'Saved meals'**
+  /// **'Meals'**
   String get filter_meals;
 
   /// No description provided for @filter_foods.
   ///
   /// In en, this message translates to:
-  /// **'Saved foods'**
+  /// **'Foods'**
   String get filter_foods;
 
   /// No description provided for @filter_recipes.
   ///
   /// In en, this message translates to:
-  /// **'Saved recipes'**
+  /// **'Recipes'**
   String get filter_recipes;
 
   /// No description provided for @items_count.
   ///
   /// In en, this message translates to:
-  /// **'{count} items'**
+  /// **'{count, plural, =1 {1 item} other {{count} items}}'**
   String items_count(int count);
 
   /// No description provided for @kcal_value.
@@ -3754,6 +3790,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{value} kcal'**
   String kcal_value(String value);
+
+  /// No description provided for @kcal_per_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kcal / serving'**
+  String kcal_per_serving(String value);
+
+  /// No description provided for @servings_value.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} servings'**
+  String servings_value(String value);
+
+  /// No description provided for @custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get custom;
+
+  /// No description provided for @database.
+  ///
+  /// In en, this message translates to:
+  /// **'Database'**
+  String get database;
+
+  /// No description provided for @no_recent_items.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent items yet'**
+  String get no_recent_items;
+
+  /// No description provided for @brand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get brand;
+
+  /// No description provided for @calorie_basis_100g.
+  ///
+  /// In en, this message translates to:
+  /// **'per 100 g'**
+  String get calorie_basis_100g;
+
+  /// No description provided for @calorie_basis_grams.
+  ///
+  /// In en, this message translates to:
+  /// **'per {grams} g'**
+  String calorie_basis_grams(String grams);
 
   /// No description provided for @template_type_meal.
   ///
@@ -3776,7 +3860,7 @@ abstract class AppLocalizations {
   /// No description provided for @rename_template.
   ///
   /// In en, this message translates to:
-  /// **'Rename saved item'**
+  /// **'Rename item'**
   String get rename_template;
 
   /// No description provided for @new_name.
@@ -3881,6 +3965,18 @@ abstract class AppLocalizations {
   /// **'Add to {meal}'**
   String food_quantity_add_to_meal(String meal);
 
+  /// No description provided for @save_to_my_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to My items for future use'**
+  String get save_to_my_items;
+
+  /// No description provided for @save_and_add_to_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and add to {meal}'**
+  String save_and_add_to_meal(String meal);
+
   /// No description provided for @edit_food_title.
   ///
   /// In en, this message translates to:
@@ -3944,13 +4040,13 @@ abstract class AppLocalizations {
   /// No description provided for @search_food_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search food (e.g., \"apple\", \"chicken\")'**
+  /// **'Search foods, meals, recipes or brands'**
   String get search_food_hint;
 
   /// No description provided for @my_saved_items.
   ///
   /// In en, this message translates to:
-  /// **'Saved items'**
+  /// **'My items'**
   String get my_saved_items;
 
   /// No description provided for @recent_foods.
@@ -3968,7 +4064,7 @@ abstract class AppLocalizations {
   /// No description provided for @global_database.
   ///
   /// In en, this message translates to:
-  /// **'Global Database'**
+  /// **'Database'**
   String get global_database;
 
   /// No description provided for @quick_actions.
@@ -3992,7 +4088,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_manually.
   ///
   /// In en, this message translates to:
-  /// **'Add Manually'**
+  /// **'Add food manually'**
   String get add_manually;
 
   /// No description provided for @add_manually_subtitle.
@@ -4043,6 +4139,12 @@ abstract class AppLocalizations {
   /// **'No results found. Try different keywords.'**
   String get no_results_found;
 
+  /// No description provided for @create_food_from_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Can’t find it? Create ‘{query}’ manually'**
+  String create_food_from_search(String query);
+
   /// No description provided for @food_search_error.
   ///
   /// In en, this message translates to:
@@ -4058,7 +4160,7 @@ abstract class AppLocalizations {
   /// No description provided for @no_matching_templates.
   ///
   /// In en, this message translates to:
-  /// **'No matching saved items'**
+  /// **'No matching items'**
   String get no_matching_templates;
 
   /// No description provided for @detailed_nutrition.

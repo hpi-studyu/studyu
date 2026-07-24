@@ -1636,6 +1636,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save => 'Save';
 
   @override
+  String get new_item => 'New';
+
+  @override
   String get discard => 'Discard';
 
   @override
@@ -1782,6 +1785,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_name => 'Food Name *';
 
   @override
+  String get nutrition_values_are_for => 'Nutrition values are for';
+
+  @override
   String get brand_name => 'Brand Name';
 
   @override
@@ -1846,6 +1852,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fat_g => 'Fat (g)';
 
   @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbohydrate => 'Carbohydrate';
+
+  @override
+  String get fat => 'Fat';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
   String get saturated_fat_g => 'Sat. Fat (g)';
 
   @override
@@ -1903,10 +1921,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get portion_state_as_served => 'As Served';
 
   @override
-  String get my_templates => 'Saved items';
+  String get my_templates => 'My items';
 
   @override
-  String get manage_saved_items => 'Manage saved items';
+  String get manage_saved_items => 'Manage';
 
   @override
   String get adjust_quantity => 'Adjust quantity';
@@ -1915,7 +1933,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicate => 'Duplicate';
 
   @override
-  String get save_as_template => 'Add saved item';
+  String get save_as_template => 'Add to My items';
 
   @override
   String get save_meal_template => 'Save meal';
@@ -1936,57 +1954,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get template_tags_hint => 'breakfast, quick, healthy';
 
   @override
-  String get template_saved => 'Saved item added';
+  String get template_saved => 'Added to My items';
 
   @override
-  String get select_meal_template => 'Saved meals';
+  String get select_meal_template => 'My meals';
 
   @override
-  String get select_food_template => 'Saved foods';
+  String get select_food_template => 'My foods';
 
   @override
-  String get search_templates => 'Search saved items...';
+  String get search_templates => 'Search My items...';
 
   @override
-  String get no_templates_saved => 'No saved items yet';
+  String get no_templates_saved => 'No items yet';
 
   @override
   String get save_templates_hint =>
       'Save your favorite meals and foods for quick access';
 
   @override
-  String get from_template => 'From saved item';
+  String get from_template => 'From My items';
 
   @override
   String get add_new_food => 'Add New Food';
 
   @override
-  String get delete_template => 'Delete saved item';
+  String get delete_template => 'Delete item';
 
   @override
   String get delete_template_confirmation =>
-      'Are you sure you want to delete this saved item?';
+      'Are you sure you want to delete this item?';
 
   @override
   String get filter_all => 'All';
 
   @override
-  String get filter_meals => 'Saved meals';
+  String get filter_meals => 'Meals';
 
   @override
-  String get filter_foods => 'Saved foods';
+  String get filter_foods => 'Foods';
 
   @override
-  String get filter_recipes => 'Saved recipes';
+  String get filter_recipes => 'Recipes';
 
   @override
   String items_count(int count) {
-    return '$count items';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
   }
 
   @override
   String kcal_value(String value) {
     return '$value kcal';
+  }
+
+  @override
+  String kcal_per_serving(String value) {
+    return '$value kcal / serving';
+  }
+
+  @override
+  String servings_value(String value) {
+    return '$value servings';
+  }
+
+  @override
+  String get custom => 'Custom';
+
+  @override
+  String get database => 'Database';
+
+  @override
+  String get no_recent_items => 'No recent items yet';
+
+  @override
+  String get brand => 'Brand';
+
+  @override
+  String get calorie_basis_100g => 'per 100 g';
+
+  @override
+  String calorie_basis_grams(String grams) {
+    return 'per $grams g';
   }
 
   @override
@@ -1999,7 +2053,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get template_type_recipe => 'Recipe';
 
   @override
-  String get rename_template => 'Rename saved item';
+  String get rename_template => 'Rename item';
 
   @override
   String get new_name => 'New Name';
@@ -2061,6 +2115,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get save_to_my_items => 'Save to My items for future use';
+
+  @override
+  String save_and_add_to_meal(String meal) {
+    return 'Save and add to $meal';
+  }
+
+  @override
   String get edit_food_title => 'Edit Food';
 
   @override
@@ -2091,10 +2153,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get more_options => 'More options';
 
   @override
-  String get search_food_hint => 'Search food (e.g., \"apple\", \"chicken\")';
+  String get search_food_hint => 'Search foods, meals, recipes or brands';
 
   @override
-  String get my_saved_items => 'Saved items';
+  String get my_saved_items => 'My items';
 
   @override
   String get recent_foods => 'Recent';
@@ -2103,7 +2165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get frequently_used_foods => 'Frequently Used';
 
   @override
-  String get global_database => 'Global Database';
+  String get global_database => 'Database';
 
   @override
   String get quick_actions => 'Quick Actions';
@@ -2115,7 +2177,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get create_recipe_subtitle => 'Build from multiple ingredients';
 
   @override
-  String get add_manually => 'Add Manually';
+  String get add_manually => 'Add food manually';
 
   @override
   String get add_manually_subtitle => 'Enter nutrition facts yourself';
@@ -2143,6 +2205,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_results_found => 'No results found. Try different keywords.';
 
   @override
+  String create_food_from_search(String query) {
+    return 'Can’t find it? Create ‘$query’ manually';
+  }
+
+  @override
   String get food_search_error =>
       'Food search is unavailable. Please try again.';
 
@@ -2158,7 +2225,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get no_matching_templates => 'No matching saved items';
+  String get no_matching_templates => 'No matching items';
 
   @override
   String get detailed_nutrition => 'Detailed Nutrition';

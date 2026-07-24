@@ -5,7 +5,7 @@ import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 import 'package:uuid/uuid.dart';
 
-enum TemplateFilter { all, meals, foods, recipes }
+enum TemplateFilter { all, foods, meals, recipes }
 
 class TemplateViewModel extends ChangeNotifier {
   final TemplateStorageManager _storageManager = TemplateStorageManager();
@@ -120,6 +120,38 @@ class TemplateViewModel extends ChangeNotifier {
     await loadAllTemplates();
   }
 
+  Future<void> updateMealTemplatePrototype(
+    String templateId,
+    List<FoodEntry> prototypes,
+  ) async {
+    final templates = await _storageManager.loadMealTemplates(userId);
+    final index = templates.indexWhere((template) => template.id == templateId);
+    if (index < 0) return;
+
+    templates[index].prototypes = prototypes.map(_cloneFoodEntry).toList();
+    templates[index].updatedAt = DateTime.now();
+    await _storageManager.saveMealTemplate(templates[index]);
+    await loadAllTemplates();
+  }
+
+  Future<void> duplicateMealTemplate(String templateId) async {
+    final templates = await _storageManager.loadMealTemplates(userId);
+    final source = templates.firstWhere(
+      (template) => template.id == templateId,
+    );
+    await _storageManager.saveMealTemplate(
+      SavedMealTemplate.withId(
+        userId: userId,
+        name: source.name,
+        mealType: source.mealType,
+        tags: source.tags == null ? null : List<String>.from(source.tags!),
+        isPublic: source.isPublic,
+        prototypes: source.prototypes.map(_cloneFoodEntry).toList(),
+      ),
+    );
+    await loadAllTemplates();
+  }
+
   Future<void> deleteMealTemplate(String templateId) async {
     await _storageManager.deleteMealTemplate(userId, templateId);
     await loadAllTemplates();
@@ -145,6 +177,37 @@ class TemplateViewModel extends ChangeNotifier {
       await _storageManager.saveFoodTemplate(templates[index]);
       await loadAllTemplates();
     }
+  }
+
+  Future<void> updateFoodTemplatePrototype(
+    String templateId,
+    FoodEntry prototype,
+  ) async {
+    final templates = await _storageManager.loadFoodTemplates(userId);
+    final index = templates.indexWhere((template) => template.id == templateId);
+    if (index < 0) return;
+
+    templates[index].prototype = _cloneFoodEntry(prototype);
+    templates[index].updatedAt = DateTime.now();
+    await _storageManager.saveFoodTemplate(templates[index]);
+    await loadAllTemplates();
+  }
+
+  Future<void> duplicateFoodTemplate(String templateId) async {
+    final templates = await _storageManager.loadFoodTemplates(userId);
+    final source = templates.firstWhere(
+      (template) => template.id == templateId,
+    );
+    await _storageManager.saveFoodTemplate(
+      SavedFoodTemplate.withId(
+        userId: userId,
+        name: source.name,
+        tags: source.tags == null ? null : List<String>.from(source.tags!),
+        isPublic: source.isPublic,
+        prototype: _cloneFoodEntry(source.prototype),
+      ),
+    );
+    await loadAllTemplates();
   }
 
   Future<void> deleteFoodTemplate(String templateId) async {

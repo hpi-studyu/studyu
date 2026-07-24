@@ -73,6 +73,21 @@ int _foodSearchScore(UnifiedFoodResult result, String normalizedQuery) {
 String _normalizeSearchText(String value) =>
     value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
+double? _gramsFromMetadata(String? value) {
+  if (value == null) return null;
+  final match = RegExp(
+    r'(\d+(?:[.,]\d+)?)\s*g(?:rams?)?\b',
+    caseSensitive: false,
+  ).firstMatch(value);
+  return match == null
+      ? null
+      : double.tryParse(match.group(1)!.replaceAll(',', '.'));
+}
+
+String _formatGrams(double grams) => grams == grams.roundToDouble()
+    ? grams.round().toString()
+    : grams.toStringAsFixed(1);
+
 final class FoodSearchSelection {
   final List<studyu.FoodEntry> foods;
 
@@ -83,7 +98,9 @@ final class FoodSearchSelection {
     : foods = List.unmodifiable([food]);
 }
 
-enum _FoodSearchSection { frequent, recent, saved }
+enum _FoodSearchSection { recent, myItems }
+
+enum _FoodSearchFilter { all, myItems, database }
 
 class FoodSearchScreen extends StatelessWidget {
   final bool allowRecipes;
@@ -179,7 +196,8 @@ class _FoodSearchScreenContent extends StatefulWidget {
 
 class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   final TextEditingController _searchController = TextEditingController();
-  _FoodSearchSection _selectedSection = _FoodSearchSection.frequent;
+  _FoodSearchSection _selectedSection = _FoodSearchSection.recent;
+  _FoodSearchFilter _selectedFilter = _FoodSearchFilter.all;
   final ScrollController _scrollController = ScrollController();
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -426,17 +444,24 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       final products = searchResult.products ?? const <Product>[];
       final newResults = products.map((product) {
         final nutriments = product.nutriments;
-        final calories = nutriments?.getValue(
+        final caloriesPer100g = nutriments?.getValue(
           Nutrient.energyKCal,
           PerSize.oneHundredGrams,
         );
+        final calorieBasisGrams =
+            _gramsFromMetadata(product.servingSize) ??
+            _gramsFromMetadata(product.quantity) ??
+            100.0;
 
         return UnifiedFoodResult(
           id: product.barcode ?? '',
           name: product.productName ?? 'Unknown',
           brand: product.brands,
           imageUrl: product.imageFrontSmallUrl,
-          calories: calories,
+          calories: caloriesPer100g == null
+              ? null
+              : caloriesPer100g * calorieBasisGrams / 100,
+          calorieBasisGrams: caloriesPer100g == null ? null : calorieBasisGrams,
           source: studyu.FoodSource.openfoodfacts,
           originalData: product,
         );
@@ -475,6 +500,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
           name: food.description ?? 'Unknown',
           brand: food.brandOwner ?? food.brandName,
           calories: food.energyKcal100g,
+          calorieBasisGrams: 100,
           source: studyu.FoodSource.usda,
           originalData: food,
         );
@@ -677,7 +703,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   void _addManually() {
     Navigator.push(
       context,
-      FoodEntryScreen.route(showSearchAction: false),
+      FoodEntryScreen.route(
+        showSearchAction: false,
+        mealLabel: widget.mealLabel,
+      ),
     ).then((result) {
       if (result != null && mounted) {
         _completeSingleSelection(result);
@@ -711,24 +740,54 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     }
   }
 
+  bool _isAllowedTemplate(dynamic template) {
+    if (template is studyu.SavedMealTemplate) return widget.allowMealTemplates;
+    if (template is studyu.SavedFoodTemplate) {
+      return widget.allowRecipes ||
+          template.prototype.entryType != studyu.FoodEntryType.recipe;
+    }
+    return false;
+  }
+
+  int _personalResultCount(TemplateViewModel templateViewModel) {
+    final query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) return 0;
+    return [
+      ...templateViewModel.mealTemplates,
+      ...templateViewModel.foodTemplates,
+    ].where((template) {
+      if (template is studyu.SavedMealTemplate) {
+        return _isAllowedTemplate(template) &&
+            template.name.toLowerCase().contains(query);
+      }
+      if (template is studyu.SavedFoodTemplate) {
+        return _isAllowedTemplate(template) &&
+            template.name.toLowerCase().contains(query);
+      }
+      return false;
+    }).length;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final templateViewModel = Provider.of<TemplateViewModel>(context);
     final rankedResults = rankFoodSearchResults(_combinedResults, _activeQuery);
+    final personalResultCount = _personalResultCount(templateViewModel);
+    final totalResultCount = personalResultCount + _combinedResults.length;
     String? searchStatus;
     if (_isInitialLoading || _isLoadingMore) {
       searchStatus = l10n.searching_databases;
     } else if (_errorMessage != null) {
       searchStatus = _errorMessage;
     } else if (_hasSearched &&
-        _combinedResults.isEmpty &&
+        totalResultCount == 0 &&
         _offSearched &&
         _usdaSearched) {
       searchStatus = l10n.no_results_found;
-    } else if (_hasSearched && _combinedResults.isNotEmpty) {
-      searchStatus = l10n.food_search_results_count(_combinedResults.length);
+    } else if (_hasSearched && totalResultCount > 0) {
+      searchStatus = l10n.food_search_results_count(totalResultCount);
     }
 
     return Scaffold(
@@ -752,7 +811,20 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               _searchController.clear();
               _onSearchChanged('', templateViewModel);
             },
+            onScanBarcode: _scanBarcode,
           ),
+          if (_searchController.text.trim().isEmpty)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16, top: 2),
+                child: TextButton.icon(
+                  onPressed: _addManually,
+                  icon: const Icon(Icons.edit_note_outlined, size: 18),
+                  label: Text(l10n.add_manually),
+                ),
+              ),
+            ),
           Semantics(
             liveRegion: true,
             label: searchStatus,
@@ -778,9 +850,15 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               combinedResults: rankedResults,
               history: widget.history,
               selectedSection: _selectedSection,
+              selectedFilter: _selectedFilter,
               onSectionChanged: (section) {
                 setState(() {
                   _selectedSection = section;
+                });
+              },
+              onFilterChanged: (filter) {
+                setState(() {
+                  _selectedFilter = filter;
                 });
               },
               onSelectHistory: _selectHistoryItem,
@@ -790,7 +868,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onSelectResult: _selectResult,
               onAddManually: _addManually,
               onCreateRecipe: _createRecipe,
-              onScanBarcode: _scanBarcode,
               onRetry: () => _retrySearch(templateViewModel),
               allowRecipes: widget.allowRecipes,
               allowMealTemplates: widget.allowMealTemplates,
@@ -812,6 +889,7 @@ class _SearchBarHeader extends StatelessWidget {
   final AppLocalizations l10n;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
+  final VoidCallback onScanBarcode;
 
   const _SearchBarHeader({
     required this.controller,
@@ -819,6 +897,7 @@ class _SearchBarHeader extends StatelessWidget {
     required this.l10n,
     required this.onChanged,
     required this.onClear,
+    required this.onScanBarcode,
   });
 
   @override
@@ -847,7 +926,11 @@ class _SearchBarHeader extends StatelessWidget {
                   icon: const Icon(Icons.clear),
                   onPressed: onClear,
                 )
-              : null,
+              : IconButton(
+                  tooltip: l10n.scan_barcode,
+                  icon: const Icon(Icons.qr_code_scanner_outlined),
+                  onPressed: onScanBarcode,
+                ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)),
           filled: true,
           fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
@@ -880,9 +963,8 @@ class _QuickSectionTabs extends StatelessWidget {
 
   String _label(_FoodSearchSection section) {
     return switch (section) {
-      _FoodSearchSection.frequent => l10n.frequently_used_foods,
       _FoodSearchSection.recent => l10n.recent_foods,
-      _FoodSearchSection.saved => l10n.my_saved_items,
+      _FoodSearchSection.myItems => l10n.my_saved_items,
     };
   }
 
@@ -906,13 +988,11 @@ class _SectionHeader extends StatelessWidget {
   final IconData icon;
   final String title;
   final Color iconColor;
-  final Widget? trailing;
 
   const _SectionHeader({
     required this.icon,
     required this.title,
     required this.iconColor,
-    this.trailing,
   });
 
   @override
@@ -921,14 +1001,7 @@ class _SectionHeader extends StatelessWidget {
 
     return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: iconColor.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Icon(icon, size: 16, color: iconColor),
-        ),
+        Icon(icon, size: 18, color: iconColor),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
@@ -938,7 +1011,6 @@ class _SectionHeader extends StatelessWidget {
             ),
           ),
         ),
-        ?trailing,
       ],
     );
   }
@@ -967,6 +1039,33 @@ class _TemplateCard extends StatelessWidget {
     final isRecipe =
         foodTemplate?.prototype.entryType == studyu.FoodEntryType.recipe;
     final name = mealTemplate?.name ?? foodTemplate!.name;
+
+    final foodBasis =
+        foodTemplate != null &&
+            foodTemplate.prototype.source != studyu.FoodSource.manual &&
+            foodTemplate.prototype.unit.trim().isNotEmpty
+        ? ' / ${foodTemplate.prototype.unit.trim()}'
+        : '';
+    final metadata = mealTemplate != null
+        ? '${l10n.template_type_meal} • ${l10n.items_count(mealTemplate.prototypes.length)}'
+        : isRecipe
+        ? [
+            l10n.template_type_recipe,
+            l10n.servings_value(
+              foodTemplate!.prototype.amount.toStringAsFixed(0),
+            ),
+            l10n.kcal_per_serving(
+              foodTemplate.prototype.nutrition.energyKcal.round().toString(),
+            ),
+          ].join(' • ')
+        : [
+            l10n.template_type_food,
+            if (foodTemplate!.prototype.source == studyu.FoodSource.manual)
+              l10n.custom
+            else
+              l10n.database,
+            '${l10n.kcal_value(foodTemplate.prototype.nutrition.energyKcal.round().toString())}$foodBasis',
+          ].join(' • ');
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -997,21 +1096,19 @@ class _TemplateCard extends StatelessWidget {
         ),
         title: Text(
           name,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
-          mealTemplate != null
-              ? l10n.items_count(mealTemplate.prototypes.length)
-              : '${isRecipe ? "Recipe • " : ""}${foodTemplate!.prototype.nutrition.energyKcal.round()} kcal',
+          metadata,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
-        ),
-        trailing: Icon(
-          Icons.add_circle_outline,
-          color: theme.colorScheme.primary,
         ),
         onTap: onTap,
       ),
@@ -1054,10 +1151,6 @@ class _HistoryFoodCard extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Icon(
-          Icons.add_circle_outline,
-          color: theme.colorScheme.primary,
-        ),
         onTap: onTap,
       ),
     );
@@ -1077,6 +1170,7 @@ class _FoodResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
@@ -1128,7 +1222,10 @@ class _FoodResultCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        _SourceBadge(source: result.source),
+                        _SourceBadge(
+                          source: result.source,
+                          hasBrand: result.brand?.trim().isNotEmpty ?? false,
+                        ),
                         if (result.brand != null &&
                             result.brand!.isNotEmpty) ...[
                           const SizedBox(width: 8),
@@ -1166,6 +1263,18 @@ class _FoodResultCard extends StatelessWidget {
                         fontSize: 10,
                       ),
                     ),
+                    if (result.calorieBasisGrams != null)
+                      Text(
+                        result.calorieBasisGrams == 100
+                            ? l10n.calorie_basis_100g
+                            : l10n.calorie_basis_grams(
+                                _formatGrams(result.calorieBasisGrams!),
+                              ),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontSize: 9,
+                        ),
+                      ),
                   ],
                 ),
             ],
@@ -1176,21 +1285,15 @@ class _FoodResultCard extends StatelessWidget {
   }
 
   Widget _buildFallbackIcon() {
-    final isOff = result.source == studyu.FoodSource.openfoodfacts;
-    return Center(
-      child: Icon(
-        isOff ? Icons.eco_outlined : Icons.agriculture_outlined,
-        size: 24,
-        color: isOff ? Colors.green.shade600 : Colors.orange.shade600,
-      ),
-    );
+    return const Center(child: Icon(Icons.fastfood_outlined, size: 24));
   }
 }
 
 class _SourceBadge extends StatelessWidget {
   final studyu.FoodSource source;
+  final bool hasBrand;
 
-  const _SourceBadge({required this.source});
+  const _SourceBadge({required this.source, required this.hasBrand});
 
   @override
   Widget build(BuildContext context) {
@@ -1205,37 +1308,15 @@ class _SourceBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        isOff ? 'OFF' : 'USDA',
+        hasBrand
+            ? AppLocalizations.of(context)!.brand
+            : AppLocalizations.of(context)!.database,
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,
           color: isOff ? Colors.green.shade700 : Colors.orange.shade700,
           letterSpacing: 0.3,
         ),
-      ),
-    );
-  }
-}
-
-class _LoadingState extends StatelessWidget {
-  final ThemeData theme;
-
-  const _LoadingState({required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.all(48),
-      child: Column(
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 16),
-          Text(
-            l10n.searching_databases,
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ],
       ),
     );
   }
@@ -1286,11 +1367,13 @@ class _EmptySectionMessage extends StatelessWidget {
 }
 
 class _NoResultsState extends StatelessWidget {
+  final String query;
   final VoidCallback onAddManually;
   final VoidCallback onCreateRecipe;
   final bool allowRecipes;
 
   const _NoResultsState({
+    required this.query,
     required this.onAddManually,
     required this.onCreateRecipe,
     required this.allowRecipes,
@@ -1308,7 +1391,7 @@ class _NoResultsState extends StatelessWidget {
           FilledButton.tonalIcon(
             onPressed: onAddManually,
             icon: const Icon(Icons.edit_note_outlined),
-            label: Text(l10n.add_food_manually),
+            label: Text(l10n.create_food_from_search(query)),
           ),
           if (allowRecipes) ...[
             const SizedBox(height: 8),
@@ -1324,152 +1407,6 @@ class _NoResultsState extends StatelessWidget {
   }
 }
 
-class _InitialPrompt extends StatelessWidget {
-  final ThemeData theme;
-
-  const _InitialPrompt({required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          Icon(
-            Icons.search_outlined,
-            size: 64,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.search_for_food,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.search_food_description,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickActionsCard extends StatelessWidget {
-  final VoidCallback onManualTap;
-  final VoidCallback onScanTap;
-  final ThemeData theme;
-
-  const _QuickActionsCard({
-    required this.onManualTap,
-    required this.onScanTap,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: Column(
-        children: [
-          _QuickActionTile(
-            icon: Icons.edit_note_outlined,
-            iconColor: Colors.purple,
-            title: l10n.add_manually,
-            subtitle: l10n.add_manually_subtitle,
-            onTap: onManualTap,
-            theme: theme,
-          ),
-          const Divider(height: 1, indent: 68),
-          _QuickActionTile(
-            icon: Icons.qr_code_scanner_outlined,
-            iconColor: Colors.green,
-            title: l10n.scan_barcode,
-            subtitle: l10n.scan_barcode_subtitle,
-            onTap: onScanTap,
-            theme: theme,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickActionTile extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final ThemeData theme;
-
-  const _QuickActionTile({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, size: 22, color: iconColor),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Optimized ListView.builder for food search results.
-/// Uses lazy loading for better performance with large result sets.
 class _FoodSearchListView extends StatelessWidget {
   final ScrollController scrollController;
   final AppLocalizations l10n;
@@ -1488,6 +1425,8 @@ class _FoodSearchListView extends StatelessWidget {
   final FoodSearchHistory history;
   final _FoodSearchSection selectedSection;
   final ValueChanged<_FoodSearchSection> onSectionChanged;
+  final _FoodSearchFilter selectedFilter;
+  final ValueChanged<_FoodSearchFilter> onFilterChanged;
   final void Function(FoodSearchHistoryItem) onSelectHistory;
   final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
   final void Function(studyu.SavedMealTemplate) onSelectMealTemplate;
@@ -1495,7 +1434,6 @@ class _FoodSearchListView extends StatelessWidget {
   final void Function(UnifiedFoodResult) onSelectResult;
   final VoidCallback onAddManually;
   final VoidCallback onCreateRecipe;
-  final VoidCallback onScanBarcode;
   final VoidCallback onRetry;
   final bool allowRecipes;
   final bool allowMealTemplates;
@@ -1518,6 +1456,8 @@ class _FoodSearchListView extends StatelessWidget {
     required this.history,
     required this.selectedSection,
     required this.onSectionChanged,
+    required this.selectedFilter,
+    required this.onFilterChanged,
     required this.onSelectHistory,
     required this.onSelectFoodTemplate,
     required this.onSelectMealTemplate,
@@ -1525,401 +1465,314 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onSelectResult,
     required this.onAddManually,
     required this.onCreateRecipe,
-    required this.onScanBarcode,
     required this.onRetry,
     this.allowRecipes = true,
     this.allowMealTemplates = false,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    bool isAllowedTemplate(dynamic template) {
-      if (template is studyu.SavedMealTemplate) return allowMealTemplates;
-      if (template is studyu.SavedFoodTemplate) {
-        return allowRecipes ||
-            template.prototype.entryType != studyu.FoodEntryType.recipe;
-      }
-      return false;
+  bool _isAllowedTemplate(dynamic template) {
+    if (template is studyu.SavedMealTemplate) return allowMealTemplates;
+    if (template is studyu.SavedFoodTemplate) {
+      return allowRecipes ||
+          template.prototype.entryType != studyu.FoodEntryType.recipe;
     }
+    return false;
+  }
 
-    final filteredTemplates = templateViewModel.filteredTemplates
-        .where(isAllowedTemplate)
-        .cast<Object>()
-        .toList();
-    final hasTemplates = <Object>[
+  List<Object> _personalMatches() {
+    final query = searchController.text.trim().toLowerCase();
+    return [
       ...templateViewModel.mealTemplates,
       ...templateViewModel.foodTemplates,
-    ].any(isAllowedTemplate);
-    final showHistory = searchController.text.isEmpty;
-    final availableSections = <_FoodSearchSection>[
-      if (history.frequentlyUsed.isNotEmpty) _FoodSearchSection.frequent,
-      if (history.recent.isNotEmpty) _FoodSearchSection.recent,
-      if (hasTemplates || allowMealTemplates) _FoodSearchSection.saved,
-    ];
-    final activeSection = availableSections.contains(selectedSection)
-        ? selectedSection
-        : availableSections.firstOrNull;
-    final showQuickNavigation = showHistory && availableSections.length > 1;
-    final frequentlyUsed =
-        showHistory && activeSection == _FoodSearchSection.frequent
-        ? history.frequentlyUsed
-        : const <FoodSearchHistoryItem>[];
-    final recent = showHistory && activeSection == _FoodSearchSection.recent
-        ? history.recent
-        : const <FoodSearchHistoryItem>[];
-    final showSavedSection =
-        !showHistory || activeSection == _FoodSearchSection.saved;
-    final showTemplates =
-        hasTemplates && filteredTemplates.isNotEmpty && showSavedSection;
-    final showNoMatchingTemplates =
-        hasTemplates &&
-        filteredTemplates.isEmpty &&
-        searchController.text.isNotEmpty;
-    final showManageOnly =
-        allowMealTemplates && !hasTemplates && showSavedSection;
+    ].where((template) {
+      if (template is studyu.SavedMealTemplate) {
+        return _isAllowedTemplate(template) &&
+            template.name.toLowerCase().contains(query);
+      }
+      if (template is studyu.SavedFoodTemplate) {
+        return _isAllowedTemplate(template) &&
+            template.name.toLowerCase().contains(query);
+      }
+      return false;
+    }).toList();
+  }
 
-    // Calculate section offsets for itemBuilder.
-    const int paddingItem = 1;
-    final quickNavigationItems = showQuickNavigation ? 2 : 0;
-    final historyItems = frequentlyUsed.isNotEmpty
-        ? frequentlyUsed.length + (showQuickNavigation ? 1 : 3)
-        : recent.isNotEmpty
-        ? recent.length + (showQuickNavigation ? 1 : 3)
-        : 0;
-    final showTemplateHeader =
-        hasTemplates &&
-        showSavedSection &&
-        (!showHistory || !showQuickNavigation);
-    final templateManageItem =
-        hasTemplates &&
-        showSavedSection &&
-        !showTemplateHeader &&
-        allowMealTemplates;
-    final int templatesHeaderItems =
-        showTemplateHeader || showManageOnly || templateManageItem
-        ? (showTemplateHeader ? 2 : 1)
-        : 0;
-    final int templatesListItems = showTemplates ? filteredTemplates.length : 0;
-    final int noMatchingTemplateItem = showNoMatchingTemplates ? 1 : 0;
-    final int templatesSpacing = showSavedSection && hasTemplates ? 1 : 0;
-    const int globalHeaderItems = 2; // header + spacing
-    final int contentItems = _getContentItemCount();
-    final int loadingIndicatorItem =
-        (isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty))
-        ? 1
-        : 0;
-    final int endOfResultsItem =
-        (hasSearched &&
-            combinedResults.isNotEmpty &&
-            !offHasMore &&
-            !usdaHasMore &&
-            !isInitialLoading &&
-            !isLoadingMore)
-        ? 1
-        : 0;
-    const int quickActionsHeaderItems = 2; // header + spacing
-    const int quickActionsItem = 1;
-    const int bottomPadding = 1;
+  List<FoodSearchHistoryItem> _recentItems() {
+    return [...history.frequentlyUsed, ...history.recent]..sort((left, right) {
+      final dateComparison = right.lastUsedAt.compareTo(left.lastUsedAt);
+      if (dateComparison != 0) return dateComparison;
+      final countComparison = right.useCount.compareTo(left.useCount);
+      return countComparison != 0
+          ? countComparison
+          : left.identity.compareTo(right.identity);
+    });
+  }
 
-    final totalItems =
-        paddingItem +
-        quickNavigationItems +
-        historyItems +
-        templatesHeaderItems +
-        templatesListItems +
-        noMatchingTemplateItem +
-        templatesSpacing +
-        globalHeaderItems +
-        contentItems +
-        loadingIndicatorItem +
-        endOfResultsItem +
-        quickActionsHeaderItems +
-        quickActionsItem +
-        bottomPadding;
-
-    return ListView.builder(
-      controller: scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: totalItems,
-      itemBuilder: (context, index) {
-        return _buildItem(
-          context,
-          index,
-          filteredTemplates,
-          hasTemplates,
-          showTemplates,
-          showNoMatchingTemplates,
-          showManageOnly,
-        );
+  Widget _templateCard(Object template) {
+    return _TemplateCard(
+      template: template,
+      onTap: () {
+        if (template is studyu.SavedMealTemplate) {
+          onSelectMealTemplate(template);
+        } else if (template is studyu.SavedFoodTemplate) {
+          onSelectFoodTemplate(template);
+        }
       },
+      theme: theme,
     );
   }
 
-  int _getContentItemCount() {
-    if (isInitialLoading && combinedResults.isEmpty) return 1;
-    if (errorMessage != null) return 1;
-    if (!hasSearched && searchController.text.isEmpty) return 1;
-    if (combinedResults.isEmpty && hasSearched && offSearched && usdaSearched) {
-      return 1;
-    }
-    return combinedResults.length;
-  }
-
-  Widget _buildItem(
-    BuildContext context,
-    int index,
-    List<Object> filteredTemplates,
-    bool hasTemplates,
-    bool showTemplates,
-    bool showNoMatchingTemplates,
-    bool showManageOnly,
-  ) {
-    var currentIndex = 0;
-
-    // Initial padding
-    if (index == currentIndex++) {
-      return const SizedBox(height: 8);
-    }
-
-    final showHistory = searchController.text.isEmpty;
-    final availableSections = <_FoodSearchSection>[
-      if (history.frequentlyUsed.isNotEmpty) _FoodSearchSection.frequent,
-      if (history.recent.isNotEmpty) _FoodSearchSection.recent,
-      if (hasTemplates || allowMealTemplates) _FoodSearchSection.saved,
-    ];
-    final activeSection = availableSections.contains(selectedSection)
-        ? selectedSection
-        : availableSections.firstOrNull;
-    final showQuickNavigation = showHistory && availableSections.length > 1;
-    final showSavedSection =
-        !showHistory || activeSection == _FoodSearchSection.saved;
-    final showTemplateHeader =
-        hasTemplates &&
-        showSavedSection &&
-        (!showHistory || !showQuickNavigation);
-
-    if (showQuickNavigation) {
-      if (index == currentIndex++) {
-        return _QuickSectionTabs(
-          sections: availableSections,
-          selectedSection: activeSection!,
+  @override
+  Widget build(BuildContext context) {
+    final query = searchController.text.trim();
+    final children = <Widget>[const SizedBox(height: 8)];
+    if (query.isEmpty) {
+      children.add(
+        _QuickSectionTabs(
+          sections: const [
+            _FoodSearchSection.recent,
+            _FoodSearchSection.myItems,
+          ],
+          selectedSection: selectedSection,
           onChanged: onSectionChanged,
           l10n: l10n,
-        );
-      }
-      if (index == currentIndex++) return const SizedBox(height: 8);
-    }
-
-    final frequentlyUsed =
-        showHistory && activeSection == _FoodSearchSection.frequent
-        ? history.frequentlyUsed
-        : const <FoodSearchHistoryItem>[];
-    final recent = showHistory && activeSection == _FoodSearchSection.recent
-        ? history.recent
-        : const <FoodSearchHistoryItem>[];
-
-    final activeHistory = frequentlyUsed.isNotEmpty ? frequentlyUsed : recent;
-    if (activeHistory.isNotEmpty) {
-      if (!showQuickNavigation && index == currentIndex++) {
-        return _SectionHeader(
-          icon: frequentlyUsed.isNotEmpty ? Icons.repeat : Icons.history,
-          title: frequentlyUsed.isNotEmpty
-              ? l10n.frequently_used_foods
-              : l10n.recent_foods,
-          iconColor: frequentlyUsed.isNotEmpty
-              ? theme.colorScheme.secondary
-              : theme.colorScheme.primary,
-        );
-      }
-      if (index == currentIndex++) return const SizedBox(height: 8);
-      final historyIndex = index - currentIndex;
-      if (historyIndex >= 0 && historyIndex < activeHistory.length) {
-        final item = activeHistory[historyIndex];
-        return _HistoryFoodCard(
-          item: item,
-          onTap: () => onSelectHistory(item),
-          theme: theme,
-        );
-      }
-      currentIndex += activeHistory.length;
-      if (index == currentIndex++) return const SizedBox(height: 16);
-    }
-
-    if (showManageOnly && index == currentIndex++) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: onManageSavedItems,
-          child: Text(l10n.manage_saved_items),
         ),
+      );
+      children.add(const SizedBox(height: 12));
+      if (selectedSection == _FoodSearchSection.recent) {
+        final recentItems = _recentItems();
+        if (recentItems.isEmpty) {
+          children.add(_EmptySectionMessage(message: l10n.no_recent_items));
+        } else {
+          children.addAll(
+            recentItems.map(
+              (item) => _HistoryFoodCard(
+                item: item,
+                onTap: () => onSelectHistory(item),
+                theme: theme,
+              ),
+            ),
+          );
+        }
+      } else {
+        final filteredTemplates = templateViewModel.filteredTemplates
+            .where(_isAllowedTemplate)
+            .cast<Object>()
+            .toList();
+        children.add(
+          _MyItemsToolbar(
+            viewModel: templateViewModel,
+            l10n: l10n,
+            onManage: onManageSavedItems,
+          ),
+        );
+        children.add(const SizedBox(height: 8));
+        if (filteredTemplates.isEmpty) {
+          children.add(_EmptySectionMessage(message: l10n.no_templates_saved));
+        } else {
+          children.addAll(filteredTemplates.map(_templateCard));
+        }
+      }
+      children.add(const SizedBox(height: 24));
+      return ListView(
+        controller: scrollController,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: children,
       );
     }
 
-    // Templates section header
-    if (hasTemplates && showSavedSection) {
-      if (showTemplateHeader && index == currentIndex++) {
-        return _SectionHeader(
+    children.add(
+      _SearchFilterChips(
+        selectedFilter: selectedFilter,
+        onChanged: onFilterChanged,
+        l10n: l10n,
+      ),
+    );
+    children.add(const SizedBox(height: 12));
+
+    final personalMatches = _personalMatches();
+    final showPersonal = selectedFilter != _FoodSearchFilter.database;
+    final showDatabase = selectedFilter != _FoodSearchFilter.myItems;
+    final databaseComplete = offSearched && usdaSearched;
+
+    if (showPersonal && personalMatches.isNotEmpty) {
+      children.add(
+        _SectionHeader(
           icon: Icons.bookmark_outline,
           title: l10n.my_saved_items,
           iconColor: theme.colorScheme.primary,
-          trailing: allowMealTemplates
-              ? TextButton(
-                  onPressed: onManageSavedItems,
-                  child: Text(l10n.manage_saved_items),
-                )
-              : null,
+        ),
+      );
+      children.add(const SizedBox(height: 8));
+      children.addAll(personalMatches.map(_templateCard));
+    }
+
+    if (showDatabase) {
+      children.add(
+        _SectionHeader(
+          icon: Icons.public,
+          title: l10n.global_database,
+          iconColor: Colors.grey.shade700,
+        ),
+      );
+      children.add(const SizedBox(height: 8));
+      if (isInitialLoading && combinedResults.isEmpty) {
+        children.add(
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Center(child: CircularProgressIndicator()),
+          ),
         );
+      } else if (errorMessage != null && combinedResults.isEmpty) {
+        children.add(_ErrorMessage(message: errorMessage!, onRetry: onRetry));
+      } else if (combinedResults.isNotEmpty) {
+        children.addAll(
+          combinedResults.map(
+            (result) => _FoodResultCard(
+              result: result,
+              onTap: () => onSelectResult(result),
+              theme: theme,
+            ),
+          ),
+        );
+      } else if (databaseComplete) {
+        children.add(_EmptySectionMessage(message: l10n.no_results_found));
       }
-      if (!showTemplateHeader &&
-          allowMealTemplates &&
-          index == currentIndex++) {
-        return Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: onManageSavedItems,
-            child: Text(l10n.manage_saved_items),
+      if (isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty)) {
+        children.add(
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator()),
           ),
         );
       }
-      if (showTemplateHeader && index == currentIndex++) {
-        return const SizedBox(height: 8);
-      }
-
-      // Templates list or empty message
-      if (showNoMatchingTemplates) {
-        if (index == currentIndex++) {
-          return _EmptySectionMessage(message: l10n.no_matching_templates);
-        }
-      } else if (showTemplates) {
-        final templateIndex = index - currentIndex;
-        if (templateIndex >= 0 && templateIndex < filteredTemplates.length) {
-          final template = filteredTemplates[templateIndex];
-          return _TemplateCard(
-            template: template,
-            onTap: () {
-              if (template is studyu.SavedMealTemplate) {
-                onSelectMealTemplate(template);
-              } else if (template is studyu.SavedFoodTemplate) {
-                onSelectFoodTemplate(template);
-              }
-            },
-            theme: theme,
-          );
-        }
-        currentIndex += filteredTemplates.length;
-      }
-
-      // Spacing after templates
-      if (index == currentIndex++) {
-        return const SizedBox(height: 16);
-      }
-    }
-
-    // Global database section header
-    if (index == currentIndex++) {
-      return _SectionHeader(
-        icon: Icons.public,
-        title: l10n.global_database,
-        iconColor: Colors.grey.shade700,
-      );
-    }
-    if (index == currentIndex++) {
-      return const SizedBox(height: 8);
-    }
-
-    // Content section
-    final contentItemCount = _getContentItemCount();
-    if (contentItemCount > 0) {
-      final contentIndex = index - currentIndex;
-      if (contentIndex >= 0 && contentIndex < contentItemCount) {
-        return _buildContentItem(contentIndex);
-      }
-      currentIndex += contentItemCount;
-    }
-
-    // Loading indicator
-    if ((isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty)) &&
-        index == currentIndex++) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    // End of results message
-    if (hasSearched &&
-        combinedResults.isNotEmpty &&
-        !offHasMore &&
-        !usdaHasMore &&
-        !isInitialLoading &&
-        !isLoadingMore &&
-        index == currentIndex++) {
-      return Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Text(
-            l10n.end_of_results,
-            style: TextStyle(color: Colors.grey.shade500),
+      if (hasSearched &&
+          combinedResults.isNotEmpty &&
+          !offHasMore &&
+          !usdaHasMore &&
+          !isInitialLoading &&
+          !isLoadingMore) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                l10n.end_of_results,
+                style: TextStyle(color: Colors.grey.shade500),
+              ),
+            ),
           ),
+        );
+      }
+    }
+
+    final noVisibleResults =
+        databaseComplete &&
+        !(showPersonal && personalMatches.isNotEmpty) &&
+        !(showDatabase && combinedResults.isNotEmpty);
+    if (hasSearched && noVisibleResults) {
+      children.add(
+        _NoResultsState(
+          query: query,
+          onAddManually: onAddManually,
+          onCreateRecipe: onCreateRecipe,
+          allowRecipes: allowRecipes,
         ),
       );
     }
-
-    // Quick actions section
-    if (index == currentIndex++) {
-      return const SizedBox(height: 16);
-    }
-    if (index == currentIndex++) {
-      return _SectionHeader(
-        icon: Icons.add_circle_outline,
-        title: l10n.quick_actions,
-        iconColor: theme.colorScheme.secondary,
-      );
-    }
-    if (index == currentIndex++) {
-      return const SizedBox(height: 8);
-    }
-    if (index == currentIndex++) {
-      return _QuickActionsCard(
-        onManualTap: onAddManually,
-        onScanTap: onScanBarcode,
-        theme: theme,
-      );
-    }
-    if (index == currentIndex++) {
-      return const SizedBox(height: 24);
-    }
-
-    return const SizedBox.shrink();
+    children.add(const SizedBox(height: 24));
+    return ListView(
+      controller: scrollController,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      children: children,
+    );
   }
+}
 
-  Widget _buildContentItem(int contentIndex) {
-    if (isInitialLoading && combinedResults.isEmpty) {
-      return _LoadingState(theme: theme);
-    }
-    if (errorMessage != null) {
-      return _ErrorMessage(message: errorMessage!, onRetry: onRetry);
-    }
-    if (!hasSearched && searchController.text.isEmpty) {
-      return _InitialPrompt(theme: theme);
-    }
-    if (combinedResults.isEmpty && hasSearched && offSearched && usdaSearched) {
-      return _NoResultsState(
-        onAddManually: onAddManually,
-        onCreateRecipe: onCreateRecipe,
-        allowRecipes: allowRecipes,
-      );
-    }
+class _MyItemsToolbar extends StatelessWidget {
+  final TemplateViewModel viewModel;
+  final AppLocalizations l10n;
+  final VoidCallback onManage;
 
-    // Results
-    if (contentIndex < combinedResults.length) {
-      return _FoodResultCard(
-        result: combinedResults[contentIndex],
-        onTap: () => onSelectResult(combinedResults[contentIndex]),
-        theme: theme,
-      );
-    }
+  const _MyItemsToolbar({
+    required this.viewModel,
+    required this.l10n,
+    required this.onManage,
+  });
 
-    return const SizedBox.shrink();
+  String _label(TemplateFilter filter) => switch (filter) {
+    TemplateFilter.all => l10n.filter_all,
+    TemplateFilter.foods => l10n.filter_foods,
+    TemplateFilter.meals => l10n.filter_meals,
+    TemplateFilter.recipes => l10n.filter_recipes,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final filter in TemplateFilter.values) ...[
+                  FilterChip(
+                    selected: viewModel.currentFilter == filter,
+                    label: Text(_label(filter)),
+                    onSelected: (_) => viewModel.setFilter(filter),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const SizedBox(width: 6),
+                ],
+              ],
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: onManage,
+          style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+          child: Text(l10n.manage_saved_items),
+        ),
+      ],
+    );
+  }
+}
+
+class _SearchFilterChips extends StatelessWidget {
+  final _FoodSearchFilter selectedFilter;
+  final ValueChanged<_FoodSearchFilter> onChanged;
+  final AppLocalizations l10n;
+
+  const _SearchFilterChips({
+    required this.selectedFilter,
+    required this.onChanged,
+    required this.l10n,
+  });
+
+  String _label(_FoodSearchFilter filter) => switch (filter) {
+    _FoodSearchFilter.all => l10n.filter_all,
+    _FoodSearchFilter.myItems => l10n.my_saved_items,
+    _FoodSearchFilter.database => l10n.database,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final filter in _FoodSearchFilter.values) ...[
+            FilterChip(
+              selected: selectedFilter == filter,
+              label: Text(_label(filter)),
+              onSelected: (_) => onChanged(filter),
+              visualDensity: VisualDensity.compact,
+            ),
+            const SizedBox(width: 6),
+          ],
+        ],
+      ),
+    );
   }
 }

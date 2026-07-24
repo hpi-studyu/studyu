@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
 
@@ -41,33 +42,12 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
   }
 
   String _getFilterLabel(AppLocalizations l10n, TemplateFilter filter) {
-    switch (filter) {
-      case TemplateFilter.all:
-        return l10n.filter_all;
-      case TemplateFilter.meals:
-        return l10n.filter_meals;
-      case TemplateFilter.foods:
-        return l10n.filter_foods;
-      case TemplateFilter.recipes:
-        return l10n.filter_recipes;
-    }
-  }
-
-  String _getMealTypeLabel(AppLocalizations l10n, MealType type) {
-    switch (type) {
-      case MealType.breakfast:
-        return l10n.meal_type_breakfast;
-      case MealType.brunch:
-        return l10n.meal_type_brunch;
-      case MealType.lunch:
-        return l10n.meal_type_lunch;
-      case MealType.dinner:
-        return l10n.meal_type_dinner;
-      case MealType.snack:
-        return l10n.meal_type_snack;
-      case MealType.other:
-        return l10n.meal_type_other;
-    }
+    return switch (filter) {
+      TemplateFilter.all => l10n.filter_all,
+      TemplateFilter.meals => l10n.filter_meals,
+      TemplateFilter.foods => l10n.filter_foods,
+      TemplateFilter.recipes => l10n.filter_recipes,
+    };
   }
 
   @override
@@ -78,7 +58,16 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     return Consumer<TemplateViewModel>(
       builder: (context, viewModel, _) {
         return Scaffold(
-          appBar: AppBar(title: Text(l10n.my_templates)),
+          appBar: AppBar(
+            title: Text(l10n.my_templates),
+            actions: [
+              TextButton.icon(
+                onPressed: () => _createFood(context, viewModel),
+                icon: const Icon(Icons.add),
+                label: Text(l10n.new_item),
+              ),
+            ],
+          ),
           body: Column(
             children: [
               Padding(
@@ -145,7 +134,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
           Icon(
             Icons.bookmark_border,
             size: 80,
-            color: theme.colorScheme.primary.withAlpha(128),
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 16),
           Text(l10n.no_templates_saved, style: theme.textTheme.titleLarge),
@@ -163,6 +152,34 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     );
   }
 
+  Future<void> _createFood(
+    BuildContext context,
+    TemplateViewModel viewModel,
+  ) async {
+    final food = await Navigator.push<FoodEntry>(
+      context,
+      FoodEntryScreen.route(showSearchAction: false),
+    );
+    if (food == null || !context.mounted) return;
+    await viewModel.saveFoodAsTemplate(name: food.name, food: food);
+  }
+
+  Future<void> _editFood(
+    BuildContext context,
+    TemplateViewModel viewModel,
+    SavedFoodTemplate template,
+  ) async {
+    final food = await Navigator.push<FoodEntry>(
+      context,
+      FoodEntryScreen.route(
+        existingFood: template.prototype,
+        showSearchAction: false,
+      ),
+    );
+    if (food == null || !context.mounted) return;
+    await viewModel.updateFoodTemplatePrototype(template.id, food);
+  }
+
   Widget _buildTemplateCard(
     BuildContext context,
     dynamic template,
@@ -170,117 +187,117 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     AppLocalizations l10n,
     ThemeData theme,
   ) {
-    if (template is SavedMealTemplate) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: theme.colorScheme.primaryContainer,
-            child: Icon(
-              Icons.restaurant_menu,
-              color: theme.colorScheme.onPrimaryContainer,
+    final isMeal = template is SavedMealTemplate;
+    final foodTemplate = template is SavedFoodTemplate ? template : null;
+    final isRecipe = foodTemplate?.prototype.entryType == FoodEntryType.recipe;
+    final name = isMeal ? template.name : foodTemplate!.name;
+    final metadata = isMeal
+        ? '${l10n.template_type_meal} · ${l10n.items_count(template.prototypes.length)}'
+        : isRecipe
+        ? [
+            l10n.template_type_recipe,
+            l10n.servings_value(
+              foodTemplate!.prototype.amount.toStringAsFixed(0),
             ),
-          ),
-          title: Text(template.name),
-          subtitle: Text(
-            '${l10n.items_count(template.prototypes.length)} - ${_getMealTypeLabel(l10n, template.mealType)}',
-          ),
-          trailing: PopupMenuButton<String>(
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                value: 'rename',
-                child: Row(
-                  children: [
-                    const Icon(Icons.edit),
-                    const SizedBox(width: 8),
-                    Text(l10n.edit),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    const Icon(Icons.delete, color: Colors.red),
-                    const SizedBox(width: 8),
-                    Text(
-                      l10n.delete,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onSelected: (value) {
-              if (value == 'rename') {
-                _showRenameDialog(context, viewModel, template, l10n);
-              } else if (value == 'delete') {
-                _confirmDelete(context, viewModel, template, l10n);
-              }
-            },
-          ),
-        ),
-      );
-    } else if (template is SavedFoodTemplate) {
-      final isRecipe = template.prototype.entryType == FoodEntryType.recipe;
-      return Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: isRecipe
-                ? Colors.orange.shade100
-                : theme.colorScheme.secondaryContainer,
-            child: Icon(
-              isRecipe ? Icons.menu_book : Icons.fastfood,
-              color: isRecipe
-                  ? Colors.orange.shade700
-                  : theme.colorScheme.onSecondaryContainer,
+            l10n.kcal_per_serving(
+              foodTemplate.prototype.nutrition.energyKcal.round().toString(),
             ),
-          ),
-          title: Text(template.name),
-          subtitle: Text(
+          ].join(' · ')
+        : [
+            l10n.template_type_food,
+            if (foodTemplate!.prototype.source == FoodSource.manual)
+              l10n.custom
+            else
+              l10n.database,
             l10n.kcal_value(
-              template.prototype.nutrition.energyKcal.toStringAsFixed(0),
+              foodTemplate.prototype.nutrition.energyKcal.round().toString(),
             ),
-          ),
-          trailing: PopupMenuButton<String>(
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                value: 'rename',
-                child: Row(
-                  children: [
-                    const Icon(Icons.edit),
-                    const SizedBox(width: 8),
-                    Text(l10n.edit),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    const Icon(Icons.delete, color: Colors.red),
-                    const SizedBox(width: 8),
-                    Text(
-                      l10n.delete,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onSelected: (value) {
-              if (value == 'rename') {
-                _showRenameDialog(context, viewModel, template, l10n);
-              } else if (value == 'delete') {
-                _confirmDelete(context, viewModel, template, l10n);
-              }
-            },
+          ].join(' · ');
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(
+          isMeal
+              ? Icons.restaurant_menu_outlined
+              : isRecipe
+              ? Icons.menu_book_outlined
+              : Icons.fastfood_outlined,
+        ),
+        title: Text(name, maxLines: 2, overflow: TextOverflow.ellipsis),
+        subtitle: Text(metadata, maxLines: 2, overflow: TextOverflow.ellipsis),
+        trailing: _templateMenu(context, viewModel, template, l10n),
+        onTap: () {
+          if (isMeal) {
+            _showRenameDialog(context, viewModel, template, l10n);
+          } else {
+            _editFood(context, viewModel, foodTemplate!);
+          }
+        },
+      ),
+    );
+  }
+
+  PopupMenuButton<String> _templateMenu(
+    BuildContext context,
+    TemplateViewModel viewModel,
+    dynamic template,
+    AppLocalizations l10n,
+  ) {
+    final isMeal = template is SavedMealTemplate;
+    return PopupMenuButton<String>(
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: 'edit',
+          child: _menuItem(Icons.edit_outlined, l10n.edit),
+        ),
+        PopupMenuItem(
+          value: 'duplicate',
+          child: _menuItem(Icons.copy_outlined, l10n.duplicate),
+        ),
+        PopupMenuItem(
+          value: 'rename',
+          child: _menuItem(
+            Icons.drive_file_rename_outline,
+            l10n.rename_template,
           ),
         ),
-      );
-    }
-    return const SizedBox.shrink();
+        PopupMenuItem(
+          value: 'delete',
+          child: _menuItem(Icons.delete_outline, l10n.delete),
+        ),
+      ],
+      onSelected: (value) async {
+        switch (value) {
+          case 'edit':
+            if (isMeal) {
+              await _showRenameDialog(context, viewModel, template, l10n);
+            } else {
+              await _editFood(
+                context,
+                viewModel,
+                template as SavedFoodTemplate,
+              );
+            }
+          case 'duplicate':
+            if (isMeal) {
+              await viewModel.duplicateMealTemplate(template.id);
+            } else {
+              await viewModel.duplicateFoodTemplate(
+                (template as SavedFoodTemplate).id,
+              );
+            }
+          case 'rename':
+            await _showRenameDialog(context, viewModel, template, l10n);
+          case 'delete':
+            await _confirmDelete(context, viewModel, template, l10n);
+        }
+      },
+    );
+  }
+
+  Widget _menuItem(IconData icon, String label) {
+    return Row(children: [Icon(icon), const SizedBox(width: 8), Text(label)]);
   }
 
   Future<void> _confirmDelete(
@@ -301,22 +318,17 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
             child: Text(l10n.delete),
           ),
         ],
       ),
     );
 
-    if (confirmed == true) {
-      if (template is SavedMealTemplate) {
-        await viewModel.deleteMealTemplate(template.id);
-      } else if (template is SavedFoodTemplate) {
-        await viewModel.deleteFoodTemplate(template.id);
-      }
+    if (confirmed != true) return;
+    if (template is SavedMealTemplate) {
+      await viewModel.deleteMealTemplate(template.id);
+    } else if (template is SavedFoodTemplate) {
+      await viewModel.deleteFoodTemplate(template.id);
     }
   }
 
@@ -329,7 +341,6 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     final currentName = template is SavedMealTemplate
         ? template.name
         : (template as SavedFoodTemplate).name;
-
     final controller = TextEditingController(text: currentName);
 
     final newName = await showDialog<String>(
@@ -362,13 +373,11 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     );
 
     controller.dispose();
-
-    if (newName != null && newName != currentName) {
-      if (template is SavedMealTemplate) {
-        await viewModel.renameMealTemplate(template.id, newName);
-      } else if (template is SavedFoodTemplate) {
-        await viewModel.renameFoodTemplate(template.id, newName);
-      }
+    if (newName == null || newName == currentName) return;
+    if (template is SavedMealTemplate) {
+      await viewModel.renameMealTemplate(template.id, newName);
+    } else if (template is SavedFoodTemplate) {
+      await viewModel.renameFoodTemplate(template.id, newName);
     }
   }
 }

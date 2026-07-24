@@ -5,7 +5,6 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
-import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class FoodEntryScreen extends StatefulWidget {
@@ -15,11 +14,13 @@ class FoodEntryScreen extends StatefulWidget {
   /// If provided, shows a banner indicating AI-estimated values.
   final double? confidenceScore;
   final bool showSearchAction;
+  final String? mealLabel;
 
   const FoodEntryScreen({
     this.existingFood,
     this.confidenceScore,
     this.showSearchAction = true,
+    this.mealLabel,
     super.key,
   });
 
@@ -27,11 +28,13 @@ class FoodEntryScreen extends StatefulWidget {
     FoodEntry? existingFood,
     double? confidenceScore,
     bool showSearchAction = true,
+    String? mealLabel,
   }) => MaterialPageRoute(
     builder: (_) => FoodEntryScreen(
       existingFood: existingFood,
       confidenceScore: confidenceScore,
       showSearchAction: showSearchAction,
+      mealLabel: mealLabel,
     ),
   );
 
@@ -66,6 +69,10 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       PortionEstimationMethod.householdMeasure;
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
+  bool _saveToMyItems = true;
+
+  bool get _isNewFoodForMeal =>
+      widget.existingFood == null && widget.mealLabel != null;
 
   /// Whether the food entry data comes from AI analysis.
   bool get _isAiAnalyzed => widget.confidenceScore != null;
@@ -172,9 +179,23 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     super.dispose();
   }
 
-  void _saveFood() {
+  Future<void> _saveFood() async {
     final food = _buildFoodEntry();
-    if (food != null) Navigator.of(context).pop(food);
+    if (food == null) return;
+
+    if (_isNewFoodForMeal && _saveToMyItems) {
+      final appState = Provider.of<AppState>(context, listen: false);
+      final userId = appState.activeSubject?.id ?? 'anonymous';
+      try {
+        await TemplateViewModel(
+          userId: userId,
+        ).saveFoodAsTemplate(name: food.name, food: food);
+      } catch (error) {
+        StudyULogger.error('Failed to save food to My items: $error');
+      }
+    }
+
+    if (mounted) Navigator.of(context).pop(food);
   }
 
   FoodEntry? _buildFoodEntry() {
@@ -268,47 +289,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     return value is String && value.trim().isNotEmpty ? value : null;
   }
 
-  Future<void> _saveAsTemplate() async {
-    final l10n = AppLocalizations.of(context)!;
-
-    if (_nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.enter_food_name)));
-      return;
-    }
-
-    final food = _buildFoodEntry();
-    if (food == null) return;
-
-    final appState = Provider.of<AppState>(context, listen: false);
-    final userId = appState.activeSubject?.id ?? 'anonymous';
-
-    final templateType = _entryType == FoodEntryType.recipe
-        ? TemplateType.recipe
-        : TemplateType.food;
-
-    final result = await SaveTemplateDialog.show(
-      context,
-      initialName: _nameController.text,
-      templateType: templateType,
-    );
-
-    if (result != null && mounted) {
-      final viewModel = TemplateViewModel(userId: userId);
-      await viewModel.saveFoodAsTemplate(
-        name: result.name,
-        food: food,
-        tags: result.tags,
-      );
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -334,19 +314,21 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               icon: const Icon(Icons.search_outlined),
               tooltip: l10n.search_food_database,
             ),
-          IconButton(
-            icon: const Icon(Icons.bookmark_add_outlined),
-            tooltip: l10n.save_as_template,
-            onPressed: _saveAsTemplate,
-          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _saveFood,
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        icon: const Icon(Icons.check),
-        label: Text(l10n.save),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: FilledButton.icon(
+            onPressed: _saveFood,
+            icon: const Icon(Icons.check),
+            label: Text(
+              _isNewFoodForMeal
+                  ? l10n.save_and_add_to_meal(widget.mealLabel!)
+                  : l10n.save,
+            ),
+          ),
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -383,8 +365,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
             // ========== ESSENTIAL FIELDS ==========
             _EssentialFieldsCard(
               nameController: _nameController,
-              amountController: _amountController,
-              unitController: _unitController,
+              servingSizeController: _servingSizeController,
               energyController: _energyController,
               proteinController: _proteinController,
               carbsController: _carbsController,
@@ -393,6 +374,16 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               theme: theme,
               isEditing: isEditing,
             ),
+
+            if (_isNewFoodForMeal)
+              CheckboxListTile(
+                value: _saveToMyItems,
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.save_to_my_items),
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (value) =>
+                    setState(() => _saveToMyItems = value ?? false),
+              ),
 
             const SizedBox(height: 12),
 
@@ -412,7 +403,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               entryType: _entryType,
               brandController: _brandController,
               descriptionController: _descriptionController,
-              servingSizeController: _servingSizeController,
               portionReferenceController: _portionReferenceController,
               portionMethod: _portionMethod,
               portionState: _portionState,
@@ -430,8 +420,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               },
             ),
 
-            // Bottom padding for FAB
-            const SizedBox(height: 88),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -519,8 +508,7 @@ class _AiEstimationBanner extends StatelessWidget {
 
 class _EssentialFieldsCard extends StatelessWidget {
   final TextEditingController nameController;
-  final TextEditingController amountController;
-  final TextEditingController unitController;
+  final TextEditingController servingSizeController;
   final TextEditingController energyController;
   final TextEditingController proteinController;
   final TextEditingController carbsController;
@@ -531,8 +519,7 @@ class _EssentialFieldsCard extends StatelessWidget {
 
   const _EssentialFieldsCard({
     required this.nameController,
-    required this.amountController,
-    required this.unitController,
+    required this.servingSizeController,
     required this.energyController,
     required this.proteinController,
     required this.carbsController,
@@ -582,7 +569,7 @@ class _EssentialFieldsCard extends StatelessWidget {
             TextFormField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: '${l10n.food_name} *',
+                labelText: l10n.food_name,
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.edit),
               ),
@@ -597,50 +584,23 @@ class _EssentialFieldsCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // Amount + Unit
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: TextFormField(
-                    controller: amountController,
-                    decoration: InputDecoration(
-                      labelText: l10n.amount,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+\.?\d{0,2}'),
-                      ),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.required_error;
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 3,
-                  child: TextFormField(
-                    controller: unitController,
-                    decoration: InputDecoration(
-                      labelText: l10n.unit,
-                      border: const OutlineInputBorder(),
-                      hintText: 'serving, cup, g...',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.required_error;
-                      }
-                      return null;
-                    },
-                  ),
-                ),
+            TextFormField(
+              controller: servingSizeController,
+              decoration: InputDecoration(
+                labelText: l10n.nutrition_values_are_for,
+                border: const OutlineInputBorder(),
+                suffixText: 'g',
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
               ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return l10n.required_error;
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 12),
 
@@ -694,7 +654,8 @@ class _EssentialFieldsCard extends StatelessWidget {
                   child: TextFormField(
                     controller: proteinController,
                     decoration: InputDecoration(
-                      labelText: l10n.protein_g,
+                      labelText: l10n.protein,
+                      helperText: l10n.optional,
                       border: const OutlineInputBorder(),
                       hintText: '0',
                       suffixText: 'g',
@@ -716,7 +677,8 @@ class _EssentialFieldsCard extends StatelessWidget {
                   child: TextFormField(
                     controller: carbsController,
                     decoration: InputDecoration(
-                      labelText: l10n.carbs_g,
+                      labelText: l10n.carbohydrate,
+                      helperText: l10n.optional,
                       border: const OutlineInputBorder(),
                       hintText: '0',
                       suffixText: 'g',
@@ -738,7 +700,8 @@ class _EssentialFieldsCard extends StatelessWidget {
                   child: TextFormField(
                     controller: fatController,
                     decoration: InputDecoration(
-                      labelText: l10n.fat_g,
+                      labelText: l10n.fat,
+                      helperText: l10n.optional,
                       border: const OutlineInputBorder(),
                       hintText: '0',
                       suffixText: 'g',
@@ -952,7 +915,6 @@ class _AdvancedOptionsCard extends StatefulWidget {
   final FoodEntryType entryType;
   final TextEditingController brandController;
   final TextEditingController descriptionController;
-  final TextEditingController servingSizeController;
   final TextEditingController portionReferenceController;
   final PortionEstimationMethod portionMethod;
   final PortionState portionState;
@@ -967,7 +929,6 @@ class _AdvancedOptionsCard extends StatefulWidget {
     required this.entryType,
     required this.brandController,
     required this.descriptionController,
-    required this.servingSizeController,
     required this.portionReferenceController,
     required this.portionMethod,
     required this.portionState,
@@ -1097,23 +1058,6 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     ),
                     maxLines: 2,
                     minLines: 1,
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Serving Size
-                  TextFormField(
-                    controller: widget.servingSizeController,
-                    decoration: InputDecoration(
-                      labelText: widget.l10n.serving_size,
-                      border: const OutlineInputBorder(),
-                      suffixText: 'g',
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+\.?\d{0,2}'),
-                      ),
-                    ],
                   ),
                   const SizedBox(height: 8),
 
