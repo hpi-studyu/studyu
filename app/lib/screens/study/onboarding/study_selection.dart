@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/studyu_driver_state.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -173,7 +174,12 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             });
                           });
                         }
+                        assert(() {
+                          StudyUDriverState.visibleStudies = studies;
+                          return true;
+                        }());
                         return ListView.builder(
+                          key: const ValueKey('study_selection_list'),
                           itemCount: studies.length,
                           itemBuilder: (context, index) {
                             final study = studies[index];
@@ -181,6 +187,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                               tag: 'study_tile_${studies[index].id}',
                               child: Material(
                                 child: StudyTile.fromStudy(
+                                  key: ValueKey('study_tile_${study.id}'),
                                   study: study,
                                   onTap: () async {
                                     await navigateToStudyOverview(
@@ -199,6 +206,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
+                  key: const ValueKey('study_selection_invite_code'),
                   icon: const Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(
@@ -280,8 +288,10 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    key: const ValueKey('invite_code_dialog'),
     title: Text(AppLocalizations.of(context)!.private_study_invite_code),
     content: TextFormField(
+      key: const ValueKey('invite_code_field'),
       controller: _controller,
       validator: (_) => _errorMessage,
       autovalidateMode: AutovalidateMode.always,
@@ -293,6 +303,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
     ),
     actions: [
       OutlinedButton.icon(
+        key: const ValueKey('invite_code_submit'),
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: _submitInviteCode,

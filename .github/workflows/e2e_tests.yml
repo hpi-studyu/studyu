@@ -5,11 +5,15 @@ on:
     paths:
       - ".github/workflows/e2e_tests.yml"
       - ".github/workflows/init-workspace/action.yml"
+      - 'app/**'
       - 'supabase/**'
       - 'scripts/reset-test-db.sh'
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
+      - 'tools/studyu_mcp/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
   workflow_dispatch:
 
 env:
@@ -64,10 +68,19 @@ jobs:
           chromedriver --port=4444 &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
 
-      - name: Run Flutter E2E tests
+      - name: Run Designer E2E tests
         working-directory: ./designer_v2
         run: |
           flutter drive --driver=test_driver/integration_driver.dart \
             --target=integration_test/app_test.dart -d web-server \
+            --web-browser-flag="--disable-web-security" \
+            --dart-define="STUDYU_ENV=.env.local"
+
+      - name: Run App onboarding E2E test
+        working-directory: ./app
+        run: |
+          flutter drive --driver=test_driver/integration_driver.dart \
+            --target=integration_test/onboarding_study_list_test.dart \
+            -d web-server \
             --web-browser-flag="--disable-web-security" \
             --dart-define="STUDYU_ENV=.env.local"

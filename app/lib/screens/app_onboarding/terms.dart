@@ -130,6 +130,8 @@ class _TermsScreenState extends State<TermsScreen> {
               title: AppLocalizations.of(context)!.terms,
               description: AppLocalizations.of(context)!.terms_content,
               acknowledgment: AppLocalizations.of(context)!.terms_agree,
+              checkboxKey: const ValueKey('terms_checkbox'),
+              checkedKey: const ValueKey('terms_checkbox_checked'),
               onChange: (val) => setState(() => _acceptedTerms = val!),
               isChecked: _acceptedTerms,
               icon: const Icon(MdiIcons.fileDocumentEdit),
@@ -141,6 +143,8 @@ class _TermsScreenState extends State<TermsScreen> {
               title: AppLocalizations.of(context)!.privacy,
               description: AppLocalizations.of(context)!.privacy_content,
               acknowledgment: AppLocalizations.of(context)!.privacy_agree,
+              checkboxKey: const ValueKey('privacy_checkbox'),
+              checkedKey: const ValueKey('privacy_checkbox_checked'),
               onChange: (val) => setState(() => _acceptedPrivacy = val!),
               isChecked: _acceptedPrivacy,
               icon: const Icon(MdiIcons.shieldLock),
@@ -149,6 +153,7 @@ class _TermsScreenState extends State<TermsScreen> {
             ),
             const SizedBox(height: 30),
             OutlinedButton.icon(
+              key: const ValueKey('imprint_button'),
               icon: const Icon(MdiIcons.scaleBalance),
               onPressed: () async {
                 final uri = Uri.parse(
@@ -176,6 +181,8 @@ class LegalSection extends StatelessWidget {
   final String? acknowledgment;
   final bool? isChecked;
   final ValueChanged<bool?>? onChange;
+  final Key? checkboxKey;
+  final Key? checkedKey;
 
   const LegalSection({
     super.key,
@@ -187,6 +194,8 @@ class LegalSection extends StatelessWidget {
     this.acknowledgment,
     this.isChecked,
     this.onChange,
+    this.checkboxKey,
+    this.checkedKey,
   });
 
   @override
@@ -214,10 +223,12 @@ class LegalSection extends StatelessWidget {
           label: Text(pdfUrlLabel!),
         ),
         CheckboxListTile(
+          key: checkboxKey,
           title: Text(acknowledgment!),
           value: isChecked,
           onChanged: onChange,
         ),
+        if (isChecked ?? false) SizedBox.shrink(key: checkedKey),
       ],
     );
   }

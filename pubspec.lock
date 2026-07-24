@@ -1077,6 +1077,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+  json_schema:
+    dependency: transitive
+    description:
+      name: json_schema
+      sha256: f37d9c3fdfe8c9aae55fdfd5af815d24ce63c3a0f6a2c1f0982c30f43643fa1a
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.2"
   json_serializable:
     dependency: transitive
     description:
@@ -1189,6 +1197,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  mcp_server:
+    dependency: transitive
+    description:
+      name: mcp_server
+      sha256: d5b2603a51b524c60753ea9031c52759f80b53dd6606f38ae70305b5eaa28d4d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   melos:
     dependency: "direct dev"
     description:
@@ -1741,6 +1757,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+  rfc_6901:
+    dependency: transitive
+    description:
+      name: rfc_6901
+      sha256: "6a43b1858dca2febaf93e15639aa6b0c49ccdfd7647775f15a499f872b018154"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   riverpod:
     dependency: transitive
     description:
@@ -2138,6 +2162,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  uri:
+    dependency: transitive
+    description:
+      name: uri
+      sha256: "889eea21e953187c6099802b7b4cf5219ba8f3518f604a1033064d45b1b8268a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   url_launcher:
     dependency: transitive
     description:
