@@ -40,6 +40,7 @@ class StudyInvitesTable extends StatelessWidget {
   static const _copyIconSize = 18.0;
   static const _copyButtonSize = 20.0;
   static const _rowActionSplashRadius = 18.0;
+  static const _rowSpacing = 0.0;
 
   final List<StudyInvite> invites;
   final OnSelectHandler<StudyInvite> onSelect;
@@ -74,6 +75,7 @@ class StudyInvitesTable extends StatelessWidget {
               _buildRow(context, item, states, activeColumns),
           trailingActionsAt: (item, _) => getActions(item),
           minRowHeight: _tableMinRowHeight,
+          rowSpacing: _rowSpacing,
           rowStyle: StandardTableStyle.flat,
         );
       },
