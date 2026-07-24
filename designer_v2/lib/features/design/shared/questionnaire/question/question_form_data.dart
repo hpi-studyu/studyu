@@ -125,7 +125,9 @@ abstract class QuestionFormData implements IFormData {
 
   Question toQuestion(); // subclass responsibility
 
-  EligibilityCriterion toEligibilityCriterion() {
+  EligibilityCriterion? toEligibilityCriterion() {
+    if (responseOptions.isEmpty) return null;
+
     final criterion = EligibilityCriterion.withId();
     // todo implement other expression types
     final expression = ChoiceExpression()..target = questionId;

@@ -179,6 +179,35 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
   });
 
+  testWidgets(
+    'Done button appears after editing submitted non-last free text',
+    (tester) async {
+      final question = FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.any,
+        lengthRange: [0, 100],
+      );
+
+      await tester.pumpWidget(
+        setup(
+          FreeTextQuestionWidget(
+            question: question,
+            initialAnswer: question.constructAnswer('0'),
+            onDone: (_) {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Done'), findsNothing);
+
+      await tester.enterText(find.byType(TextFormField), '00');
+      await tester.pump();
+
+      expect(find.text('Done'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 600));
+    },
+  );
+
   testWidgets('typing updates onDraftChanged but does not call onDone', (
     tester,
   ) async {

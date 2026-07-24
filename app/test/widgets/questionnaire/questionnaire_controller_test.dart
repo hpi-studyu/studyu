@@ -15,6 +15,14 @@ FreeTextQuestion freeTextQuestion(String id, String prompt) =>
       ..id = id
       ..prompt = prompt;
 
+FreeTextQuestion numericFreeTextQuestion(String id, String prompt) =>
+    FreeTextQuestion.withId(
+        textType: FreeTextQuestionType.numeric,
+        lengthRange: [1, 100],
+      )
+      ..id = id
+      ..prompt = prompt;
+
 QuestionConditional<T> shownWhenQ1True<T>() =>
     QuestionConditional<T>.withCondition(
       CompositeExpression(
@@ -195,6 +203,81 @@ void main() {
       expect(controller.visibleQuestions.length, equals(2));
       expect(controller.visibleQuestions.map((q) => q.id), contains('q2'));
     });
+
+    test('free text length conditional detects entered text', () {
+      final q1 = freeTextQuestion('q1', 'Enter text');
+      final q2 = boolQuestion('q2', 'Shown when text entered')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [
+              TextExpression(
+                comparator: TextComparator.lengthGreaterThan,
+                value: '0',
+              )..target = 'q1',
+            ],
+          ),
+        );
+
+      final controller = QuestionnaireController([q1, q2]);
+
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+      controller.submitAnswer(q1.constructAnswer(''));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+      controller.submitAnswer(q1.constructAnswer('x'));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1', 'q2']);
+    });
+
+    test('free text same length conditional compares character length', () {
+      final q1 = freeTextQuestion('q1', 'Enter text');
+      final q2 = boolQuestion('q2', 'Shown when same length')
+        ..conditional = QuestionConditional<bool>.withCondition(
+          CompositeExpression(
+            logicType: LogicType.and,
+            expressions: [
+              TextExpression(comparator: TextComparator.lengthEqual, value: '4')
+                ..target = 'q1',
+            ],
+          ),
+        );
+
+      final controller = QuestionnaireController([q1, q2]);
+
+      controller.submitAnswer(q1.constructAnswer('abc'));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+      controller.submitAnswer(q1.constructAnswer('abcd'));
+      expect(controller.visibleQuestions.map((q) => q.id), ['q1', 'q2']);
+    });
+
+    test(
+      'numeric free text numeric expression compares numeric answer value',
+      () {
+        final q1 = numericFreeTextQuestion('q1', 'Enter number');
+        final q2 = boolQuestion('q2', 'Shown when value > 5')
+          ..conditional = QuestionConditional<bool>.withCondition(
+            CompositeExpression(
+              logicType: LogicType.and,
+              expressions: [
+                NumericExpression(
+                  comparator: NumericComparator.greaterThan,
+                  value: 5,
+                )..target = 'q1',
+              ],
+            ),
+          );
+
+        final controller = QuestionnaireController([q1, q2]);
+
+        controller.submitAnswer(q1.constructAnswer('3'));
+        expect(controller.visibleQuestions.map((q) => q.id), ['q1']);
+
+        controller.submitAnswer(q1.constructAnswer('12'));
+        expect(controller.visibleQuestions.map((q) => q.id), ['q1', 'q2']);
+      },
+    );
 
     // ── Test 6: no-op draft update does not notify listeners ──
 

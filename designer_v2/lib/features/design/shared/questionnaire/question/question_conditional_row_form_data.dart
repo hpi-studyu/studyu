@@ -64,9 +64,14 @@ class ConditionRowFormData extends IFormData {
     // Handle text questions
     if (comparator is TextComparator) {
       if (value == null) return null;
+      final textValue = value.toString();
+      if (_usesTextLengthComparator(comparator as TextComparator) &&
+          int.tryParse(textValue) == null) {
+        return null;
+      }
       return TextExpression(
         comparator: comparator as TextComparator,
-        value: value.toString(),
+        value: textValue,
       )..target = questionId;
     }
 
@@ -88,4 +93,16 @@ class ConditionRowFormData extends IFormData {
 
   @override
   FormDataID get id => throw UnimplementedError();
+
+  bool _usesTextLengthComparator(TextComparator comparator) {
+    return switch (comparator) {
+      TextComparator.lengthGreaterThan ||
+      TextComparator.lengthLessThan ||
+      TextComparator.lengthGreaterThanOrEqual ||
+      TextComparator.lengthLessThanOrEqual ||
+      TextComparator.lengthEqual ||
+      TextComparator.lengthNotEqual => true,
+      _ => false,
+    };
+  }
 }

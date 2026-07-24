@@ -1111,6 +1111,44 @@ class AppLocalizationsDe extends AppLocalizations {
       'enthält nicht';
 
   @override
+  String get form_array_question_visibility_logic_shorter_than => 'kürzer als';
+
+  @override
+  String get form_array_question_visibility_logic_shorter_than_or_equal_to =>
+      'kürzer als oder gleich';
+
+  @override
+  String get form_array_question_visibility_logic_longer_than => 'länger als';
+
+  @override
+  String get form_array_question_visibility_logic_longer_than_or_equal_to =>
+      'länger als oder gleich';
+
+  @override
+  String get form_array_question_visibility_logic_same_length_as =>
+      'gleich lang wie';
+
+  @override
+  String get form_array_question_visibility_logic_different_length_as =>
+      'anders lang als';
+
+  @override
+  String get form_array_question_visibility_logic_length_greater_than =>
+      'Länge >';
+
+  @override
+  String get form_array_question_visibility_logic_length_less_than => 'Länge <';
+
+  @override
+  String
+  get form_array_question_visibility_logic_length_greater_than_or_equal =>
+      'Länge >=';
+
+  @override
+  String get form_array_question_visibility_logic_length_less_than_or_equal =>
+      'Länge <=';
+
+  @override
   String get form_array_question_visibility_logic_not => 'NICHT';
 
   @override
