@@ -28,13 +28,20 @@ class SignupForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(formControl: controller.getEmailControl()),
-        //const SizedBox(height: 12.0),
-        const SizedBox(height: 4.0),
-        PasswordTextField(formControl: controller.getPasswordControl()),
+        EmailTextField(
+          key: const ValueKey('signup_email'),
+          formControl: controller.getEmailControl(),
+        ),
         //const SizedBox(height: 12.0),
         const SizedBox(height: 4.0),
         PasswordTextField(
+          key: const ValueKey('signup_password'),
+          formControl: controller.getPasswordControl(),
+        ),
+        //const SizedBox(height: 12.0),
+        const SizedBox(height: 4.0),
+        PasswordTextField(
+          key: const ValueKey('signup_password_confirm'),
           formControl: controller.getPasswordConfirmationControl(),
           labelText: tr.form_field_password_confirm,
           hintText: tr.form_field_password_confirm_hint,
@@ -95,6 +102,7 @@ class SignupForm extends FormConsumerRefWidget {
           builder: (context, form, child) {
             return Center(
               child: PrimaryButton(
+                key: const ValueKey('signup_button'),
                 text: tr.action_button_signup,
                 isLoading: state.isLoading,
                 enabled: form.valid,
@@ -119,6 +127,7 @@ class SignupForm extends FormConsumerRefWidget {
             Text(tr.link_login_description),
             const SizedBox(width: 4.0),
             Hyperlink(
+              key: const ValueKey('login_link'),
               text: tr.link_login,
               onClick: () =>
                   ref.read(routerProvider).dispatch(RoutingIntents.login),

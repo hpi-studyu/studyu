@@ -89,10 +89,21 @@ class StudiesTable extends StatelessWidget {
         final isCompactStatTitle =
             constraints.maxWidth < compactStatTitleThreshold;
         // Calculate the minimum stat column width
-        final int maxStatTitleLength = isCompactStatTitle
-            ? "Completed".length
-            : tr.studies_list_header_participants_completed.length;
-        final double statsColumnWidth = maxStatTitleLength * 9.9;
+        final double enrolledColumnWidth =
+            (isCompactStatTitle
+                ? "Enrolled".length
+                : tr.studies_list_header_participants_enrolled.length) *
+            10;
+        final double activeColumnWidth =
+            (isCompactStatTitle
+                ? "Active".length
+                : tr.studies_list_header_participants_active.length) *
+            10;
+        final double completedColumnWidth =
+            (isCompactStatTitle
+                ? "Completed".length
+                : tr.studies_list_header_participants_completed.length) *
+            10;
 
         // Calculate the minimum status column width
         int maxStatusLength = "Entwurf".length;
@@ -116,7 +127,7 @@ class StudiesTable extends StatelessWidget {
         // Set column definitions
         final columnDefinitionsMap = {
           StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(itemHeight),
-          StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
+          StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(32),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(
             statusColumnWidth,
           ),
@@ -128,13 +139,13 @@ class StudiesTable extends StatelessWidget {
               : StudiesTableColumnSize.flexWidth(10),
           StudiesTableColumn.enrolled: isCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+              : StudiesTableColumnSize.fixedWidth(enrolledColumnWidth),
           StudiesTableColumn.active: isCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+              : StudiesTableColumnSize.fixedWidth(activeColumnWidth),
           StudiesTableColumn.completed: isCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+              : StudiesTableColumnSize.fixedWidth(completedColumnWidth),
           StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(
             itemHeight,
           ),
@@ -224,12 +235,14 @@ class StudiesTable extends StatelessWidget {
             ),
             SizedBox(height: rowSpacing),
             ListView.builder(
+              key: const ValueKey('studies_table_rows'),
               itemCount: studies.length,
               itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final item = studies[index];
                 return StudiesTableItem(
+                  key: ValueKey('study_row_${item.id}'),
                   study: item,
                   columnSizes: columnDefinitionsMap.values.toList(),
                   actions: getActions(item),
@@ -285,6 +298,9 @@ class StudiesTable extends StatelessWidget {
       sortable: sortable,
       sortingActive: sortingActive,
       sortAscending: sortAscending(),
+      center:
+          column != StudiesTableColumn.title &&
+          column != StudiesTableColumn.pin,
       onSort: sortable
           ? () {
               dashboardController.setSorting(

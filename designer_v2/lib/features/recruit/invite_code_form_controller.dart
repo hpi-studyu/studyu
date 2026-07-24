@@ -117,6 +117,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   @override
   void initControls() {
     regenerateCode(); // initialize randomly
+    prevFormValue = {...form.value};
   }
 
   // - Validation
@@ -151,7 +152,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   @override
   StudyInvite buildFormData() {
     return StudyInvite(
-      codeControl.value!,
+      codeControl.value!.trim().toLowerCase(),
       study.id,
       preselectedInterventionIds: preconfiguredSchedule,
     );
@@ -169,9 +170,12 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Future<StudyInvite> save({bool updateState = true}) {
-    return inviteCodeRepository
-        .save(buildFormData())
-        .then((wrapped) => wrapped!.model);
+    return inviteCodeRepository.save(buildFormData()).then((wrapped) {
+      if (updateState) {
+        finalizeInitializationBaseline();
+      }
+      return wrapped!.model;
+    });
   }
 }
 

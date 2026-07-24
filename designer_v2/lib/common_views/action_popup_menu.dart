@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -14,15 +16,18 @@ class ActionPopUpMenuButton extends StatelessWidget {
     this.splashRadius = 24.0,
     this.triggerIconSize = 18.0,
     this.position = PopupMenuPosition.under,
+    this.triggerIcon,
     this.triggerIconColor,
     this.triggerIconColorHover,
     this.disableSplashEffect = false,
     this.hideOnEmpty = true,
     this.enabled = true,
+    this.triggerBuilder,
     super.key,
   });
 
   final List<ModelAction> actions;
+  final IconData? triggerIcon;
   final Color? triggerIconColor;
   final Color? triggerIconColorHover;
   final double triggerIconSize;
@@ -33,6 +38,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
   final double? splashRadius;
   final bool enabled;
   final PopupMenuPosition position;
+  final Widget? triggerBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -68,58 +74,121 @@ class ActionPopUpMenuButton extends StatelessWidget {
         triggerIconColor ?? theme.iconTheme.color!.withValues(alpha: 0.7);
     final iconColorHover =
         triggerIconColorHover ?? theme.iconTheme.color!.withValues(alpha: 0.7);
-    final triggerIcon = (orientation == Axis.vertical)
-        ? Icons.more_vert_rounded
-        : Icons.more_horiz_rounded;
+    final triggerIcon =
+        this.triggerIcon ??
+        ((orientation == Axis.vertical)
+            ? Icons.more_vert_rounded
+            : Icons.more_horiz_rounded);
 
-    return PopupMenuButton(
-      key: ValueKey(actions),
-      icon: Icon(
-        triggerIcon,
-        size: triggerIconSize,
-        color: isHovered ? iconColorHover : iconColorDefault,
-      ),
+    return PopupMenuButton<ModelAction>(
+      key: key ?? ValueKey(actions),
+      icon:
+          triggerBuilder ??
+          Icon(
+            triggerIcon,
+            size: triggerIconSize,
+            color: isHovered ? iconColorHover : iconColorDefault,
+          ),
       enabled: enabled,
       elevation: elevation,
       splashRadius: splashRadius,
       position: position,
-      onSelected: (action) => action is ModelAction ? action.onExecute() : null,
-      itemBuilder: (BuildContext context) {
+      itemBuilder: (BuildContext itemContext) {
         final textTheme = theme.textTheme.labelMedium!;
-        final List<PopupMenuEntry> popupList = [];
+        final List<PopupMenuEntry<ModelAction>> popupList = [];
         for (final action in actions) {
           if (action.isSeparator) {
             popupList.add(const PopupMenuDivider());
             continue;
           }
-          popupList.add(
-            PopupMenuItem(
-              value: action,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                horizontalTitleGap: 4.0,
-                leading: (action.icon == null)
-                    ? const SizedBox.shrink()
-                    : Icon(
-                        action.icon,
-                        size: theme.iconTheme.size ?? 14.0,
-                        color: action.isDestructive
-                            ? Colors.red
-                            : iconColorDefault,
-                      ),
-                title: action.isDestructive
-                    ? Text(
-                        action.label,
-                        style: textTheme.copyWith(color: Colors.red),
-                      )
-                    : Text(action.label, style: textTheme),
+          if (action.isHeader) {
+            popupList.add(
+              PopupMenuItem<ModelAction>(
+                enabled: false,
+                height: 32, // Condensed header
+                child: Text(
+                  action.label,
+                  style: textTheme.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12, // Slightly smaller for headers if needed
+                  ),
+                ),
               ),
+            );
+            continue;
+          }
+          popupList.add(
+            PopupMenuItem<ModelAction>(
+              value: action,
+              onTap: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!context.mounted) return;
+                  unawaited(action.execute(context));
+                });
+              },
+              child: (action.tooltip != null)
+                  ? Tooltip(
+                      message: action.tooltip,
+                      child: _buildListTile(
+                        theme,
+                        action,
+                        iconColorDefault,
+                        textTheme,
+                      ),
+                    )
+                  : _buildListTile(theme, action, iconColorDefault, textTheme),
             ),
           );
           continue;
         }
         return popupList;
       },
+    );
+  }
+
+  Widget _buildListTile(
+    ThemeData theme,
+    ModelAction action,
+    Color iconColorDefault,
+    TextStyle textTheme,
+  ) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+      horizontalTitleGap: 4.0,
+      leading: (action.icon == null)
+          ? const SizedBox.shrink()
+          : Badge(
+              smallSize: 8,
+              isLabelVisible: action.showBadge,
+              child: Icon(
+                action.icon,
+                size: theme.iconTheme.size ?? 14.0,
+                color: action.isDestructive
+                    ? Colors.red
+                    : (action.isChecked
+                          ? theme.colorScheme.primary
+                          : iconColorDefault),
+              ),
+            ),
+      title: action.isDestructive
+          ? Text(action.label, style: textTheme.copyWith(color: Colors.red))
+          : Text(
+              action.label,
+              style: action.isChecked
+                  ? textTheme.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    )
+                  : textTheme,
+            ),
+      trailing: action.isChecked
+          ? Icon(
+              Icons.check_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: theme.colorScheme.primary,
+            )
+          : null,
     );
   }
 }

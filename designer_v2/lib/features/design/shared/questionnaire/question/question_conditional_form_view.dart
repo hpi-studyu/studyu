@@ -86,6 +86,40 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     return !oldIds.containsAll(newIds) || !newIds.containsAll(oldIds);
   }
 
+  Widget _buildQuestionOptionContent(Question option, int index) {
+    return Tooltip(
+      message: option.prompt ?? '',
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          children: [
+            Icon(
+              SurveyQuestionType.of(option).icon,
+              size: 16,
+              color: Colors.grey,
+            ),
+            const SizedBox(width: 8),
+            Text('${index + 1}.', style: const TextStyle(color: Colors.grey)),
+            const SizedBox(width: 4),
+            Expanded(
+              child: Text(option.prompt!, overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComparatorOptionContent(String label) {
+    return Tooltip(
+      message: label,
+      child: SizedBox(
+        width: double.infinity,
+        child: Text(label, overflow: TextOverflow.ellipsis),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
@@ -200,6 +234,16 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
               child: ReactiveDropdownField<String>(
                 formControl: conditionVm.questionIdControl,
                 isExpanded: true,
+                selectedItemBuilder: (context) => availableQuestions
+                    .asMap()
+                    .map(
+                      (index, option) => MapEntry(
+                        index,
+                        _buildQuestionOptionContent(option, index),
+                      ),
+                    )
+                    .values
+                    .toList(),
                 items: availableQuestions
                     .asMap()
                     .map(
@@ -207,27 +251,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                         index,
                         DropdownMenuItem(
                           value: option.id,
-                          child: Row(
-                            children: [
-                              Icon(
-                                SurveyQuestionType.of(option).icon,
-                                size: 16,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${index + 1}.',
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  option.prompt!,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: _buildQuestionOptionContent(option, index),
                         ),
                       ),
                     )
@@ -252,14 +276,18 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                   child: ReactiveDropdownField<dynamic>(
                     formControl: conditionVm.comparatorControl,
                     isExpanded: true,
+                    selectedItemBuilder: (context) => conditionVm
+                        .availableComparators
+                        .map(
+                          (option) =>
+                              _buildComparatorOptionContent(option.label),
+                        )
+                        .toList(),
                     items: conditionVm.availableComparators
                         .map(
                           (option) => DropdownMenuItem(
                             value: option.value,
-                            child: Text(
-                              option.label,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: _buildComparatorOptionContent(option.label),
                           ),
                         )
                         .toList(),
@@ -377,6 +405,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case FreeTextQuestion.questionType:
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
+          keyboardType: freeTextThresholdKeyboardType(conditionVm),
+          inputFormatters: freeTextThresholdInputFormatters(conditionVm),
           decoration: InputDecoration(
             labelText: tr.form_array_question_visibility_logic_value_title,
             border: const OutlineInputBorder(),
@@ -412,4 +442,32 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       currentQuestionId: formViewModel.currentQuestionId,
     );
   }
+}
+
+List<TextInputFormatter>? freeTextThresholdInputFormatters(
+  ConditionRowFormViewModel conditionVm,
+) {
+  if (!conditionVm.selectedComparatorUsesNumericThreshold) {
+    return null;
+  }
+
+  return [
+    FilteringTextInputFormatter.allow(
+      conditionVm.selectedQuestionAllowsSignedNumericThreshold
+          ? RegExp(r'^-?\d*\.?\d*')
+          : RegExp(r'^\d*'),
+    ),
+  ];
+}
+
+TextInputType freeTextThresholdKeyboardType(
+  ConditionRowFormViewModel conditionVm,
+) {
+  if (!conditionVm.selectedComparatorUsesNumericThreshold) {
+    return TextInputType.text;
+  }
+
+  return conditionVm.selectedQuestionAllowsSignedNumericThreshold
+      ? const TextInputType.numberWithOptions(signed: true)
+      : TextInputType.number;
 }

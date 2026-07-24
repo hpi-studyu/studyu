@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
@@ -23,13 +25,13 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     bool? consentGiven;
     if (subject!.study.hasConsentCheck) {
-      consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+      consentGiven = await context.push<bool>('/${RouteNames.consent}');
     } else {
       consentGiven = true;
     }
     if (!context.mounted) return;
     if (consentGiven != null && consentGiven) {
-      Navigator.pushNamed(context, Routes.kickoff);
+      context.push('/${RouteNames.kickoff}');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -53,7 +55,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
-        leading: Icon(MdiIcons.mapMarkerPath),
+        leading: const Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -182,7 +184,7 @@ class IconIndicator extends StatelessWidget {
         color: color ?? Theme.of(context).colorScheme.secondary,
       ),
       child: Center(
-        child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
+        child: Icon(MdiIconsHelper.fromString(iconName), color: Colors.white),
       ),
     );
   }

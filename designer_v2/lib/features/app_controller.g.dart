@@ -11,13 +11,13 @@ part of 'app_controller.dart';
 /// Main controller that's bound to the top-level application widget's state
 
 @ProviderFor(AppController)
-const appControllerProvider = AppControllerProvider._();
+final appControllerProvider = AppControllerProvider._();
 
 /// Main controller that's bound to the top-level application widget's state
 final class AppControllerProvider
     extends $StreamNotifierProvider<AppController, AppControllerState> {
   /// Main controller that's bound to the top-level application widget's state
-  const AppControllerProvider._()
+  AppControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -44,8 +44,7 @@ abstract class _$AppController extends $StreamNotifier<AppControllerState> {
   Stream<AppControllerState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<AppControllerState>, AppControllerState>;
     final element =
@@ -56,6 +55,6 @@ abstract class _$AppController extends $StreamNotifier<AppControllerState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -37,7 +37,7 @@ jobs:
         uses: ./.github/workflows/init-workspace
 
       - name: Run fix
-        run: melos run fix
+        run: melos fix
 
       - name: Run quality check
         run: melos qualitycheck
@@ -57,7 +57,7 @@ jobs:
           done
 
       - name: Commit changes if any
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore: Apply static analysis changes'
 
@@ -73,4 +73,4 @@ jobs:
         uses: ./.github/workflows/init-workspace
 
       - name: Run Test
-        run: melos run test --no-select
+        run: melos test --no-select

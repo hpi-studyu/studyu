@@ -1,3 +1,24 @@
+## 4.9.0
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: enhance Answer class to support DateTime serialization in JSON.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+## 4.8.1
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 4.8.0
+
+ - **FIX**: migrate csv.
+ - **FIX**: update to flutter v3.41.5.
+ - **FEAT**: Add persistent user-defined study filters and active filter state to user preferences.
+
 ## 4.7.1
 
  - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.

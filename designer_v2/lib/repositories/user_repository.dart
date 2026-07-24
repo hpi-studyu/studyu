@@ -2,6 +2,7 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
@@ -15,6 +16,15 @@ abstract class IUserRepository {
     PreferenceAction pinAction,
     String modelId,
   );
+  Future<StudyUUser> saveCustomPreset(SavedFilter filter);
+  Future<StudyUUser> deleteCustomPreset(String id);
+  List<SavedFilter> getCustomPresets();
+  ({String? presetId, FilterGroup? filterGroup}) getActiveFilter(String page);
+  Future<StudyUUser> saveActiveFilter({
+    required String page,
+    String? presetId,
+    FilterGroup? filterGroup,
+  });
 }
 
 enum PreferenceAction { pin, pinOff }
@@ -72,6 +82,91 @@ class UserRepository implements IUserRepository {
         newPinnedStudies.remove(modelId);
     }
     user.preferences.pinnedStudies = newPinnedStudies;
+    return saveUser();
+  }
+
+  @override
+  Future<StudyUUser> saveCustomPreset(SavedFilter filter) {
+    final presets = getCustomPresets();
+    final index = presets.indexWhere((p) => p.id == filter.id);
+    if (index != -1) {
+      presets[index] = filter;
+    } else {
+      presets.add(filter);
+    }
+    return _updateStudyFiltering(
+      'custom_presets',
+      presets.map((e) => e.toJson()).toList(),
+    );
+  }
+
+  @override
+  Future<StudyUUser> deleteCustomPreset(String id) {
+    final presets = getCustomPresets();
+    presets.removeWhere((p) => p.id == id);
+    return _updateStudyFiltering(
+      'custom_presets',
+      presets.map((e) => e.toJson()).toList(),
+    );
+  }
+
+  @override
+  List<SavedFilter> getCustomPresets() {
+    final filtering = user.preferences.studyFiltering;
+    final presetsJson = filtering['custom_presets'] as List?;
+    if (presetsJson == null) return [];
+    return presetsJson
+        .map((e) => SavedFilter.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<StudyUUser> saveActiveFilter({
+    required String page,
+    String? presetId,
+    FilterGroup? filterGroup,
+  }) {
+    final filtering = Map<String, dynamic>.from(
+      user.preferences.studyFiltering,
+    );
+    final activeFilters = Map<String, dynamic>.from(
+      filtering['active_filters'] as Map? ?? {},
+    );
+
+    activeFilters[page] = {
+      if (presetId != null) 'preset_id': presetId,
+      if (filterGroup != null) 'filter_group': filterGroup.toJson(),
+    };
+
+    filtering['active_filters'] = activeFilters;
+    user.preferences.studyFiltering = filtering;
+    return saveUser();
+  }
+
+  @override
+  ({String? presetId, FilterGroup? filterGroup}) getActiveFilter(String page) {
+    final filtering = user.preferences.studyFiltering;
+    final activeFilters = filtering['active_filters'] as Map?;
+    if (activeFilters == null) return (presetId: null, filterGroup: null);
+
+    final pageFilter = activeFilters[page] as Map?;
+    if (pageFilter == null) return (presetId: null, filterGroup: null);
+
+    final presetId = pageFilter['preset_id'] as String?;
+    final filterGroupJson = pageFilter['filter_group'] as Map<String, dynamic>?;
+    final filterGroup = filterGroupJson != null
+        ? FilterGroup.fromJson(filterGroupJson)
+        : null;
+
+    return (presetId: presetId, filterGroup: filterGroup);
+  }
+
+  Future<StudyUUser> _updateStudyFiltering(String key, dynamic value) {
+    final filtering = Map<String, dynamic>.from(
+      user.preferences.studyFiltering,
+    );
+    filtering[key] = value;
+    user.preferences.studyFiltering = filtering;
     return saveUser();
   }
 }

@@ -1,3 +1,97 @@
+## 1.18.0
+
+ - **REFACTOR**: clean up date question localization and validation messages.
+ - **FIX**(designer): enlarge test preview frame.
+ - **FIX**(designer): disable screener without questions.
+ - **FIX**(app): open preview on study overview.
+ - **FIX**(designer): revert unintended app controller change.
+ - **FIX**(designer): restore default search bar background.
+ - **FIX**(designer): resolve splash screen initialization loop.
+ - **FIX**(dashboard): restore localized search placeholder.
+ - **FIX**(designer): use outer context for popup actions.
+ - **FIX**(designer): defer popup menu action execution.
+ - **FIX**(designer): remove default confirmation icons.
+ - **FIX**(designer): resolve confirmation merge conflicts.
+ - **FIX**(designer): centralize destructive action confirmations.
+ - **FIX**(designer): style actions in destructive confirmation dialog.
+ - **FIX**(designer): update unsaved changes dialog copy and button weights.
+ - **FIX**(designer): centralize destructive action confirmations.
+ - **FIX**(designer): handle recruit popup menu delete action.
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+ - **FIX**: remove deprecated material_design_icons_flutter dependency.
+ - **FIX**(preview): avoid reloading test app page navigation.
+ - **FEAT**(designer): localize hardcoded preview overlay strings.
+ - **FEAT**: Add onCleared callback to DateQuestionWidget and QuestionContainer.
+ - **FEAT**: Refactor preview iframe style injection and cleanup logic.
+ - **FEAT**: Enhance Date Question Functionality with Time Input and Localization.
+ - **FEAT**: simplify date question form by removing unused preview section and related logic.
+ - **FEAT**: update date label translations for clarity in German and English.
+ - **FEAT**: remove initial date handling from date question components.
+ - **FEAT**: add localization for date format preset labels in English and German.
+ - **FEAT**: implement date range validation and localization for date questions.
+ - **FEAT**: add DateQuestion and DateQuestionWidget for date selection in questionnaires.
+
+## 1.17.0
+
+ - **REFACTOR**(questionnaire): improve free text question handling and remove custom error message support.
+ - **FIX**: upgrade deps.
+ - **FIX**(measurements): persist new survey questions.
+ - **FIX**(designer): preserve form dirty guards.
+ - **FIX**(designer): intervention task dismissable warning works.
+ - **FIX**(designer): duplicate unsaved survey questions.
+ - **FIX**: update free text validation messages and regex handling.
+ - **FIX**: align dependencies for Flutter 3.44.
+ - **FIX**: add missing const constructors to satisfy linter.
+ - **FIX**: migrate to flutter_material_design_icons in favor of deprecated material_design_icons_flutter.
+ - **FIX**: upgrade deps.
+ - **FIX**: update Flutter version to 3.44.0 and clean up unused imports.
+ - **FIX**: remove redundant fitbit label.
+ - **FEAT**: make barrier dismissable with warning check.
+ - **FEAT**: Add custom error message support for free text questions.
+ - **FEAT**: add custom free text validation and localization support.
+ - **FEAT**(test): add stable ValueKeys for MCP automation.
+ - **FEAT**(designer): move fitbit credentials into measurement question editor.
+
+## 1.16.0
+
+ - **REFACTOR**: fix and format.
+ - **REFACTOR**: Update widget constructors to use `super.key` and refine filter UI constants and German localization.
+ - **REFACTOR**: remove "Clear all" filter option from dashboard studies filter.
+ - **REFACTOR**: filter_builder smaller.
+ - **REFACTOR**: Add new filter widgets for enum, boolean, number, text, and date range types for dashboard studies, and update the filter builder to utilize them.
+ - **FIX**: migrate csv.
+ - **FIX**: update to flutter v3.41.5.
+ - **FIX**: resolve hash conflict in dashboardControllerHash.
+ - **FIX**: filter out exportDefinition action from available study actions.
+ - **FIX**: cast error value to Object for validation message function.
+ - **FIX**: Center studies table content and headers, adjust column sizing, and add DevTools options file.
+ - **FIX**: upgrade to flutter v3.38.4.
+ - **FIX**: Introduce comparator utility for symbol display and enhance filter chip labels and conditional form options.
+ - **FIX**: filter translation.
+ - **FIX**: preset highlighting bug.
+ - **FIX**: make `setStudiesFilter` asynchronous and fetch user data.
+ - **FIX**: improve dashboard responsiveness by adapting UI elements to screen sizes and add a DevTools options file.
+ - **FEAT**: Implement study definition export as JSON and add null check for study import.
+ - **FEAT**: Implement study import functionality, include study definition in export, and add customizable row spacing to form layouts.
+ - **FEAT**: localize dashboard filter UI, preset management, and related enum labels.
+ - **FEAT**: Track expanded filter fields in controller and enhance selected preset UI in filter builder.
+ - **FEAT**: add active state highlighting to filter presets, update filter action button labels and icons, and remove filter match count display.
+ - **FEAT**: Add 6px horizontal spacing to the filter builder UI.
+ - **FEAT**: Add persistent user-defined study filters and active filter state to user preferences.
+ - **FEAT**: Initialize filter builder's active preset from dashboard state or by matching saved filters.
+ - **FEAT**: Overhaul dashboard filter UI with auto-apply on close, enhanced preset management, and expandable filter sections.
+ - **FEAT**: Add dashboard filter presets and a unified filter menu, replacing old filter view components.
+ - **FEAT**: Implement dynamic and hierarchical study filtering on the dashboard, including UI, data models, and evaluation logic.
+
+## 1.15.5
+
+ - **FIX**: update balanced description in study schedule translations and upgrade dependencies.
+
+## 1.15.4
+
+ - **FIX**: update balanced description in study schedule translations.
+
 ## 1.15.3
 
  - **REFACTOR**(designer_v2): centralize AsyncValue study state access.

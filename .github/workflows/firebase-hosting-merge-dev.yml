@@ -19,6 +19,7 @@ on:
       - '.firebaserc'
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   MELOS_SDK_PATH: 'auto'
 
 concurrency:
@@ -33,7 +34,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
       - name: Init workspace
@@ -57,7 +58,7 @@ jobs:
           echo "STUDYU_DESIGNER_VERSION=$designer_version" >> "$GITHUB_ENV"
           cd ..
       - name: Build Web
-        run: melos run build:web:dev --no-select
+        run: melos build:web:dev --no-select
       - name: Stamp version info into web builds
         run: |
           # --- Stamp version info into app build ---

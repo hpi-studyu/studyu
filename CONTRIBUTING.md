@@ -74,7 +74,7 @@ Changes to the models in the `core` package requires to perform a re-generation
 of the JSON IO code. The toolchain we use for this consists of [build_runner](https://pub.dev/packages/build_runner)
 and [json_serializable](https://pub.dev/packages/json_serializable).
 
-After you made changes to the models, update the generated IO code by running `melos run generate`.
+After you made changes to the models, update the generated IO code by running `melos generate`.
 
 Contrary to most recommendations, we commit those generated files (`*.g.dart`) to Git. This
 is needed, because `core` is a dependency of the StudyU App and the StudyU Designer
@@ -83,12 +83,116 @@ and dependencies need to have all files generated, when being imported.
 ## Code Style
 
 We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
-guidelines for Dart and Flutter. Run `melos format` to format your code and
-`dart analyze` to check for any issues. For commit messages, we use the
-[Conventional Commits](https://www.conventionalcommits.org) format. For any new
-features or bug fixes, create a new branch and open a pull request.
+guidelines for Dart and Flutter. Run `fvm exec melos qualitycheck` to
+format, analyze, and regenerate code.
 
-Please make sure to follow these guidelines when contributing to the project.
+### Optional RTK output filtering
+
+This repository includes `.rtk/filters.toml` for [RTK](https://github.com/rtk-ai/rtk), a CLI proxy that compresses noisy command output. RTK is optional; without it, run the documented commands normally.
+
+If RTK is installed, prefix Flutter, Dart, FVM, or Melos commands with `rtk` for shorter output:
+
+```bash
+rtk fvm exec melos qualitycheck
+```
+
+## Frontend
+
+We use Flutter's Material Design with a custom light theme defined in `app/lib/theme.dart`.
+Prefer `Theme.of(context).colorScheme` over hardcoded colors. For responsive layouts, use
+`LayoutBuilder` and `MediaQuery`. Localization is handled via `flutter_localizations` with
+ARB files in `app/lib/l10n/`.
+
+## Commits
+
+We use [Conventional Commits](https://www.conventionalcommits.org) for all
+commit messages. The format is:
+
+```
+<type>(<scope>): <description>
+```
+
+Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`.
+Scopes match the package name: `app`, `designer`, `core`, `flutter_common`, `db`.
+
+Examples from this repo:
+
+- `fix: remove redundant fitbit label`
+- `feat(designer): move fitbit credentials to study-level`
+- `chore: update deps + ios deps`
+
+## Pull Requests
+
+For any new features or bug fixes, create a new branch and open a pull request.
+Every pull request should include the following:
+
+1. **Clear title** using Conventional Commits format (e.g.,
+   `fix(designer): resolve drag-and-drop issue`)
+2. **Description** explaining the change, motivation, and any related issues
+3. **Screenshot or video** demonstrating the changes — this is **required** for
+   all PRs. Use a screen recording for interactive changes and a screenshot for
+   static ones.
+4. **Testing steps** so reviewers can verify the change locally
+
+### PR Checklist
+
+- [ ] `fvm exec melos qualitycheck` passes
+- [ ] Screenshot or video of the changes attached
+- [ ] Description links related issues
+
+## Code Reviews — Conventional Comments
+
+We use [Conventional Comments](https://conventionalcomments.org/) for all review
+feedback. This standard makes the intent behind each comment clear and
+actionable.
+
+### Format
+
+```
+<label> [decorations]: <subject>
+
+[discussion]
+```
+
+### Labels
+
+| Label | Purpose |
+| --- | --- |
+| **praise:** | Highlight something positive. Leave at least one per review. |
+| **nitpick:** | Trivial preference-based request. Non-blocking by nature. |
+| **suggestion:** | Propose an improvement. Be explicit about *what* and *why*. |
+| **issue:** | Highlight a specific problem. Pair with a suggestion when possible. |
+| **todo:** | Small, necessary change that must be done before merging. |
+| **question:** | Ask for clarification when you're unsure if something is a problem. |
+| **thought:** | Share an idea that came up during review. Non-blocking. |
+| **chore:** | A process-related task needed before acceptance (e.g., run CI job). |
+| **note:** | Non-blocking observation the reader should be aware of. |
+
+### Decorations
+
+Add decorations in parentheses for extra context:
+
+- **(non-blocking)** — should not prevent merging
+- **(blocking)** — must be resolved before merging
+- **(if-minor)** — resolve only if the fix is trivial
+
+### Examples
+
+```
+suggestion (non-blocking): Consider extracting this into a helper method.
+
+It appears in three places and the logic is identical.
+```
+
+```
+issue (blocking): This query fetches all rows without pagination.
+
+On tables with 10k+ rows this will timeout. Can we add a LIMIT clause?
+```
+
+```
+praise: Great use of the builder pattern here — very readable.
+```
 
 ## Flutter Version Management
 
@@ -117,3 +221,5 @@ own instance to ensure data privacy and security. For development purposes,
 Supabase can be self-hosted by using the [Supabase CLI](https://supabase.com/docs/guides/cli).
 Have a look into the [/supabase/README.md](./supabase/README.md) file for a
 guide on how to run the Supabase CLI for StudyU.
+
+Create new database migrations with the Supabase CLI (`supabase migration new <name>`) and commit the generated SQL under `supabase/migrations/`. Legacy migration files in `database/migration-legacy/` are documented in [supabase/README.md](./supabase/README.md).

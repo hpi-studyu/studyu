@@ -34,6 +34,7 @@ abstract class Question<V> {
               ImageCapturingQuestion.fromJson(data),
             AudioRecordingQuestion.questionType =>
               AudioRecordingQuestion.fromJson(data),
+            DateQuestion.questionType => DateQuestion.fromJson(data),
             FreeTextQuestion.questionType => FreeTextQuestion.fromJson(data),
             FitbitQuestion.questionType => FitbitQuestion.fromJson(data),
             PainQuestion.questionType => PainQuestion.fromJson(data),
