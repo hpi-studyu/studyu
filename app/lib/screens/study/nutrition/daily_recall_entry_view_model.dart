@@ -149,10 +149,22 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     _scheduleAutoSave('meal edited');
   }
 
+  void updateMealById(String mealId, MealLog meal) {
+    final index = recall.meals.indexWhere((entry) => entry.id == mealId);
+    if (index == -1) return;
+    updateMeal(index, meal);
+  }
+
   void removeMeal(int index) {
     recall.meals.removeAt(index);
     notifyListeners();
     _scheduleAutoSave('meal removed');
+  }
+
+  void removeMealById(String mealId) {
+    final index = recall.meals.indexWhere((entry) => entry.id == mealId);
+    if (index == -1) return;
+    removeMeal(index);
   }
 
   // Helper to copy recall with new fields

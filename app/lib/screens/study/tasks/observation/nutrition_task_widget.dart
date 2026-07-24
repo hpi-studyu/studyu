@@ -392,135 +392,80 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    final customMealTypes =
-        widget.task?.customMealTypes?.toSet().toList() ?? [];
-    final hasCustomMealTypes = customMealTypes.isNotEmpty;
-    final categories = hasCustomMealTypes
-        ? [
-            for (final label in customMealTypes)
-              _MealCategory(
-                keyValue: 'custom-$label',
-                label: label,
-                icon: Icons.restaurant_outlined,
-                initialMealType: MealType.other,
-                initialCustomMealLabel: label,
-                includes: (meal) =>
-                    meal.mealType == MealType.other &&
-                    meal.customMealLabel == label,
-              ),
-            if (recall.meals.any(
-              (meal) =>
-                  meal.mealType != MealType.other ||
-                  !customMealTypes.contains(meal.customMealLabel),
-            ))
-              _MealCategory(
-                keyValue: 'legacy-other',
-                label: l10n.meal_category_other,
-                icon: Icons.restaurant_outlined,
-                initialMealType: MealType.other,
-                canAdd: false,
-                includes: (meal) =>
-                    meal.mealType != MealType.other ||
-                    !customMealTypes.contains(meal.customMealLabel),
-              ),
-          ]
-        : [
-            _MealCategory(
-              keyValue: MealType.breakfast.name,
-              label: l10n.meal_type_breakfast,
-              icon: Icons.wb_sunny_outlined,
-              initialMealType: MealType.breakfast,
-              includes: (meal) => meal.mealType == MealType.breakfast,
-            ),
-            _MealCategory(
-              keyValue: MealType.lunch.name,
-              label: l10n.meal_type_lunch,
-              icon: Icons.lunch_dining_outlined,
-              initialMealType: MealType.lunch,
-              includes: (meal) => meal.mealType == MealType.lunch,
-            ),
-            _MealCategory(
-              keyValue: MealType.dinner.name,
-              label: l10n.meal_type_dinner,
-              icon: Icons.dinner_dining_outlined,
-              initialMealType: MealType.dinner,
-              includes: (meal) => meal.mealType == MealType.dinner,
-            ),
-            _MealCategory(
-              keyValue: MealType.snack.name,
-              label: l10n.meal_category_snacks,
-              icon: Icons.cookie_outlined,
-              initialMealType: MealType.snack,
-              includes: (meal) => meal.mealType == MealType.snack,
-            ),
-            _MealCategory(
-              keyValue: MealType.other.name,
-              label: l10n.meal_category_other,
-              icon: Icons.restaurant_outlined,
-              initialMealType: MealType.other,
-              includes: (meal) =>
-                  meal.mealType == MealType.brunch ||
-                  meal.mealType == MealType.other,
-            ),
-          ];
+    final entries =
+        [
+          for (var index = 0; index < recall.meals.length; index++)
+            (index: index, meal: recall.meals[index]),
+        ]..sort((left, right) {
+          final leftTime = _knownTimestamp(left.meal);
+          final rightTime = _knownTimestamp(right.meal);
+          if (leftTime == null && rightTime == null) {
+            return left.index.compareTo(right.index);
+          }
+          if (leftTime == null) return 1;
+          if (rightTime == null) return -1;
+          final comparison = leftTime.compareTo(rightTime);
+          return comparison == 0
+              ? left.index.compareTo(right.index)
+              : comparison;
+        });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Text(
-              l10n.meals,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+            Expanded(
+              child: Text(
+                l10n.meals,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            if (widget.task?.minimumMealsRequired != null) ...[
-              const SizedBox(width: 8),
+            if (widget.task?.minimumMealsRequired != null)
               _MinMealsProgressChip(
                 current: recall.meals.where((m) => !m.isSkipped).length,
                 minimum: widget.task!.minimumMealsRequired!,
                 theme: theme,
               ),
-            ],
           ],
         ),
         const SizedBox(height: 12),
-        for (final category in categories)
-          _MealCategorySection(
-            category: category,
-            entries: [
-              for (var index = 0; index < recall.meals.length; index++)
-                if (category.includes(recall.meals[index]))
-                  (index: index, meal: recall.meals[index]),
-            ],
-            onAdd: category.canAdd
-                ? () => _addMeal(
-                    context,
-                    model,
-                    initialMealType: category.initialMealType,
-                    initialCustomMealLabel: category.initialCustomMealLabel,
-                  )
-                : null,
-            onEdit: (meal, index) => _editMeal(context, model, meal, index),
-            onSaveTemplate: (meal) => _saveMealAsTemplate(context, meal),
-            onDelete: model.removeMeal,
+        if (entries.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(l10n.no_meals_recorded),
+          ),
+        for (var index = 0; index < entries.length; index++) ...[
+          if (index > 0 &&
+              _knownTimestamp(entries[index - 1].meal) != null &&
+              _knownTimestamp(entries[index].meal) == null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: Text(
+                l10n.time_not_remembered,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          _MealTimelineCard(
+            meal: entries[index].meal,
+            onTap: () => _editMeal(context, model, entries[index].meal),
+            onSaveTemplate: () =>
+                _saveMealAsTemplate(context, entries[index].meal),
+            onDelete: () => model.removeMealById(entries[index].meal.id),
             getMealTypeLabel: (type) => _getMealTypeLabel(context, type),
           ),
+        ],
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           child: FilledButton.icon(
-            onPressed: () => _addMeal(
-              context,
-              model,
-              initialMealType: hasCustomMealTypes ? MealType.other : null,
-              initialCustomMealLabel: hasCustomMealTypes
-                  ? customMealTypes.first
-                  : null,
-            ),
+            onPressed: () => _addMeal(context, model),
             icon: const Icon(Icons.add),
-            label: Text(l10n.log_food),
+            label: Text(l10n.add_meal_or_snack),
           ),
         ),
       ],
@@ -538,6 +483,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         task: widget.task,
         initialMealType: initialMealType,
         initialCustomMealLabel: initialCustomMealLabel,
+        occurrenceDate: model.recall.date,
       ),
     );
     if (result case SavedMealEntryResult(:final meal)) {
@@ -549,20 +495,24 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     BuildContext context,
     DailyRecallEntryViewModel model,
     MealLog meal,
-    int index,
   ) async {
     final result = await Navigator.of(
       context,
     ).push(MealEntryScreen.route(existingMeal: meal, task: widget.task));
     switch (result) {
       case SavedMealEntryResult(:final meal):
-        model.updateMeal(index, meal);
+        model.updateMealById(meal.id, meal);
       case DeletedMealEntryResult():
-        model.removeMeal(index);
+        model.removeMealById(meal.id);
       case null:
         break;
     }
   }
+
+  DateTime? _knownTimestamp(MealLog meal) =>
+      meal.timePrecision == MealOccurrenceTimePrecision.unknown
+      ? null
+      : meal.timestamp;
 
   String _getMealTypeLabel(BuildContext context, MealType type) {
     final l10n = AppLocalizations.of(context)!;
@@ -627,122 +577,16 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   }
 }
 
-class _MealCategory {
-  final String keyValue;
-  final String label;
-  final IconData icon;
-  final MealType initialMealType;
-  final String? initialCustomMealLabel;
-  final bool canAdd;
-  final bool Function(MealLog) includes;
-
-  const _MealCategory({
-    required this.keyValue,
-    required this.label,
-    required this.icon,
-    required this.initialMealType,
-    this.initialCustomMealLabel,
-    this.canAdd = true,
-    required this.includes,
-  });
-}
-
-class _MealCategorySection extends StatelessWidget {
-  final _MealCategory category;
-  final List<({int index, MealLog meal})> entries;
-  final VoidCallback? onAdd;
-  final void Function(MealLog meal, int index) onEdit;
-  final ValueChanged<MealLog> onSaveTemplate;
-  final ValueChanged<int> onDelete;
-  final String Function(MealType) getMealTypeLabel;
-
-  const _MealCategorySection({
-    required this.category,
-    required this.entries,
-    required this.onAdd,
-    required this.onEdit,
-    required this.onSaveTemplate,
-    required this.onDelete,
-    required this.getMealTypeLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
-    if (entries.isEmpty) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          key: ValueKey('empty-meal-category-${category.keyValue}'),
-          onTap: onAdd,
-          child: ListTile(
-            leading: Icon(category.icon, color: theme.colorScheme.primary),
-            title: Text(category.label),
-            subtitle: Text(l10n.no_foods_added),
-            trailing: onAdd == null ? null : const Icon(Icons.add),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(category.icon, size: 20, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  category.label,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              if (onAdd != null)
-                IconButton(
-                  onPressed: onAdd,
-                  icon: const Icon(Icons.add),
-                  tooltip: l10n.add_meal,
-                ),
-            ],
-          ),
-          for (final entry in entries)
-            _MealCard(
-              meal: entry.meal,
-              index: entry.index,
-              onTap: () => onEdit(entry.meal, entry.index),
-              onEdit: () => onEdit(entry.meal, entry.index),
-              onSaveTemplate: () => onSaveTemplate(entry.meal),
-              onDelete: () => onDelete(entry.index),
-              getMealTypeLabel: getMealTypeLabel,
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MealCard extends StatelessWidget {
+class _MealTimelineCard extends StatelessWidget {
   final MealLog meal;
-  final int index;
   final VoidCallback onTap;
-  final VoidCallback onEdit;
   final VoidCallback onSaveTemplate;
   final VoidCallback onDelete;
   final String Function(MealType) getMealTypeLabel;
 
-  const _MealCard({
+  const _MealTimelineCard({
     required this.meal,
-    required this.index,
     required this.onTap,
-    required this.onEdit,
     required this.onSaveTemplate,
     required this.onDelete,
     required this.getMealTypeLabel,
@@ -757,6 +601,26 @@ class _MealCard extends StatelessWidget {
       0,
       (sum, food) => sum + food.nutrition.energyKcal,
     );
+    final label = meal.customMealLabel?.trim().isNotEmpty == true
+        ? meal.customMealLabel!.trim()
+        : meal.mealType == MealType.other
+        ? (meal.isLabelExplicitlyUnset
+              ? l10n.meal_neutral_label
+              : getMealTypeLabel(meal.mealType))
+        : getMealTypeLabel(meal.mealType);
+    final time =
+        meal.timestamp == null ||
+            meal.timePrecision == MealOccurrenceTimePrecision.unknown
+        ? l10n.time_not_remembered
+        : meal.timePrecision == MealOccurrenceTimePrecision.approximate
+        ? l10n.about_time(
+            MaterialLocalizations.of(
+              context,
+            ).formatTimeOfDay(TimeOfDay.fromDateTime(meal.timestamp!)),
+          )
+        : MaterialLocalizations.of(
+            context,
+          ).formatTimeOfDay(TimeOfDay.fromDateTime(meal.timestamp!));
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -767,34 +631,36 @@ class _MealCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              _MealTypeAvatar(meal: meal, getMealTypeLabel: getMealTypeLabel),
-              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      meal.customMealLabel ?? getMealTypeLabel(meal.mealType),
+                      meal.isSkipped
+                          ? l10n.skipped_this_meal
+                          : foodNames.isEmpty
+                          ? l10n.no_foods_added
+                          : foodNames,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
-                      meal.isSkipped
-                          ? meal.skipReason ?? l10n.skipped_this_meal
-                          : foodNames.isEmpty
-                          ? l10n.no_foods_added
-                          : foodNames,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      meal.foods.isEmpty
-                          ? _formatTime(meal.timestamp)
-                          : '${_formatTime(meal.timestamp)} • ${l10n.kcal_value(totalEnergy.toStringAsFixed(0))}',
+                      [
+                        time,
+                        if (meal.isSkipped &&
+                            meal.skipReason?.trim().isNotEmpty == true)
+                          meal.skipReason!.trim(),
+                        if (meal.isSkipped &&
+                            meal.customMealLabel?.trim().isNotEmpty == true)
+                          meal.customMealLabel!.trim(),
+                        if (!meal.isSkipped) label,
+                        if (!meal.isSkipped)
+                          l10n.kcal_value(totalEnergy.toStringAsFixed(0)),
+                      ].join(' • '),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -805,13 +671,10 @@ class _MealCard extends StatelessWidget {
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, size: 20),
                 tooltip: l10n.more_options,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
                 onSelected: (value) {
                   switch (value) {
                     case 'edit':
-                      onEdit();
+                      onTap();
                     case 'save_template':
                       onSaveTemplate();
                     case 'delete':
@@ -850,56 +713,6 @@ class _MealCard extends StatelessWidget {
       ),
     );
   }
-
-  String _formatTime(DateTime timestamp) {
-    return '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
-  }
-}
-
-class _MealTypeAvatar extends StatelessWidget {
-  final MealLog meal;
-  final String Function(MealType) getMealTypeLabel;
-
-  const _MealTypeAvatar({required this.meal, required this.getMealTypeLabel});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    IconData icon;
-    Color color;
-
-    switch (meal.mealType) {
-      case MealType.breakfast:
-        icon = Icons.wb_sunny_outlined;
-        color = Colors.amber;
-      case MealType.brunch:
-        icon = Icons.brunch_dining_outlined;
-        color = Colors.orange;
-      case MealType.lunch:
-        icon = Icons.lunch_dining_outlined;
-        color = Colors.green;
-      case MealType.dinner:
-        icon = Icons.dinner_dining_outlined;
-        color = Colors.indigo;
-      case MealType.snack:
-        icon = Icons.cookie_outlined;
-        color = Colors.purple;
-      case MealType.other:
-        icon = Icons.restaurant_outlined;
-        color = theme.colorScheme.primary;
-    }
-
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(child: Icon(icon, size: 22, color: color)),
-    );
-  }
 }
 
 class _PopupMenuItem extends StatelessWidget {
@@ -915,22 +728,14 @@ class _PopupMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = isDestructive
+        ? Theme.of(context).colorScheme.error
+        : Theme.of(context).colorScheme.onSurface;
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 18,
-          color: isDestructive
-              ? Theme.of(context).colorScheme.error
-              : Theme.of(context).colorScheme.onSurface,
-        ),
+        Icon(icon, size: 18, color: color),
         const SizedBox(width: 12),
-        Text(
-          label,
-          style: TextStyle(
-            color: isDestructive ? Theme.of(context).colorScheme.error : null,
-          ),
-        ),
+        Text(label, style: TextStyle(color: isDestructive ? color : null)),
       ],
     );
   }

@@ -651,6 +651,28 @@
     }
   },
   "meal_entry_title": "Meal Entry",
+  "add_meal_or_snack": "Add meal or snack",
+  "meal_neutral_label": "Meal",
+  "meal_suffix": "meal",
+  "meal_label": "Meal label",
+  "no_meal_label": "No label",
+  "time_not_remembered": "Time not remembered",
+  "about_time": "About {time}",
+  "@about_time": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "time_exact": "Exact time",
+  "time_exact_description": "I know the exact time",
+  "time_approximate": "Approximate time",
+  "time_approximate_description": "I know roughly when",
+  "time_unknown": "I don't remember",
+  "photo_recall_time_required_title": "Set a meal time first",
+  "photo_recall_time_required_message": "Photo Recall needs a meal time to find photos from around that occasion.",
+  "set_time": "Set time",
   "save": "Save",
   "discard": "Discard",
   "discard_meal_changes_title": "Leave this meal?",

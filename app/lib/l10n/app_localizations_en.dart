@@ -1585,6 +1585,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meal_entry_title => 'Meal Entry';
 
   @override
+  String get add_meal_or_snack => 'Add meal or snack';
+
+  @override
+  String get meal_neutral_label => 'Meal';
+
+  @override
+  String get meal_suffix => 'meal';
+
+  @override
+  String get meal_label => 'Meal label';
+
+  @override
+  String get no_meal_label => 'No label';
+
+  @override
+  String get time_not_remembered => 'Time not remembered';
+
+  @override
+  String about_time(String time) {
+    return 'About $time';
+  }
+
+  @override
+  String get time_exact => 'Exact time';
+
+  @override
+  String get time_exact_description => 'I know the exact time';
+
+  @override
+  String get time_approximate => 'Approximate time';
+
+  @override
+  String get time_approximate_description => 'I know roughly when';
+
+  @override
+  String get time_unknown => 'I don\'t remember';
+
+  @override
+  String get photo_recall_time_required_title => 'Set a meal time first';
+
+  @override
+  String get photo_recall_time_required_message =>
+      'Photo Recall needs a meal time to find photos from around that occasion.';
+
+  @override
+  String get set_time => 'Set time';
+
+  @override
   String get save => 'Save';
 
   @override

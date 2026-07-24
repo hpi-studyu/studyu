@@ -1599,7 +1599,56 @@ class AppLocalizationsDe extends AppLocalizations {
   String get meal_entry_title => 'Meal Entry';
 
   @override
-  String get save => 'Save';
+  String get add_meal_or_snack => 'Mahlzeit oder Snack hinzufügen';
+
+  @override
+  String get meal_neutral_label => 'Mahlzeit';
+
+  @override
+  String get meal_suffix => 'Mahlzeit';
+
+  @override
+  String get meal_label => 'Bezeichnung der Mahlzeit';
+
+  @override
+  String get no_meal_label => 'Keine Bezeichnung';
+
+  @override
+  String get time_not_remembered => 'Zeit nicht erinnert';
+
+  @override
+  String about_time(String time) {
+    return 'Ungefähr $time';
+  }
+
+  @override
+  String get time_exact => 'Genaue Uhrzeit';
+
+  @override
+  String get time_exact_description => 'Ich kenne die genaue Uhrzeit';
+
+  @override
+  String get time_approximate => 'Ungefähre Uhrzeit';
+
+  @override
+  String get time_approximate_description => 'Ich weiß ungefähr, wann';
+
+  @override
+  String get time_unknown => 'Ich erinnere mich nicht';
+
+  @override
+  String get photo_recall_time_required_title =>
+      'Legen Sie zuerst eine Zeit fest';
+
+  @override
+  String get photo_recall_time_required_message =>
+      'Photo Recall benötigt eine Mahlzeitzeit, um Fotos aus diesem Zeitraum zu finden.';
+
+  @override
+  String get set_time => 'Zeit festlegen';
+
+  @override
+  String get save => 'Speichern';
 
   @override
   String get discard => 'Verwerfen';

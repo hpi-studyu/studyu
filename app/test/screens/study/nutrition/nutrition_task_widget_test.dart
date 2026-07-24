@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
-import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
 Widget nutritionTaskApp(NutritionTask task, {DailyRecall? existingRecall}) =>
@@ -116,12 +115,15 @@ MealLog meal(
   String? label,
   List<FoodEntry> foods = const [],
   bool isSkipped = false,
+  MealOccurrenceTimePrecision timePrecision =
+      MealOccurrenceTimePrecision.approximate,
 }) => MealLog(
   id: id,
   mealType: type,
   customMealLabel: label,
   mealContext: MealContext.home,
   timestamp: DateTime(2026, 7, 15, 12),
+  timePrecision: timePrecision,
   timezone: 'UTC',
   isSkipped: isSkipped,
   skipReason: isSkipped ? 'Not hungry' : null,
@@ -254,87 +256,38 @@ void main() {
     );
   });
 
-  testWidgets('empty overview uses tappable predefined meal rows', (
+  testWidgets('empty overview uses one chronological add action', (
     tester,
   ) async {
     await tester.pumpWidget(nutritionTaskApp(nutritionTask()));
     await tester.pump();
 
-    expect(find.text('No meals recorded yet'), findsNothing);
-    expect(find.text('Breakfast'), findsOneWidget);
-    expect(find.text('Lunch'), findsOneWidget);
-    expect(find.text('Dinner'), findsOneWidget);
-    expect(find.text('Snacks'), findsOneWidget);
-    expect(find.text('Other meals'), findsOneWidget);
-    expect(find.text('No foods added'), findsNWidgets(5));
-    expect(find.text('Log food'), findsOneWidget);
+    expect(find.text('No meals recorded yet'), findsOneWidget);
+    expect(find.text('Breakfast'), findsNothing);
+    expect(find.text('Add meal or snack'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('empty-meal-category-breakfast')),
-    );
+    await tester.tap(find.text('Add meal or snack'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Breakfast'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Meal label'), findsOneWidget);
   });
 
-  testWidgets('custom meal rows preselect and persist their configured label', (
+  testWidgets('configured custom labels remain available in the editor', (
     tester,
   ) async {
-    final prototype = food('saved-food', 'Saved apple', 52);
-    await TemplateStorageManager().saveFoodTemplate(
-      SavedFoodTemplate(
-        id: 'saved-food-template',
-        userId: 'anonymous',
-        name: 'Saved apple template',
-        isPublic: false,
-        createdAt: DateTime(2026, 7, 15),
-        prototype: prototype,
-      ),
-    );
-
     await tester.pumpWidget(
       nutritionTaskApp(
         nutritionTask(customMealTypes: ['Morning meal', 'Late meal']),
       ),
     );
     await tester.pump();
+    await tester.tap(find.text('Add meal or snack'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Meal label'));
+    await tester.pumpAndSettle();
 
-    expect(find.text('Breakfast'), findsNothing);
     expect(find.text('Morning meal'), findsOneWidget);
     expect(find.text('Late meal'), findsOneWidget);
-
-    await tester.tap(
-      find.byKey(const ValueKey('empty-meal-category-custom-Morning meal')),
-    );
-    await tester.pumpAndSettle();
-
-    expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Morning meal'),
-      ),
-      findsOneWidget,
-    );
-
-    await tester.ensureVisible(find.text('Add Food'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Add Food'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Saved apple template'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Add to Morning meal'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Morning meal'), findsNWidgets(2));
-    expect(find.text('Saved apple'), findsOneWidget);
   });
 
   testWidgets('custom tasks keep unmatched legacy meals under Other meals', (
@@ -366,10 +319,10 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Morning meal'), findsNWidgets(2));
-    expect(find.text('Other meals'), findsOneWidget);
-    expect(find.text('Late bite'), findsOneWidget);
-    expect(find.text('Breakfast'), findsOneWidget);
+    expect(find.textContaining('Morning meal'), findsOneWidget);
+    expect(find.textContaining('Other'), findsNothing);
+    expect(find.textContaining('Late bite'), findsOneWidget);
+    expect(find.textContaining('Breakfast'), findsOneWidget);
     expect(find.text('Lunch'), findsNothing);
     expect(find.text('Toast'), findsOneWidget);
     expect(find.text('Eggs'), findsOneWidget);
@@ -403,9 +356,9 @@ void main() {
 
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('Yogurt'), findsOneWidget);
-    expect(find.text('Brunch'), findsOneWidget);
-    expect(find.text('Late bite'), findsOneWidget);
-    expect(find.text('Not hungry'), findsOneWidget);
+    expect(find.textContaining('Brunch'), findsOneWidget);
+    expect(find.textContaining('Late bite'), findsOneWidget);
+    expect(find.textContaining('Not hungry'), findsOneWidget);
     expect(find.textContaining('52 kcal'), findsOneWidget);
     expect(find.textContaining('90 kcal'), findsOneWidget);
   });
@@ -464,4 +417,81 @@ void main() {
       expect(find.text('Please record at least 2 meal(s)'), findsOneWidget);
     },
   );
+
+  testWidgets('groups unknown-time entries at the end', (tester) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal(
+            'unknown',
+            MealType.other,
+            timePrecision: MealOccurrenceTimePrecision.unknown,
+            foods: [food('tea', 'Tea', 5)],
+          ),
+          meal(
+            'early',
+            MealType.breakfast,
+            foods: [food('cereal', 'Cereal', 200)],
+          ),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('Time not remembered'), findsNWidgets(2));
+    expect(find.text('Tea'), findsOneWidget);
+    expect(find.text('Cereal'), findsOneWidget);
+    final cerealY = tester.getTopLeft(find.text('Cereal')).dy;
+    final teaY = tester.getTopLeft(find.text('Tea')).dy;
+    expect(cerealY, lessThan(teaY));
+  });
+
+  testWidgets('timestamp does not make unknown precision chronological', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal(
+            'unknown',
+            MealType.other,
+            timePrecision: MealOccurrenceTimePrecision.unknown,
+            foods: [food('tea', 'Tea', 5)],
+          )..timestamp = DateTime(2026, 7, 15, 6),
+          meal('later', MealType.dinner, foods: [food('bread', 'Bread', 100)]),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    expect(
+      tester.getTopLeft(find.text('Bread')).dy,
+      lessThan(tester.getTopLeft(find.text('Tea')).dy),
+    );
+  });
+
+  testWidgets('historical Other and skipped labels remain visible', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal('other', MealType.other, foods: [food('tea', 'Tea', 5)]),
+          meal(
+            'skipped',
+            MealType.other,
+            label: 'Early breakfast',
+            isSkipped: true,
+          ),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('Other'), findsOneWidget);
+    expect(find.textContaining('Early breakfast'), findsOneWidget);
+  });
 }

@@ -44,6 +44,13 @@ class _MealTypeSelection {
   const _MealTypeSelection(this.type, [this.customLabel]);
 }
 
+class _TimeSelection {
+  final DateTime? timestamp;
+  final MealOccurrenceTimePrecision precision;
+
+  const _TimeSelection(this.timestamp, this.precision);
+}
+
 class _MealDetailsSelection {
   final MealContext mealContext;
   final CompanyContext? companyContext;
@@ -63,12 +70,14 @@ class MealEntryScreen extends StatefulWidget {
   final NutritionTask? task;
   final MealType? initialMealType;
   final String? initialCustomMealLabel;
+  final DateTime? occurrenceDate;
 
   const MealEntryScreen({
     this.existingMeal,
     this.task,
     this.initialMealType,
     this.initialCustomMealLabel,
+    this.occurrenceDate,
     super.key,
   });
 
@@ -77,12 +86,14 @@ class MealEntryScreen extends StatefulWidget {
     NutritionTask? task,
     MealType? initialMealType,
     String? initialCustomMealLabel,
+    DateTime? occurrenceDate,
   }) => MaterialPageRoute(
     builder: (_) => MealEntryScreen(
       existingMeal: existingMeal,
       task: task,
       initialMealType: initialMealType,
       initialCustomMealLabel: initialCustomMealLabel,
+      occurrenceDate: occurrenceDate,
     ),
   );
 
@@ -91,20 +102,17 @@ class MealEntryScreen extends StatefulWidget {
 }
 
 class _MealEntryScreenState extends State<MealEntryScreen> {
-  static const int _breakfastStart = 6;
-  static const int _brunchStart = 10;
-  static const int _lunchStart = 12;
-  static const int _dinnerStart = 16;
-  static const int _dinnerEnd = 21;
-
   late MealLog _meal;
   late MealType _mealType;
   late MealContext _mealContext;
-  late DateTime _timestamp;
+  DateTime? _timestamp;
+  late MealOccurrenceTimePrecision _timePrecision;
+  late bool _hasSelectedTime;
   late bool _isSkipped;
   CompanyContext? _companyContext;
   DistractionContext? _distractionContext;
   String? _customMealLabel;
+  late bool _isLabelExplicitlyUnset;
   String? _locationDescription;
   String? _skipReason;
   late final String _initialMealSnapshot;
@@ -125,16 +133,23 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       _mealType = _meal.mealType;
       _mealContext = _meal.mealContext;
       _timestamp = _meal.timestamp;
+      _timePrecision = _meal.timePrecision;
+      _hasSelectedTime = true;
       _isSkipped = _meal.isSkipped;
       _companyContext = _meal.companyContext;
       _distractionContext = _meal.distractionContext;
       _customMealLabel = _meal.customMealLabel;
+      _isLabelExplicitlyUnset = _meal.isLabelExplicitlyUnset;
       _locationDescription = _meal.locationDescription;
       _skipReason = _meal.skipReason;
     } else {
-      _timestamp = DateTime.now();
-      _mealType = widget.initialMealType ?? _getMealTypeByTime(_timestamp);
+      _timestamp = null;
+      _timePrecision = MealOccurrenceTimePrecision.unknown;
+      _hasSelectedTime = false;
+      _mealType = widget.initialMealType ?? MealType.other;
       _customMealLabel = widget.initialCustomMealLabel;
+      _isLabelExplicitlyUnset =
+          _mealType == MealType.other && _customMealLabel == null;
       _mealContext = MealContext.home;
       _isSkipped = false;
       _meal = MealLog.withId(
@@ -142,6 +157,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         customMealLabel: _customMealLabel,
         mealContext: _mealContext,
         timestamp: _timestamp,
+        timePrecision: _timePrecision,
+        isLabelExplicitlyUnset: _isLabelExplicitlyUnset,
         timezone: DateTime.now().timeZoneName,
         isSkipped: _isSkipped,
         foods: [],
@@ -156,17 +173,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   void dispose() {
     _skipReasonController.dispose();
     super.dispose();
-  }
-
-  MealType _getMealTypeByTime(DateTime time) {
-    final hour = time.hour;
-    if (hour >= _breakfastStart && hour < _brunchStart) {
-      return MealType.breakfast;
-    }
-    if (hour >= _brunchStart && hour < _lunchStart) return MealType.brunch;
-    if (hour >= _lunchStart && hour < _dinnerStart) return MealType.lunch;
-    if (hour >= _dinnerStart && hour < _dinnerEnd) return MealType.dinner;
-    return MealType.snack;
   }
 
   Future<void> _addFood() async {
@@ -287,14 +293,16 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     return MealLog(
       id: _meal.id,
       mealType: _mealType,
-      customMealLabel: clearDetails || _mealType != MealType.other
+      customMealLabel: _customMealLabel?.trim().isEmpty == true
           ? null
-          : _customMealLabel,
+          : _customMealLabel?.trim(),
+      isLabelExplicitlyUnset: _isLabelExplicitlyUnset,
       mealContext: _mealContext,
       locationDescription: clearDetails || _mealContext != MealContext.other
           ? null
           : _locationDescription?.trim(),
       timestamp: _timestamp,
+      timePrecision: _timePrecision,
       timezone: _meal.timezone,
       isSkipped: _isSkipped,
       skipReason: normalizeSkipped && !_isSkipped ? null : _skipReason?.trim(),
@@ -310,14 +318,25 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   bool get _hasUnsavedChanges => _mealSnapshot != _initialMealSnapshot;
 
   bool get _isMealValid =>
-      (!_isSkipped && _meal.foods.isNotEmpty) ||
+      (!_isSkipped && _meal.foods.isNotEmpty && _hasSelectedTime) ||
       (_isSkipped && _skipReason?.trim().isNotEmpty == true);
 
   String get _mealLabel {
     final customLabel = _customMealLabel?.trim();
-    return _mealType == MealType.other && customLabel?.isNotEmpty == true
+    return customLabel?.isNotEmpty == true
         ? customLabel!
+        : _mealType == MealType.other && _isLabelExplicitlyUnset
+        ? AppLocalizations.of(context)!.meal_neutral_label
         : _getMealTypeLabel(_mealType);
+  }
+
+  String get _pageTitle {
+    if (widget.existingMeal == null) {
+      return AppLocalizations.of(context)!.add_meal_or_snack;
+    }
+    return _mealLabel == AppLocalizations.of(context)!.meal_neutral_label
+        ? AppLocalizations.of(context)!.meal_neutral_label
+        : '$_mealLabel ${AppLocalizations.of(context)!.meal_suffix}';
   }
 
   void _pop([MealEntryResult? result]) {
@@ -422,6 +441,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       _customMealLabel = selection.type == MealType.other
           ? selection.customLabel?.trim()
           : null;
+      _isLabelExplicitlyUnset =
+          selection.type == MealType.other &&
+          (selection.customLabel?.trim().isEmpty ?? true);
     });
   }
 
@@ -463,21 +485,42 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   Future<void> _selectTime() async {
+    final selection = await showModalBottomSheet<_TimeSelection>(
+      context: context,
+      useSafeArea: true,
+      builder: (sheetContext) =>
+          _TimeSelectionSheet(timestamp: _timestamp, precision: _timePrecision),
+    );
+    if (selection == null || !mounted) return;
+
+    if (selection.precision == MealOccurrenceTimePrecision.unknown) {
+      setState(() {
+        _timestamp = null;
+        _timePrecision = selection.precision;
+        _hasSelectedTime = true;
+      });
+      return;
+    }
+
     final picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(_timestamp),
+      initialTime: _timestamp == null
+          ? TimeOfDay.now()
+          : TimeOfDay.fromDateTime(_timestamp!),
     );
-    if (picked != null) {
-      setState(() {
-        _timestamp = DateTime(
-          _timestamp.year,
-          _timestamp.month,
-          _timestamp.day,
-          picked.hour,
-          picked.minute,
-        );
-      });
-    }
+    if (picked == null || !mounted) return;
+    final date = _timestamp ?? widget.occurrenceDate ?? DateTime.now();
+    setState(() {
+      _timestamp = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        picked.hour,
+        picked.minute,
+      );
+      _timePrecision = selection.precision;
+      _hasSelectedTime = true;
+    });
   }
 
   String _getMealTypeLabel(MealType type) {
@@ -558,87 +601,114 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
-  Future<void> _showPhotoRecall() => showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    showDragHandle: true,
-    builder: (sheetContext) {
-      String? analyzingPhotoId;
+  Future<void> _showPhotoRecall() async {
+    if (_timestamp == null ||
+        _timePrecision == MealOccurrenceTimePrecision.unknown) {
+      final l10n = AppLocalizations.of(context)!;
+      final shouldSetTime = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(l10n.photo_recall_time_required_title),
+          content: Text(l10n.photo_recall_time_required_message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(l10n.set_time),
+            ),
+          ],
+        ),
+      );
+      if (shouldSetTime != true || !mounted) return;
+      await _selectTime();
+      if (_timestamp == null || !mounted) return;
+    }
 
-      return StatefulBuilder(
-        builder: (context, setSheetState) {
-          Future<void> analyzePhoto(PhotoReference photo) async {
-            if (!sheetContext.mounted) return;
-            setSheetState(() => analyzingPhotoId = photo.id);
-            await _analyzeAndAddFood(photo);
-            if (sheetContext.mounted) {
-              setSheetState(() => analyzingPhotoId = null);
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        String? analyzingPhotoId;
+
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            Future<void> analyzePhoto(PhotoReference photo) async {
+              if (!sheetContext.mounted) return;
+              setSheetState(() => analyzingPhotoId = photo.id);
+              await _analyzeAndAddFood(photo);
+              if (sheetContext.mounted) {
+                setSheetState(() => analyzingPhotoId = null);
+              }
             }
-          }
 
-          final l10n = AppLocalizations.of(context)!;
-          return FractionallySizedBox(
-            heightFactor: 0.9,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 8, 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.photoRecallTitle,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              l10n.photoRecallSubtitle,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
+            final l10n = AppLocalizations.of(context)!;
+            return FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 8, 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.photoRecallTitle,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                l10n.photoRecallSubtitle,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).closeButtonTooltip,
-                        onPressed: () => Navigator.of(sheetContext).pop(),
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: PhotoRecallSection(
-                      mealTime: _timestamp,
-                      onPhotoTap: (photo) {
-                        PhotoViewerDialog.show(
-                          context,
-                          photoId: photo.id,
-                          photoDate: photo.createDateTime,
-                          onAnalyze: () => analyzePhoto(photo),
-                        );
-                      },
-                      onAnalyzePhoto: analyzePhoto,
-                      analyzingPhotoId: analyzingPhotoId,
+                        IconButton(
+                          tooltip: MaterialLocalizations.of(
+                            context,
+                          ).closeButtonTooltip,
+                          onPressed: () => Navigator.of(sheetContext).pop(),
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
+                  const Divider(height: 1),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: PhotoRecallSection(
+                        mealTime: _timestamp!,
+                        onPhotoTap: (photo) {
+                          PhotoViewerDialog.show(
+                            context,
+                            photoId: photo.id,
+                            photoDate: photo.createDateTime,
+                            onAnalyze: () => analyzePhoto(photo),
+                          );
+                        },
+                        onAnalyzePhoto: analyzePhoto,
+                        analyzingPhotoId: analyzingPhotoId,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   Future<void> _analyzeAndAddFood(PhotoReference photo) async {
     final l10n = AppLocalizations.of(context)!;
@@ -754,7 +824,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_mealLabel),
+          title: Text(_pageTitle),
           actions: [
             if (_meal.foods.isNotEmpty && !_isSkipped)
               IconButton(
@@ -786,51 +856,58 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Column(
-                    children: [
-                      SwitchListTile(
-                        title: Text(l10n.skipped_this_meal),
-                        value: _isSkipped,
-                        onChanged: (value) {
-                          setState(() => _isSkipped = value);
-                        },
-                      ),
-                      if (_isSkipped)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                          child: TextField(
-                            controller: _skipReasonController,
-                            decoration: InputDecoration(
-                              labelText: l10n.reason_for_skipping,
-                              errorText:
-                                  _hasAttemptedSave &&
-                                      _skipReason?.trim().isNotEmpty != true
-                                  ? l10n.enter_skip_reason
-                                  : null,
-                              border: const OutlineInputBorder(),
-                            ),
-                            onChanged: (value) {
-                              setState(() => _skipReason = value);
-                            },
-                          ),
+              if (widget.existingMeal != null)
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Column(
+                      children: [
+                        SwitchListTile(
+                          title: Text(l10n.skipped_this_meal),
+                          value: _isSkipped,
+                          onChanged: (value) {
+                            setState(() => _isSkipped = value);
+                          },
                         ),
-                    ],
+                        if (_isSkipped)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                            child: TextField(
+                              controller: _skipReasonController,
+                              decoration: InputDecoration(
+                                labelText: l10n.reason_for_skipping,
+                                errorText:
+                                    _hasAttemptedSave &&
+                                        _skipReason?.trim().isNotEmpty != true
+                                    ? l10n.enter_skip_reason
+                                    : null,
+                                border: const OutlineInputBorder(),
+                              ),
+                              onChanged: (value) {
+                                setState(() => _skipReason = value);
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               if (!_isSkipped) ...[
                 const SizedBox(height: 16),
                 _SettingsRow(
-                  icon: Icons.restaurant_menu,
-                  label: l10n.meal_type_label,
+                  icon: Icons.label_outline,
+                  label: l10n.meal_label,
                   value: _mealLabel,
                   onTap: _selectMealType,
                 ),
                 const SizedBox(height: 8),
-                _TimeSelector(timestamp: _timestamp, onSelectTime: _selectTime),
+                _TimeSelector(
+                  timestamp: _timestamp,
+                  precision: _timePrecision,
+                  hasSelection: _hasSelectedTime,
+                  showValidationError: _hasAttemptedSave && !_hasSelectedTime,
+                  onSelectTime: _selectTime,
+                ),
                 const SizedBox(height: 16),
                 _SettingsRow(
                   icon: Icons.photo_library_outlined,
@@ -879,12 +956,14 @@ class _SettingsRow extends StatelessWidget {
   final String label;
   final String value;
   final VoidCallback onTap;
+  final String? errorText;
 
   const _SettingsRow({
     required this.icon,
     required this.label,
     required this.value,
     required this.onTap,
+    this.errorText,
   });
 
   @override
@@ -894,7 +973,17 @@ class _SettingsRow extends StatelessWidget {
         onTap: onTap,
         leading: Icon(icon),
         title: Text(label),
-        subtitle: Text(value),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(value),
+            if (errorText != null)
+              Text(
+                errorText!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+          ],
+        ),
         trailing: const Icon(Icons.chevron_right),
       ),
     );
@@ -938,9 +1027,9 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final customTypes = widget.customMealTypes;
-    final visibleCustomTypes = customTypes
-        ?.where((label) => label != l10n.meal_type_other)
-        .toList();
+    final visibleCustomTypes =
+        customTypes?.where((label) => label != l10n.meal_type_other).toList() ??
+        const <String>[];
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -959,51 +1048,59 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
-            if (customTypes != null && customTypes.isNotEmpty) ...[
-              ...visibleCustomTypes!.map(
-                (label) => ListTile(
-                  title: Text(label),
-                  leading: Icon(
-                    widget.mealType == MealType.other &&
-                            widget.customMealLabel == label
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                  ),
-                  onTap: () => Navigator.of(
-                    context,
-                  ).pop(_MealTypeSelection(MealType.other, label)),
-                ),
-              ),
+            for (final type in [
+              MealType.breakfast,
+              MealType.lunch,
+              MealType.dinner,
+              MealType.snack,
+            ])
               ListTile(
-                title: Text(l10n.meal_type_other),
+                title: Text(_getMealTypeLabel(type, l10n)),
+                leading: Icon(
+                  widget.mealType == type &&
+                          (widget.customMealLabel?.trim().isEmpty ?? true)
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                ),
+                onTap: () =>
+                    Navigator.of(context).pop(_MealTypeSelection(type)),
+              ),
+            ...visibleCustomTypes.map(
+              (label) => ListTile(
+                title: Text(label),
                 leading: Icon(
                   widget.mealType == MealType.other &&
-                          (widget.customMealLabel?.trim().isEmpty ?? true)
+                          widget.customMealLabel == label
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
                 ),
                 onTap: () => Navigator.of(
                   context,
-                ).pop(const _MealTypeSelection(MealType.other, '')),
+                ).pop(_MealTypeSelection(MealType.other, label)),
               ),
-            ] else
-              ...MealType.values.map(
-                (type) => ListTile(
-                  title: Text(_getMealTypeLabel(type, l10n)),
-                  leading: Icon(
-                    widget.mealType == type
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                  ),
-                  onTap: () {
-                    if (type == MealType.other) {
-                      setState(() => _editingOther = true);
-                    } else {
-                      Navigator.of(context).pop(_MealTypeSelection(type));
-                    }
-                  },
-                ),
+            ),
+            ListTile(
+              title: Text(l10n.custom_meal_label),
+              leading: Icon(
+                _editingOther
+                    ? Icons.radio_button_checked
+                    : Icons.edit_outlined,
               ),
+              onTap: () => setState(() => _editingOther = true),
+            ),
+            ListTile(
+              title: Text(l10n.no_meal_label),
+              leading: Icon(
+                widget.mealType == MealType.other &&
+                        (widget.customMealLabel?.trim().isEmpty ?? true) &&
+                        !_editingOther
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+              ),
+              onTap: () => Navigator.of(
+                context,
+              ).pop(const _MealTypeSelection(MealType.other, '')),
+            ),
             if (_editingOther) ...[
               const SizedBox(height: 8),
               TextField(
@@ -1036,19 +1133,90 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
   }
 }
 
-class _TimeSelector extends StatelessWidget {
-  final DateTime timestamp;
-  final VoidCallback onSelectTime;
+class _TimeSelectionSheet extends StatelessWidget {
+  final DateTime? timestamp;
+  final MealOccurrenceTimePrecision precision;
 
-  const _TimeSelector({required this.timestamp, required this.onSelectTime});
+  const _TimeSelectionSheet({required this.timestamp, required this.precision});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.schedule),
+            title: Text(l10n.time_exact),
+            subtitle: Text(l10n.time_exact_description),
+            trailing: precision == MealOccurrenceTimePrecision.exact
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () => Navigator.of(context).pop(
+              const _TimeSelection(null, MealOccurrenceTimePrecision.exact),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.more_time),
+            title: Text(l10n.time_approximate),
+            subtitle: Text(l10n.time_approximate_description),
+            trailing: precision == MealOccurrenceTimePrecision.approximate
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () => Navigator.of(context).pop(
+              const _TimeSelection(
+                null,
+                MealOccurrenceTimePrecision.approximate,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.help_outline),
+            title: Text(l10n.time_unknown),
+            trailing: precision == MealOccurrenceTimePrecision.unknown
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () => Navigator.of(context).pop(
+              const _TimeSelection(null, MealOccurrenceTimePrecision.unknown),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimeSelector extends StatelessWidget {
+  final DateTime? timestamp;
+  final MealOccurrenceTimePrecision precision;
+  final bool hasSelection;
+  final bool showValidationError;
+  final VoidCallback onSelectTime;
+
+  const _TimeSelector({
+    required this.timestamp,
+    required this.precision,
+    required this.hasSelection,
+    required this.showValidationError,
+    required this.onSelectTime,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final value = !hasSelection
+        ? l10n.time_picker_hint
+        : timestamp == null || precision == MealOccurrenceTimePrecision.unknown
+        ? l10n.time_not_remembered
+        : precision == MealOccurrenceTimePrecision.approximate
+        ? l10n.about_time(TimeOfDay.fromDateTime(timestamp!).format(context))
+        : TimeOfDay.fromDateTime(timestamp!).format(context);
     return _SettingsRow(
       icon: Icons.access_time_rounded,
       label: l10n.time,
-      value: TimeOfDay.fromDateTime(timestamp).format(context),
+      value: value,
+      errorText: showValidationError ? l10n.required_error : null,
       onTap: onSelectTime,
     );
   }

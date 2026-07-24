@@ -42,6 +42,8 @@ FoodSearchHistory buildFoodSearchHistory(
     if (result is! DailyRecall) continue;
 
     for (final meal in result.meals) {
+      final mealTimestamp = meal.timestamp;
+      if (mealTimestamp == null) continue;
       for (final food in meal.foods) {
         final identity = foodHistoryIdentity(food);
         final existing = entries[identity];
@@ -49,18 +51,18 @@ FoodSearchHistory buildFoodSearchHistory(
           entries[identity] = _HistoryAccumulator(
             food: cloneFoodEntry(food),
             useCount: 1,
-            lastUsedAt: meal.timestamp,
+            lastUsedAt: mealTimestamp,
           );
           continue;
         }
 
         existing.useCount++;
-        if (meal.timestamp.isAfter(existing.lastUsedAt) ||
-            (meal.timestamp == existing.lastUsedAt &&
+        if (mealTimestamp.isAfter(existing.lastUsedAt) ||
+            (mealTimestamp == existing.lastUsedAt &&
                 food.id.compareTo(existing.food.id) < 0)) {
           existing
             ..food = cloneFoodEntry(food)
-            ..lastUsedAt = meal.timestamp;
+            ..lastUsedAt = mealTimestamp;
         }
       }
     }

@@ -642,6 +642,29 @@
   "leave_anyway": "Trotzdem verlassen",
   "finish_nutrition_log": "Ernährungstagebuch für heute abschließen",
   "finish_nutrition_log_description": "Damit wird Ihr aktuelles Ernährungstagebuch für heute übermittelt.",
+  "add_meal_or_snack": "Mahlzeit oder Snack hinzufügen",
+  "meal_neutral_label": "Mahlzeit",
+  "meal_suffix": "Mahlzeit",
+  "meal_label": "Bezeichnung der Mahlzeit",
+  "no_meal_label": "Keine Bezeichnung",
+  "time_not_remembered": "Zeit nicht erinnert",
+  "about_time": "Ungefähr {time}",
+  "@about_time": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "time_exact": "Genaue Uhrzeit",
+  "time_exact_description": "Ich kenne die genaue Uhrzeit",
+  "time_approximate": "Ungefähre Uhrzeit",
+  "time_approximate_description": "Ich weiß ungefähr, wann",
+  "time_unknown": "Ich erinnere mich nicht",
+  "photo_recall_time_required_title": "Legen Sie zuerst eine Zeit fest",
+  "photo_recall_time_required_message": "Photo Recall benötigt eine Mahlzeitzeit, um Fotos aus diesem Zeitraum zu finden.",
+  "set_time": "Zeit festlegen",
+  "save": "Speichern",
   "discard": "Verwerfen",
   "discard_meal_changes_title": "Mahlzeit verlassen?",
   "discard_meal_changes_message": "Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie die Mahlzeit weiter.",

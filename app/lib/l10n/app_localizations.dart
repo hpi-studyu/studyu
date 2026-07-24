@@ -2975,6 +2975,96 @@ abstract class AppLocalizations {
   /// **'Meal Entry'**
   String get meal_entry_title;
 
+  /// No description provided for @add_meal_or_snack.
+  ///
+  /// In en, this message translates to:
+  /// **'Add meal or snack'**
+  String get add_meal_or_snack;
+
+  /// No description provided for @meal_neutral_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get meal_neutral_label;
+
+  /// No description provided for @meal_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'meal'**
+  String get meal_suffix;
+
+  /// No description provided for @meal_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal label'**
+  String get meal_label;
+
+  /// No description provided for @no_meal_label.
+  ///
+  /// In en, this message translates to:
+  /// **'No label'**
+  String get no_meal_label;
+
+  /// No description provided for @time_not_remembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Time not remembered'**
+  String get time_not_remembered;
+
+  /// No description provided for @about_time.
+  ///
+  /// In en, this message translates to:
+  /// **'About {time}'**
+  String about_time(String time);
+
+  /// No description provided for @time_exact.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact time'**
+  String get time_exact;
+
+  /// No description provided for @time_exact_description.
+  ///
+  /// In en, this message translates to:
+  /// **'I know the exact time'**
+  String get time_exact_description;
+
+  /// No description provided for @time_approximate.
+  ///
+  /// In en, this message translates to:
+  /// **'Approximate time'**
+  String get time_approximate;
+
+  /// No description provided for @time_approximate_description.
+  ///
+  /// In en, this message translates to:
+  /// **'I know roughly when'**
+  String get time_approximate_description;
+
+  /// No description provided for @time_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t remember'**
+  String get time_unknown;
+
+  /// No description provided for @photo_recall_time_required_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a meal time first'**
+  String get photo_recall_time_required_title;
+
+  /// No description provided for @photo_recall_time_required_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Recall needs a meal time to find photos from around that occasion.'**
+  String get photo_recall_time_required_message;
+
+  /// No description provided for @set_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Set time'**
+  String get set_time;
+
   /// No description provided for @save.
   ///
   /// In en, this message translates to:
