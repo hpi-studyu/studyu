@@ -22,14 +22,29 @@ import 'package:studyu_core/core.dart';
 class MealEntryScreen extends StatefulWidget {
   final MealLog? existingMeal;
   final NutritionTask? task;
+  final MealType? initialMealType;
+  final String? initialCustomMealLabel;
 
-  const MealEntryScreen({this.existingMeal, this.task, super.key});
+  const MealEntryScreen({
+    this.existingMeal,
+    this.task,
+    this.initialMealType,
+    this.initialCustomMealLabel,
+    super.key,
+  });
 
   static MaterialPageRoute<MealLog> route({
     MealLog? existingMeal,
     NutritionTask? task,
+    MealType? initialMealType,
+    String? initialCustomMealLabel,
   }) => MaterialPageRoute(
-    builder: (_) => MealEntryScreen(existingMeal: existingMeal, task: task),
+    builder: (_) => MealEntryScreen(
+      existingMeal: existingMeal,
+      task: task,
+      initialMealType: initialMealType,
+      initialCustomMealLabel: initialCustomMealLabel,
+    ),
   );
 
   @override
@@ -82,11 +97,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       _skipReason = _meal.skipReason;
     } else {
       _timestamp = DateTime.now();
-      _mealType = _getMealTypeByTime(_timestamp);
+      _mealType = widget.initialMealType ?? _getMealTypeByTime(_timestamp);
+      _customMealLabel = widget.initialCustomMealLabel;
       _mealContext = MealContext.home;
       _isSkipped = false;
       _meal = MealLog.withId(
         mealType: _mealType,
+        customMealLabel: _customMealLabel,
         mealContext: _mealContext,
         timestamp: _timestamp,
         timezone: DateTime.now().timeZoneName,

@@ -638,6 +638,10 @@
   "meal_type_snack": "Snack",
   "meal_type_brunch": "Brunch",
   "meal_type_other": "Other",
+  "meal_category_snacks": "Snacks",
+  "meal_category_other": "Other meals",
+  "no_foods_added": "No foods added",
+  "log_food": "Log food",
   "food_items_count": "{count} food items",
   "@food_items_count": {
     "placeholders": {

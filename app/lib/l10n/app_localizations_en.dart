@@ -1565,6 +1565,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meal_type_other => 'Other';
 
   @override
+  String get meal_category_snacks => 'Snacks';
+
+  @override
+  String get meal_category_other => 'Other meals';
+
+  @override
+  String get no_foods_added => 'No foods added';
+
+  @override
+  String get log_food => 'Log food';
+
+  @override
   String food_items_count(int count) {
     return '$count food items';
   }

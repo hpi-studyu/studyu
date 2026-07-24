@@ -2939,6 +2939,30 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get meal_type_other;
 
+  /// No description provided for @meal_category_snacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get meal_category_snacks;
+
+  /// No description provided for @meal_category_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other meals'**
+  String get meal_category_other;
+
+  /// No description provided for @no_foods_added.
+  ///
+  /// In en, this message translates to:
+  /// **'No foods added'**
+  String get no_foods_added;
+
+  /// No description provided for @log_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Log food'**
+  String get log_food;
+
   /// No description provided for @food_items_count.
   ///
   /// In en, this message translates to:

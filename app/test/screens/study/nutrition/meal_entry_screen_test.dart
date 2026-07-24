@@ -134,6 +134,84 @@ void main() {
     );
   });
 
+  testWidgets('new meal uses the requested initial meal type', (tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: const MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: Locale('en'),
+          home: MealEntryScreen(initialMealType: MealType.dinner),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(
+      tester
+          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Dinner'))
+          .selected,
+      isTrue,
+    );
+  });
+
+  testWidgets('new meal uses the requested custom meal label', (tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: const MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: Locale('en'),
+          home: MealEntryScreen(
+            initialMealType: MealType.other,
+            initialCustomMealLabel: 'Late bite',
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(
+      tester
+          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Other'))
+          .selected,
+      isTrue,
+    );
+    expect(find.text('Late bite'), findsOneWidget);
+  });
+
+  testWidgets('existing meal wins over requested initial values', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          home: MealEntryScreen(
+            existingMeal: editableMeal(),
+            initialMealType: MealType.dinner,
+            initialCustomMealLabel: 'Ignored',
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(
+      tester
+          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Other'))
+          .selected,
+      isTrue,
+    );
+    expect(find.text('Supper'), findsOneWidget);
+    expect(find.text('Ignored'), findsNothing);
+  });
+
   testWidgets('skipped meal only asks for a reason and keeps save visible', (
     tester,
   ) async {

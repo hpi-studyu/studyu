@@ -645,5 +645,9 @@
   "meal_context": "Mahlzeitenkontext",
   "search_food_description": "Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.",
   "food_search_error": "Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.",
-  "food_search_results_count": "{count, plural, =1 {1 Ergebnis gefunden} other {{count} Ergebnisse gefunden}}"
+  "food_search_results_count": "{count, plural, =1 {1 Ergebnis gefunden} other {{count} Ergebnisse gefunden}}",
+  "meal_category_snacks": "Snacks",
+  "meal_category_other": "Weitere Mahlzeiten",
+  "no_foods_added": "Keine Lebensmittel hinzugefügt",
+  "log_food": "Lebensmittel eintragen"
 }
