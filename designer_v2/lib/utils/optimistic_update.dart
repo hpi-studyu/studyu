@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 typedef VoidCallback = void Function();
@@ -39,20 +41,31 @@ class OptimisticUpdate {
       applyOptimistic();
     }
     _runUpdateHandlerIfAny();
+    if (completeFutureOptimistically) {
+      unawaited(_applyAndHandleErrors(rethrowSynchronously: false));
+      return;
+    }
+
+    await _applyAndHandleErrors(rethrowSynchronously: true);
+  }
+
+  Future<void> _applyAndHandleErrors({
+    required bool rethrowSynchronously,
+  }) async {
     try {
-      if (completeFutureOptimistically) {
-        runAsync(apply);
-      } else {
-        await apply();
-      }
+      await runAsync(apply);
       _runUpdateHandlerIfAny();
     } catch (e, stackTrace) {
       onError?.call(e, stackTrace);
       rollback();
       _runUpdateHandlerIfAny();
-      if (rethrowErrors) {
+      if (!rethrowErrors) {
+        return;
+      }
+      if (rethrowSynchronously) {
         rethrow;
       }
+      Zone.current.handleUncaughtError(e, stackTrace);
     }
   }
 

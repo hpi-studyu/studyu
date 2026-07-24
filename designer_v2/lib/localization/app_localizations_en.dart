@@ -541,6 +541,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dialog_subject_invite_code => 'invite code';
 
   @override
+  String dialog_delete_invite_code_title(Object code) {
+    return 'Delete invite code $code?';
+  }
+
+  @override
+  String get dialog_delete_invite_code_message =>
+      'Anyone with this code will no longer be able to use it.';
+
+  @override
   String get dialog_subject_fitbit_credentials => 'fitbit credentials';
 
   @override
@@ -2128,6 +2137,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_header_code => 'Code';
 
   @override
+  String get code_list_header_actions => 'Actions';
+
+  @override
   String get action_button_code_new => 'New code';
 
   @override
@@ -2426,6 +2438,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_delete_invite_code => 'Delete invite code';
+
+  @override
+  String get action_delete_code => 'Delete code';
 
   @override
   String get action_remove => 'Remove';
@@ -2788,6 +2803,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filter_reset_all => 'Clear all';
 
   @override
+  String get code_list_filter_title => 'Filter invite codes';
+
+  @override
+  String get code_list_filter_enrolled_status => 'Enrolled status';
+
+  @override
+  String get code_list_filter_enrolled_min => 'Enrolled min';
+
+  @override
+  String get code_list_filter_enrolled_max => 'Enrolled max';
+
+  @override
+  String get code_list_filter_intervention_assignment =>
+      'Intervention assignment';
+
+  @override
+  String get code_list_filter_apply => 'Apply';
+
+  @override
+  String get code_list_filter_option_all => 'All';
+
+  @override
+  String get code_list_filter_option_unused => 'Unused';
+
+  @override
+  String get code_list_filter_option_used => 'Used';
+
+  @override
+  String code_list_filter_button_active(int count) {
+    return 'Filter ($count)';
+  }
+
+  @override
   String filter_show_studies(int count) {
     return 'Show $count Studies';
   }
@@ -2954,4 +3002,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filter';
+
+  @override
+  String get code_list_no_results_title => 'No matching invite codes';
+
+  @override
+  String get code_list_no_results_description =>
+      'Try changing search or filters to see more invite codes.';
+
+  @override
+  String get code_list_clear_filters => 'Clear filters';
+
+  @override
+  String get code_list_search_hint => 'Search invite codes';
+
+  @override
+  String code_list_active_count(int count) {
+    return '$count active invite codes';
+  }
+
+  @override
+  String code_list_total_count(int count) {
+    return '$count total';
+  }
+
+  @override
+  String get code_list_page_size => 'Rows';
+
+  @override
+  String get code_list_rows_per_page => 'Rows per page:';
+
+  @override
+  String code_list_page(int page) {
+    return 'Page $page';
+  }
+
+  @override
+  String code_list_page_range(int start, int end, int count) {
+    return '$start–$end of $count';
+  }
+
+  @override
+  String code_list_page_loading(int start, int end) {
+    return 'Loading $start–$end...';
+  }
+
+  @override
+  String get code_list_page_fetch_error =>
+      'Couldn’t load the next page. Check your connection and try again.';
+
+  @override
+  String get code_list_retry => 'Retry';
+
+  @override
+  String get code_list_previous_page => 'Previous page';
+
+  @override
+  String get code_list_next_page => 'Next page';
 }

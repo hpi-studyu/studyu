@@ -550,6 +550,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dialog_subject_invite_code => 'Teilnahmecode';
 
   @override
+  String dialog_delete_invite_code_title(Object code) {
+    return 'Teilnahmecode $code löschen?';
+  }
+
+  @override
+  String get dialog_delete_invite_code_message =>
+      'Jeder mit diesem Code kann ihn danach nicht mehr verwenden.';
+
+  @override
   String get dialog_subject_fitbit_credentials => 'Fitbit-Zugangsdaten';
 
   @override
@@ -2151,6 +2160,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get code_list_header_code => 'Code';
 
   @override
+  String get code_list_header_actions => 'Aktionen';
+
+  @override
   String get action_button_code_new => 'Neuer Code';
 
   @override
@@ -2453,6 +2465,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get action_delete_invite_code => 'Teilnahmecode löschen';
+
+  @override
+  String get action_delete_code => 'Code löschen';
 
   @override
   String get action_remove => 'Entfernen';
@@ -2824,6 +2839,39 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filter_reset_all => 'Zurücksetzen';
 
   @override
+  String get code_list_filter_title => 'Einladungscodes filtern';
+
+  @override
+  String get code_list_filter_enrolled_status => 'Anmeldestatus';
+
+  @override
+  String get code_list_filter_enrolled_min => 'Angemeldet min';
+
+  @override
+  String get code_list_filter_enrolled_max => 'Angemeldet max';
+
+  @override
+  String get code_list_filter_intervention_assignment =>
+      'Interventionszuweisung';
+
+  @override
+  String get code_list_filter_apply => 'Anwenden';
+
+  @override
+  String get code_list_filter_option_all => 'Alle';
+
+  @override
+  String get code_list_filter_option_unused => 'Ungenutzt';
+
+  @override
+  String get code_list_filter_option_used => 'Genutzt';
+
+  @override
+  String code_list_filter_button_active(int count) {
+    return 'Filtern ($count)';
+  }
+
+  @override
   String filter_show_studies(int count) {
     return '$count Studien anzeigen';
   }
@@ -2990,4 +3038,61 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filtern';
+
+  @override
+  String get code_list_no_results_title => 'Keine passenden Einladungscodes';
+
+  @override
+  String get code_list_no_results_description =>
+      'Ändere Suche oder Filter, um mehr Einladungscodes zu sehen.';
+
+  @override
+  String get code_list_clear_filters => 'Filter zurücksetzen';
+
+  @override
+  String get code_list_search_hint => 'Einladungscodes suchen';
+
+  @override
+  String code_list_active_count(int count) {
+    return '$count aktive Einladungscodes';
+  }
+
+  @override
+  String code_list_total_count(int count) {
+    return '$count insgesamt';
+  }
+
+  @override
+  String get code_list_page_size => 'Zeilen';
+
+  @override
+  String get code_list_rows_per_page => 'Zeilen pro Seite:';
+
+  @override
+  String code_list_page(int page) {
+    return 'Seite $page';
+  }
+
+  @override
+  String code_list_page_range(int start, int end, int count) {
+    return '$start–$end von $count';
+  }
+
+  @override
+  String code_list_page_loading(int start, int end) {
+    return '$start–$end wird geladen...';
+  }
+
+  @override
+  String get code_list_page_fetch_error =>
+      'Nächste Seite konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.';
+
+  @override
+  String get code_list_retry => 'Erneut versuchen';
+
+  @override
+  String get code_list_previous_page => 'Vorherige Seite';
+
+  @override
+  String get code_list_next_page => 'Nächste Seite';
 }

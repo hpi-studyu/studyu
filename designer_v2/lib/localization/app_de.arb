@@ -200,6 +200,13 @@
   "dialog_subject_consent_item": "Einwilligungspunkt",
   "dialog_subject_report_section": "Berichtsabschnitt",
   "dialog_subject_invite_code": "Teilnahmecode",
+  "dialog_delete_invite_code_title": "Teilnahmecode {code} löschen?",
+  "@dialog_delete_invite_code_title": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "dialog_delete_invite_code_message": "Jeder mit diesem Code kann ihn danach nicht mehr verwenden.",
   "dialog_subject_fitbit_credentials": "Fitbit-Zugangsdaten",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
   "form_question_create": "Neue Frage",
@@ -807,6 +814,7 @@
   "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
+  "code_list_header_actions": "Aktionen",
   "action_button_code_new": "Neuer Code",
   "notification_code_deleted": "Teilnahmecode gelöscht",
   "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",
@@ -931,6 +939,7 @@
   "action_edit": "Bearbeiten",
   "action_delete": "Löschen",
   "action_delete_invite_code": "Teilnahmecode löschen",
+  "action_delete_code": "Code löschen",
   "action_remove": "Entfernen",
   "action_duplicate": "Duplizieren",
   "action_clipboard": "In Zwischenablage kopieren",
@@ -1045,6 +1054,23 @@
   "filter_save_as_new": "Als neu speichern",
   "filter_delete_preset": "Vorlage löschen",
   "filter_reset_all": "Zurücksetzen",
+  "code_list_filter_title": "Einladungscodes filtern",
+  "code_list_filter_enrolled_status": "Anmeldestatus",
+  "code_list_filter_enrolled_min": "Angemeldet min",
+  "code_list_filter_enrolled_max": "Angemeldet max",
+  "code_list_filter_intervention_assignment": "Interventionszuweisung",
+  "code_list_filter_apply": "Anwenden",
+  "code_list_filter_option_all": "Alle",
+  "code_list_filter_option_unused": "Ungenutzt",
+  "code_list_filter_option_used": "Genutzt",
+  "code_list_filter_button_active": "Filtern ({count})",
+  "@code_list_filter_button_active": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "filter_show_studies": "{count} Studien anzeigen",
   "@filter_show_studies": {
     "placeholders": {
@@ -1108,5 +1134,64 @@
   "filter_section_custom_presets": "Benutzerdefinierte Vorlagen",
   "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
-  "filter_button_main": "Filtern"
+  "filter_button_main": "Filtern",
+  "code_list_no_results_title": "Keine passenden Einladungscodes",
+  "code_list_no_results_description": "Ändere Suche oder Filter, um mehr Einladungscodes zu sehen.",
+  "code_list_clear_filters": "Filter zurücksetzen",
+  "code_list_search_hint": "Einladungscodes suchen",
+  "code_list_active_count": "{count} aktive Einladungscodes",
+  "@code_list_active_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_total_count": "{count} insgesamt",
+  "@code_list_total_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_size": "Zeilen",
+  "code_list_rows_per_page": "Zeilen pro Seite:",
+  "code_list_page": "Seite {page}",
+  "@code_list_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_range": "{start}\u2013{end} von {count}",
+  "@code_list_page_range": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_loading": "{start}\u2013{end} wird geladen...",
+  "@code_list_page_loading": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_fetch_error": "Nächste Seite konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+  "code_list_retry": "Erneut versuchen",
+  "code_list_previous_page": "Vorherige Seite",
+  "code_list_next_page": "Nächste Seite"
 }

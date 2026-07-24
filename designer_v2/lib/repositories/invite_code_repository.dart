@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -20,8 +21,24 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 part 'invite_code_repository.g.dart';
 
+const int defaultInviteCodePageSize = 50;
+
 abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
+
+  Future<List<StudyInvite>> fetchPage({
+    required int offset,
+    required int limit,
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
+    bool ascending = true,
+  });
+
+  Future<int> count({
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+  });
 }
 
 class InviteCodeRepository extends ModelRepository<StudyInvite>
@@ -74,6 +91,40 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   }
 
   @override
+  Future<List<StudyInvite>> fetchPage({
+    required int offset,
+    required int limit,
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
+    bool ascending = true,
+  }) async {
+    final invites = await apiClient.fetchStudyInvitesPage(
+      studyId,
+      offset: offset,
+      limit: limit,
+      query: query,
+      filters: filters,
+      sortBy: sortBy,
+      ascending: ascending,
+    );
+    for (final invite in invites) {
+      final wrappedInvite = upsertLocally(invite);
+      wrappedInvite.markAsFetched();
+    }
+    emitUpdate();
+    return invites;
+  }
+
+  @override
+  Future<int> count({
+    String? query,
+    InviteCodeFilters filters = const InviteCodeFilters(),
+  }) {
+    return apiClient.countStudyInvites(studyId, query: query, filters: filters);
+  }
+
+  @override
   List<ModelAction> availableActions(StudyInvite model) {
     final deepLink = generateInviteDeepLink(model.code);
     final List<ModelAction> actions = [
@@ -110,12 +161,16 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         ModelAction.addSeparator(),
         ModelAction(
           type: ModelActionType.delete,
-          label: tr.action_delete_invite_code,
-          confirmation: ModelActionConfirmations.delete(
-            subject: tr.dialog_subject_invite_code,
+          label: tr.action_delete_code,
+          confirmation: ModelActionConfirmation(
+            title: tr.dialog_delete_invite_code_title(
+              _formattedDeleteCode(model.code),
+            ),
+            message: tr.dialog_delete_invite_code_message,
+            confirmLabel: tr.action_delete_code,
           ),
           onExecute: () async {
-            await delete(getKey(model));
+            await delete(getKey(model), runOptimistically: false);
             ref
                 .read(routerProvider)
                 .dispatch(RoutingIntents.studyRecruit(model.studyId));
@@ -137,6 +192,14 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Future<void> _copy(String value, SnackbarIntent notification) async {
     await ref.read(clipboardServiceProvider).copy(value);
     ref.read(notificationServiceProvider).show(notification);
+  }
+
+  String _formattedDeleteCode(String code) {
+    const visiblePrefixLength = 8;
+    if (code.length <= visiblePrefixLength) {
+      return code;
+    }
+    return '${code.substring(0, visiblePrefixLength)}...';
   }
 
   void _showSharePopup(BuildContext context, String deepLink, String filename) {
@@ -225,35 +288,23 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<StudyInvite> fetch(ModelID modelId) {
-    // Read directly from the study instead of fetching from the network
-    return Future.value(study.getInvite(modelId));
+    return apiClient.fetchStudyInvite(modelId);
   }
 
   @override
   Future<List<StudyInvite>> fetchAll() {
-    // Read directly from the study instead of fetching from the network
-    return Future.value(study.invites ?? []);
+    return apiClient.fetchStudyInvitesPage(
+      study.id,
+      offset: 0,
+      limit: defaultInviteCodePageSize,
+    );
   }
 
   @override
   Future<StudyInvite> save(StudyInvite model) {
-    study.invites ??= [];
-    final prevInvites = [...study.invites!];
-
+    final prevInvites = [...?study.invites];
     final saveOperation = OptimisticUpdate(
-      applyOptimistic: () {
-        final inviteIdx = study.invites!.indexWhere(
-          (i) => i.code == model.code,
-        );
-        if (inviteIdx == -1) {
-          // add new code
-          study.invites!.add(model);
-        } else {
-          // replace existing code
-          study.invites![inviteIdx] = model;
-        }
-        studyRepository.upsertLocally(study);
-      },
+      applyOptimistic: () {},
       apply: () async {
         await studyRepository.ensurePersisted(model.studyId);
         await apiClient.saveStudyInvite(model);
@@ -264,6 +315,7 @@ class InviteCodeRepositoryDelegate
       },
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
+      completeFutureOptimistically: false,
     );
 
     return saveOperation.execute().then((_) => model);
@@ -271,10 +323,6 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<void> delete(StudyInvite model) {
-    assert(study.invites != null);
-    assert(study.invites!.isNotEmpty);
-
-    final prevInvites = [...study.invites!];
     final deleteOperation = OptimisticUpdate(
       applyOptimistic: () {
         study.invites!.remove(model);
@@ -282,12 +330,10 @@ class InviteCodeRepositoryDelegate
         studyRepository.upsertLocally(study);
       },
       apply: () => apiClient.deleteStudyInvite(model),
-      rollback: () {
-        study.invites = prevInvites;
-        studyRepository.upsertLocally(study);
-      },
+      rollback: () {},
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
+      completeFutureOptimistically: false,
     );
 
     return deleteOperation.execute();

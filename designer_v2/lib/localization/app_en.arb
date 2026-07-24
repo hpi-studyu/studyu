@@ -204,6 +204,13 @@
   "dialog_subject_consent_item": "consent item",
   "dialog_subject_report_section": "report section",
   "dialog_subject_invite_code": "invite code",
+  "dialog_delete_invite_code_title": "Delete invite code {code}?",
+  "@dialog_delete_invite_code_title": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "dialog_delete_invite_code_message": "Anyone with this code will no longer be able to use it.",
   "dialog_subject_fitbit_credentials": "fitbit credentials",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
   "form_question_create": "New Question",
@@ -811,6 +818,7 @@
   "code_list_empty_title": "You haven't invited anyone yet",
   "code_list_empty_description": "Add participants to your study via invite codes.",
   "code_list_header_code": "Code",
+  "code_list_header_actions": "Actions",
   "action_button_code_new": "New code",
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Participant details",
@@ -931,6 +939,7 @@
   "action_unpin": "Remove pin",
   "action_delete": "Delete",
   "action_delete_invite_code": "Delete invite code",
+  "action_delete_code": "Delete code",
   "action_remove": "Remove",
   "action_duplicate": "Duplicate",
   "action_clipboard": "Copy to clipboard",
@@ -1045,6 +1054,23 @@
   "filter_save_as_new": "Save as new",
   "filter_delete_preset": "Delete preset",
   "filter_reset_all": "Clear all",
+  "code_list_filter_title": "Filter invite codes",
+  "code_list_filter_enrolled_status": "Enrolled status",
+  "code_list_filter_enrolled_min": "Enrolled min",
+  "code_list_filter_enrolled_max": "Enrolled max",
+  "code_list_filter_intervention_assignment": "Intervention assignment",
+  "code_list_filter_apply": "Apply",
+  "code_list_filter_option_all": "All",
+  "code_list_filter_option_unused": "Unused",
+  "code_list_filter_option_used": "Used",
+  "code_list_filter_button_active": "Filter ({count})",
+  "@code_list_filter_button_active": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "filter_show_studies": "Show {count} Studies",
   "@filter_show_studies": {
     "placeholders": {
@@ -1108,5 +1134,64 @@
   "filter_section_custom_presets": "Custom Presets",
   "filter_button_advanced": "Configure Filters...",
   "filter_button_clear": "Clear filter",
-  "filter_button_main": "Filter"
+  "filter_button_main": "Filter",
+  "code_list_no_results_title": "No matching invite codes",
+  "code_list_no_results_description": "Try changing search or filters to see more invite codes.",
+  "code_list_clear_filters": "Clear filters",
+  "code_list_search_hint": "Search invite codes",
+  "code_list_active_count": "{count} active invite codes",
+  "@code_list_active_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_total_count": "{count} total",
+  "@code_list_total_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_size": "Rows",
+  "code_list_rows_per_page": "Rows per page:",
+  "code_list_page": "Page {page}",
+  "@code_list_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_range": "{start}\u2013{end} of {count}",
+  "@code_list_page_range": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_loading": "Loading {start}\u2013{end}...",
+  "@code_list_page_loading": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      }
+    }
+  },
+  "code_list_page_fetch_error": "Couldn\u2019t load the next page. Check your connection and try again.",
+  "code_list_retry": "Retry",
+  "code_list_previous_page": "Previous page",
+  "code_list_next_page": "Next page"
 }
