@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -122,13 +123,22 @@ class DashboardController extends _$DashboardController
   }
 
   Future<void> _fetchPage(int token, {required bool isInitial}) async {
+    await _fetchPageWithLimit(token, isInitial: isInitial);
+  }
+
+  Future<void> _fetchPageWithLimit(
+    int token, {
+    required bool isInitial,
+    int? limit,
+  }) async {
     try {
       final pinnedIds = _userRepository.user.preferences.pinnedStudies;
       final offset = isInitial ? 0 : state.loadedStudies.length;
+      final fetchLimit = limit ?? DashboardState.pageSize;
 
       final page = await _studyRepository.fetchPage(
         offset: offset,
-        limit: DashboardState.pageSize,
+        limit: fetchLimit,
         sortBy: state.sortByColumn,
         ascending: state.sortAscending,
         preset: state.studiesFilter ?? DashboardState.defaultFilter,
@@ -171,6 +181,67 @@ class DashboardController extends _$DashboardController
         loadError: () => e,
       );
     }
+  }
+
+  Future<void> _refreshAfterMutation({int? targetLoadedStudyCount}) async {
+    final token = ++_fetchToken;
+    final refreshLimit = max(
+      targetLoadedStudyCount ?? state.loadedStudies.length,
+      DashboardState.pageSize,
+    );
+
+    state = state.copyWith(
+      isLoadingMore: false,
+      isLoadingPinned: true,
+      loadError: () => null,
+      advancedFilterUnsupported: false,
+    );
+
+    final pinnedFuture = _fetchPinnedFor(token);
+    final pageFuture = _fetchPageWithLimit(
+      token,
+      isInitial: true,
+      limit: refreshLimit,
+    );
+    final pageTotalFuture = _fetchPageTotalCount(token);
+    await Future.wait([pinnedFuture, pageFuture, pageTotalFuture]);
+    if (token != _fetchToken) return;
+    state = state.copyWith(
+      isLoadingInitial: false,
+      isLoadingMore: false,
+      isLoadingPinned: false,
+    );
+  }
+
+  void _removeStudyLocally(String studyId) {
+    final updatedPinnedStudies = [
+      for (final study in state.pinnedStudiesList)
+        if (study.id != studyId) study,
+    ];
+    final updatedLoadedStudies = [
+      for (final study in state.loadedStudies)
+        if (study.id != studyId) study,
+    ];
+
+    final removedPinnedCount =
+        state.pinnedStudiesList.length - updatedPinnedStudies.length;
+    final removedLoadedCount =
+        state.loadedStudies.length - updatedLoadedStudies.length;
+    final removedCount = removedPinnedCount + removedLoadedCount;
+
+    if (removedCount == 0) return;
+
+    final updatedTotalCount = max(state.totalCount - removedCount, 0);
+    final updatedPageTotalCount = max(state.pageTotalCount - removedCount, 0);
+
+    state = state.copyWith(
+      pinnedStudiesList: () => updatedPinnedStudies,
+      loadedStudies: () => updatedLoadedStudies,
+      totalCount: updatedTotalCount,
+      pageTotalCount: updatedPageTotalCount,
+      hasMore: updatedLoadedStudies.length < updatedTotalCount,
+      loadError: () => null,
+    );
   }
 
   Future<void> _fetchPageTotalCount(int token) async {
@@ -423,9 +494,13 @@ class DashboardController extends _$DashboardController
           isChecked: action.isChecked,
           showBadge: action.showBadge,
           onExecute: () async {
+            final loadedStudyCountBeforeDelete = state.loadedStudies.length;
             try {
               await action.onExecute();
-              await _resetAndReload();
+              _removeStudyLocally(model.id);
+              await _refreshAfterMutation(
+                targetLoadedStudyCount: loadedStudyCountBeforeDelete,
+              );
             } catch (e) {
               state = state.copyWith(loadError: () => e);
             }
@@ -448,8 +523,11 @@ class DashboardController extends _$DashboardController
           isChecked: action.isChecked,
           showBadge: action.showBadge,
           onExecute: () async {
+            final loadedStudyCountBeforeRefresh = state.loadedStudies.length;
             await action.onExecute();
-            await _resetAndReload();
+            await _refreshAfterMutation(
+              targetLoadedStudyCount: loadedStudyCountBeforeRefresh,
+            );
           },
         );
       }

@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_navigation.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -19,6 +20,9 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_to_postgrest.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
+import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -142,6 +146,8 @@ class _Harness {
 }
 
 void main() {
+  setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
+
   group('DashboardController pagination', () {
     test('initial fetch requests page 0 with default params', () async {
       final h = _Harness(
@@ -837,5 +843,123 @@ void main() {
         ),
       ).called(2);
     });
+
+    test('delete keeps list populated while refresh is in flight', () async {
+      final firstStudy = _study('s1');
+      final secondStudy = _study('s2');
+      final h = _Harness(
+        initialPage: StudiesPage(
+          studies: [firstStudy, secondStudy],
+          totalCount: 2,
+        ),
+      );
+      await h.settle();
+      clearInteractions(h.studyRepo);
+
+      when(h.studyRepo.availableActions(firstStudy)).thenReturn([
+        ModelAction(
+          type: StudyActionType.delete,
+          label: 'delete',
+          onExecute: () async {},
+        ),
+      ]);
+
+      final pageCompleter = Completer<StudiesPage>();
+      when(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).thenAnswer((invocation) {
+        final limit = invocation.namedArguments[#limit] as int;
+        return limit == 1
+            ? Future.value(const StudiesPage(studies: [], totalCount: 1))
+            : pageCompleter.future;
+      });
+
+      final deleteAction = h.controller
+          .availableActions(firstStudy)
+          .firstWhere((action) => action.type == StudyActionType.delete);
+
+      deleteAction.onExecute();
+      await h.settle();
+
+      expect(h.state.loadedStudies.map((study) => study.id), ['s2']);
+      expect(h.state.isLoadingInitial, isFalse);
+
+      pageCompleter.complete(
+        StudiesPage(studies: [secondStudy], totalCount: 1),
+      );
+      await h.settle();
+
+      expect(h.state.loadedStudies.map((study) => study.id), ['s2']);
+      expect(h.state.totalCount, 1);
+    });
+
+    test(
+      'duplicate refresh keeps current row budget instead of first-page reset',
+      () async {
+        final studies = List.generate(25, (i) => _study('s$i'));
+        final h = _Harness(
+          initialPage: StudiesPage(studies: studies, totalCount: 80),
+        );
+        await h.settle();
+        clearInteractions(h.studyRepo);
+
+        when(h.studyRepo.availableActions(studies.first)).thenReturn([
+          ModelAction(
+            type: StudyActionType.duplicate,
+            label: 'duplicate',
+            onExecute: () async {},
+          ),
+        ]);
+
+        when(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).thenAnswer(
+          (_) async => StudiesPage(studies: studies, totalCount: 81),
+        );
+
+        final duplicateAction = h.controller
+            .availableActions(studies.first)
+            .firstWhere((action) => action.type == StudyActionType.duplicate);
+
+        await duplicateAction.onExecute();
+        await h.settle();
+
+        verify(
+          h.studyRepo.fetchPage(
+            offset: 0,
+            limit: 25,
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(1);
+        expect(h.state.loadedStudies, hasLength(25));
+        expect(h.state.isLoadingInitial, isFalse);
+      },
+    );
   });
 }

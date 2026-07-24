@@ -255,50 +255,55 @@ class StudiesTable extends StatelessWidget {
             ),
             SizedBox(height: rowSpacing),
             Expanded(
-              child: ListView.builder(
-                key: const ValueKey('studies_table_rows'),
-                prototypeItem: StudiesTableItem.prototype(
-                  columnSizes: columnDefinitionsMap.values.toList(),
-                  itemHeight: itemHeight,
-                  itemPadding: itemPadding,
-                  rowSpacing: rowSpacing,
-                  columnSpacing: columnSpacing,
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(
+                  context,
+                ).copyWith(scrollbars: false),
+                child: ListView.builder(
+                  key: const ValueKey('studies_table_rows'),
+                  prototypeItem: StudiesTableItem.prototype(
+                    columnSizes: columnDefinitionsMap.values.toList(),
+                    itemHeight: itemHeight,
+                    itemPadding: itemPadding,
+                    rowSpacing: rowSpacing,
+                    columnSpacing: columnSpacing,
+                  ),
+                  itemCount: studies.length + (_showsFooter ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index >= studies.length) {
+                      return _buildFooter(context);
+                    }
+
+                    if (hasMore &&
+                        !isLoadingMore &&
+                        index >= studies.length - _loadMorePrefetchThreshold) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        onLoadMore?.call();
+                      });
+                    }
+
+                    final item = studies[index];
+                    return RepaintBoundary(
+                      child: StudiesTableItem(
+                        key: ValueKey('study_row_${item.id}'),
+                        study: item,
+                        columnSizes: columnDefinitionsMap.values.toList(),
+                        actions: getActions(item),
+                        isPinned: pinnedStudies.contains(item.id),
+                        itemHeight: itemHeight,
+                        itemPadding: itemPadding,
+                        rowSpacing: rowSpacing,
+                        columnSpacing: columnSpacing,
+                        onPinnedChanged: (study, pinned) {
+                          pinnedStudies.contains(item.id)
+                              ? dashboardController.pinOffStudy(item.id)
+                              : dashboardController.pinStudy(item.id);
+                        },
+                        onTap: (study) => onSelect.call(study),
+                      ),
+                    );
+                  },
                 ),
-                itemCount: studies.length + (_showsFooter ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index >= studies.length) {
-                    return _buildFooter(context);
-                  }
-
-                  if (hasMore &&
-                      !isLoadingMore &&
-                      index >= studies.length - _loadMorePrefetchThreshold) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      onLoadMore?.call();
-                    });
-                  }
-
-                  final item = studies[index];
-                  return RepaintBoundary(
-                    child: StudiesTableItem(
-                      key: ValueKey('study_row_${item.id}'),
-                      study: item,
-                      columnSizes: columnDefinitionsMap.values.toList(),
-                      actions: getActions(item),
-                      isPinned: pinnedStudies.contains(item.id),
-                      itemHeight: itemHeight,
-                      itemPadding: itemPadding,
-                      rowSpacing: rowSpacing,
-                      columnSpacing: columnSpacing,
-                      onPinnedChanged: (study, pinned) {
-                        pinnedStudies.contains(item.id)
-                            ? dashboardController.pinOffStudy(item.id)
-                            : dashboardController.pinStudy(item.id);
-                      },
-                      onTap: (study) => onSelect.call(study),
-                    ),
-                  );
-                },
               ),
             ),
           ],
