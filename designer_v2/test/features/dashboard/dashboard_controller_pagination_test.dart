@@ -569,69 +569,163 @@ void main() {
       },
     );
 
-    test(
-      'pinStudy reloads data and moves study to pinnedStudiesList',
-      () async {
-        final h = _Harness(
-          initialPage: StudiesPage(
-            studies: [_study('a'), _study('b'), _study('c')],
-            totalCount: 3,
-          ),
-        );
-        await h.settle();
+    test('pinStudy moves a loaded study locally without reloading', () async {
+      final h = _Harness(
+        initialPage: StudiesPage(
+          studies: [_study('a'), _study('b'), _study('c')],
+          totalCount: 3,
+        ),
+      );
+      await h.settle();
 
-        // After pinning 'b', simulate user prefs updated and server returning
-        // 'b' as pinned and [a, c] as the paginated list.
-        final updatedUser = StudyUUser(
-          id: 'me',
-          email: 'me@x.test',
-          preferences: Preferences(pinnedStudies: {'b'}),
-        );
-        when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
-          when(h.userRepo.user).thenReturn(updatedUser);
-          return updatedUser;
-        });
-        when(
-          h.studyRepo.fetchPinned(any),
-        ).thenAnswer((_) async => [_study('b')]);
-        when(
-          h.studyRepo.fetchPage(
-            offset: anyNamed('offset'),
-            limit: anyNamed('limit'),
-            sortBy: anyNamed('sortBy'),
-            ascending: anyNamed('ascending'),
-            preset: anyNamed('preset'),
-            currentUser: anyNamed('currentUser'),
-            searchQuery: anyNamed('searchQuery'),
-            advancedFilter: anyNamed('advancedFilter'),
-            excludeIds: anyNamed('excludeIds'),
-          ),
-        ).thenAnswer(
-          (_) async =>
-              StudiesPage(studies: [_study('a'), _study('c')], totalCount: 2),
-        );
-        clearInteractions(h.studyRepo);
+      final updatedUser = StudyUUser(
+        id: 'me',
+        email: 'me@x.test',
+        preferences: Preferences(pinnedStudies: {'b'}),
+      );
+      when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
+        when(h.userRepo.user).thenReturn(updatedUser);
+        return updatedUser;
+      });
+      clearInteractions(h.studyRepo);
 
-        await h.controller.pinStudy('b');
-        await h.settle();
+      await h.controller.pinStudy('b');
 
-        expect(h.state.loadedStudies.map((s) => s.id), ['a', 'c']);
-        expect(h.state.pinnedStudiesList.map((s) => s.id), ['b']);
-        verify(
-          h.studyRepo.fetchPage(
-            offset: anyNamed('offset'),
-            limit: anyNamed('limit'),
-            sortBy: anyNamed('sortBy'),
-            ascending: anyNamed('ascending'),
-            preset: anyNamed('preset'),
-            currentUser: anyNamed('currentUser'),
-            searchQuery: anyNamed('searchQuery'),
-            advancedFilter: anyNamed('advancedFilter'),
-            excludeIds: anyNamed('excludeIds'),
-          ),
-        ).called(greaterThanOrEqualTo(1));
-      },
-    );
+      expect(h.state.loadedStudies.map((s) => s.id), ['a', 'c']);
+      expect(h.state.pinnedStudiesList.map((s) => s.id), ['b']);
+      expect(h.state.totalCount, 2);
+      expect(h.state.pageTotalCount, 2);
+      expect(h.state.hasMore, isFalse);
+      verifyNever(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      );
+      verifyNever(h.studyRepo.fetchPinned(any));
+    });
+
+    test('pinStudy reloads when the study is not loaded', () async {
+      final h = _Harness(
+        initialPage: StudiesPage(
+          studies: [_study('a'), _study('b')],
+          totalCount: 2,
+        ),
+      );
+      await h.settle();
+
+      final updatedUser = StudyUUser(
+        id: 'me',
+        email: 'me@x.test',
+        preferences: Preferences(pinnedStudies: {'missing'}),
+      );
+      when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
+        when(h.userRepo.user).thenReturn(updatedUser);
+        return updatedUser;
+      });
+      when(
+        h.studyRepo.fetchPinned(any),
+      ).thenAnswer((_) async => [_study('missing')]);
+      when(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).thenAnswer(
+        (_) async =>
+            StudiesPage(studies: [_study('a'), _study('b')], totalCount: 2),
+      );
+      clearInteractions(h.studyRepo);
+
+      await h.controller.pinStudy('missing');
+      await h.settle();
+
+      verify(h.studyRepo.fetchPinned(any)).called(1);
+      verify(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).called(greaterThanOrEqualTo(1));
+      expect(h.state.pinnedStudiesList.map((s) => s.id), ['missing']);
+    });
+
+    test('pinOffStudy keeps the full reload behavior', () async {
+      final h = _Harness(
+        pinnedIds: {'p'},
+        initialPage: StudiesPage(studies: [_study('a')], totalCount: 1),
+        initialPinned: [_study('p')],
+      );
+      await h.settle();
+
+      final updatedUser = StudyUUser(
+        id: 'me',
+        email: 'me@x.test',
+        preferences: Preferences(),
+      );
+      when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
+        when(h.userRepo.user).thenReturn(updatedUser);
+        return updatedUser;
+      });
+      when(h.studyRepo.fetchPinned(any)).thenAnswer((_) async => const []);
+      when(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).thenAnswer(
+        (_) async =>
+            StudiesPage(studies: [_study('p'), _study('a')], totalCount: 2),
+      );
+      clearInteractions(h.studyRepo);
+
+      await h.controller.pinOffStudy('p');
+      await h.settle();
+
+      verify(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).called(greaterThanOrEqualTo(1));
+      expect(h.state.pinnedStudiesList, isEmpty);
+      expect(h.state.loadedStudies.map((s) => s.id), ['p', 'a']);
+    });
 
     test(
       'initial fetch excludes pinned ids from the paginated query',

@@ -274,8 +274,44 @@ class DashboardController extends _$DashboardController
   }
 
   Future<void> pinStudy(String modelId) async {
+    final wasUnpinned = !_userRepository.user.preferences.pinnedStudies
+        .contains(modelId);
+    final wasLoading =
+        state.isLoadingInitial || state.isLoadingMore || state.isLoadingPinned;
+    final wasLoaded = state.loadedStudies.any((study) => study.id == modelId);
     await _userRepository.updatePreferences(PreferenceAction.pin, modelId);
-    await _resetAndReload();
+
+    final studyIndex = state.loadedStudies.indexWhere(
+      (study) => study.id == modelId,
+    );
+    final canUpdateLocally =
+        wasUnpinned &&
+        wasLoaded &&
+        !wasLoading &&
+        !state.isLoadingInitial &&
+        !state.isLoadingMore &&
+        !state.isLoadingPinned &&
+        studyIndex != -1;
+    if (!canUpdateLocally) {
+      await _resetAndReload();
+      return;
+    }
+
+    final updatedLoaded = [...state.loadedStudies]..removeAt(studyIndex);
+    final updatedTotalCount = state.totalCount > 0 ? state.totalCount - 1 : 0;
+    final updatedPageTotalCount = state.pageTotalCount > 0
+        ? state.pageTotalCount - 1
+        : 0;
+    state = state.copyWith(
+      loadedStudies: () => updatedLoaded,
+      pinnedStudiesList: () => [
+        ...state.pinnedStudiesList,
+        state.loadedStudies[studyIndex],
+      ],
+      totalCount: updatedTotalCount,
+      pageTotalCount: updatedPageTotalCount,
+      hasMore: updatedLoaded.length < updatedTotalCount,
+    );
   }
 
   Future<void> pinOffStudy(String modelId) async {
