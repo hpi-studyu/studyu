@@ -18,7 +18,7 @@ Prefix `dart`/`flutter` commands with `fvm`, and `melos` commands with `fvm exec
 FVM-managed SDK version.
 
 Before running any melos, flutter, dart, or fvm command, check if `rtk` is installed
-(`command -v rtk`) and prefix the command with `rtk ` when available. This applies the
+(`command -v rtk`) and prefix the command with `rtk` when available. This applies the
 project's RTK output filters.
 
 - `fvm dart pub get`: installs root dependencies.
@@ -41,6 +41,8 @@ Follow Effective Dart and the shared `analysis_options.yaml`, which includes `pa
 
 Tests use Flutter/Dart test tooling. Place unit and widget tests under each package's `test/` directory and Designer integration tests under `designer_v2/integration_test/`. Prefer names ending in `_test.dart`, matching the feature or model, for example `filter_evaluator_test.dart`. Run all package tests with `melos test`; run a focused package test with `cd designer_v2 && flutter test`.
 
+Prefer tests for logic, behavior, state, navigation, and accessibility contracts. Do not add or update widget assertions that merely mirror presentation details such as exact icons, colors, typography, spacing, widget classes, or incidental copy. Do not add visual/golden coverage for a purely visual change unless explicitly requested; only update existing goldens when their established coverage requires it.
+
 ## Commit & Pull Request Guidelines
 
 Use Conventional Commits, as seen in history: `fix: remove redundant fitbit label`, `feat(designer): move fitbit credentials...`, `chore: update deps + ios deps`. Keep commits scoped and include generated files when applicable. Pull requests should describe the change, link related issues, list verification commands, and include screenshots or recordings for UI changes.
@@ -52,7 +54,9 @@ Do not commit secrets. Environment templates live in `flutter_common/lib/envs/`;
 ## AI Agent Behavioral Constraints & Execution Rules
 
 You must strictly adhere to the following workspace rules for all file modifications, terminal command executions, commit generations, and pull request actions.
+
 ### 1. Code Quality & Pre-Commit Checks
+
 Before staging changes, committing, or opening a Pull Request, you MUST run `scripts/pre-commit-check`. This is the same shared check used by the tracked `.githooks/pre-commit` hook: it runs format and analyze, and only runs code generation when staged files can affect generated output.
 
 Do NOT run `fvm exec melos qualitycheck` as the default pre-commit or pre-PR check. Run it only when you need the full CI-style workspace check or when explicitly requested.

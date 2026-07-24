@@ -521,49 +521,6 @@ void main() {
     expect(find.text('Cereal'), findsOneWidget);
     expect(find.text('Toast'), findsOneWidget);
     expect(find.textContaining('Breakfast •'), findsNothing);
-    expect(find.byIcon(Icons.breakfast_dining_outlined), findsOneWidget);
-  });
-
-  testWidgets('meal groups keep the original category icons and colors', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      nutritionTaskApp(
-        nutritionTask(),
-        existingRecall: recall([
-          meal('breakfast', MealType.breakfast)
-            ..timestamp = DateTime(2026, 7, 15, 8),
-          meal('brunch', MealType.brunch)
-            ..timestamp = DateTime(2026, 7, 15, 10),
-          meal('lunch', MealType.lunch)..timestamp = DateTime(2026, 7, 15, 12),
-          meal('snack', MealType.snack)..timestamp = DateTime(2026, 7, 15, 15),
-          meal('dinner', MealType.dinner)
-            ..timestamp = DateTime(2026, 7, 15, 19),
-        ]),
-      ),
-    );
-    await tester.pump();
-
-    expect(
-      tester.widget<Icon>(find.byIcon(Icons.breakfast_dining_outlined)).color,
-      Colors.amber,
-    );
-    expect(
-      tester.widget<Icon>(find.byIcon(Icons.brunch_dining_outlined)).color,
-      Colors.orange,
-    );
-    expect(
-      tester.widget<Icon>(find.byIcon(Icons.lunch_dining_outlined)).color,
-      Colors.green,
-    );
-    expect(
-      tester.widget<Icon>(find.byIcon(Icons.cookie_outlined)).color,
-      Colors.purple,
-    );
-    expect(
-      tester.widget<Icon>(find.byIcon(Icons.dinner_dining_outlined)).color,
-      Colors.indigo,
-    );
   });
 
   testWidgets('interleaved categories stay chronological', (tester) async {
