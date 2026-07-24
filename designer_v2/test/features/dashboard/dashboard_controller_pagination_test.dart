@@ -22,11 +22,11 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_type
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import 'dashboard_controller_pagination_test.mocks.dart';
@@ -860,7 +860,7 @@ void main() {
         ModelAction(
           type: StudyActionType.delete,
           label: 'delete',
-          onExecute: () async {},
+          onExecute: () {},
         ),
       ]);
 
@@ -917,7 +917,7 @@ void main() {
           ModelAction(
             type: StudyActionType.duplicate,
             label: 'duplicate',
-            onExecute: () async {},
+            onExecute: () {},
           ),
         ]);
 
