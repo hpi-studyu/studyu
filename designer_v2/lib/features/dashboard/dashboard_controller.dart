@@ -94,6 +94,8 @@ class DashboardController extends _$DashboardController
     final pageFuture = _fetchPage(token, isInitial: true);
     final pageTotalFuture = _fetchPageTotalCount(token);
     await Future.wait([pinnedFuture, pageFuture, pageTotalFuture]);
+    if (token != _fetchToken) return;
+    state = state.copyWith(isLoadingInitial: false);
   }
 
   Future<void> _fetchPinnedFor(int token) async {
@@ -146,7 +148,6 @@ class DashboardController extends _$DashboardController
       state = state.copyWith(
         loadedStudies: () => updatedLoaded,
         totalCount: page.totalCount,
-        isLoadingInitial: false,
         isLoadingMore: false,
         hasMore: hasMore,
         loadError: () => null,
@@ -157,7 +158,6 @@ class DashboardController extends _$DashboardController
       state = state.copyWith(
         loadedStudies: () => const [],
         totalCount: 0,
-        isLoadingInitial: false,
         isLoadingMore: false,
         hasMore: false,
         loadError: () => e,
@@ -166,7 +166,6 @@ class DashboardController extends _$DashboardController
     } catch (e) {
       if (token != _fetchToken) return;
       state = state.copyWith(
-        isLoadingInitial: false,
         isLoadingMore: false,
         hasMore: false,
         loadError: () => e,

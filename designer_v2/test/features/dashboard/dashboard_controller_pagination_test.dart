@@ -172,6 +172,43 @@ void main() {
       expect(h.state.isLoadingInitial, isFalse);
     });
 
+    test('keeps the initial count loading until the total is known', () async {
+      final h = _Harness();
+      final pageCompleter = Completer<StudiesPage>();
+      final totalCompleter = Completer<StudiesPage>();
+      when(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).thenAnswer((invocation) {
+        final limit = invocation.namedArguments[#limit] as int;
+        return limit == 1 ? totalCompleter.future : pageCompleter.future;
+      });
+
+      await Future<void>.delayed(Duration.zero);
+      pageCompleter.complete(
+        StudiesPage(studies: [_study('s1')], totalCount: 4),
+      );
+      await h.settle();
+
+      expect(h.state.loadedStudies, hasLength(1));
+      expect(h.state.isLoadingInitial, isTrue);
+
+      totalCompleter.complete(const StudiesPage(studies: [], totalCount: 4));
+      await h.settle();
+
+      expect(h.state.isLoadingInitial, isFalse);
+      expect(h.state.displayTotalStudyCount, 4);
+    });
+
     test('hasMore is false when total <= loaded', () async {
       final h = _Harness(
         initialPage: StudiesPage(

@@ -207,13 +207,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildStudiesCount(BuildContext context, DashboardState state) {
+    if (state.isLoadingInitial) {
+      return const SizedBox(width: 72, height: 20);
+    }
+
     final localizations = AppLocalizations.of(context)!;
     final String countLabel;
-    if (state.isLoadingInitial) {
-      countLabel = localizations.studies_count_total(
-        state.displayTotalStudyCount,
-      );
-    } else if (state.hasActiveRefinement) {
+    if (state.hasActiveRefinement) {
       countLabel = localizations.studies_count_filtered(
         state.filteredStudyCount,
         state.displayTotalStudyCount,
