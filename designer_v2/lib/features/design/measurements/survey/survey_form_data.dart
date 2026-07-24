@@ -24,6 +24,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
     required super.hasReminder,
     super.reminderTime,
     required this.questionnaireFormData,
+    this.scheduleRule,
   });
 
   final MeasurementID measurementId;
@@ -31,6 +32,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
   final String? introText;
   final String? outroText;
   final QuestionnaireFormData questionnaireFormData;
+  final TaskScheduleRule? scheduleRule;
 
   @override
   FormDataID get id => measurementId;
@@ -53,6 +55,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
       hasReminder: questionnaireTask.schedule.hasReminder,
       reminderTime: questionnaireTask.schedule.reminderTime,
       instanceId: questionnaireTask.schedule.instanceId,
+      scheduleRule: questionnaireTask.scheduleRule,
     );
   }
 
@@ -64,6 +67,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
     questionnaireTask.footer = outroText;
     questionnaireTask.questions = questionnaireFormData.toQuestionnaire();
     questionnaireTask.schedule = toSchedule();
+    questionnaireTask.scheduleRule = scheduleRule;
     return questionnaireTask;
   }
 
@@ -81,6 +85,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
       timeLockEnd: timeLockEnd,
       hasReminder: hasReminder,
       reminderTime: reminderTime,
+      scheduleRule: scheduleRule,
     );
   }
 }
