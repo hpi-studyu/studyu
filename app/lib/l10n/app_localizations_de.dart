@@ -1920,7 +1920,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get portion_state_as_served => 'As Served';
 
   @override
-  String get my_templates => 'Meine Vorlagen';
+  String get my_templates => 'Gespeicherte Elemente';
 
   @override
   String get manage_saved_items => 'Gespeicherte Elemente verwalten';
@@ -1932,19 +1932,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get duplicate => 'Duplizieren';
 
   @override
-  String get save_as_template => 'Als Vorlage speichern';
+  String get save_as_template => 'Gespeichertes Element hinzufügen';
 
   @override
-  String get save_meal_template => 'Mahlzeit als Vorlage speichern';
+  String get save_meal_template => 'Mahlzeit speichern';
 
   @override
-  String get save_food_template => 'Lebensmittel als Vorlage speichern';
+  String get save_food_template => 'Lebensmittel speichern';
 
   @override
-  String get save_recipe_template => 'Rezept als Vorlage speichern';
+  String get save_recipe_template => 'Rezept speichern';
 
   @override
-  String get template_name => 'Vorlagenname';
+  String get template_name => 'Name';
 
   @override
   String get template_tags_optional => 'Tags (optional)';
@@ -1953,48 +1953,48 @@ class AppLocalizationsDe extends AppLocalizations {
   String get template_tags_hint => 'Frühstück, schnell, gesund';
 
   @override
-  String get template_saved => 'Vorlage gespeichert';
+  String get template_saved => 'Gespeichertes Element hinzugefügt';
 
   @override
-  String get select_meal_template => 'Mahlzeit-Vorlage auswählen';
+  String get select_meal_template => 'Gespeicherte Mahlzeiten';
 
   @override
-  String get select_food_template => 'Lebensmittel-Vorlage auswählen';
+  String get select_food_template => 'Gespeicherte Lebensmittel';
 
   @override
-  String get search_templates => 'Vorlagen suchen...';
+  String get search_templates => 'Gespeicherte Elemente suchen...';
 
   @override
-  String get no_templates_saved => 'Noch keine Vorlagen gespeichert';
+  String get no_templates_saved => 'Noch keine gespeicherten Elemente';
 
   @override
   String get save_templates_hint =>
-      'Speichern Sie Ihre Lieblingsmahlzeiten und Lebensmittel als Vorlagen für schnellen Zugriff';
+      'Speichern Sie Ihre Lieblingsmahlzeiten und Lebensmittel für schnellen Zugriff';
 
   @override
-  String get from_template => 'Aus Vorlage';
+  String get from_template => 'Aus gespeichertem Element';
 
   @override
   String get add_new_food => 'Neues Lebensmittel hinzufügen';
 
   @override
-  String get delete_template => 'Vorlage löschen';
+  String get delete_template => 'Gespeichertes Element löschen';
 
   @override
   String get delete_template_confirmation =>
-      'Sind Sie sicher, dass Sie diese Vorlage löschen möchten?';
+      'Möchten Sie dieses gespeicherte Element wirklich löschen?';
 
   @override
   String get filter_all => 'Alle';
 
   @override
-  String get filter_meals => 'Mahlzeiten';
+  String get filter_meals => 'Gespeicherte Mahlzeiten';
 
   @override
-  String get filter_foods => 'Lebensmittel';
+  String get filter_foods => 'Gespeicherte Lebensmittel';
 
   @override
-  String get filter_recipes => 'Rezepte';
+  String get filter_recipes => 'Gespeicherte Rezepte';
 
   @override
   String items_count(int count) {
@@ -2016,7 +2016,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get template_type_recipe => 'Rezept';
 
   @override
-  String get rename_template => 'Vorlage umbenennen';
+  String get rename_template => 'Gespeichertes Element umbenennen';
 
   @override
   String get new_name => 'Neuer Name';
@@ -2111,7 +2111,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get search_food_hint => 'Search food (e.g., \"apple\", \"chicken\")';
 
   @override
-  String get my_saved_items => 'My Saved Items';
+  String get my_saved_items => 'Gespeicherte Elemente';
 
   @override
   String get recent_foods => 'Zuletzt verwendet';
@@ -2175,7 +2175,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get no_matching_templates => 'No matching templates';
+  String get no_matching_templates => 'Keine passenden gespeicherten Elemente';
 
   @override
   String get detailed_nutrition => 'Detailed Nutrition';

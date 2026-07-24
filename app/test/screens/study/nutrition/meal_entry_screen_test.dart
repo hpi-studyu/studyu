@@ -1057,7 +1057,7 @@ void main() {
     expect(find.text('Adjust quantity'), findsOneWidget);
     expect(find.text('Edit'), findsOneWidget);
     expect(find.text('Duplicate'), findsOneWidget);
-    expect(find.text('Save as Template'), findsOneWidget);
+    expect(find.text('Save food'), findsOneWidget);
     expect(find.text('Delete'), findsWidgets);
     await tester.tap(find.text('Duplicate'));
     await tester.pumpAndSettle();

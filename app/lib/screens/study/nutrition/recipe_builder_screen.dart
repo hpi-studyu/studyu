@@ -386,7 +386,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
           if (_ingredients.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.bookmark_add_outlined),
-              tooltip: l10n.save_as_template,
+              tooltip: l10n.save_recipe_template,
               onPressed: _saveAsTemplate,
             ),
         ],

@@ -1903,7 +1903,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get portion_state_as_served => 'As Served';
 
   @override
-  String get my_templates => 'My Templates';
+  String get my_templates => 'Saved items';
 
   @override
   String get manage_saved_items => 'Manage saved items';
@@ -1915,19 +1915,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicate => 'Duplicate';
 
   @override
-  String get save_as_template => 'Save as Template';
+  String get save_as_template => 'Add saved item';
 
   @override
-  String get save_meal_template => 'Save Meal Template';
+  String get save_meal_template => 'Save meal';
 
   @override
-  String get save_food_template => 'Save Food Template';
+  String get save_food_template => 'Save food';
 
   @override
-  String get save_recipe_template => 'Save Recipe Template';
+  String get save_recipe_template => 'Save recipe';
 
   @override
-  String get template_name => 'Template Name';
+  String get template_name => 'Name';
 
   @override
   String get template_tags_optional => 'Tags (optional)';
@@ -1936,48 +1936,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get template_tags_hint => 'breakfast, quick, healthy';
 
   @override
-  String get template_saved => 'Template saved';
+  String get template_saved => 'Saved item added';
 
   @override
-  String get select_meal_template => 'Select Meal Template';
+  String get select_meal_template => 'Saved meals';
 
   @override
-  String get select_food_template => 'Select Food Template';
+  String get select_food_template => 'Saved foods';
 
   @override
-  String get search_templates => 'Search templates...';
+  String get search_templates => 'Search saved items...';
 
   @override
-  String get no_templates_saved => 'No templates saved yet';
+  String get no_templates_saved => 'No saved items yet';
 
   @override
   String get save_templates_hint =>
-      'Save your favorite meals and foods as templates for quick access';
+      'Save your favorite meals and foods for quick access';
 
   @override
-  String get from_template => 'From Template';
+  String get from_template => 'From saved item';
 
   @override
   String get add_new_food => 'Add New Food';
 
   @override
-  String get delete_template => 'Delete Template';
+  String get delete_template => 'Delete saved item';
 
   @override
   String get delete_template_confirmation =>
-      'Are you sure you want to delete this template?';
+      'Are you sure you want to delete this saved item?';
 
   @override
   String get filter_all => 'All';
 
   @override
-  String get filter_meals => 'Meals';
+  String get filter_meals => 'Saved meals';
 
   @override
-  String get filter_foods => 'Foods';
+  String get filter_foods => 'Saved foods';
 
   @override
-  String get filter_recipes => 'Recipes';
+  String get filter_recipes => 'Saved recipes';
 
   @override
   String items_count(int count) {
@@ -1999,7 +1999,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get template_type_recipe => 'Recipe';
 
   @override
-  String get rename_template => 'Rename Template';
+  String get rename_template => 'Rename saved item';
 
   @override
   String get new_name => 'New Name';
@@ -2094,7 +2094,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_food_hint => 'Search food (e.g., \"apple\", \"chicken\")';
 
   @override
-  String get my_saved_items => 'My Saved Items';
+  String get my_saved_items => 'Saved items';
 
   @override
   String get recent_foods => 'Recent';
@@ -2158,7 +2158,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get no_matching_templates => 'No matching templates';
+  String get no_matching_templates => 'No matching saved items';
 
   @override
   String get detailed_nutrition => 'Detailed Nutrition';

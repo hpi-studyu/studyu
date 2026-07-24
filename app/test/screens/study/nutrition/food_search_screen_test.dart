@@ -339,7 +339,7 @@ void main() {
     await tester.tap(find.text('Manage saved items'));
     await tester.pumpAndSettle();
 
-    expect(find.text('My Templates'), findsOneWidget);
+    expect(find.text('Saved items'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 

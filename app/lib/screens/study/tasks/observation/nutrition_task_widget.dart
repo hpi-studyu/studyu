@@ -857,7 +857,7 @@ class _MealTimelineCard extends StatelessWidget {
                         value: 'save_template',
                         child: _PopupMenuItem(
                           icon: Icons.bookmark_add_outlined,
-                          label: l10n.save_as_template,
+                          label: l10n.save_meal_template,
                         ),
                       ),
                     PopupMenuItem(

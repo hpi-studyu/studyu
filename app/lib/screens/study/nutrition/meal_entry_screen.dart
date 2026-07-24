@@ -253,7 +253,11 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.bookmark_add_outlined),
-              title: Text(l10n.save_as_template),
+              title: Text(
+                food.entryType == FoodEntryType.recipe
+                    ? l10n.save_recipe_template
+                    : l10n.save_food_template,
+              ),
               onTap: () => Navigator.pop(context, _FoodAction.saveTemplate),
             ),
             ListTile(
@@ -839,7 +843,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.bookmark_add_outlined),
-                tooltip: l10n.save_as_template,
+                tooltip: l10n.save_meal_template,
                 onPressed: _isSavingTemplate ? null : _saveAsTemplate,
               ),
             TextButton(onPressed: _saveMeal, child: Text(l10n.save)),
