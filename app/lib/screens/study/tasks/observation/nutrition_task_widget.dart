@@ -508,6 +508,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       return _MealTimelineCategory(
         key: 'custom:$customLabel',
         icon: Icons.restaurant_outlined,
+        color: Theme.of(context).colorScheme.primary,
         label: customLabel!,
       );
     }
@@ -517,36 +518,42 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         return _MealTimelineCategory(
           key: 'breakfast',
           icon: Icons.wb_sunny_outlined,
+          color: Colors.amber,
           label: l10n.meal_type_breakfast,
         );
       case MealType.brunch:
         return _MealTimelineCategory(
           key: 'brunch',
-          icon: Icons.free_breakfast_outlined,
+          icon: Icons.brunch_dining_outlined,
+          color: Colors.orange,
           label: l10n.meal_type_brunch,
         );
       case MealType.lunch:
         return _MealTimelineCategory(
           key: 'lunch',
           icon: Icons.lunch_dining_outlined,
+          color: Colors.green,
           label: l10n.meal_type_lunch,
         );
       case MealType.dinner:
         return _MealTimelineCategory(
           key: 'dinner',
           icon: Icons.dinner_dining_outlined,
+          color: Colors.indigo,
           label: l10n.meal_type_dinner,
         );
       case MealType.snack:
         return _MealTimelineCategory(
           key: 'snack',
           icon: Icons.cookie_outlined,
+          color: Colors.purple,
           label: l10n.meal_type_snack,
         );
       case MealType.other:
         return _MealTimelineCategory(
           key: meal.isLabelExplicitlyUnset ? 'meal' : 'other',
           icon: Icons.restaurant_outlined,
+          color: Theme.of(context).colorScheme.primary,
           label: meal.isLabelExplicitlyUnset
               ? l10n.meal_neutral_label
               : l10n.meal_type_other,
@@ -666,11 +673,13 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
 class _MealTimelineCategory {
   final String key;
   final IconData icon;
+  final Color color;
   final String label;
 
   const _MealTimelineCategory({
     required this.key,
     required this.icon,
+    required this.color,
     required this.label,
   });
 }
@@ -701,8 +710,18 @@ class _MealTimelineGroupHeader extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8, bottom: 4),
         child: Row(
           children: [
-            ExcludeSemantics(child: Icon(category.icon)),
-            const SizedBox(width: 8),
+            ExcludeSemantics(
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: category.color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(category.icon, size: 22, color: category.color),
+              ),
+            ),
+            const SizedBox(width: 12),
             Text(
               category.label,
               style: Theme.of(
