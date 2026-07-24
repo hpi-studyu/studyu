@@ -844,6 +844,8 @@
   "more_options": "More options",
   "search_food_hint": "Search food (e.g., \"apple\", \"chicken\")",
   "my_saved_items": "My Saved Items",
+  "recent_foods": "Recent",
+  "frequently_used_foods": "Frequently Used",
   "global_database": "Global Database",
   "quick_actions": "Quick Actions",
   "create_recipe": "Create Recipe",

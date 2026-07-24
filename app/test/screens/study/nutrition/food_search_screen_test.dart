@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/models/unified_food_result.dart';
 import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/util/template_storage_manager.dart';
@@ -21,8 +22,9 @@ Widget foodSearchApp(
   bool allowMealTemplates = false,
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
+  studyu.StudySubject? activeSubject,
 }) => ChangeNotifierProvider(
-  create: (_) => AppState(),
+  create: (_) => AppState()..activeSubject = activeSubject,
   child: MaterialApp(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -41,8 +43,9 @@ Widget foodSearchModalApp({
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
   ValueChanged<FoodSearchSelection?>? onResult,
+  studyu.StudySubject? activeSubject,
 }) => ChangeNotifierProvider(
-  create: (_) => AppState(),
+  create: (_) => AppState()..activeSubject = activeSubject,
   child: MaterialApp(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -84,6 +87,15 @@ UsdaSearchResponse usdaResult([List<UsdaFoodItem> foods = const []]) =>
 UsdaFoodItem usdaFood(String name, [int id = 1]) =>
     UsdaFoodItem(fdcId: id, description: name, foodNutrients: const []);
 
+UnifiedFoodResult unifiedFood(String id, String name, {String? brand}) =>
+    UnifiedFoodResult(
+      id: id,
+      name: name,
+      brand: brand,
+      source: studyu.FoodSource.usda,
+      originalData: Object(),
+    );
+
 Future<void> enterSearch(WidgetTester tester, String query) async {
   await tester.enterText(find.byType(TextField), query);
   await tester.pump(const Duration(milliseconds: 400));
@@ -98,6 +110,26 @@ Future<void> scrollToBottom(WidgetTester tester) async {
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  test('ranks exact and generic results while preserving ties', () {
+    final results = [
+      unifiedFood('branded-prefix', 'Apple juice', brand: 'Brand'),
+      unifiedFood('generic-other', 'Fresh fruit'),
+      unifiedFood('branded-exact', 'Apple', brand: 'Brand'),
+      unifiedFood('generic-prefix', 'Apple slices'),
+      unifiedFood('generic-exact', 'Apple'),
+      unifiedFood('generic-prefix-tie', 'Apple sauce'),
+    ];
+
+    expect(rankFoodSearchResults(results, 'apple').map((result) => result.id), [
+      'generic-exact',
+      'branded-exact',
+      'generic-prefix',
+      'generic-prefix-tie',
+      'branded-prefix',
+      'generic-other',
+    ]);
+  });
 
   testWidgets('shows English search examples without a quick recipe action', (
     tester,
@@ -125,6 +157,36 @@ void main() {
       find.text('Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('shows participant history and opens quantity confirmation', (
+    tester,
+  ) async {
+    final apple = historyFood('apple', 'Apple');
+    final banana = historyFood('banana', 'Banana');
+    final subject = studyu.StudySubject('subject', 'study', 'user', [])
+      ..progress = [
+        historyProgress('subject', DateTime.utc(2025), [apple]),
+        historyProgress('subject', DateTime.utc(2025, 1, 2), [apple]),
+        historyProgress('subject', DateTime.utc(2025, 1, 3), [banana]),
+      ];
+
+    await tester.pumpWidget(
+      foodSearchModalApp(mealLabel: 'Snack', activeSubject: subject),
+    );
+    await tester.tap(find.text('Open search'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Frequently Used'), findsOneWidget);
+    expect(find.text('Recent'), findsOneWidget);
+    expect(find.text('Apple'), findsOneWidget);
+    expect(find.text('Banana'), findsOneWidget);
+
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Add to Snack'), findsOneWidget);
+    expect(find.text('Amount'), findsOneWidget);
   });
 
   testWidgets('hides saved items when only disallowed recipes exist', (
@@ -1187,6 +1249,36 @@ void main() {
     expect(prototype.templateId, isNull);
   });
 
+  testWidgets('keeps generic results ahead as providers finish incrementally', (
+    tester,
+  ) async {
+    final usdaCompleter = Completer<UsdaSearchResponse>();
+    await tester.pumpWidget(
+      foodSearchApp(
+        const Locale('en'),
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) async =>
+                offResult([
+                  Product(productName: 'Apple juice', brands: 'Brand'),
+                ]),
+        usdaFoodSearch: ({required query, required page, required pageSize}) =>
+            usdaCompleter.future,
+      ),
+    );
+
+    await enterSearch(tester, 'apple');
+    await tester.pump();
+    expect(find.text('Apple juice'), findsOneWidget);
+
+    usdaCompleter.complete(usdaResult([usdaFood('Apple')]));
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getTopLeft(find.text('Apple')).dy,
+      lessThan(tester.getTopLeft(find.text('Apple juice')).dy),
+    );
+  });
+
   testWidgets('partial provider success keeps useful results', (tester) async {
     await tester.pumpWidget(
       foodSearchApp(
@@ -1216,3 +1308,64 @@ void main() {
     );
   });
 }
+
+studyu.SubjectProgress historyProgress(
+  String subjectId,
+  DateTime mealTime,
+  List<studyu.FoodEntry> foods,
+) {
+  final recall = studyu.DailyRecall.withId(
+    date: mealTime,
+    recallMode: studyu.RecallMode.realtimeRecord,
+    meals: [
+      studyu.MealLog.withId(
+        mealType: studyu.MealType.snack,
+        mealContext: studyu.MealContext.home,
+        timestamp: mealTime,
+        timezone: 'UTC',
+        isSkipped: false,
+        foods: foods,
+      ),
+    ],
+  );
+  return studyu.SubjectProgress(
+    subjectId: subjectId,
+    interventionId: 'intervention',
+    taskId: 'task',
+    resultType: 'DailyRecall',
+    result: studyu.Result<studyu.DailyRecall>.app(
+      type: 'DailyRecall',
+      periodId: 'period',
+      result: recall,
+    ),
+  );
+}
+
+studyu.FoodEntry historyFood(String id, String name) => studyu.FoodEntry(
+  id: id,
+  entryType: studyu.FoodEntryType.singleIngredient,
+  name: name,
+  amount: 1,
+  unit: 'serving',
+  servingSizeGrams: 100,
+  portionEstimationMethod: studyu.PortionEstimationMethod.standardUnit,
+  portionState: studyu.PortionState.asServed,
+  nutrition: studyu.NutritionProfile(
+    energyKcal: 100,
+    protein: 1,
+    carbs: 1,
+    fat: 1,
+    sugars: 0,
+    fiber: 0,
+    saturatedFat: 0,
+    transFat: 0,
+    cholesterol: 0,
+    sodium: 0,
+    waterContent: 0,
+    micros: const {},
+  ),
+  source: studyu.FoodSource.manual,
+  confidenceScore: 1,
+  createdAt: DateTime.utc(2024),
+  originalValues: const {},
+);

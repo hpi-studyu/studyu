@@ -3863,6 +3863,18 @@ abstract class AppLocalizations {
   /// **'My Saved Items'**
   String get my_saved_items;
 
+  /// No description provided for @recent_foods.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recent_foods;
+
+  /// No description provided for @frequently_used_foods.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Used'**
+  String get frequently_used_foods;
+
   /// No description provided for @global_database.
   ///
   /// In en, this message translates to:

@@ -2064,6 +2064,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get my_saved_items => 'My Saved Items';
 
   @override
+  String get recent_foods => 'Zuletzt verwendet';
+
+  @override
+  String get frequently_used_foods => 'Häufig verwendet';
+
+  @override
   String get global_database => 'Global Database';
 
   @override

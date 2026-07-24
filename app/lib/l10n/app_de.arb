@@ -654,6 +654,8 @@
   "meal_context": "Mahlzeitenkontext",
   "meal_details": "Mahlzeitendetails",
   "apply": "Übernehmen",
+  "recent_foods": "Zuletzt verwendet",
+  "frequently_used_foods": "Häufig verwendet",
   "search_food_description": "Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.",
   "food_search_error": "Die Lebensmittelsuche ist nicht verfügbar. Bitte versuchen Sie es erneut.",
   "food_search_results_count": "{count, plural, =1 {1 Ergebnis gefunden} other {{count} Ergebnisse gefunden}}",

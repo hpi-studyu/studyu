@@ -10,6 +10,7 @@ import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
@@ -28,6 +29,49 @@ typedef UsdaFoodSearch =
       required int page,
       required int pageSize,
     });
+
+List<UnifiedFoodResult> rankFoodSearchResults(
+  Iterable<UnifiedFoodResult> results,
+  String query,
+) {
+  final normalizedQuery = _normalizeSearchText(query);
+  final indexed = results.indexed.toList();
+  if (normalizedQuery.isEmpty) {
+    return indexed.map((entry) => entry.$2).toList(growable: false);
+  }
+
+  indexed.sort((left, right) {
+    final scoreComparison = _foodSearchScore(
+      left.$2,
+      normalizedQuery,
+    ).compareTo(_foodSearchScore(right.$2, normalizedQuery));
+    return scoreComparison != 0 ? scoreComparison : left.$1.compareTo(right.$1);
+  });
+  return indexed.map((entry) => entry.$2).toList(growable: false);
+}
+
+int _foodSearchScore(UnifiedFoodResult result, String normalizedQuery) {
+  final name = _normalizeSearchText(result.name);
+  final queryTokens = normalizedQuery.split(' ');
+  final nameTokens = name.split(' ');
+  final isExact = name == normalizedQuery;
+  final isPrefixOrToken =
+      name.startsWith(normalizedQuery) ||
+      queryTokens.every(
+        (queryToken) =>
+            nameTokens.any((nameToken) => nameToken.startsWith(queryToken)),
+      );
+  final matchTier = isExact
+      ? 0
+      : isPrefixOrToken
+      ? 1
+      : 2;
+  final isBranded = result.brand?.trim().isNotEmpty ?? false;
+  return matchTier * 2 + (isBranded ? 1 : 0);
+}
+
+String _normalizeSearchText(String value) =>
+    value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
 final class FoodSearchSelection {
   final List<studyu.FoodEntry> foods;
@@ -86,7 +130,14 @@ class FoodSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context, listen: false);
-    final userId = appState.activeSubject?.id ?? 'anonymous';
+    final activeSubject = appState.activeSubject;
+    final userId = activeSubject?.id ?? 'anonymous';
+    final history = activeSubject == null
+        ? FoodSearchHistory.empty
+        : buildFoodSearchHistory(
+            activeSubject.progress,
+            subjectId: activeSubject.id,
+          );
 
     return ChangeNotifierProvider(
       create: (_) => TemplateViewModel(userId: userId),
@@ -96,6 +147,7 @@ class FoodSearchScreen extends StatelessWidget {
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
+        history: history,
       ),
     );
   }
@@ -107,6 +159,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
+  final FoodSearchHistory history;
 
   const _FoodSearchScreenContent({
     this.allowRecipes = true,
@@ -114,6 +167,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
+    required this.history,
   });
 
   @override
@@ -550,6 +604,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     );
   }
 
+  void _selectHistoryItem(FoodSearchHistoryItem item) {
+    _showQuantity(item.createSelection());
+  }
+
   void _selectResult(UnifiedFoodResult result) {
     final foodEntry = result.source == studyu.FoodSource.openfoodfacts
         ? _convertToFoodEntry(result.originalData as Product)
@@ -655,6 +713,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final templateViewModel = Provider.of<TemplateViewModel>(context);
+    final rankedResults = rankFoodSearchResults(_combinedResults, _activeQuery);
     String? searchStatus;
     if (_isInitialLoading || _isLoadingMore) {
       searchStatus = l10n.searching_databases;
@@ -713,7 +772,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               offHasMore: _offHasMore,
               usdaHasMore: _usdaHasMore,
               errorMessage: _errorMessage,
-              combinedResults: _combinedResults,
+              combinedResults: rankedResults,
+              history: widget.history,
+              onSelectHistory: _selectHistoryItem,
               onSelectFoodTemplate: _selectFoodTemplate,
               onSelectMealTemplate: _selectMealTemplate,
               onManageSavedItems: () => _manageSavedItems(templateViewModel),
@@ -901,6 +962,51 @@ class _TemplateCard extends StatelessWidget {
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
+        ),
+        trailing: Icon(
+          Icons.add_circle_outline,
+          color: theme.colorScheme.primary,
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class _HistoryFoodCard extends StatelessWidget {
+  final FoodSearchHistoryItem item;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  const _HistoryFoodCard({
+    required this.item,
+    required this.onTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final food = item.food;
+    final l10n = AppLocalizations.of(context)!;
+    final brand = food.brandName?.trim();
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        leading: Icon(
+          Icons.fastfood_outlined,
+          color: theme.colorScheme.primary,
+        ),
+        title: Text(food.name, maxLines: 2, overflow: TextOverflow.ellipsis),
+        subtitle: Text(
+          [
+            if (brand != null && brand.isNotEmpty) brand,
+            l10n.kcal_value(food.nutrition.energyKcal.round().toString()),
+          ].join(' • '),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         trailing: Icon(
           Icons.add_circle_outline,
@@ -1333,6 +1439,8 @@ class _FoodSearchListView extends StatelessWidget {
   final bool usdaHasMore;
   final String? errorMessage;
   final List<UnifiedFoodResult> combinedResults;
+  final FoodSearchHistory history;
+  final void Function(FoodSearchHistoryItem) onSelectHistory;
   final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
   final void Function(studyu.SavedMealTemplate) onSelectMealTemplate;
   final VoidCallback onManageSavedItems;
@@ -1359,6 +1467,8 @@ class _FoodSearchListView extends StatelessWidget {
     required this.usdaHasMore,
     required this.errorMessage,
     required this.combinedResults,
+    required this.history,
+    required this.onSelectHistory,
     required this.onSelectFoodTemplate,
     required this.onSelectMealTemplate,
     required this.onManageSavedItems,
@@ -1396,10 +1506,19 @@ class _FoodSearchListView extends StatelessWidget {
         filteredTemplates.isEmpty &&
         searchController.text.isNotEmpty;
     final showManageOnly = allowMealTemplates && !hasTemplates;
+    final showHistory = searchController.text.isEmpty;
+    final frequentlyUsed = showHistory
+        ? history.frequentlyUsed
+        : const <FoodSearchHistoryItem>[];
+    final recent = showHistory
+        ? history.recent
+        : const <FoodSearchHistoryItem>[];
 
-    // Calculate section offsets for itemBuilder
-    // Structure: [padding, templatesHeader, templatesList, globalHeader, content, quickActionsHeader, quickActions, bottomPadding]
+    // Calculate section offsets for itemBuilder.
     const int paddingItem = 1;
+    final historyItems =
+        (frequentlyUsed.isEmpty ? 0 : frequentlyUsed.length + 3) +
+        (recent.isEmpty ? 0 : recent.length + 3);
     final int templatesHeaderItems = hasTemplates
         ? 2
         : showManageOnly
@@ -1431,6 +1550,7 @@ class _FoodSearchListView extends StatelessWidget {
 
     final totalItems =
         paddingItem +
+        historyItems +
         templatesHeaderItems +
         templatesListItems +
         noMatchingTemplateItem +
@@ -1485,6 +1605,58 @@ class _FoodSearchListView extends StatelessWidget {
     // Initial padding
     if (index == currentIndex++) {
       return const SizedBox(height: 8);
+    }
+
+    final showHistory = searchController.text.isEmpty;
+    final frequentlyUsed = showHistory
+        ? history.frequentlyUsed
+        : const <FoodSearchHistoryItem>[];
+    final recent = showHistory
+        ? history.recent
+        : const <FoodSearchHistoryItem>[];
+
+    if (frequentlyUsed.isNotEmpty) {
+      if (index == currentIndex++) {
+        return _SectionHeader(
+          icon: Icons.repeat,
+          title: l10n.frequently_used_foods,
+          iconColor: theme.colorScheme.secondary,
+        );
+      }
+      if (index == currentIndex++) return const SizedBox(height: 8);
+      final historyIndex = index - currentIndex;
+      if (historyIndex >= 0 && historyIndex < frequentlyUsed.length) {
+        final item = frequentlyUsed[historyIndex];
+        return _HistoryFoodCard(
+          item: item,
+          onTap: () => onSelectHistory(item),
+          theme: theme,
+        );
+      }
+      currentIndex += frequentlyUsed.length;
+      if (index == currentIndex++) return const SizedBox(height: 16);
+    }
+
+    if (recent.isNotEmpty) {
+      if (index == currentIndex++) {
+        return _SectionHeader(
+          icon: Icons.history,
+          title: l10n.recent_foods,
+          iconColor: theme.colorScheme.primary,
+        );
+      }
+      if (index == currentIndex++) return const SizedBox(height: 8);
+      final historyIndex = index - currentIndex;
+      if (historyIndex >= 0 && historyIndex < recent.length) {
+        final item = recent[historyIndex];
+        return _HistoryFoodCard(
+          item: item,
+          onTap: () => onSelectHistory(item),
+          theme: theme,
+        );
+      }
+      currentIndex += recent.length;
+      if (index == currentIndex++) return const SizedBox(height: 16);
     }
 
     if (showManageOnly && index == currentIndex++) {
