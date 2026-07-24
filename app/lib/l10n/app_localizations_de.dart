@@ -1987,6 +1987,38 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get food_quantity_amount => 'Menge';
+
+  @override
+  String get food_quantity_invalid_amount =>
+      'Geben Sie eine Menge größer als null ein';
+
+  @override
+  String get food_quantity_serving => 'Portion';
+
+  @override
+  String food_quantity_serving_value(String value, String unit) {
+    return '$value g pro $unit';
+  }
+
+  @override
+  String get food_quantity_energy => 'Energie';
+
+  @override
+  String get food_quantity_protein => 'Protein';
+
+  @override
+  String get food_quantity_carbs => 'Kohlenhydrate';
+
+  @override
+  String get food_quantity_fat => 'Fett';
+
+  @override
+  String food_quantity_add_to_meal(String meal) {
+    return 'Zu $meal hinzufügen';
+  }
+
+  @override
   String get edit_food_title => 'Edit Food';
 
   @override

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
@@ -784,12 +785,16 @@ void main() {
     expect(original.foods, hasLength(1));
   });
 
-  testWidgets('template return preserves and saves the meal draft', (
+  testWidgets('template quantity return preserves and saves the meal draft', (
     tester,
   ) async {
     final prototype = FoodEntry.fromJson(testFood().toJson())
       ..id = 'saved-food-prototype'
-      ..name = 'Saved Pear';
+      ..name = 'Saved Pear'
+      ..originalValues = {
+        'nested': {'value': 1},
+      };
+    prototype.nutrition.micros = {'vitaminC': 5};
     await TemplateStorageManager().saveFoodTemplate(
       SavedFoodTemplate(
         id: 'saved-food-template',
@@ -813,6 +818,18 @@ void main() {
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
 
+    expect(find.text('Add to Edited supper'), findsOneWidget);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FoodQuantitySheet),
+        matching: find.byIcon(Icons.add),
+      ),
+    );
+    await tester.pump();
+    expect(find.text('104 kcal'), findsOneWidget);
+    await tester.tap(find.text('Add to Edited supper'));
+    await tester.pumpAndSettle();
+
     expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('Saved Pear'), findsOneWidget);
@@ -827,7 +844,67 @@ void main() {
     expect(result!.foods.first.name, 'Apple');
     expect(result!.foods.last.id, isNot(prototype.id));
     expect(result!.foods.last.name, 'Saved Pear');
+    expect(result!.foods.last.amount, 2);
+    expect(result!.foods.last.nutrition.energyKcal, 104);
+    expect(result!.foods.last.nutrition.micros['vitaminC'], 10);
+    expect(result!.foods.last.source, prototype.source);
     expect(result!.foods.last.templateId, 'saved-food-template');
+    expect(result!.foods.last.originalValues, prototype.originalValues);
+    expect(original.customMealLabel, 'Supper');
+    expect(original.foods, hasLength(1));
+  });
+
+  testWidgets('canceling template or quantity selection adds no food', (
+    tester,
+  ) async {
+    final prototype = FoodEntry.fromJson(testFood().toJson())
+      ..id = 'saved-food-prototype'
+      ..name = 'Saved Pear';
+    await TemplateStorageManager().saveFoodTemplate(
+      SavedFoodTemplate(
+        id: 'saved-food-template',
+        userId: 'anonymous',
+        name: 'Saved Pear Template',
+        isPublic: false,
+        createdAt: DateTime(2026, 7, 15),
+        prototype: prototype,
+      ),
+    );
+    final original = editableMeal();
+    MealLog? result;
+    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await selectMealType(tester, 'Other', customLabel: 'Edited supper');
+    await tester.ensureVisible(find.byTooltip('From Template'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('From Template'));
+    await tester.pumpAndSettle();
+    await tester.tapAt(const Offset(5, 5));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Saved Pear'), findsNothing);
+    expect(find.text('Edited supper'), findsWidgets);
+    expect(find.text('Apple'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('From Template'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Saved Pear Template'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add to Edited supper'), findsOneWidget);
+    await tester.tapAt(const Offset(5, 5));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Saved Pear'), findsNothing);
+    expect(find.text('Edited supper'), findsWidgets);
+    expect(find.text('Apple'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.customMealLabel, 'Edited supper');
+    expect(result!.foods, hasLength(1));
+    expect(result!.foods.single.id, 'food');
     expect(original.customMealLabel, 'Supper');
     expect(original.foods, hasLength(1));
   });

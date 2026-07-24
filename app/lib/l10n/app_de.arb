@@ -658,5 +658,14 @@
   "meal_category_other": "Weitere Mahlzeiten",
   "no_foods_added": "Keine Lebensmittel hinzugefügt",
   "log_food": "Lebensmittel eintragen",
-  "add_food_to_meal": "Lebensmittel zu {meal} hinzufügen"
+  "add_food_to_meal": "Lebensmittel zu {meal} hinzufügen",
+  "food_quantity_amount": "Menge",
+  "food_quantity_invalid_amount": "Geben Sie eine Menge größer als null ein",
+  "food_quantity_serving": "Portion",
+  "food_quantity_serving_value": "{value} g pro {unit}",
+  "food_quantity_energy": "Energie",
+  "food_quantity_protein": "Protein",
+  "food_quantity_carbs": "Kohlenhydrate",
+  "food_quantity_fat": "Fett",
+  "food_quantity_add_to_meal": "Zu {meal} hinzufügen"
 }

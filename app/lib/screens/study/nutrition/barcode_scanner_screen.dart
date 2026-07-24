@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:studyu_app/models/usda_models.dart';
-import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
@@ -151,38 +150,8 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
       if (result.status == ProductResultV3.statusSuccess &&
           result.product != null) {
-        // Product found in OpenFoodFacts!
-        final foodEntry = _convertToFoodEntry(result.product!);
-
-        // Navigate to food entry screen for editing
-        final editedFood = await Navigator.push(
-          context,
-          FoodEntryScreen.route(
-            existingFood: foodEntry,
-            showSearchAction: false,
-          ),
-        );
-
-        if (editedFood != null && mounted) {
-          // Return the food entry
-          Navigator.pop(context, editedFood);
-        } else {
-          // User cancelled, resume scanning
-          if (mounted) {
-            setState(() {
-              _isProcessing = false;
-              _lastScannedCode = null;
-              _lastScanTime = null;
-              _detectedCode = null;
-            });
-            try {
-              await _controller.start();
-            } catch (e) {
-              // Ignore restart errors
-            }
-          }
-        }
-        return; // Success, exit early
+        Navigator.pop(context, _convertToFoodEntry(result.product!));
+        return;
       }
 
       // Not found in OpenFoodFacts, try USDA
@@ -195,38 +164,8 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         if (usdaResult.foods.isNotEmpty) {
           final usdaFood = usdaResult.foods.first;
 
-          // Product found in USDA!
-          final foodEntry = _convertUsdaToFoodEntry(usdaFood);
-
-          // Navigate to food entry screen for editing
-          final editedFood = await Navigator.push(
-            context,
-            FoodEntryScreen.route(
-              existingFood: foodEntry,
-              showSearchAction: false,
-            ),
-          );
-
-          if (editedFood != null && mounted) {
-            // Return the food entry
-            Navigator.pop(context, editedFood);
-          } else {
-            // User cancelled, resume scanning
-            if (mounted) {
-              setState(() {
-                _isProcessing = false;
-                _lastScannedCode = null;
-                _lastScanTime = null;
-                _detectedCode = null;
-              });
-              try {
-                await _controller.start();
-              } catch (e) {
-                // Ignore restart errors
-              }
-            }
-          }
-          return; // Success, exit early
+          Navigator.pop(context, _convertUsdaToFoodEntry(usdaFood));
+          return;
         }
       } catch (usdaError) {
         // Continue to show "not found" dialog
@@ -291,16 +230,16 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       portionState: studyu.PortionState.asServed,
       yieldFactor: 1.0,
       nutrition: studyu.NutritionProfile(
-        energyKcal: energyKcal,
-        protein: protein,
-        carbs: carbs,
-        fat: fat,
-        sugars: sugars,
-        fiber: fiber,
-        saturatedFat: saturatedFat,
+        energyKcal: energyKcal * servingSizeGrams / 100,
+        protein: protein * servingSizeGrams / 100,
+        carbs: carbs * servingSizeGrams / 100,
+        fat: fat * servingSizeGrams / 100,
+        sugars: sugars * servingSizeGrams / 100,
+        fiber: fiber * servingSizeGrams / 100,
+        saturatedFat: saturatedFat * servingSizeGrams / 100,
         transFat: 0,
         cholesterol: 0,
-        sodium: sodium,
+        sodium: sodium * servingSizeGrams / 100,
         waterContent: 0,
         micros: {},
       ),

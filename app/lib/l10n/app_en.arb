@@ -803,6 +803,32 @@
       }
     }
   },
+  "food_quantity_amount": "Amount",
+  "food_quantity_invalid_amount": "Enter an amount greater than zero",
+  "food_quantity_serving": "Serving",
+  "food_quantity_serving_value": "{value} g per {unit}",
+  "@food_quantity_serving_value": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "food_quantity_energy": "Energy",
+  "food_quantity_protein": "Protein",
+  "food_quantity_carbs": "Carbohydrates",
+  "food_quantity_fat": "Fat",
+  "food_quantity_add_to_meal": "Add to {meal}",
+  "@food_quantity_add_to_meal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
   "edit_food_title": "Edit Food",
   "add_food_manually": "Add Food Manually",
   "basic_information": "Basic Information",

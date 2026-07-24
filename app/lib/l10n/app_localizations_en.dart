@@ -1972,6 +1972,38 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get food_quantity_amount => 'Amount';
+
+  @override
+  String get food_quantity_invalid_amount =>
+      'Enter an amount greater than zero';
+
+  @override
+  String get food_quantity_serving => 'Serving';
+
+  @override
+  String food_quantity_serving_value(String value, String unit) {
+    return '$value g per $unit';
+  }
+
+  @override
+  String get food_quantity_energy => 'Energy';
+
+  @override
+  String get food_quantity_protein => 'Protein';
+
+  @override
+  String get food_quantity_carbs => 'Carbohydrates';
+
+  @override
+  String get food_quantity_fat => 'Fat';
+
+  @override
+  String food_quantity_add_to_meal(String meal) {
+    return 'Add to $meal';
+  }
+
+  @override
   String get edit_food_title => 'Edit Food';
 
   @override

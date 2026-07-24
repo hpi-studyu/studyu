@@ -6,6 +6,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
@@ -449,12 +450,19 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final appState = Provider.of<AppState>(context, listen: false);
     final userId = appState.activeSubject?.id ?? 'anonymous';
 
-    final food = await TemplateSelectionSheet.show(
+    final selectedFood = await TemplateSelectionSheet.show(
       context,
       mode: TemplateSelectionMode.food,
       userId: userId,
     );
-    if (food is FoodEntry) {
+    if (selectedFood is! FoodEntry || !mounted) return;
+
+    final food = await FoodQuantitySheet.show(
+      context,
+      food: selectedFood,
+      mealLabel: _mealLabel,
+    );
+    if (food != null && mounted) {
       setState(() => _meal.foods.add(food));
     }
   }

@@ -9,6 +9,7 @@ import 'package:studyu_app/models/unified_food_result.dart';
 import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
@@ -511,16 +512,16 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       portionState: studyu.PortionState.asServed,
       yieldFactor: 1.0,
       nutrition: studyu.NutritionProfile(
-        energyKcal: energyKcal,
-        protein: protein,
-        carbs: carbs,
-        fat: fat,
-        sugars: sugars,
-        fiber: fiber,
-        saturatedFat: saturatedFat,
+        energyKcal: energyKcal * servingSizeGrams / 100,
+        protein: protein * servingSizeGrams / 100,
+        carbs: carbs * servingSizeGrams / 100,
+        fat: fat * servingSizeGrams / 100,
+        sugars: sugars * servingSizeGrams / 100,
+        fiber: fiber * servingSizeGrams / 100,
+        saturatedFat: saturatedFat * servingSizeGrams / 100,
         transFat: 0,
         cholesterol: 0,
-        sodium: sodium,
+        sodium: sodium * servingSizeGrams / 100,
         waterContent: 0,
         micros: {},
       ),
@@ -533,13 +534,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _selectResult(UnifiedFoodResult result) {
-    studyu.FoodEntry foodEntry;
-    if (result.source == studyu.FoodSource.openfoodfacts) {
-      foodEntry = _convertToFoodEntry(result.originalData as Product);
+    final foodEntry = result.source == studyu.FoodSource.openfoodfacts
+        ? _convertToFoodEntry(result.originalData as Product)
+        : _convertUsdaToFoodEntry(result.originalData as UsdaFoodItem);
+    if (widget.mealLabel == null) {
+      _navigateToEdit(foodEntry);
     } else {
-      foodEntry = _convertUsdaToFoodEntry(result.originalData as UsdaFoodItem);
+      _showQuantity(foodEntry);
     }
-    _navigateToEdit(foodEntry);
   }
 
   void _selectTemplate(studyu.SavedFoodTemplate template) {
@@ -547,7 +549,23 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       context,
       listen: false,
     );
-    Navigator.pop(context, templateViewModel.applyFoodTemplate(template));
+    final foodEntry = templateViewModel.applyFoodTemplate(template);
+    if (widget.mealLabel == null) {
+      Navigator.pop(context, foodEntry);
+    } else {
+      _showQuantity(foodEntry);
+    }
+  }
+
+  Future<void> _showQuantity(studyu.FoodEntry foodEntry) async {
+    final result = await FoodQuantitySheet.show(
+      context,
+      food: foodEntry,
+      mealLabel: widget.mealLabel,
+    );
+    if (result != null && mounted) {
+      Navigator.pop(context, result);
+    }
   }
 
   void _navigateToEdit(studyu.FoodEntry foodEntry) {
@@ -581,9 +599,15 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   Future<void> _scanBarcode() async {
-    final result = await Navigator.push(context, BarcodeScannerScreen.route());
-    if (result != null && mounted) {
-      Navigator.pop(context, result);
+    final result = await Navigator.push<studyu.FoodEntry>(
+      context,
+      BarcodeScannerScreen.route(),
+    );
+    if (result == null || !mounted) return;
+    if (widget.mealLabel == null) {
+      _navigateToEdit(result);
+    } else {
+      await _showQuantity(result);
     }
   }
 

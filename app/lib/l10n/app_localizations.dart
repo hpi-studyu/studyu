@@ -3719,6 +3719,60 @@ abstract class AppLocalizations {
   /// **'Add food to {meal}'**
   String add_food_to_meal(String meal);
 
+  /// No description provided for @food_quantity_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get food_quantity_amount;
+
+  /// No description provided for @food_quantity_invalid_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than zero'**
+  String get food_quantity_invalid_amount;
+
+  /// No description provided for @food_quantity_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Serving'**
+  String get food_quantity_serving;
+
+  /// No description provided for @food_quantity_serving_value.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} g per {unit}'**
+  String food_quantity_serving_value(String value, String unit);
+
+  /// No description provided for @food_quantity_energy.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get food_quantity_energy;
+
+  /// No description provided for @food_quantity_protein.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get food_quantity_protein;
+
+  /// No description provided for @food_quantity_carbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbohydrates'**
+  String get food_quantity_carbs;
+
+  /// No description provided for @food_quantity_fat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get food_quantity_fat;
+
+  /// No description provided for @food_quantity_add_to_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {meal}'**
+  String food_quantity_add_to_meal(String meal);
+
   /// No description provided for @edit_food_title.
   ///
   /// In en, this message translates to:

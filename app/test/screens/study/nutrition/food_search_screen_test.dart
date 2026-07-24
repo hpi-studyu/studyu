@@ -36,6 +36,7 @@ Widget foodSearchModalApp({
   required String mealLabel,
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
+  ValueChanged<studyu.FoodEntry?>? onResult,
 }) => ChangeNotifierProvider(
   create: (_) => AppState(),
   child: MaterialApp(
@@ -45,12 +46,15 @@ Widget foodSearchModalApp({
       builder: (context) => Scaffold(
         body: Center(
           child: FilledButton(
-            onPressed: () => FoodSearchScreen.show(
-              context,
-              mealLabel: mealLabel,
-              openFoodFactsSearch: openFoodFactsSearch,
-              usdaFoodSearch: usdaFoodSearch,
-            ),
+            onPressed: () async {
+              final result = await FoodSearchScreen.show(
+                context,
+                mealLabel: mealLabel,
+                openFoodFactsSearch: openFoodFactsSearch,
+                usdaFoodSearch: usdaFoodSearch,
+              );
+              onResult?.call(result);
+            },
             child: const Text('Open search'),
           ),
         ),
@@ -119,7 +123,7 @@ void main() {
     );
   });
 
-  testWidgets('modal keeps contextual search state across nested details', (
+  testWidgets('modal keeps contextual search state across quantity cancel', (
     tester,
   ) async {
     final requests = <SearchRequest>[];
@@ -164,8 +168,9 @@ void main() {
     await tester.tap(find.text('Apple'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Edit Food'), findsOneWidget);
-    await tester.pageBack();
+    expect(find.text('Add to Snack'), findsOneWidget);
+    expect(find.text('Apple'), findsWidgets);
+    await tester.tapAt(const Offset(5, 5));
     await tester.pumpAndSettle();
 
     expect(find.text('Add food to Snack'), findsOneWidget);
@@ -183,6 +188,55 @@ void main() {
 
     expect(find.text('Open search'), findsOneWidget);
     expect(find.byType(FoodSearchScreen), findsNothing);
+  });
+
+  testWidgets('modal scales provider serving and selected amount once', (
+    tester,
+  ) async {
+    final nutriments = Nutriments.empty()
+      ..setValue(Nutrient.energyKCal, PerSize.oneHundredGrams, 100)
+      ..setValue(Nutrient.proteins, PerSize.oneHundredGrams, 10);
+    studyu.FoodEntry? selectedFood;
+
+    await tester.pumpWidget(
+      foodSearchModalApp(
+        mealLabel: 'Snack',
+        onResult: (food) => selectedFood = food,
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) async =>
+                offResult([
+                  Product(
+                    productName: 'Apple',
+                    servingSize: '50 g',
+                    nutriments: nutriments,
+                  ),
+                ]),
+        usdaFoodSearch:
+            ({required query, required page, required pageSize}) async =>
+                usdaResult(),
+      ),
+    );
+
+    await tester.tap(find.text('Open search'));
+    await tester.pumpAndSettle();
+    await enterSearch(tester, 'apple');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('50 kcal'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+    expect(find.text('100 kcal'), findsOneWidget);
+
+    await tester.tap(find.text('Add to Snack'));
+    await tester.pumpAndSettle();
+
+    expect(selectedFood, isNotNull);
+    expect(selectedFood!.amount, 2);
+    expect(selectedFood!.servingSizeGrams, 50);
+    expect(selectedFood!.nutrition.energyKcal, 100);
+    expect(selectedFood!.nutrition.protein, 10);
   });
 
   testWidgets('German USDA outage stays localized and retries Apfel', (
@@ -1013,6 +1067,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Add food to Snack'), findsOneWidget);
     await tester.tap(find.text('Saved Apple Template'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add to Snack'), findsOneWidget);
+    await tester.tap(find.text('Add to Snack'));
     await tester.pumpAndSettle();
 
     expect(selectedFood, isNotNull);

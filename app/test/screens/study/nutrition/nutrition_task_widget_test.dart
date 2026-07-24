@@ -199,6 +199,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved apple template'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Add to Morning meal'));
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
