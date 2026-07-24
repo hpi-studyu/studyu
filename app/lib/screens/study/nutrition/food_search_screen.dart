@@ -83,6 +83,8 @@ final class FoodSearchSelection {
     : foods = List.unmodifiable([food]);
 }
 
+enum _FoodSearchSection { frequent, recent, saved }
+
 class FoodSearchScreen extends StatelessWidget {
   final bool allowRecipes;
   final bool allowMealTemplates;
@@ -177,6 +179,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
 
 class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   final TextEditingController _searchController = TextEditingController();
+  _FoodSearchSection _selectedSection = _FoodSearchSection.frequent;
   final ScrollController _scrollController = ScrollController();
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -774,6 +777,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               errorMessage: _errorMessage,
               combinedResults: rankedResults,
               history: widget.history,
+              selectedSection: _selectedSection,
+              onSectionChanged: (section) {
+                setState(() {
+                  _selectedSection = section;
+                });
+              },
               onSelectHistory: _selectHistoryItem,
               onSelectFoodTemplate: _selectFoodTemplate,
               onSelectMealTemplate: _selectMealTemplate,
@@ -851,6 +860,43 @@ class _SearchBarHeader extends StatelessWidget {
         ),
         onSubmitted: (_) => focusNode.unfocus(),
         onChanged: onChanged,
+      ),
+    );
+  }
+}
+
+class _QuickSectionTabs extends StatelessWidget {
+  final List<_FoodSearchSection> sections;
+  final _FoodSearchSection selectedSection;
+  final ValueChanged<_FoodSearchSection> onChanged;
+  final AppLocalizations l10n;
+
+  const _QuickSectionTabs({
+    required this.sections,
+    required this.selectedSection,
+    required this.onChanged,
+    required this.l10n,
+  });
+
+  String _label(_FoodSearchSection section) {
+    return switch (section) {
+      _FoodSearchSection.frequent => l10n.frequently_used_foods,
+      _FoodSearchSection.recent => l10n.recent_foods,
+      _FoodSearchSection.saved => l10n.my_saved_items,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedIndex = sections.indexOf(selectedSection);
+    return DefaultTabController(
+      key: ValueKey(Object.hashAll(sections)),
+      length: sections.length,
+      initialIndex: selectedIndex < 0 ? 0 : selectedIndex,
+      child: TabBar(
+        isScrollable: true,
+        onTap: (index) => onChanged(sections[index]),
+        tabs: [for (final section in sections) Tab(text: _label(section))],
       ),
     );
   }
@@ -1440,6 +1486,8 @@ class _FoodSearchListView extends StatelessWidget {
   final String? errorMessage;
   final List<UnifiedFoodResult> combinedResults;
   final FoodSearchHistory history;
+  final _FoodSearchSection selectedSection;
+  final ValueChanged<_FoodSearchSection> onSectionChanged;
   final void Function(FoodSearchHistoryItem) onSelectHistory;
   final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
   final void Function(studyu.SavedMealTemplate) onSelectMealTemplate;
@@ -1468,6 +1516,8 @@ class _FoodSearchListView extends StatelessWidget {
     required this.errorMessage,
     required this.combinedResults,
     required this.history,
+    required this.selectedSection,
+    required this.onSectionChanged,
     required this.onSelectHistory,
     required this.onSelectFoodTemplate,
     required this.onSelectMealTemplate,
@@ -1500,35 +1550,58 @@ class _FoodSearchListView extends StatelessWidget {
       ...templateViewModel.mealTemplates,
       ...templateViewModel.foodTemplates,
     ].any(isAllowedTemplate);
-    final showTemplates = hasTemplates && filteredTemplates.isNotEmpty;
+    final showHistory = searchController.text.isEmpty;
+    final availableSections = <_FoodSearchSection>[
+      if (history.frequentlyUsed.isNotEmpty) _FoodSearchSection.frequent,
+      if (history.recent.isNotEmpty) _FoodSearchSection.recent,
+      if (hasTemplates || allowMealTemplates) _FoodSearchSection.saved,
+    ];
+    final activeSection = availableSections.contains(selectedSection)
+        ? selectedSection
+        : availableSections.firstOrNull;
+    final showQuickNavigation = showHistory && availableSections.length > 1;
+    final frequentlyUsed =
+        showHistory && activeSection == _FoodSearchSection.frequent
+        ? history.frequentlyUsed
+        : const <FoodSearchHistoryItem>[];
+    final recent = showHistory && activeSection == _FoodSearchSection.recent
+        ? history.recent
+        : const <FoodSearchHistoryItem>[];
+    final showSavedSection =
+        !showHistory || activeSection == _FoodSearchSection.saved;
+    final showTemplates =
+        hasTemplates && filteredTemplates.isNotEmpty && showSavedSection;
     final showNoMatchingTemplates =
         hasTemplates &&
         filteredTemplates.isEmpty &&
         searchController.text.isNotEmpty;
-    final showManageOnly = allowMealTemplates && !hasTemplates;
-    final showHistory = searchController.text.isEmpty;
-    final frequentlyUsed = showHistory
-        ? history.frequentlyUsed
-        : const <FoodSearchHistoryItem>[];
-    final recent = showHistory
-        ? history.recent
-        : const <FoodSearchHistoryItem>[];
+    final showManageOnly =
+        allowMealTemplates && !hasTemplates && showSavedSection;
 
     // Calculate section offsets for itemBuilder.
     const int paddingItem = 1;
-    final historyItems =
-        (frequentlyUsed.isEmpty ? 0 : frequentlyUsed.length + 3) +
-        (recent.isEmpty ? 0 : recent.length + 3);
-    final int templatesHeaderItems = hasTemplates
-        ? 2
-        : showManageOnly
-        ? 1
+    final quickNavigationItems = showQuickNavigation ? 2 : 0;
+    final historyItems = frequentlyUsed.isNotEmpty
+        ? frequentlyUsed.length + (showQuickNavigation ? 1 : 3)
+        : recent.isNotEmpty
+        ? recent.length + (showQuickNavigation ? 1 : 3)
+        : 0;
+    final showTemplateHeader =
+        hasTemplates &&
+        showSavedSection &&
+        (!showHistory || !showQuickNavigation);
+    final templateManageItem =
+        hasTemplates &&
+        showSavedSection &&
+        !showTemplateHeader &&
+        allowMealTemplates;
+    final int templatesHeaderItems =
+        showTemplateHeader || showManageOnly || templateManageItem
+        ? (showTemplateHeader ? 2 : 1)
         : 0;
     final int templatesListItems = showTemplates ? filteredTemplates.length : 0;
     final int noMatchingTemplateItem = showNoMatchingTemplates ? 1 : 0;
-    final int templatesSpacing = hasTemplates
-        ? 1
-        : 0; // SizedBox after templates
+    final int templatesSpacing = showSavedSection && hasTemplates ? 1 : 0;
     const int globalHeaderItems = 2; // header + spacing
     final int contentItems = _getContentItemCount();
     final int loadingIndicatorItem =
@@ -1550,6 +1623,7 @@ class _FoodSearchListView extends StatelessWidget {
 
     final totalItems =
         paddingItem +
+        quickNavigationItems +
         historyItems +
         templatesHeaderItems +
         templatesListItems +
@@ -1608,54 +1682,66 @@ class _FoodSearchListView extends StatelessWidget {
     }
 
     final showHistory = searchController.text.isEmpty;
-    final frequentlyUsed = showHistory
+    final availableSections = <_FoodSearchSection>[
+      if (history.frequentlyUsed.isNotEmpty) _FoodSearchSection.frequent,
+      if (history.recent.isNotEmpty) _FoodSearchSection.recent,
+      if (hasTemplates || allowMealTemplates) _FoodSearchSection.saved,
+    ];
+    final activeSection = availableSections.contains(selectedSection)
+        ? selectedSection
+        : availableSections.firstOrNull;
+    final showQuickNavigation = showHistory && availableSections.length > 1;
+    final showSavedSection =
+        !showHistory || activeSection == _FoodSearchSection.saved;
+    final showTemplateHeader =
+        hasTemplates &&
+        showSavedSection &&
+        (!showHistory || !showQuickNavigation);
+
+    if (showQuickNavigation) {
+      if (index == currentIndex++) {
+        return _QuickSectionTabs(
+          sections: availableSections,
+          selectedSection: activeSection!,
+          onChanged: onSectionChanged,
+          l10n: l10n,
+        );
+      }
+      if (index == currentIndex++) return const SizedBox(height: 8);
+    }
+
+    final frequentlyUsed =
+        showHistory && activeSection == _FoodSearchSection.frequent
         ? history.frequentlyUsed
         : const <FoodSearchHistoryItem>[];
-    final recent = showHistory
+    final recent = showHistory && activeSection == _FoodSearchSection.recent
         ? history.recent
         : const <FoodSearchHistoryItem>[];
 
-    if (frequentlyUsed.isNotEmpty) {
-      if (index == currentIndex++) {
+    final activeHistory = frequentlyUsed.isNotEmpty ? frequentlyUsed : recent;
+    if (activeHistory.isNotEmpty) {
+      if (!showQuickNavigation && index == currentIndex++) {
         return _SectionHeader(
-          icon: Icons.repeat,
-          title: l10n.frequently_used_foods,
-          iconColor: theme.colorScheme.secondary,
+          icon: frequentlyUsed.isNotEmpty ? Icons.repeat : Icons.history,
+          title: frequentlyUsed.isNotEmpty
+              ? l10n.frequently_used_foods
+              : l10n.recent_foods,
+          iconColor: frequentlyUsed.isNotEmpty
+              ? theme.colorScheme.secondary
+              : theme.colorScheme.primary,
         );
       }
       if (index == currentIndex++) return const SizedBox(height: 8);
       final historyIndex = index - currentIndex;
-      if (historyIndex >= 0 && historyIndex < frequentlyUsed.length) {
-        final item = frequentlyUsed[historyIndex];
+      if (historyIndex >= 0 && historyIndex < activeHistory.length) {
+        final item = activeHistory[historyIndex];
         return _HistoryFoodCard(
           item: item,
           onTap: () => onSelectHistory(item),
           theme: theme,
         );
       }
-      currentIndex += frequentlyUsed.length;
-      if (index == currentIndex++) return const SizedBox(height: 16);
-    }
-
-    if (recent.isNotEmpty) {
-      if (index == currentIndex++) {
-        return _SectionHeader(
-          icon: Icons.history,
-          title: l10n.recent_foods,
-          iconColor: theme.colorScheme.primary,
-        );
-      }
-      if (index == currentIndex++) return const SizedBox(height: 8);
-      final historyIndex = index - currentIndex;
-      if (historyIndex >= 0 && historyIndex < recent.length) {
-        final item = recent[historyIndex];
-        return _HistoryFoodCard(
-          item: item,
-          onTap: () => onSelectHistory(item),
-          theme: theme,
-        );
-      }
-      currentIndex += recent.length;
+      currentIndex += activeHistory.length;
       if (index == currentIndex++) return const SizedBox(height: 16);
     }
 
@@ -1670,8 +1756,8 @@ class _FoodSearchListView extends StatelessWidget {
     }
 
     // Templates section header
-    if (hasTemplates) {
-      if (index == currentIndex++) {
+    if (hasTemplates && showSavedSection) {
+      if (showTemplateHeader && index == currentIndex++) {
         return _SectionHeader(
           icon: Icons.bookmark_outline,
           title: l10n.my_saved_items,
@@ -1684,7 +1770,18 @@ class _FoodSearchListView extends StatelessWidget {
               : null,
         );
       }
-      if (index == currentIndex++) {
+      if (!showTemplateHeader &&
+          allowMealTemplates &&
+          index == currentIndex++) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: onManageSavedItems,
+            child: Text(l10n.manage_saved_items),
+          ),
+        );
+      }
+      if (showTemplateHeader && index == currentIndex++) {
         return const SizedBox(height: 8);
       }
 

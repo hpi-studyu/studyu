@@ -180,9 +180,13 @@ void main() {
     expect(find.text('Frequently Used'), findsOneWidget);
     expect(find.text('Recent'), findsOneWidget);
     expect(find.text('Apple'), findsOneWidget);
+    expect(find.text('Banana'), findsNothing);
+
+    await tester.tap(find.text('Recent'));
+    await tester.pumpAndSettle();
     expect(find.text('Banana'), findsOneWidget);
 
-    await tester.tap(find.text('Apple'));
+    await tester.tap(find.text('Banana'));
     await tester.pumpAndSettle();
 
     expect(find.text('Add to Snack'), findsOneWidget);
