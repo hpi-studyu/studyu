@@ -89,6 +89,7 @@ Future<void> openMealEntry(
   WidgetTester tester,
   MealLog meal, {
   NutritionTask? task,
+  DateTime? occurrenceDate,
   ValueChanged<MealLog?>? onResult,
   ValueChanged<MealEntryResult?>? onEntryResult,
 }) async {
@@ -107,8 +108,11 @@ Future<void> openMealEntry(
                   final result = await Navigator.of(context)
                       .push<MealEntryResult>(
                         MaterialPageRoute(
-                          builder: (_) =>
-                              MealEntryScreen(existingMeal: meal, task: task),
+                          builder: (_) => MealEntryScreen(
+                            existingMeal: meal,
+                            task: task,
+                            occurrenceDate: occurrenceDate,
+                          ),
                         ),
                       );
                   onEntryResult?.call(result);
@@ -201,11 +205,48 @@ void main() {
 
     await tester.tap(find.text('Select a time'));
     await tester.pumpAndSettle();
+    final timeGroup = tester.widget<RadioGroup<MealOccurrenceTimePrecision>>(
+      find.byType(RadioGroup<MealOccurrenceTimePrecision>),
+    );
+    expect(timeGroup.groupValue, isNull);
     await tester.tap(find.text("I don't remember"));
     await tester.pumpAndSettle();
 
     expect(find.text('Time not remembered'), findsOneWidget);
     expect(find.text('Required'), findsNothing);
+  });
+
+  testWidgets('unknown historical meal uses recall date when time is added', (
+    tester,
+  ) async {
+    MealLog? result;
+    final historical = editableMeal()
+      ..timestamp = null
+      ..timePrecision = MealOccurrenceTimePrecision.unknown;
+    await openMealEntry(
+      tester,
+      historical,
+      occurrenceDate: DateTime(2024, 2, 3),
+      onResult: (value) => result = value,
+    );
+
+    await tester.tap(find.text('Time'));
+    await tester.pumpAndSettle();
+    expect(
+      find.byType(RadioListTile<MealOccurrenceTimePrecision>),
+      findsNWidgets(3),
+    );
+    await tester.tap(find.text('Exact time'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.timestamp!.year, 2024);
+    expect(result!.timestamp!.month, 2);
+    expect(result!.timestamp!.day, 3);
   });
 
   testWidgets('new meal uses the requested custom meal label', (tester) async {
@@ -349,10 +390,10 @@ void main() {
     await tester.tap(find.text('Meal label'));
     await tester.pumpAndSettle();
 
-    final noLabelTile = tester.widget<ListTile>(
-      find.widgetWithText(ListTile, 'No label').last,
+    expect(
+      find.widgetWithText(RadioListTile<String>, 'No label'),
+      findsOneWidget,
     );
-    expect((noLabelTile.leading! as Icon).icon, Icons.radio_button_checked);
     expect(find.text('Breakfast'), findsOneWidget);
   });
 
@@ -594,23 +635,9 @@ void main() {
         findsOneWidget,
       );
 
-      await tester.tap(find.text('Skipped this meal'));
-      await tester.pump();
-
-      expect(
-        tester.widget<TextField>(find.byType(TextField)).decoration?.errorText,
-        'Enter a reason before saving.',
-      );
-
-      await tester.enterText(find.byType(TextField), 'Not hungry');
-      await tester.pump();
-
+      expect(find.text('Skipped this meal'), findsNothing);
       expect(result, isNull);
       expect(find.byType(MealEntryScreen), findsOneWidget);
-      expect(
-        tester.widget<TextField>(find.byType(TextField)).decoration?.errorText,
-        isNull,
-      );
     },
   );
 

@@ -1505,7 +1505,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get instructions => 'Instructions';
+  String get instructions => 'Anleitung';
 
   @override
   String get nutrition_instructions_default =>
@@ -1513,7 +1513,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String min_meals_required(int count) {
-    return 'Please record at least $count meal(s)';
+    return 'Bitte erfassen Sie mindestens $count Mahlzeit(en)';
   }
 
   @override
@@ -1552,22 +1552,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get add_meal => 'Add Meal';
 
   @override
-  String get no_meals_recorded => 'No meals recorded yet';
+  String get no_meals_recorded => 'Noch keine Mahlzeiten erfasst';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Bearbeiten';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Löschen';
 
   @override
-  String get meal_type_breakfast => 'Breakfast';
+  String get meal_type_breakfast => 'Frühstück';
 
   @override
-  String get meal_type_lunch => 'Lunch';
+  String get meal_type_lunch => 'Mittagessen';
 
   @override
-  String get meal_type_dinner => 'Dinner';
+  String get meal_type_dinner => 'Abendessen';
 
   @override
   String get meal_type_snack => 'Snack';
@@ -1576,7 +1576,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get meal_type_brunch => 'Brunch';
 
   @override
-  String get meal_type_other => 'Other';
+  String get meal_type_other => 'Andere Mahlzeit';
 
   @override
   String get meal_category_snacks => 'Snacks';
@@ -1691,7 +1691,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get meal_information => 'Meal Information';
 
   @override
-  String get meal_type_label => 'Meal Type';
+  String get meal_type_label => 'Mahlzeitenart';
 
   @override
   String get meal_details => 'Mahlzeitendetails';
@@ -1700,31 +1700,32 @@ class AppLocalizationsDe extends AppLocalizations {
   String get apply => 'Übernehmen';
 
   @override
-  String get custom_meal_label => 'Custom Meal Label';
+  String get custom_meal_label => 'Eigene Bezeichnung';
 
   @override
-  String get time => 'Time';
+  String get time => 'Uhrzeit';
 
   @override
-  String get where_did_you_eat => 'Where did you eat?';
+  String get where_did_you_eat => 'Wo haben Sie gegessen?';
 
   @override
-  String get location_description => 'Location Description';
+  String get location_description => 'Ortsbeschreibung';
 
   @override
-  String get location_description_hint => 'Describe where you ate';
+  String get location_description_hint =>
+      'Beschreiben Sie, wo Sie gegessen haben';
 
   @override
-  String get who_were_you_with => 'Who were you with?';
+  String get who_were_you_with => 'Mit wem waren Sie zusammen?';
 
   @override
-  String get distractions_during_meal => 'Distractions during meal?';
+  String get distractions_during_meal => 'Ablenkungen während der Mahlzeit?';
 
   @override
-  String get skipped_this_meal => 'Skipped this meal';
+  String get skipped_this_meal => 'Diese Mahlzeit übersprungen';
 
   @override
-  String get reason_for_skipping => 'Reason for skipping';
+  String get reason_for_skipping => 'Grund für das Überspringen';
 
   @override
   String food_items_section(int count) {
@@ -1732,58 +1733,58 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get add_food => 'Add Food';
+  String get add_food => 'Lebensmittel hinzufügen';
 
   @override
   String get no_food_items_yet => 'No food items yet';
 
   @override
-  String get not_specified => 'Not specified';
+  String get not_specified => 'Nicht angegeben';
 
   @override
-  String get context_home => 'Home';
+  String get context_home => 'Zu Hause';
 
   @override
   String get context_restaurant => 'Restaurant';
 
   @override
-  String get context_takeout => 'Takeout';
+  String get context_takeout => 'Zum Mitnehmen';
 
   @override
-  String get context_vending => 'Vending';
+  String get context_vending => 'Automat';
 
   @override
-  String get context_other => 'Other';
+  String get context_other => 'Andere';
 
   @override
-  String get company_alone => 'Alone';
+  String get company_alone => 'Allein';
 
   @override
-  String get company_family => 'Family';
+  String get company_family => 'Familie';
 
   @override
-  String get company_friends => 'Friends';
+  String get company_friends => 'Freunde';
 
   @override
-  String get company_colleagues => 'Colleagues';
+  String get company_colleagues => 'Kolleginnen und Kollegen';
 
   @override
-  String get company_other => 'Other';
+  String get company_other => 'Andere';
 
   @override
-  String get distraction_none => 'None';
+  String get distraction_none => 'Keine';
 
   @override
-  String get distraction_tv => 'TV';
+  String get distraction_tv => 'Fernsehen';
 
   @override
-  String get distraction_phone => 'Phone';
+  String get distraction_phone => 'Telefon';
 
   @override
-  String get distraction_work => 'Work';
+  String get distraction_work => 'Arbeit';
 
   @override
-  String get distraction_other => 'Other';
+  String get distraction_other => 'Andere';
 
   @override
   String get food_entry_title => 'Food Entry';
@@ -1874,7 +1875,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sodium_mg => 'Sodium (mg)';
 
   @override
-  String get required_error => 'Required';
+  String get required_error => 'Erforderlich';
 
   @override
   String get enter_food_name => 'Please enter a food name';
@@ -2024,17 +2025,17 @@ class AppLocalizationsDe extends AppLocalizations {
   String get today => 'Today';
 
   @override
-  String get meals => 'Meals';
+  String get meals => 'Mahlzeiten';
 
   @override
-  String get food_items => 'Food items';
+  String get food_items => 'Lebensmittel';
 
   @override
   String get tap_to_add_first_meal =>
       'Tap the button above to add your first meal';
 
   @override
-  String get tap_to_add_food => 'Tap to add food';
+  String get tap_to_add_food => 'Tippen, um ein Lebensmittel hinzuzufügen';
 
   @override
   String get add_food_title => 'Add Food';
@@ -2104,7 +2105,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calorie_distribution => 'Calorie Distribution';
 
   @override
-  String get more_options => 'More options';
+  String get more_options => 'Weitere Optionen';
 
   @override
   String get search_food_hint => 'Search food (e.g., \"apple\", \"chicken\")';

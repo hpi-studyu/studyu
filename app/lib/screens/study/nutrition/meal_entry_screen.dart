@@ -488,8 +488,10 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final selection = await showModalBottomSheet<_TimeSelection>(
       context: context,
       useSafeArea: true,
-      builder: (sheetContext) =>
-          _TimeSelectionSheet(timestamp: _timestamp, precision: _timePrecision),
+      builder: (sheetContext) => _TimeSelectionSheet(
+        timestamp: _timestamp,
+        precision: _hasSelectedTime ? _timePrecision : null,
+      ),
     );
     if (selection == null || !mounted) return;
 
@@ -509,7 +511,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           : TimeOfDay.fromDateTime(_timestamp!),
     );
     if (picked == null || !mounted) return;
-    final date = _timestamp ?? widget.occurrenceDate ?? DateTime.now();
+    final date = _timePrecision == MealOccurrenceTimePrecision.unknown
+        ? widget.occurrenceDate ?? DateTime.now()
+        : _timestamp ?? widget.occurrenceDate ?? DateTime.now();
     setState(() {
       _timestamp = DateTime(
         date.year,
@@ -856,7 +860,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              if (widget.existingMeal != null)
+              if (widget.existingMeal?.isSkipped == true)
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(4),
@@ -1007,6 +1011,7 @@ class _MealTypeSheet extends StatefulWidget {
 
 class _MealTypeSheetState extends State<_MealTypeSheet> {
   late final TextEditingController _customLabelController;
+  late String _selectedKey;
   bool _editingOther = false;
 
   @override
@@ -1015,6 +1020,42 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
     _customLabelController = TextEditingController(
       text: widget.customMealLabel ?? '',
     );
+    _selectedKey = _initialChoiceKey;
+  }
+
+  String get _initialChoiceKey {
+    if (widget.mealType != MealType.other) return widget.mealType.name;
+    final customLabel = widget.customMealLabel?.trim();
+    if (customLabel?.isNotEmpty == true) {
+      if (widget.customMealTypes?.contains(customLabel) == true) {
+        return 'custom:$customLabel';
+      }
+      return 'custom-editor';
+    }
+    return 'none';
+  }
+
+  void _onChoiceChanged(String? key) {
+    if (key == null) return;
+    if (key == 'custom-editor') {
+      setState(() {
+        _selectedKey = key;
+        _editingOther = true;
+      });
+      return;
+    }
+    if (key == 'none') {
+      Navigator.of(context).pop(const _MealTypeSelection(MealType.other, ''));
+      return;
+    }
+    if (key.startsWith('custom:')) {
+      Navigator.of(
+        context,
+      ).pop(_MealTypeSelection(MealType.other, key.substring(7)));
+      return;
+    }
+    final type = MealType.values.firstWhere((value) => value.name == key);
+    Navigator.of(context).pop(_MealTypeSelection(type));
   }
 
   @override
@@ -1048,58 +1089,39 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
-            for (final type in [
-              MealType.breakfast,
-              MealType.lunch,
-              MealType.dinner,
-              MealType.snack,
-            ])
-              ListTile(
-                title: Text(_getMealTypeLabel(type, l10n)),
-                leading: Icon(
-                  widget.mealType == type &&
-                          (widget.customMealLabel?.trim().isEmpty ?? true)
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                ),
-                onTap: () =>
-                    Navigator.of(context).pop(_MealTypeSelection(type)),
+            RadioGroup<String>(
+              groupValue: _selectedKey == 'custom-editor' && !_editingOther
+                  ? null
+                  : _selectedKey,
+              onChanged: _onChoiceChanged,
+              child: Column(
+                children: [
+                  for (final type in [
+                    MealType.breakfast,
+                    MealType.lunch,
+                    MealType.dinner,
+                    MealType.snack,
+                  ])
+                    RadioListTile<String>(
+                      value: type.name,
+                      title: Text(_getMealTypeLabel(type, l10n)),
+                    ),
+                  ...visibleCustomTypes.map(
+                    (label) => RadioListTile<String>(
+                      value: 'custom:$label',
+                      title: Text(label),
+                    ),
+                  ),
+                  RadioListTile<String>(
+                    value: 'custom-editor',
+                    title: Text(l10n.custom_meal_label),
+                  ),
+                  RadioListTile<String>(
+                    value: 'none',
+                    title: Text(l10n.no_meal_label),
+                  ),
+                ],
               ),
-            ...visibleCustomTypes.map(
-              (label) => ListTile(
-                title: Text(label),
-                leading: Icon(
-                  widget.mealType == MealType.other &&
-                          widget.customMealLabel == label
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                ),
-                onTap: () => Navigator.of(
-                  context,
-                ).pop(_MealTypeSelection(MealType.other, label)),
-              ),
-            ),
-            ListTile(
-              title: Text(l10n.custom_meal_label),
-              leading: Icon(
-                _editingOther
-                    ? Icons.radio_button_checked
-                    : Icons.edit_outlined,
-              ),
-              onTap: () => setState(() => _editingOther = true),
-            ),
-            ListTile(
-              title: Text(l10n.no_meal_label),
-              leading: Icon(
-                widget.mealType == MealType.other &&
-                        (widget.customMealLabel?.trim().isEmpty ?? true) &&
-                        !_editingOther
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-              ),
-              onTap: () => Navigator.of(
-                context,
-              ).pop(const _MealTypeSelection(MealType.other, '')),
             ),
             if (_editingOther) ...[
               const SizedBox(height: 8),
@@ -1116,7 +1138,7 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
                 onPressed: () => Navigator.of(context).pop(
                   _MealTypeSelection(
                     MealType.other,
-                    _customLabelController.text,
+                    _customLabelController.text.trim(),
                   ),
                 ),
                 child: Text(l10n.apply),
@@ -1135,7 +1157,7 @@ class _MealTypeSheetState extends State<_MealTypeSheet> {
 
 class _TimeSelectionSheet extends StatelessWidget {
   final DateTime? timestamp;
-  final MealOccurrenceTimePrecision precision;
+  final MealOccurrenceTimePrecision? precision;
 
   const _TimeSelectionSheet({required this.timestamp, required this.precision});
 
@@ -1143,45 +1165,35 @@ class _TimeSelectionSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.schedule),
-            title: Text(l10n.time_exact),
-            subtitle: Text(l10n.time_exact_description),
-            trailing: precision == MealOccurrenceTimePrecision.exact
-                ? const Icon(Icons.check)
-                : null,
-            onTap: () => Navigator.of(context).pop(
-              const _TimeSelection(null, MealOccurrenceTimePrecision.exact),
+      child: RadioGroup<MealOccurrenceTimePrecision>(
+        groupValue: precision,
+        onChanged: (value) {
+          if (value != null) {
+            Navigator.of(context).pop(_TimeSelection(null, value));
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<MealOccurrenceTimePrecision>(
+              value: MealOccurrenceTimePrecision.exact,
+              secondary: const Icon(Icons.schedule),
+              title: Text(l10n.time_exact),
+              subtitle: Text(l10n.time_exact_description),
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.more_time),
-            title: Text(l10n.time_approximate),
-            subtitle: Text(l10n.time_approximate_description),
-            trailing: precision == MealOccurrenceTimePrecision.approximate
-                ? const Icon(Icons.check)
-                : null,
-            onTap: () => Navigator.of(context).pop(
-              const _TimeSelection(
-                null,
-                MealOccurrenceTimePrecision.approximate,
-              ),
+            RadioListTile<MealOccurrenceTimePrecision>(
+              value: MealOccurrenceTimePrecision.approximate,
+              secondary: const Icon(Icons.more_time),
+              title: Text(l10n.time_approximate),
+              subtitle: Text(l10n.time_approximate_description),
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.help_outline),
-            title: Text(l10n.time_unknown),
-            trailing: precision == MealOccurrenceTimePrecision.unknown
-                ? const Icon(Icons.check)
-                : null,
-            onTap: () => Navigator.of(context).pop(
-              const _TimeSelection(null, MealOccurrenceTimePrecision.unknown),
+            RadioListTile<MealOccurrenceTimePrecision>(
+              value: MealOccurrenceTimePrecision.unknown,
+              secondary: const Icon(Icons.help_outline),
+              title: Text(l10n.time_unknown),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

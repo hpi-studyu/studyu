@@ -410,6 +410,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               : comparison;
         });
 
+    final groups = _buildTimelineGroups(context, entries);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -437,10 +439,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(l10n.no_meals_recorded),
           ),
-        for (var index = 0; index < entries.length; index++) ...[
-          if (index > 0 &&
-              _knownTimestamp(entries[index - 1].meal) != null &&
-              _knownTimestamp(entries[index].meal) == null)
+        for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) ...[
+          if (groups[groupIndex].isUnknown &&
+              (groupIndex == 0 || !groups[groupIndex - 1].isUnknown))
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: Text(
@@ -450,14 +451,16 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 ),
               ),
             ),
-          _MealTimelineCard(
-            meal: entries[index].meal,
-            onTap: () => _editMeal(context, model, entries[index].meal),
-            onSaveTemplate: () =>
-                _saveMealAsTemplate(context, entries[index].meal),
-            onDelete: () => model.removeMealById(entries[index].meal.id),
-            getMealTypeLabel: (type) => _getMealTypeLabel(context, type),
-          ),
+          _MealTimelineGroupHeader(category: groups[groupIndex].category),
+          for (final entry in groups[groupIndex].entries)
+            _MealTimelineCard(
+              key: ValueKey('meal-${entry.meal.id}'),
+              meal: entry.meal,
+              categoryLabel: groups[groupIndex].category.label,
+              onTap: () => _editMeal(context, model, entry.meal),
+              onSaveTemplate: () => _saveMealAsTemplate(context, entry.meal),
+              onDelete: () => model.removeMealById(entry.meal.id),
+            ),
         ],
         const SizedBox(height: 8),
         SizedBox(
@@ -470,6 +473,85 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         ),
       ],
     );
+  }
+
+  List<_MealTimelineGroup> _buildTimelineGroups(
+    BuildContext context,
+    List<({int index, MealLog meal})> entries,
+  ) {
+    final groups = <_MealTimelineGroup>[];
+    for (final entry in entries) {
+      final isUnknown = _knownTimestamp(entry.meal) == null;
+      final category = _timelineCategory(context, entry.meal);
+      final previous = groups.isEmpty ? null : groups.last;
+      if (previous == null ||
+          previous.isUnknown != isUnknown ||
+          previous.category.key != category.key) {
+        groups.add(
+          _MealTimelineGroup(
+            category: category,
+            isUnknown: isUnknown,
+            entries: [entry],
+          ),
+        );
+      } else {
+        previous.entries.add(entry);
+      }
+    }
+    return groups;
+  }
+
+  _MealTimelineCategory _timelineCategory(BuildContext context, MealLog meal) {
+    final l10n = AppLocalizations.of(context)!;
+    final customLabel = meal.customMealLabel?.trim();
+    if (customLabel?.isNotEmpty == true) {
+      return _MealTimelineCategory(
+        key: 'custom:$customLabel',
+        icon: Icons.restaurant_outlined,
+        label: customLabel!,
+      );
+    }
+
+    switch (meal.mealType) {
+      case MealType.breakfast:
+        return _MealTimelineCategory(
+          key: 'breakfast',
+          icon: Icons.wb_sunny_outlined,
+          label: l10n.meal_type_breakfast,
+        );
+      case MealType.brunch:
+        return _MealTimelineCategory(
+          key: 'brunch',
+          icon: Icons.free_breakfast_outlined,
+          label: l10n.meal_type_brunch,
+        );
+      case MealType.lunch:
+        return _MealTimelineCategory(
+          key: 'lunch',
+          icon: Icons.lunch_dining_outlined,
+          label: l10n.meal_type_lunch,
+        );
+      case MealType.dinner:
+        return _MealTimelineCategory(
+          key: 'dinner',
+          icon: Icons.dinner_dining_outlined,
+          label: l10n.meal_type_dinner,
+        );
+      case MealType.snack:
+        return _MealTimelineCategory(
+          key: 'snack',
+          icon: Icons.cookie_outlined,
+          label: l10n.meal_type_snack,
+        );
+      case MealType.other:
+        return _MealTimelineCategory(
+          key: meal.isLabelExplicitlyUnset ? 'meal' : 'other',
+          icon: Icons.restaurant_outlined,
+          label: meal.isLabelExplicitlyUnset
+              ? l10n.meal_neutral_label
+              : l10n.meal_type_other,
+        );
+    }
   }
 
   Future<void> _addMeal(
@@ -496,9 +578,13 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     DailyRecallEntryViewModel model,
     MealLog meal,
   ) async {
-    final result = await Navigator.of(
-      context,
-    ).push(MealEntryScreen.route(existingMeal: meal, task: widget.task));
+    final result = await Navigator.of(context).push(
+      MealEntryScreen.route(
+        existingMeal: meal,
+        task: widget.task,
+        occurrenceDate: model.recall.date,
+      ),
+    );
     switch (result) {
       case SavedMealEntryResult(:final meal):
         model.updateMealById(meal.id, meal);
@@ -577,19 +663,73 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   }
 }
 
+class _MealTimelineCategory {
+  final String key;
+  final IconData icon;
+  final String label;
+
+  const _MealTimelineCategory({
+    required this.key,
+    required this.icon,
+    required this.label,
+  });
+}
+
+class _MealTimelineGroup {
+  final _MealTimelineCategory category;
+  final bool isUnknown;
+  final List<({int index, MealLog meal})> entries;
+
+  _MealTimelineGroup({
+    required this.category,
+    required this.isUnknown,
+    required this.entries,
+  });
+}
+
+class _MealTimelineGroupHeader extends StatelessWidget {
+  final _MealTimelineCategory category;
+
+  const _MealTimelineGroupHeader({required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      label: category.label,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 4),
+        child: Row(
+          children: [
+            ExcludeSemantics(child: Icon(category.icon)),
+            const SizedBox(width: 8),
+            Text(
+              category.label,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _MealTimelineCard extends StatelessWidget {
   final MealLog meal;
+  final String categoryLabel;
   final VoidCallback onTap;
   final VoidCallback onSaveTemplate;
   final VoidCallback onDelete;
-  final String Function(MealType) getMealTypeLabel;
 
   const _MealTimelineCard({
+    super.key,
     required this.meal,
+    required this.categoryLabel,
     required this.onTap,
     required this.onSaveTemplate,
     required this.onDelete,
-    required this.getMealTypeLabel,
   });
 
   @override
@@ -601,13 +741,6 @@ class _MealTimelineCard extends StatelessWidget {
       0,
       (sum, food) => sum + food.nutrition.energyKcal,
     );
-    final label = meal.customMealLabel?.trim().isNotEmpty == true
-        ? meal.customMealLabel!.trim()
-        : meal.mealType == MealType.other
-        ? (meal.isLabelExplicitlyUnset
-              ? l10n.meal_neutral_label
-              : getMealTypeLabel(meal.mealType))
-        : getMealTypeLabel(meal.mealType);
     final time =
         meal.timestamp == null ||
             meal.timePrecision == MealOccurrenceTimePrecision.unknown
@@ -622,92 +755,104 @@ class _MealTimelineCard extends StatelessWidget {
             context,
           ).formatTimeOfDay(TimeOfDay.fromDateTime(meal.timestamp!));
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      meal.isSkipped
-                          ? l10n.skipped_this_meal
-                          : foodNames.isEmpty
-                          ? l10n.no_foods_added
-                          : foodNames,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+    return Semantics(
+      container: true,
+      label: [
+        categoryLabel,
+        if (meal.isSkipped)
+          l10n.skipped_this_meal
+        else if (foodNames.isNotEmpty)
+          foodNames
+        else
+          l10n.no_foods_added,
+        time,
+        if (meal.isSkipped && meal.skipReason?.trim().isNotEmpty == true)
+          meal.skipReason!.trim(),
+        if (!meal.isSkipped) l10n.kcal_value(totalEnergy.toStringAsFixed(0)),
+      ].join('. '),
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        meal.isSkipped
+                            ? l10n.skipped_this_meal
+                            : foodNames.isEmpty
+                            ? l10n.no_foods_added
+                            : foodNames,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        [
+                          time,
+                          if (meal.isSkipped &&
+                              meal.skipReason?.trim().isNotEmpty == true)
+                            meal.skipReason!.trim(),
+                          if (!meal.isSkipped)
+                            l10n.kcal_value(totalEnergy.toStringAsFixed(0)),
+                        ].join(' • '),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert, size: 20),
+                  tooltip: l10n.more_options,
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'edit':
+                        onTap();
+                      case 'save_template':
+                        onSaveTemplate();
+                      case 'delete':
+                        onDelete();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: _PopupMenuItem(
+                        icon: Icons.edit_outlined,
+                        label: l10n.edit,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      [
-                        time,
-                        if (meal.isSkipped &&
-                            meal.skipReason?.trim().isNotEmpty == true)
-                          meal.skipReason!.trim(),
-                        if (meal.isSkipped &&
-                            meal.customMealLabel?.trim().isNotEmpty == true)
-                          meal.customMealLabel!.trim(),
-                        if (!meal.isSkipped) label,
-                        if (!meal.isSkipped)
-                          l10n.kcal_value(totalEnergy.toStringAsFixed(0)),
-                      ].join(' • '),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                    if (meal.foods.isNotEmpty && !meal.isSkipped)
+                      PopupMenuItem(
+                        value: 'save_template',
+                        child: _PopupMenuItem(
+                          icon: Icons.bookmark_add_outlined,
+                          label: l10n.save_as_template,
+                        ),
+                      ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: _PopupMenuItem(
+                        icon: Icons.delete_outline,
+                        label: l10n.delete,
+                        isDestructive: true,
                       ),
                     ),
                   ],
                 ),
-              ),
-              PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert, size: 20),
-                tooltip: l10n.more_options,
-                onSelected: (value) {
-                  switch (value) {
-                    case 'edit':
-                      onTap();
-                    case 'save_template':
-                      onSaveTemplate();
-                    case 'delete':
-                      onDelete();
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: _PopupMenuItem(
-                      icon: Icons.edit_outlined,
-                      label: l10n.edit,
-                    ),
-                  ),
-                  if (meal.foods.isNotEmpty && !meal.isSkipped)
-                    PopupMenuItem(
-                      value: 'save_template',
-                      child: _PopupMenuItem(
-                        icon: Icons.bookmark_add_outlined,
-                        label: l10n.save_as_template,
-                      ),
-                    ),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: _PopupMenuItem(
-                      icon: Icons.delete_outline,
-                      label: l10n.delete,
-                      isDestructive: true,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

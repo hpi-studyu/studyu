@@ -7,24 +7,27 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_core/core.dart';
 
-Widget nutritionTaskApp(NutritionTask task, {DailyRecall? existingRecall}) =>
-    ChangeNotifierProvider(
-      create: (_) => AppState(),
-      child: MaterialApp(
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('en'),
-        home: NutritionTaskWidget(
-          existingRecall: existingRecall,
-          task: task,
-          completionPeriod: CompletionPeriod(
-            id: 'period',
-            unlockTime: StudyUTimeOfDay(),
-            lockTime: StudyUTimeOfDay(hour: 23),
-          ),
-        ),
+Widget nutritionTaskApp(
+  NutritionTask task, {
+  DailyRecall? existingRecall,
+  Locale locale = const Locale('en'),
+}) => ChangeNotifierProvider(
+  create: (_) => AppState(),
+  child: MaterialApp(
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    locale: locale,
+    home: NutritionTaskWidget(
+      existingRecall: existingRecall,
+      task: task,
+      completionPeriod: CompletionPeriod(
+        id: 'period',
+        unlockTime: StudyUTimeOfDay(),
+        lockTime: StudyUTimeOfDay(hour: 23),
       ),
-    );
+    ),
+  ),
+);
 
 class _NutritionLauncher extends StatefulWidget {
   const _NutritionLauncher({
@@ -272,6 +275,26 @@ void main() {
     expect(find.text('Meal label'), findsOneWidget);
   });
 
+  testWidgets('German nutrition timeline uses participant translations', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(nutritionTask(), locale: const Locale('de')),
+    );
+    await tester.pump();
+
+    expect(find.text('Mahlzeiten'), findsOneWidget);
+    expect(find.text('Mahlzeit oder Snack hinzufügen'), findsOneWidget);
+    expect(find.text('Meals'), findsNothing);
+
+    await tester.tap(find.text('Mahlzeit oder Snack hinzufügen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bezeichnung der Mahlzeit'));
+    await tester.pumpAndSettle();
+    expect(find.text('Frühstück'), findsOneWidget);
+    expect(find.text('Lunch'), findsNothing);
+  });
+
   testWidgets('configured custom labels remain available in the editor', (
     tester,
   ) async {
@@ -469,6 +492,69 @@ void main() {
     expect(
       tester.getTopLeft(find.text('Bread')).dy,
       lessThan(tester.getTopLeft(find.text('Tea')).dy),
+    );
+  });
+
+  testWidgets('adjacent category entries share one icon header', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal(
+            'first',
+            MealType.breakfast,
+            foods: [food('cereal', 'Cereal', 200)],
+          )..timestamp = DateTime(2026, 7, 15, 8),
+          meal(
+            'second',
+            MealType.breakfast,
+            foods: [food('toast', 'Toast', 150)],
+          )..timestamp = DateTime(2026, 7, 15, 9),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Breakfast'), findsOneWidget);
+    expect(find.text('Cereal'), findsOneWidget);
+    expect(find.text('Toast'), findsOneWidget);
+    expect(find.textContaining('Breakfast •'), findsNothing);
+    expect(find.byIcon(Icons.wb_sunny_outlined), findsOneWidget);
+  });
+
+  testWidgets('interleaved categories stay chronological', (tester) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal(
+            'first',
+            MealType.breakfast,
+            foods: [food('cereal', 'Cereal', 200)],
+          )..timestamp = DateTime(2026, 7, 15, 8),
+          meal('lunch', MealType.lunch, foods: [food('pasta', 'Pasta', 500)])
+            ..timestamp = DateTime(2026, 7, 15, 12),
+          meal(
+            'second',
+            MealType.breakfast,
+            foods: [food('toast', 'Toast', 150)],
+          )..timestamp = DateTime(2026, 7, 15, 13),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    final breakfastHeaders = find.text('Breakfast');
+    expect(breakfastHeaders, findsNWidgets(2));
+    expect(
+      tester.getTopLeft(breakfastHeaders.at(0)).dy,
+      lessThan(tester.getTopLeft(find.text('Lunch')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Lunch')).dy,
+      lessThan(tester.getTopLeft(breakfastHeaders.at(1)).dy),
     );
   });
 

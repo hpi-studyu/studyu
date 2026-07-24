@@ -69,6 +69,28 @@ void main() {
     expect(history.recent, isEmpty);
   });
 
+  test('includes foods from meals with unknown time', () {
+    final recentFood = food(id: 'unknown-recent', name: 'Tea');
+    final frequentFood = food(id: 'unknown-frequent', name: 'Toast');
+
+    final history = buildFoodSearchHistory([
+      recallProgress(
+        'participant',
+        DateTime.utc(2025, 1, 5),
+        [recentFood, frequentFood],
+        unknownTime: true,
+        occurrenceTimestamp: DateTime.utc(2020),
+      ),
+      recallProgress('participant', DateTime.utc(2025, 1, 6), [
+        frequentFood,
+      ], unknownTime: true),
+    ], subjectId: 'participant');
+
+    expect(history.recent.single.food.name, 'Tea');
+    expect(history.frequentlyUsed.single.food.name, 'Toast');
+    expect(history.frequentlyUsed.single.lastUsedAt, DateTime.utc(2025, 1, 6));
+  });
+
   test(
     'creates an independent selection with fresh identity and timestamp',
     () {
@@ -91,8 +113,10 @@ void main() {
 studyu.SubjectProgress recallProgress(
   String subjectId,
   DateTime mealTime,
-  List<studyu.FoodEntry> foods,
-) {
+  List<studyu.FoodEntry> foods, {
+  bool unknownTime = false,
+  DateTime? occurrenceTimestamp,
+}) {
   final recall = studyu.DailyRecall.withId(
     date: mealTime,
     recallMode: studyu.RecallMode.realtimeRecord,
@@ -100,7 +124,10 @@ studyu.SubjectProgress recallProgress(
       studyu.MealLog.withId(
         mealType: studyu.MealType.snack,
         mealContext: studyu.MealContext.home,
-        timestamp: mealTime,
+        timestamp: occurrenceTimestamp ?? (unknownTime ? null : mealTime),
+        timePrecision: unknownTime
+            ? studyu.MealOccurrenceTimePrecision.unknown
+            : studyu.MealOccurrenceTimePrecision.approximate,
         timezone: 'UTC',
         isSkipped: false,
         foods: foods,
