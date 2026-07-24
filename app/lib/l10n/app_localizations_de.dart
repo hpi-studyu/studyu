@@ -2247,4 +2247,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get leave_anyway => 'Trotzdem verlassen';
+
+  @override
+  String get finish_nutrition_log => 'Ernährungstagebuch für heute abschließen';
+
+  @override
+  String get finish_nutrition_log_description =>
+      'Damit wird Ihr aktuelles Ernährungstagebuch für heute übermittelt.';
 }

@@ -22,6 +22,7 @@ class NutritionFormData extends IFormDataWithSchedule {
     super.reminderTime,
     this.collectMealContext = true,
     this.allowRecipes = true,
+    this.requireDailyCompletionConfirmation = false,
     this.minimumMealsRequired,
     this.customMealTypes,
   });
@@ -31,6 +32,7 @@ class NutritionFormData extends IFormDataWithSchedule {
   final String? instructions;
   final bool collectMealContext;
   final bool allowRecipes;
+  final bool requireDailyCompletionConfirmation;
   final int? minimumMealsRequired;
   final List<String>? customMealTypes;
 
@@ -50,6 +52,8 @@ class NutritionFormData extends IFormDataWithSchedule {
       instanceId: nutritionTask.schedule.instanceId,
       collectMealContext: nutritionTask.collectMealContext,
       allowRecipes: nutritionTask.allowRecipes,
+      requireDailyCompletionConfirmation:
+          nutritionTask.requireDailyCompletionConfirmation,
       minimumMealsRequired: nutritionTask.minimumMealsRequired,
       customMealTypes: nutritionTask.customMealTypes,
     );
@@ -63,6 +67,8 @@ class NutritionFormData extends IFormDataWithSchedule {
     nutritionTask.schedule = toSchedule();
     nutritionTask.collectMealContext = collectMealContext;
     nutritionTask.allowRecipes = allowRecipes;
+    nutritionTask.requireDailyCompletionConfirmation =
+        requireDailyCompletionConfirmation;
     nutritionTask.minimumMealsRequired = minimumMealsRequired;
     nutritionTask.customMealTypes = customMealTypes;
     return nutritionTask;
@@ -82,6 +88,7 @@ class NutritionFormData extends IFormDataWithSchedule {
       reminderTime: reminderTime,
       collectMealContext: collectMealContext,
       allowRecipes: allowRecipes,
+      requireDailyCompletionConfirmation: requireDailyCompletionConfirmation,
       minimumMealsRequired: minimumMealsRequired,
       customMealTypes: customMealTypes != null
           ? List.from(customMealTypes!)

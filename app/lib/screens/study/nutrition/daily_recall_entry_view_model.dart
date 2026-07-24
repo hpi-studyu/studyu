@@ -191,21 +191,38 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   /// Cancels a scheduled auto-save and waits for an already-running save.
   ///
-  /// Completion must be persisted after any older auto-save so that an
-  /// incomplete snapshot cannot overwrite the completed recall.
-  Future<void> flushPendingAutoSave() async {
+  /// When [persistToDatabase] is true, a scheduled but not-yet-started save is
+  /// started immediately. Completion leaves this false because it persists the
+  /// completed recall in its own upsert.
+  Future<void> flushPendingAutoSave({bool persistToDatabase = false}) async {
+    final hadScheduledSave = _autoSaveTimer != null;
     _autoSaveTimer?.cancel();
     _autoSaveTimer = null;
 
     final pendingSave = _autoSaveFuture;
-    if (pendingSave == null) return;
+    if (pendingSave != null) {
+      try {
+        await pendingSave;
+      } catch (error, stackTrace) {
+        StudyULogger.warning(
+          '[DailyRecallVM] Pending auto-save failed before leaving: $error\n$stackTrace',
+        );
+      }
+    }
 
-    try {
-      await pendingSave;
-    } catch (error, stackTrace) {
-      StudyULogger.warning(
-        '[DailyRecallVM] Pending auto-save failed before completion: $error\n$stackTrace',
-      );
+    if (persistToDatabase &&
+        hadScheduledSave &&
+        subject != null &&
+        _studyDaySnapshot != null &&
+        isInTaskMode) {
+      try {
+        await _performAutoSave();
+      } catch (error, stackTrace) {
+        StudyULogger.warning(
+          '[DailyRecallVM] Final auto-save failed before leaving: $error\n$stackTrace',
+        );
+        rethrow;
+      }
     }
   }
 

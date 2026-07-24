@@ -3001,6 +3001,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Erlaube Teilnehmenden, Lebensmittel zu wiederverwendbaren Rezepten zusammenzufassen.';
 
   @override
+  String get form_field_nutrition_require_daily_completion =>
+      'Täglichen Abschluss verlangen';
+
+  @override
+  String get form_field_nutrition_require_daily_completion_help =>
+      'Verlange von Teilnehmenden, ihr Ernährungstagebuch jeden Tag ausdrücklich abzuschließen.';
+
+  @override
   String get form_field_nutrition_minimum_meals_required =>
       'Mindestanzahl an Mahlzeiten';
 

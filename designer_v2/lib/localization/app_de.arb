@@ -1096,6 +1096,8 @@
   "form_field_nutrition_collect_meal_context_help": "Frage Teilnehmende, wo und mit wem sie gegessen haben.",
   "form_field_nutrition_allow_recipes": "Rezepte erlauben",
   "form_field_nutrition_allow_recipes_help": "Erlaube Teilnehmenden, Lebensmittel zu wiederverwendbaren Rezepten zusammenzufassen.",
+  "form_field_nutrition_require_daily_completion": "Täglichen Abschluss verlangen",
+  "form_field_nutrition_require_daily_completion_help": "Verlange von Teilnehmenden, ihr Ernährungstagebuch jeden Tag ausdrücklich abzuschließen.",
   "form_field_nutrition_minimum_meals_required": "Mindestanzahl an Mahlzeiten",
   "form_field_nutrition_minimum_meals_help": "Lege fest, wie viele nicht übersprungene Mahlzeiten vor Abschluss der Aufgabe erforderlich sind.",
   "form_field_nutrition_minimum_meals_hint": "Optional",

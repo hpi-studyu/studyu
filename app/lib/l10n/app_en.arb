@@ -924,5 +924,7 @@
       }
     }
   },
-  "leave_anyway": "Leave anyway"
+  "leave_anyway": "Leave anyway",
+  "finish_nutrition_log": "Finish today’s nutrition log",
+  "finish_nutrition_log_description": "This submits your current nutrition log for today."
 }

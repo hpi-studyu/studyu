@@ -1096,6 +1096,8 @@
   "form_field_nutrition_collect_meal_context_help": "Ask participants where and with whom they ate.",
   "form_field_nutrition_allow_recipes": "Allow recipes",
   "form_field_nutrition_allow_recipes_help": "Let participants combine food items into reusable recipes.",
+  "form_field_nutrition_require_daily_completion": "Require daily completion",
+  "form_field_nutrition_require_daily_completion_help": "Require participants to explicitly finish their nutrition log each day.",
   "form_field_nutrition_minimum_meals_required": "Minimum meals required",
   "form_field_nutrition_minimum_meals_help": "Require this many non-skipped meals before participants can complete the task.",
   "form_field_nutrition_minimum_meals_hint": "Optional",

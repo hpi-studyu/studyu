@@ -46,6 +46,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   VoidCallback? _viewModelListener;
   bool _isCompleting = false;
 
+  bool _requiresDailyCompletion(NutritionTask? task) =>
+      task?.requireDailyCompletionConfirmation ?? true;
+
   @override
   void initState() {
     super.initState();
@@ -113,33 +116,39 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           return PopScope(
             canPop:
                 !model.isInTaskMode ||
-                widget.task?.minimumMealsRequired == null ||
-                model.meetsMinimumMeals,
+                (_requiresDailyCompletion(widget.task) &&
+                    (widget.task?.minimumMealsRequired == null ||
+                        model.meetsMinimumMeals)),
             onPopInvokedWithResult: (bool didPop, _) async {
               if (didPop) return;
-              final shouldPop = await showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: Text(l10n.min_meals_not_met_title),
-                  content: Text(
-                    l10n.min_meals_not_met_message(
-                      widget.task!.minimumMealsRequired!,
+              if (model.isInTaskMode && !model.meetsMinimumMeals) {
+                final shouldLeave = await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(l10n.min_meals_not_met_title),
+                    content: Text(
+                      l10n.min_meals_not_met_message(
+                        widget.task!.minimumMealsRequired!,
+                      ),
                     ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(false),
+                        child: Text(l10n.cancel),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(true),
+                        child: Text(l10n.leave_anyway),
+                      ),
+                    ],
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(false),
-                      child: Text(l10n.cancel),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(true),
-                      child: Text(l10n.leave_anyway),
-                    ),
-                  ],
-                ),
-              );
-              if (shouldPop == true && context.mounted) {
-                Navigator.of(context).pop();
+                );
+                if (shouldLeave != true || !context.mounted) return;
+              }
+              if (_requiresDailyCompletion(widget.task)) {
+                if (context.mounted) Navigator.of(context).pop();
+              } else {
+                await _leaveWithoutCompletion(model);
               }
             },
             child: Scaffold(
@@ -182,26 +191,37 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                       ),
                     ),
                   ),
-                  if (model.isInTaskMode)
+                  if (model.isInTaskMode &&
+                      _requiresDailyCompletion(widget.task))
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
-                          onPressed: _isCompleting || !model.meetsMinimumMeals
-                              ? null
-                              : () => _completeTask(model),
-                          icon: _isCompleting
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Icon(Icons.check),
-                          label: Text(l10n.complete),
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.finish_nutrition_log_description,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          FilledButton.icon(
+                            onPressed:
+                                _isCompleting ||
+                                    !model.meetsMinimumMeals ||
+                                    model.recall.meals.isEmpty
+                                ? null
+                                : () => _completeTask(model),
+                            icon: _isCompleting
+                                ? const SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.check),
+                            label: Text(l10n.finish_nutrition_log),
+                          ),
+                        ],
                       ),
                     ),
                 ],
@@ -213,8 +233,31 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     );
   }
 
+  Future<void> _leaveWithoutCompletion(DailyRecallEntryViewModel model) async {
+    if (_isCompleting) return;
+    setState(() => _isCompleting = true);
+    try {
+      await model.flushPendingAutoSave(persistToDatabase: true);
+      if (mounted) Navigator.of(context).pop(model.recall);
+    } catch (error) {
+      if (mounted) {
+        setState(() => _isCompleting = false);
+        StudyULogger.error('Failed to save nutrition results: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.could_not_save_results),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _completeTask(DailyRecallEntryViewModel model) async {
-    if (_isCompleting || !model.meetsMinimumMeals) return;
+    if (_isCompleting ||
+        !model.meetsMinimumMeals ||
+        model.recall.meals.isEmpty) {
+      return;
+    }
     setState(() => _isCompleting = true);
     try {
       await model.flushPendingAutoSave();

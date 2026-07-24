@@ -5005,6 +5005,18 @@ abstract class AppLocalizations {
   /// **'Let participants combine food items into reusable recipes.'**
   String get form_field_nutrition_allow_recipes_help;
 
+  /// No description provided for @form_field_nutrition_require_daily_completion.
+  ///
+  /// In en, this message translates to:
+  /// **'Require daily completion'**
+  String get form_field_nutrition_require_daily_completion;
+
+  /// No description provided for @form_field_nutrition_require_daily_completion_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Require participants to explicitly finish their nutrition log each day.'**
+  String get form_field_nutrition_require_daily_completion_help;
+
   /// No description provided for @form_field_nutrition_minimum_meals_required.
   ///
   /// In en, this message translates to:

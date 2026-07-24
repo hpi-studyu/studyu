@@ -2228,4 +2228,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leave_anyway => 'Leave anyway';
+
+  @override
+  String get finish_nutrition_log => 'Finish today’s nutrition log';
+
+  @override
+  String get finish_nutrition_log_description =>
+      'This submits your current nutrition log for today.';
 }

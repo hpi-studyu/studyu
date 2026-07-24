@@ -37,6 +37,8 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
   final FormControl<String> instructionsControl = FormControl(value: '');
   final FormControl<bool> collectMealContextControl = FormControl(value: true);
   final FormControl<bool> allowRecipesControl = FormControl(value: true);
+  final FormControl<bool> requireDailyCompletionConfirmationControl =
+      FormControl(value: false);
   final FormControl<int> minimumMealsRequiredControl = FormControl();
   final FormArray<String> customMealTypesControl = FormArray<String>([]);
 
@@ -79,6 +81,8 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     'instructions': instructionsControl,
     'collectMealContext': collectMealContextControl,
     'allowRecipes': allowRecipesControl,
+    'requireDailyCompletionConfirmation':
+        requireDailyCompletionConfirmationControl,
     'minimumMealsRequired': minimumMealsRequiredControl,
     'customMealTypes': customMealTypesControl,
     ...scheduleFormControls,
@@ -92,6 +96,8 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     instructionsControl.value = data.instructions ?? '';
     collectMealContextControl.value = data.collectMealContext;
     allowRecipesControl.value = data.allowRecipes;
+    requireDailyCompletionConfirmationControl.value =
+        data.requireDailyCompletionConfirmation;
     minimumMealsRequiredControl.value = data.minimumMealsRequired;
 
     customMealTypesControl.clear();
@@ -111,6 +117,8 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
       instructions: instructionsControl.value,
       collectMealContext: collectMealContextControl.value ?? true,
       allowRecipes: allowRecipesControl.value ?? true,
+      requireDailyCompletionConfirmation:
+          requireDailyCompletionConfirmationControl.value ?? false,
       minimumMealsRequired: minimumMealsRequiredControl.value,
       customMealTypes: () {
         final types = customMealTypesControl.controls

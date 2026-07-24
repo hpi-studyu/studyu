@@ -4180,6 +4180,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leave anyway'**
   String get leave_anyway;
+
+  /// No description provided for @finish_nutrition_log.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish today’s nutrition log'**
+  String get finish_nutrition_log;
+
+  /// No description provided for @finish_nutrition_log_description.
+  ///
+  /// In en, this message translates to:
+  /// **'This submits your current nutrition log for today.'**
+  String get finish_nutrition_log_description;
 }
 
 class _AppLocalizationsDelegate

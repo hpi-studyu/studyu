@@ -27,15 +27,57 @@ Widget nutritionTaskApp(NutritionTask task, {DailyRecall? existingRecall}) =>
       ),
     );
 
+class _NutritionLauncher extends StatefulWidget {
+  const _NutritionLauncher({
+    required this.task,
+    required this.onResult,
+    this.existingRecall,
+  });
+
+  final NutritionTask task;
+  final DailyRecall? existingRecall;
+  final ValueChanged<DailyRecall?> onResult;
+
+  @override
+  State<_NutritionLauncher> createState() => _NutritionLauncherState();
+}
+
+class _NutritionLauncherState extends State<_NutritionLauncher> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final result = await Navigator.of(context).push<DailyRecall>(
+        NutritionTaskWidget.route(
+          existingRecall: widget.existingRecall,
+          task: widget.task,
+          completionPeriod: CompletionPeriod(
+            id: 'period',
+            unlockTime: StudyUTimeOfDay(),
+            lockTime: StudyUTimeOfDay(hour: 23),
+          ),
+        ),
+      );
+      widget.onResult(result);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
 NutritionTask nutritionTask({
   String? instructions,
   int? minimumMeals,
   List<String>? customMealTypes,
+  bool requireDailyCompletionConfirmation = true,
 }) => NutritionTask.withId()
   ..title = 'Nutrition'
   ..instructions = instructions
   ..minimumMealsRequired = minimumMeals
-  ..customMealTypes = customMealTypes;
+  ..customMealTypes = customMealTypes
+  ..requireDailyCompletionConfirmation = requireDailyCompletionConfirmation;
 
 NutritionProfile nutrition(double energyKcal) => NutritionProfile(
   energyKcal: energyKcal,
@@ -96,6 +138,93 @@ DailyRecall recall(List<MealLog> meals) => DailyRecall(
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  testWidgets('hides daily completion controls when confirmation is optional', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(requireDailyCompletionConfirmation: false),
+        existingRecall: recall([meal('meal', MealType.breakfast)]),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Finish today’s nutrition log'), findsNothing);
+    expect(
+      find.text('This submits your current nutrition log for today.'),
+      findsNothing,
+    );
+  });
+
+  testWidgets('disables required completion for an empty day', (tester) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(nutritionTask(), existingRecall: recall([])),
+    );
+    await tester.pump();
+
+    final finishButton = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Finish today’s nutrition log'),
+    );
+    expect(finishButton.onPressed, isNull);
+  });
+
+  testWidgets('required completion still returns a completed recall', (
+    tester,
+  ) async {
+    DailyRecall? result;
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          home: _NutritionLauncher(
+            task: nutritionTask(),
+            existingRecall: recall([meal('meal', MealType.breakfast)]),
+            onResult: (value) => result = value,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    await tester.tap(find.text('Finish today’s nutrition log'));
+    await tester.pumpAndSettle();
+
+    expect(result, isA<DailyRecall>());
+    expect(result!.entryCompletedAt, isNotNull);
+  });
+
+  testWidgets('optional completion leaves a non-completed recall', (
+    tester,
+  ) async {
+    DailyRecall? result;
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          home: _NutritionLauncher(
+            task: nutritionTask(requireDailyCompletionConfirmation: false),
+            onResult: (value) => result = value,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(result, isA<DailyRecall>());
+    expect(result!.entryCompletedAt, isNull);
+  });
 
   testWidgets('shows the recall date as non-interactive header text', (
     tester,

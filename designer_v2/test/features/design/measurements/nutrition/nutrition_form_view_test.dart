@@ -11,6 +11,28 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 void main() {
   setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
 
+  test('new nutrition tasks do not require daily confirmation by default', () {
+    final formViewModel = NutritionFormViewModel(
+      study: Study.withId('study-1'),
+    );
+
+    expect(
+      formViewModel.requireDailyCompletionConfirmationControl.value,
+      isFalse,
+    );
+    expect(
+      formViewModel.buildFormData().requireDailyCompletionConfirmation,
+      isFalse,
+    );
+    expect(
+      formViewModel
+          .buildFormData()
+          .toNutritionTask()
+          .requireDailyCompletionConfirmation,
+      isFalse,
+    );
+  });
+
   test('allows an empty optional minimum meal count', () {
     final formViewModel = NutritionFormViewModel(
       study: Study.withId('study-1'),
@@ -40,6 +62,12 @@ void main() {
           ),
         ),
       ),
+    );
+
+    expect(find.text('Require daily completion'), findsOneWidget);
+    expect(
+      formViewModel.requireDailyCompletionConfirmationControl.value,
+      isFalse,
     );
 
     await tester.tap(find.text('Add meal type'));
