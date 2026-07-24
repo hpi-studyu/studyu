@@ -195,7 +195,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved apple template'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(find.text('Morning meal'), findsNWidgets(2));
@@ -273,6 +273,37 @@ void main() {
     expect(find.text('Not hungry'), findsOneWidget);
     expect(find.textContaining('52 kcal'), findsOneWidget);
     expect(find.textContaining('90 kcal'), findsOneWidget);
+  });
+
+  testWidgets('deleted editor result removes only the selected meal', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal(
+            'breakfast',
+            MealType.breakfast,
+            foods: [food('apple', 'Apple', 52)],
+          ),
+          meal('lunch', MealType.lunch, foods: [food('yogurt', 'Yogurt', 90)]),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Delete meal'));
+    await tester.tap(find.text('Delete meal'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NutritionTaskWidget), findsOneWidget);
+    expect(find.text('Apple'), findsNothing);
+    expect(find.text('Yogurt'), findsOneWidget);
   });
 
   testWidgets('shows nutrition instructions without a collapsed section', (

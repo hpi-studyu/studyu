@@ -2990,14 +2990,50 @@ abstract class AppLocalizations {
   /// No description provided for @discard_meal_changes_title.
   ///
   /// In en, this message translates to:
-  /// **'Discard meal changes?'**
+  /// **'Leave this meal?'**
   String get discard_meal_changes_title;
 
   /// No description provided for @discard_meal_changes_message.
   ///
   /// In en, this message translates to:
-  /// **'Your changes to this meal will be lost.'**
+  /// **'Save your changes, discard them, or continue editing.'**
   String get discard_meal_changes_message;
+
+  /// No description provided for @save_and_leave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and leave'**
+  String get save_and_leave;
+
+  /// No description provided for @discard_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes'**
+  String get discard_changes;
+
+  /// No description provided for @continue_editing.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue editing'**
+  String get continue_editing;
+
+  /// No description provided for @delete_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete meal'**
+  String get delete_meal;
+
+  /// No description provided for @delete_meal_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this meal?'**
+  String get delete_meal_title;
+
+  /// No description provided for @delete_meal_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This meal will be removed from the nutrition log.'**
+  String get delete_meal_message;
 
   /// No description provided for @enter_skip_reason.
   ///

@@ -19,6 +19,22 @@ import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_app/widgets/template_selection_sheet.dart';
 import 'package:studyu_core/core.dart';
 
+sealed class MealEntryResult {
+  const MealEntryResult();
+}
+
+final class SavedMealEntryResult extends MealEntryResult {
+  final MealLog meal;
+
+  const SavedMealEntryResult(this.meal);
+}
+
+final class DeletedMealEntryResult extends MealEntryResult {
+  const DeletedMealEntryResult();
+}
+
+enum _UnsavedMealAction { save, discard, continueEditing }
+
 class MealEntryScreen extends StatefulWidget {
   final MealLog? existingMeal;
   final NutritionTask? task;
@@ -33,7 +49,7 @@ class MealEntryScreen extends StatefulWidget {
     super.key,
   });
 
-  static MaterialPageRoute<MealLog> route({
+  static MaterialPageRoute<MealEntryResult> route({
     MealLog? existingMeal,
     NutritionTask? task,
     MealType? initialMealType,
@@ -70,6 +86,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   String? _skipReason;
   late final String _initialMealSnapshot;
   bool _allowPop = false;
+  bool _hasAttemptedSave = false;
 
   late TextEditingController _customMealLabelController;
   late TextEditingController _locationDescriptionController;
@@ -174,7 +191,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     return MealLog(
       id: _meal.id,
       mealType: _mealType,
-      customMealLabel: clearDetails ? null : _customMealLabel,
+      customMealLabel: clearDetails || _mealType != MealType.other
+          ? null
+          : _customMealLabel,
       mealContext: _mealContext,
       locationDescription: clearDetails ? null : _locationDescription,
       timestamp: _timestamp,
@@ -192,7 +211,28 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   bool get _hasUnsavedChanges => _mealSnapshot != _initialMealSnapshot;
 
-  void _pop([MealLog? result]) {
+  bool get _isMealValid =>
+      (!_isSkipped && _meal.foods.isNotEmpty) ||
+      (_isSkipped && _skipReason?.trim().isNotEmpty == true);
+
+  String get _mealLabel {
+    final customLabel = _customMealLabel?.trim();
+    return _mealType == MealType.other && customLabel?.isNotEmpty == true
+        ? customLabel!
+        : _getMealTypeLabel(_mealType);
+  }
+
+  void _setMealType(MealType mealType) {
+    setState(() {
+      _mealType = mealType;
+      if (mealType != MealType.other) {
+        _customMealLabel = null;
+        _customMealLabelController.clear();
+      }
+    });
+  }
+
+  void _pop([MealEntryResult? result]) {
     setState(() => _allowPop = true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) Navigator.of(context).pop(result);
@@ -200,17 +240,62 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   void _saveMeal() {
+    if (!_isMealValid) {
+      setState(() => _hasAttemptedSave = true);
+      return;
+    }
+
     _meal = _buildMeal(normalizeSkipped: true);
-    _pop(_meal);
+    _pop(SavedMealEntryResult(_meal));
   }
 
   Future<void> _confirmDiscard() async {
     final l10n = AppLocalizations.of(context)!;
-    final shouldDiscard = await showDialog<bool>(
+    final action = await showDialog<_UnsavedMealAction>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.discard_meal_changes_title),
         content: Text(l10n.discard_meal_changes_message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(
+              dialogContext,
+            ).pop(_UnsavedMealAction.continueEditing),
+            child: Text(l10n.continue_editing),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_UnsavedMealAction.discard),
+            child: Text(l10n.discard_changes),
+          ),
+          FilledButton(
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_UnsavedMealAction.save),
+            child: Text(l10n.save_and_leave),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+
+    switch (action) {
+      case _UnsavedMealAction.save:
+        _saveMeal();
+      case _UnsavedMealAction.discard:
+        _pop();
+      case _UnsavedMealAction.continueEditing:
+      case null:
+        return;
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final l10n = AppLocalizations.of(context)!;
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.delete_meal_title),
+        content: Text(l10n.delete_meal_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -218,12 +303,17 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l10n.discard),
+            child: Text(
+              l10n.delete,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
           ),
         ],
       ),
     );
-    if (shouldDiscard == true && mounted) _pop();
+    if (shouldDelete == true && mounted) {
+      _pop(const DeletedMealEntryResult());
+    }
   }
 
   Future<void> _selectTime() async {
@@ -455,10 +545,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final canSave =
-        (!_isSkipped && _meal.foods.isNotEmpty) ||
-        (_isSkipped && _skipReason?.trim().isNotEmpty == true);
-
     return PopScope(
       canPop: _allowPop || !_hasUnsavedChanges,
       onPopInvokedWithResult: (didPop, _) {
@@ -466,7 +552,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(l10n.meal_entry_title),
+          title: Text(_mealLabel),
           actions: [
             if (_meal.foods.isNotEmpty && !_isSkipped)
               IconButton(
@@ -480,6 +566,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 tooltip: l10n.save_as_template,
                 onPressed: _isSavingTemplate ? null : _saveAsTemplate,
               ),
+            TextButton(onPressed: _saveMeal, child: Text(l10n.save)),
           ],
         ),
         body: SingleChildScrollView(
@@ -487,6 +574,20 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (!_isSkipped) ...[
+                _FoodListSection(
+                  meal: _meal,
+                  isSkipped: false,
+                  showValidationError: _hasAttemptedSave && _meal.foods.isEmpty,
+                  onAddFood: _addFood,
+                  onAddFoodFromTemplate: _addFoodFromTemplate,
+                  onEditFood: _editFood,
+                  onRemoveFood: _removeFood,
+                  onSaveFoodAsTemplate: _saveFoodAsTemplate,
+                  isSavingFoodTemplate: _isSavingFoodTemplate,
+                ),
+                const SizedBox(height: 16),
+              ],
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(4),
@@ -506,9 +607,11 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                             controller: _skipReasonController,
                             decoration: InputDecoration(
                               labelText: l10n.reason_for_skipping,
-                              errorText: _skipReason?.trim().isNotEmpty == true
-                                  ? null
-                                  : l10n.enter_skip_reason,
+                              errorText:
+                                  _hasAttemptedSave &&
+                                      _skipReason?.trim().isNotEmpty != true
+                                  ? l10n.enter_skip_reason
+                                  : null,
                               border: const OutlineInputBorder(),
                             ),
                             onChanged: (value) {
@@ -527,26 +630,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   customMealLabel: _customMealLabel,
                   customMealLabelController: _customMealLabelController,
                   customMealTypes: widget.task?.customMealTypes,
-                  onMealTypeChanged: (value) {
-                    setState(() => _mealType = value);
-                  },
+                  onMealTypeChanged: _setMealType,
                   onCustomLabelChanged: (value) {
                     setState(() => _customMealLabel = value);
                   },
                 ),
                 const SizedBox(height: 16),
                 _TimeSelector(timestamp: _timestamp, onSelectTime: _selectTime),
-                const SizedBox(height: 16),
-                _FoodListSection(
-                  meal: _meal,
-                  isSkipped: false,
-                  onAddFood: _addFood,
-                  onAddFoodFromTemplate: _addFoodFromTemplate,
-                  onEditFood: _editFood,
-                  onRemoveFood: _removeFood,
-                  onSaveFoodAsTemplate: _saveFoodAsTemplate,
-                  isSavingFoodTemplate: _isSavingFoodTemplate,
-                ),
                 const SizedBox(height: 16),
                 PhotoRecallSection(
                   mealTime: _timestamp,
@@ -588,26 +678,22 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     },
                   ),
               ],
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-        bottomNavigationBar: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+              if (widget.existingMeal != null) ...[
+                const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: canSave ? _saveMeal : null,
-                    icon: const Icon(Icons.check),
-                    label: Text(l10n.save),
+                  child: OutlinedButton.icon(
+                    onPressed: _confirmDelete,
+                    icon: const Icon(Icons.delete_outline),
+                    label: Text(l10n.delete_meal),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
               ],
-            ),
+              const SizedBox(height: 16),
+            ],
           ),
         ),
       ),
@@ -821,6 +907,7 @@ class _FoodListSection extends StatelessWidget {
   final Function(int) onRemoveFood;
   final Function(FoodEntry) onSaveFoodAsTemplate;
   final bool isSavingFoodTemplate;
+  final bool showValidationError;
 
   const _FoodListSection({
     required this.meal,
@@ -831,6 +918,7 @@ class _FoodListSection extends StatelessWidget {
     required this.onRemoveFood,
     required this.onSaveFoodAsTemplate,
     this.isSavingFoodTemplate = false,
+    this.showValidationError = false,
   });
 
   @override
@@ -843,7 +931,24 @@ class _FoodListSection extends StatelessWidget {
     }
 
     if (meal.foods.isEmpty) {
-      return _EmptyFoodState(theme: theme, l10n: l10n, onAddFood: onAddFood);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.food_items,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _EmptyFoodState(
+            theme: theme,
+            l10n: l10n,
+            onAddFood: onAddFood,
+            showValidationError: showValidationError,
+          ),
+        ],
+      );
     }
 
     return Column(
@@ -921,11 +1026,13 @@ class _EmptyFoodState extends StatelessWidget {
   final ThemeData theme;
   final AppLocalizations l10n;
   final VoidCallback onAddFood;
+  final bool showValidationError;
 
   const _EmptyFoodState({
     required this.theme,
     required this.l10n,
     required this.onAddFood,
+    required this.showValidationError,
   });
 
   @override
@@ -967,13 +1074,15 @@ class _EmptyFoodState extends StatelessWidget {
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.add_food_before_saving,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.error,
+                if (showValidationError) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.add_food_before_saving,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

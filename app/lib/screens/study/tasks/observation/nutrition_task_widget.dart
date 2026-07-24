@@ -497,8 +497,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         initialCustomMealLabel: initialCustomMealLabel,
       ),
     );
-    if (result != null) {
-      model.addMeal(result);
+    if (result case SavedMealEntryResult(:final meal)) {
+      model.addMeal(meal);
     }
   }
 
@@ -511,8 +511,13 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     final result = await Navigator.of(
       context,
     ).push(MealEntryScreen.route(existingMeal: meal, task: widget.task));
-    if (result != null) {
-      model.updateMeal(index, result);
+    switch (result) {
+      case SavedMealEntryResult(:final meal):
+        model.updateMeal(index, meal);
+      case DeletedMealEntryResult():
+        model.removeMeal(index);
+      case null:
+        break;
     }
   }
 

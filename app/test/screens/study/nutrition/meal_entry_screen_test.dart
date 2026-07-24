@@ -84,6 +84,7 @@ Future<void> openMealEntry(
   WidgetTester tester,
   MealLog meal, {
   ValueChanged<MealLog?>? onResult,
+  ValueChanged<MealEntryResult?>? onEntryResult,
 }) async {
   await tester.pumpWidget(
     ChangeNotifierProvider(
@@ -97,12 +98,16 @@ Future<void> openMealEntry(
             body: Center(
               child: FilledButton(
                 onPressed: () async {
-                  final result = await Navigator.of(context).push<MealLog>(
-                    MaterialPageRoute(
-                      builder: (_) => MealEntryScreen(existingMeal: meal),
-                    ),
+                  final result = await Navigator.of(context)
+                      .push<MealEntryResult>(
+                        MaterialPageRoute(
+                          builder: (_) => MealEntryScreen(existingMeal: meal),
+                        ),
+                      );
+                  onEntryResult?.call(result);
+                  onResult?.call(
+                    result is SavedMealEntryResult ? result.meal : null,
                   );
-                  onResult?.call(result);
                 },
                 child: const Text('Open meal'),
               ),
@@ -154,6 +159,13 @@ void main() {
           .selected,
       isTrue,
     );
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Dinner')),
+      findsOneWidget,
+    );
+    expect(find.widgetWithText(TextButton, 'Save'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Save'), findsNothing);
+    expect(find.text('Delete meal'), findsNothing);
   });
 
   testWidgets('new meal uses the requested custom meal label', (tester) async {
@@ -179,7 +191,14 @@ void main() {
           .selected,
       isTrue,
     );
-    expect(find.text('Late bite'), findsOneWidget);
+    expect(find.text('Late bite'), findsWidgets);
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Late bite'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('existing meal wins over requested initial values', (
@@ -208,8 +227,43 @@ void main() {
           .selected,
       isTrue,
     );
-    expect(find.text('Supper'), findsOneWidget);
+    expect(find.text('Supper'), findsWidgets);
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Supper')),
+      findsOneWidget,
+    );
     expect(find.text('Ignored'), findsNothing);
+  });
+
+  testWidgets('built-in meal type clears an existing custom label', (
+    tester,
+  ) async {
+    MealEntryResult? result;
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      onEntryResult: (value) => result = value,
+    );
+
+    await tester.tap(find.widgetWithText(FilterChip, 'Dinner'));
+    await tester.pump();
+
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Dinner')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Supper')),
+      findsNothing,
+    );
+
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isA<SavedMealEntryResult>());
+    final savedMeal = (result! as SavedMealEntryResult).meal;
+    expect(savedMeal.mealType, MealType.dinner);
+    expect(savedMeal.customMealLabel, isNull);
   });
 
   testWidgets('skipped meal only asks for a reason and keeps save visible', (
@@ -221,22 +275,24 @@ void main() {
     expect(find.text('Meal Type'), findsNothing);
     expect(find.text('Meal context'), findsNothing);
     var reasonField = tester.widget<TextField>(find.byType(TextField));
-    expect(reasonField.decoration?.errorText, 'Enter a reason before saving.');
+    expect(reasonField.decoration?.errorText, isNull);
 
-    var saveButton = tester.widget<FilledButton>(
-      find.widgetWithText(FilledButton, 'Save'),
+    final saveButton = tester.widget<TextButton>(
+      find.widgetWithText(TextButton, 'Save'),
     );
-    expect(saveButton.onPressed, isNull);
+    expect(saveButton.onPressed, isNotNull);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pump();
+
+    reasonField = tester.widget<TextField>(find.byType(TextField));
+    expect(reasonField.decoration?.errorText, 'Enter a reason before saving.');
 
     await tester.enterText(find.byType(TextField), 'Not hungry');
     await tester.pump();
 
     reasonField = tester.widget<TextField>(find.byType(TextField));
     expect(reasonField.decoration?.errorText, isNull);
-    saveButton = tester.widget<FilledButton>(
-      find.widgetWithText(FilledButton, 'Save'),
-    );
-    expect(saveButton.onPressed, isNotNull);
   });
 
   testWidgets(
@@ -255,6 +311,8 @@ void main() {
       );
       expect(emptyFoodState, findsOneWidget);
       expect(tester.widget<InkWell>(emptyFoodState).onTap, isNotNull);
+      expect(find.text('Food items'), findsOneWidget);
+      expect(find.text('Meal Nutrition'), findsNothing);
       expect(
         find.ancestor(
           of: find.text('Tap to add food'),
@@ -267,38 +325,54 @@ void main() {
           of: emptyFoodState,
           matching: find.text('Add at least one food item before saving.'),
         ),
-        findsOneWidget,
+        findsNothing,
       );
-      var saveButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Save'),
+      final saveButton = tester.widget<TextButton>(
+        find.widgetWithText(TextButton, 'Save'),
       );
-      expect(saveButton.onPressed, isNull);
+      expect(saveButton.onPressed, isNotNull);
 
-      await tester.tap(find.text('Skipped this meal'));
+      await tester.tap(find.widgetWithText(TextButton, 'Save'));
       await tester.pump();
 
       expect(result, isNull);
       expect(find.byType(MealEntryScreen), findsOneWidget);
       expect(
+        find.descendant(
+          of: emptyFoodState,
+          matching: find.text('Add at least one food item before saving.'),
+        ),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.text('Skipped this meal'));
+      await tester.pump();
+
+      expect(
         tester.widget<TextField>(find.byType(TextField)).decoration?.errorText,
         'Enter a reason before saving.',
       );
-      saveButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Save'),
-      );
-      expect(saveButton.onPressed, isNull);
 
       await tester.enterText(find.byType(TextField), 'Not hungry');
       await tester.pump();
 
       expect(result, isNull);
       expect(find.byType(MealEntryScreen), findsOneWidget);
-      saveButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Save'),
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).decoration?.errorText,
+        isNull,
       );
-      expect(saveButton.onPressed, isNotNull);
     },
   );
+
+  testWidgets('food workspace appears before meal details', (tester) async {
+    await openMealEntry(tester, editableMeal());
+
+    expect(
+      tester.getTopLeft(find.text('Food items')).dy,
+      lessThan(tester.getTopLeft(find.text('Meal Type')).dy),
+    );
+  });
 
   testWidgets('meal fields cards and chips use native theme defaults', (
     tester,
@@ -338,7 +412,7 @@ void main() {
     }
   });
 
-  testWidgets('back asks before discarding changed meal', (tester) async {
+  testWidgets('back offers save discard and continue actions', (tester) async {
     await openMealEntry(tester, skippedMeal());
     await tester.enterText(find.byType(TextField), 'Not hungry');
     await tester.pump();
@@ -346,24 +420,86 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    expect(find.text('Discard meal changes?'), findsOneWidget);
+    expect(find.text('Leave this meal?'), findsOneWidget);
     expect(
-      find.text('Your changes to this meal will be lost.'),
+      find.text('Save your changes, discard them, or continue editing.'),
       findsOneWidget,
     );
+    expect(find.text('Save and leave'), findsOneWidget);
+    expect(find.text('Discard changes'), findsOneWidget);
+    expect(find.text('Continue editing'), findsOneWidget);
 
-    await tester.tap(find.text('Cancel'));
+    await tester.tap(find.text('Continue editing'));
     await tester.pumpAndSettle();
 
     expect(find.byType(MealEntryScreen), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Discard'));
+    await tester.tap(find.text('Discard changes'));
     await tester.pumpAndSettle();
 
     expect(find.byType(MealEntryScreen), findsNothing);
     expect(find.text('Open meal'), findsOneWidget);
+  });
+
+  testWidgets('save and leave returns the validated meal', (tester) async {
+    MealLog? result;
+    await openMealEntry(
+      tester,
+      skippedMeal(),
+      onResult: (value) => result = value,
+    );
+    await tester.enterText(find.byType(TextField), 'Not hungry');
+    await tester.pump();
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save and leave'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.skipReason, 'Not hungry');
+    expect(find.byType(MealEntryScreen), findsNothing);
+  });
+
+  testWidgets('save and leave keeps an invalid meal open', (tester) async {
+    await openMealEntry(tester, emptyMeal());
+    await tester.tap(find.widgetWithText(FilterChip, 'Dinner'));
+    await tester.pump();
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save and leave'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MealEntryScreen), findsOneWidget);
+    expect(
+      find.text('Add at least one food item before saving.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('existing meal can return a typed deleted result', (
+    tester,
+  ) async {
+    MealEntryResult? result;
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      onEntryResult: (value) => result = value,
+    );
+
+    await tester.ensureVisible(find.text('Delete meal'));
+    await tester.tap(find.text('Delete meal'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Delete this meal?'), findsOneWidget);
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+
+    expect(result, isA<DeletedMealEntryResult>());
+    expect(find.byType(MealEntryScreen), findsNothing);
   });
 
   testWidgets('food editor hides search and preserves the meal draft', (
@@ -380,10 +516,7 @@ void main() {
     await tester.enterText(customLabelField, 'Edited supper');
     await tester.pump();
 
-    await tester.drag(
-      find.byType(SingleChildScrollView),
-      const Offset(0, -250),
-    );
+    await tester.ensureVisible(find.text('Apple'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Apple'));
     await tester.pumpAndSettle();
@@ -395,7 +528,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(MealEntryScreen), findsOneWidget);
-    expect(find.text('Edited supper'), findsOneWidget);
+    expect(find.text('Edited supper'), findsWidgets);
   });
 
   testWidgets('recipe builder return preserves and saves the meal draft', (
@@ -435,10 +568,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(MealEntryScreen), findsOneWidget);
-    expect(find.text('Edited supper'), findsOneWidget);
+    expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -486,11 +619,11 @@ void main() {
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Edited supper'), findsOneWidget);
+    expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('Saved Pear'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -517,7 +650,7 @@ void main() {
 
     await tester.tap(find.text('Skipped this meal'));
     await tester.pump();
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -533,7 +666,7 @@ void main() {
     final original = skippedMeal(reason: 'Not hungry');
     await openMealEntry(tester, original, onResult: (value) => result = value);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);

@@ -1591,11 +1591,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discard => 'Discard';
 
   @override
-  String get discard_meal_changes_title => 'Discard meal changes?';
+  String get discard_meal_changes_title => 'Leave this meal?';
 
   @override
   String get discard_meal_changes_message =>
-      'Your changes to this meal will be lost.';
+      'Save your changes, discard them, or continue editing.';
+
+  @override
+  String get save_and_leave => 'Save and leave';
+
+  @override
+  String get discard_changes => 'Discard changes';
+
+  @override
+  String get continue_editing => 'Continue editing';
+
+  @override
+  String get delete_meal => 'Delete meal';
+
+  @override
+  String get delete_meal_title => 'Delete this meal?';
+
+  @override
+  String get delete_meal_message =>
+      'This meal will be removed from the nutrition log.';
 
   @override
   String get enter_skip_reason => 'Enter a reason before saving.';

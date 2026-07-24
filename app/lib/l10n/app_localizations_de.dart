@@ -1605,12 +1605,30 @@ class AppLocalizationsDe extends AppLocalizations {
   String get discard => 'Verwerfen';
 
   @override
-  String get discard_meal_changes_title =>
-      'Änderungen an der Mahlzeit verwerfen?';
+  String get discard_meal_changes_title => 'Mahlzeit verlassen?';
 
   @override
   String get discard_meal_changes_message =>
-      'Ihre Änderungen an dieser Mahlzeit gehen verloren.';
+      'Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie die Mahlzeit weiter.';
+
+  @override
+  String get save_and_leave => 'Speichern und verlassen';
+
+  @override
+  String get discard_changes => 'Änderungen verwerfen';
+
+  @override
+  String get continue_editing => 'Weiter bearbeiten';
+
+  @override
+  String get delete_meal => 'Mahlzeit löschen';
+
+  @override
+  String get delete_meal_title => 'Diese Mahlzeit löschen?';
+
+  @override
+  String get delete_meal_message =>
+      'Diese Mahlzeit wird aus dem Ernährungsprotokoll entfernt.';
 
   @override
   String get enter_skip_reason =>
