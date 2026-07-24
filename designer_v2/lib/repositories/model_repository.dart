@@ -230,7 +230,6 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     if (wrappedModel == null) {
       throw ModelNotFoundException();
     }
-
     wrappedModel.markAsLoading();
 
     final deleteOperation = OptimisticUpdate(
@@ -254,7 +253,10 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       },
       rethrowErrors: true,
       runOptimistically: runOptimistically,
-      completeFutureOptimistically: runOptimistically,
+      // Delete callers must wait for backend completion before showing
+      // success UI or reloading lists; otherwise the study can appear to
+      // "delete successfully" while the request is still in flight.
+      completeFutureOptimistically: false,
     );
 
     return deleteOperation.execute();

@@ -103,6 +103,7 @@ class UserNotFoundException extends APIException {}
 
 abstract class PostgrestErrorCodes {
   static const String isNotSingleItem = 'PGRST116';
+  static const String foreignKeyViolation = '23503';
 }
 
 class StudyUApiClient extends SupabaseClientDependant
@@ -361,11 +362,18 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<void> deleteStudy(Study study) async {
     await _testDelay();
+    try {
+      await study.delete();
+    } on PostgrestException catch (error) {
+      if (!_isMissingStudyCascade(error)) {
+        rethrow;
+      }
 
-    // Some environments still have study foreign keys without ON DELETE CASCADE.
-    // Delete child rows explicitly so study deletion works there too.
-    await _deleteStudyDependents(study.id);
-    await study.delete();
+      // Some environments still have study foreign keys without ON DELETE
+      // CASCADE. Fallback to explicit cleanup only for that legacy case.
+      await _deleteStudyDependents(study.id);
+      await study.delete();
+    }
   }
 
   Future<void> _deleteStudyDependents(StudyID studyId) async {
@@ -395,6 +403,17 @@ class StudyUApiClient extends SupabaseClientDependant
         .delete()
         .eq('study_id', studyId);
     await supabaseClient.from(Repo.tableName).delete().eq('study_id', studyId);
+  }
+
+  bool _isMissingStudyCascade(PostgrestException error) {
+    final details = error.details?.toString() ?? '';
+    final message = error.message;
+    final referencesStudyForeignKey =
+        details.contains('study') ||
+        message.contains('study') ||
+        message.contains('repo');
+    return error.code == PostgrestErrorCodes.foreignKeyViolation &&
+        referencesStudyForeignKey;
   }
 
   @override

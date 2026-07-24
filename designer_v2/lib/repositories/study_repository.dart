@@ -173,14 +173,20 @@ class StudyRepository extends ModelRepository<Study>
       advancedFilter: advancedFilter,
       excludeIds: excludeIds,
     );
-    upsertAllLocally(page.studies);
+    final wrappedStudies = upsertAllLocally(page.studies);
+    for (final wrappedStudy in wrappedStudies) {
+      wrappedStudy.markAsFetched();
+    }
     return page;
   }
 
   @override
   Future<List<Study>> fetchPinned(Set<String> pinnedIds) async {
     final studies = await apiClient.getPinnedUserStudies(pinnedIds: pinnedIds);
-    upsertAllLocally(studies);
+    final wrappedStudies = upsertAllLocally(studies);
+    for (final wrappedStudy in wrappedStudies) {
+      wrappedStudy.markAsFetched();
+    }
     return studies;
   }
 
@@ -221,24 +227,14 @@ class StudyRepository extends ModelRepository<Study>
         // same as "Copy" but for non-drafts
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
-        onExecute: () async {
-          return await duplicateAndSave(model).then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          );
-        },
+        onExecute: () => duplicateAndSave(model),
         isAvailable:
             model.status != StudyStatus.draft && model.canCopy(currentUser),
       ),
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
-        onExecute: () async {
-          return await duplicateAndSave(model).then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          );
-        },
+        onExecute: () => duplicateAndSave(model),
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
