@@ -2763,6 +2763,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filter_reset_all => 'Clear all';
 
   @override
+  String get code_list_filter_title => 'Filter invite codes';
+
+  @override
+  String get code_list_filter_enrolled_status => 'Enrolled status';
+
+  @override
+  String get code_list_filter_enrolled_min => 'Enrolled min';
+
+  @override
+  String get code_list_filter_enrolled_max => 'Enrolled max';
+
+  @override
+  String get code_list_filter_intervention_assignment =>
+      'Intervention assignment';
+
+  @override
+  String get code_list_filter_apply => 'Apply';
+
+  @override
+  String get code_list_filter_option_all => 'All';
+
+  @override
+  String get code_list_filter_option_unused => 'Unused';
+
+  @override
+  String get code_list_filter_option_used => 'Used';
+
+  @override
+  String code_list_filter_button_active(int count) {
+    return 'Filter ($count)';
+  }
+
+  @override
   String filter_show_studies(int count) {
     return 'Show $count Studies';
   }

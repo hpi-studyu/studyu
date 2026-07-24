@@ -1044,6 +1044,23 @@
   "filter_save_as_new": "Save as new",
   "filter_delete_preset": "Delete preset",
   "filter_reset_all": "Clear all",
+  "code_list_filter_title": "Filter invite codes",
+  "code_list_filter_enrolled_status": "Enrolled status",
+  "code_list_filter_enrolled_min": "Enrolled min",
+  "code_list_filter_enrolled_max": "Enrolled max",
+  "code_list_filter_intervention_assignment": "Intervention assignment",
+  "code_list_filter_apply": "Apply",
+  "code_list_filter_option_all": "All",
+  "code_list_filter_option_unused": "Unused",
+  "code_list_filter_option_used": "Used",
+  "code_list_filter_button_active": "Filter ({count})",
+  "@code_list_filter_button_active": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "filter_show_studies": "Show {count} Studies",
   "@filter_show_studies": {
     "placeholders": {

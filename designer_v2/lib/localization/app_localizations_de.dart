@@ -2801,6 +2801,39 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filter_reset_all => 'Zurücksetzen';
 
   @override
+  String get code_list_filter_title => 'Einladungscodes filtern';
+
+  @override
+  String get code_list_filter_enrolled_status => 'Anmeldestatus';
+
+  @override
+  String get code_list_filter_enrolled_min => 'Angemeldet min';
+
+  @override
+  String get code_list_filter_enrolled_max => 'Angemeldet max';
+
+  @override
+  String get code_list_filter_intervention_assignment =>
+      'Interventionszuweisung';
+
+  @override
+  String get code_list_filter_apply => 'Anwenden';
+
+  @override
+  String get code_list_filter_option_all => 'Alle';
+
+  @override
+  String get code_list_filter_option_unused => 'Ungenutzt';
+
+  @override
+  String get code_list_filter_option_used => 'Genutzt';
+
+  @override
+  String code_list_filter_button_active(int count) {
+    return 'Filtern ($count)';
+  }
+
+  @override
   String filter_show_studies(int count) {
     return '$count Studien anzeigen';
   }

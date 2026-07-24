@@ -238,20 +238,19 @@ class StudyInvitesTable extends StatelessWidget {
     }
 
     Widget buildInterventionCell(Intervention? intervention) {
-      return (intervention != null)
-          ? Text(
-              intervention.name ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-            )
-          : Text(
-              tr.form_field_preconfigured_schedule_intervention_default,
-              style: defaultInterventionTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-            );
+      final label = intervention?.name ??
+          tr.form_field_preconfigured_schedule_intervention_default;
+      final style = intervention != null ? null : defaultInterventionTextStyle;
+      return Tooltip(
+        message: label,
+        child: Text(
+          label,
+          style: style,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+        ),
+      );
     }
 
     final participantCount = getParticipantCountForInvite(item);

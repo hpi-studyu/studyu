@@ -4719,6 +4719,66 @@ abstract class AppLocalizations {
   /// **'Clear all'**
   String get filter_reset_all;
 
+  /// No description provided for @code_list_filter_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter invite codes'**
+  String get code_list_filter_title;
+
+  /// No description provided for @code_list_filter_enrolled_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled status'**
+  String get code_list_filter_enrolled_status;
+
+  /// No description provided for @code_list_filter_enrolled_min.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled min'**
+  String get code_list_filter_enrolled_min;
+
+  /// No description provided for @code_list_filter_enrolled_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled max'**
+  String get code_list_filter_enrolled_max;
+
+  /// No description provided for @code_list_filter_intervention_assignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Intervention assignment'**
+  String get code_list_filter_intervention_assignment;
+
+  /// No description provided for @code_list_filter_apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get code_list_filter_apply;
+
+  /// No description provided for @code_list_filter_option_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get code_list_filter_option_all;
+
+  /// No description provided for @code_list_filter_option_unused.
+  ///
+  /// In en, this message translates to:
+  /// **'Unused'**
+  String get code_list_filter_option_unused;
+
+  /// No description provided for @code_list_filter_option_used.
+  ///
+  /// In en, this message translates to:
+  /// **'Used'**
+  String get code_list_filter_option_used;
+
+  /// No description provided for @code_list_filter_button_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter ({count})'**
+  String code_list_filter_button_active(int count);
+
   /// No description provided for @filter_show_studies.
   ///
   /// In en, this message translates to:

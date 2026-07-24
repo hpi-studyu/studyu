@@ -400,7 +400,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           style: IconButton.styleFrom(
             shape: const CircleBorder(),
             minimumSize: const Size.square(_paginationButtonSize),
-            side: BorderSide(color: theme.colorScheme.primary),
+            side: BorderSide(color: theme.colorScheme.outline),
           ),
         ),
         const SizedBox(width: _paginationSpacing),
@@ -414,7 +414,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           style: IconButton.styleFrom(
             shape: const CircleBorder(),
             minimumSize: const Size.square(_paginationButtonSize),
-            side: BorderSide(color: theme.colorScheme.primary),
+            side: BorderSide(color: theme.colorScheme.outline),
           ),
         ),
       ],

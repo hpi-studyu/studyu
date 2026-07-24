@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 const _filterMenuWidth = 360.0;
 const _filterMenuBorderRadius = 16.0;
@@ -113,14 +113,14 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Filter invite codes'.hardcoded,
+                      tr.code_list_filter_title,
                       style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(height: _filterMenuHeaderSpacing),
                     DropdownButtonFormField<InviteCodeEnrolledFilter>(
                       initialValue: _draft.enrolled,
-                      decoration: const InputDecoration(
-                        labelText: 'Enrolled status',
+                      decoration: InputDecoration(
+                        labelText: tr.code_list_filter_enrolled_status,
                       ),
                       items: InviteCodeEnrolledFilter.values
                           .map(
@@ -147,8 +147,8 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
-                            decoration: const InputDecoration(
-                              labelText: 'Enrolled min',
+                            decoration: InputDecoration(
+                              labelText: tr.code_list_filter_enrolled_min,
                             ),
                           ),
                         ),
@@ -160,8 +160,8 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
-                            decoration: const InputDecoration(
-                              labelText: 'Enrolled max',
+                            decoration: InputDecoration(
+                              labelText: tr.code_list_filter_enrolled_max,
                             ),
                           ),
                         ),
@@ -170,8 +170,8 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                     const SizedBox(height: _filterMenuSectionSpacing),
                     DropdownButtonFormField<InviteCodeInterventionFilter>(
                       initialValue: _draft.intervention,
-                      decoration: const InputDecoration(
-                        labelText: 'Intervention assignment',
+                      decoration: InputDecoration(
+                        labelText: tr.code_list_filter_intervention_assignment,
                       ),
                       items: InviteCodeInterventionFilter.values
                           .map(
@@ -196,7 +196,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                             _resetDraft(const InviteCodeFilters());
                             widget.onApply(const InviteCodeFilters());
                           },
-                          child: Text('Clear all'.hardcoded),
+                          child: Text(tr.filter_reset_all),
                         ),
                         const Spacer(),
                         FilledButton(
@@ -219,7 +219,7 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
                                 .normalized();
                             widget.onApply(applied);
                           },
-                          child: Text('Apply'.hardcoded),
+                          child: Text(tr.code_list_filter_apply),
                         ),
                       ],
                     ),
@@ -238,7 +238,9 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
             color: theme.colorScheme.primary,
           ),
           label: Text(
-            isActive ? 'Filter ($activeCount)'.hardcoded : 'Filter'.hardcoded,
+            isActive
+                ? tr.code_list_filter_button_active(activeCount)
+                : tr.filter_button_main,
             style: theme.textTheme.labelLarge?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w500,
@@ -296,18 +298,21 @@ class _InviteCodeFilterButtonState extends State<InviteCodeFilterButton> {
 
   String _enrolledLabel(InviteCodeEnrolledFilter value) {
     return switch (value) {
-      InviteCodeEnrolledFilter.all => 'All'.hardcoded,
-      InviteCodeEnrolledFilter.unused => 'Unused'.hardcoded,
-      InviteCodeEnrolledFilter.used => 'Used'.hardcoded,
+      InviteCodeEnrolledFilter.all => tr.code_list_filter_option_all,
+      InviteCodeEnrolledFilter.unused => tr.code_list_filter_option_unused,
+      InviteCodeEnrolledFilter.used => tr.code_list_filter_option_used,
     };
   }
 
   String _interventionLabel(InviteCodeInterventionFilter value) {
     return switch (value) {
-      InviteCodeInterventionFilter.all => 'All'.hardcoded,
-      InviteCodeInterventionFilter.defaultAssignment => 'Default'.hardcoded,
-      InviteCodeInterventionFilter.interventionA => 'Intervention A'.hardcoded,
-      InviteCodeInterventionFilter.interventionB => 'Intervention B'.hardcoded,
+      InviteCodeInterventionFilter.all => tr.code_list_filter_option_all,
+      InviteCodeInterventionFilter.defaultAssignment =>
+        tr.form_field_preconfigured_schedule_intervention_default,
+      InviteCodeInterventionFilter.interventionA =>
+        tr.form_field_preconfigured_schedule_intervention_a,
+      InviteCodeInterventionFilter.interventionB =>
+        tr.form_field_preconfigured_schedule_intervention_b,
     };
   }
 }
