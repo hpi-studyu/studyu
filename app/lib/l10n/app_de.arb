@@ -569,6 +569,9 @@
     }
   },
   "my_templates": "Meine Vorlagen",
+  "manage_saved_items": "Gespeicherte Elemente verwalten",
+  "adjust_quantity": "Menge anpassen",
+  "duplicate": "Duplizieren",
   "save_as_template": "Als Vorlage speichern",
   "save_meal_template": "Mahlzeit als Vorlage speichern",
   "save_food_template": "Lebensmittel als Vorlage speichern",

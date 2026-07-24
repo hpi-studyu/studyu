@@ -1873,6 +1873,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get my_templates => 'Meine Vorlagen';
 
   @override
+  String get manage_saved_items => 'Gespeicherte Elemente verwalten';
+
+  @override
+  String get adjust_quantity => 'Menge anpassen';
+
+  @override
+  String get duplicate => 'Duplizieren';
+
+  @override
   String get save_as_template => 'Als Vorlage speichern';
 
   @override

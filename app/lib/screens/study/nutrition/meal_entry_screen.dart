@@ -17,7 +17,6 @@ import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/photo_recall_section.dart';
 import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
-import 'package:studyu_app/widgets/template_selection_sheet.dart';
 import 'package:studyu_core/core.dart';
 
 sealed class MealEntryResult {
@@ -35,6 +34,8 @@ final class DeletedMealEntryResult extends MealEntryResult {
 }
 
 enum _UnsavedMealAction { save, discard, continueEditing }
+
+enum _FoodAction { adjustQuantity, edit, duplicate, saveTemplate, delete }
 
 class _MealTypeSelection {
   final MealType type;
@@ -113,7 +114,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   late TextEditingController _skipReasonController;
 
   bool _isSavingTemplate = false;
-  bool _isSavingFoodTemplate = false;
   String? _analyzingPhotoId;
 
   final PhotoGalleryService _photoService = PhotoGalleryService();
@@ -177,27 +177,110 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       allowRecipes: widget.task?.allowRecipes ?? true,
     );
     if (result != null && mounted) {
-      setState(() {
-        _meal.foods.add(result);
-      });
+      setState(() => _meal.foods.addAll(result.foods));
     }
   }
 
-  Future<void> _editFood(FoodEntry food, int index) async {
+  int _foodIndex(String foodId) =>
+      _meal.foods.indexWhere((food) => food.id == foodId);
+
+  Future<void> _editFood(FoodEntry food) async {
     final result = await Navigator.of(
       context,
     ).push(FoodEntryScreen.route(existingFood: food, showSearchAction: false));
-    if (result != null) {
-      setState(() {
-        _meal.foods[index] = result;
-      });
-    }
+    if (result == null || !mounted) return;
+
+    final index = _foodIndex(food.id);
+    if (index == -1) return;
+    setState(() => _meal.foods[index] = result);
   }
 
-  void _removeFood(int index) {
+  void _removeFood(FoodEntry food) {
+    final index = _foodIndex(food.id);
+    if (index == -1) return;
+    setState(() => _meal.foods.removeAt(index));
+  }
+
+  Future<void> _adjustFoodQuantity(FoodEntry food) async {
+    final result = await FoodQuantitySheet.show(
+      context,
+      food: food,
+      mealLabel: _mealLabel,
+    );
+    if (result == null || !mounted) return;
+
+    final index = _foodIndex(food.id);
+    if (index == -1) return;
+    setState(() => _meal.foods[index] = result);
+  }
+
+  void _duplicateFood(FoodEntry food) {
+    final index = _foodIndex(food.id);
+    if (index == -1) return;
     setState(() {
-      _meal.foods.removeAt(index);
+      _meal.foods.insert(index + 1, duplicateFoodEntry(_meal.foods[index]));
     });
+  }
+
+  Future<void> _showFoodActions(FoodEntry food) async {
+    final l10n = AppLocalizations.of(context)!;
+    final action = await showModalBottomSheet<_FoodAction>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.straighten_outlined),
+              title: Text(l10n.adjust_quantity),
+              onTap: () => Navigator.pop(context, _FoodAction.adjustQuantity),
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: Text(l10n.edit),
+              onTap: () => Navigator.pop(context, _FoodAction.edit),
+            ),
+            ListTile(
+              leading: const Icon(Icons.copy_outlined),
+              title: Text(l10n.duplicate),
+              onTap: () => Navigator.pop(context, _FoodAction.duplicate),
+            ),
+            ListTile(
+              leading: const Icon(Icons.bookmark_add_outlined),
+              title: Text(l10n.save_as_template),
+              onTap: () => Navigator.pop(context, _FoodAction.saveTemplate),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              title: Text(
+                l10n.delete,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              onTap: () => Navigator.pop(context, _FoodAction.delete),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted) return;
+    switch (action) {
+      case _FoodAction.adjustQuantity:
+        await _adjustFoodQuantity(food);
+      case _FoodAction.edit:
+        await _editFood(food);
+      case _FoodAction.duplicate:
+        _duplicateFood(food);
+      case _FoodAction.saveTemplate:
+        await _saveFoodAsTemplate(food);
+      case _FoodAction.delete:
+        _removeFood(food);
+      case null:
+        break;
+    }
   }
 
   MealLog _buildMeal({bool normalizeSkipped = false}) {
@@ -446,27 +529,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
-  Future<void> _addFoodFromTemplate() async {
-    final appState = Provider.of<AppState>(context, listen: false);
-    final userId = appState.activeSubject?.id ?? 'anonymous';
-
-    final selectedFood = await TemplateSelectionSheet.show(
-      context,
-      mode: TemplateSelectionMode.food,
-      userId: userId,
-    );
-    if (selectedFood is! FoodEntry || !mounted) return;
-
-    final food = await FoodQuantitySheet.show(
-      context,
-      food: selectedFood,
-      mealLabel: _mealLabel,
-    );
-    if (food != null && mounted) {
-      setState(() => _meal.foods.add(food));
-    }
-  }
-
   Future<void> _saveFoodAsTemplate(FoodEntry food) async {
     final l10n = AppLocalizations.of(context)!;
     final appState = Provider.of<AppState>(context, listen: false);
@@ -483,7 +545,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
 
     if (result != null && mounted) {
-      setState(() => _isSavingFoodTemplate = true);
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveFoodAsTemplate(
         name: result.name,
@@ -491,7 +552,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         tags: result.tags,
       );
       if (mounted) {
-        setState(() => _isSavingFoodTemplate = false);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
@@ -651,11 +711,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   isSkipped: false,
                   showValidationError: _hasAttemptedSave && _meal.foods.isEmpty,
                   onAddFood: _addFood,
-                  onAddFoodFromTemplate: _addFoodFromTemplate,
-                  onEditFood: _editFood,
-                  onRemoveFood: _removeFood,
-                  onSaveFoodAsTemplate: _saveFoodAsTemplate,
-                  isSavingFoodTemplate: _isSavingFoodTemplate,
+                  onFoodActions: _showFoodActions,
                 ),
                 const SizedBox(height: 16),
               ],
@@ -938,22 +994,14 @@ class _FoodListSection extends StatelessWidget {
   final MealLog meal;
   final bool isSkipped;
   final VoidCallback onAddFood;
-  final VoidCallback onAddFoodFromTemplate;
-  final Function(FoodEntry, int) onEditFood;
-  final Function(int) onRemoveFood;
-  final Function(FoodEntry) onSaveFoodAsTemplate;
-  final bool isSavingFoodTemplate;
+  final Future<void> Function(FoodEntry) onFoodActions;
   final bool showValidationError;
 
   const _FoodListSection({
     required this.meal,
     required this.isSkipped,
     required this.onAddFood,
-    required this.onAddFoodFromTemplate,
-    required this.onEditFood,
-    required this.onRemoveFood,
-    required this.onSaveFoodAsTemplate,
-    this.isSavingFoodTemplate = false,
+    required this.onFoodActions,
     this.showValidationError = false,
   });
 
@@ -999,60 +1047,33 @@ class _FoodListSection extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Row(
-              children: [
-                Semantics(
-                  label: l10n.from_template,
-                  button: true,
-                  child: IconButton.outlined(
-                    onPressed: onAddFoodFromTemplate,
-                    icon: const Icon(Icons.bookmark, size: 18),
-                    tooltip: l10n.from_template,
-                    style: IconButton.styleFrom(
-                      minimumSize: const Size(44, 44),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
+            Semantics(
+              label: l10n.add_food,
+              button: true,
+              child: FilledButton(
+                onPressed: onAddFood,
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
                   ),
                 ),
-                const SizedBox(width: 8),
-                Semantics(
-                  label: l10n.add_food,
-                  button: true,
-                  child: FilledButton(
-                    onPressed: onAddFood,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.add, size: 18),
-                        const SizedBox(width: 6),
-                        Text(l10n.add_food),
-                      ],
-                    ),
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.add, size: 18),
+                    const SizedBox(width: 6),
+                    Text(l10n.add_food),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        ...List.generate(meal.foods.length, (index) {
-          final food = meal.foods[index];
-          return _FoodCard(
-            food: food,
-            index: index,
-            onTap: () => onEditFood(food, index),
-            onEdit: () => onEditFood(food, index),
-            onDelete: () => onRemoveFood(index),
-            onSaveTemplate: () => onSaveFoodAsTemplate(food),
-            isSavingTemplate: isSavingFoodTemplate,
-          );
-        }),
+        ...meal.foods.map(
+          (food) => _FoodCard(food: food, onTap: () => onFoodActions(food)),
+        ),
       ],
     );
   }
@@ -1130,22 +1151,9 @@ class _EmptyFoodState extends StatelessWidget {
 
 class _FoodCard extends StatelessWidget {
   final FoodEntry food;
-  final int index;
   final VoidCallback onTap;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-  final VoidCallback onSaveTemplate;
-  final bool isSavingTemplate;
 
-  const _FoodCard({
-    required this.food,
-    required this.index,
-    required this.onTap,
-    required this.onEdit,
-    required this.onDelete,
-    required this.onSaveTemplate,
-    this.isSavingTemplate = false,
-  });
+  const _FoodCard({required this.food, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -1211,62 +1219,10 @@ class _FoodCard extends StatelessWidget {
                   ],
                 ),
               ),
-              PopupMenuButton<String>(
+              IconButton(
                 icon: const Icon(Icons.more_vert, size: 20),
                 tooltip: l10n.more_options,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                onSelected: (value) {
-                  if (isSavingTemplate) return;
-                  switch (value) {
-                    case 'edit':
-                      onEdit();
-                    case 'save_template':
-                      onSaveTemplate();
-                    case 'delete':
-                      onDelete();
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: _PopupMenuItem(
-                      icon: Icons.edit_outlined,
-                      label: l10n.edit,
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'save_template',
-                    enabled: !isSavingTemplate,
-                    child: isSavingTemplate
-                        ? Row(
-                            children: [
-                              const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(l10n.saving),
-                            ],
-                          )
-                        : _PopupMenuItem(
-                            icon: Icons.bookmark_add_outlined,
-                            label: l10n.save_as_template,
-                          ),
-                  ),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: _PopupMenuItem(
-                      icon: Icons.delete_outline,
-                      label: l10n.delete,
-                      isDestructive: true,
-                    ),
-                  ),
-                ],
+                onPressed: onTap,
               ),
             ],
           ),
@@ -1521,40 +1477,6 @@ class _DropdownField<T> extends StatelessWidget {
           )
           .toList(),
       onChanged: onChanged,
-    );
-  }
-}
-
-class _PopupMenuItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isDestructive;
-
-  const _PopupMenuItem({
-    required this.icon,
-    required this.label,
-    this.isDestructive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 18,
-          color: isDestructive
-              ? Theme.of(context).colorScheme.error
-              : Theme.of(context).colorScheme.onSurface,
-        ),
-        const SizedBox(width: 12),
-        Text(
-          label,
-          style: TextStyle(
-            color: isDestructive ? Theme.of(context).colorScheme.error : null,
-          ),
-        ),
-      ],
     );
   }
 }

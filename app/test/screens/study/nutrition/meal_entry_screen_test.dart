@@ -726,6 +726,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Apple'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit'));
+    await tester.pumpAndSettle();
 
     expect(find.byType(FoodEntryScreen), findsOneWidget);
     expect(find.byTooltip('Search Food Database'), findsNothing);
@@ -810,10 +812,10 @@ void main() {
     await openMealEntry(tester, original, onResult: (value) => result = value);
 
     await selectMealType(tester, 'Other', customLabel: 'Edited supper');
-    await tester.ensureVisible(find.byTooltip('From Template'));
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('From Template'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
@@ -854,6 +856,89 @@ void main() {
     expect(original.foods, hasLength(1));
   });
 
+  testWidgets('saved meal adds cloned foods without replacing meal details', (
+    tester,
+  ) async {
+    final pear = FoodEntry.fromJson(testFood().toJson())
+      ..id = 'pear-prototype'
+      ..name = 'Pear';
+    final yogurt = FoodEntry.fromJson(testFood().toJson())
+      ..id = 'yogurt-prototype'
+      ..name = 'Yogurt';
+    await TemplateStorageManager().saveMealTemplate(
+      SavedMealTemplate(
+        id: 'saved-meal-template',
+        userId: 'anonymous',
+        name: 'Afternoon Snack',
+        mealType: MealType.snack,
+        isPublic: false,
+        createdAt: DateTime(2026, 7, 15),
+        prototypes: [pear, yogurt],
+      ),
+    );
+    final original = editableMeal();
+    MealLog? result;
+    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await selectMealType(tester, 'Other', customLabel: 'Edited supper');
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Manage saved items'), findsOneWidget);
+    await tester.tap(find.text('Afternoon Snack'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pear'), findsOneWidget);
+    expect(find.text('Yogurt'), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.mealType, MealType.other);
+    expect(result!.customMealLabel, 'Edited supper');
+    expect(result!.mealContext, original.mealContext);
+    expect(result!.timestamp, original.timestamp);
+    expect(result!.foods, hasLength(3));
+    expect(result!.foods[1].id, isNot(pear.id));
+    expect(result!.foods[2].id, isNot(yogurt.id));
+    expect(result!.foods[1].templateId, 'saved-meal-template');
+    expect(result!.foods[2].templateId, 'saved-meal-template');
+    expect(original.foods, hasLength(1));
+  });
+
+  testWidgets('food actions use a sheet and duplicate with fresh identity', (
+    tester,
+  ) async {
+    final original = editableMeal();
+    MealLog? result;
+    await openMealEntry(tester, original, onResult: (value) => result = value);
+
+    expect(find.byType(PopupMenuButton<String>), findsNothing);
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Adjust quantity'), findsOneWidget);
+    expect(find.text('Edit'), findsOneWidget);
+    expect(find.text('Duplicate'), findsOneWidget);
+    expect(find.text('Save as Template'), findsOneWidget);
+    expect(find.text('Delete'), findsWidgets);
+    await tester.tap(find.text('Duplicate'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Apple'), findsNWidgets(2));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.foods, hasLength(2));
+    expect(result!.foods.first.id, original.foods.first.id);
+    expect(result!.foods.last.id, isNot(original.foods.first.id));
+    expect(result!.foods.last.source, original.foods.first.source);
+    expect(result!.foods.last.externalId, original.foods.first.externalId);
+    expect(result!.foods.last.templateId, original.foods.first.templateId);
+    expect(original.foods, hasLength(1));
+  });
+
   testWidgets('canceling template or quantity selection adds no food', (
     tester,
   ) async {
@@ -874,24 +959,26 @@ void main() {
     MealLog? result;
     await openMealEntry(tester, original, onResult: (value) => result = value);
     await selectMealType(tester, 'Other', customLabel: 'Edited supper');
-    await tester.ensureVisible(find.byTooltip('From Template'));
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('From Template'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
-    await tester.tapAt(const Offset(5, 5));
+    await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
     expect(find.text('Saved Pear'), findsNothing);
     expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('From Template'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
     expect(find.text('Add to Edited supper'), findsOneWidget);
     await tester.tapAt(const Offset(5, 5));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
     expect(find.text('Saved Pear'), findsNothing);

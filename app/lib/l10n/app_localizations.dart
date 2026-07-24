@@ -3509,6 +3509,24 @@ abstract class AppLocalizations {
   /// **'My Templates'**
   String get my_templates;
 
+  /// No description provided for @manage_saved_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage saved items'**
+  String get manage_saved_items;
+
+  /// No description provided for @adjust_quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust quantity'**
+  String get adjust_quantity;
+
+  /// No description provided for @duplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get duplicate;
+
   /// No description provided for @save_as_template.
   ///
   /// In en, this message translates to:

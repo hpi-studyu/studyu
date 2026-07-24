@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:studyu_core/core.dart';
+import 'package:uuid/uuid.dart';
 
 MealLog cloneMealLog(MealLog meal) => MealLog.fromJson(
   jsonDecode(jsonEncode(meal.toJson())) as Map<String, dynamic>,
@@ -9,6 +10,26 @@ MealLog cloneMealLog(MealLog meal) => MealLog.fromJson(
 FoodEntry cloneFoodEntry(FoodEntry food) => FoodEntry.fromJson(
   jsonDecode(jsonEncode(food.toJson())) as Map<String, dynamic>,
 );
+
+FoodEntry duplicateFoodEntry(FoodEntry food) {
+  final duplicate = cloneFoodEntry(food)
+    ..id = const Uuid().v4()
+    ..createdAt = DateTime.now()
+    ..modifiedAt = null
+    ..parentRecipeId = null;
+  duplicate.recipeIngredients = duplicate.recipeIngredients
+      ?.map(
+        (composition) => RecipeComposition.withId(
+          recipeId: duplicate.id,
+          ingredientId: composition.ingredientId,
+          amount: composition.amount,
+          unit: composition.unit,
+          sortOrder: composition.sortOrder,
+        ),
+      )
+      .toList();
+  return duplicate;
+}
 
 FoodEntry rescaleFoodAmount(FoodEntry food, double newAmount) {
   if (!food.amount.isFinite || food.amount <= 0) {

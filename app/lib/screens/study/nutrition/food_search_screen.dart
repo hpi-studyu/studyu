@@ -10,6 +10,7 @@ import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
+import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
@@ -28,14 +29,26 @@ typedef UsdaFoodSearch =
       required int pageSize,
     });
 
+final class FoodSearchSelection {
+  final List<studyu.FoodEntry> foods;
+
+  FoodSearchSelection(Iterable<studyu.FoodEntry> foods)
+    : foods = List.unmodifiable(foods);
+
+  FoodSearchSelection.single(studyu.FoodEntry food)
+    : foods = List.unmodifiable([food]);
+}
+
 class FoodSearchScreen extends StatelessWidget {
   final bool allowRecipes;
+  final bool allowMealTemplates;
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
 
   const FoodSearchScreen({
     this.allowRecipes = true,
+    this.allowMealTemplates = false,
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
@@ -48,13 +61,13 @@ class FoodSearchScreen extends StatelessWidget {
     builder: (_) => FoodSearchScreen(allowRecipes: allowRecipes),
   );
 
-  static Future<studyu.FoodEntry?> show(
+  static Future<FoodSearchSelection?> show(
     BuildContext context, {
     required String mealLabel,
     bool allowRecipes = true,
     OpenFoodFactsSearch? openFoodFactsSearch,
     UsdaFoodSearch? usdaFoodSearch,
-  }) => showModalBottomSheet<studyu.FoodEntry>(
+  }) => showModalBottomSheet<FoodSearchSelection>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -62,6 +75,7 @@ class FoodSearchScreen extends StatelessWidget {
       heightFactor: 0.96,
       child: FoodSearchScreen(
         allowRecipes: allowRecipes,
+        allowMealTemplates: true,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
@@ -78,6 +92,7 @@ class FoodSearchScreen extends StatelessWidget {
       create: (_) => TemplateViewModel(userId: userId),
       child: _FoodSearchScreenContent(
         allowRecipes: allowRecipes,
+        allowMealTemplates: allowMealTemplates,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
@@ -88,12 +103,14 @@ class FoodSearchScreen extends StatelessWidget {
 
 class _FoodSearchScreenContent extends StatefulWidget {
   final bool allowRecipes;
+  final bool allowMealTemplates;
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
 
   const _FoodSearchScreenContent({
     this.allowRecipes = true,
+    this.allowMealTemplates = false,
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
@@ -544,17 +561,26 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     }
   }
 
-  void _selectTemplate(studyu.SavedFoodTemplate template) {
+  void _selectFoodTemplate(studyu.SavedFoodTemplate template) {
     final templateViewModel = Provider.of<TemplateViewModel>(
       context,
       listen: false,
     );
     final foodEntry = templateViewModel.applyFoodTemplate(template);
-    if (widget.mealLabel == null) {
-      Navigator.pop(context, foodEntry);
-    } else {
+    if (widget.allowMealTemplates) {
       _showQuantity(foodEntry);
+    } else {
+      Navigator.pop(context, foodEntry);
     }
+  }
+
+  void _selectMealTemplate(studyu.SavedMealTemplate template) {
+    final templateViewModel = Provider.of<TemplateViewModel>(
+      context,
+      listen: false,
+    );
+    final meal = templateViewModel.applyMealTemplate(template);
+    Navigator.pop(context, FoodSearchSelection(meal.foods));
   }
 
   Future<void> _showQuantity(studyu.FoodEntry foodEntry) async {
@@ -564,7 +590,15 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       mealLabel: widget.mealLabel,
     );
     if (result != null && mounted) {
-      Navigator.pop(context, result);
+      _completeSingleSelection(result);
+    }
+  }
+
+  void _completeSingleSelection(studyu.FoodEntry foodEntry) {
+    if (widget.allowMealTemplates) {
+      Navigator.pop(context, FoodSearchSelection.single(foodEntry));
+    } else {
+      Navigator.pop(context, foodEntry);
     }
   }
 
@@ -574,7 +608,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       FoodEntryScreen.route(existingFood: foodEntry, showSearchAction: false),
     ).then((result) {
       if (result != null && mounted) {
-        Navigator.pop(context, result);
+        _completeSingleSelection(result);
       }
     });
   }
@@ -585,7 +619,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       FoodEntryScreen.route(showSearchAction: false),
     ).then((result) {
       if (result != null && mounted) {
-        Navigator.pop(context, result);
+        _completeSingleSelection(result);
       }
     });
   }
@@ -593,9 +627,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   void _createRecipe() {
     Navigator.push(context, RecipeBuilderScreen.route()).then((result) {
       if (result != null && mounted) {
-        Navigator.pop(context, result);
+        _completeSingleSelection(result);
       }
     });
+  }
+
+  Future<void> _manageSavedItems(TemplateViewModel templateViewModel) async {
+    await Navigator.push(context, MyTemplatesScreen.route());
+    if (mounted) await templateViewModel.loadAllTemplates();
   }
 
   Future<void> _scanBarcode() async {
@@ -675,13 +714,16 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               usdaHasMore: _usdaHasMore,
               errorMessage: _errorMessage,
               combinedResults: _combinedResults,
-              onSelectTemplate: _selectTemplate,
+              onSelectFoodTemplate: _selectFoodTemplate,
+              onSelectMealTemplate: _selectMealTemplate,
+              onManageSavedItems: () => _manageSavedItems(templateViewModel),
               onSelectResult: _selectResult,
               onAddManually: _addManually,
               onCreateRecipe: _createRecipe,
               onScanBarcode: _scanBarcode,
               onRetry: () => _retrySearch(templateViewModel),
               allowRecipes: widget.allowRecipes,
+              allowMealTemplates: widget.allowMealTemplates,
             ),
           ),
         ],
@@ -757,11 +799,13 @@ class _SectionHeader extends StatelessWidget {
   final IconData icon;
   final String title;
   final Color iconColor;
+  final Widget? trailing;
 
   const _SectionHeader({
     required this.icon,
     required this.title,
     required this.iconColor,
+    this.trailing,
   });
 
   @override
@@ -779,19 +823,22 @@ class _SectionHeader extends StatelessWidget {
           child: Icon(icon, size: 16, color: iconColor),
         ),
         const SizedBox(width: 10),
-        Text(
-          title,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
+        ?trailing,
       ],
     );
   }
 }
 
 class _TemplateCard extends StatelessWidget {
-  final studyu.SavedFoodTemplate template;
+  final Object template;
   final VoidCallback onTap;
   final ThemeData theme;
 
@@ -803,8 +850,16 @@ class _TemplateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final mealTemplate = template is studyu.SavedMealTemplate
+        ? template as studyu.SavedMealTemplate
+        : null;
+    final foodTemplate = template is studyu.SavedFoodTemplate
+        ? template as studyu.SavedFoodTemplate
+        : null;
     final isRecipe =
-        template.prototype.entryType == studyu.FoodEntryType.recipe;
+        foodTemplate?.prototype.entryType == studyu.FoodEntryType.recipe;
+    final name = mealTemplate?.name ?? foodTemplate!.name;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -822,7 +877,11 @@ class _TemplateCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            isRecipe ? Icons.menu_book_outlined : Icons.fastfood_outlined,
+            mealTemplate != null
+                ? Icons.restaurant_menu_outlined
+                : isRecipe
+                ? Icons.menu_book_outlined
+                : Icons.fastfood_outlined,
             size: 22,
             color: isRecipe
                 ? Colors.orange.shade700
@@ -830,13 +889,15 @@ class _TemplateCard extends StatelessWidget {
           ),
         ),
         title: Text(
-          template.name,
+          name,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
-          '${isRecipe ? "Recipe • " : ""}${template.prototype.nutrition.energyKcal.round()} kcal',
+          mealTemplate != null
+              ? l10n.items_count(mealTemplate.prototypes.length)
+              : '${isRecipe ? "Recipe • " : ""}${foodTemplate!.prototype.nutrition.energyKcal.round()} kcal',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -1272,13 +1333,16 @@ class _FoodSearchListView extends StatelessWidget {
   final bool usdaHasMore;
   final String? errorMessage;
   final List<UnifiedFoodResult> combinedResults;
-  final void Function(studyu.SavedFoodTemplate) onSelectTemplate;
+  final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
+  final void Function(studyu.SavedMealTemplate) onSelectMealTemplate;
+  final VoidCallback onManageSavedItems;
   final void Function(UnifiedFoodResult) onSelectResult;
   final VoidCallback onAddManually;
   final VoidCallback onCreateRecipe;
   final VoidCallback onScanBarcode;
   final VoidCallback onRetry;
   final bool allowRecipes;
+  final bool allowMealTemplates;
 
   const _FoodSearchListView({
     required this.scrollController,
@@ -1295,36 +1359,52 @@ class _FoodSearchListView extends StatelessWidget {
     required this.usdaHasMore,
     required this.errorMessage,
     required this.combinedResults,
-    required this.onSelectTemplate,
+    required this.onSelectFoodTemplate,
+    required this.onSelectMealTemplate,
+    required this.onManageSavedItems,
     required this.onSelectResult,
     required this.onAddManually,
     required this.onCreateRecipe,
     required this.onScanBarcode,
     required this.onRetry,
     this.allowRecipes = true,
+    this.allowMealTemplates = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool isAllowedTemplate(dynamic template) {
+      if (template is studyu.SavedMealTemplate) return allowMealTemplates;
+      if (template is studyu.SavedFoodTemplate) {
+        return allowRecipes ||
+            template.prototype.entryType != studyu.FoodEntryType.recipe;
+      }
+      return false;
+    }
+
     final filteredTemplates = templateViewModel.filteredTemplates
-        .whereType<studyu.SavedFoodTemplate>()
-        .where(
-          (t) =>
-              allowRecipes ||
-              t.prototype.entryType != studyu.FoodEntryType.recipe,
-        )
+        .where(isAllowedTemplate)
+        .cast<Object>()
         .toList();
-    final hasTemplates = templateViewModel.foodTemplates.isNotEmpty;
+    final hasTemplates = <Object>[
+      ...templateViewModel.mealTemplates,
+      ...templateViewModel.foodTemplates,
+    ].any(isAllowedTemplate);
     final showTemplates = hasTemplates && filteredTemplates.isNotEmpty;
     final showNoMatchingTemplates =
         hasTemplates &&
         filteredTemplates.isEmpty &&
         searchController.text.isNotEmpty;
+    final showManageOnly = allowMealTemplates && !hasTemplates;
 
     // Calculate section offsets for itemBuilder
     // Structure: [padding, templatesHeader, templatesList, globalHeader, content, quickActionsHeader, quickActions, bottomPadding]
     const int paddingItem = 1;
-    final int templatesHeaderItems = hasTemplates ? 2 : 0; // header + spacing
+    final int templatesHeaderItems = hasTemplates
+        ? 2
+        : showManageOnly
+        ? 1
+        : 0;
     final int templatesListItems = showTemplates ? filteredTemplates.length : 0;
     final int noMatchingTemplateItem = showNoMatchingTemplates ? 1 : 0;
     final int templatesSpacing = hasTemplates
@@ -1375,6 +1455,7 @@ class _FoodSearchListView extends StatelessWidget {
           hasTemplates,
           showTemplates,
           showNoMatchingTemplates,
+          showManageOnly,
         );
       },
     );
@@ -1393,16 +1474,27 @@ class _FoodSearchListView extends StatelessWidget {
   Widget _buildItem(
     BuildContext context,
     int index,
-    List<studyu.SavedFoodTemplate> filteredTemplates,
+    List<Object> filteredTemplates,
     bool hasTemplates,
     bool showTemplates,
     bool showNoMatchingTemplates,
+    bool showManageOnly,
   ) {
     var currentIndex = 0;
 
     // Initial padding
     if (index == currentIndex++) {
       return const SizedBox(height: 8);
+    }
+
+    if (showManageOnly && index == currentIndex++) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+          onPressed: onManageSavedItems,
+          child: Text(l10n.manage_saved_items),
+        ),
+      );
     }
 
     // Templates section header
@@ -1412,6 +1504,12 @@ class _FoodSearchListView extends StatelessWidget {
           icon: Icons.bookmark_outline,
           title: l10n.my_saved_items,
           iconColor: theme.colorScheme.primary,
+          trailing: allowMealTemplates
+              ? TextButton(
+                  onPressed: onManageSavedItems,
+                  child: Text(l10n.manage_saved_items),
+                )
+              : null,
         );
       }
       if (index == currentIndex++) {
@@ -1426,9 +1524,16 @@ class _FoodSearchListView extends StatelessWidget {
       } else if (showTemplates) {
         final templateIndex = index - currentIndex;
         if (templateIndex >= 0 && templateIndex < filteredTemplates.length) {
+          final template = filteredTemplates[templateIndex];
           return _TemplateCard(
-            template: filteredTemplates[templateIndex],
-            onTap: () => onSelectTemplate(filteredTemplates[templateIndex]),
+            template: template,
+            onTap: () {
+              if (template is studyu.SavedMealTemplate) {
+                onSelectMealTemplate(template);
+              } else if (template is studyu.SavedFoodTemplate) {
+                onSelectFoodTemplate(template);
+              }
+            },
             theme: theme,
           );
         }

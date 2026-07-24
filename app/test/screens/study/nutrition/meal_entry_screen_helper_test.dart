@@ -62,6 +62,36 @@ FoodEntry foodEntry({double amount = 2}) => FoodEntry(
 );
 
 void main() {
+  test('duplicates food with fresh identity and isolated nested state', () {
+    final source = foodEntry();
+    final duplicate = duplicateFoodEntry(source);
+
+    expect(duplicate.id, isNot(source.id));
+    expect(duplicate.createdAt, isNot(source.createdAt));
+    expect(duplicate.modifiedAt, isNull);
+    expect(duplicate.parentRecipeId, isNull);
+    expect(duplicate.source, source.source);
+    expect(duplicate.externalId, source.externalId);
+    expect(duplicate.templateId, source.templateId);
+    expect(duplicate.recipeIngredients!.single.id, isNot('composition-id'));
+    expect(duplicate.recipeIngredients!.single.recipeId, duplicate.id);
+
+    (duplicate.originalValues['nested'] as Map<String, dynamic>)['changed'] =
+        true;
+    duplicate.nutrition.micros['iron'] = 0;
+    duplicate.recipeMetadata!.retentionFactors['iron'] = 0;
+    duplicate.recipeIngredients!.single.amount = 99;
+
+    expect(source.originalValues, {
+      'nested': {
+        'values': [1, 2],
+      },
+    });
+    expect(source.nutrition.micros['iron'], 12);
+    expect(source.recipeMetadata!.retentionFactors['iron'], 0.9);
+    expect(source.recipeIngredients!.single.amount, 1);
+  });
+
   test('rescales every nutrient without changing per-unit metadata', () {
     final source = foodEntry();
     final scaled = rescaleFoodAmount(source, 4);

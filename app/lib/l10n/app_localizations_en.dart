@@ -1858,6 +1858,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get my_templates => 'My Templates';
 
   @override
+  String get manage_saved_items => 'Manage saved items';
+
+  @override
+  String get adjust_quantity => 'Adjust quantity';
+
+  @override
+  String get duplicate => 'Duplicate';
+
+  @override
   String get save_as_template => 'Save as Template';
 
   @override

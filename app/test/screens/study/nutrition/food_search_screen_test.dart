@@ -17,6 +17,8 @@ typedef SearchRequest = ({String source, String query, int page, int pageSize});
 
 Widget foodSearchApp(
   Locale locale, {
+  bool allowRecipes = true,
+  bool allowMealTemplates = false,
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
 }) => ChangeNotifierProvider(
@@ -26,6 +28,8 @@ Widget foodSearchApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     locale: locale,
     home: FoodSearchScreen(
+      allowRecipes: allowRecipes,
+      allowMealTemplates: allowMealTemplates,
       openFoodFactsSearch: openFoodFactsSearch,
       usdaFoodSearch: usdaFoodSearch,
     ),
@@ -36,7 +40,7 @@ Widget foodSearchModalApp({
   required String mealLabel,
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
-  ValueChanged<studyu.FoodEntry?>? onResult,
+  ValueChanged<FoodSearchSelection?>? onResult,
 }) => ChangeNotifierProvider(
   create: (_) => AppState(),
   child: MaterialApp(
@@ -123,6 +127,63 @@ void main() {
     );
   });
 
+  testWidgets('hides saved items when only disallowed recipes exist', (
+    tester,
+  ) async {
+    await TemplateStorageManager().saveFoodTemplate(
+      studyu.SavedFoodTemplate(
+        id: 'recipe-template',
+        userId: 'anonymous',
+        name: 'Saved Recipe',
+        isPublic: false,
+        createdAt: DateTime.utc(2025),
+        prototype: studyu.FoodEntry(
+          id: 'recipe-prototype',
+          entryType: studyu.FoodEntryType.recipe,
+          name: 'Saved Recipe',
+          amount: 1,
+          unit: 'serving',
+          servingSizeGrams: 100,
+          portionEstimationMethod:
+              studyu.PortionEstimationMethod.householdMeasure,
+          portionState: studyu.PortionState.asServed,
+          nutrition: studyu.NutritionProfile(
+            energyKcal: 100,
+            protein: 1,
+            carbs: 1,
+            fat: 1,
+            sugars: 0,
+            fiber: 0,
+            saturatedFat: 0,
+            transFat: 0,
+            cholesterol: 0,
+            sodium: 0,
+            waterContent: 0,
+            micros: const {},
+          ),
+          source: studyu.FoodSource.manual,
+          confidenceScore: 1,
+          createdAt: DateTime.utc(2025),
+          originalValues: const {},
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(
+      foodSearchApp(const Locale('en'), allowRecipes: false),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('My Saved Items'), findsNothing);
+    expect(find.text('Saved Recipe'), findsNothing);
+    expect(find.text('Global Database'), findsOneWidget);
+
+    await TemplateStorageManager().deleteFoodTemplate(
+      'anonymous',
+      'recipe-template',
+    );
+  });
+
   testWidgets('modal keeps contextual search state across quantity cancel', (
     tester,
   ) async {
@@ -190,18 +251,51 @@ void main() {
     expect(find.byType(FoodSearchScreen), findsNothing);
   });
 
+  testWidgets('saved-item management returns to the same search state', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      foodSearchModalApp(
+        mealLabel: 'Snack',
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) async =>
+                offResult(),
+        usdaFoodSearch:
+            ({required query, required page, required pageSize}) async =>
+                usdaResult(),
+      ),
+    );
+
+    await tester.tap(find.text('Open search'));
+    await tester.pumpAndSettle();
+    await enterSearch(tester, 'apple');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Manage saved items'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('My Templates'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Add food to Snack'), findsOneWidget);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      'apple',
+    );
+  });
+
   testWidgets('modal scales provider serving and selected amount once', (
     tester,
   ) async {
     final nutriments = Nutriments.empty()
       ..setValue(Nutrient.energyKCal, PerSize.oneHundredGrams, 100)
       ..setValue(Nutrient.proteins, PerSize.oneHundredGrams, 10);
-    studyu.FoodEntry? selectedFood;
+    FoodSearchSelection? selection;
 
     await tester.pumpWidget(
       foodSearchModalApp(
         mealLabel: 'Snack',
-        onResult: (food) => selectedFood = food,
+        onResult: (result) => selection = result,
         openFoodFactsSearch:
             ({required query, required page, required pageSize}) async =>
                 offResult([
@@ -232,11 +326,12 @@ void main() {
     await tester.tap(find.text('Add to Snack'));
     await tester.pumpAndSettle();
 
-    expect(selectedFood, isNotNull);
-    expect(selectedFood!.amount, 2);
-    expect(selectedFood!.servingSizeGrams, 50);
-    expect(selectedFood!.nutrition.energyKcal, 100);
-    expect(selectedFood!.nutrition.protein, 10);
+    expect(selection, isNotNull);
+    final selectedFood = selection!.foods.single;
+    expect(selectedFood.amount, 2);
+    expect(selectedFood.servingSizeGrams, 50);
+    expect(selectedFood.nutrition.energyKcal, 100);
+    expect(selectedFood.nutrition.protein, 10);
   });
 
   testWidgets('German USDA outage stays localized and retries Apfel', (
@@ -1026,7 +1121,7 @@ void main() {
       prototype: prototype,
     );
     await TemplateStorageManager().saveFoodTemplate(template);
-    studyu.FoodEntry? selectedFood;
+    FoodSearchSelection? selection;
 
     await tester.pumpWidget(
       ChangeNotifierProvider(
@@ -1038,7 +1133,7 @@ void main() {
             builder: (context) => Scaffold(
               body: TextButton(
                 onPressed: () async {
-                  selectedFood = await FoodSearchScreen.show(
+                  selection = await FoodSearchScreen.show(
                     context,
                     mealLabel: 'Snack',
                     openFoodFactsSearch:
@@ -1072,21 +1167,22 @@ void main() {
     await tester.tap(find.text('Add to Snack'));
     await tester.pumpAndSettle();
 
-    expect(selectedFood, isNotNull);
-    expect(selectedFood!.id, isNot(prototype.id));
-    expect(selectedFood!.templateId, template.id);
-    expect(selectedFood!.name, prototype.name);
-    expect(selectedFood!.brandName, prototype.brandName);
-    expect(selectedFood!.description, prototype.description);
-    expect(selectedFood!.amount, prototype.amount);
-    expect(selectedFood!.unit, prototype.unit);
-    expect(selectedFood!.servingSizeGrams, prototype.servingSizeGrams);
-    expect(selectedFood!.nutrition.toJson(), prototype.nutrition.toJson());
-    expect(selectedFood!.foodCode, prototype.foodCode);
-    expect(selectedFood!.externalId, prototype.externalId);
-    expect(selectedFood!.source, prototype.source);
-    expect(selectedFood!.confidenceScore, prototype.confidenceScore);
-    expect(selectedFood!.originalValues, prototype.originalValues);
+    expect(selection, isNotNull);
+    final selectedFood = selection!.foods.single;
+    expect(selectedFood.id, isNot(prototype.id));
+    expect(selectedFood.templateId, template.id);
+    expect(selectedFood.name, prototype.name);
+    expect(selectedFood.brandName, prototype.brandName);
+    expect(selectedFood.description, prototype.description);
+    expect(selectedFood.amount, prototype.amount);
+    expect(selectedFood.unit, prototype.unit);
+    expect(selectedFood.servingSizeGrams, prototype.servingSizeGrams);
+    expect(selectedFood.nutrition.toJson(), prototype.nutrition.toJson());
+    expect(selectedFood.foodCode, prototype.foodCode);
+    expect(selectedFood.externalId, prototype.externalId);
+    expect(selectedFood.source, prototype.source);
+    expect(selectedFood.confidenceScore, prototype.confidenceScore);
+    expect(selectedFood.originalValues, prototype.originalValues);
     expect(prototype.id, 'prototype-food-id');
     expect(prototype.templateId, isNull);
   });
