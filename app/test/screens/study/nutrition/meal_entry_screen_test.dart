@@ -851,7 +851,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Apple'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Edit'));
+    await tester.tap(find.text('Edit this entry'));
     await tester.pumpAndSettle();
 
     expect(find.byType(FoodEntryScreen), findsOneWidget);
@@ -950,6 +950,8 @@ void main() {
 
     await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('My items'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
 
@@ -1020,8 +1022,9 @@ void main() {
     await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('My items'));
+    await tester.pumpAndSettle();
 
-    expect(find.text('Manage saved items'), findsOneWidget);
     await tester.tap(find.text('Afternoon Snack'));
     await tester.pumpAndSettle();
 
@@ -1043,37 +1046,43 @@ void main() {
     expect(original.foods, hasLength(1));
   });
 
-  testWidgets('food actions use a sheet and duplicate with fresh identity', (
-    tester,
-  ) async {
-    final original = editableMeal();
-    MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+  testWidgets(
+    'food actions show contextual sheet and close before quantity edit',
+    (tester) async {
+      await openMealEntry(tester, editableMeal());
 
-    expect(find.byType(PopupMenuButton<String>), findsNothing);
+      expect(find.byType(PopupMenuButton<String>), findsNothing);
+      await tester.tap(find.byTooltip('More options'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Apple'), findsNWidgets(2));
+      expect(find.text('1 piece · 52 kcal'), findsOneWidget);
+      expect(find.text('Adjust quantity'), findsOneWidget);
+      expect(find.text('Edit this entry'), findsOneWidget);
+      expect(find.text('Save to My items'), findsOneWidget);
+      expect(find.text('Duplicate'), findsNothing);
+      expect(find.text('Remove from meal'), findsOneWidget);
+      expect(find.text('Delete'), findsNothing);
+      expect(find.byType(Divider), findsOneWidget);
+
+      await tester.tap(find.text('Adjust quantity'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(FoodQuantitySheet), findsOneWidget);
+      expect(find.text('Remove from meal'), findsNothing);
+    },
+  );
+
+  testWidgets('saved food omits the save action', (tester) async {
+    final meal = editableMeal();
+    meal.foods.single.templateId = 'saved-food-template';
+    await openMealEntry(tester, meal);
+
     await tester.tap(find.byTooltip('More options'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Adjust quantity'), findsOneWidget);
-    expect(find.text('Edit'), findsOneWidget);
-    expect(find.text('Duplicate'), findsOneWidget);
-    expect(find.text('Save food'), findsOneWidget);
-    expect(find.text('Delete'), findsWidgets);
-    await tester.tap(find.text('Duplicate'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Apple'), findsNWidgets(2));
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
-    await tester.pumpAndSettle();
-
-    expect(result, isNotNull);
-    expect(result!.foods, hasLength(2));
-    expect(result!.foods.first.id, original.foods.first.id);
-    expect(result!.foods.last.id, isNot(original.foods.first.id));
-    expect(result!.foods.last.source, original.foods.first.source);
-    expect(result!.foods.last.externalId, original.foods.first.externalId);
-    expect(result!.foods.last.templateId, original.foods.first.templateId);
-    expect(original.foods, hasLength(1));
+    expect(find.text('Save to My items'), findsNothing);
+    expect(find.text('Remove from meal'), findsOneWidget);
   });
 
   testWidgets('canceling template or quantity selection adds no food', (
@@ -1113,6 +1122,8 @@ void main() {
     expect(find.text('Apple'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('My items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();

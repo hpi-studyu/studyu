@@ -3647,6 +3647,24 @@ abstract class AppLocalizations {
   /// **'Adjust quantity'**
   String get adjust_quantity;
 
+  /// No description provided for @edit_this_entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit this entry'**
+  String get edit_this_entry;
+
+  /// No description provided for @save_to_my_items_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to My items'**
+  String get save_to_my_items_action;
+
+  /// No description provided for @remove_from_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from meal'**
+  String get remove_from_meal;
+
   /// No description provided for @duplicate.
   ///
   /// In en, this message translates to:
@@ -3665,6 +3683,18 @@ abstract class AppLocalizations {
   /// **'Save meal'**
   String get save_meal_template;
 
+  /// No description provided for @save_as_reusable_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as reusable meal'**
+  String get save_as_reusable_meal;
+
+  /// No description provided for @save_as_reusable_meal_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Add this combination to My items so you can use it again.'**
+  String get save_as_reusable_meal_description;
+
   /// No description provided for @save_food_template.
   ///
   /// In en, this message translates to:
@@ -3682,6 +3712,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name'**
   String get template_name;
+
+  /// No description provided for @template_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal name *'**
+  String get template_name_required;
 
   /// No description provided for @template_tags_optional.
   ///
@@ -3784,6 +3820,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1 {1 item} other {{count} items}}'**
   String items_count(int count);
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @serving_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount, plural, =1 {1 serving} other {{amount} servings}}'**
+  String serving_amount(num amount);
 
   /// No description provided for @kcal_value.
   ///
@@ -4040,7 +4088,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_food_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search foods, meals, recipes or brands'**
+  /// **'Search foods, meals, recipes…'**
   String get search_food_hint;
 
   /// No description provided for @my_saved_items.
@@ -4088,7 +4136,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_manually.
   ///
   /// In en, this message translates to:
-  /// **'Add food manually'**
+  /// **'Create food manually'**
   String get add_manually;
 
   /// No description provided for @add_manually_subtitle.
@@ -4096,6 +4144,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter nutrition facts yourself'**
   String get add_manually_subtitle;
+
+  /// No description provided for @tap_item_to_choose_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an item to choose the serving and amount.'**
+  String get tap_item_to_choose_serving;
 
   /// No description provided for @scan_barcode.
   ///
@@ -4139,10 +4193,22 @@ abstract class AppLocalizations {
   /// **'No results found. Try different keywords.'**
   String get no_results_found;
 
+  /// No description provided for @no_results_for_query.
+  ///
+  /// In en, this message translates to:
+  /// **'No results for “{query}”'**
+  String no_results_for_query(String query);
+
+  /// No description provided for @cant_find_it.
+  ///
+  /// In en, this message translates to:
+  /// **'Can’t find it?'**
+  String get cant_find_it;
+
   /// No description provided for @create_food_from_search.
   ///
   /// In en, this message translates to:
-  /// **'Can’t find it? Create ‘{query}’ manually'**
+  /// **'Create “{query}” manually'**
   String create_food_from_search(String query);
 
   /// No description provided for @food_search_error.

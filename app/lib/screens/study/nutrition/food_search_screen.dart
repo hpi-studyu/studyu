@@ -12,7 +12,6 @@ import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -84,9 +83,40 @@ double? _gramsFromMetadata(String? value) {
       : double.tryParse(match.group(1)!.replaceAll(',', '.'));
 }
 
-String _formatGrams(double grams) => grams == grams.roundToDouble()
-    ? grams.round().toString()
-    : grams.toStringAsFixed(1);
+String _formatNumber(double value) => value == value.roundToDouble()
+    ? value.round().toString()
+    : value.toStringAsFixed(1);
+
+String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) {
+  final unit = food.unit.trim();
+  final serving = unit.isEmpty || unit.toLowerCase() == 'serving'
+      ? l10n.serving_amount(food.amount)
+      : '${_formatNumber(food.amount)} $unit';
+  return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
+}
+
+String? _foodImageUrl(studyu.FoodEntry food) {
+  for (final key in [
+    'image_front_small_url',
+    'image_front_url',
+    'image_url',
+    'imageUrl',
+  ]) {
+    final value = food.originalValues[key];
+    if (value is String && value.trim().isNotEmpty) return value;
+  }
+  return null;
+}
+
+Widget _fallbackItemIcon(ThemeData theme, IconData icon, {double size = 22}) =>
+    Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(icon, size: size, color: theme.colorScheme.onSurfaceVariant),
+    );
 
 final class FoodSearchSelection {
   final List<studyu.FoodEntry> foods;
@@ -227,6 +257,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   bool _usdaSearched = false;
   bool _offFailed = false;
   bool _usdaFailed = false;
+  bool _showServingHint = true;
 
   static const int _pageSize = 20;
 
@@ -242,11 +273,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     OpenFoodAPIConfiguration.globalLanguages = [OpenFoodFactsLanguage.ENGLISH];
 
     _scrollController.addListener(_onScroll);
-
-    // Auto-focus search field on load
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _searchFocusNode.requestFocus();
-    });
   }
 
   @override
@@ -637,10 +663,18 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     _showQuantity(item.createSelection());
   }
 
-  void _selectResult(UnifiedFoodResult result) {
-    final foodEntry = result.source == studyu.FoodSource.openfoodfacts
+  void _addHistoryItem(FoodSearchHistoryItem item) {
+    _completeSingleSelection(item.createSelection());
+  }
+
+  studyu.FoodEntry _foodEntryForResult(UnifiedFoodResult result) {
+    return result.source == studyu.FoodSource.openfoodfacts
         ? _convertToFoodEntry(result.originalData as Product)
         : _convertUsdaToFoodEntry(result.originalData as UsdaFoodItem);
+  }
+
+  void _selectResult(UnifiedFoodResult result) {
+    final foodEntry = _foodEntryForResult(result);
     if (widget.mealLabel == null) {
       _navigateToEdit(foodEntry);
     } else {
@@ -648,17 +682,28 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     }
   }
 
-  void _selectFoodTemplate(studyu.SavedFoodTemplate template) {
-    final templateViewModel = Provider.of<TemplateViewModel>(
+  void _addResult(UnifiedFoodResult result) {
+    _completeSingleSelection(_foodEntryForResult(result));
+  }
+
+  studyu.FoodEntry _foodEntryForTemplate(studyu.SavedFoodTemplate template) {
+    return Provider.of<TemplateViewModel>(
       context,
       listen: false,
-    );
-    final foodEntry = templateViewModel.applyFoodTemplate(template);
+    ).applyFoodTemplate(template);
+  }
+
+  void _selectFoodTemplate(studyu.SavedFoodTemplate template) {
+    final foodEntry = _foodEntryForTemplate(template);
     if (widget.allowMealTemplates) {
       _showQuantity(foodEntry);
     } else {
-      Navigator.pop(context, foodEntry);
+      _completeSingleSelection(foodEntry);
     }
+  }
+
+  void _addFoodTemplate(studyu.SavedFoodTemplate template) {
+    _completeSingleSelection(_foodEntryForTemplate(template));
   }
 
   void _selectMealTemplate(studyu.SavedMealTemplate template) {
@@ -671,6 +716,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   Future<void> _showQuantity(studyu.FoodEntry foodEntry) async {
+    if (_showServingHint) {
+      setState(() => _showServingHint = false);
+    }
     final result = await FoodQuantitySheet.show(
       context,
       food: foodEntry,
@@ -708,14 +756,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         mealLabel: widget.mealLabel,
       ),
     ).then((result) {
-      if (result != null && mounted) {
-        _completeSingleSelection(result);
-      }
-    });
-  }
-
-  void _createRecipe() {
-    Navigator.push(context, RecipeBuilderScreen.route()).then((result) {
       if (result != null && mounted) {
         _completeSingleSelection(result);
       }
@@ -773,31 +813,53 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final templateViewModel = Provider.of<TemplateViewModel>(context);
+    final query = _searchController.text.trim();
     final rankedResults = rankFoodSearchResults(_combinedResults, _activeQuery);
     final personalResultCount = _personalResultCount(templateViewModel);
-    final totalResultCount = personalResultCount + _combinedResults.length;
+    final visibleResultCount = switch (_selectedFilter) {
+      _FoodSearchFilter.all => personalResultCount + _combinedResults.length,
+      _FoodSearchFilter.myItems => personalResultCount,
+      _FoodSearchFilter.database => _combinedResults.length,
+    };
+    final databaseComplete = _offSearched && _usdaSearched;
+    final searchComplete =
+        _hasSearched &&
+        !_isInitialLoading &&
+        (_selectedFilter == _FoodSearchFilter.myItems || databaseComplete);
+    final showSearchFallback =
+        query.isNotEmpty &&
+        searchComplete &&
+        visibleResultCount == 0 &&
+        (_selectedFilter == _FoodSearchFilter.myItems || _errorMessage == null);
     String? searchStatus;
-    if (_isInitialLoading || _isLoadingMore) {
+    if ((_isInitialLoading || _isLoadingMore) &&
+        _selectedFilter != _FoodSearchFilter.myItems) {
       searchStatus = l10n.searching_databases;
-    } else if (_errorMessage != null) {
+    } else if (_errorMessage != null &&
+        _selectedFilter != _FoodSearchFilter.myItems) {
       searchStatus = _errorMessage;
-    } else if (_hasSearched &&
-        totalResultCount == 0 &&
-        _offSearched &&
-        _usdaSearched) {
-      searchStatus = l10n.no_results_found;
-    } else if (_hasSearched && totalResultCount > 0) {
-      searchStatus = l10n.food_search_results_count(totalResultCount);
+    } else if (searchComplete && visibleResultCount == 0) {
+      searchStatus = l10n.no_results_for_query(query);
+    } else if (_hasSearched && visibleResultCount > 0) {
+      searchStatus = l10n.food_search_results_count(visibleResultCount);
     }
 
     return Scaffold(
       appBar: AppBar(
         leading: widget.mealLabel == null ? null : const CloseButton(),
+        centerTitle: true,
         title: Text(
           widget.mealLabel == null
               ? l10n.add_food_title
               : l10n.add_food_to_meal(widget.mealLabel!),
         ),
+        actions: [
+          IconButton(
+            tooltip: l10n.add_manually,
+            icon: const Icon(Icons.note_add_outlined),
+            onPressed: _addManually,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -813,18 +875,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
             },
             onScanBarcode: _scanBarcode,
           ),
-          if (_searchController.text.trim().isEmpty)
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16, top: 2),
-                child: TextButton.icon(
-                  onPressed: _addManually,
-                  icon: const Icon(Icons.edit_note_outlined, size: 18),
-                  label: Text(l10n.add_manually),
-                ),
-              ),
-            ),
           Semantics(
             liveRegion: true,
             label: searchStatus,
@@ -862,17 +912,21 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
                 });
               },
               onSelectHistory: _selectHistoryItem,
+              onAddHistory: _addHistoryItem,
               onSelectFoodTemplate: _selectFoodTemplate,
+              onAddFoodTemplate: _addFoodTemplate,
               onSelectMealTemplate: _selectMealTemplate,
               onManageSavedItems: () => _manageSavedItems(templateViewModel),
               onSelectResult: _selectResult,
-              onAddManually: _addManually,
-              onCreateRecipe: _createRecipe,
+              onAddResult: _addResult,
               onRetry: () => _retrySearch(templateViewModel),
               allowRecipes: widget.allowRecipes,
               allowMealTemplates: widget.allowMealTemplates,
+              showServingHint: _showServingHint && widget.allowMealTemplates,
             ),
           ),
+          if (showSearchFallback)
+            _SearchFallback(query: query, onAddManually: _addManually),
         ],
       ),
     );
@@ -903,20 +957,11 @@ class _SearchBarHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-          ),
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: TextField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: true,
         decoration: InputDecoration(
           hintText: l10n.search_food_hint,
           prefixIcon: const Icon(Icons.search),
@@ -1019,11 +1064,13 @@ class _SectionHeader extends StatelessWidget {
 class _TemplateCard extends StatelessWidget {
   final Object template;
   final VoidCallback onTap;
+  final VoidCallback onAdd;
   final ThemeData theme;
 
   const _TemplateCard({
     required this.template,
     required this.onTap,
+    required this.onAdd,
     required this.theme,
   });
 
@@ -1039,78 +1086,84 @@ class _TemplateCard extends StatelessWidget {
     final isRecipe =
         foodTemplate?.prototype.entryType == studyu.FoodEntryType.recipe;
     final name = mealTemplate?.name ?? foodTemplate!.name;
-
-    final foodBasis =
-        foodTemplate != null &&
-            foodTemplate.prototype.source != studyu.FoodSource.manual &&
-            foodTemplate.prototype.unit.trim().isNotEmpty
-        ? ' / ${foodTemplate.prototype.unit.trim()}'
-        : '';
-    final metadata = mealTemplate != null
-        ? '${l10n.template_type_meal} • ${l10n.items_count(mealTemplate.prototypes.length)}'
+    final icon = mealTemplate != null
+        ? Icons.restaurant_menu_outlined
         : isRecipe
-        ? [
-            l10n.template_type_recipe,
-            l10n.servings_value(
-              foodTemplate!.prototype.amount.toStringAsFixed(0),
-            ),
-            l10n.kcal_per_serving(
-              foodTemplate.prototype.nutrition.energyKcal.round().toString(),
-            ),
-          ].join(' • ')
-        : [
-            l10n.template_type_food,
-            if (foodTemplate!.prototype.source == studyu.FoodSource.manual)
-              l10n.custom
-            else
-              l10n.database,
-            '${l10n.kcal_value(foodTemplate.prototype.nutrition.energyKcal.round().toString())}$foodBasis',
-          ].join(' • ');
+        ? Icons.menu_book_outlined
+        : Icons.fastfood_outlined;
+    final imageUrl = foodTemplate == null
+        ? null
+        : _foodImageUrl(foodTemplate.prototype);
+
+    final metadata = mealTemplate != null
+        ? '${l10n.template_type_meal} · ${l10n.items_count(mealTemplate.prototypes.length)}'
+        : _foodServingMetadata(l10n, foodTemplate!.prototype);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: isRecipe
-                ? Colors.orange.withValues(alpha: 0.12)
-                : theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            mealTemplate != null
-                ? Icons.restaurant_menu_outlined
-                : isRecipe
-                ? Icons.menu_book_outlined
-                : Icons.fastfood_outlined,
-            size: 22,
-            color: isRecipe
-                ? Colors.orange.shade700
-                : theme.colorScheme.primary,
-          ),
-        ),
-        title: Text(
-          name,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          metadata,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: imageUrl == null
+                      ? _fallbackItemIcon(theme, icon)
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) =>
+                                _fallbackItemIcon(theme, icon),
+                          ),
+                        ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        metadata,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: onAdd,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(l10n.add),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -1119,11 +1172,13 @@ class _TemplateCard extends StatelessWidget {
 class _HistoryFoodCard extends StatelessWidget {
   final FoodSearchHistoryItem item;
   final VoidCallback onTap;
+  final VoidCallback onAdd;
   final ThemeData theme;
 
   const _HistoryFoodCard({
     required this.item,
     required this.onTap,
+    required this.onAdd,
     required this.theme,
   });
 
@@ -1131,27 +1186,74 @@ class _HistoryFoodCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final food = item.food;
     final l10n = AppLocalizations.of(context)!;
-    final brand = food.brandName?.trim();
+    final imageUrl = _foodImageUrl(food);
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        leading: Icon(
-          Icons.fastfood_outlined,
-          color: theme.colorScheme.primary,
-        ),
-        title: Text(food.name, maxLines: 2, overflow: TextOverflow.ellipsis),
-        subtitle: Text(
-          [
-            if (brand != null && brand.isNotEmpty) brand,
-            l10n.kcal_value(food.nutrition.energyKcal.round().toString()),
-          ].join(' • '),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: imageUrl == null
+                      ? _fallbackItemIcon(theme, Icons.fastfood_outlined)
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => _fallbackItemIcon(
+                              theme,
+                              Icons.fastfood_outlined,
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        food.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            ListTileTheme.of(context).titleTextStyle ??
+                            theme.textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _foodServingMetadata(l10n, food),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: onAdd,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(l10n.add),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -1160,17 +1262,29 @@ class _HistoryFoodCard extends StatelessWidget {
 class _FoodResultCard extends StatelessWidget {
   final UnifiedFoodResult result;
   final VoidCallback onTap;
+  final VoidCallback onAdd;
   final ThemeData theme;
 
   const _FoodResultCard({
     required this.result,
     required this.onTap,
+    required this.onAdd,
     required this.theme,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final calories = switch (result.originalData) {
+      final UsdaFoodItem food =>
+        food.energyKcal100g * (food.servingSize ?? 100) / 100,
+      _ => result.calories,
+    };
+    final metadata = [
+      l10n.serving_amount(1),
+      if (calories != null) l10n.kcal_value(calories.round().toString()),
+    ].join(' · ');
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
@@ -1182,14 +1296,9 @@ class _FoodResultCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Image or fallback icon
-              Container(
+              SizedBox(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(10),
-                ),
                 child: result.imageUrl != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(10),
@@ -1198,15 +1307,20 @@ class _FoodResultCard extends StatelessWidget {
                           width: 48,
                           height: 48,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) {
-                            return _buildFallbackIcon();
-                          },
+                          errorBuilder: (_, _, _) => _fallbackItemIcon(
+                            theme,
+                            Icons.fastfood_outlined,
+                            size: 24,
+                          ),
                         ),
                       )
-                    : _buildFallbackIcon(),
+                    : _fallbackItemIcon(
+                        theme,
+                        Icons.fastfood_outlined,
+                        size: 24,
+                      ),
               ),
               const SizedBox(width: 12),
-              // Content
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1216,106 +1330,30 @@ class _FoodResultCard extends StatelessWidget {
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        _SourceBadge(
-                          source: result.source,
-                          hasBrand: result.brand?.trim().isNotEmpty ?? false,
-                        ),
-                        if (result.brand != null &&
-                            result.brand!.isNotEmpty) ...[
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              result.brand!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                    const SizedBox(height: 2),
+                    Text(
+                      metadata,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
               ),
-              // Calories
-              if (result.calories != null)
-                Column(
-                  children: [
-                    Text(
-                      '${result.calories!.round()}',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      'kcal',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        fontSize: 10,
-                      ),
-                    ),
-                    if (result.calorieBasisGrams != null)
-                      Text(
-                        result.calorieBasisGrams == 100
-                            ? l10n.calorie_basis_100g
-                            : l10n.calorie_basis_grams(
-                                _formatGrams(result.calorieBasisGrams!),
-                              ),
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontSize: 9,
-                        ),
-                      ),
-                  ],
+              TextButton(
+                onPressed: onAdd,
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
                 ),
+                child: Text(l10n.add),
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFallbackIcon() {
-    return const Center(child: Icon(Icons.fastfood_outlined, size: 24));
-  }
-}
-
-class _SourceBadge extends StatelessWidget {
-  final studyu.FoodSource source;
-  final bool hasBrand;
-
-  const _SourceBadge({required this.source, required this.hasBrand});
-
-  @override
-  Widget build(BuildContext context) {
-    final isOff = source == studyu.FoodSource.openfoodfacts;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: isOff
-            ? Colors.green.withValues(alpha: 0.12)
-            : Colors.orange.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        hasBrand
-            ? AppLocalizations.of(context)!.brand
-            : AppLocalizations.of(context)!.database,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: isOff ? Colors.green.shade700 : Colors.orange.shade700,
-          letterSpacing: 0.3,
         ),
       ),
     );
@@ -1331,17 +1369,20 @@ class _ErrorMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
         children: [
-          Text(
-            message,
-            style: const TextStyle(color: Colors.red),
-            textAlign: TextAlign.center,
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
           ),
-          const SizedBox(height: 12),
-          FilledButton.tonal(onPressed: onRetry, child: Text(l10n.try_again)),
+          TextButton(onPressed: onRetry, child: Text(l10n.try_again)),
         ],
       ),
     );
@@ -1368,40 +1409,78 @@ class _EmptySectionMessage extends StatelessWidget {
 
 class _NoResultsState extends StatelessWidget {
   final String query;
-  final VoidCallback onAddManually;
-  final VoidCallback onCreateRecipe;
-  final bool allowRecipes;
 
-  const _NoResultsState({
-    required this.query,
-    required this.onAddManually,
-    required this.onCreateRecipe,
-    required this.allowRecipes,
-  });
+  const _NoResultsState({required this.query});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Column(
-        children: [
-          Text(l10n.no_results_found, textAlign: TextAlign.center),
-          const SizedBox(height: 12),
-          FilledButton.tonalIcon(
-            onPressed: onAddManually,
-            icon: const Icon(Icons.edit_note_outlined),
-            label: Text(l10n.create_food_from_search(query)),
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      child: Text(
+        AppLocalizations.of(context)!.no_results_for_query(query),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _SearchFallback extends StatelessWidget {
+  final String query;
+  final VoidCallback onAddManually;
+
+  const _SearchFallback({required this.query, required this.onAddManually});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      top: false,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          border: Border(
+            top: BorderSide(color: theme.colorScheme.outlineVariant),
           ),
-          if (allowRecipes) ...[
-            const SizedBox(height: 8),
-            TextButton.icon(
-              onPressed: onCreateRecipe,
-              icon: const Icon(Icons.menu_book_outlined),
-              label: Text(l10n.create_recipe),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.cant_find_it,
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: 4),
+            FilledButton.tonalIcon(
+              onPressed: onAddManually,
+              icon: const Icon(Icons.note_add_outlined),
+              label: Text(
+                AppLocalizations.of(context)!.create_food_from_search(query),
+              ),
             ),
           ],
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ServingHint extends StatelessWidget {
+  final AppLocalizations l10n;
+
+  const _ServingHint({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        l10n.tap_item_to_choose_serving,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -1428,15 +1507,17 @@ class _FoodSearchListView extends StatelessWidget {
   final _FoodSearchFilter selectedFilter;
   final ValueChanged<_FoodSearchFilter> onFilterChanged;
   final void Function(FoodSearchHistoryItem) onSelectHistory;
+  final void Function(FoodSearchHistoryItem) onAddHistory;
   final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
+  final void Function(studyu.SavedFoodTemplate) onAddFoodTemplate;
   final void Function(studyu.SavedMealTemplate) onSelectMealTemplate;
   final VoidCallback onManageSavedItems;
   final void Function(UnifiedFoodResult) onSelectResult;
-  final VoidCallback onAddManually;
-  final VoidCallback onCreateRecipe;
+  final void Function(UnifiedFoodResult) onAddResult;
   final VoidCallback onRetry;
   final bool allowRecipes;
   final bool allowMealTemplates;
+  final bool showServingHint;
 
   const _FoodSearchListView({
     required this.scrollController,
@@ -1459,15 +1540,17 @@ class _FoodSearchListView extends StatelessWidget {
     required this.selectedFilter,
     required this.onFilterChanged,
     required this.onSelectHistory,
+    required this.onAddHistory,
     required this.onSelectFoodTemplate,
+    required this.onAddFoodTemplate,
     required this.onSelectMealTemplate,
     required this.onManageSavedItems,
     required this.onSelectResult,
-    required this.onAddManually,
-    required this.onCreateRecipe,
+    required this.onAddResult,
     required this.onRetry,
     this.allowRecipes = true,
     this.allowMealTemplates = false,
+    required this.showServingHint,
   });
 
   bool _isAllowedTemplate(dynamic template) {
@@ -1518,6 +1601,13 @@ class _FoodSearchListView extends StatelessWidget {
           onSelectFoodTemplate(template);
         }
       },
+      onAdd: () {
+        if (template is studyu.SavedMealTemplate) {
+          onSelectMealTemplate(template);
+        } else if (template is studyu.SavedFoodTemplate) {
+          onAddFoodTemplate(template);
+        }
+      },
       theme: theme,
     );
   }
@@ -1525,30 +1615,46 @@ class _FoodSearchListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final query = searchController.text.trim();
-    final children = <Widget>[const SizedBox(height: 8)];
+    final children = <Widget>[];
     if (query.isEmpty) {
       children.add(
-        _QuickSectionTabs(
-          sections: const [
-            _FoodSearchSection.recent,
-            _FoodSearchSection.myItems,
+        Row(
+          children: [
+            Expanded(
+              child: _QuickSectionTabs(
+                sections: const [
+                  _FoodSearchSection.recent,
+                  _FoodSearchSection.myItems,
+                ],
+                selectedSection: selectedSection,
+                onChanged: onSectionChanged,
+                l10n: l10n,
+              ),
+            ),
+            if (selectedSection == _FoodSearchSection.myItems)
+              TextButton(
+                onPressed: onManageSavedItems,
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                ),
+                child: Text(l10n.manage_saved_items),
+              ),
           ],
-          selectedSection: selectedSection,
-          onChanged: onSectionChanged,
-          l10n: l10n,
         ),
       );
-      children.add(const SizedBox(height: 12));
+      children.add(const SizedBox(height: 4));
       if (selectedSection == _FoodSearchSection.recent) {
         final recentItems = _recentItems();
         if (recentItems.isEmpty) {
           children.add(_EmptySectionMessage(message: l10n.no_recent_items));
         } else {
+          if (showServingHint) children.add(_ServingHint(l10n: l10n));
           children.addAll(
             recentItems.map(
               (item) => _HistoryFoodCard(
                 item: item,
                 onTap: () => onSelectHistory(item),
+                onAdd: () => onAddHistory(item),
                 theme: theme,
               ),
             ),
@@ -1559,17 +1665,17 @@ class _FoodSearchListView extends StatelessWidget {
             .where(_isAllowedTemplate)
             .cast<Object>()
             .toList();
-        children.add(
-          _MyItemsToolbar(
-            viewModel: templateViewModel,
-            l10n: l10n,
-            onManage: onManageSavedItems,
-          ),
-        );
+        children.add(_MyItemsToolbar(viewModel: templateViewModel, l10n: l10n));
         children.add(const SizedBox(height: 8));
         if (filteredTemplates.isEmpty) {
           children.add(_EmptySectionMessage(message: l10n.no_templates_saved));
         } else {
+          if (showServingHint &&
+              filteredTemplates.any(
+                (template) => template is studyu.SavedFoodTemplate,
+              )) {
+            children.add(_ServingHint(l10n: l10n));
+          }
           children.addAll(filteredTemplates.map(_templateCard));
         }
       }
@@ -1594,92 +1700,114 @@ class _FoodSearchListView extends StatelessWidget {
     final showPersonal = selectedFilter != _FoodSearchFilter.database;
     final showDatabase = selectedFilter != _FoodSearchFilter.myItems;
     final databaseComplete = offSearched && usdaSearched;
-
-    if (showPersonal && personalMatches.isNotEmpty) {
-      children.add(
-        _SectionHeader(
-          icon: Icons.bookmark_outline,
-          title: l10n.my_saved_items,
-          iconColor: theme.colorScheme.primary,
-        ),
-      );
-      children.add(const SizedBox(height: 8));
-      children.addAll(personalMatches.map(_templateCard));
-    }
-
-    if (showDatabase) {
-      children.add(
-        _SectionHeader(
-          icon: Icons.public,
-          title: l10n.global_database,
-          iconColor: Colors.grey.shade700,
-        ),
-      );
-      children.add(const SizedBox(height: 8));
-      if (isInitialLoading && combinedResults.isEmpty) {
-        children.add(
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        );
-      } else if (errorMessage != null && combinedResults.isEmpty) {
-        children.add(_ErrorMessage(message: errorMessage!, onRetry: onRetry));
-      } else if (combinedResults.isNotEmpty) {
-        children.addAll(
-          combinedResults.map(
-            (result) => _FoodResultCard(
-              result: result,
-              onTap: () => onSelectResult(result),
-              theme: theme,
-            ),
-          ),
-        );
-      } else if (databaseComplete) {
-        children.add(_EmptySectionMessage(message: l10n.no_results_found));
-      }
-      if (isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty)) {
-        children.add(
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        );
-      }
-      if (hasSearched &&
-          combinedResults.isNotEmpty &&
-          !offHasMore &&
-          !usdaHasMore &&
-          !isInitialLoading &&
-          !isLoadingMore) {
-        children.add(
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Center(
-              child: Text(
-                l10n.end_of_results,
-                style: TextStyle(color: Colors.grey.shade500),
-              ),
-            ),
-          ),
-        );
-      }
-    }
-
+    final selectedSearchComplete =
+        hasSearched &&
+        !isInitialLoading &&
+        (selectedFilter == _FoodSearchFilter.myItems || databaseComplete);
     final noVisibleResults =
-        databaseComplete &&
         !(showPersonal && personalMatches.isNotEmpty) &&
         !(showDatabase && combinedResults.isNotEmpty);
-    if (hasSearched && noVisibleResults) {
-      children.add(
-        _NoResultsState(
-          query: query,
-          onAddManually: onAddManually,
-          onCreateRecipe: onCreateRecipe,
-          allowRecipes: allowRecipes,
-        ),
-      );
+    final showGlobalNoResults =
+        selectedSearchComplete && errorMessage == null && noVisibleResults;
+    if (showServingHint &&
+        ((showDatabase && combinedResults.isNotEmpty) ||
+            (showPersonal &&
+                personalMatches.any(
+                  (template) => template is studyu.SavedFoodTemplate,
+                )))) {
+      children.add(_ServingHint(l10n: l10n));
     }
+
+    if (showGlobalNoResults) {
+      children.add(_NoResultsState(query: query));
+    } else {
+      if (showPersonal) {
+        children.add(
+          _SectionHeader(
+            icon: Icons.bookmark_outline,
+            title: l10n.my_saved_items,
+            iconColor: theme.colorScheme.primary,
+          ),
+        );
+        children.add(const SizedBox(height: 8));
+        if (personalMatches.isEmpty) {
+          children.add(
+            _EmptySectionMessage(message: l10n.no_matching_templates),
+          );
+        } else {
+          children.addAll(personalMatches.map(_templateCard));
+        }
+      }
+
+      if (showDatabase) {
+        if (showPersonal) children.add(const SizedBox(height: 12));
+        children.add(
+          _SectionHeader(
+            icon: Icons.public,
+            title: l10n.global_database,
+            iconColor: theme.colorScheme.onSurfaceVariant,
+          ),
+        );
+        children.add(const SizedBox(height: 8));
+        if (isInitialLoading && combinedResults.isEmpty) {
+          children.add(
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        } else {
+          if (combinedResults.isNotEmpty) {
+            children.addAll(
+              combinedResults.map(
+                (result) => _FoodResultCard(
+                  result: result,
+                  onTap: () => onSelectResult(result),
+                  onAdd: () => onAddResult(result),
+                  theme: theme,
+                ),
+              ),
+            );
+          }
+          if (errorMessage != null) {
+            children.add(
+              _ErrorMessage(message: errorMessage!, onRetry: onRetry),
+            );
+          } else if (databaseComplete && combinedResults.isEmpty) {
+            children.add(
+              _EmptySectionMessage(message: l10n.no_matching_templates),
+            );
+          }
+        }
+        if (isLoadingMore || (isInitialLoading && combinedResults.isNotEmpty)) {
+          children.add(
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+        if (hasSearched &&
+            combinedResults.isNotEmpty &&
+            !offHasMore &&
+            !usdaHasMore &&
+            !isInitialLoading &&
+            !isLoadingMore) {
+          children.add(
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                child: Text(
+                  l10n.end_of_results,
+                  style: TextStyle(color: Colors.grey.shade500),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
+
     children.add(const SizedBox(height: 24));
     return ListView(
       controller: scrollController,
@@ -1692,13 +1820,8 @@ class _FoodSearchListView extends StatelessWidget {
 class _MyItemsToolbar extends StatelessWidget {
   final TemplateViewModel viewModel;
   final AppLocalizations l10n;
-  final VoidCallback onManage;
 
-  const _MyItemsToolbar({
-    required this.viewModel,
-    required this.l10n,
-    required this.onManage,
-  });
+  const _MyItemsToolbar({required this.viewModel, required this.l10n});
 
   String _label(TemplateFilter filter) => switch (filter) {
     TemplateFilter.all => l10n.filter_all,
@@ -1709,32 +1832,21 @@ class _MyItemsToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final filter in TemplateFilter.values) ...[
-                  FilterChip(
-                    selected: viewModel.currentFilter == filter,
-                    label: Text(_label(filter)),
-                    onSelected: (_) => viewModel.setFilter(filter),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  const SizedBox(width: 6),
-                ],
-              ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final filter in TemplateFilter.values) ...[
+            FilterChip(
+              selected: viewModel.currentFilter == filter,
+              label: Text(_label(filter)),
+              onSelected: (_) => viewModel.setFilter(filter),
+              visualDensity: VisualDensity.compact,
             ),
-          ),
-        ),
-        TextButton(
-          onPressed: onManage,
-          style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
-          child: Text(l10n.manage_saved_items),
-        ),
-      ],
+            const SizedBox(width: 6),
+          ],
+        ],
+      ),
     );
   }
 }

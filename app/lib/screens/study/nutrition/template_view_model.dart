@@ -103,7 +103,7 @@ class TemplateViewModel extends ChangeNotifier {
     await loadAllTemplates();
   }
 
-  Future<void> saveFoodAsTemplate({
+  Future<String> saveFoodAsTemplate({
     required String name,
     required FoodEntry food,
     List<String>? tags,
@@ -118,6 +118,7 @@ class TemplateViewModel extends ChangeNotifier {
 
     await _storageManager.saveFoodTemplate(template);
     await loadAllTemplates();
+    return template.id;
   }
 
   Future<void> updateMealTemplatePrototype(

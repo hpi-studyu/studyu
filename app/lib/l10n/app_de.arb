@@ -571,12 +571,18 @@
   "my_templates": "Meine Elemente",
   "manage_saved_items": "Verwalten",
   "adjust_quantity": "Menge anpassen",
+  "edit_this_entry": "Diesen Eintrag bearbeiten",
+  "save_to_my_items_action": "In Meine Elemente speichern",
+  "remove_from_meal": "Aus Mahlzeit entfernen",
   "duplicate": "Duplizieren",
   "save_as_template": "Zu meinen Elementen hinzufügen",
   "save_meal_template": "Mahlzeit speichern",
+  "save_as_reusable_meal": "Als wiederverwendbare Mahlzeit speichern",
+  "save_as_reusable_meal_description": "Füge diese Kombination zu Meine Elemente hinzu, damit du sie wieder verwenden kannst.",
   "save_food_template": "Lebensmittel speichern",
   "save_recipe_template": "Rezept speichern",
   "template_name": "Name",
+  "template_name_required": "Mahlzeitname *",
   "template_tags_optional": "Tags (optional)",
   "template_tags_hint": "Frühstück, schnell, gesund",
   "template_saved": "Zu meinen Elementen hinzugefügt",
@@ -598,6 +604,15 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "add": "Hinzufügen",
+  "serving_amount": "{amount, plural, =1 {1 Portion} other {{amount} Portionen}}",
+  "@serving_amount": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
       }
     }
   },
@@ -710,16 +725,26 @@
   "meal_context": "Mahlzeitenkontext",
   "meal_details": "Mahlzeitendetails",
   "apply": "Übernehmen",
-  "search_food_hint": "Lebensmittel, Mahlzeiten, Rezepte oder Marken suchen",
+  "search_food_hint": "Lebensmittel, Mahlzeiten, Rezepte suchen…",
   "recent_foods": "Zuletzt verwendet",
   "frequently_used_foods": "Häufig verwendet",
   "my_saved_items": "Meine Elemente",
   "global_database": "Datenbank",
-  "add_manually": "Lebensmittel manuell hinzufügen",
+  "add_manually": "Lebensmittel manuell erstellen",
+  "tap_item_to_choose_serving": "Tippen Sie auf ein Element, um Portion und Menge auszuwählen.",
   "scan_barcode": "Barcode scannen",
   "searching_databases": "Datenbanken werden durchsucht...",
   "no_results_found": "Keine Ergebnisse gefunden. Versuchen Sie andere Suchbegriffe.",
-  "create_food_from_search": "Nicht gefunden? „{query}“ manuell erstellen",
+  "no_results_for_query": "Keine Ergebnisse für „{query}“",
+  "@no_results_for_query": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "cant_find_it": "Nicht gefunden?",
+  "create_food_from_search": "„{query}“ manuell erstellen",
   "@create_food_from_search": {
     "placeholders": {
       "query": {

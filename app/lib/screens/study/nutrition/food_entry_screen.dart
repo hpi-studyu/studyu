@@ -187,7 +187,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       final appState = Provider.of<AppState>(context, listen: false);
       final userId = appState.activeSubject?.id ?? 'anonymous';
       try {
-        await TemplateViewModel(
+        food.templateId = await TemplateViewModel(
           userId: userId,
         ).saveFoodAsTemplate(name: food.name, food: food);
       } catch (error) {

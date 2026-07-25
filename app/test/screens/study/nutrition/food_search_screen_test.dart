@@ -131,32 +131,46 @@ void main() {
     ]);
   });
 
-  testWidgets('shows English search examples without a quick recipe action', (
+  testWidgets('offers accessible manual creation in the header', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
     await tester.pumpWidget(foodSearchApp(const Locale('en')));
     await tester.pump();
 
+    final searchField = tester.widget<TextField>(find.byType(TextField));
+    expect(searchField.decoration!.hintText, 'Search foods, meals, recipes…');
+    expect(searchField.focusNode!.hasFocus, isFalse);
+    expect(searchField.decoration!.suffixIcon, isA<IconButton>());
+    expect(find.byTooltip('Scan Barcode'), findsOneWidget);
+    expect(find.text('Add manually'), findsNothing);
+    expect(find.text('Create Recipe'), findsNothing);
+
+    final createButton = find.widgetWithIcon(
+      IconButton,
+      Icons.note_add_outlined,
+    );
+    expect(find.byTooltip('Create food manually'), findsOneWidget);
     expect(
-      find.text('Try “apple”, “oat milk”, or a brand name.'),
-      findsOneWidget,
+      tester.getSemantics(createButton).getSemanticsData().tooltip,
+      'Create food manually',
     );
 
-    await tester.drag(find.byType(ListView), const Offset(0, -500));
-    await tester.pump();
-
-    expect(find.text('Add Manually'), findsOneWidget);
-    expect(find.text('Create Recipe'), findsNothing);
+    await tester.tap(createButton);
+    await tester.pumpAndSettle();
+    expect(find.text('Add Food Manually'), findsOneWidget);
+    semantics.dispose();
   });
 
-  testWidgets('shows localized German search examples', (tester) async {
+  testWidgets('shows the localized compact German search hint', (tester) async {
     await tester.pumpWidget(foodSearchApp(const Locale('de')));
     await tester.pump();
 
     expect(
-      find.text('Zum Beispiel „Apfel“, „Hafermilch“ oder einen Markennamen.'),
-      findsOneWidget,
+      tester.widget<TextField>(find.byType(TextField)).decoration!.hintText,
+      'Lebensmittel, Mahlzeiten, Rezepte suchen…',
     );
+    expect(find.byTooltip('Lebensmittel manuell erstellen'), findsOneWidget);
   });
 
   testWidgets('shows participant history and opens quantity confirmation', (
@@ -177,14 +191,13 @@ void main() {
     await tester.tap(find.text('Open search'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Frequently Used'), findsOneWidget);
     expect(find.text('Recent'), findsOneWidget);
     expect(find.text('Apple'), findsOneWidget);
-    expect(find.text('Banana'), findsNothing);
-
-    await tester.tap(find.text('Recent'));
-    await tester.pumpAndSettle();
     expect(find.text('Banana'), findsOneWidget);
+    expect(
+      find.text('Tap an item to choose the serving and amount.'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Banana'));
     await tester.pumpAndSettle();
@@ -240,14 +253,31 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('My Saved Items'), findsNothing);
+    await tester.tap(find.text('My items'));
+    await tester.pumpAndSettle();
+
     expect(find.text('Saved Recipe'), findsNothing);
-    expect(find.text('Global Database'), findsOneWidget);
+    expect(find.text('No items yet'), findsOneWidget);
+    expect(find.text('Manage'), findsOneWidget);
 
     await TemplateStorageManager().deleteFoodTemplate(
       'anonymous',
       'recipe-template',
     );
+  });
+
+  testWidgets('my items controls fit a narrow picker', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(320, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(foodSearchApp(const Locale('en')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('My items'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Manage'), findsOneWidget);
+    expect(find.text('Recipes'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('modal keeps contextual search state across quantity cancel', (
@@ -302,6 +332,10 @@ void main() {
 
     expect(find.text('Add food to Snack'), findsOneWidget);
     expect(
+      find.text('Tap an item to choose the serving and amount.'),
+      findsNothing,
+    );
+    expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       'apple',
     );
@@ -317,7 +351,7 @@ void main() {
     expect(find.byType(FoodSearchScreen), findsNothing);
   });
 
-  testWidgets('saved-item management returns to the same search state', (
+  testWidgets('saved-item management stays outside the filter row', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -334,19 +368,26 @@ void main() {
 
     await tester.tap(find.text('Open search'));
     await tester.pumpAndSettle();
-    await enterSearch(tester, 'apple');
+    await tester.tap(find.text('My items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Manage saved items'));
+    await tester.tap(find.text('Manage'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Saved items'), findsOneWidget);
+    expect(find.text('My items'), findsWidgets);
+    await tester.tap(find.text('New'));
+    await tester.pumpAndSettle();
+    expect(find.text('Foods'), findsWidgets);
+    expect(find.text('Create Recipe'), findsOneWidget);
+    await tester.tapAt(const Offset(5, 5));
+    await tester.pumpAndSettle();
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     expect(find.text('Add food to Snack'), findsOneWidget);
+    expect(find.text('Manage'), findsOneWidget);
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
-      'apple',
+      isEmpty,
     );
   });
 
@@ -381,6 +422,7 @@ void main() {
     await tester.pumpAndSettle();
     await enterSearch(tester, 'apple');
     await tester.pumpAndSettle();
+    expect(find.text('1 serving · 50 kcal'), findsOneWidget);
     await tester.tap(find.text('Apple'));
     await tester.pumpAndSettle();
 
@@ -398,6 +440,36 @@ void main() {
     expect(selectedFood.servingSizeGrams, 50);
     expect(selectedFood.nutrition.energyKcal, 100);
     expect(selectedFood.nutrition.protein, 10);
+  });
+
+  testWidgets('Add button adds the default serving without configuration', (
+    tester,
+  ) async {
+    FoodSearchSelection? selection;
+    await tester.pumpWidget(
+      foodSearchModalApp(
+        mealLabel: 'Snack',
+        onResult: (result) => selection = result,
+        openFoodFactsSearch:
+            ({required query, required page, required pageSize}) async =>
+                offResult([offFood('Apple')]),
+        usdaFoodSearch:
+            ({required query, required page, required pageSize}) async =>
+                usdaResult(),
+      ),
+    );
+
+    await tester.tap(find.text('Open search'));
+    await tester.pumpAndSettle();
+    await enterSearch(tester, 'apple');
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Add'));
+    await tester.pumpAndSettle();
+
+    expect(selection, isNotNull);
+    expect(selection!.foods.single.name, 'Apple');
+    expect(selection!.foods.single.amount, 1);
+    expect(find.text('Amount'), findsNothing);
   });
 
   testWidgets('German USDA outage stays localized and retries Apfel', (
@@ -721,7 +793,6 @@ void main() {
     await enterSearch(tester, 'apple');
     await tester.pump();
 
-    expect(find.text('Orchard Co'), findsWidgets);
     await tester.dragUntilVisible(
       find.text('Apple 8'),
       find.byType(ListView),
@@ -745,6 +816,11 @@ void main() {
     expect(find.text('Edit Food'), findsOneWidget);
     expect(find.byTooltip('Search Food Database'), findsNothing);
 
+    await tester.dragUntilVisible(
+      find.text('Advanced Options'),
+      find.byType(ListView).last,
+      const Offset(0, -200),
+    );
     await tester.tap(find.text('Advanced Options'));
     await tester.pumpAndSettle();
     final brandField = tester.widget<TextField>(
@@ -835,7 +911,8 @@ void main() {
     usdaCompleter.complete(usdaResult([usdaFood('Late USDA')]));
     await tester.pump();
 
-    expect(find.text('Search for Food'), findsOneWidget);
+    expect(find.text('Recent'), findsOneWidget);
+    expect(find.byTooltip('Create food manually'), findsOneWidget);
     expect(find.text('Late Apple'), findsNothing);
     expect(find.text('Late USDA'), findsNothing);
     expect(find.byType(CircularProgressIndicator), findsNothing);
@@ -922,7 +999,11 @@ void main() {
 
     oldPagination.complete(offResult([offFood('Stale Apple page 2')]));
     await tester.pump();
-    await scrollToBottom(tester);
+    await tester.dragUntilVisible(
+      find.text('Banana page 2'),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
 
     expect(find.text('Banana page 2'), findsOneWidget);
     expect(find.text('Stale Apple page 2'), findsNothing);
@@ -1022,12 +1103,10 @@ void main() {
     await enterSearch(tester, 'nothing');
     await tester.pump();
 
-    expect(
-      find.text('No results found. Try different keywords.'),
-      findsOneWidget,
-    );
-    expect(find.text('Add Food Manually'), findsOneWidget);
-    expect(find.text('Create Recipe'), findsOneWidget);
+    expect(find.text('No results for “nothing”'), findsOneWidget);
+    expect(find.text('Can’t find it?'), findsOneWidget);
+    expect(find.text('Create “nothing” manually'), findsOneWidget);
+    expect(find.text('Create Recipe'), findsNothing);
     expect(
       find.text('Food search is unavailable. Please try again.'),
       findsNothing,
@@ -1044,11 +1123,7 @@ void main() {
             'live region',
             isTrue,
           )
-          .having(
-            (data) => data.label,
-            'label',
-            'No results found. Try different keywords.',
-          ),
+          .having((data) => data.label, 'label', 'No results for “nothing”'),
     );
 
     semantics.dispose();
@@ -1097,6 +1172,12 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Try again'), findsOneWidget);
+    expect(find.text('My items'), findsWidgets);
+    expect(find.text('Database'), findsWidgets);
+    expect(find.text('No matching items'), findsOneWidget);
+    expect(find.text('No results for “apple”'), findsNothing);
+    expect(find.text('Can’t find it?'), findsNothing);
+    expect(find.text('Create “apple” manually'), findsNothing);
     expect(
       find.text('No results found. Try different keywords.'),
       findsNothing,
@@ -1129,6 +1210,7 @@ void main() {
       find.text('Food search is unavailable. Please try again.'),
       findsNothing,
     );
+    expect(find.text('Create “apple” manually'), findsNothing);
     expect(requests, [
       (source: 'off', query: 'apple', page: 1, pageSize: 20),
       (source: 'usda', query: 'apple', page: 1, pageSize: 20),
@@ -1227,6 +1309,9 @@ void main() {
     await tester.tap(find.text('Open food search'));
     await tester.pumpAndSettle();
     expect(find.text('Add food to Snack'), findsOneWidget);
+    await tester.tap(find.text('My items'));
+    await tester.pumpAndSettle();
+    expect(find.text('2 slice · 52 kcal'), findsOneWidget);
     await tester.tap(find.text('Saved Apple Template'));
     await tester.pumpAndSettle();
     expect(find.text('Add to Snack'), findsOneWidget);

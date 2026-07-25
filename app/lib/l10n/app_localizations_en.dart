@@ -1930,6 +1930,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adjust_quantity => 'Adjust quantity';
 
   @override
+  String get edit_this_entry => 'Edit this entry';
+
+  @override
+  String get save_to_my_items_action => 'Save to My items';
+
+  @override
+  String get remove_from_meal => 'Remove from meal';
+
+  @override
   String get duplicate => 'Duplicate';
 
   @override
@@ -1939,6 +1948,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_meal_template => 'Save meal';
 
   @override
+  String get save_as_reusable_meal => 'Save as reusable meal';
+
+  @override
+  String get save_as_reusable_meal_description =>
+      'Add this combination to My items so you can use it again.';
+
+  @override
   String get save_food_template => 'Save food';
 
   @override
@@ -1946,6 +1962,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get template_name => 'Name';
+
+  @override
+  String get template_name_required => 'Meal name *';
 
   @override
   String get template_tags_optional => 'Tags (optional)';
@@ -2004,6 +2023,20 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: '$count items',
       one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String serving_amount(num amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      amount,
+      locale: localeName,
+      other: '$amount servings',
+      one: '1 serving',
     );
     return '$_temp0';
   }
@@ -2153,7 +2186,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get more_options => 'More options';
 
   @override
-  String get search_food_hint => 'Search foods, meals, recipes or brands';
+  String get search_food_hint => 'Search foods, meals, recipes…';
 
   @override
   String get my_saved_items => 'My items';
@@ -2177,10 +2210,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get create_recipe_subtitle => 'Build from multiple ingredients';
 
   @override
-  String get add_manually => 'Add food manually';
+  String get add_manually => 'Create food manually';
 
   @override
   String get add_manually_subtitle => 'Enter nutrition facts yourself';
+
+  @override
+  String get tap_item_to_choose_serving =>
+      'Tap an item to choose the serving and amount.';
 
   @override
   String get scan_barcode => 'Scan Barcode';
@@ -2205,8 +2242,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_results_found => 'No results found. Try different keywords.';
 
   @override
+  String no_results_for_query(String query) {
+    return 'No results for “$query”';
+  }
+
+  @override
+  String get cant_find_it => 'Can’t find it?';
+
+  @override
   String create_food_from_search(String query) {
-    return 'Can’t find it? Create ‘$query’ manually';
+    return 'Create “$query” manually';
   }
 
   @override

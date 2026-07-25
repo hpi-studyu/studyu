@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
+
+enum _NewItemType { food, recipe }
 
 class MyTemplatesScreen extends StatelessWidget {
   const MyTemplatesScreen({super.key});
@@ -61,10 +64,44 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
           appBar: AppBar(
             title: Text(l10n.my_templates),
             actions: [
-              TextButton.icon(
-                onPressed: () => _createFood(context, viewModel),
-                icon: const Icon(Icons.add),
-                label: Text(l10n.new_item),
+              PopupMenuButton<_NewItemType>(
+                tooltip: l10n.new_item,
+                onSelected: (type) {
+                  switch (type) {
+                    case _NewItemType.food:
+                      _createFood(context, viewModel);
+                    case _NewItemType.recipe:
+                      _createRecipe(context, viewModel);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: _NewItemType.food,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.fastfood),
+                      title: Text(l10n.filter_foods),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: _NewItemType.recipe,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.menu_book),
+                      title: Text(l10n.create_recipe),
+                    ),
+                  ),
+                ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.add),
+                      const SizedBox(width: 4),
+                      Text(l10n.new_item),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -150,6 +187,18 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
         ],
       ),
     );
+  }
+
+  Future<void> _createRecipe(
+    BuildContext context,
+    TemplateViewModel viewModel,
+  ) async {
+    final recipe = await Navigator.push<FoodEntry>(
+      context,
+      RecipeBuilderScreen.route(),
+    );
+    if (recipe == null || !context.mounted) return;
+    await viewModel.saveFoodAsTemplate(name: recipe.name, food: recipe);
   }
 
   Future<void> _createFood(

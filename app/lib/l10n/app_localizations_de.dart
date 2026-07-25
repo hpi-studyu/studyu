@@ -1947,6 +1947,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get adjust_quantity => 'Menge anpassen';
 
   @override
+  String get edit_this_entry => 'Diesen Eintrag bearbeiten';
+
+  @override
+  String get save_to_my_items_action => 'In Meine Elemente speichern';
+
+  @override
+  String get remove_from_meal => 'Aus Mahlzeit entfernen';
+
+  @override
   String get duplicate => 'Duplizieren';
 
   @override
@@ -1956,6 +1965,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_meal_template => 'Mahlzeit speichern';
 
   @override
+  String get save_as_reusable_meal =>
+      'Als wiederverwendbare Mahlzeit speichern';
+
+  @override
+  String get save_as_reusable_meal_description =>
+      'Füge diese Kombination zu Meine Elemente hinzu, damit du sie wieder verwenden kannst.';
+
+  @override
   String get save_food_template => 'Lebensmittel speichern';
 
   @override
@@ -1963,6 +1980,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get template_name => 'Name';
+
+  @override
+  String get template_name_required => 'Mahlzeitname *';
 
   @override
   String get template_tags_optional => 'Tags (optional)';
@@ -2021,6 +2041,20 @@ class AppLocalizationsDe extends AppLocalizations {
       locale: localeName,
       other: '$count Elemente',
       one: '1 Element',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get add => 'Hinzufügen';
+
+  @override
+  String serving_amount(num amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      amount,
+      locale: localeName,
+      other: '$amount Portionen',
+      one: '1 Portion',
     );
     return '$_temp0';
   }
@@ -2170,8 +2204,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get more_options => 'Weitere Optionen';
 
   @override
-  String get search_food_hint =>
-      'Lebensmittel, Mahlzeiten, Rezepte oder Marken suchen';
+  String get search_food_hint => 'Lebensmittel, Mahlzeiten, Rezepte suchen…';
 
   @override
   String get my_saved_items => 'Meine Elemente';
@@ -2195,10 +2228,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get create_recipe_subtitle => 'Build from multiple ingredients';
 
   @override
-  String get add_manually => 'Lebensmittel manuell hinzufügen';
+  String get add_manually => 'Lebensmittel manuell erstellen';
 
   @override
   String get add_manually_subtitle => 'Enter nutrition facts yourself';
+
+  @override
+  String get tap_item_to_choose_serving =>
+      'Tippen Sie auf ein Element, um Portion und Menge auszuwählen.';
 
   @override
   String get scan_barcode => 'Barcode scannen';
@@ -2224,8 +2261,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Keine Ergebnisse gefunden. Versuchen Sie andere Suchbegriffe.';
 
   @override
+  String no_results_for_query(String query) {
+    return 'Keine Ergebnisse für „$query“';
+  }
+
+  @override
+  String get cant_find_it => 'Nicht gefunden?';
+
+  @override
   String create_food_from_search(String query) {
-    return 'Nicht gefunden? „$query“ manuell erstellen';
+    return '„$query“ manuell erstellen';
   }
 
   @override

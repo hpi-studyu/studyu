@@ -777,12 +777,18 @@
   "my_templates": "My items",
   "manage_saved_items": "Manage",
   "adjust_quantity": "Adjust quantity",
+  "edit_this_entry": "Edit this entry",
+  "save_to_my_items_action": "Save to My items",
+  "remove_from_meal": "Remove from meal",
   "duplicate": "Duplicate",
   "save_as_template": "Add to My items",
   "save_meal_template": "Save meal",
+  "save_as_reusable_meal": "Save as reusable meal",
+  "save_as_reusable_meal_description": "Add this combination to My items so you can use it again.",
   "save_food_template": "Save food",
   "save_recipe_template": "Save recipe",
   "template_name": "Name",
+  "template_name_required": "Meal name *",
   "template_tags_optional": "Tags (optional)",
   "template_tags_hint": "breakfast, quick, healthy",
   "template_saved": "Added to My items",
@@ -804,6 +810,15 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "add": "Add",
+  "serving_amount": "{amount, plural, =1 {1 serving} other {{amount} servings}}",
+  "@serving_amount": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
       }
     }
   },
@@ -908,7 +923,7 @@
   "nutrition_summary": "Nutrition Summary",
   "calorie_distribution": "Calorie Distribution",
   "more_options": "More options",
-  "search_food_hint": "Search foods, meals, recipes or brands",
+  "search_food_hint": "Search foods, meals, recipes…",
   "my_saved_items": "My items",
   "recent_foods": "Recent",
   "frequently_used_foods": "Frequently Used",
@@ -916,8 +931,9 @@
   "quick_actions": "Quick Actions",
   "create_recipe": "Create Recipe",
   "create_recipe_subtitle": "Build from multiple ingredients",
-  "add_manually": "Add food manually",
+  "add_manually": "Create food manually",
   "add_manually_subtitle": "Enter nutrition facts yourself",
+  "tap_item_to_choose_serving": "Tap an item to choose the serving and amount.",
   "scan_barcode": "Scan Barcode",
   "scan_barcode_subtitle": "Find packaged products quickly",
   "search_for_food": "Search for Food",
@@ -925,7 +941,16 @@
   "searching_databases": "Searching databases...",
   "end_of_results": "End of results",
   "no_results_found": "No results found. Try different keywords.",
-  "create_food_from_search": "Can’t find it? Create ‘{query}’ manually",
+  "no_results_for_query": "No results for “{query}”",
+  "@no_results_for_query": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "cant_find_it": "Can’t find it?",
+  "create_food_from_search": "Create “{query}” manually",
   "@create_food_from_search": {
     "placeholders": {
       "query": {

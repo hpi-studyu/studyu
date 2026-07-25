@@ -35,7 +35,7 @@ final class DeletedMealEntryResult extends MealEntryResult {
 
 enum _UnsavedMealAction { save, discard, continueEditing }
 
-enum _FoodAction { adjustQuantity, edit, duplicate, saveTemplate, delete }
+enum _FoodAction { adjustQuantity, edit, saveTemplate, remove }
 
 class _MealTypeSelection {
   final MealType type;
@@ -219,57 +219,66 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     setState(() => _meal.foods[index] = result);
   }
 
-  void _duplicateFood(FoodEntry food) {
-    final index = _foodIndex(food.id);
-    if (index == -1) return;
-    setState(() {
-      _meal.foods.insert(index + 1, duplicateFoodEntry(_meal.foods[index]));
-    });
-  }
-
   Future<void> _showFoodActions(FoodEntry food) async {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final action = await showModalBottomSheet<_FoodAction>(
       context: context,
       showDragHandle: true,
-      builder: (context) => SafeArea(
+      builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    food.name,
+                    style: theme.textTheme.titleLarge,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _foodActionSubtitle(food, l10n),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             ListTile(
               leading: const Icon(Icons.straighten_outlined),
               title: Text(l10n.adjust_quantity),
-              onTap: () => Navigator.pop(context, _FoodAction.adjustQuantity),
+              onTap: () =>
+                  Navigator.pop(sheetContext, _FoodAction.adjustQuantity),
             ),
             ListTile(
               leading: const Icon(Icons.edit_outlined),
-              title: Text(l10n.edit),
-              onTap: () => Navigator.pop(context, _FoodAction.edit),
+              title: Text(l10n.edit_this_entry),
+              onTap: () => Navigator.pop(sheetContext, _FoodAction.edit),
             ),
-            ListTile(
-              leading: const Icon(Icons.copy_outlined),
-              title: Text(l10n.duplicate),
-              onTap: () => Navigator.pop(context, _FoodAction.duplicate),
-            ),
-            ListTile(
-              leading: const Icon(Icons.bookmark_add_outlined),
-              title: Text(
-                food.entryType == FoodEntryType.recipe
-                    ? l10n.save_recipe_template
-                    : l10n.save_food_template,
+            if (food.templateId == null)
+              ListTile(
+                leading: const Icon(Icons.bookmark_add_outlined),
+                title: Text(l10n.save_to_my_items_action),
+                onTap: () =>
+                    Navigator.pop(sheetContext, _FoodAction.saveTemplate),
               ),
-              onTap: () => Navigator.pop(context, _FoodAction.saveTemplate),
-            ),
+            const Divider(height: 1),
             ListTile(
               leading: Icon(
                 Icons.delete_outline,
-                color: Theme.of(context).colorScheme.error,
+                color: theme.colorScheme.error,
               ),
               title: Text(
-                l10n.delete,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                l10n.remove_from_meal,
+                style: TextStyle(color: theme.colorScheme.error),
               ),
-              onTap: () => Navigator.pop(context, _FoodAction.delete),
+              onTap: () => Navigator.pop(sheetContext, _FoodAction.remove),
             ),
           ],
         ),
@@ -278,18 +287,27 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     if (!mounted) return;
     switch (action) {
       case _FoodAction.adjustQuantity:
+        // The menu is already dismissed before the quantity sheet opens.
         await _adjustFoodQuantity(food);
       case _FoodAction.edit:
         await _editFood(food);
-      case _FoodAction.duplicate:
-        _duplicateFood(food);
       case _FoodAction.saveTemplate:
         await _saveFoodAsTemplate(food);
-      case _FoodAction.delete:
+      case _FoodAction.remove:
         _removeFood(food);
       case null:
         break;
     }
+  }
+
+  String _foodActionSubtitle(FoodEntry food, AppLocalizations l10n) {
+    final amount = food.amount == food.amount.roundToDouble()
+        ? food.amount.round().toString()
+        : food.amount.toStringAsFixed(1);
+    final serving = food.unit.trim().isEmpty
+        ? l10n.serving_amount(food.amount)
+        : '$amount ${food.unit.trim()}';
+    return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
   }
 
   MealLog _buildMeal({bool normalizeSkipped = false}) {
@@ -558,7 +576,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     final result = await SaveTemplateDialog.show(
       context,
-      initialName: _customMealLabel ?? _getMealTypeLabel(_mealType),
+      initialName:
+          _customMealLabel ??
+          (_mealType == MealType.other ? '' : _getMealTypeLabel(_mealType)),
       templateType: TemplateType.meal,
     );
 
@@ -596,7 +616,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     if (result != null && mounted) {
       final viewModel = TemplateViewModel(userId: userId);
-      await viewModel.saveFoodAsTemplate(
+      food.templateId = await viewModel.saveFoodAsTemplate(
         name: result.name,
         food: food,
         tags: result.tags,
@@ -833,21 +853,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(_pageTitle),
-          actions: [
-            if (_meal.foods.isNotEmpty && !_isSkipped)
-              IconButton(
-                icon: _isSavingTemplate
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.bookmark_add_outlined),
-                tooltip: l10n.save_meal_template,
-                onPressed: _isSavingTemplate ? null : _saveAsTemplate,
-              ),
-            TextButton(onPressed: _saveMeal, child: Text(l10n.save)),
-          ],
+          actions: [TextButton(onPressed: _saveMeal, child: Text(l10n.save))],
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -861,6 +867,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   showValidationError: _hasAttemptedSave && _meal.foods.isEmpty,
                   onAddFood: _addFood,
                   onFoodActions: _showFoodActions,
+                  onSaveAsTemplate: _saveAsTemplate,
+                  isSavingTemplate: _isSavingTemplate,
                 ),
                 const SizedBox(height: 16),
               ],
@@ -1243,6 +1251,8 @@ class _FoodListSection extends StatelessWidget {
   final bool isSkipped;
   final VoidCallback onAddFood;
   final Future<void> Function(FoodEntry) onFoodActions;
+  final VoidCallback onSaveAsTemplate;
+  final bool isSavingTemplate;
   final bool showValidationError;
 
   const _FoodListSection({
@@ -1250,6 +1260,8 @@ class _FoodListSection extends StatelessWidget {
     required this.isSkipped,
     required this.onAddFood,
     required this.onFoodActions,
+    required this.onSaveAsTemplate,
+    this.isSavingTemplate = false,
     this.showValidationError = false,
   });
 
@@ -1295,26 +1307,42 @@ class _FoodListSection extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Semantics(
-              label: l10n.add_food,
-              button: true,
-              child: FilledButton(
-                onPressed: onAddFood,
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton.icon(
+                  onPressed: isSavingTemplate ? null : onSaveAsTemplate,
+                  icon: isSavingTemplate
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.bookmark_add_outlined, size: 18),
+                  label: Text(l10n.save_meal_template),
+                ),
+                Semantics(
+                  label: l10n.add_food,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: onAddFood,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add, size: 18),
+                        const SizedBox(width: 6),
+                        Text(l10n.add_food),
+                      ],
+                    ),
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.add, size: 18),
-                    const SizedBox(width: 6),
-                    Text(l10n.add_food),
-                  ],
-                ),
-              ),
+              ],
             ),
           ],
         ),
@@ -1355,13 +1383,13 @@ class _EmptyFoodState extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer,
+                    color: theme.colorScheme.surfaceContainerHighest,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.add_circle_outline,
                     size: 36,
-                    color: theme.colorScheme.primary,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -1408,7 +1436,9 @@ class _FoodCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    final (icon, color) = _getFoodIconAndColor(food.entryType);
+    final icon = food.entryType == FoodEntryType.recipe
+        ? Icons.menu_book_outlined
+        : Icons.fastfood_outlined;
     final imageUrl = _getFoodImageUrl(food);
 
     return Card(
@@ -1420,22 +1450,18 @@ class _FoodCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              Container(
+              SizedBox(
                 width: 44,
                 height: 44,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
                 child: imageUrl == null
-                    ? Center(child: Icon(icon, size: 22, color: color))
+                    ? _buildFallbackIcon(theme, icon)
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.cover,
                           errorBuilder: (_, _, _) =>
-                              Center(child: Icon(icon, size: 22, color: color)),
+                              _buildFallbackIcon(theme, icon),
                         ),
                       ),
               ),
@@ -1490,6 +1516,15 @@ class _FoodCard extends StatelessWidget {
     );
   }
 
+  Widget _buildFallbackIcon(ThemeData theme, IconData icon) => Container(
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: theme.colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Icon(icon, size: 22, color: theme.colorScheme.onSurfaceVariant),
+  );
+
   String? _getFoodImageUrl(FoodEntry food) {
     for (final key in [
       'image_front_small_url',
@@ -1501,19 +1536,6 @@ class _FoodCard extends StatelessWidget {
       if (value is String && value.trim().isNotEmpty) return value;
     }
     return null;
-  }
-
-  (IconData, Color) _getFoodIconAndColor(FoodEntryType entryType) {
-    switch (entryType) {
-      case FoodEntryType.recipe:
-        return (Icons.menu_book_outlined, Colors.orange);
-      case FoodEntryType.brandedProduct:
-        return (Icons.shopping_bag_outlined, Colors.blue);
-      case FoodEntryType.manualCustom:
-        return (Icons.edit_note_outlined, Colors.purple);
-      default:
-        return (Icons.restaurant_outlined, Colors.green);
-    }
   }
 }
 

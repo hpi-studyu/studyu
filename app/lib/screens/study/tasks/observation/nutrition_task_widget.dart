@@ -649,7 +649,10 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     final result = await SaveTemplateDialog.show(
       context,
       initialName:
-          meal.customMealLabel ?? _getMealTypeLabel(context, meal.mealType),
+          meal.customMealLabel ??
+          (meal.mealType == MealType.other
+              ? ''
+              : _getMealTypeLabel(context, meal.mealType)),
       templateType: TemplateType.meal,
     );
 
