@@ -620,8 +620,16 @@
   "food_selection_add_to_selection": "Zur Auswahl hinzufügen",
   "food_selection_update_selection": "Auswahl aktualisieren",
   "food_selection_selected_items": "Ausgewählte Elemente",
-  "food_selection_view_all": "Alle {count, plural, =1 {1 ausgewähltes Element} other {{count} ausgewählten Elemente}} anzeigen",
-  "@food_selection_view_all": {
+  "food_selection_selected_count": "{count, plural, =1 {1 Element ausgewählt} other {{count} Elemente ausgewählt}}",
+  "@food_selection_selected_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_view_more": "Weitere {count} anzeigen",
+  "@food_selection_view_more": {
     "placeholders": {
       "count": {
         "type": "int"

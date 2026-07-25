@@ -3857,11 +3857,17 @@ abstract class AppLocalizations {
   /// **'Selected items'**
   String get food_selection_selected_items;
 
-  /// No description provided for @food_selection_view_all.
+  /// No description provided for @food_selection_selected_count.
   ///
   /// In en, this message translates to:
-  /// **'View all {count, plural, =1 {1 selected item} other {{count} selected items}}'**
-  String food_selection_view_all(int count);
+  /// **'{count, plural, =1 {1 item selected} other {{count} items selected}}'**
+  String food_selection_selected_count(int count);
+
+  /// No description provided for @food_selection_view_more.
+  ///
+  /// In en, this message translates to:
+  /// **'View {count} more'**
+  String food_selection_view_more(int count);
 
   /// No description provided for @food_selection_increment.
   ///

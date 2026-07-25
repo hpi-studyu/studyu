@@ -72,15 +72,10 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
               ),
               const SizedBox(height: 2),
               Text(l10n.total_energy),
-              const SizedBox(height: 12),
-              _macroGrid(context),
+              const SizedBox(height: 20),
+              _macronutrients(context),
             ],
           ),
-        ),
-        const Divider(height: 1),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: _distribution(context),
         ),
         const Divider(height: 1),
         Padding(
@@ -91,70 +86,7 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
     );
   }
 
-  Widget _macroGrid(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _metric(
-                context,
-                l10n.carbohydrates,
-                widget.nutrition.carbs,
-                'carbs',
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _metric(
-                context,
-                l10n.protein,
-                widget.nutrition.protein,
-                'protein',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _metric(context, l10n.fat, widget.nutrition.fat, 'fat'),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _metric(
-                context,
-                l10n.fibre,
-                widget.nutrition.fiber,
-                'fiber',
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _metric(BuildContext context, String label, double value, String key) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: theme.textTheme.bodySmall),
-        const SizedBox(height: 2),
-        Text(
-          _format(value, 'g', key),
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _distribution(BuildContext context) {
+  Widget _macronutrients(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final total =
@@ -164,94 +96,129 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
     final macros = [
       (
         l10n.carbohydrates,
+        widget.nutrition.carbs,
+        'carbs',
         widget.nutrition.carbs * 4 / (total == 0 ? 1 : total) * 100,
         theme.colorScheme.primary,
       ),
       (
         l10n.protein,
+        widget.nutrition.protein,
+        'protein',
         widget.nutrition.protein * 4 / (total == 0 ? 1 : total) * 100,
-        theme.colorScheme.primaryContainer,
+        theme.colorScheme.tertiary,
       ),
       (
         l10n.fat,
+        widget.nutrition.fat,
+        'fat',
         widget.nutrition.fat * 9 / (total == 0 ? 1 : total) * 100,
         theme.colorScheme.secondary,
       ),
     ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.energy_by_macronutrient,
+          l10n.macronutrients,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 10),
-        if (total == 0)
-          Text(l10n.no_data_yet, style: theme.textTheme.bodySmall)
-        else ...[
+        const SizedBox(height: 8),
+        for (final macro in macros)
+          _macronutrientRow(
+            label: macro.$1,
+            value: macro.$2,
+            keyName: macro.$3,
+            percent: macro.$4,
+            color: macro.$5,
+          ),
+        _macronutrientRow(
+          label: l10n.fibre,
+          value: widget.nutrition.fiber,
+          keyName: 'fiber',
+        ),
+        if (total > 0) ...[
+          const SizedBox(height: 10),
           Semantics(
-            label: macros.map((m) => '${m.$1} ${m.$2.round()}%').join(', '),
+            label: macros.map((m) => '${m.$1} ${m.$4.round()}%').join(', '),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: Row(
                 children: [
                   for (final macro in macros)
                     Expanded(
-                      flex: macro.$2.round().clamp(1, 100),
+                      flex: macro.$4.round().clamp(1, 100),
                       child: ColoredBox(
-                        color: macro.$3,
-                        child: const SizedBox(height: 12),
+                        color: macro.$5,
+                        child: const SizedBox(height: 8),
                       ),
                     ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (final macro in macros)
-                Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: macro.$3,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              macro.$1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${macro.$2.round()}%',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
         ],
       ],
+    );
+  }
+
+  Widget _macronutrientRow({
+    required String label,
+    required double value,
+    required String keyName,
+    double? percent,
+    Color? color,
+  }) {
+    final theme = Theme.of(context);
+    final unavailable = widget.nutrition.unavailableNutrients.contains(keyName);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 14,
+            child: color == null
+                ? null
+                : Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+          ),
+          const SizedBox(width: 6),
+          Expanded(child: Text(label)),
+          SizedBox(
+            width: 64,
+            child: Text(
+              _format(value, 'g', keyName),
+              textAlign: TextAlign.end,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 48,
+            child: Text(
+              percent == null
+                  ? ''
+                  : unavailable
+                  ? '—'
+                  : '${percent.round()}%',
+              textAlign: TextAlign.end,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

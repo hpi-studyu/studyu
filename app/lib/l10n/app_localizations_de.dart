@@ -2066,14 +2066,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_selection_selected_items => 'Ausgewählte Elemente';
 
   @override
-  String food_selection_view_all(int count) {
+  String food_selection_selected_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count ausgewählten Elemente',
-      one: '1 ausgewähltes Element',
+      other: '$count Elemente ausgewählt',
+      one: '1 Element ausgewählt',
     );
-    return 'Alle $_temp0 anzeigen';
+    return '$_temp0';
+  }
+
+  @override
+  String food_selection_view_more(int count) {
+    return 'Weitere $count anzeigen';
   }
 
   @override

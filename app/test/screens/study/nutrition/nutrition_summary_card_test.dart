@@ -60,7 +60,11 @@ void main() {
     expect(find.text('555 kcal'), findsOneWidget);
     expect(find.text('30.7 g'), findsOneWidget);
     expect(find.text('50.4 g'), findsOneWidget);
-    expect(find.text('Energy by macronutrient'), findsOneWidget);
+    expect(find.text('Macronutrients'), findsOneWidget);
+    expect(find.text('Energy by macronutrient'), findsNothing);
+    expect(find.text('23%'), findsOneWidget);
+    expect(find.text('37%'), findsOneWidget);
+    expect(find.text('40%'), findsOneWidget);
     expect(find.text('Detailed Nutrients'), findsOneWidget);
     expect(find.text('Show'), findsOneWidget);
     expect(find.text('Hide'), findsNothing);
@@ -160,6 +164,7 @@ void main() {
     expect(find.text('1 serving'), findsOneWidget);
     expect(find.text('100 kcal'), findsOneWidget);
     expect(find.text('0 g'), findsNWidgets(4));
-    expect(find.text('No data yet'), findsOneWidget);
+    expect(find.text('0%'), findsNWidgets(3));
+    expect(find.text('No data yet'), findsNothing);
   });
 }

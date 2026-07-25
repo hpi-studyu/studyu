@@ -826,8 +826,16 @@
   "food_selection_add_to_selection": "Add to selection",
   "food_selection_update_selection": "Update selection",
   "food_selection_selected_items": "Selected items",
-  "food_selection_view_all": "View all {count, plural, =1 {1 selected item} other {{count} selected items}}",
-  "@food_selection_view_all": {
+  "food_selection_selected_count": "{count, plural, =1 {1 item selected} other {{count} items selected}}",
+  "@food_selection_selected_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_view_more": "View {count} more",
+  "@food_selection_view_more": {
     "placeholders": {
       "count": {
         "type": "int"

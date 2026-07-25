@@ -1332,11 +1332,10 @@ class _SelectionPeekTray extends StatelessWidget {
     final largeText = mediaQuery.textScaler.scale(1) > 1.3;
     final previewLimit = keyboardOpen ? 0 : (largeText ? 1 : 2);
     final previewItems = store.recentItems.take(previewLimit).toList();
-    final showViewAll = !keyboardOpen && store.itemCount > previewItems.length;
+    final hiddenItemCount = store.itemCount - previewItems.length;
+    final showViewMore = !keyboardOpen && hiddenItemCount > 0;
     final calorieText = _selectionCaloriesSummary(l10n, store);
-    final totals =
-        '${l10n.items_count(store.itemCount)} · '
-        '${l10n.serving_amount(store.servingCount)} · $calorieText';
+    final totals = '${l10n.serving_amount(store.servingCount)} · $calorieText';
     final unavailable = store.unknownCaloriesCount == 0
         ? ''
         : ', ${l10n.food_selection_calories_unavailable(store.unknownCaloriesCount)}';
@@ -1352,24 +1351,19 @@ class _SelectionPeekTray extends StatelessWidget {
       child: Material(
         elevation: 8,
         color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+          side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+        ),
+        clipBehavior: Clip.antiAlias,
         child: SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 6, 16, 12),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Center(
-                  child: Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.outlineVariant,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
                 InkWell(
                   onTap: onReview,
                   child: Padding(
@@ -1378,14 +1372,12 @@ class _SelectionPeekTray extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '${l10n.food_selection_selected_items} · ${store.itemCount}',
+                            l10n.food_selection_selected_count(store.itemCount),
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ),
                         IconButton(
-                          tooltip: l10n.food_selection_view_all(
-                            store.itemCount,
-                          ),
+                          tooltip: l10n.food_selection_selected_items,
                           onPressed: onReview,
                           icon: const Icon(Icons.expand_less),
                           visualDensity: VisualDensity.compact,
@@ -1395,25 +1387,30 @@ class _SelectionPeekTray extends StatelessWidget {
                   ),
                 ),
                 if (previewItems.isNotEmpty)
-                  AnimatedSwitcher(
+                  AnimatedSize(
                     duration: const Duration(milliseconds: 180),
                     child: Column(
-                      key: ValueKey(
-                        previewItems.map((item) => item.key).join('|'),
-                      ),
                       children: [
                         for (final item in previewItems)
-                          _SelectionPreviewRow(item: item, store: store),
+                          AnimatedSwitcher(
+                            key: ValueKey(item.key),
+                            duration: const Duration(milliseconds: 180),
+                            child: _SelectionPreviewRow(
+                              key: ValueKey('${item.key}:${item.quantity}'),
+                              item: item,
+                              store: store,
+                            ),
+                          ),
                       ],
                     ),
                   ),
-                if (showViewAll)
+                if (showViewMore)
                   Align(
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       onPressed: onReview,
                       child: Text(
-                        l10n.food_selection_view_all(store.itemCount),
+                        l10n.food_selection_view_more(hiddenItemCount),
                       ),
                     ),
                   ),
@@ -1447,41 +1444,26 @@ class _SelectionPreviewRow extends StatelessWidget {
   final FoodSelectionItem item;
   final FoodSelectionStore store;
 
-  const _SelectionPreviewRow({required this.item, required this.store});
+  const _SelectionPreviewRow({
+    required this.item,
+    required this.store,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Semantics(
-      selected: true,
-      label: l10n.food_selection_selected(item.name, item.quantity),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              item.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          IconButton(
-            tooltip: l10n.food_selection_decrement(item.name),
-            onPressed: () => store.decrement(item.key),
-            icon: const Icon(Icons.remove),
-          ),
-          Text('${item.quantity}'),
-          IconButton(
-            tooltip: l10n.food_selection_increment(item.name),
-            onPressed: () => store.increment(item.key),
-            icon: const Icon(Icons.add),
-          ),
-          IconButton(
-            tooltip: l10n.food_selection_delete(item.name),
-            onPressed: () => store.delete(item.key),
-            icon: const Icon(Icons.delete_outline),
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        Expanded(
+          child: Text(item.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+        ),
+        _SelectionQuantityControl(
+          name: item.name,
+          quantity: item.quantity,
+          onDecrement: () => store.decrement(item.key),
+          onIncrement: () => store.increment(item.key),
+        ),
+      ],
     );
   }
 }
@@ -1529,12 +1511,23 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
         child: Column(
           children: [
             Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outlineVariant,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      l10n.food_selection_selected_items,
+                      l10n.food_selection_selected_count(store.itemCount),
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
@@ -1596,7 +1589,6 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    '${l10n.items_count(store.itemCount)} · '
                     '${l10n.serving_amount(store.servingCount)} · $summary',
                     textAlign: TextAlign.center,
                   ),

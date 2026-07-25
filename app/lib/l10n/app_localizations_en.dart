@@ -2047,14 +2047,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_selection_selected_items => 'Selected items';
 
   @override
-  String food_selection_view_all(int count) {
+  String food_selection_selected_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count selected items',
-      one: '1 selected item',
+      other: '$count items selected',
+      one: '1 item selected',
     );
-    return 'View all $_temp0';
+    return '$_temp0';
+  }
+
+  @override
+  String food_selection_view_more(int count) {
+    return 'View $count more';
   }
 
   @override
