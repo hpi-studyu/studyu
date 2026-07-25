@@ -999,6 +999,22 @@
   "food_quantity_add_to_meal": "Add to {meal}",
   "food_quantity_add_to_selection": "Add to selection",
   "food_quantity_update_selection": "Update selection",
+  "food_quantity_per_serving": "Per serving: {calories}",
+  "@food_quantity_per_serving": {
+    "placeholders": {
+      "calories": {
+        "type": "String"
+      }
+    }
+  },
+  "food_quantity_selection_total": "Selection total: {calories}",
+  "@food_quantity_selection_total": {
+    "placeholders": {
+      "calories": {
+        "type": "String"
+      }
+    }
+  },
   "save_to_my_items": "Save to My items for future use",
   "save_and_add_to_meal": "Save and add to {meal}",
   "@save_and_add_to_meal": {

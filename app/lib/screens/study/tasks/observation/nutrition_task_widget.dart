@@ -580,6 +580,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         initialMealType: initialMealType,
         initialCustomMealLabel: initialCustomMealLabel,
         occurrenceDate: model.recall.date,
+        openFoodSearch: true,
       ),
     );
     if (result case SavedMealEntryResult(:final meal)) {

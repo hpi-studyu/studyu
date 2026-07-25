@@ -2235,6 +2235,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_quantity_update_selection => 'Update selection';
 
   @override
+  String food_quantity_per_serving(String calories) {
+    return 'Per serving: $calories';
+  }
+
+  @override
+  String food_quantity_selection_total(String calories) {
+    return 'Selection total: $calories';
+  }
+
+  @override
   String get save_to_my_items => 'Save to My items for future use';
 
   @override

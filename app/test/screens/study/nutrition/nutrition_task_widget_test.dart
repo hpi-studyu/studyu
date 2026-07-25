@@ -259,20 +259,18 @@ void main() {
     );
   });
 
-  testWidgets('empty overview uses one chronological add action', (
-    tester,
-  ) async {
+  testWidgets('empty overview uses one log-meal action', (tester) async {
     await tester.pumpWidget(nutritionTaskApp(nutritionTask()));
     await tester.pump();
 
     expect(find.text('No meals recorded yet'), findsOneWidget);
     expect(find.text('Breakfast'), findsNothing);
-    expect(find.text('Add meal or snack'), findsOneWidget);
+    expect(find.text('Log meal'), findsOneWidget);
 
-    await tester.tap(find.text('Add meal or snack'));
+    await tester.tap(find.text('Log meal'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Meal label'), findsOneWidget);
+    expect(find.text('Add items to meal'), findsOneWidget);
   });
 
   testWidgets('German nutrition timeline uses participant translations', (
@@ -284,14 +282,13 @@ void main() {
     await tester.pump();
 
     expect(find.text('Mahlzeiten'), findsOneWidget);
-    expect(find.text('Mahlzeit oder Snack hinzufügen'), findsOneWidget);
+    expect(find.text('Mahlzeit erfassen'), findsOneWidget);
     expect(find.text('Meals'), findsNothing);
 
-    await tester.tap(find.text('Mahlzeit oder Snack hinzufügen'));
+    await tester.tap(find.text('Mahlzeit erfassen'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Bezeichnung der Mahlzeit'));
-    await tester.pumpAndSettle();
-    expect(find.text('Frühstück'), findsOneWidget);
+
+    expect(find.text('Elemente zu mahlzeit hinzufügen'), findsOneWidget);
     expect(find.text('Lunch'), findsNothing);
   });
 
@@ -304,7 +301,9 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.text('Add meal or snack'));
+    await tester.tap(find.text('Log meal'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Meal label'));
     await tester.pumpAndSettle();

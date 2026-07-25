@@ -257,9 +257,18 @@ final class FoodSelectionStore extends ChangeNotifier {
   }) {
     final item = _items[key];
     if (item == null) return;
-    item
-      ..baseFood = cloneFoodEntry(food)
-      ..caloriesKnown = caloriesKnown;
+    final servings = food.amount / item.baseFood.amount;
+    final roundedServings = servings.round();
+    if (servings.isFinite &&
+        roundedServings > 0 &&
+        (servings - roundedServings).abs() < 0.000001) {
+      item.quantity = roundedServings;
+    } else {
+      item
+        ..baseFood = cloneFoodEntry(food)
+        ..quantity = 1;
+    }
+    item.caloriesKnown = caloriesKnown;
     notifyListeners();
   }
 
@@ -941,11 +950,15 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     if (_showServingHint) {
       setState(() => _showServingHint = false);
     }
+    final selected = key == null ? null : _selectionStore?.itemFor(key);
     final result = await FoodQuantitySheet.show(
       context,
       food: foodEntry,
       mealLabel: widget.mealLabel,
       action: action,
+      initialAmount: selected == null
+          ? null
+          : selected.baseFood.amount * selected.quantity,
     );
     if (result == null || !mounted) return;
     if (action == FoodQuantityAction.updateSelection && key != null) {
@@ -2187,6 +2200,7 @@ class _FoodSearchListView extends StatelessWidget {
           final food = templateViewModel.applyFoodTemplate(template);
           selectionStore?.decrement(canonicalFoodSelectionKey(food));
         },
+        showManagementActions: false,
       );
     }
 
@@ -2305,6 +2319,7 @@ class _FoodSearchListView extends StatelessWidget {
                     templateViewModel.applyFoodTemplate(template),
                   ),
                 ),
+                showManagementActions: false,
               ),
             ),
           );

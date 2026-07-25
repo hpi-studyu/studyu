@@ -38,6 +38,8 @@ Future<void> pumpSheet(
   WidgetTester tester, {
   Locale locale = const Locale('en'),
   FoodEntry? food,
+  FoodQuantityAction action = FoodQuantityAction.existingMeal,
+  double? initialAmount,
   ValueChanged<FoodEntry?>? onResult,
 }) async {
   await tester.pumpWidget(
@@ -53,6 +55,8 @@ Future<void> pumpSheet(
                 context,
                 food: food ?? apple(),
                 mealLabel: 'Snack',
+                action: action,
+                initialAmount: initialAmount,
               );
               onResult?.call(result);
             },
@@ -90,6 +94,23 @@ void main() {
     expect(result!.nutrition.energyKcal, 190);
     expect(result!.nutrition.protein, 1);
     expect(result!.nutrition.micros['vitaminC'], 16.8);
+  });
+
+  testWidgets('shows the current selection total', (tester) async {
+    await pumpSheet(
+      tester,
+      action: FoodQuantityAction.updateSelection,
+      initialAmount: 2,
+    );
+
+    expect(find.text('Per serving: 95 kcal'), findsOneWidget);
+    expect(find.text('Selection total: 190 kcal'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+
+    expect(find.text('Selection total: 285 kcal'), findsOneWidget);
+    expect(find.text('Update selection'), findsOneWidget);
   });
 
   testWidgets('invalid direct amounts disable adding', (tester) async {

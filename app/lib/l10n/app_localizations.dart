@@ -4109,6 +4109,18 @@ abstract class AppLocalizations {
   /// **'Update selection'**
   String get food_quantity_update_selection;
 
+  /// No description provided for @food_quantity_per_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Per serving: {calories}'**
+  String food_quantity_per_serving(String calories);
+
+  /// No description provided for @food_quantity_selection_total.
+  ///
+  /// In en, this message translates to:
+  /// **'Selection total: {calories}'**
+  String food_quantity_selection_total(String calories);
+
   /// No description provided for @save_to_my_items.
   ///
   /// In en, this message translates to:

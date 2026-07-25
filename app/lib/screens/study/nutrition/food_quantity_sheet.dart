@@ -10,11 +10,13 @@ class FoodQuantitySheet extends StatefulWidget {
   final FoodEntry food;
   final String? mealLabel;
   final FoodQuantityAction action;
+  final double? initialAmount;
 
   const FoodQuantitySheet({
     required this.food,
     this.mealLabel,
     this.action = FoodQuantityAction.existingMeal,
+    this.initialAmount,
     super.key,
   });
 
@@ -23,12 +25,17 @@ class FoodQuantitySheet extends StatefulWidget {
     required FoodEntry food,
     String? mealLabel,
     FoodQuantityAction action = FoodQuantityAction.existingMeal,
+    double? initialAmount,
   }) => showModalBottomSheet<FoodEntry>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) =>
-        FoodQuantitySheet(food: food, mealLabel: mealLabel, action: action),
+    builder: (_) => FoodQuantitySheet(
+      food: food,
+      mealLabel: mealLabel,
+      action: action,
+      initialAmount: initialAmount,
+    ),
   );
 
   @override
@@ -43,7 +50,7 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
   void initState() {
     super.initState();
     _amountController = TextEditingController(
-      text: _formatNumber(widget.food.amount),
+      text: _formatNumber(widget.initialAmount ?? widget.food.amount),
     );
     _updateAmount(_amountController.text);
   }
@@ -171,6 +178,24 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                       widget.food.unit,
                     ),
             ),
+            if (widget.action != FoodQuantityAction.existingMeal) ...[
+              const SizedBox(height: 20),
+              Text(
+                l10n.food_quantity_per_serving(
+                  l10n.kcal_value(
+                    widget.food.nutrition.energyKcal.toStringAsFixed(0),
+                  ),
+                ),
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                l10n.food_quantity_selection_total(
+                  l10n.kcal_value(food.nutrition.energyKcal.toStringAsFixed(0)),
+                ),
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
             const SizedBox(height: 20),
             Wrap(
               spacing: 16,

@@ -72,6 +72,7 @@ class MealEntryScreen extends StatefulWidget {
   final MealType? initialMealType;
   final String? initialCustomMealLabel;
   final DateTime? occurrenceDate;
+  final bool openFoodSearch;
 
   const MealEntryScreen({
     this.existingMeal,
@@ -79,6 +80,7 @@ class MealEntryScreen extends StatefulWidget {
     this.initialMealType,
     this.initialCustomMealLabel,
     this.occurrenceDate,
+    this.openFoodSearch = false,
     super.key,
   });
 
@@ -88,6 +90,7 @@ class MealEntryScreen extends StatefulWidget {
     MealType? initialMealType,
     String? initialCustomMealLabel,
     DateTime? occurrenceDate,
+    bool openFoodSearch = false,
   }) => MaterialPageRoute(
     builder: (_) => MealEntryScreen(
       existingMeal: existingMeal,
@@ -95,6 +98,7 @@ class MealEntryScreen extends StatefulWidget {
       initialMealType: initialMealType,
       initialCustomMealLabel: initialCustomMealLabel,
       occurrenceDate: occurrenceDate,
+      openFoodSearch: openFoodSearch,
     ),
   );
 
@@ -166,6 +170,11 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     _skipReasonController = TextEditingController(text: _skipReason ?? '');
     _initialMealSnapshot = _mealSnapshot;
+    if (widget.openFoodSearch) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _addFood();
+      });
+    }
   }
 
   @override
@@ -1411,7 +1420,7 @@ class _FoodCard extends StatelessWidget {
 
     final icon = food.entryType == FoodEntryType.meal
         ? Icons.restaurant_menu_outlined
-        : Icons.fastfood_outlined;
+        : Icons.restaurant_outlined;
     final imageUrl = _getFoodImageUrl(food);
 
     return Card(

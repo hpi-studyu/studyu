@@ -20,6 +20,7 @@ class FoodLibrary extends StatefulWidget {
   final int Function(studyu.SavedFoodTemplate)? selectedQuantity;
   final ValueChanged<studyu.SavedFoodTemplate>? onIncrement;
   final ValueChanged<studyu.SavedFoodTemplate>? onDecrement;
+  final bool showManagementActions;
 
   const FoodLibrary({
     this.allowMeals = true,
@@ -33,6 +34,7 @@ class FoodLibrary extends StatefulWidget {
     this.selectedQuantity,
     this.onIncrement,
     this.onDecrement,
+    this.showManagementActions = true,
     super.key,
   });
 
@@ -107,6 +109,7 @@ class _FoodLibraryState extends State<FoodLibrary> {
                         onDecrement: widget.onDecrement == null
                             ? null
                             : () => widget.onDecrement!(template),
+                        showManagementActions: widget.showManagementActions,
                       ),
                     const SizedBox(height: 24),
                   ],
@@ -125,6 +128,7 @@ class FoodLibraryItemCard extends StatelessWidget {
   final int selectedQuantity;
   final VoidCallback? onIncrement;
   final VoidCallback? onDecrement;
+  final bool showManagementActions;
 
   const FoodLibraryItemCard({
     required this.template,
@@ -134,6 +138,7 @@ class FoodLibraryItemCard extends StatelessWidget {
     this.selectedQuantity = 1,
     this.onIncrement,
     this.onDecrement,
+    this.showManagementActions = true,
     super.key,
   });
 
@@ -232,28 +237,29 @@ class FoodLibraryItemCard extends StatelessWidget {
                     onPressed: () => onAdd!(template),
                     child: Text(l10n.add),
                   ),
-                PopupMenuButton<_FoodLibraryAction>(
-                  onSelected: (action) => _handleAction(context, action),
-                  itemBuilder: (_) => [
-                    if (onAdd != null && !isSelected)
+                if (showManagementActions)
+                  PopupMenuButton<_FoodLibraryAction>(
+                    onSelected: (action) => _handleAction(context, action),
+                    itemBuilder: (_) => [
+                      if (onAdd != null && !isSelected)
+                        PopupMenuItem(
+                          value: _FoodLibraryAction.add,
+                          child: _menuItem(Icons.add, l10n.add),
+                        ),
                       PopupMenuItem(
-                        value: _FoodLibraryAction.add,
-                        child: _menuItem(Icons.add, l10n.add),
+                        value: _FoodLibraryAction.edit,
+                        child: _menuItem(Icons.edit_outlined, l10n.edit),
                       ),
-                    PopupMenuItem(
-                      value: _FoodLibraryAction.edit,
-                      child: _menuItem(Icons.edit_outlined, l10n.edit),
-                    ),
-                    PopupMenuItem(
-                      value: _FoodLibraryAction.duplicate,
-                      child: _menuItem(Icons.copy_outlined, l10n.duplicate),
-                    ),
-                    PopupMenuItem(
-                      value: _FoodLibraryAction.delete,
-                      child: _menuItem(Icons.delete_outline, l10n.delete),
-                    ),
-                  ],
-                ),
+                      PopupMenuItem(
+                        value: _FoodLibraryAction.duplicate,
+                        child: _menuItem(Icons.copy_outlined, l10n.duplicate),
+                      ),
+                      PopupMenuItem(
+                        value: _FoodLibraryAction.delete,
+                        child: _menuItem(Icons.delete_outline, l10n.delete),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
