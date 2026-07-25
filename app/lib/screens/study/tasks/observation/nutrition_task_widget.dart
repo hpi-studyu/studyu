@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
+import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/html_text.dart';
@@ -196,7 +196,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        Navigator.push(context, MyTemplatesScreen.route());
+                        Navigator.push(context, FoodLibraryScreen.route());
                       },
                       icon: const Icon(Icons.bookmark_outline),
                       label: Text(l10n.my_saved_items),

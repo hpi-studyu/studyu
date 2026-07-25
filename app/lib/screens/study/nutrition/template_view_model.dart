@@ -114,8 +114,10 @@ class TemplateViewModel extends ChangeNotifier {
     final index = templates.indexWhere((template) => template.id == templateId);
     if (index < 0) return;
 
-    templates[index].prototype = _cloneFoodEntry(prototype);
-    templates[index].updatedAt = DateTime.now();
+    templates[index]
+      ..name = prototype.name
+      ..prototype = _cloneFoodEntry(prototype)
+      ..updatedAt = DateTime.now();
     await _storageManager.saveFoodTemplate(templates[index]);
     await loadAllTemplates();
   }

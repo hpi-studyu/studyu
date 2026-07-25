@@ -9,10 +9,11 @@ import 'package:studyu_app/models/unified_food_result.dart';
 import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_library.dart';
+import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -769,7 +770,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _openFoodLibrary() {
-    Navigator.push(context, MyTemplatesScreen.route());
+    Navigator.push(context, FoodLibraryScreen.route());
   }
 
   Future<void> _scanBarcode() async {
@@ -1092,110 +1093,6 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _TemplateCard extends StatelessWidget {
-  final Object template;
-  final VoidCallback onTap;
-  final VoidCallback onAdd;
-  final ThemeData theme;
-
-  const _TemplateCard({
-    required this.template,
-    required this.onTap,
-    required this.onAdd,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final foodTemplate = template as studyu.SavedFoodTemplate;
-    final isMeal =
-        foodTemplate.prototype.entryType == studyu.FoodEntryType.meal;
-    final name = foodTemplate.name;
-    final icon = isMeal
-        ? Icons.restaurant_menu_outlined
-        : Icons.restaurant_outlined;
-    final imageUrl = _foodImageUrl(foodTemplate.prototype);
-
-    final metadata = isMeal
-        ? '${l10n.template_type_meal} · ${l10n.items_count(foodTemplate.prototype.componentFoods?.length ?? 0)}'
-        : _foodServingMetadata(l10n, foodTemplate.prototype);
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed)
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
-              : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 44,
-                  height: 44,
-                  child: imageUrl == null
-                      ? _fallbackItemIcon(theme, icon)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) =>
-                                _fallbackItemIcon(theme, icon),
-                          ),
-                        ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        metadata,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: onAdd,
-                  style: TextButton.styleFrom(
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  child: Text(l10n.add),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -1593,7 +1490,7 @@ class _FoodSearchListView extends StatelessWidget {
         template.prototype.entryType != studyu.FoodEntryType.meal;
   }
 
-  List<Object> _personalMatches() {
+  List<studyu.SavedFoodTemplate> _personalMatches() {
     final query = searchController.text.trim().toLowerCase();
     return templateViewModel.foodTemplates
         .where(
@@ -1621,72 +1518,58 @@ class _FoodSearchListView extends StatelessWidget {
     });
   }
 
-  Widget _templateCard(Object template) {
-    return _TemplateCard(
-      template: template,
-      onTap: () => onSelectFoodTemplate(template as studyu.SavedFoodTemplate),
-      onAdd: () => onAddFoodTemplate(template as studyu.SavedFoodTemplate),
-      theme: theme,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final query = searchController.text.trim();
+    if (query.isEmpty && selectedSection == _FoodSearchSection.myItems) {
+      return FoodLibrary(
+        allowMeals: allowMeals,
+        showSearch: false,
+        scrollController: scrollController,
+        header: _QuickSectionTabs(
+          sections: const [
+            _FoodSearchSection.recent,
+            _FoodSearchSection.myItems,
+          ],
+          selectedSection: selectedSection,
+          onChanged: onSectionChanged,
+          l10n: l10n,
+        ),
+        listHeader: showServingHint ? _ServingHint(l10n: l10n) : null,
+        onTap: onSelectFoodTemplate,
+        onAdd: onAddFoodTemplate,
+      );
+    }
+
     final children = <Widget>[];
     if (query.isEmpty) {
       children.add(
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _QuickSectionTabs(
-              sections: const [
-                _FoodSearchSection.recent,
-                _FoodSearchSection.myItems,
-              ],
-              selectedSection: selectedSection,
-              onChanged: onSectionChanged,
-              l10n: l10n,
-            ),
+        _QuickSectionTabs(
+          sections: const [
+            _FoodSearchSection.recent,
+            _FoodSearchSection.myItems,
           ],
+          selectedSection: selectedSection,
+          onChanged: onSectionChanged,
+          l10n: l10n,
         ),
       );
       children.add(const SizedBox(height: 4));
-      if (selectedSection == _FoodSearchSection.recent) {
-        final recentItems = _recentItems();
-        if (recentItems.isEmpty) {
-          children.add(_EmptySectionMessage(message: l10n.no_recent_items));
-        } else {
-          if (showServingHint) children.add(_ServingHint(l10n: l10n));
-          children.addAll(
-            recentItems.map(
-              (item) => _HistoryFoodCard(
-                item: item,
-                onTap: () => onSelectHistory(item),
-                onAdd: () => onAddHistory(item),
-                theme: theme,
-              ),
-            ),
-          );
-        }
+      final recentItems = _recentItems();
+      if (recentItems.isEmpty) {
+        children.add(_EmptySectionMessage(message: l10n.no_recent_items));
       } else {
-        final filteredTemplates = templateViewModel.filteredTemplates
-            .where(_isAllowedTemplate)
-            .cast<Object>()
-            .toList();
-        children.add(_MyItemsToolbar(viewModel: templateViewModel, l10n: l10n));
-        children.add(const SizedBox(height: 8));
-        if (filteredTemplates.isEmpty) {
-          children.add(_EmptySectionMessage(message: l10n.no_templates_saved));
-        } else {
-          if (showServingHint &&
-              filteredTemplates.any(
-                (template) => template is studyu.SavedFoodTemplate,
-              )) {
-            children.add(_ServingHint(l10n: l10n));
-          }
-          children.addAll(filteredTemplates.map(_templateCard));
-        }
+        if (showServingHint) children.add(_ServingHint(l10n: l10n));
+        children.addAll(
+          recentItems.map(
+            (item) => _HistoryFoodCard(
+              item: item,
+              onTap: () => onSelectHistory(item),
+              onAdd: () => onAddHistory(item),
+              theme: theme,
+            ),
+          ),
+        );
       }
       children.add(const SizedBox(height: 24));
       return ListView(
@@ -1720,10 +1603,7 @@ class _FoodSearchListView extends StatelessWidget {
         selectedSearchComplete && errorMessage == null && noVisibleResults;
     if (showServingHint &&
         ((showDatabase && combinedResults.isNotEmpty) ||
-            (showPersonal &&
-                personalMatches.any(
-                  (template) => template is studyu.SavedFoodTemplate,
-                )))) {
+            (showPersonal && personalMatches.isNotEmpty))) {
       children.add(_ServingHint(l10n: l10n));
     }
 
@@ -1744,7 +1624,15 @@ class _FoodSearchListView extends StatelessWidget {
             _EmptySectionMessage(message: l10n.no_matching_templates),
           );
         } else {
-          children.addAll(personalMatches.map(_templateCard));
+          children.addAll(
+            personalMatches.map(
+              (template) => FoodLibraryItemCard(
+                template: template,
+                onTap: onSelectFoodTemplate,
+                onAdd: onAddFoodTemplate,
+              ),
+            ),
+          );
         }
       }
 
@@ -1822,39 +1710,6 @@ class _FoodSearchListView extends StatelessWidget {
       controller: scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       children: children,
-    );
-  }
-}
-
-class _MyItemsToolbar extends StatelessWidget {
-  final TemplateViewModel viewModel;
-  final AppLocalizations l10n;
-
-  const _MyItemsToolbar({required this.viewModel, required this.l10n});
-
-  String _label(TemplateFilter filter) => switch (filter) {
-    TemplateFilter.all => l10n.filter_all,
-    TemplateFilter.foods => l10n.filter_foods,
-    TemplateFilter.meals => l10n.filter_meals,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (final filter in TemplateFilter.values) ...[
-            FilterChip(
-              selected: viewModel.currentFilter == filter,
-              label: Text(_label(filter)),
-              onSelected: (_) => viewModel.setFilter(filter),
-              visualDensity: VisualDensity.compact,
-            ),
-            const SizedBox(width: 6),
-          ],
-        ],
-      ),
     );
   }
 }
