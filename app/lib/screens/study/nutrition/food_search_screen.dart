@@ -851,7 +851,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         title: Text(
           widget.mealLabel == null
               ? l10n.add_food_title
-              : l10n.add_food_to_meal(widget.mealLabel!),
+              : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
           IconButton(

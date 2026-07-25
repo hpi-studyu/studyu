@@ -577,6 +577,17 @@
   "duplicate": "Duplizieren",
   "save_as_template": "Zu meinen Elementen hinzufügen",
   "save_meal_template": "Mahlzeit speichern",
+  "done_label": "Fertig",
+  "log_meal": "Mahlzeit erfassen",
+  "add_items": "Elemente hinzufügen",
+  "add_items_to_meal": "Elemente zu {meal} hinzufügen",
+  "@add_items_to_meal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
   "save_as_reusable_meal": "Als wiederverwendbare Mahlzeit speichern",
   "save_as_reusable_meal_description": "Füge diese Kombination zu Meine Elemente hinzu, damit du sie wieder verwenden kannst.",
   "save_food_template": "Lebensmittel speichern",
@@ -803,7 +814,7 @@
   "meals": "Mahlzeiten",
   "no_meals_recorded": "Noch keine Mahlzeiten erfasst",
   "add_food": "Lebensmittel hinzufügen",
-  "tap_to_add_food": "Tippen, um ein Lebensmittel hinzuzufügen",
+  "tap_to_add_food": "Tippen, um Elemente hinzuzufügen",
   "not_specified": "Nicht angegeben",
   "context_home": "Zu Hause",
   "context_restaurant": "Restaurant",

@@ -2882,7 +2882,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_meal.
   ///
   /// In en, this message translates to:
-  /// **'Add Meal'**
+  /// **'New meal'**
   String get add_meal;
 
   /// No description provided for @no_meals_recorded.
@@ -3682,6 +3682,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save meal'**
   String get save_meal_template;
+
+  /// No description provided for @done_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done_label;
+
+  /// No description provided for @log_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Log meal'**
+  String get log_meal;
+
+  /// No description provided for @add_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items'**
+  String get add_items;
+
+  /// No description provided for @add_items_to_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items to {meal}'**
+  String add_items_to_meal(String meal);
 
   /// No description provided for @save_as_reusable_meal.
   ///

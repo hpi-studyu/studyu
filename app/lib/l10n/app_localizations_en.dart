@@ -1535,7 +1535,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get add_meal => 'Add Meal';
+  String get add_meal => 'New meal';
 
   @override
   String get no_meals_recorded => 'No meals recorded yet';
@@ -1946,6 +1946,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save_meal_template => 'Save meal';
+
+  @override
+  String get done_label => 'Done';
+
+  @override
+  String get log_meal => 'Log meal';
+
+  @override
+  String get add_items => 'Add items';
+
+  @override
+  String add_items_to_meal(String meal) {
+    return 'Add items to $meal';
+  }
 
   @override
   String get save_as_reusable_meal => 'Save as reusable meal';

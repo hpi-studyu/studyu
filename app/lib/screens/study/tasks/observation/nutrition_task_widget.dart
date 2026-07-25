@@ -468,7 +468,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           child: FilledButton.icon(
             onPressed: () => _addMeal(context, model),
             icon: const Icon(Icons.add),
-            label: Text(l10n.add_meal_or_snack),
+            label: Text(l10n.log_meal),
           ),
         ),
       ],
@@ -855,14 +855,6 @@ class _MealTimelineCard extends StatelessWidget {
                         label: l10n.edit,
                       ),
                     ),
-                    if (meal.foods.isNotEmpty && !meal.isSkipped)
-                      PopupMenuItem(
-                        value: 'save_template',
-                        child: _PopupMenuItem(
-                          icon: Icons.bookmark_add_outlined,
-                          label: l10n.save_meal_template,
-                        ),
-                      ),
                     PopupMenuItem(
                       value: 'delete',
                       child: _PopupMenuItem(

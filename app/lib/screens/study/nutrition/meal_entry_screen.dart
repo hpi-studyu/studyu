@@ -354,7 +354,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   String get _pageTitle {
     if (widget.existingMeal == null) {
-      return AppLocalizations.of(context)!.add_meal_or_snack;
+      return AppLocalizations.of(context)!.log_meal;
     }
     return _mealLabel == AppLocalizations.of(context)!.meal_neutral_label
         ? AppLocalizations.of(context)!.meal_neutral_label
@@ -853,7 +853,14 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(_pageTitle),
-          actions: [TextButton(onPressed: _saveMeal, child: Text(l10n.save))],
+          actions: [
+            TextButton(
+              onPressed: _saveMeal,
+              child: Text(
+                widget.existingMeal == null ? l10n.done_label : l10n.save,
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -913,7 +920,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 _SettingsRow(
                   icon: Icons.label_outline,
                   label: l10n.meal_label,
-                  value: _mealLabel,
+                  value: _mealLabel == l10n.meal_neutral_label
+                      ? l10n.no_meal_label
+                      : _mealLabel,
                   onTap: _selectMealType,
                 ),
                 const SizedBox(height: 8),
@@ -1310,19 +1319,12 @@ class _FoodListSection extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextButton.icon(
+                TextButton(
                   onPressed: isSavingTemplate ? null : onSaveAsTemplate,
-                  icon: isSavingTemplate
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.bookmark_add_outlined, size: 18),
-                  label: Text(l10n.save_meal_template),
+                  child: Text(l10n.save_meal_template),
                 ),
                 Semantics(
-                  label: l10n.add_food,
+                  label: l10n.add_items,
                   button: true,
                   child: FilledButton(
                     onPressed: onAddFood,
@@ -1337,7 +1339,7 @@ class _FoodListSection extends StatelessWidget {
                       children: [
                         const Icon(Icons.add, size: 18),
                         const SizedBox(width: 6),
-                        Text(l10n.add_food),
+                        Text(l10n.add_items),
                       ],
                     ),
                   ),
@@ -1394,7 +1396,7 @@ class _EmptyFoodState extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  l10n.add_food,
+                  l10n.add_items,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.primary,

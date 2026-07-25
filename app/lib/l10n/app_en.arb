@@ -628,7 +628,7 @@
       }
     }
   },
-  "add_meal": "Add Meal",
+  "add_meal": "New meal",
   "no_meals_recorded": "No meals recorded yet",
   "edit": "Edit",
   "delete": "Delete",
@@ -783,6 +783,17 @@
   "duplicate": "Duplicate",
   "save_as_template": "Add to My items",
   "save_meal_template": "Save meal",
+  "done_label": "Done",
+  "log_meal": "Log meal",
+  "add_items": "Add items",
+  "add_items_to_meal": "Add items to {meal}",
+  "@add_items_to_meal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
   "save_as_reusable_meal": "Save as reusable meal",
   "save_as_reusable_meal_description": "Add this combination to My items so you can use it again.",
   "save_food_template": "Save food",

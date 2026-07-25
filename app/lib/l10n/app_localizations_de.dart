@@ -1549,7 +1549,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get add_meal => 'Add Meal';
+  String get add_meal => 'New meal';
 
   @override
   String get no_meals_recorded => 'Noch keine Mahlzeiten erfasst';
@@ -1965,6 +1965,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_meal_template => 'Mahlzeit speichern';
 
   @override
+  String get done_label => 'Fertig';
+
+  @override
+  String get log_meal => 'Mahlzeit erfassen';
+
+  @override
+  String get add_items => 'Elemente hinzufügen';
+
+  @override
+  String add_items_to_meal(String meal) {
+    return 'Elemente zu $meal hinzufügen';
+  }
+
+  @override
   String get save_as_reusable_meal =>
       'Als wiederverwendbare Mahlzeit speichern';
 
@@ -2123,7 +2137,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Tap the button above to add your first meal';
 
   @override
-  String get tap_to_add_food => 'Tippen, um ein Lebensmittel hinzuzufügen';
+  String get tap_to_add_food => 'Tippen, um Elemente hinzuzufügen';
 
   @override
   String get add_food_title => 'Add Food';
