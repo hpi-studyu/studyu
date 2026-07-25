@@ -1961,7 +1961,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_as_template => 'Zu meinen Elementen hinzufügen';
 
   @override
-  String get save_meal => 'Mahlzeit speichern';
+  String get save_meal => 'In Bibliothek speichern';
 
   @override
   String get done_label => 'Fertig';

@@ -11,13 +11,27 @@ import 'package:studyu_core/core.dart';
 
 class MealCreatorScreen extends StatefulWidget {
   final FoodEntry? existingMeal;
+  final List<FoodEntry> initialFoods;
+  final String? initialName;
 
-  const MealCreatorScreen({this.existingMeal, super.key});
+  const MealCreatorScreen({
+    this.existingMeal,
+    this.initialFoods = const [],
+    this.initialName,
+    super.key,
+  });
 
-  static MaterialPageRoute<FoodEntry> route({FoodEntry? existingMeal}) =>
-      MaterialPageRoute(
-        builder: (_) => MealCreatorScreen(existingMeal: existingMeal),
-      );
+  static MaterialPageRoute<FoodEntry> route({
+    FoodEntry? existingMeal,
+    List<FoodEntry> initialFoods = const [],
+    String? initialName,
+  }) => MaterialPageRoute(
+    builder: (_) => MealCreatorScreen(
+      existingMeal: existingMeal,
+      initialFoods: initialFoods,
+      initialName: initialName,
+    ),
+  );
 
   @override
   State<MealCreatorScreen> createState() => _MealCreatorScreenState();
@@ -75,12 +89,23 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
 
       _foods = meal.componentFoods ?? [];
     } else {
-      _nameController = TextEditingController();
+      _nameController = TextEditingController(text: widget.initialName ?? '');
       _descriptionController = TextEditingController();
       _servingsController = TextEditingController(text: '1');
       _rawWeightController = TextEditingController();
       _cookedWeightController = TextEditingController();
       _preparationMethodController = TextEditingController();
+      _componentFoods.addAll(widget.initialFoods);
+      _foods = [
+        for (var index = 0; index < widget.initialFoods.length; index++)
+          FoodComposition.withId(
+            parentEntryId: '',
+            foodId: widget.initialFoods[index].id,
+            amount: widget.initialFoods[index].amount,
+            unit: widget.initialFoods[index].unit,
+            sortOrder: index,
+          ),
+      ];
     }
 
     // Initialize Quick Add controllers

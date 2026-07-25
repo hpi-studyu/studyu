@@ -1944,7 +1944,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_as_template => 'Add to My items';
 
   @override
-  String get save_meal => 'Save meal';
+  String get save_meal => 'Save to library';
 
   @override
   String get done_label => 'Done';

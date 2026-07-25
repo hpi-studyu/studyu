@@ -8,6 +8,7 @@ import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/food_analysis_service.dart';
@@ -120,8 +121,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   bool _hasAttemptedSave = false;
 
   late TextEditingController _skipReasonController;
-
-  bool _isSavingTemplate = false;
 
   final PhotoGalleryService _photoService = PhotoGalleryService();
 
@@ -567,37 +566,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
-  Future<void> _saveAsTemplate() async {
-    if (_isSkipped) return;
-
-    final l10n = AppLocalizations.of(context)!;
-    final appState = Provider.of<AppState>(context, listen: false);
-    final userId = appState.activeSubject?.id ?? 'anonymous';
-
-    final result = await SaveTemplateDialog.show(
-      context,
-      initialName:
-          _customMealLabel ??
-          (_mealType == MealType.other ? '' : _getMealTypeLabel(_mealType)),
-      templateType: TemplateType.meal,
-    );
-
-    if (result != null && mounted) {
-      setState(() => _isSavingTemplate = true);
-      final viewModel = TemplateViewModel(userId: userId);
-      await viewModel.saveMealAsTemplate(
-        name: result.name,
-        meal: _buildMeal(),
-        tags: result.tags,
-      );
-      if (mounted) {
-        setState(() => _isSavingTemplate = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
-      }
-    }
-  }
+  Future<void> _openMealBuilder() => Navigator.of(context).push(
+    MealCreatorScreen.route(initialFoods: _meal.foods, initialName: _mealLabel),
+  );
 
   Future<void> _saveFoodAsTemplate(FoodEntry food) async {
     final l10n = AppLocalizations.of(context)!;
@@ -874,8 +845,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   showValidationError: _hasAttemptedSave && _meal.foods.isEmpty,
                   onAddFood: _addFood,
                   onFoodActions: _showFoodActions,
-                  onSaveAsTemplate: _saveAsTemplate,
-                  isSavingTemplate: _isSavingTemplate,
+                  onSaveToLibrary: _openMealBuilder,
                 ),
                 const SizedBox(height: 16),
               ],
@@ -1260,8 +1230,7 @@ class _FoodListSection extends StatelessWidget {
   final bool isSkipped;
   final VoidCallback onAddFood;
   final Future<void> Function(FoodEntry) onFoodActions;
-  final VoidCallback onSaveAsTemplate;
-  final bool isSavingTemplate;
+  final VoidCallback onSaveToLibrary;
   final bool showValidationError;
 
   const _FoodListSection({
@@ -1269,8 +1238,7 @@ class _FoodListSection extends StatelessWidget {
     required this.isSkipped,
     required this.onAddFood,
     required this.onFoodActions,
-    required this.onSaveAsTemplate,
-    this.isSavingTemplate = false,
+    required this.onSaveToLibrary,
     this.showValidationError = false,
   });
 
@@ -1304,6 +1272,8 @@ class _FoodListSection extends StatelessWidget {
       );
     }
 
+    final compactActions = MediaQuery.sizeOf(context).width < 480;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1319,10 +1289,18 @@ class _FoodListSection extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextButton(
-                  onPressed: isSavingTemplate ? null : onSaveAsTemplate,
-                  child: Text(l10n.save_meal),
-                ),
+                if (compactActions)
+                  IconButton(
+                    tooltip: l10n.save_meal,
+                    onPressed: onSaveToLibrary,
+                    icon: const Icon(Icons.bookmark_add_outlined),
+                  )
+                else
+                  TextButton.icon(
+                    onPressed: onSaveToLibrary,
+                    icon: const Icon(Icons.bookmark_add_outlined),
+                    label: Text(l10n.save_meal),
+                  ),
                 Semantics(
                   label: l10n.add_items,
                   button: true,

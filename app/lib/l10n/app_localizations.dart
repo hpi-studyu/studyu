@@ -3680,7 +3680,7 @@ abstract class AppLocalizations {
   /// No description provided for @save_meal.
   ///
   /// In en, this message translates to:
-  /// **'Save meal'**
+  /// **'Save to library'**
   String get save_meal;
 
   /// No description provided for @done_label.
