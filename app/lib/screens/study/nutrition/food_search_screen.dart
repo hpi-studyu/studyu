@@ -12,6 +12,7 @@ import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -132,7 +133,7 @@ enum _FoodSearchSection { recent, myItems }
 
 enum _FoodSearchFilter { all, myItems, database }
 
-enum _CreateOption { food, meal }
+enum _FoodSearchAction { food, meal, foodLibrary }
 
 class FoodSearchScreen extends StatelessWidget {
   final bool allowMeals;
@@ -767,6 +768,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     });
   }
 
+  void _openFoodLibrary() {
+    Navigator.push(context, MyTemplatesScreen.route());
+  }
+
   Future<void> _scanBarcode() async {
     final result = await Navigator.push<studyu.FoodEntry>(
       context,
@@ -843,32 +848,54 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
-          PopupMenuButton<_CreateOption>(
-            onSelected: (option) {
-              switch (option) {
-                case _CreateOption.food:
+          PopupMenuButton<_FoodSearchAction>(
+            tooltip: l10n.create,
+            onSelected: (action) {
+              switch (action) {
+                case _FoodSearchAction.food:
                   _addManually();
-                case _CreateOption.meal:
+                case _FoodSearchAction.meal:
                   _createMeal();
+                case _FoodSearchAction.foodLibrary:
+                  _openFoodLibrary();
               }
             },
             itemBuilder: (_) => [
               PopupMenuItem(
-                value: _CreateOption.food,
-                child: Text(l10n.add_new_food),
+                value: _FoodSearchAction.food,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.restaurant_outlined),
+                    const SizedBox(width: 12),
+                    Text(l10n.add_food_action),
+                  ],
+                ),
               ),
               PopupMenuItem(
-                value: _CreateOption.meal,
-                child: Text(l10n.create_meal),
+                value: _FoodSearchAction.meal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.restaurant_menu_outlined),
+                    const SizedBox(width: 12),
+                    Text(l10n.add_meal_action),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: _FoodSearchAction.foodLibrary,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.bookmark_outline),
+                    const SizedBox(width: 12),
+                    Text(l10n.food_library),
+                  ],
+                ),
               ),
             ],
-            child: IgnorePointer(
-              child: TextButton.icon(
-                icon: const Icon(Icons.add),
-                label: Text(l10n.create),
-                onPressed: () {},
-              ),
-            ),
+            icon: const Icon(Icons.more_vert),
           ),
         ],
       ),
@@ -1091,7 +1118,7 @@ class _TemplateCard extends StatelessWidget {
     final name = foodTemplate.name;
     final icon = isMeal
         ? Icons.restaurant_menu_outlined
-        : Icons.fastfood_outlined;
+        : Icons.restaurant_outlined;
     final imageUrl = _foodImageUrl(foodTemplate.prototype);
 
     final metadata = isMeal
@@ -1213,7 +1240,7 @@ class _HistoryFoodCard extends StatelessWidget {
                   width: 44,
                   height: 44,
                   child: imageUrl == null
-                      ? _fallbackItemIcon(theme, Icons.fastfood_outlined)
+                      ? _fallbackItemIcon(theme, Icons.restaurant_outlined)
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.network(
@@ -1221,7 +1248,7 @@ class _HistoryFoodCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (_, _, _) => _fallbackItemIcon(
                               theme,
-                              Icons.fastfood_outlined,
+                              Icons.restaurant_outlined,
                             ),
                           ),
                         ),
@@ -1323,14 +1350,14 @@ class _FoodResultCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (_, _, _) => _fallbackItemIcon(
                             theme,
-                            Icons.fastfood_outlined,
+                            Icons.restaurant_outlined,
                             size: 24,
                           ),
                         ),
                       )
                     : _fallbackItemIcon(
                         theme,
-                        Icons.fastfood_outlined,
+                        Icons.restaurant_outlined,
                         size: 24,
                       ),
               ),

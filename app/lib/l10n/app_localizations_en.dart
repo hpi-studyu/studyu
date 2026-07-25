@@ -2196,6 +2196,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get my_saved_items => 'My food library';
 
   @override
+  String get food_library => 'Food library';
+
+  @override
+  String get add_food_action => 'Add food';
+
+  @override
+  String get add_meal_action => 'Add meal';
+
+  @override
   String get recent_foods => 'Recently added';
 
   @override

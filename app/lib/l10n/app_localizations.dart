@@ -4103,6 +4103,24 @@ abstract class AppLocalizations {
   /// **'My food library'**
   String get my_saved_items;
 
+  /// No description provided for @food_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Food library'**
+  String get food_library;
+
+  /// No description provided for @add_food_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food'**
+  String get add_food_action;
+
+  /// No description provided for @add_meal_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Add meal'**
+  String get add_meal_action;
+
   /// No description provided for @recent_foods.
   ///
   /// In en, this message translates to:
