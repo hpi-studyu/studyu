@@ -1814,11 +1814,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get description_hint => 'Optional notes about this food';
 
   @override
-  String get recipe_info =>
-      'Recipe: Use Recipe Builder for better ingredient management';
+  String get meal_info => 'Meal: Use Meal Creator for combined food management';
 
   @override
-  String get open_recipe_builder => 'Open Recipe Builder';
+  String get open_meal_creator => 'Open Meal Creator';
 
   @override
   String get amount => 'Amount *';
@@ -1905,7 +1904,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get entry_type_single_ingredient => 'Single Ingredient';
 
   @override
-  String get entry_type_recipe => 'Recipe';
+  String get entry_type_meal => 'Meal';
 
   @override
   String get entry_type_branded_product => 'Branded Product';
@@ -1990,7 +1989,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_food_template => 'Lebensmittel speichern';
 
   @override
-  String get save_recipe_template => 'Rezept speichern';
+  String get save_created_meal_template => 'Erstellte Mahlzeit speichern';
 
   @override
   String get template_name => 'Name';
@@ -2046,7 +2045,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filter_foods => 'Lebensmittel';
 
   @override
-  String get filter_recipes => 'Rezepte';
+  String get filter_created_meals => 'Erstellte Mahlzeiten';
 
   @override
   String items_count(int count) {
@@ -2115,7 +2114,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get template_type_food => 'Lebensmittel';
 
   @override
-  String get template_type_recipe => 'Rezept';
+  String get template_type_created_meal => 'Erstellte Mahlzeit';
 
   @override
   String get rename_template => 'Element umbenennen';
@@ -2191,7 +2190,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get edit_food_title => 'Edit Food';
 
   @override
-  String get add_food_manually => 'Add Food Manually';
+  String get add_food_manually => 'Add food manually';
 
   @override
   String get basic_information => 'Basic Information';
@@ -2218,7 +2217,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get more_options => 'Weitere Optionen';
 
   @override
-  String get search_food_hint => 'Lebensmittel, Mahlzeiten, Rezepte suchen…';
+  String get search_food_hint =>
+      'Lebensmittel, Mahlzeiten, erstellte Mahlzeiten suchen…';
 
   @override
   String get my_saved_items => 'Meine Elemente';
@@ -2236,10 +2236,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get quick_actions => 'Quick Actions';
 
   @override
-  String get create_recipe => 'Create Recipe';
+  String get create_meal => 'Create meal';
 
   @override
-  String get create_recipe_subtitle => 'Build from multiple ingredients';
+  String get create_meal_subtitle => 'Combine multiple foods';
 
   @override
   String get add_manually => 'Lebensmittel manuell erstellen';

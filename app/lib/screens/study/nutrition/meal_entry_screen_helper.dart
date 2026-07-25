@@ -16,12 +16,12 @@ FoodEntry duplicateFoodEntry(FoodEntry food) {
     ..id = const Uuid().v4()
     ..createdAt = DateTime.now()
     ..modifiedAt = null
-    ..parentRecipeId = null;
-  duplicate.recipeIngredients = duplicate.recipeIngredients
+    ..parentEntryId = null;
+  duplicate.componentFoods = duplicate.componentFoods
       ?.map(
-        (composition) => RecipeComposition.withId(
-          recipeId: duplicate.id,
-          ingredientId: composition.ingredientId,
+        (composition) => FoodComposition.withId(
+          parentEntryId: duplicate.id,
+          foodId: composition.foodId,
           amount: composition.amount,
           unit: composition.unit,
           sortOrder: composition.sortOrder,

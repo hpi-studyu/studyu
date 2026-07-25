@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -152,7 +152,7 @@ void main() {
         await _expectGolden(
           tester,
           size: size.value,
-          screen: const RecipeBuilderScreen(),
+          screen: const MealCreatorScreen(),
           name: 'recipe_builder_wide',
         );
       });

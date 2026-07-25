@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
 
-enum _NewItemType { food, recipe }
+enum _NewItemType { food, createdMeal }
 
 class MyTemplatesScreen extends StatelessWidget {
   const MyTemplatesScreen({super.key});
@@ -49,7 +49,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
       TemplateFilter.all => l10n.filter_all,
       TemplateFilter.meals => l10n.filter_meals,
       TemplateFilter.foods => l10n.filter_foods,
-      TemplateFilter.recipes => l10n.filter_recipes,
+      TemplateFilter.createdMeals => l10n.filter_created_meals,
     };
   }
 
@@ -70,8 +70,8 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                   switch (type) {
                     case _NewItemType.food:
                       _createFood(context, viewModel);
-                    case _NewItemType.recipe:
-                      _createRecipe(context, viewModel);
+                    case _NewItemType.createdMeal:
+                      _createCreatedMeal(context, viewModel);
                   }
                 },
                 itemBuilder: (context) => [
@@ -84,11 +84,11 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                     ),
                   ),
                   PopupMenuItem(
-                    value: _NewItemType.recipe,
+                    value: _NewItemType.createdMeal,
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.menu_book),
-                      title: Text(l10n.create_recipe),
+                      title: Text(l10n.create_meal),
                     ),
                   ),
                 ],
@@ -189,16 +189,16 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     );
   }
 
-  Future<void> _createRecipe(
+  Future<void> _createCreatedMeal(
     BuildContext context,
     TemplateViewModel viewModel,
   ) async {
-    final recipe = await Navigator.push<FoodEntry>(
+    final meal = await Navigator.push<FoodEntry>(
       context,
-      RecipeBuilderScreen.route(),
+      MealCreatorScreen.route(),
     );
-    if (recipe == null || !context.mounted) return;
-    await viewModel.saveFoodAsTemplate(name: recipe.name, food: recipe);
+    if (meal == null || !context.mounted) return;
+    await viewModel.saveFoodAsTemplate(name: meal.name, food: meal);
   }
 
   Future<void> _createFood(
@@ -238,13 +238,14 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
   ) {
     final isMeal = template is SavedMealTemplate;
     final foodTemplate = template is SavedFoodTemplate ? template : null;
-    final isRecipe = foodTemplate?.prototype.entryType == FoodEntryType.recipe;
+    final isCreatedMeal =
+        foodTemplate?.prototype.entryType == FoodEntryType.meal;
     final name = isMeal ? template.name : foodTemplate!.name;
     final metadata = isMeal
         ? '${l10n.template_type_meal} · ${l10n.items_count(template.prototypes.length)}'
-        : isRecipe
+        : isCreatedMeal
         ? [
-            l10n.template_type_recipe,
+            l10n.template_type_created_meal,
             l10n.servings_value(
               foodTemplate!.prototype.amount.toStringAsFixed(0),
             ),
@@ -269,7 +270,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
         leading: Icon(
           isMeal
               ? Icons.restaurant_menu_outlined
-              : isRecipe
+              : isCreatedMeal
               ? Icons.menu_book_outlined
               : Icons.fastfood_outlined,
         ),

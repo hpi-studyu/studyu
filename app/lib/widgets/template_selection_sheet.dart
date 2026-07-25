@@ -203,10 +203,10 @@ class _TemplateSelectionSheetContentState
         },
       );
     } else if (template is SavedFoodTemplate) {
-      final isRecipe = template.prototype.entryType == FoodEntryType.recipe;
+      final isCreatedMeal = template.prototype.entryType == FoodEntryType.meal;
       return ListTile(
         leading: CircleAvatar(
-          child: Icon(isRecipe ? Icons.menu_book : Icons.fastfood),
+          child: Icon(isCreatedMeal ? Icons.menu_book : Icons.fastfood),
         ),
         title: Text(template.name),
         subtitle: Text(

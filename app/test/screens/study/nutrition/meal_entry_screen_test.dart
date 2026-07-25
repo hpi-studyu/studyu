@@ -10,9 +10,9 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
-import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
@@ -886,16 +886,16 @@ void main() {
     expect(find.text('Add food to Edited supper'), findsOneWidget);
 
     final navigator = tester.state<NavigatorState>(find.byType(Navigator));
-    final recipeResult = navigator.push<FoodEntry>(RecipeBuilderScreen.route());
+    final recipeResult = navigator.push<FoodEntry>(MealCreatorScreen.route());
     await tester.pumpAndSettle();
 
-    expect(find.byType(RecipeBuilderScreen), findsOneWidget);
+    expect(find.byType(MealCreatorScreen), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     expect(await recipeResult, isNull);
-    expect(find.byType(RecipeBuilderScreen), findsNothing);
+    expect(find.byType(MealCreatorScreen), findsNothing);
 
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();

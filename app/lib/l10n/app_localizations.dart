@@ -3383,17 +3383,17 @@ abstract class AppLocalizations {
   /// **'Optional notes about this food'**
   String get description_hint;
 
-  /// No description provided for @recipe_info.
+  /// No description provided for @meal_info.
   ///
   /// In en, this message translates to:
-  /// **'Recipe: Use Recipe Builder for better ingredient management'**
-  String get recipe_info;
+  /// **'Meal: Use Meal Creator for combined food management'**
+  String get meal_info;
 
-  /// No description provided for @open_recipe_builder.
+  /// No description provided for @open_meal_creator.
   ///
   /// In en, this message translates to:
-  /// **'Open Recipe Builder'**
-  String get open_recipe_builder;
+  /// **'Open Meal Creator'**
+  String get open_meal_creator;
 
   /// No description provided for @amount.
   ///
@@ -3563,11 +3563,11 @@ abstract class AppLocalizations {
   /// **'Single Ingredient'**
   String get entry_type_single_ingredient;
 
-  /// No description provided for @entry_type_recipe.
+  /// No description provided for @entry_type_meal.
   ///
   /// In en, this message translates to:
-  /// **'Recipe'**
-  String get entry_type_recipe;
+  /// **'Meal'**
+  String get entry_type_meal;
 
   /// No description provided for @entry_type_branded_product.
   ///
@@ -3725,11 +3725,11 @@ abstract class AppLocalizations {
   /// **'Save food'**
   String get save_food_template;
 
-  /// No description provided for @save_recipe_template.
+  /// No description provided for @save_created_meal_template.
   ///
   /// In en, this message translates to:
-  /// **'Save recipe'**
-  String get save_recipe_template;
+  /// **'Save created meal'**
+  String get save_created_meal_template;
 
   /// No description provided for @template_name.
   ///
@@ -3833,11 +3833,11 @@ abstract class AppLocalizations {
   /// **'Foods'**
   String get filter_foods;
 
-  /// No description provided for @filter_recipes.
+  /// No description provided for @filter_created_meals.
   ///
   /// In en, this message translates to:
-  /// **'Recipes'**
-  String get filter_recipes;
+  /// **'Created meals'**
+  String get filter_created_meals;
 
   /// No description provided for @items_count.
   ///
@@ -3923,11 +3923,11 @@ abstract class AppLocalizations {
   /// **'Food'**
   String get template_type_food;
 
-  /// No description provided for @template_type_recipe.
+  /// No description provided for @template_type_created_meal.
   ///
   /// In en, this message translates to:
-  /// **'Recipe'**
-  String get template_type_recipe;
+  /// **'Meal'**
+  String get template_type_created_meal;
 
   /// No description provided for @rename_template.
   ///
@@ -4058,7 +4058,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_food_manually.
   ///
   /// In en, this message translates to:
-  /// **'Add Food Manually'**
+  /// **'Add food manually'**
   String get add_food_manually;
 
   /// No description provided for @basic_information.
@@ -4112,7 +4112,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_food_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search foods, meals, recipes…'**
+  /// **'Search foods, meals, created meals…'**
   String get search_food_hint;
 
   /// No description provided for @my_saved_items.
@@ -4145,17 +4145,17 @@ abstract class AppLocalizations {
   /// **'Quick Actions'**
   String get quick_actions;
 
-  /// No description provided for @create_recipe.
+  /// No description provided for @create_meal.
   ///
   /// In en, this message translates to:
-  /// **'Create Recipe'**
-  String get create_recipe;
+  /// **'Create meal'**
+  String get create_meal;
 
-  /// No description provided for @create_recipe_subtitle.
+  /// No description provided for @create_meal_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Build from multiple ingredients'**
-  String get create_recipe_subtitle;
+  /// **'Combine multiple foods'**
+  String get create_meal_subtitle;
 
   /// No description provided for @add_manually.
   ///

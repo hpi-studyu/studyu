@@ -82,17 +82,19 @@ class TemplateStorageManager {
     }
   }
 
-  Future<List<SavedFoodTemplate>> loadRecipeTemplates(String userId) async {
+  Future<List<SavedFoodTemplate>> loadCreatedMealTemplates(
+    String userId,
+  ) async {
     final templates = await loadFoodTemplates(userId);
     return templates
-        .where((t) => t.prototype.entryType == FoodEntryType.recipe)
+        .where((t) => t.prototype.entryType == FoodEntryType.meal)
         .toList();
   }
 
   Future<List<SavedFoodTemplate>> loadFoodOnlyTemplates(String userId) async {
     final templates = await loadFoodTemplates(userId);
     return templates
-        .where((t) => t.prototype.entryType != FoodEntryType.recipe)
+        .where((t) => t.prototype.entryType != FoodEntryType.meal)
         .toList();
   }
 

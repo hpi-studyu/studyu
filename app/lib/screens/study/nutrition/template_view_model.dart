@@ -5,7 +5,7 @@ import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 import 'package:uuid/uuid.dart';
 
-enum TemplateFilter { all, foods, meals, recipes }
+enum TemplateFilter { all, foods, meals, createdMeals }
 
 class TemplateViewModel extends ChangeNotifier {
   final TemplateStorageManager _storageManager = TemplateStorageManager();
@@ -31,12 +31,12 @@ class TemplateViewModel extends ChangeNotifier {
   List<SavedMealTemplate> get mealTemplates => _mealTemplates;
   List<SavedFoodTemplate> get foodTemplates => _foodTemplates;
 
-  List<SavedFoodTemplate> get recipeTemplates => _foodTemplates
-      .where((t) => t.prototype.entryType == FoodEntryType.recipe)
+  List<SavedFoodTemplate> get createdMealTemplates => _foodTemplates
+      .where((t) => t.prototype.entryType == FoodEntryType.meal)
       .toList();
 
   List<SavedFoodTemplate> get foodOnlyTemplates => _foodTemplates
-      .where((t) => t.prototype.entryType != FoodEntryType.recipe)
+      .where((t) => t.prototype.entryType != FoodEntryType.meal)
       .toList();
 
   List<dynamic> get filteredTemplates {
@@ -49,8 +49,8 @@ class TemplateViewModel extends ChangeNotifier {
         results = _mealTemplates;
       case TemplateFilter.foods:
         results = foodOnlyTemplates;
-      case TemplateFilter.recipes:
-        results = recipeTemplates;
+      case TemplateFilter.createdMeals:
+        results = createdMealTemplates;
     }
 
     if (_searchQuery.isNotEmpty) {
@@ -257,12 +257,12 @@ class TemplateViewModel extends ChangeNotifier {
       ..templateId = templateId
       ..createdAt = DateTime.now()
       ..modifiedAt = null
-      ..parentRecipeId = null;
-    food.recipeIngredients = food.recipeIngredients
+      ..parentEntryId = null;
+    food.componentFoods = food.componentFoods
         ?.map(
-          (composition) => RecipeComposition.withId(
-            recipeId: food.id,
-            ingredientId: composition.ingredientId,
+          (composition) => FoodComposition.withId(
+            parentEntryId: food.id,
+            foodId: composition.foodId,
             amount: composition.amount,
             unit: composition.unit,
             sortOrder: composition.sortOrder,

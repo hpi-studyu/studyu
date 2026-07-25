@@ -9,27 +9,27 @@ import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
-class RecipeBuilderScreen extends StatefulWidget {
-  final FoodEntry? existingRecipe;
+class MealCreatorScreen extends StatefulWidget {
+  final FoodEntry? existingMeal;
 
-  const RecipeBuilderScreen({this.existingRecipe, super.key});
+  const MealCreatorScreen({this.existingMeal, super.key});
 
-  static MaterialPageRoute<FoodEntry> route({FoodEntry? existingRecipe}) =>
+  static MaterialPageRoute<FoodEntry> route({FoodEntry? existingMeal}) =>
       MaterialPageRoute(
-        builder: (_) => RecipeBuilderScreen(existingRecipe: existingRecipe),
+        builder: (_) => MealCreatorScreen(existingMeal: existingMeal),
       );
 
   @override
-  State<RecipeBuilderScreen> createState() => _RecipeBuilderScreenState();
+  State<MealCreatorScreen> createState() => _MealCreatorScreenState();
 }
 
-class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
+class _MealCreatorScreenState extends State<MealCreatorScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _servingsController;
 
-  // Recipe metadata controllers
+  // Meal metadata controllers
   late TextEditingController _rawWeightController;
   late TextEditingController _cookedWeightController;
   late TextEditingController _preparationMethodController;
@@ -40,34 +40,32 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   late TextEditingController _quickCaloriesController;
   bool _showQuickAdd = false;
 
-  List<RecipeComposition> _ingredients = [];
-  final List<FoodEntry> _ingredientFoods = [];
-  RecipeMetadata? _metadata;
+  List<FoodComposition> _foods = [];
+  final List<FoodEntry> _componentFoods = [];
+  PreparationDetails? _preparationDetails;
   NutritionProfile? _cachedNutrition;
 
   @override
   void initState() {
     super.initState();
-    if (widget.existingRecipe != null) {
-      final recipe = widget.existingRecipe!;
-      _nameController = TextEditingController(text: recipe.name);
+    if (widget.existingMeal != null) {
+      final meal = widget.existingMeal!;
+      _nameController = TextEditingController(text: meal.name);
       _descriptionController = TextEditingController(
-        text: recipe.description ?? '',
+        text: meal.description ?? '',
       );
-      _servingsController = TextEditingController(
-        text: recipe.amount.toString(),
-      );
+      _servingsController = TextEditingController(text: meal.amount.toString());
 
-      if (recipe.recipeMetadata != null) {
-        _metadata = recipe.recipeMetadata;
+      if (meal.preparationDetails != null) {
+        _preparationDetails = meal.preparationDetails;
         _rawWeightController = TextEditingController(
-          text: _metadata!.rawWeight.toString(),
+          text: _preparationDetails!.rawWeight.toString(),
         );
         _cookedWeightController = TextEditingController(
-          text: _metadata!.cookedWeight.toString(),
+          text: _preparationDetails!.cookedWeight.toString(),
         );
         _preparationMethodController = TextEditingController(
-          text: _metadata!.preparationMethod,
+          text: _preparationDetails!.preparationMethod,
         );
       } else {
         _rawWeightController = TextEditingController();
@@ -75,7 +73,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         _preparationMethodController = TextEditingController();
       }
 
-      _ingredients = recipe.recipeIngredients ?? [];
+      _foods = meal.componentFoods ?? [];
     } else {
       _nameController = TextEditingController();
       _descriptionController = TextEditingController();
@@ -111,18 +109,18 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     super.dispose();
   }
 
-  Future<void> _addIngredient() async {
+  Future<void> _addFood() async {
     final result = await Navigator.of(context).push(FoodSearchScreen.route());
     if (result != null) {
       setState(() {
-        _ingredientFoods.add(result);
-        _ingredients.add(
-          RecipeComposition.withId(
-            recipeId: '',
-            ingredientId: result.id,
+        _componentFoods.add(result);
+        _foods.add(
+          FoodComposition.withId(
+            parentEntryId: '',
+            foodId: result.id,
             amount: result.amount,
             unit: result.unit,
-            sortOrder: _ingredients.length,
+            sortOrder: _foods.length,
           ),
         );
         _cachedNutrition = null;
@@ -130,15 +128,15 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     }
   }
 
-  void _quickAddIngredient() {
+  void _quickAddFood() {
     final name = _quickNameController.text.trim();
     final amount = double.tryParse(_quickAmountController.text) ?? 1;
     final calories = double.tryParse(_quickCaloriesController.text) ?? 0;
 
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter ingredient name')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter food name')));
       return;
     }
 
@@ -170,14 +168,14 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     );
 
     setState(() {
-      _ingredientFoods.add(quickFood);
-      _ingredients.add(
-        RecipeComposition.withId(
-          recipeId: '',
-          ingredientId: quickFood.id,
+      _componentFoods.add(quickFood);
+      _foods.add(
+        FoodComposition.withId(
+          parentEntryId: '',
+          foodId: quickFood.id,
           amount: amount,
           unit: 'serving',
-          sortOrder: _ingredients.length,
+          sortOrder: _foods.length,
         ),
       );
       _cachedNutrition = null;
@@ -189,23 +187,23 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     });
   }
 
-  void _removeIngredient(int index) {
+  void _removeFood(int index) {
     setState(() {
-      _ingredients.removeAt(index);
-      _ingredientFoods.removeAt(index);
+      _foods.removeAt(index);
+      _componentFoods.removeAt(index);
       _cachedNutrition = null;
     });
   }
 
-  void _updateIngredientAmount(int index, double amount, String unit) {
+  void _updateFoodAmount(int index, double amount, String unit) {
     setState(() {
-      _ingredients[index] = RecipeComposition(
-        id: _ingredients[index].id,
-        recipeId: _ingredients[index].recipeId,
-        ingredientId: _ingredients[index].ingredientId,
+      _foods[index] = FoodComposition(
+        id: _foods[index].id,
+        parentEntryId: _foods[index].parentEntryId,
+        foodId: _foods[index].foodId,
         amount: amount,
         unit: unit,
-        sortOrder: _ingredients[index].sortOrder,
+        sortOrder: _foods[index].sortOrder,
       );
       _cachedNutrition = null;
     });
@@ -225,9 +223,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     double totalWater = 0;
     final Map<String, double> totalMicros = {};
 
-    for (int i = 0; i < _ingredientFoods.length; i++) {
-      final food = _ingredientFoods[i];
-      final composition = _ingredients[i];
+    for (int i = 0; i < _componentFoods.length; i++) {
+      final food = _componentFoods[i];
+      final composition = _foods[i];
 
       final ratio = composition.amount / food.amount;
 
@@ -266,20 +264,20 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     );
   }
 
-  FoodEntry? _buildRecipe() {
-    if (!_formKey.currentState!.validate() || _ingredients.isEmpty) {
+  FoodEntry? _buildMeal() {
+    if (!_formKey.currentState!.validate() || _foods.isEmpty) {
       return null;
     }
 
     final nutrition = _calculateTotalNutrition();
 
-    RecipeMetadata? metadata;
+    PreparationDetails? preparationDetails;
     if (_rawWeightController.text.isNotEmpty &&
         _cookedWeightController.text.isNotEmpty &&
         _preparationMethodController.text.isNotEmpty) {
       final rawWeight = double.parse(_rawWeightController.text);
       final cookedWeight = double.parse(_cookedWeightController.text);
-      metadata = RecipeMetadata(
+      preparationDetails = PreparationDetails(
         rawWeight: rawWeight,
         cookedWeight: cookedWeight,
         yieldFactor: cookedWeight / rawWeight,
@@ -288,8 +286,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       );
     }
 
-    return FoodEntry.withId(
-      entryType: FoodEntryType.recipe,
+    final meal = FoodEntry.withId(
+      entryType: FoodEntryType.meal,
       name: _nameController.text,
       description: _descriptionController.text.isEmpty
           ? null
@@ -303,13 +301,13 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       source: FoodSource.manual,
       confidenceScore: 0.9,
       originalValues: {},
-      recipeMetadata: metadata,
-      recipeIngredients: _ingredients
+      preparationDetails: preparationDetails,
+      componentFoods: _foods
           .map(
-            (comp) => RecipeComposition(
+            (comp) => FoodComposition(
               id: comp.id,
-              recipeId: '',
-              ingredientId: comp.ingredientId,
+              parentEntryId: '',
+              foodId: comp.foodId,
               amount: comp.amount,
               unit: comp.unit,
               sortOrder: comp.sortOrder,
@@ -317,25 +315,29 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
           )
           .toList(),
     );
+    for (final composition in meal.componentFoods!) {
+      composition.parentEntryId = meal.id;
+    }
+    return meal;
   }
 
-  void _saveRecipe() {
-    final recipe = _buildRecipe();
-    if (recipe != null) {
-      Navigator.of(context).pop(recipe);
-    } else if (_ingredients.isEmpty) {
+  void _saveMeal() {
+    final meal = _buildMeal();
+    if (meal != null) {
+      Navigator.of(context).pop(meal);
+    } else if (_foods.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one ingredient')),
+        const SnackBar(content: Text('Please add at least one food')),
       );
     }
   }
 
   Future<void> _saveAsTemplate() async {
-    final recipe = _buildRecipe();
-    if (recipe == null) {
-      if (_ingredients.isEmpty) {
+    final meal = _buildMeal();
+    if (meal == null) {
+      if (_foods.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add at least one ingredient')),
+          const SnackBar(content: Text('Please add at least one food')),
         );
       }
       return;
@@ -348,14 +350,14 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     final result = await SaveTemplateDialog.show(
       context,
       initialName: _nameController.text,
-      templateType: TemplateType.recipe,
+      templateType: TemplateType.createdMeal,
     );
 
     if (result != null && mounted) {
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveFoodAsTemplate(
         name: result.name,
-        food: recipe,
+        food: meal,
         tags: result.tags,
       );
       if (mounted) {
@@ -369,31 +371,31 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (_ingredients.isNotEmpty && _cachedNutrition == null) {
+    if (_foods.isNotEmpty && _cachedNutrition == null) {
       _cachedNutrition = _calculateTotalNutrition();
     }
     final nutrition = _cachedNutrition;
 
     final l10n = AppLocalizations.of(context)!;
-    final canSave = _nameController.text.isNotEmpty && _ingredients.isNotEmpty;
+    final canSave = _nameController.text.isNotEmpty && _foods.isNotEmpty;
     final servingsCount = (double.tryParse(_servingsController.text) ?? 1)
         .toInt();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recipe Builder'),
+        title: const Text('Meal Creator'),
         actions: [
-          if (_ingredients.isNotEmpty)
+          if (_foods.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.bookmark_add_outlined),
-              tooltip: l10n.save_recipe_template,
+              tooltip: l10n.save_meal_template,
               onPressed: _saveAsTemplate,
             ),
         ],
       ),
       floatingActionButton: canSave
           ? FloatingActionButton.extended(
-              onPressed: _saveRecipe,
+              onPressed: _saveMeal,
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,
               icon: const Icon(Icons.check),
@@ -405,8 +407,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // ========== RECIPE BASIC INFO ==========
-            _RecipeInfoCard(
+            // ========== MEAL DETAILS ==========
+            _MealInfoCard(
               nameController: _nameController,
               descriptionController: _descriptionController,
               servingsController: _servingsController,
@@ -417,7 +419,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
             const SizedBox(height: 12),
 
             // ========== METADATA (Collapsible) ==========
-            _RecipeMetadataCard(
+            _PreparationDetailsCard(
               rawWeightController: _rawWeightController,
               cookedWeightController: _cookedWeightController,
               preparationMethodController: _preparationMethodController,
@@ -425,11 +427,11 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 
             const SizedBox(height: 16),
 
-            // ========== INGREDIENTS SECTION ==========
-            _IngredientsSectionHeader(
-              ingredientCount: _ingredients.length,
+            // ========== FOODS SECTION ==========
+            _FoodsSectionHeader(
+              foodCount: _foods.length,
               theme: theme,
-              onAddIngredient: _addIngredient,
+              onAddFood: _addFood,
               onToggleQuickAdd: () =>
                   setState(() => _showQuickAdd = !_showQuickAdd),
               showQuickAdd: _showQuickAdd,
@@ -442,29 +444,29 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                 nameController: _quickNameController,
                 amountController: _quickAmountController,
                 caloriesController: _quickCaloriesController,
-                onAdd: _quickAddIngredient,
+                onAdd: _quickAddFood,
                 theme: theme,
               ),
             ],
 
             const SizedBox(height: 12),
 
-            // ========== INGREDIENTS LIST ==========
-            if (_ingredients.isEmpty)
-              _EmptyIngredientsState(theme: theme)
+            // ========== FOODS LIST ==========
+            if (_foods.isEmpty)
+              _EmptyFoodsState(theme: theme)
             else
-              ...List.generate(_ingredients.length, (index) {
-                final ingredient = _ingredientFoods[index];
-                final composition = _ingredients[index];
+              ...List.generate(_foods.length, (index) {
+                final food = _componentFoods[index];
+                final composition = _foods[index];
 
-                return _IngredientCard(
-                  ingredient: ingredient,
+                return _FoodCard(
+                  food: food,
                   composition: composition,
                   index: index,
                   theme: theme,
-                  onRemove: () => _removeIngredient(index),
+                  onRemove: () => _removeFood(index),
                   onUpdateAmount: (amount, unit) =>
-                      _updateIngredientAmount(index, amount, unit),
+                      _updateFoodAmount(index, amount, unit),
                 );
               }),
 
@@ -492,14 +494,14 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 // WIDGETS
 // ============================================================
 
-class _RecipeInfoCard extends StatelessWidget {
+class _MealInfoCard extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController descriptionController;
   final TextEditingController servingsController;
   final ThemeData theme;
   final AppLocalizations l10n;
 
-  const _RecipeInfoCard({
+  const _MealInfoCard({
     required this.nameController,
     required this.descriptionController,
     required this.servingsController,
@@ -525,7 +527,7 @@ class _RecipeInfoCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Recipe Information',
+                  'Meal details',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -536,14 +538,14 @@ class _RecipeInfoCard extends StatelessWidget {
             TextFormField(
               controller: nameController,
               decoration: const InputDecoration(
-                labelText: 'Recipe Name *',
+                labelText: 'Meal Name *',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.edit),
               ),
               textCapitalization: TextCapitalization.words,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a recipe name';
+                  return 'Please enter a meal name';
                 }
                 return null;
               },
@@ -594,12 +596,12 @@ class _RecipeInfoCard extends StatelessWidget {
   }
 }
 
-class _RecipeMetadataCard extends StatelessWidget {
+class _PreparationDetailsCard extends StatelessWidget {
   final TextEditingController rawWeightController;
   final TextEditingController cookedWeightController;
   final TextEditingController preparationMethodController;
 
-  const _RecipeMetadataCard({
+  const _PreparationDetailsCard({
     required this.rawWeightController,
     required this.cookedWeightController,
     required this.preparationMethodController,
@@ -612,7 +614,7 @@ class _RecipeMetadataCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
         leading: Icon(Icons.science_outlined, color: Colors.grey.shade600),
-        title: const Text('Recipe Metadata'),
+        title: const Text('Preparation details'),
         subtitle: const Text('Raw/cooked weights, preparation method'),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         children: [
@@ -657,7 +659,7 @@ class _RecipeMetadataCard extends StatelessWidget {
           TextFormField(
             controller: preparationMethodController,
             decoration: const InputDecoration(
-              labelText: 'Preparation Method',
+              labelText: 'Preparation details',
               border: OutlineInputBorder(),
               hintText: 'e.g., baked, fried, steamed',
               isDense: true,
@@ -669,17 +671,17 @@ class _RecipeMetadataCard extends StatelessWidget {
   }
 }
 
-class _IngredientsSectionHeader extends StatelessWidget {
-  final int ingredientCount;
+class _FoodsSectionHeader extends StatelessWidget {
+  final int foodCount;
   final ThemeData theme;
-  final VoidCallback onAddIngredient;
+  final VoidCallback onAddFood;
   final VoidCallback onToggleQuickAdd;
   final bool showQuickAdd;
 
-  const _IngredientsSectionHeader({
-    required this.ingredientCount,
+  const _FoodsSectionHeader({
+    required this.foodCount,
     required this.theme,
-    required this.onAddIngredient,
+    required this.onAddFood,
     required this.onToggleQuickAdd,
     required this.showQuickAdd,
   });
@@ -690,7 +692,7 @@ class _IngredientsSectionHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Ingredients ($ingredientCount)',
+          'Foods ($foodCount)',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -700,7 +702,7 @@ class _IngredientsSectionHeader extends StatelessWidget {
             IconButton.outlined(
               onPressed: onToggleQuickAdd,
               icon: Icon(showQuickAdd ? Icons.close : Icons.bolt, size: 18),
-              tooltip: 'Quick Add',
+              tooltip: 'Add food manually',
               style: IconButton.styleFrom(
                 minimumSize: const Size(36, 36),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -708,7 +710,7 @@ class _IngredientsSectionHeader extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             FilledButton(
-              onPressed: onAddIngredient,
+              onPressed: onAddFood,
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -720,7 +722,7 @@ class _IngredientsSectionHeader extends StatelessWidget {
                 children: [
                   Icon(Icons.search, size: 18),
                   SizedBox(width: 6),
-                  Text('Search Food'),
+                  Text('Add food'),
                 ],
               ),
             ),
@@ -769,7 +771,7 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'Quick Add Ingredient',
+                  'Add food manually',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: widget.theme.colorScheme.tertiary,
@@ -846,10 +848,10 @@ class _QuickAddFormState extends State<_QuickAddForm> {
   }
 }
 
-class _EmptyIngredientsState extends StatelessWidget {
+class _EmptyFoodsState extends StatelessWidget {
   final ThemeData theme;
 
-  const _EmptyIngredientsState({required this.theme});
+  const _EmptyFoodsState({required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -869,14 +871,14 @@ class _EmptyIngredientsState extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'No ingredients yet',
+              'No foods yet',
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Search or use Quick Add to start',
+              'Search or add food manually to start',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant.withValues(
                   alpha: 0.7,
@@ -890,16 +892,16 @@ class _EmptyIngredientsState extends StatelessWidget {
   }
 }
 
-class _IngredientCard extends StatelessWidget {
-  final FoodEntry ingredient;
-  final RecipeComposition composition;
+class _FoodCard extends StatelessWidget {
+  final FoodEntry food;
+  final FoodComposition composition;
   final int index;
   final ThemeData theme;
   final VoidCallback onRemove;
   final Function(double amount, String unit) onUpdateAmount;
 
-  const _IngredientCard({
-    required this.ingredient,
+  const _FoodCard({
+    required this.food,
     required this.composition,
     required this.index,
     required this.theme,
@@ -920,13 +922,13 @@ class _IngredientCard extends StatelessWidget {
           ),
         ),
         title: Text(
-          ingredient.name,
+          food.name,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
-          '${composition.amount} ${composition.unit} • ${ingredient.nutrition.energyKcal.toStringAsFixed(0)} kcal',
+          '${composition.amount} ${composition.unit} • ${food.nutrition.energyKcal.toStringAsFixed(0)} kcal',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -962,7 +964,7 @@ class _IngredientCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Ingredient'),
+        title: const Text('Edit food'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

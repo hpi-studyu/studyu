@@ -65,7 +65,7 @@ enum DistractionContext {
 
 enum FoodEntryType {
   singleIngredient,
-  recipe,
+  meal,
   brandedProduct,
   manualCustom;
 

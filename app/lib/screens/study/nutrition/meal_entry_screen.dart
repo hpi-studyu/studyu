@@ -179,7 +179,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final result = await FoodSearchScreen.show(
       context,
       mealLabel: _mealLabel,
-      allowRecipes: widget.task?.allowRecipes ?? true,
+      allowCreatedMeals: widget.task?.allowCreatedMeals ?? true,
     );
     if (result != null && mounted) {
       setState(() => _meal.foods.addAll(result.foods));
@@ -604,8 +604,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final appState = Provider.of<AppState>(context, listen: false);
     final userId = appState.activeSubject?.id ?? 'anonymous';
 
-    final templateType = food.entryType == FoodEntryType.recipe
-        ? TemplateType.recipe
+    final templateType = food.entryType == FoodEntryType.meal
+        ? TemplateType.createdMeal
         : TemplateType.food;
 
     final result = await SaveTemplateDialog.show(
@@ -1438,7 +1438,7 @@ class _FoodCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    final icon = food.entryType == FoodEntryType.recipe
+    final icon = food.entryType == FoodEntryType.meal
         ? Icons.menu_book_outlined
         : Icons.fastfood_outlined;
     final imageUrl = _getFoodImageUrl(food);

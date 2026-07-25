@@ -3,7 +3,7 @@ import 'dart:ui' show SemanticsAction;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_core/core.dart';
 
@@ -84,10 +84,10 @@ void main() {
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
-    await tester.pumpWidget(testApp(const RecipeBuilderScreen()));
+    await tester.pumpWidget(testApp(const MealCreatorScreen()));
     await tester.pump();
 
-    final emptyState = find.text('No ingredients yet');
+    final emptyState = find.text('No foods yet');
     expect(emptyState, findsOneWidget);
     expect(
       find.ancestor(of: emptyState, matching: find.byType(InkWell)),
@@ -101,7 +101,7 @@ void main() {
       isFalse,
     );
 
-    for (final label in ['Recipe Name *', 'Servings *', 'Description']) {
+    for (final label in ['Meal Name *', 'Servings *', 'Description']) {
       final field = tester.widget<TextField>(
         find.byWidgetPredicate(
           (widget) =>
@@ -112,7 +112,7 @@ void main() {
       expect(field.decoration?.fillColor, isNull);
     }
 
-    await tester.tap(find.byTooltip('Quick Add'));
+    await tester.tap(find.byTooltip('Add food manually'));
     await tester.pumpAndSettle();
 
     for (final label in ['Name *', 'Qty', 'Calories (kcal)']) {
@@ -132,10 +132,10 @@ void main() {
   testWidgets('recipe builder uses the shared collapsed nutrition summary', (
     tester,
   ) async {
-    await tester.pumpWidget(testApp(const RecipeBuilderScreen()));
+    await tester.pumpWidget(testApp(const MealCreatorScreen()));
     await tester.pump();
 
-    await tester.tap(find.byTooltip('Quick Add'));
+    await tester.tap(find.byTooltip('Add food manually'));
     await tester.pumpAndSettle();
 
     final nameField = find.byWidgetPredicate(

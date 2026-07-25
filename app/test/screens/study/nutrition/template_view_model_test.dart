@@ -55,20 +55,20 @@ void main() {
   test('applyFoodTemplate reparents independent recipe compositions', () async {
     final prototype = _foodEntry(
       id: 'recipe-prototype',
-      entryType: FoodEntryType.recipe,
+      entryType: FoodEntryType.meal,
       originalValues: {'source': 'recipe-template'},
-      recipeMetadata: RecipeMetadata(
+      preparationDetails: PreparationDetails(
         rawWeight: 500,
         cookedWeight: 400,
         yieldFactor: 0.8,
         preparationMethod: 'baked',
         retentionFactors: {'vitaminC': 0.7},
       ),
-      recipeIngredients: [
-        RecipeComposition(
+      componentFoods: [
+        FoodComposition(
           id: 'prototype-composition',
-          recipeId: 'recipe-prototype',
-          ingredientId: 'ingredient-1',
+          parentEntryId: 'recipe-prototype',
+          foodId: 'ingredient-1',
           amount: 2,
           unit: 'cup',
           sortOrder: 3,
@@ -80,31 +80,34 @@ void main() {
     final applied = viewModel.applyFoodTemplate(
       _template(id: 'recipe-template', prototype: prototype),
     );
-    final appliedComposition = applied.recipeIngredients!.single;
-    final prototypeComposition = prototype.recipeIngredients!.single;
+    final appliedComposition = applied.componentFoods!.single;
+    final prototypeComposition = prototype.componentFoods!.single;
 
     expect(applied.id, isNot(prototype.id));
     expect(applied.templateId, 'recipe-template');
-    expect(applied.recipeMetadata, isNot(same(prototype.recipeMetadata)));
     expect(
-      applied.recipeMetadata!.retentionFactors,
-      isNot(same(prototype.recipeMetadata!.retentionFactors)),
+      applied.preparationDetails,
+      isNot(same(prototype.preparationDetails)),
     );
-    expect(applied.recipeIngredients, isNot(same(prototype.recipeIngredients)));
+    expect(
+      applied.preparationDetails!.retentionFactors,
+      isNot(same(prototype.preparationDetails!.retentionFactors)),
+    );
+    expect(applied.componentFoods, isNot(same(prototype.componentFoods)));
     expect(appliedComposition, isNot(same(prototypeComposition)));
     expect(appliedComposition.id, isNot(prototypeComposition.id));
-    expect(appliedComposition.recipeId, applied.id);
-    expect(appliedComposition.ingredientId, prototypeComposition.ingredientId);
+    expect(appliedComposition.parentEntryId, applied.id);
+    expect(appliedComposition.foodId, prototypeComposition.foodId);
     expect(appliedComposition.amount, prototypeComposition.amount);
     expect(appliedComposition.unit, prototypeComposition.unit);
     expect(appliedComposition.sortOrder, prototypeComposition.sortOrder);
 
-    applied.recipeMetadata!.retentionFactors['vitaminC'] = 0.1;
+    applied.preparationDetails!.retentionFactors['vitaminC'] = 0.1;
     appliedComposition.amount = 99;
-    applied.recipeIngredients!.add(
-      RecipeComposition.withId(
-        recipeId: applied.id,
-        ingredientId: 'ingredient-2',
+    applied.componentFoods!.add(
+      FoodComposition.withId(
+        parentEntryId: applied.id,
+        foodId: 'ingredient-2',
         amount: 1,
         unit: 'g',
       ),
@@ -112,10 +115,10 @@ void main() {
 
     expect(prototype.id, 'recipe-prototype');
     expect(prototype.templateId, isNull);
-    expect(prototype.recipeMetadata!.retentionFactors['vitaminC'], 0.7);
-    expect(prototype.recipeIngredients, hasLength(1));
+    expect(prototype.preparationDetails!.retentionFactors['vitaminC'], 0.7);
+    expect(prototype.componentFoods, hasLength(1));
     expect(prototypeComposition.id, 'prototype-composition');
-    expect(prototypeComposition.recipeId, 'recipe-prototype');
+    expect(prototypeComposition.parentEntryId, 'recipe-prototype');
     expect(prototypeComposition.amount, 2);
   });
 }
@@ -144,8 +147,8 @@ FoodEntry _foodEntry({
   required String id,
   FoodEntryType entryType = FoodEntryType.singleIngredient,
   required Map<String, dynamic> originalValues,
-  RecipeMetadata? recipeMetadata,
-  List<RecipeComposition>? recipeIngredients,
+  PreparationDetails? preparationDetails,
+  List<FoodComposition>? componentFoods,
 }) => FoodEntry(
   id: id,
   entryType: entryType,
@@ -173,6 +176,6 @@ FoodEntry _foodEntry({
   confidenceScore: 1,
   createdAt: DateTime.utc(2025),
   originalValues: originalValues,
-  recipeMetadata: recipeMetadata,
-  recipeIngredients: recipeIngredients,
+  preparationDetails: preparationDetails,
+  componentFoods: componentFoods,
 );

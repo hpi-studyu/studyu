@@ -59,11 +59,11 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
               ),
             ),
             FormTableRow(
-              control: widget.formViewModel.allowRecipesControl,
-              label: tr.form_field_nutrition_allow_recipes,
-              labelHelpText: tr.form_field_nutrition_allow_recipes_help,
+              control: widget.formViewModel.allowCreatedMealsControl,
+              label: tr.form_field_nutrition_allow_created_meals,
+              labelHelpText: tr.form_field_nutrition_allow_created_meals_help,
               input: ReactiveSwitch(
-                formControl: widget.formViewModel.allowRecipesControl,
+                formControl: widget.formViewModel.allowCreatedMealsControl,
               ),
             ),
             FormTableRow(

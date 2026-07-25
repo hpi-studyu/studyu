@@ -4993,17 +4993,17 @@ abstract class AppLocalizations {
   /// **'Ask participants where and with whom they ate.'**
   String get form_field_nutrition_collect_meal_context_help;
 
-  /// No description provided for @form_field_nutrition_allow_recipes.
+  /// No description provided for @form_field_nutrition_allow_created_meals.
   ///
   /// In en, this message translates to:
-  /// **'Allow recipes'**
-  String get form_field_nutrition_allow_recipes;
+  /// **'Allow created meals'**
+  String get form_field_nutrition_allow_created_meals;
 
-  /// No description provided for @form_field_nutrition_allow_recipes_help.
+  /// No description provided for @form_field_nutrition_allow_created_meals_help.
   ///
   /// In en, this message translates to:
-  /// **'Let participants combine food items into reusable recipes.'**
-  String get form_field_nutrition_allow_recipes_help;
+  /// **'Let participants combine food items into reusable combined meals.'**
+  String get form_field_nutrition_allow_created_meals_help;
 
   /// No description provided for @form_field_nutrition_require_daily_completion.
   ///

@@ -8,7 +8,7 @@ class SaveTemplateResult {
   SaveTemplateResult({required this.name, required this.tags});
 }
 
-enum TemplateType { meal, food, recipe }
+enum TemplateType { meal, food, createdMeal }
 
 class SaveTemplateDialog extends StatefulWidget {
   final String initialName;
@@ -62,8 +62,8 @@ class _SaveTemplateDialogState extends State<SaveTemplateDialog> {
         return l10n.save_as_reusable_meal;
       case TemplateType.food:
         return l10n.save_food_template;
-      case TemplateType.recipe:
-        return l10n.save_recipe_template;
+      case TemplateType.createdMeal:
+        return l10n.save_created_meal_template;
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:studyu_core/core.dart';
 
 FoodEntry foodEntry({double amount = 2}) => FoodEntry(
   id: 'food-id',
-  entryType: FoodEntryType.recipe,
+  entryType: FoodEntryType.meal,
   name: 'Soup',
   brandName: 'Kitchen',
   description: 'Description',
@@ -42,19 +42,19 @@ FoodEntry foodEntry({double amount = 2}) => FoodEntry(
       'values': [1, 2],
     },
   },
-  parentRecipeId: 'parent-id',
-  recipeMetadata: RecipeMetadata(
+  parentEntryId: 'parent-id',
+  preparationDetails: PreparationDetails(
     rawWeight: 500,
     cookedWeight: 400,
     yieldFactor: 0.8,
     preparationMethod: 'boiled',
     retentionFactors: {'iron': 0.9},
   ),
-  recipeIngredients: [
-    RecipeComposition(
+  componentFoods: [
+    FoodComposition(
       id: 'composition-id',
-      recipeId: 'food-id',
-      ingredientId: 'ingredient-id',
+      parentEntryId: 'food-id',
+      foodId: 'ingredient-id',
       amount: 1,
       unit: 'piece',
     ),
@@ -69,18 +69,18 @@ void main() {
     expect(duplicate.id, isNot(source.id));
     expect(duplicate.createdAt, isNot(source.createdAt));
     expect(duplicate.modifiedAt, isNull);
-    expect(duplicate.parentRecipeId, isNull);
+    expect(duplicate.parentEntryId, isNull);
     expect(duplicate.source, source.source);
     expect(duplicate.externalId, source.externalId);
     expect(duplicate.templateId, source.templateId);
-    expect(duplicate.recipeIngredients!.single.id, isNot('composition-id'));
-    expect(duplicate.recipeIngredients!.single.recipeId, duplicate.id);
+    expect(duplicate.componentFoods!.single.id, isNot('composition-id'));
+    expect(duplicate.componentFoods!.single.parentEntryId, duplicate.id);
 
     (duplicate.originalValues['nested'] as Map<String, dynamic>)['changed'] =
         true;
     duplicate.nutrition.micros['iron'] = 0;
-    duplicate.recipeMetadata!.retentionFactors['iron'] = 0;
-    duplicate.recipeIngredients!.single.amount = 99;
+    duplicate.preparationDetails!.retentionFactors['iron'] = 0;
+    duplicate.componentFoods!.single.amount = 99;
 
     expect(source.originalValues, {
       'nested': {
@@ -88,8 +88,8 @@ void main() {
       },
     });
     expect(source.nutrition.micros['iron'], 12);
-    expect(source.recipeMetadata!.retentionFactors['iron'], 0.9);
-    expect(source.recipeIngredients!.single.amount, 1);
+    expect(source.preparationDetails!.retentionFactors['iron'], 0.9);
+    expect(source.componentFoods!.single.amount, 1);
   });
 
   test('rescales every nutrient without changing per-unit metadata', () {
@@ -115,12 +115,12 @@ void main() {
     expect(scaled.source, FoodSource.usda);
     expect(scaled.externalId, 'external-id');
     expect(scaled.templateId, 'template-id');
-    expect(scaled.recipeMetadata!.retentionFactors, {'iron': 0.9});
-    expect(scaled.recipeIngredients!.single.amount, 1);
+    expect(scaled.preparationDetails!.retentionFactors, {'iron': 0.9});
+    expect(scaled.componentFoods!.single.amount, 1);
 
     (scaled.originalValues['nested'] as Map<String, dynamic>)['changed'] = true;
-    scaled.recipeMetadata!.retentionFactors['iron'] = 0;
-    scaled.recipeIngredients!.single.amount = 99;
+    scaled.preparationDetails!.retentionFactors['iron'] = 0;
+    scaled.componentFoods!.single.amount = 99;
     scaled.nutrition.micros['iron'] = 0;
 
     expect(source.originalValues, {
@@ -128,8 +128,8 @@ void main() {
         'values': [1, 2],
       },
     });
-    expect(source.recipeMetadata!.retentionFactors['iron'], 0.9);
-    expect(source.recipeIngredients!.single.amount, 1);
+    expect(source.preparationDetails!.retentionFactors['iron'], 0.9);
+    expect(source.componentFoods!.single.amount, 1);
     expect(source.nutrition.micros['iron'], 12);
     expect(source.amount, 2);
   });

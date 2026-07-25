@@ -86,19 +86,19 @@ FoodEntry existingOffFood(Map<String, dynamic> originalValues) {
     createdAt: DateTime.utc(2025, 1, 2, 3, 4),
     modifiedAt: DateTime.utc(2025, 2, 3),
     originalValues: originalValues,
-    parentRecipeId: 'parent-recipe-id',
-    recipeMetadata: RecipeMetadata(
+    parentEntryId: 'parent-recipe-id',
+    preparationDetails: PreparationDetails(
       rawWeight: 100,
       cookedWeight: 80,
       yieldFactor: 0.8,
       preparationMethod: 'baked',
       retentionFactors: {'protein': 0.9},
     ),
-    recipeIngredients: [
-      RecipeComposition(
+    componentFoods: [
+      FoodComposition(
         id: 'composition-id',
-        recipeId: 'recipe-id',
-        ingredientId: 'ingredient-id',
+        parentEntryId: 'recipe-id',
+        foodId: 'ingredient-id',
         amount: 1,
         unit: 'piece',
       ),
@@ -169,9 +169,9 @@ void main() {
     expect(result!.confidenceScore, existingFood.confidenceScore);
     expect(result!.templateId, existingFood.templateId);
     expect(result!.originalValues, same(originalValues));
-    expect(result!.parentRecipeId, existingFood.parentRecipeId);
-    expect(result!.recipeMetadata, same(existingFood.recipeMetadata));
-    expect(result!.recipeIngredients, same(existingFood.recipeIngredients));
+    expect(result!.parentEntryId, existingFood.parentEntryId);
+    expect(result!.preparationDetails, same(existingFood.preparationDetails));
+    expect(result!.componentFoods, same(existingFood.componentFoods));
     expect(result!.nutrition.transFat, existingFood.nutrition.transFat);
     expect(result!.nutrition.cholesterol, existingFood.nutrition.cholesterol);
     expect(result!.nutrition.waterContent, existingFood.nutrition.waterContent);

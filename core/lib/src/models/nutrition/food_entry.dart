@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/models/nutrition/enums.dart';
+import 'package:studyu_core/src/models/nutrition/food_composition.dart';
 import 'package:studyu_core/src/models/nutrition/nutrition_profile.dart';
-import 'package:studyu_core/src/models/nutrition/recipe_composition.dart';
-import 'package:studyu_core/src/models/nutrition/recipe_metadata.dart';
+import 'package:studyu_core/src/models/nutrition/preparation_details.dart';
 import 'package:uuid/uuid.dart';
 
 part 'food_entry.g.dart';
@@ -31,11 +31,11 @@ class FoodEntry {
   DateTime createdAt;
   DateTime? modifiedAt;
   Map<String, dynamic> originalValues;
-  String? parentRecipeId;
+  String? parentEntryId;
 
-  // Recipe-specific fields
-  RecipeMetadata? recipeMetadata;
-  List<RecipeComposition>? recipeIngredients;
+  // Meal-specific fields
+  PreparationDetails? preparationDetails;
+  List<FoodComposition>? componentFoods;
 
   FoodEntry({
     required this.id,
@@ -60,9 +60,9 @@ class FoodEntry {
     required this.createdAt,
     this.modifiedAt,
     required this.originalValues,
-    this.parentRecipeId,
-    this.recipeMetadata,
-    this.recipeIngredients,
+    this.parentEntryId,
+    this.preparationDetails,
+    this.componentFoods,
   });
 
   FoodEntry.withId({
@@ -86,9 +86,9 @@ class FoodEntry {
     this.templateId,
     this.modifiedAt,
     required this.originalValues,
-    this.parentRecipeId,
-    this.recipeMetadata,
-    this.recipeIngredients,
+    this.parentEntryId,
+    this.preparationDetails,
+    this.componentFoods,
   }) : id = const Uuid().v4(),
        createdAt = DateTime.now();
 

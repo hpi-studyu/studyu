@@ -278,9 +278,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       createdAt: existingFood.createdAt,
       modifiedAt: DateTime.now(),
       originalValues: existingFood.originalValues,
-      parentRecipeId: existingFood.parentRecipeId,
-      recipeMetadata: existingFood.recipeMetadata,
-      recipeIngredients: existingFood.recipeIngredients,
+      parentEntryId: existingFood.parentEntryId,
+      preparationDetails: existingFood.preparationDetails,
+      componentFoods: existingFood.componentFoods,
     );
   }
 
@@ -1011,7 +1011,7 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                   const SizedBox(height: 8),
                   // Entry Type Dropdown
                   DropdownButtonFormField<FoodEntryType>(
-                    initialValue: widget.entryType == FoodEntryType.recipe
+                    initialValue: widget.entryType == FoodEntryType.meal
                         ? FoodEntryType.manualCustom
                         : widget.entryType,
                     decoration: InputDecoration(
@@ -1021,7 +1021,7 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                     ),
                     isExpanded: true,
                     items: FoodEntryType.values
-                        .where((type) => type != FoodEntryType.recipe)
+                        .where((type) => type != FoodEntryType.meal)
                         .map((type) {
                           return DropdownMenuItem(
                             value: type,
@@ -1172,8 +1172,8 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
     switch (type) {
       case FoodEntryType.singleIngredient:
         return widget.l10n.entry_type_single_ingredient;
-      case FoodEntryType.recipe:
-        return widget.l10n.entry_type_recipe;
+      case FoodEntryType.meal:
+        return widget.l10n.entry_type_meal;
       case FoodEntryType.brandedProduct:
         return widget.l10n.entry_type_branded_product;
       case FoodEntryType.manualCustom:

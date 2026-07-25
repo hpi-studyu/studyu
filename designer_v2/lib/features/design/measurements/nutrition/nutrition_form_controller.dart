@@ -36,7 +36,7 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
   );
   final FormControl<String> instructionsControl = FormControl(value: '');
   final FormControl<bool> collectMealContextControl = FormControl(value: true);
-  final FormControl<bool> allowRecipesControl = FormControl(value: true);
+  final FormControl<bool> allowCreatedMealsControl = FormControl(value: true);
   final FormControl<bool> requireDailyCompletionConfirmationControl =
       FormControl(value: false);
   final FormControl<int> minimumMealsRequiredControl = FormControl();
@@ -80,7 +80,7 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     'title': titleControl,
     'instructions': instructionsControl,
     'collectMealContext': collectMealContextControl,
-    'allowRecipes': allowRecipesControl,
+    'allowCreatedMeals': allowCreatedMealsControl,
     'requireDailyCompletionConfirmation':
         requireDailyCompletionConfirmationControl,
     'minimumMealsRequired': minimumMealsRequiredControl,
@@ -95,7 +95,7 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     titleControl.value = data.title;
     instructionsControl.value = data.instructions ?? '';
     collectMealContextControl.value = data.collectMealContext;
-    allowRecipesControl.value = data.allowRecipes;
+    allowCreatedMealsControl.value = data.allowCreatedMeals;
     requireDailyCompletionConfirmationControl.value =
         data.requireDailyCompletionConfirmation;
     minimumMealsRequiredControl.value = data.minimumMealsRequired;
@@ -116,7 +116,7 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
       title: titleControl.value!, // required
       instructions: instructionsControl.value,
       collectMealContext: collectMealContextControl.value ?? true,
-      allowRecipes: allowRecipesControl.value ?? true,
+      allowCreatedMeals: allowCreatedMealsControl.value ?? true,
       requireDailyCompletionConfirmation:
           requireDailyCompletionConfirmationControl.value ?? false,
       minimumMealsRequired: minimumMealsRequiredControl.value,

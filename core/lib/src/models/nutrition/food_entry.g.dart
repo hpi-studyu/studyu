@@ -36,12 +36,14 @@ FoodEntry _$FoodEntryFromJson(Map<String, dynamic> json) => FoodEntry(
       ? null
       : DateTime.parse(json['modifiedAt'] as String),
   originalValues: json['originalValues'] as Map<String, dynamic>,
-  parentRecipeId: json['parentRecipeId'] as String?,
-  recipeMetadata: json['recipeMetadata'] == null
+  parentEntryId: json['parentEntryId'] as String?,
+  preparationDetails: json['preparationDetails'] == null
       ? null
-      : RecipeMetadata.fromJson(json['recipeMetadata'] as Map<String, dynamic>),
-  recipeIngredients: (json['recipeIngredients'] as List<dynamic>?)
-      ?.map((e) => RecipeComposition.fromJson(e as Map<String, dynamic>))
+      : PreparationDetails.fromJson(
+          json['preparationDetails'] as Map<String, dynamic>,
+        ),
+  componentFoods: (json['componentFoods'] as List<dynamic>?)
+      ?.map((e) => FoodComposition.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
@@ -68,16 +70,14 @@ Map<String, dynamic> _$FoodEntryToJson(FoodEntry instance) => <String, dynamic>{
   'createdAt': instance.createdAt.toIso8601String(),
   'modifiedAt': ?instance.modifiedAt?.toIso8601String(),
   'originalValues': instance.originalValues,
-  'parentRecipeId': ?instance.parentRecipeId,
-  'recipeMetadata': ?instance.recipeMetadata?.toJson(),
-  'recipeIngredients': ?instance.recipeIngredients
-      ?.map((e) => e.toJson())
-      .toList(),
+  'parentEntryId': ?instance.parentEntryId,
+  'preparationDetails': ?instance.preparationDetails?.toJson(),
+  'componentFoods': ?instance.componentFoods?.map((e) => e.toJson()).toList(),
 };
 
 const _$FoodEntryTypeEnumMap = {
   FoodEntryType.singleIngredient: 'singleIngredient',
-  FoodEntryType.recipe: 'recipe',
+  FoodEntryType.meal: 'meal',
   FoodEntryType.brandedProduct: 'brandedProduct',
   FoodEntryType.manualCustom: 'manualCustom',
 };

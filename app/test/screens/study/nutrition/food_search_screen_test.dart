@@ -18,7 +18,7 @@ typedef SearchRequest = ({String source, String query, int page, int pageSize});
 
 Widget foodSearchApp(
   Locale locale, {
-  bool allowRecipes = true,
+  bool allowCreatedMeals = true,
   bool allowMealTemplates = false,
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
@@ -30,7 +30,7 @@ Widget foodSearchApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     locale: locale,
     home: FoodSearchScreen(
-      allowRecipes: allowRecipes,
+      allowCreatedMeals: allowCreatedMeals,
       allowMealTemplates: allowMealTemplates,
       openFoodFactsSearch: openFoodFactsSearch,
       usdaFoodSearch: usdaFoodSearch,
@@ -139,12 +139,15 @@ void main() {
     await tester.pump();
 
     final searchField = tester.widget<TextField>(find.byType(TextField));
-    expect(searchField.decoration!.hintText, 'Search foods, meals, recipes…');
+    expect(
+      searchField.decoration!.hintText,
+      'Search foods, meals, created meals…',
+    );
     expect(searchField.focusNode!.hasFocus, isFalse);
     expect(searchField.decoration!.suffixIcon, isA<IconButton>());
     expect(find.byTooltip('Scan Barcode'), findsOneWidget);
     expect(find.text('Add manually'), findsNothing);
-    expect(find.text('Create Recipe'), findsNothing);
+    expect(find.text('Create meal'), findsNothing);
 
     final createButton = find.widgetWithIcon(
       IconButton,
@@ -158,7 +161,7 @@ void main() {
 
     await tester.tap(createButton);
     await tester.pumpAndSettle();
-    expect(find.text('Add Food Manually'), findsOneWidget);
+    expect(find.text('Add food manually'), findsOneWidget);
     semantics.dispose();
   });
 
@@ -168,7 +171,7 @@ void main() {
 
     expect(
       tester.widget<TextField>(find.byType(TextField)).decoration!.hintText,
-      'Lebensmittel, Mahlzeiten, Rezepte suchen…',
+      'Lebensmittel, Mahlzeiten, erstellte Mahlzeiten suchen…',
     );
     expect(find.byTooltip('Lebensmittel manuell erstellen'), findsOneWidget);
   });
@@ -218,7 +221,7 @@ void main() {
         createdAt: DateTime.utc(2025),
         prototype: studyu.FoodEntry(
           id: 'recipe-prototype',
-          entryType: studyu.FoodEntryType.recipe,
+          entryType: studyu.FoodEntryType.meal,
           name: 'Saved Recipe',
           amount: 1,
           unit: 'serving',
@@ -249,7 +252,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      foodSearchApp(const Locale('en'), allowRecipes: false),
+      foodSearchApp(const Locale('en'), allowCreatedMeals: false),
     );
     await tester.pumpAndSettle();
 
@@ -276,7 +279,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Manage'), findsOneWidget);
-    expect(find.text('Recipes'), findsOneWidget);
+    expect(find.text('Created meals'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -377,7 +380,7 @@ void main() {
     await tester.tap(find.text('New'));
     await tester.pumpAndSettle();
     expect(find.text('Foods'), findsWidgets);
-    expect(find.text('Create Recipe'), findsOneWidget);
+    expect(find.text('Create meal'), findsOneWidget);
     await tester.tapAt(const Offset(5, 5));
     await tester.pumpAndSettle();
     await tester.pageBack();
@@ -1106,7 +1109,7 @@ void main() {
     expect(find.text('No results for “nothing”'), findsOneWidget);
     expect(find.text('Can’t find it?'), findsOneWidget);
     expect(find.text('Create “nothing” manually'), findsOneWidget);
-    expect(find.text('Create Recipe'), findsNothing);
+    expect(find.text('Create meal'), findsNothing);
     expect(
       find.text('Food search is unavailable. Please try again.'),
       findsNothing,

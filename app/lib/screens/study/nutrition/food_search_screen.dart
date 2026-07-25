@@ -133,14 +133,14 @@ enum _FoodSearchSection { recent, myItems }
 enum _FoodSearchFilter { all, myItems, database }
 
 class FoodSearchScreen extends StatelessWidget {
-  final bool allowRecipes;
+  final bool allowCreatedMeals;
   final bool allowMealTemplates;
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
 
   const FoodSearchScreen({
-    this.allowRecipes = true,
+    this.allowCreatedMeals = true,
     this.allowMealTemplates = false,
     this.mealLabel,
     this.openFoodFactsSearch,
@@ -149,15 +149,15 @@ class FoodSearchScreen extends StatelessWidget {
   });
 
   static MaterialPageRoute<studyu.FoodEntry> route({
-    bool allowRecipes = true,
+    bool allowCreatedMeals = true,
   }) => MaterialPageRoute(
-    builder: (_) => FoodSearchScreen(allowRecipes: allowRecipes),
+    builder: (_) => FoodSearchScreen(allowCreatedMeals: allowCreatedMeals),
   );
 
   static Future<FoodSearchSelection?> show(
     BuildContext context, {
     required String mealLabel,
-    bool allowRecipes = true,
+    bool allowCreatedMeals = true,
     OpenFoodFactsSearch? openFoodFactsSearch,
     UsdaFoodSearch? usdaFoodSearch,
   }) => showModalBottomSheet<FoodSearchSelection>(
@@ -167,7 +167,7 @@ class FoodSearchScreen extends StatelessWidget {
     builder: (_) => FractionallySizedBox(
       heightFactor: 0.96,
       child: FoodSearchScreen(
-        allowRecipes: allowRecipes,
+        allowCreatedMeals: allowCreatedMeals,
         allowMealTemplates: true,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
@@ -191,7 +191,7 @@ class FoodSearchScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => TemplateViewModel(userId: userId),
       child: _FoodSearchScreenContent(
-        allowRecipes: allowRecipes,
+        allowCreatedMeals: allowCreatedMeals,
         allowMealTemplates: allowMealTemplates,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
@@ -203,7 +203,7 @@ class FoodSearchScreen extends StatelessWidget {
 }
 
 class _FoodSearchScreenContent extends StatefulWidget {
-  final bool allowRecipes;
+  final bool allowCreatedMeals;
   final bool allowMealTemplates;
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
@@ -211,7 +211,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
   final FoodSearchHistory history;
 
   const _FoodSearchScreenContent({
-    this.allowRecipes = true,
+    this.allowCreatedMeals = true,
     this.allowMealTemplates = false,
     this.mealLabel,
     this.openFoodFactsSearch,
@@ -783,8 +783,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   bool _isAllowedTemplate(dynamic template) {
     if (template is studyu.SavedMealTemplate) return widget.allowMealTemplates;
     if (template is studyu.SavedFoodTemplate) {
-      return widget.allowRecipes ||
-          template.prototype.entryType != studyu.FoodEntryType.recipe;
+      return widget.allowCreatedMeals ||
+          template.prototype.entryType != studyu.FoodEntryType.meal;
     }
     return false;
   }
@@ -920,7 +920,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onSelectResult: _selectResult,
               onAddResult: _addResult,
               onRetry: () => _retrySearch(templateViewModel),
-              allowRecipes: widget.allowRecipes,
+              allowCreatedMeals: widget.allowCreatedMeals,
               allowMealTemplates: widget.allowMealTemplates,
               showServingHint: _showServingHint && widget.allowMealTemplates,
             ),
@@ -1083,12 +1083,12 @@ class _TemplateCard extends StatelessWidget {
     final foodTemplate = template is studyu.SavedFoodTemplate
         ? template as studyu.SavedFoodTemplate
         : null;
-    final isRecipe =
-        foodTemplate?.prototype.entryType == studyu.FoodEntryType.recipe;
+    final isCreatedMeal =
+        foodTemplate?.prototype.entryType == studyu.FoodEntryType.meal;
     final name = mealTemplate?.name ?? foodTemplate!.name;
     final icon = mealTemplate != null
         ? Icons.restaurant_menu_outlined
-        : isRecipe
+        : isCreatedMeal
         ? Icons.menu_book_outlined
         : Icons.fastfood_outlined;
     final imageUrl = foodTemplate == null
@@ -1515,7 +1515,7 @@ class _FoodSearchListView extends StatelessWidget {
   final void Function(UnifiedFoodResult) onSelectResult;
   final void Function(UnifiedFoodResult) onAddResult;
   final VoidCallback onRetry;
-  final bool allowRecipes;
+  final bool allowCreatedMeals;
   final bool allowMealTemplates;
   final bool showServingHint;
 
@@ -1548,7 +1548,7 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onSelectResult,
     required this.onAddResult,
     required this.onRetry,
-    this.allowRecipes = true,
+    this.allowCreatedMeals = true,
     this.allowMealTemplates = false,
     required this.showServingHint,
   });
@@ -1556,8 +1556,8 @@ class _FoodSearchListView extends StatelessWidget {
   bool _isAllowedTemplate(dynamic template) {
     if (template is studyu.SavedMealTemplate) return allowMealTemplates;
     if (template is studyu.SavedFoodTemplate) {
-      return allowRecipes ||
-          template.prototype.entryType != studyu.FoodEntryType.recipe;
+      return allowCreatedMeals ||
+          template.prototype.entryType != studyu.FoodEntryType.meal;
     }
     return false;
   }
@@ -1827,7 +1827,7 @@ class _MyItemsToolbar extends StatelessWidget {
     TemplateFilter.all => l10n.filter_all,
     TemplateFilter.foods => l10n.filter_foods,
     TemplateFilter.meals => l10n.filter_meals,
-    TemplateFilter.recipes => l10n.filter_recipes,
+    TemplateFilter.createdMeals => l10n.filter_created_meals,
   };
 
   @override
