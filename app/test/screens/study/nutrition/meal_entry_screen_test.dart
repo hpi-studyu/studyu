@@ -188,10 +188,7 @@ void main() {
     expect(find.text('Meal label'), findsOneWidget);
     expect(find.text('Dinner'), findsWidgets);
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Add meal or snack'),
-      ),
+      find.descendant(of: find.byType(AppBar), matching: find.text('Log meal')),
       findsOneWidget,
     );
     expect(find.widgetWithText(TextButton, 'Save'), findsOneWidget);
@@ -269,10 +266,7 @@ void main() {
     expect(find.text('Meal label'), findsOneWidget);
     expect(find.text('Late bite'), findsWidgets);
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Add meal or snack'),
-      ),
+      find.descendant(of: find.byType(AppBar), matching: find.text('Log meal')),
       findsOneWidget,
     );
   });
@@ -300,10 +294,7 @@ void main() {
     expect(find.text('Meal label'), findsOneWidget);
     expect(find.text('Supper'), findsWidgets);
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Supper meal'),
-      ),
+      find.descendant(of: find.byType(AppBar), matching: find.text('Log meal')),
       findsOneWidget,
     );
     expect(find.text('Ignored'), findsNothing);
@@ -322,10 +313,7 @@ void main() {
     await selectMealType(tester, 'Dinner');
 
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Dinner meal'),
-      ),
+      find.descendant(of: find.byType(AppBar), matching: find.text('Log meal')),
       findsOneWidget,
     );
     expect(
@@ -412,7 +400,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, 'No label').last);
     await tester.pumpAndSettle();
-    expect(find.text('Meal'), findsWidgets);
+    expect(find.text('Log meal'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();

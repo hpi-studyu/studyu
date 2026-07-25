@@ -351,14 +351,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         : _getMealTypeLabel(_mealType);
   }
 
-  String get _pageTitle {
-    if (widget.existingMeal == null) {
-      return AppLocalizations.of(context)!.log_meal;
-    }
-    return _mealLabel == AppLocalizations.of(context)!.meal_neutral_label
-        ? AppLocalizations.of(context)!.meal_neutral_label
-        : '$_mealLabel ${AppLocalizations.of(context)!.meal_suffix}';
-  }
+  String get _pageTitle => AppLocalizations.of(context)!.log_meal;
 
   void _pop([MealEntryResult? result]) {
     setState(() => _allowPop = true);
