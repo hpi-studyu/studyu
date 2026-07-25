@@ -154,6 +154,11 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             },
             child: Scaffold(
               appBar: _buildAppBar(context, model, l10n),
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () => _addMeal(context, model),
+                icon: const Icon(Icons.add),
+                label: Text(l10n.log_meal),
+              ),
               body: Column(
                 children: [
                   Expanded(
@@ -473,15 +478,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               onDelete: () => model.removeMealById(entry.meal.id),
             ),
         ],
-        const SizedBox(height: 8),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton.icon(
-            onPressed: () => _addMeal(context, model),
-            icon: const Icon(Icons.add),
-            label: Text(l10n.log_meal),
-          ),
-        ),
       ],
     );
   }
