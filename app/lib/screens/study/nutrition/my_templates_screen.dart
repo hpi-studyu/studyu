@@ -7,7 +7,7 @@ import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
 
-enum _NewItemType { food, createdMeal }
+enum _NewItemType { food, meal }
 
 class MyTemplatesScreen extends StatelessWidget {
   const MyTemplatesScreen({super.key});
@@ -49,7 +49,6 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
       TemplateFilter.all => l10n.filter_all,
       TemplateFilter.meals => l10n.filter_meals,
       TemplateFilter.foods => l10n.filter_foods,
-      TemplateFilter.createdMeals => l10n.filter_created_meals,
     };
   }
 
@@ -70,8 +69,8 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                   switch (type) {
                     case _NewItemType.food:
                       _createFood(context, viewModel);
-                    case _NewItemType.createdMeal:
-                      _createCreatedMeal(context, viewModel);
+                    case _NewItemType.meal:
+                      _createMeal(context, viewModel);
                   }
                 },
                 itemBuilder: (context) => [
@@ -84,7 +83,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                     ),
                   ),
                   PopupMenuItem(
-                    value: _NewItemType.createdMeal,
+                    value: _NewItemType.meal,
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.menu_book),
@@ -189,7 +188,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     );
   }
 
-  Future<void> _createCreatedMeal(
+  Future<void> _createMeal(
     BuildContext context,
     TemplateViewModel viewModel,
   ) async {
@@ -236,18 +235,14 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     AppLocalizations l10n,
     ThemeData theme,
   ) {
-    final isMeal = template is SavedMealTemplate;
-    final foodTemplate = template is SavedFoodTemplate ? template : null;
-    final isCreatedMeal =
-        foodTemplate?.prototype.entryType == FoodEntryType.meal;
-    final name = isMeal ? template.name : foodTemplate!.name;
+    final foodTemplate = template as SavedFoodTemplate;
+    final isMeal = foodTemplate.prototype.entryType == FoodEntryType.meal;
+    final name = foodTemplate.name;
     final metadata = isMeal
-        ? '${l10n.template_type_meal} · ${l10n.items_count(template.prototypes.length)}'
-        : isCreatedMeal
         ? [
-            l10n.template_type_created_meal,
-            l10n.servings_value(
-              foodTemplate!.prototype.amount.toStringAsFixed(0),
+            l10n.template_type_meal,
+            l10n.items_count(
+              foodTemplate.prototype.componentFoods?.length ?? 0,
             ),
             l10n.kcal_per_serving(
               foodTemplate.prototype.nutrition.energyKcal.round().toString(),
@@ -255,7 +250,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
           ].join(' · ')
         : [
             l10n.template_type_food,
-            if (foodTemplate!.prototype.source == FoodSource.manual)
+            if (foodTemplate.prototype.source == FoodSource.manual)
               l10n.custom
             else
               l10n.database,
@@ -268,20 +263,16 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: Icon(
-          isMeal
-              ? Icons.restaurant_menu_outlined
-              : isCreatedMeal
-              ? Icons.menu_book_outlined
-              : Icons.fastfood_outlined,
+          isMeal ? Icons.menu_book_outlined : Icons.fastfood_outlined,
         ),
         title: Text(name, maxLines: 2, overflow: TextOverflow.ellipsis),
         subtitle: Text(metadata, maxLines: 2, overflow: TextOverflow.ellipsis),
         trailing: _templateMenu(context, viewModel, template, l10n),
         onTap: () {
           if (isMeal) {
-            _showRenameDialog(context, viewModel, template, l10n);
+            _showRenameDialog(context, viewModel, foodTemplate, l10n);
           } else {
-            _editFood(context, viewModel, foodTemplate!);
+            _editFood(context, viewModel, foodTemplate);
           }
         },
       ),
@@ -294,7 +285,8 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     dynamic template,
     AppLocalizations l10n,
   ) {
-    final isMeal = template is SavedMealTemplate;
+    final foodTemplate = template as SavedFoodTemplate;
+    final isMeal = foodTemplate.prototype.entryType == FoodEntryType.meal;
     return PopupMenuButton<String>(
       itemBuilder: (_) => [
         PopupMenuItem(
@@ -321,22 +313,12 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
         switch (value) {
           case 'edit':
             if (isMeal) {
-              await _showRenameDialog(context, viewModel, template, l10n);
+              await _showRenameDialog(context, viewModel, foodTemplate, l10n);
             } else {
-              await _editFood(
-                context,
-                viewModel,
-                template as SavedFoodTemplate,
-              );
+              await _editFood(context, viewModel, foodTemplate);
             }
           case 'duplicate':
-            if (isMeal) {
-              await viewModel.duplicateMealTemplate(template.id);
-            } else {
-              await viewModel.duplicateFoodTemplate(
-                (template as SavedFoodTemplate).id,
-              );
-            }
+            await viewModel.duplicateFoodTemplate(foodTemplate.id);
           case 'rename':
             await _showRenameDialog(context, viewModel, template, l10n);
           case 'delete':
@@ -375,11 +357,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     );
 
     if (confirmed != true) return;
-    if (template is SavedMealTemplate) {
-      await viewModel.deleteMealTemplate(template.id);
-    } else if (template is SavedFoodTemplate) {
-      await viewModel.deleteFoodTemplate(template.id);
-    }
+    await viewModel.deleteFoodTemplate((template as SavedFoodTemplate).id);
   }
 
   Future<void> _showRenameDialog(
@@ -388,9 +366,8 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
     dynamic template,
     AppLocalizations l10n,
   ) async {
-    final currentName = template is SavedMealTemplate
-        ? template.name
-        : (template as SavedFoodTemplate).name;
+    final foodTemplate = template as SavedFoodTemplate;
+    final currentName = foodTemplate.name;
     final controller = TextEditingController(text: currentName);
 
     final newName = await showDialog<String>(
@@ -424,10 +401,6 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
 
     controller.dispose();
     if (newName == null || newName == currentName) return;
-    if (template is SavedMealTemplate) {
-      await viewModel.renameMealTemplate(template.id, newName);
-    } else if (template is SavedFoodTemplate) {
-      await viewModel.renameFoodTemplate(template.id, newName);
-    }
+    await viewModel.renameFoodTemplate(foodTemplate.id, newName);
   }
 }

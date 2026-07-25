@@ -1961,7 +1961,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_as_template => 'Zu meinen Elementen hinzufügen';
 
   @override
-  String get save_meal_template => 'Mahlzeit speichern';
+  String get save_meal => 'Mahlzeit speichern';
 
   @override
   String get done_label => 'Fertig';
@@ -1986,10 +1986,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Füge diese Kombination zu Meine Elemente hinzu, damit du sie wieder verwenden kannst.';
 
   @override
-  String get save_food_template => 'Lebensmittel speichern';
-
-  @override
-  String get save_created_meal_template => 'Erstellte Mahlzeit speichern';
+  String get save_food => 'Lebensmittel speichern';
 
   @override
   String get template_name => 'Name';
@@ -2007,10 +2004,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get template_saved => 'Zu meinen Elementen hinzugefügt';
 
   @override
-  String get select_meal_template => 'Meine Mahlzeiten';
+  String get select_meal => 'Meine Mahlzeiten';
 
   @override
-  String get select_food_template => 'Meine Lebensmittel';
+  String get select_food => 'Meine Lebensmittel';
 
   @override
   String get search_templates => 'Meine Elemente durchsuchen...';
@@ -2043,9 +2040,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get filter_foods => 'Lebensmittel';
-
-  @override
-  String get filter_created_meals => 'Erstellte Mahlzeiten';
 
   @override
   String items_count(int count) {
@@ -2112,9 +2106,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get template_type_food => 'Lebensmittel';
-
-  @override
-  String get template_type_created_meal => 'Erstellte Mahlzeit';
 
   @override
   String get rename_template => 'Element umbenennen';
@@ -2217,8 +2208,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get more_options => 'Weitere Optionen';
 
   @override
-  String get search_food_hint =>
-      'Lebensmittel, Mahlzeiten, erstellte Mahlzeiten suchen…';
+  String get search_food_hint => 'Lebensmittel und Mahlzeiten suchen…';
 
   @override
   String get my_saved_items => 'Meine Elemente';

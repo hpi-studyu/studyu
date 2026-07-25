@@ -18,8 +18,7 @@ typedef SearchRequest = ({String source, String query, int page, int pageSize});
 
 Widget foodSearchApp(
   Locale locale, {
-  bool allowCreatedMeals = true,
-  bool allowMealTemplates = false,
+  bool allowMeals = true,
   OpenFoodFactsSearch? openFoodFactsSearch,
   UsdaFoodSearch? usdaFoodSearch,
   studyu.StudySubject? activeSubject,
@@ -30,8 +29,7 @@ Widget foodSearchApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     locale: locale,
     home: FoodSearchScreen(
-      allowCreatedMeals: allowCreatedMeals,
-      allowMealTemplates: allowMealTemplates,
+      allowMeals: allowMeals,
       openFoodFactsSearch: openFoodFactsSearch,
       usdaFoodSearch: usdaFoodSearch,
     ),
@@ -139,10 +137,7 @@ void main() {
     await tester.pump();
 
     final searchField = tester.widget<TextField>(find.byType(TextField));
-    expect(
-      searchField.decoration!.hintText,
-      'Search foods, meals, created meals…',
-    );
+    expect(searchField.decoration!.hintText, 'Search foods and meals…');
     expect(searchField.focusNode!.hasFocus, isFalse);
     expect(searchField.decoration!.suffixIcon, isA<IconButton>());
     expect(find.byTooltip('Scan Barcode'), findsOneWidget);
@@ -252,7 +247,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      foodSearchApp(const Locale('en'), allowCreatedMeals: false),
+      foodSearchApp(const Locale('en'), allowMeals: false),
     );
     await tester.pumpAndSettle();
 
@@ -279,7 +274,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Manage'), findsOneWidget);
-    expect(find.text('Created meals'), findsOneWidget);
+    expect(find.text('Meals'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

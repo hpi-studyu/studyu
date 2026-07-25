@@ -14,9 +14,9 @@ class NutritionTask extends Observation {
   @JsonKey(defaultValue: true)
   bool collectMealContext = true;
 
-  /// Whether participants may create combined meal entries
+  /// Whether participants may create meal entries
   @JsonKey(defaultValue: true)
-  bool allowCreatedMeals = true;
+  bool allowMeals = true;
 
   /// Whether participants must explicitly confirm their daily nutrition log.
   ///

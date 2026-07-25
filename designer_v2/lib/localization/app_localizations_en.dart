@@ -2955,11 +2955,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Ask participants where and with whom they ate.';
 
   @override
-  String get form_field_nutrition_allow_created_meals => 'Allow created meals';
+  String get form_field_nutrition_allow_meals => 'Allow meals';
 
   @override
-  String get form_field_nutrition_allow_created_meals_help =>
-      'Let participants combine food items into reusable combined meals.';
+  String get form_field_nutrition_allow_meals_help =>
+      'Let participants combine food items into reusable meals.';
 
   @override
   String get form_field_nutrition_require_daily_completion =>

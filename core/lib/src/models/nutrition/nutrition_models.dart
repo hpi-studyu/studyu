@@ -6,4 +6,3 @@ export 'meal_log.dart';
 export 'nutrition_profile.dart';
 export 'preparation_details.dart';
 export 'saved_food_template.dart';
-export 'saved_meal_template.dart';

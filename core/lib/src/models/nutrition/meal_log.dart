@@ -11,7 +11,7 @@ class MealLog {
   MealType mealType;
   String? customMealLabel;
 
-  /// True when a newly created meal intentionally has no category label.
+  /// True when a meal intentionally has no category label.
   /// Missing serialized values remain false for legacy MealType.other records.
   bool isLabelExplicitlyUnset;
   MealContext mealContext;

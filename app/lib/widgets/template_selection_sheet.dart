@@ -94,18 +94,17 @@ class _TemplateSelectionSheetContentState
 
         final templates = widget.mode == TemplateSelectionMode.meal
             ? viewModel.mealTemplates
-            : viewModel.foodTemplates;
+            : viewModel.foodOnlyTemplates;
 
         final filteredTemplates = viewModel.searchQuery.isEmpty
             ? templates
-            : templates.where((t) {
-                final name = t is SavedMealTemplate
-                    ? t.name
-                    : (t as SavedFoodTemplate).name;
-                return name.toLowerCase().contains(
-                  viewModel.searchQuery.toLowerCase(),
-                );
-              }).toList();
+            : templates
+                  .where(
+                    (t) => t.name.toLowerCase().contains(
+                      viewModel.searchQuery.toLowerCase(),
+                    ),
+                  )
+                  .toList();
 
         return Column(
           children: [
@@ -125,8 +124,8 @@ class _TemplateSelectionSheetContentState
                 children: [
                   Text(
                     widget.mode == TemplateSelectionMode.meal
-                        ? l10n.select_meal_template
-                        : l10n.select_food_template,
+                        ? l10n.select_meal
+                        : l10n.select_food,
                     style: theme.textTheme.titleLarge,
                   ),
                   TextButton(
@@ -191,28 +190,19 @@ class _TemplateSelectionSheetContentState
     TemplateViewModel viewModel,
     AppLocalizations l10n,
   ) {
-    if (template is SavedMealTemplate) {
-      return ListTile(
-        leading: const CircleAvatar(child: Icon(Icons.restaurant_menu)),
-        title: Text(template.name),
-        subtitle: Text(l10n.items_count(template.prototypes.length)),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          final meal = viewModel.applyMealTemplate(template);
-          Navigator.pop(context, meal);
-        },
-      );
-    } else if (template is SavedFoodTemplate) {
-      final isCreatedMeal = template.prototype.entryType == FoodEntryType.meal;
+    if (template is SavedFoodTemplate) {
+      final isMeal = template.prototype.entryType == FoodEntryType.meal;
       return ListTile(
         leading: CircleAvatar(
-          child: Icon(isCreatedMeal ? Icons.menu_book : Icons.fastfood),
+          child: Icon(isMeal ? Icons.menu_book : Icons.fastfood),
         ),
         title: Text(template.name),
         subtitle: Text(
-          l10n.kcal_value(
-            template.prototype.nutrition.energyKcal.toStringAsFixed(0),
-          ),
+          isMeal
+              ? l10n.items_count(template.prototype.componentFoods?.length ?? 0)
+              : l10n.kcal_value(
+                  template.prototype.nutrition.energyKcal.toStringAsFixed(0),
+                ),
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {

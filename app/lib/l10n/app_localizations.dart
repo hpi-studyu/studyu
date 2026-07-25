@@ -3677,11 +3677,11 @@ abstract class AppLocalizations {
   /// **'Add to My items'**
   String get save_as_template;
 
-  /// No description provided for @save_meal_template.
+  /// No description provided for @save_meal.
   ///
   /// In en, this message translates to:
   /// **'Save meal'**
-  String get save_meal_template;
+  String get save_meal;
 
   /// No description provided for @done_label.
   ///
@@ -3719,17 +3719,11 @@ abstract class AppLocalizations {
   /// **'Add this combination to My items so you can use it again.'**
   String get save_as_reusable_meal_description;
 
-  /// No description provided for @save_food_template.
+  /// No description provided for @save_food.
   ///
   /// In en, this message translates to:
   /// **'Save food'**
-  String get save_food_template;
-
-  /// No description provided for @save_created_meal_template.
-  ///
-  /// In en, this message translates to:
-  /// **'Save created meal'**
-  String get save_created_meal_template;
+  String get save_food;
 
   /// No description provided for @template_name.
   ///
@@ -3761,17 +3755,17 @@ abstract class AppLocalizations {
   /// **'Added to My items'**
   String get template_saved;
 
-  /// No description provided for @select_meal_template.
+  /// No description provided for @select_meal.
   ///
   /// In en, this message translates to:
   /// **'My meals'**
-  String get select_meal_template;
+  String get select_meal;
 
-  /// No description provided for @select_food_template.
+  /// No description provided for @select_food.
   ///
   /// In en, this message translates to:
   /// **'My foods'**
-  String get select_food_template;
+  String get select_food;
 
   /// No description provided for @search_templates.
   ///
@@ -3832,12 +3826,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Foods'**
   String get filter_foods;
-
-  /// No description provided for @filter_created_meals.
-  ///
-  /// In en, this message translates to:
-  /// **'Created meals'**
-  String get filter_created_meals;
 
   /// No description provided for @items_count.
   ///
@@ -3922,12 +3910,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Food'**
   String get template_type_food;
-
-  /// No description provided for @template_type_created_meal.
-  ///
-  /// In en, this message translates to:
-  /// **'Meal'**
-  String get template_type_created_meal;
 
   /// No description provided for @rename_template.
   ///
@@ -4112,7 +4094,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_food_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search foods, meals, created meals…'**
+  /// **'Search foods and meals…'**
   String get search_food_hint;
 
   /// No description provided for @my_saved_items.

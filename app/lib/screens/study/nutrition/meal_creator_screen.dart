@@ -110,7 +110,9 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   }
 
   Future<void> _addFood() async {
-    final result = await Navigator.of(context).push(FoodSearchScreen.route());
+    final result = await Navigator.of(
+      context,
+    ).push(FoodSearchScreen.route(allowMeals: false));
     if (result != null) {
       setState(() {
         _componentFoods.add(result);
@@ -350,7 +352,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     final result = await SaveTemplateDialog.show(
       context,
       initialName: _nameController.text,
-      templateType: TemplateType.createdMeal,
+      templateType: TemplateType.meal,
     );
 
     if (result != null && mounted) {
@@ -388,7 +390,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
           if (_foods.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.bookmark_add_outlined),
-              tooltip: l10n.save_meal_template,
+              tooltip: l10n.save_meal,
               onPressed: _saveAsTemplate,
             ),
         ],

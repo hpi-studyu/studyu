@@ -1944,7 +1944,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_as_template => 'Add to My items';
 
   @override
-  String get save_meal_template => 'Save meal';
+  String get save_meal => 'Save meal';
 
   @override
   String get done_label => 'Done';
@@ -1968,10 +1968,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add this combination to My items so you can use it again.';
 
   @override
-  String get save_food_template => 'Save food';
-
-  @override
-  String get save_created_meal_template => 'Save created meal';
+  String get save_food => 'Save food';
 
   @override
   String get template_name => 'Name';
@@ -1989,10 +1986,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get template_saved => 'Added to My items';
 
   @override
-  String get select_meal_template => 'My meals';
+  String get select_meal => 'My meals';
 
   @override
-  String get select_food_template => 'My foods';
+  String get select_food => 'My foods';
 
   @override
   String get search_templates => 'Search My items...';
@@ -2025,9 +2022,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_foods => 'Foods';
-
-  @override
-  String get filter_created_meals => 'Created meals';
 
   @override
   String items_count(int count) {
@@ -2094,9 +2088,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get template_type_food => 'Food';
-
-  @override
-  String get template_type_created_meal => 'Meal';
 
   @override
   String get rename_template => 'Rename item';
@@ -2199,7 +2190,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get more_options => 'More options';
 
   @override
-  String get search_food_hint => 'Search foods, meals, created meals…';
+  String get search_food_hint => 'Search foods and meals…';
 
   @override
   String get my_saved_items => 'My items';

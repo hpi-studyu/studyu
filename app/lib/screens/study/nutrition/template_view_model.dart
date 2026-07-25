@@ -5,13 +5,12 @@ import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 import 'package:uuid/uuid.dart';
 
-enum TemplateFilter { all, foods, meals, createdMeals }
+enum TemplateFilter { all, foods, meals }
 
 class TemplateViewModel extends ChangeNotifier {
   final TemplateStorageManager _storageManager = TemplateStorageManager();
   final String userId;
 
-  List<SavedMealTemplate> _mealTemplates = [];
   List<SavedFoodTemplate> _foodTemplates = [];
 
   bool _isLoading = false;
@@ -28,44 +27,26 @@ class TemplateViewModel extends ChangeNotifier {
   TemplateFilter get currentFilter => _currentFilter;
   String get searchQuery => _searchQuery;
 
-  List<SavedMealTemplate> get mealTemplates => _mealTemplates;
   List<SavedFoodTemplate> get foodTemplates => _foodTemplates;
-
-  List<SavedFoodTemplate> get createdMealTemplates => _foodTemplates
-      .where((t) => t.prototype.entryType == FoodEntryType.meal)
+  List<SavedFoodTemplate> get mealTemplates => _foodTemplates
+      .where((template) => template.prototype.entryType == FoodEntryType.meal)
       .toList();
-
   List<SavedFoodTemplate> get foodOnlyTemplates => _foodTemplates
-      .where((t) => t.prototype.entryType != FoodEntryType.meal)
+      .where((template) => template.prototype.entryType != FoodEntryType.meal)
       .toList();
 
-  List<dynamic> get filteredTemplates {
-    List<dynamic> results = [];
+  List<SavedFoodTemplate> get filteredTemplates {
+    final templates = switch (_currentFilter) {
+      TemplateFilter.all => _foodTemplates,
+      TemplateFilter.foods => foodOnlyTemplates,
+      TemplateFilter.meals => mealTemplates,
+    };
 
-    switch (_currentFilter) {
-      case TemplateFilter.all:
-        results = [..._mealTemplates, ..._foodTemplates];
-      case TemplateFilter.meals:
-        results = _mealTemplates;
-      case TemplateFilter.foods:
-        results = foodOnlyTemplates;
-      case TemplateFilter.createdMeals:
-        results = createdMealTemplates;
-    }
-
-    if (_searchQuery.isNotEmpty) {
-      final lowerQuery = _searchQuery.toLowerCase();
-      results = results.where((template) {
-        if (template is SavedMealTemplate) {
-          return template.name.toLowerCase().contains(lowerQuery);
-        } else if (template is SavedFoodTemplate) {
-          return template.name.toLowerCase().contains(lowerQuery);
-        }
-        return false;
-      }).toList();
-    }
-
-    return results;
+    if (_searchQuery.isEmpty) return templates;
+    final lowerQuery = _searchQuery.toLowerCase();
+    return templates
+        .where((template) => template.name.toLowerCase().contains(lowerQuery))
+        .toList();
   }
 
   Future<void> loadAllTemplates() async {
@@ -74,7 +55,6 @@ class TemplateViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _mealTemplates = await _storageManager.loadMealTemplates(userId);
       _foodTemplates = await _storageManager.loadFoodTemplates(userId);
     } catch (e) {
       _error = e.toString();
@@ -90,17 +70,11 @@ class TemplateViewModel extends ChangeNotifier {
     required MealLog meal,
     List<String>? tags,
   }) async {
-    final template = SavedMealTemplate.withId(
-      userId: userId,
+    await saveFoodAsTemplate(
       name: name,
-      mealType: meal.mealType,
+      food: _buildMealEntry(name: name, foods: meal.foods),
       tags: tags,
-      isPublic: false,
-      prototypes: meal.foods.map(_cloneFoodEntry).toList(),
     );
-
-    await _storageManager.saveMealTemplate(template);
-    await loadAllTemplates();
   }
 
   Future<String> saveFoodAsTemplate({
@@ -119,54 +93,6 @@ class TemplateViewModel extends ChangeNotifier {
     await _storageManager.saveFoodTemplate(template);
     await loadAllTemplates();
     return template.id;
-  }
-
-  Future<void> updateMealTemplatePrototype(
-    String templateId,
-    List<FoodEntry> prototypes,
-  ) async {
-    final templates = await _storageManager.loadMealTemplates(userId);
-    final index = templates.indexWhere((template) => template.id == templateId);
-    if (index < 0) return;
-
-    templates[index].prototypes = prototypes.map(_cloneFoodEntry).toList();
-    templates[index].updatedAt = DateTime.now();
-    await _storageManager.saveMealTemplate(templates[index]);
-    await loadAllTemplates();
-  }
-
-  Future<void> duplicateMealTemplate(String templateId) async {
-    final templates = await _storageManager.loadMealTemplates(userId);
-    final source = templates.firstWhere(
-      (template) => template.id == templateId,
-    );
-    await _storageManager.saveMealTemplate(
-      SavedMealTemplate.withId(
-        userId: userId,
-        name: source.name,
-        mealType: source.mealType,
-        tags: source.tags == null ? null : List<String>.from(source.tags!),
-        isPublic: source.isPublic,
-        prototypes: source.prototypes.map(_cloneFoodEntry).toList(),
-      ),
-    );
-    await loadAllTemplates();
-  }
-
-  Future<void> deleteMealTemplate(String templateId) async {
-    await _storageManager.deleteMealTemplate(userId, templateId);
-    await loadAllTemplates();
-  }
-
-  Future<void> renameMealTemplate(String templateId, String newName) async {
-    final templates = await _storageManager.loadMealTemplates(userId);
-    final index = templates.indexWhere((t) => t.id == templateId);
-    if (index >= 0) {
-      templates[index].name = newName;
-      templates[index].updatedAt = DateTime.now();
-      await _storageManager.saveMealTemplate(templates[index]);
-      await loadAllTemplates();
-    }
   }
 
   Future<void> renameFoodTemplate(String templateId, String newName) async {
@@ -216,20 +142,6 @@ class TemplateViewModel extends ChangeNotifier {
     await loadAllTemplates();
   }
 
-  MealLog applyMealTemplate(SavedMealTemplate template) {
-    return MealLog.withId(
-      mealType: template.mealType,
-      mealContext: MealContext.home,
-      timestamp: DateTime.now(),
-      timezone: DateTime.now().timeZoneName,
-      isSkipped: false,
-      templateId: template.id,
-      foods: template.prototypes
-          .map((f) => _createFoodFromPrototype(f, template.id))
-          .toList(),
-    );
-  }
-
   FoodEntry applyFoodTemplate(SavedFoodTemplate template) {
     return _createFoodFromPrototype(template.prototype, template.id);
   }
@@ -270,5 +182,88 @@ class TemplateViewModel extends ChangeNotifier {
         )
         .toList();
     return food;
+  }
+
+  FoodEntry _buildMealEntry({
+    required String name,
+    required List<FoodEntry> foods,
+  }) {
+    final nutrition = _sumNutrition(foods);
+    final meal = FoodEntry.withId(
+      entryType: FoodEntryType.meal,
+      name: name,
+      amount: 1,
+      unit: 'serving',
+      servingSizeGrams: foods.fold(
+        0,
+        (total, food) => total + food.servingSizeGrams,
+      ),
+      portionEstimationMethod: PortionEstimationMethod.householdMeasure,
+      portionState: PortionState.asServed,
+      nutrition: nutrition,
+      source: FoodSource.manual,
+      confidenceScore: 0.9,
+      originalValues: {},
+      componentFoods: [],
+    );
+    meal.componentFoods = foods
+        .map(
+          (food) => FoodComposition.withId(
+            parentEntryId: meal.id,
+            foodId: food.id,
+            amount: food.amount,
+            unit: food.unit,
+          ),
+        )
+        .toList();
+    return meal;
+  }
+
+  NutritionProfile _sumNutrition(List<FoodEntry> foods) {
+    final micros = <String, double>{};
+    var energy = 0.0;
+    var protein = 0.0;
+    var carbs = 0.0;
+    var fat = 0.0;
+    var sugars = 0.0;
+    var fiber = 0.0;
+    var saturatedFat = 0.0;
+    var transFat = 0.0;
+    var cholesterol = 0.0;
+    var sodium = 0.0;
+    var waterContent = 0.0;
+
+    for (final food in foods) {
+      final nutrition = food.nutrition;
+      energy += nutrition.energyKcal;
+      protein += nutrition.protein;
+      carbs += nutrition.carbs;
+      fat += nutrition.fat;
+      sugars += nutrition.sugars;
+      fiber += nutrition.fiber;
+      saturatedFat += nutrition.saturatedFat;
+      transFat += nutrition.transFat;
+      cholesterol += nutrition.cholesterol;
+      sodium += nutrition.sodium;
+      waterContent += nutrition.waterContent;
+      nutrition.micros.forEach((key, value) {
+        micros[key] = (micros[key] ?? 0) + value;
+      });
+    }
+
+    return NutritionProfile(
+      energyKcal: energy,
+      protein: protein,
+      carbs: carbs,
+      fat: fat,
+      sugars: sugars,
+      fiber: fiber,
+      saturatedFat: saturatedFat,
+      transFat: transFat,
+      cholesterol: cholesterol,
+      sodium: sodium,
+      waterContent: waterContent,
+      micros: micros,
+    );
   }
 }

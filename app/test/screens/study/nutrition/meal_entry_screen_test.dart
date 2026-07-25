@@ -1000,15 +1000,32 @@ void main() {
     final yogurt = FoodEntry.fromJson(testFood().toJson())
       ..id = 'yogurt-prototype'
       ..name = 'Yogurt';
-    await TemplateStorageManager().saveMealTemplate(
-      SavedMealTemplate(
+    final mealPrototype = FoodEntry.fromJson(testFood().toJson())
+      ..id = 'meal-prototype'
+      ..entryType = FoodEntryType.meal
+      ..name = 'Afternoon Snack'
+      ..componentFoods = [
+        FoodComposition.withId(
+          parentEntryId: 'meal-prototype',
+          foodId: pear.id,
+          amount: pear.amount,
+          unit: pear.unit,
+        ),
+        FoodComposition.withId(
+          parentEntryId: 'meal-prototype',
+          foodId: yogurt.id,
+          amount: yogurt.amount,
+          unit: yogurt.unit,
+        ),
+      ];
+    await TemplateStorageManager().saveFoodTemplate(
+      SavedFoodTemplate(
         id: 'saved-meal-template',
         userId: 'anonymous',
         name: 'Afternoon Snack',
-        mealType: MealType.snack,
         isPublic: false,
         createdAt: DateTime(2026, 7, 15),
-        prototypes: [pear, yogurt],
+        prototype: mealPrototype,
       ),
     );
     final original = editableMeal();
@@ -1028,8 +1045,7 @@ void main() {
     await tester.tap(find.text('Afternoon Snack'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Pear'), findsOneWidget);
-    expect(find.text('Yogurt'), findsOneWidget);
+    expect(find.text('Afternoon Snack'), findsOneWidget);
     await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
 
@@ -1038,11 +1054,11 @@ void main() {
     expect(result!.customMealLabel, 'Edited supper');
     expect(result!.mealContext, original.mealContext);
     expect(result!.timestamp, original.timestamp);
-    expect(result!.foods, hasLength(3));
-    expect(result!.foods[1].id, isNot(pear.id));
-    expect(result!.foods[2].id, isNot(yogurt.id));
+    expect(result!.foods, hasLength(2));
+    expect(result!.foods[1].id, isNot(mealPrototype.id));
+    expect(result!.foods[1].entryType, FoodEntryType.meal);
     expect(result!.foods[1].templateId, 'saved-meal-template');
-    expect(result!.foods[2].templateId, 'saved-meal-template');
+    expect(result!.foods[1].componentFoods, hasLength(2));
     expect(original.foods, hasLength(1));
   });
 

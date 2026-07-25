@@ -21,7 +21,7 @@ class NutritionFormData extends IFormDataWithSchedule {
     required super.hasReminder,
     super.reminderTime,
     this.collectMealContext = true,
-    this.allowCreatedMeals = true,
+    this.allowMeals = true,
     this.requireDailyCompletionConfirmation = false,
     this.minimumMealsRequired,
     this.customMealTypes,
@@ -31,7 +31,7 @@ class NutritionFormData extends IFormDataWithSchedule {
   final String title;
   final String? instructions;
   final bool collectMealContext;
-  final bool allowCreatedMeals;
+  final bool allowMeals;
   final bool requireDailyCompletionConfirmation;
   final int? minimumMealsRequired;
   final List<String>? customMealTypes;
@@ -51,7 +51,7 @@ class NutritionFormData extends IFormDataWithSchedule {
       reminderTime: nutritionTask.schedule.reminderTime,
       instanceId: nutritionTask.schedule.instanceId,
       collectMealContext: nutritionTask.collectMealContext,
-      allowCreatedMeals: nutritionTask.allowCreatedMeals,
+      allowMeals: nutritionTask.allowMeals,
       requireDailyCompletionConfirmation:
           nutritionTask.requireDailyCompletionConfirmation,
       minimumMealsRequired: nutritionTask.minimumMealsRequired,
@@ -66,7 +66,7 @@ class NutritionFormData extends IFormDataWithSchedule {
     nutritionTask.instructions = instructions;
     nutritionTask.schedule = toSchedule();
     nutritionTask.collectMealContext = collectMealContext;
-    nutritionTask.allowCreatedMeals = allowCreatedMeals;
+    nutritionTask.allowMeals = allowMeals;
     nutritionTask.requireDailyCompletionConfirmation =
         requireDailyCompletionConfirmation;
     nutritionTask.minimumMealsRequired = minimumMealsRequired;
@@ -87,7 +87,7 @@ class NutritionFormData extends IFormDataWithSchedule {
       hasReminder: hasReminder,
       reminderTime: reminderTime,
       collectMealContext: collectMealContext,
-      allowCreatedMeals: allowCreatedMeals,
+      allowMeals: allowMeals,
       requireDailyCompletionConfirmation: requireDailyCompletionConfirmation,
       minimumMealsRequired: minimumMealsRequired,
       customMealTypes: customMealTypes != null

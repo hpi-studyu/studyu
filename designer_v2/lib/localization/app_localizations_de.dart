@@ -2994,12 +2994,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Frage Teilnehmende, wo und mit wem sie gegessen haben.';
 
   @override
-  String get form_field_nutrition_allow_created_meals =>
-      'Erstellte Mahlzeiten erlauben';
+  String get form_field_nutrition_allow_meals => 'Mahlzeiten erlauben';
 
   @override
-  String get form_field_nutrition_allow_created_meals_help =>
-      'Erlaube Teilnehmenden, Lebensmittel zu wiederverwendbaren kombinierten Mahlzeiten zusammenzufassen.';
+  String get form_field_nutrition_allow_meals_help =>
+      'Erlaube Teilnehmenden, Lebensmittel zu wiederverwendbaren Mahlzeiten zusammenzufassen.';
 
   @override
   String get form_field_nutrition_require_daily_completion =>

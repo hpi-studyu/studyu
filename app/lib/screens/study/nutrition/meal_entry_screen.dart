@@ -179,7 +179,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final result = await FoodSearchScreen.show(
       context,
       mealLabel: _mealLabel,
-      allowCreatedMeals: widget.task?.allowCreatedMeals ?? true,
+      allowMeals: widget.task?.allowMeals ?? true,
     );
     if (result != null && mounted) {
       setState(() => _meal.foods.addAll(result.foods));
@@ -605,7 +605,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final userId = appState.activeSubject?.id ?? 'anonymous';
 
     final templateType = food.entryType == FoodEntryType.meal
-        ? TemplateType.createdMeal
+        ? TemplateType.meal
         : TemplateType.food;
 
     final result = await SaveTemplateDialog.show(
@@ -1321,7 +1321,7 @@ class _FoodListSection extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: isSavingTemplate ? null : onSaveAsTemplate,
-                  child: Text(l10n.save_meal_template),
+                  child: Text(l10n.save_meal),
                 ),
                 Semantics(
                   label: l10n.add_items,

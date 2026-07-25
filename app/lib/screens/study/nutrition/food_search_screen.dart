@@ -133,31 +133,28 @@ enum _FoodSearchSection { recent, myItems }
 enum _FoodSearchFilter { all, myItems, database }
 
 class FoodSearchScreen extends StatelessWidget {
-  final bool allowCreatedMeals;
-  final bool allowMealTemplates;
+  final bool allowMeals;
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
 
   const FoodSearchScreen({
-    this.allowCreatedMeals = true,
-    this.allowMealTemplates = false,
+    this.allowMeals = true,
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
     super.key,
   });
 
-  static MaterialPageRoute<studyu.FoodEntry> route({
-    bool allowCreatedMeals = true,
-  }) => MaterialPageRoute(
-    builder: (_) => FoodSearchScreen(allowCreatedMeals: allowCreatedMeals),
-  );
+  static MaterialPageRoute<studyu.FoodEntry> route({bool allowMeals = true}) =>
+      MaterialPageRoute(
+        builder: (_) => FoodSearchScreen(allowMeals: allowMeals),
+      );
 
   static Future<FoodSearchSelection?> show(
     BuildContext context, {
     required String mealLabel,
-    bool allowCreatedMeals = true,
+    bool allowMeals = true,
     OpenFoodFactsSearch? openFoodFactsSearch,
     UsdaFoodSearch? usdaFoodSearch,
   }) => showModalBottomSheet<FoodSearchSelection>(
@@ -167,8 +164,7 @@ class FoodSearchScreen extends StatelessWidget {
     builder: (_) => FractionallySizedBox(
       heightFactor: 0.96,
       child: FoodSearchScreen(
-        allowCreatedMeals: allowCreatedMeals,
-        allowMealTemplates: true,
+        allowMeals: allowMeals,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
@@ -191,8 +187,7 @@ class FoodSearchScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => TemplateViewModel(userId: userId),
       child: _FoodSearchScreenContent(
-        allowCreatedMeals: allowCreatedMeals,
-        allowMealTemplates: allowMealTemplates,
+        allowMeals: allowMeals,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
@@ -203,16 +198,14 @@ class FoodSearchScreen extends StatelessWidget {
 }
 
 class _FoodSearchScreenContent extends StatefulWidget {
-  final bool allowCreatedMeals;
-  final bool allowMealTemplates;
+  final bool allowMeals;
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
   final FoodSearchHistory history;
 
   const _FoodSearchScreenContent({
-    this.allowCreatedMeals = true,
-    this.allowMealTemplates = false,
+    this.allowMeals = true,
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
@@ -659,11 +652,17 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     );
   }
 
+  bool _isAllowedFood(studyu.FoodEntry food) {
+    return widget.allowMeals || food.entryType != studyu.FoodEntryType.meal;
+  }
+
   void _selectHistoryItem(FoodSearchHistoryItem item) {
+    if (!_isAllowedFood(item.food)) return;
     _showQuantity(item.createSelection());
   }
 
   void _addHistoryItem(FoodSearchHistoryItem item) {
+    if (!_isAllowedFood(item.food)) return;
     _completeSingleSelection(item.createSelection());
   }
 
@@ -694,8 +693,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _selectFoodTemplate(studyu.SavedFoodTemplate template) {
+    if (!_isAllowedFood(template.prototype)) return;
     final foodEntry = _foodEntryForTemplate(template);
-    if (widget.allowMealTemplates) {
+    if (widget.mealLabel != null) {
       _showQuantity(foodEntry);
     } else {
       _completeSingleSelection(foodEntry);
@@ -703,16 +703,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _addFoodTemplate(studyu.SavedFoodTemplate template) {
+    if (!_isAllowedFood(template.prototype)) return;
     _completeSingleSelection(_foodEntryForTemplate(template));
-  }
-
-  void _selectMealTemplate(studyu.SavedMealTemplate template) {
-    final templateViewModel = Provider.of<TemplateViewModel>(
-      context,
-      listen: false,
-    );
-    final meal = templateViewModel.applyMealTemplate(template);
-    Navigator.pop(context, FoodSearchSelection(meal.foods));
   }
 
   Future<void> _showQuantity(studyu.FoodEntry foodEntry) async {
@@ -730,7 +722,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _completeSingleSelection(studyu.FoodEntry foodEntry) {
-    if (widget.allowMealTemplates) {
+    if (widget.mealLabel != null) {
       Navigator.pop(context, FoodSearchSelection.single(foodEntry));
     } else {
       Navigator.pop(context, foodEntry);
@@ -780,32 +772,21 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     }
   }
 
-  bool _isAllowedTemplate(dynamic template) {
-    if (template is studyu.SavedMealTemplate) return widget.allowMealTemplates;
-    if (template is studyu.SavedFoodTemplate) {
-      return widget.allowCreatedMeals ||
-          template.prototype.entryType != studyu.FoodEntryType.meal;
-    }
-    return false;
+  bool _isAllowedTemplate(studyu.SavedFoodTemplate template) {
+    return widget.allowMeals ||
+        template.prototype.entryType != studyu.FoodEntryType.meal;
   }
 
   int _personalResultCount(TemplateViewModel templateViewModel) {
     final query = _searchController.text.trim().toLowerCase();
     if (query.isEmpty) return 0;
-    return [
-      ...templateViewModel.mealTemplates,
-      ...templateViewModel.foodTemplates,
-    ].where((template) {
-      if (template is studyu.SavedMealTemplate) {
-        return _isAllowedTemplate(template) &&
-            template.name.toLowerCase().contains(query);
-      }
-      if (template is studyu.SavedFoodTemplate) {
-        return _isAllowedTemplate(template) &&
-            template.name.toLowerCase().contains(query);
-      }
-      return false;
-    }).length;
+    return templateViewModel.foodTemplates
+        .where(
+          (template) =>
+              _isAllowedTemplate(template) &&
+              template.name.toLowerCase().contains(query),
+        )
+        .length;
   }
 
   @override
@@ -915,14 +896,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onAddHistory: _addHistoryItem,
               onSelectFoodTemplate: _selectFoodTemplate,
               onAddFoodTemplate: _addFoodTemplate,
-              onSelectMealTemplate: _selectMealTemplate,
               onManageSavedItems: () => _manageSavedItems(templateViewModel),
               onSelectResult: _selectResult,
               onAddResult: _addResult,
               onRetry: () => _retrySearch(templateViewModel),
-              allowCreatedMeals: widget.allowCreatedMeals,
-              allowMealTemplates: widget.allowMealTemplates,
-              showServingHint: _showServingHint && widget.allowMealTemplates,
+              allowMeals: widget.allowMeals,
+              showServingHint: _showServingHint && widget.mealLabel != null,
             ),
           ),
           if (showSearchFallback)
@@ -1077,27 +1056,16 @@ class _TemplateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final mealTemplate = template is studyu.SavedMealTemplate
-        ? template as studyu.SavedMealTemplate
-        : null;
-    final foodTemplate = template is studyu.SavedFoodTemplate
-        ? template as studyu.SavedFoodTemplate
-        : null;
-    final isCreatedMeal =
-        foodTemplate?.prototype.entryType == studyu.FoodEntryType.meal;
-    final name = mealTemplate?.name ?? foodTemplate!.name;
-    final icon = mealTemplate != null
-        ? Icons.restaurant_menu_outlined
-        : isCreatedMeal
-        ? Icons.menu_book_outlined
-        : Icons.fastfood_outlined;
-    final imageUrl = foodTemplate == null
-        ? null
-        : _foodImageUrl(foodTemplate.prototype);
+    final foodTemplate = template as studyu.SavedFoodTemplate;
+    final isMeal =
+        foodTemplate.prototype.entryType == studyu.FoodEntryType.meal;
+    final name = foodTemplate.name;
+    final icon = isMeal ? Icons.menu_book_outlined : Icons.fastfood_outlined;
+    final imageUrl = _foodImageUrl(foodTemplate.prototype);
 
-    final metadata = mealTemplate != null
-        ? '${l10n.template_type_meal} · ${l10n.items_count(mealTemplate.prototypes.length)}'
-        : _foodServingMetadata(l10n, foodTemplate!.prototype);
+    final metadata = isMeal
+        ? '${l10n.template_type_meal} · ${l10n.items_count(foodTemplate.prototype.componentFoods?.length ?? 0)}'
+        : _foodServingMetadata(l10n, foodTemplate.prototype);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -1510,13 +1478,11 @@ class _FoodSearchListView extends StatelessWidget {
   final void Function(FoodSearchHistoryItem) onAddHistory;
   final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
   final void Function(studyu.SavedFoodTemplate) onAddFoodTemplate;
-  final void Function(studyu.SavedMealTemplate) onSelectMealTemplate;
   final VoidCallback onManageSavedItems;
   final void Function(UnifiedFoodResult) onSelectResult;
   final void Function(UnifiedFoodResult) onAddResult;
   final VoidCallback onRetry;
-  final bool allowCreatedMeals;
-  final bool allowMealTemplates;
+  final bool allowMeals;
   final bool showServingHint;
 
   const _FoodSearchListView({
@@ -1543,45 +1509,38 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onAddHistory,
     required this.onSelectFoodTemplate,
     required this.onAddFoodTemplate,
-    required this.onSelectMealTemplate,
     required this.onManageSavedItems,
     required this.onSelectResult,
     required this.onAddResult,
     required this.onRetry,
-    this.allowCreatedMeals = true,
-    this.allowMealTemplates = false,
+    this.allowMeals = true,
     required this.showServingHint,
   });
 
-  bool _isAllowedTemplate(dynamic template) {
-    if (template is studyu.SavedMealTemplate) return allowMealTemplates;
-    if (template is studyu.SavedFoodTemplate) {
-      return allowCreatedMeals ||
-          template.prototype.entryType != studyu.FoodEntryType.meal;
-    }
-    return false;
+  bool _isAllowedTemplate(studyu.SavedFoodTemplate template) {
+    return allowMeals ||
+        template.prototype.entryType != studyu.FoodEntryType.meal;
   }
 
   List<Object> _personalMatches() {
     final query = searchController.text.trim().toLowerCase();
-    return [
-      ...templateViewModel.mealTemplates,
-      ...templateViewModel.foodTemplates,
-    ].where((template) {
-      if (template is studyu.SavedMealTemplate) {
-        return _isAllowedTemplate(template) &&
-            template.name.toLowerCase().contains(query);
-      }
-      if (template is studyu.SavedFoodTemplate) {
-        return _isAllowedTemplate(template) &&
-            template.name.toLowerCase().contains(query);
-      }
-      return false;
-    }).toList();
+    return templateViewModel.foodTemplates
+        .where(
+          (template) =>
+              _isAllowedTemplate(template) &&
+              template.name.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   List<FoodSearchHistoryItem> _recentItems() {
-    return [...history.frequentlyUsed, ...history.recent]..sort((left, right) {
+    final items = [...history.frequentlyUsed, ...history.recent]
+        .where(
+          (item) =>
+              allowMeals || item.food.entryType != studyu.FoodEntryType.meal,
+        )
+        .toList();
+    return items..sort((left, right) {
       final dateComparison = right.lastUsedAt.compareTo(left.lastUsedAt);
       if (dateComparison != 0) return dateComparison;
       final countComparison = right.useCount.compareTo(left.useCount);
@@ -1594,20 +1553,8 @@ class _FoodSearchListView extends StatelessWidget {
   Widget _templateCard(Object template) {
     return _TemplateCard(
       template: template,
-      onTap: () {
-        if (template is studyu.SavedMealTemplate) {
-          onSelectMealTemplate(template);
-        } else if (template is studyu.SavedFoodTemplate) {
-          onSelectFoodTemplate(template);
-        }
-      },
-      onAdd: () {
-        if (template is studyu.SavedMealTemplate) {
-          onSelectMealTemplate(template);
-        } else if (template is studyu.SavedFoodTemplate) {
-          onAddFoodTemplate(template);
-        }
-      },
+      onTap: () => onSelectFoodTemplate(template as studyu.SavedFoodTemplate),
+      onAdd: () => onAddFoodTemplate(template as studyu.SavedFoodTemplate),
       theme: theme,
     );
   }
@@ -1827,7 +1774,6 @@ class _MyItemsToolbar extends StatelessWidget {
     TemplateFilter.all => l10n.filter_all,
     TemplateFilter.foods => l10n.filter_foods,
     TemplateFilter.meals => l10n.filter_meals,
-    TemplateFilter.createdMeals => l10n.filter_created_meals,
   };
 
   @override
