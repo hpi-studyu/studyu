@@ -2217,10 +2217,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_library => 'Lebensmittelbibliothek';
 
   @override
-  String get add_food_action => 'Lebensmittel hinzufügen';
+  String get add_food_action => 'Lebensmittel erstellen';
 
   @override
-  String get add_meal_action => 'Mahlzeit hinzufügen';
+  String get add_meal_action => 'Mahlzeit erstellen';
 
   @override
   String get recent_foods => 'Zuletzt verwendet';

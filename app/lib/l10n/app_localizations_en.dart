@@ -2199,10 +2199,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_library => 'Food library';
 
   @override
-  String get add_food_action => 'Add food';
+  String get add_food_action => 'Create food';
 
   @override
-  String get add_meal_action => 'Add meal';
+  String get add_meal_action => 'Create meal';
 
   @override
   String get recent_foods => 'Recently added';
