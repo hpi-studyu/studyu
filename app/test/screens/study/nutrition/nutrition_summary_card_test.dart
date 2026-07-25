@@ -13,23 +13,8 @@ Widget testApp(Widget home) => MaterialApp(
   home: home,
 );
 
-NutritionProfile zeroNutrition() => NutritionProfile(
-  energyKcal: 0,
-  protein: 0,
-  carbs: 0,
-  fat: 0,
-  sugars: 0,
-  fiber: 0,
-  saturatedFat: 0,
-  transFat: 0,
-  cholesterol: 0,
-  sodium: 0,
-  waterContent: 0,
-  micros: const {},
-);
-
 void main() {
-  testWidgets('nutrition summary is compact and expands without hiding zeros', (
+  testWidgets('nutrition summary distinguishes zero and unavailable values', (
     tester,
   ) async {
     tester.view.devicePixelRatio = 1;
@@ -38,13 +23,30 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     final semantics = tester.ensureSemantics();
 
+    final nutrition = NutritionProfile(
+      energyKcal: 555,
+      protein: 50.4,
+      carbs: 30.7,
+      fat: 23.9,
+      sugars: 0,
+      fiber: 3.5,
+      saturatedFat: 0,
+      transFat: 0,
+      cholesterol: 0,
+      sodium: 0,
+      waterContent: 0,
+      micros: const {},
+      unavailableNutrients: const {'sugars'},
+      unavailableItemCount: 1,
+    );
+
     await tester.pumpWidget(
       testApp(
         Scaffold(
           body: SingleChildScrollView(
             child: NutritionSummaryCard(
-              nutrition: zeroNutrition(),
-              title: 'Meal Nutrition',
+              nutrition: nutrition,
+              title: 'Today’s nutrition',
             ),
           ),
         ),
@@ -52,30 +54,26 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Meal Nutrition'), findsOneWidget);
-    expect(find.text('0 kcal'), findsOneWidget);
-    expect(find.text('0.0g'), findsNWidgets(3));
-    expect(find.bySemanticsLabel(RegExp('0 kcal')), findsWidgets);
-    expect(find.bySemanticsLabel(RegExp('0\\.0g')), findsWidgets);
-    expect(find.text('No data yet'), findsNothing);
-    expect(find.text('Detailed Nutrients'), findsNothing);
+    expect(find.text('Today’s nutrition'), findsOneWidget);
+    expect(find.text('555 kcal'), findsOneWidget);
+    expect(find.text('30.7 g'), findsOneWidget);
+    expect(find.text('50.4 g'), findsOneWidget);
+    expect(find.text('Energy by macronutrient'), findsOneWidget);
+    expect(find.text('Show'), findsOneWidget);
+    expect(
+      find.textContaining('Some nutrient values are unavailable for 1 item.'),
+      findsOneWidget,
+    );
 
-    final summaryTile = find.byType(ListTile).first;
-    await tester.tap(summaryTile);
+    await tester.tap(find.widgetWithText(TextButton, 'Show'));
     await tester.pumpAndSettle();
+    expect(find.text('Hide'), findsOneWidget);
+    expect(find.text('—'), findsOneWidget);
+    expect(find.text('0 g'), findsAtLeastNWidgets(1));
 
-    expect(find.text('0 kcal'), findsOneWidget);
-    expect(find.text('0.0g'), findsNWidgets(3));
-    expect(find.text('No data yet'), findsOneWidget);
-    expect(find.text('Detailed Nutrients'), findsOneWidget);
-
-    await tester.tap(summaryTile);
+    await tester.tap(find.widgetWithText(TextButton, 'Hide'));
     await tester.pumpAndSettle();
-
-    expect(find.text('0 kcal'), findsOneWidget);
-    expect(find.text('0.0g'), findsNWidgets(3));
-    expect(find.text('No data yet'), findsNothing);
-    expect(find.text('Detailed Nutrients'), findsNothing);
+    expect(find.text('Show'), findsOneWidget);
 
     semantics.dispose();
   });
@@ -159,7 +157,7 @@ void main() {
     expect(find.text('Nutrition per Serving'), findsOneWidget);
     expect(find.text('1 serving'), findsOneWidget);
     expect(find.text('100 kcal'), findsOneWidget);
-    expect(find.text('0.0g'), findsNWidgets(3));
-    expect(find.text('No data yet'), findsNothing);
+    expect(find.text('0 g'), findsNWidgets(4));
+    expect(find.text('No data yet'), findsOneWidget);
   });
 }
