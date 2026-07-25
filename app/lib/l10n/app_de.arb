@@ -739,7 +739,7 @@
   "my_saved_items": "Meine Elemente",
   "global_database": "Datenbank",
   "add_manually": "Lebensmittel manuell erstellen",
-  "tap_item_to_choose_serving": "Tippen Sie auf ein Element, um Portion und Menge auszuwählen.",
+  "tap_item_to_choose_serving": "Tippen Sie auf ein Lebensmittel, um Portion oder Menge zu ändern.",
   "scan_barcode": "Barcode scannen",
   "searching_databases": "Datenbanken werden durchsucht...",
   "no_results_found": "Keine Ergebnisse gefunden. Versuchen Sie andere Suchbegriffe.",

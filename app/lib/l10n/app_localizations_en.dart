@@ -2190,13 +2190,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get more_options => 'More options';
 
   @override
-  String get search_food_hint => 'Search foods and meals…';
+  String get search_food_hint => 'Search foods, meals or brands';
 
   @override
-  String get my_saved_items => 'My items';
+  String get my_saved_items => 'My food library';
 
   @override
-  String get recent_foods => 'Recent';
+  String get recent_foods => 'Recently added';
 
   @override
   String get frequently_used_foods => 'Frequently Used';
@@ -2224,7 +2224,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tap_item_to_choose_serving =>
-      'Tap an item to choose the serving and amount.';
+      'Tap a food to change the serving or amount.';
 
   @override
   String get scan_barcode => 'Scan Barcode';

@@ -4094,19 +4094,19 @@ abstract class AppLocalizations {
   /// No description provided for @search_food_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search foods and meals…'**
+  /// **'Search foods, meals or brands'**
   String get search_food_hint;
 
   /// No description provided for @my_saved_items.
   ///
   /// In en, this message translates to:
-  /// **'My items'**
+  /// **'My food library'**
   String get my_saved_items;
 
   /// No description provided for @recent_foods.
   ///
   /// In en, this message translates to:
-  /// **'Recent'**
+  /// **'Recently added'**
   String get recent_foods;
 
   /// No description provided for @frequently_used_foods.
@@ -4160,7 +4160,7 @@ abstract class AppLocalizations {
   /// No description provided for @tap_item_to_choose_serving.
   ///
   /// In en, this message translates to:
-  /// **'Tap an item to choose the serving and amount.'**
+  /// **'Tap a food to change the serving or amount.'**
   String get tap_item_to_choose_serving;
 
   /// No description provided for @scan_barcode.

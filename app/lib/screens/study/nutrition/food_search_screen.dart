@@ -11,7 +11,7 @@ import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
-import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -132,6 +132,8 @@ enum _FoodSearchSection { recent, myItems }
 
 enum _FoodSearchFilter { all, myItems, database }
 
+enum _CreateOption { food, meal }
+
 class FoodSearchScreen extends StatelessWidget {
   final bool allowMeals;
   final String? mealLabel;
@@ -161,8 +163,9 @@ class FoodSearchScreen extends StatelessWidget {
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) => FractionallySizedBox(
-      heightFactor: 0.96,
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    shape: const RoundedRectangleBorder(),
+    builder: (_) => SizedBox.expand(
       child: FoodSearchScreen(
         allowMeals: allowMeals,
         mealLabel: mealLabel,
@@ -754,9 +757,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     });
   }
 
-  Future<void> _manageSavedItems(TemplateViewModel templateViewModel) async {
-    await Navigator.push(context, MyTemplatesScreen.route());
-    if (mounted) await templateViewModel.loadAllTemplates();
+  void _createMeal() {
+    Navigator.push<studyu.FoodEntry>(context, MealCreatorScreen.route()).then((
+      result,
+    ) {
+      if (result != null && mounted) {
+        _completeSingleSelection(result);
+      }
+    });
   }
 
   Future<void> _scanBarcode() async {
@@ -835,10 +843,32 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
-          TextButton.icon(
-            icon: const Icon(Icons.add),
-            label: Text(l10n.create),
-            onPressed: _addManually,
+          PopupMenuButton<_CreateOption>(
+            onSelected: (option) {
+              switch (option) {
+                case _CreateOption.food:
+                  _addManually();
+                case _CreateOption.meal:
+                  _createMeal();
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: _CreateOption.food,
+                child: Text(l10n.add_new_food),
+              ),
+              PopupMenuItem(
+                value: _CreateOption.meal,
+                child: Text(l10n.create_meal),
+              ),
+            ],
+            child: IgnorePointer(
+              child: TextButton.icon(
+                icon: const Icon(Icons.add),
+                label: Text(l10n.create),
+                onPressed: () {},
+              ),
+            ),
           ),
         ],
       ),
@@ -896,7 +926,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onAddHistory: _addHistoryItem,
               onSelectFoodTemplate: _selectFoodTemplate,
               onAddFoodTemplate: _addFoodTemplate,
-              onManageSavedItems: () => _manageSavedItems(templateViewModel),
               onSelectResult: _selectResult,
               onAddResult: _addResult,
               onRetry: () => _retrySearch(templateViewModel),
@@ -1076,6 +1105,11 @@ class _TemplateCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
+        overlayColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.pressed)
+              ? theme.colorScheme.primary.withValues(alpha: 0.12)
+              : null,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: ConstrainedBox(
@@ -1164,6 +1198,11 @@ class _HistoryFoodCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
+        overlayColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.pressed)
+              ? theme.colorScheme.primary.withValues(alpha: 0.12)
+              : null,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: ConstrainedBox(
@@ -1262,6 +1301,11 @@ class _FoodResultCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
+        overlayColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.pressed)
+              ? theme.colorScheme.primary.withValues(alpha: 0.12)
+              : null,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -1480,7 +1524,6 @@ class _FoodSearchListView extends StatelessWidget {
   final void Function(FoodSearchHistoryItem) onAddHistory;
   final void Function(studyu.SavedFoodTemplate) onSelectFoodTemplate;
   final void Function(studyu.SavedFoodTemplate) onAddFoodTemplate;
-  final VoidCallback onManageSavedItems;
   final void Function(UnifiedFoodResult) onSelectResult;
   final void Function(UnifiedFoodResult) onAddResult;
   final VoidCallback onRetry;
@@ -1511,7 +1554,6 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onAddHistory,
     required this.onSelectFoodTemplate,
     required this.onAddFoodTemplate,
-    required this.onManageSavedItems,
     required this.onSelectResult,
     required this.onAddResult,
     required this.onRetry,
@@ -1567,27 +1609,18 @@ class _FoodSearchListView extends StatelessWidget {
     final children = <Widget>[];
     if (query.isEmpty) {
       children.add(
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: _QuickSectionTabs(
-                sections: const [
-                  _FoodSearchSection.recent,
-                  _FoodSearchSection.myItems,
-                ],
-                selectedSection: selectedSection,
-                onChanged: onSectionChanged,
-                l10n: l10n,
-              ),
+            _QuickSectionTabs(
+              sections: const [
+                _FoodSearchSection.recent,
+                _FoodSearchSection.myItems,
+              ],
+              selectedSection: selectedSection,
+              onChanged: onSectionChanged,
+              l10n: l10n,
             ),
-            if (selectedSection == _FoodSearchSection.myItems)
-              TextButton(
-                onPressed: onManageSavedItems,
-                style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
-                ),
-                child: Text(l10n.manage_saved_items),
-              ),
           ],
         ),
       );
