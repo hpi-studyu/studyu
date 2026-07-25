@@ -1992,7 +1992,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_food => 'My foods';
 
   @override
-  String get search_templates => 'Search My Items...';
+  String get search_templates => 'Search saved foods and meals…';
 
   @override
   String get no_templates_saved => 'No items yet';

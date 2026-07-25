@@ -53,31 +53,28 @@ class _FoodLibraryScreenContent extends StatelessWidget {
             itemBuilder: (_) => [
               PopupMenuItem(
                 value: _NewItemType.food,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.fastfood),
-                  title: Text(l10n.filter_foods),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.restaurant_outlined),
+                    const SizedBox(width: 12),
+                    Text(l10n.add_food_action),
+                  ],
                 ),
               ),
               PopupMenuItem(
                 value: _NewItemType.meal,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.restaurant_menu_outlined),
-                  title: Text(l10n.create_meal),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.restaurant_menu_outlined),
+                    const SizedBox(width: 12),
+                    Text(l10n.add_meal_action),
+                  ],
                 ),
               ),
             ],
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  const Icon(Icons.add),
-                  const SizedBox(width: 4),
-                  Text(l10n.new_item),
-                ],
-              ),
-            ),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),

@@ -3770,7 +3770,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_templates.
   ///
   /// In en, this message translates to:
-  /// **'Search My Items...'**
+  /// **'Search saved foods and meals…'**
   String get search_templates;
 
   /// No description provided for @no_templates_saved.

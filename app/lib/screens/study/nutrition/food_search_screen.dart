@@ -11,6 +11,7 @@ import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
+import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
@@ -1059,10 +1060,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   }
 
   void _openFoodLibrary() {
-    final templateViewModel = context.read<TemplateViewModel>();
-    _searchController.clear();
-    templateViewModel.setSearchQuery('');
-    setState(() => _selectedSection = _FoodSearchSection.myItems);
+    Navigator.push(context, FoodLibraryScreen.route());
   }
 
   Future<void> _scanBarcode() async {
@@ -1146,7 +1144,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         title: Text(
           widget.mealLabel == null
               ? l10n.add_food_title
-              : l10n.add_items_to_meal(widget.mealLabel!),
+              : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
           PopupMenuButton<_FoodSearchAction>(

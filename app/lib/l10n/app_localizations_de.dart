@@ -2010,7 +2010,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get select_food => 'Meine Lebensmittel';
 
   @override
-  String get search_templates => 'Meine Elemente durchsuchen...';
+  String get search_templates =>
+      'Gespeicherte Lebensmittel und Mahlzeiten durchsuchen…';
 
   @override
   String get no_templates_saved => 'Noch keine Elemente';

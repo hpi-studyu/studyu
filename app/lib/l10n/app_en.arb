@@ -804,7 +804,7 @@
   "template_saved": "Added to My items",
   "select_meal": "My meals",
   "select_food": "My foods",
-  "search_templates": "Search My Items...",
+  "search_templates": "Search saved foods and meals…",
   "no_templates_saved": "No items yet",
   "save_templates_hint": "Save your favorite meals and foods for quick access",
   "from_template": "From My items",
