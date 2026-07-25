@@ -1101,7 +1101,7 @@
   "form_field_nutrition_minimum_meals_required": "Minimum meals required",
   "form_field_nutrition_minimum_meals_help": "Require this many non-skipped meals before participants can complete the task.",
   "form_field_nutrition_minimum_meals_hint": "Optional",
-  "form_field_nutrition_default_title": "Nutrition Tracking",
+  "form_field_nutrition_default_title": "Nutrition tracking",
   "form_field_nutrition_custom_meal_types": "Custom Meal Types",
   "form_field_nutrition_custom_meal_types_hint": "Leave empty to use defaults",
   "form_field_nutrition_add_meal_type": "Add meal type",

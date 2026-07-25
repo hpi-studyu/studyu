@@ -5038,7 +5038,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_nutrition_default_title.
   ///
   /// In en, this message translates to:
-  /// **'Nutrition Tracking'**
+  /// **'Nutrition tracking'**
   String get form_field_nutrition_default_title;
 
   /// No description provided for @form_field_nutrition_custom_meal_types.

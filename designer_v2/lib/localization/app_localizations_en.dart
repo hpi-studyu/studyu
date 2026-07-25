@@ -2981,7 +2981,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_field_nutrition_minimum_meals_hint => 'Optional';
 
   @override
-  String get form_field_nutrition_default_title => 'Nutrition Tracking';
+  String get form_field_nutrition_default_title => 'Nutrition tracking';
 
   @override
   String get form_field_nutrition_custom_meal_types => 'Custom Meal Types';
