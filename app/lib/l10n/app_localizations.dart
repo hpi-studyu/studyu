@@ -3770,7 +3770,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_templates.
   ///
   /// In en, this message translates to:
-  /// **'Search My items...'**
+  /// **'Search My Items...'**
   String get search_templates;
 
   /// No description provided for @no_templates_saved.
@@ -3838,6 +3838,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
+
+  /// No description provided for @food_selection_add_to_selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to selection'**
+  String get food_selection_add_to_selection;
+
+  /// No description provided for @food_selection_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {name} to selection'**
+  String food_selection_added(String name);
+
+  /// No description provided for @food_selection_update_selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Update selection'**
+  String get food_selection_update_selection;
+
+  /// No description provided for @food_selection_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get food_selection_review;
+
+  /// No description provided for @food_selection_undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get food_selection_undo;
+
+  /// No description provided for @food_selection_increment.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase {name}'**
+  String food_selection_increment(String name);
+
+  /// No description provided for @food_selection_decrement.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease {name}'**
+  String food_selection_decrement(String name);
+
+  /// No description provided for @food_selection_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}'**
+  String food_selection_delete(String name);
+
+  /// No description provided for @food_selection_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, selected, quantity {quantity}'**
+  String food_selection_selected(String name, int quantity);
+
+  /// No description provided for @food_selection_known_calories.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kcal known · {count} unavailable'**
+  String food_selection_known_calories(String value, int count);
+
+  /// No description provided for @food_selection_unknown_calories.
+  ///
+  /// In en, this message translates to:
+  /// **'— kcal · {count} unavailable'**
+  String food_selection_unknown_calories(int count);
+
+  /// No description provided for @food_selection_calories_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories unavailable for {count, plural, =1 {one item} other {{count} items}}'**
+  String food_selection_calories_unavailable(int count);
+
+  /// No description provided for @food_selection_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1 {Add 1 item to {meal}} other {Add {count} items to {meal}}}'**
+  String food_selection_confirm(int count, String meal);
 
   /// No description provided for @serving_amount.
   ///
@@ -4019,6 +4097,18 @@ abstract class AppLocalizations {
   /// **'Add to {meal}'**
   String food_quantity_add_to_meal(String meal);
 
+  /// No description provided for @food_quantity_add_to_selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to selection'**
+  String get food_quantity_add_to_selection;
+
+  /// No description provided for @food_quantity_update_selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Update selection'**
+  String get food_quantity_update_selection;
+
   /// No description provided for @save_to_my_items.
   ///
   /// In en, this message translates to:
@@ -4064,8 +4154,56 @@ abstract class AppLocalizations {
   /// No description provided for @daily_nutrition_total.
   ///
   /// In en, this message translates to:
-  /// **'Daily Nutrition Total'**
+  /// **'Today\'s nutrition'**
   String get daily_nutrition_total;
+
+  /// No description provided for @energy_by_macronutrient.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy by macronutrient'**
+  String get energy_by_macronutrient;
+
+  /// No description provided for @total_energy.
+  ///
+  /// In en, this message translates to:
+  /// **'Total energy'**
+  String get total_energy;
+
+  /// No description provided for @show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get show;
+
+  /// No description provided for @hide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hide;
+
+  /// No description provided for @carbohydrates.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbohydrates'**
+  String get carbohydrates;
+
+  /// No description provided for @fibre.
+  ///
+  /// In en, this message translates to:
+  /// **'Fibre'**
+  String get fibre;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @some_values_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Some nutrient values are unavailable for {count} {count, plural, =1 {item} other {items}}.'**
+  String some_values_unavailable(int count);
 
   /// No description provided for @meal_nutrition.
   ///
@@ -4112,13 +4250,13 @@ abstract class AppLocalizations {
   /// No description provided for @add_food_action.
   ///
   /// In en, this message translates to:
-  /// **'Add food'**
+  /// **'Create food'**
   String get add_food_action;
 
   /// No description provided for @add_meal_action.
   ///
   /// In en, this message translates to:
-  /// **'Add meal'**
+  /// **'Create meal'**
   String get add_meal_action;
 
   /// No description provided for @recent_foods.

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -10,10 +11,11 @@ import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
-import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -97,6 +99,43 @@ String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) {
   return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
 }
 
+double? _resultCalories(UnifiedFoodResult result) {
+  return switch (result.originalData) {
+    final UsdaFoodItem food when food.getNutrientValue(1008) != null =>
+      food.energyKcal100g * (food.servingSize ?? 100) / 100,
+    final UsdaFoodItem _ => null,
+    _ => result.calories,
+  };
+}
+
+bool _resultCaloriesKnown(UnifiedFoodResult result) {
+  return switch (result.originalData) {
+    final UsdaFoodItem food => food.getNutrientValue(1008) != null,
+    final Product product =>
+      product.nutriments?.getValue(
+            Nutrient.energyKCal,
+            PerSize.oneHundredGrams,
+          ) !=
+          null,
+    _ => result.calories != null,
+  };
+}
+
+String _selectionCaloriesSummary(
+  AppLocalizations l10n,
+  FoodSelectionStore store,
+) {
+  final known = store.knownCalories().round();
+  return store.unknownCaloriesCount == 0
+      ? l10n.kcal_value(known.toString())
+      : known == 0
+      ? l10n.food_selection_unknown_calories(store.unknownCaloriesCount)
+      : l10n.food_selection_known_calories(
+          known.toString(),
+          store.unknownCaloriesCount,
+        );
+}
+
 String? _foodImageUrl(studyu.FoodEntry food) {
   for (final key in [
     'image_front_small_url',
@@ -130,6 +169,144 @@ final class FoodSearchSelection {
     : foods = List.unmodifiable([food]);
 }
 
+final class FoodSelectionItem {
+  final String key;
+  studyu.FoodEntry baseFood;
+  int quantity;
+  bool caloriesKnown;
+
+  FoodSelectionItem({
+    required this.key,
+    required this.baseFood,
+    this.quantity = 1,
+    this.caloriesKnown = true,
+  });
+
+  String get name => baseFood.name;
+}
+
+/// Temporary, route-scoped state for the multi-select Add items flow.
+final class FoodSelectionStore extends ChangeNotifier {
+  final LinkedHashMap<String, FoodSelectionItem> _items = LinkedHashMap();
+  String? _lastAddedKey;
+
+  Iterable<FoodSelectionItem> get items => _items.values;
+  int get itemCount => _items.length;
+  int get servingCount =>
+      _items.values.fold(0, (sum, item) => sum + item.quantity);
+  int get unknownCaloriesCount =>
+      _items.values.where((item) => !item.caloriesKnown).length;
+  bool get isEmpty => _items.isEmpty;
+
+  FoodSelectionItem? itemFor(String key) => _items[key];
+
+  void addOrIncrement(
+    String key,
+    studyu.FoodEntry food, {
+    bool caloriesKnown = true,
+  }) {
+    final existing = _items[key];
+    if (existing == null) {
+      _items[key] = FoodSelectionItem(
+        key: key,
+        baseFood: cloneFoodEntry(food),
+        caloriesKnown: caloriesKnown,
+      );
+    } else {
+      existing.quantity++;
+    }
+    _lastAddedKey = key;
+    notifyListeners();
+  }
+
+  void increment(String key) {
+    final item = _items[key];
+    if (item == null) return;
+    item.quantity++;
+    _lastAddedKey = key;
+    notifyListeners();
+  }
+
+  void decrement(String key) {
+    final item = _items[key];
+    if (item == null) return;
+    if (item.quantity <= 1) {
+      _items.remove(key);
+    } else {
+      item.quantity--;
+    }
+    notifyListeners();
+  }
+
+  void delete(String key) {
+    if (_items.remove(key) == null) return;
+    notifyListeners();
+  }
+
+  void replaceBase(
+    String key,
+    studyu.FoodEntry food, {
+    required bool caloriesKnown,
+  }) {
+    final item = _items[key];
+    if (item == null) return;
+    item
+      ..baseFood = cloneFoodEntry(food)
+      ..caloriesKnown = caloriesKnown;
+    notifyListeners();
+  }
+
+  void undoLatestAdd() {
+    final key = _lastAddedKey;
+    if (key == null) return;
+    decrement(key);
+    _lastAddedKey = null;
+  }
+
+  double knownCalories() => _items.values
+      .where((item) => item.caloriesKnown)
+      .fold(
+        0,
+        (sum, item) => sum + item.baseFood.nutrition.energyKcal * item.quantity,
+      );
+
+  List<studyu.FoodEntry> materialize() {
+    final result = <studyu.FoodEntry>[];
+    for (final item in _items.values) {
+      final amount = item.baseFood.amount * item.quantity;
+      if (!amount.isFinite || amount <= 0) {
+        throw ArgumentError.value(amount, 'amount', 'Must be positive');
+      }
+      result.add(rescaleFoodAmount(item.baseFood, amount));
+    }
+    return result;
+  }
+}
+
+String canonicalFoodSelectionKey(studyu.FoodEntry food) {
+  if (food.templateId case final templateId? when templateId.isNotEmpty) {
+    return 'template:$templateId';
+  }
+  final source = food.source.name;
+  final externalId = food.externalId?.trim();
+  if (externalId != null && externalId.isNotEmpty) {
+    return '$source:id:$externalId';
+  }
+  final barcode = food.foodCode?.trim();
+  if (barcode != null && barcode.isNotEmpty) {
+    return '$source:barcode:$barcode';
+  }
+  if (food.source == studyu.FoodSource.manual) return 'manual:${food.id}';
+  return [
+    source,
+    _normalizeSearchText(food.name),
+    _normalizeSearchText(food.brandName ?? ''),
+    _normalizeSearchText(food.unit),
+    food.amount.toString(),
+    food.servingSizeGrams.toString(),
+  ].join('|');
+}
+
 enum _FoodSearchSection { recent, myItems }
 
 enum _FoodSearchFilter { all, myItems, database }
@@ -161,14 +338,10 @@ class FoodSearchScreen extends StatelessWidget {
     bool allowMeals = true,
     OpenFoodFactsSearch? openFoodFactsSearch,
     UsdaFoodSearch? usdaFoodSearch,
-  }) => showModalBottomSheet<FoodSearchSelection>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-    shape: const RoundedRectangleBorder(),
-    builder: (_) => SizedBox.expand(
-      child: FoodSearchScreen(
+  }) => Navigator.of(context).push(
+    MaterialPageRoute<FoodSearchSelection>(
+      fullscreenDialog: true,
+      builder: (_) => FoodSearchScreen(
         allowMeals: allowMeals,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
@@ -224,6 +397,9 @@ class _FoodSearchScreenContent extends StatefulWidget {
 
 class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   final TextEditingController _searchController = TextEditingController();
+  late final FoodSelectionStore? _selectionStore = widget.mealLabel == null
+      ? null
+      : FoodSelectionStore();
   _FoodSearchSection _selectedSection = _FoodSearchSection.recent;
   _FoodSearchFilter _selectedFilter = _FoodSearchFilter.all;
   final ScrollController _scrollController = ScrollController();
@@ -256,12 +432,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   bool _offFailed = false;
   bool _usdaFailed = false;
   bool _showServingHint = true;
+  bool _isConfirming = false;
 
   static const int _pageSize = 20;
 
   @override
   void initState() {
     super.initState();
+    _selectionStore?.addListener(_onSelectionChanged);
     OpenFoodAPIConfiguration.userAgent = UserAgent(
       name: 'StudyU',
       version: '1.0',
@@ -273,8 +451,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     _scrollController.addListener(_onScroll);
   }
 
+  void _onSelectionChanged() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void dispose() {
+    _selectionStore?.removeListener(_onSelectionChanged);
+    _selectionStore?.dispose();
     _debounceTimer?.cancel();
     _searchController.dispose();
     _scrollController.dispose();
@@ -523,8 +707,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
           id: food.fdcId.toString(),
           name: food.description ?? 'Unknown',
           brand: food.brandOwner ?? food.brandName,
-          calories: food.energyKcal100g,
-          calorieBasisGrams: 100,
+          calories: food.getNutrientValue(1008),
+          calorieBasisGrams: food.getNutrientValue(1008) == null ? null : 100,
           source: studyu.FoodSource.usda,
           originalData: food,
         );
@@ -612,7 +796,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final sodium =
         (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) *
         1000;
-
     double servingSizeGrams = 100.0;
     if (product.servingSize != null) {
       final match = RegExp(
@@ -663,12 +846,26 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
   void _selectHistoryItem(FoodSearchHistoryItem item) {
     if (!_isAllowedFood(item.food)) return;
-    _showQuantity(item.createSelection());
+    final food = item.createSelection();
+    if (_selectionStore == null) {
+      _showQuantity(food);
+      return;
+    }
+    final key = canonicalFoodSelectionKey(food);
+    final selected = _selectionStore.itemFor(key);
+    _showQuantity(
+      selected?.baseFood ?? food,
+      key: key,
+      action: selected == null
+          ? FoodQuantityAction.addToSelection
+          : FoodQuantityAction.updateSelection,
+    );
   }
 
   void _addHistoryItem(FoodSearchHistoryItem item) {
     if (!_isAllowedFood(item.food)) return;
-    _completeSingleSelection(item.createSelection());
+    final food = item.createSelection();
+    _addToSelection(food, key: canonicalFoodSelectionKey(food));
   }
 
   studyu.FoodEntry _foodEntryForResult(UnifiedFoodResult result) {
@@ -681,13 +878,27 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final foodEntry = _foodEntryForResult(result);
     if (widget.mealLabel == null) {
       _navigateToEdit(foodEntry);
-    } else {
-      _showQuantity(foodEntry);
+      return;
     }
+    final key = canonicalFoodSelectionKey(foodEntry);
+    final selected = _selectionStore!.itemFor(key);
+    _showQuantity(
+      selected?.baseFood ?? foodEntry,
+      key: key,
+      action: selected == null
+          ? FoodQuantityAction.addToSelection
+          : FoodQuantityAction.updateSelection,
+      caloriesKnown: _resultCaloriesKnown(result),
+    );
   }
 
   void _addResult(UnifiedFoodResult result) {
-    _completeSingleSelection(_foodEntryForResult(result));
+    final food = _foodEntryForResult(result);
+    _addToSelection(
+      food,
+      key: canonicalFoodSelectionKey(food),
+      caloriesKnown: _resultCaloriesKnown(result),
+    );
   }
 
   studyu.FoodEntry _foodEntryForTemplate(studyu.SavedFoodTemplate template) {
@@ -700,19 +911,33 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   void _selectFoodTemplate(studyu.SavedFoodTemplate template) {
     if (!_isAllowedFood(template.prototype)) return;
     final foodEntry = _foodEntryForTemplate(template);
-    if (widget.mealLabel != null) {
-      _showQuantity(foodEntry);
-    } else {
+    if (widget.mealLabel == null) {
       _completeSingleSelection(foodEntry);
+      return;
     }
+    final key = canonicalFoodSelectionKey(foodEntry);
+    final selected = _selectionStore!.itemFor(key);
+    _showQuantity(
+      selected?.baseFood ?? foodEntry,
+      key: key,
+      action: selected == null
+          ? FoodQuantityAction.addToSelection
+          : FoodQuantityAction.updateSelection,
+    );
   }
 
   void _addFoodTemplate(studyu.SavedFoodTemplate template) {
     if (!_isAllowedFood(template.prototype)) return;
-    _completeSingleSelection(_foodEntryForTemplate(template));
+    final food = _foodEntryForTemplate(template);
+    _addToSelection(food, key: canonicalFoodSelectionKey(food));
   }
 
-  Future<void> _showQuantity(studyu.FoodEntry foodEntry) async {
+  Future<void> _showQuantity(
+    studyu.FoodEntry foodEntry, {
+    String? key,
+    FoodQuantityAction action = FoodQuantityAction.existingMeal,
+    bool caloriesKnown = true,
+  }) async {
     if (_showServingHint) {
       setState(() => _showServingHint = false);
     }
@@ -720,10 +945,66 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       context,
       food: foodEntry,
       mealLabel: widget.mealLabel,
+      action: action,
     );
-    if (result != null && mounted) {
+    if (result == null || !mounted) return;
+    if (action == FoodQuantityAction.updateSelection && key != null) {
+      _selectionStore!.replaceBase(
+        key,
+        result,
+        caloriesKnown:
+            _selectionStore.itemFor(key)?.caloriesKnown ?? caloriesKnown,
+      );
+    } else if (action == FoodQuantityAction.addToSelection) {
+      _addToSelection(
+        result,
+        key: key ?? canonicalFoodSelectionKey(result),
+        caloriesKnown: caloriesKnown,
+      );
+    } else {
       _completeSingleSelection(result);
     }
+  }
+
+  Future<void> _showReviewSheet(FoodSelectionStore store) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) =>
+          _SelectionReviewSheet(store: store, mealLabel: widget.mealLabel!),
+    );
+    if (confirmed != true || !mounted || _isConfirming || store.isEmpty) return;
+    _isConfirming = true;
+    final foods = store.materialize();
+    if (!mounted) return;
+    Navigator.pop(context, FoodSearchSelection(foods));
+  }
+
+  void _addToSelection(
+    studyu.FoodEntry food, {
+    required String key,
+    bool caloriesKnown = true,
+  }) {
+    if (_selectionStore == null) {
+      _completeSingleSelection(food);
+      return;
+    }
+    _selectionStore.addOrIncrement(key, food, caloriesKnown: caloriesKnown);
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 72),
+          content: Text(l10n.food_selection_added(food.name)),
+          action: SnackBarAction(
+            label: l10n.food_selection_undo,
+            onPressed: _selectionStore.undoLatestAdd,
+          ),
+        ),
+      );
   }
 
   void _completeSingleSelection(studyu.FoodEntry foodEntry) {
@@ -754,7 +1035,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       ),
     ).then((result) {
       if (result != null && mounted) {
-        _completeSingleSelection(result);
+        if (_selectionStore == null) {
+          _completeSingleSelection(result);
+        } else {
+          _addToSelection(result, key: canonicalFoodSelectionKey(result));
+        }
       }
     });
   }
@@ -764,13 +1049,20 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       result,
     ) {
       if (result != null && mounted) {
-        _completeSingleSelection(result);
+        if (_selectionStore == null) {
+          _completeSingleSelection(result);
+        } else {
+          _addToSelection(result, key: canonicalFoodSelectionKey(result));
+        }
       }
     });
   }
 
   void _openFoodLibrary() {
-    Navigator.push(context, FoodLibraryScreen.route());
+    final templateViewModel = context.read<TemplateViewModel>();
+    _searchController.clear();
+    templateViewModel.setSearchQuery('');
+    setState(() => _selectedSection = _FoodSearchSection.myItems);
   }
 
   Future<void> _scanBarcode() async {
@@ -782,7 +1074,15 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     if (widget.mealLabel == null) {
       _navigateToEdit(result);
     } else {
-      await _showQuantity(result);
+      final key = canonicalFoodSelectionKey(result);
+      final selected = _selectionStore!.itemFor(key);
+      await _showQuantity(
+        selected?.baseFood ?? result,
+        key: key,
+        action: selected == null
+            ? FoodQuantityAction.addToSelection
+            : FoodQuantityAction.updateSelection,
+      );
     }
   }
 
@@ -846,7 +1146,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         title: Text(
           widget.mealLabel == null
               ? l10n.add_food_title
-              : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
+              : l10n.add_items_to_meal(widget.mealLabel!),
         ),
         actions: [
           PopupMenuButton<_FoodSearchAction>(
@@ -903,16 +1203,13 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       body: Column(
         children: [
           // Search Bar
-          _SearchBarHeader(
+          FoodSearchBar(
             controller: _searchController,
             focusNode: _searchFocusNode,
-            l10n: l10n,
+            hintText: l10n.search_food_hint,
             onChanged: (val) => _onSearchChanged(val, templateViewModel),
-            onClear: () {
-              _searchController.clear();
-              _onSearchChanged('', templateViewModel);
-            },
             onScanBarcode: _scanBarcode,
+            barcodeTooltip: l10n.scan_barcode,
           ),
           Semantics(
             liveRegion: true,
@@ -959,10 +1256,18 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               onRetry: () => _retrySearch(templateViewModel),
               allowMeals: widget.allowMeals,
               showServingHint: _showServingHint && widget.mealLabel != null,
+              selectionStore: _selectionStore,
+              selectionKeyForResult: (result) =>
+                  canonicalFoodSelectionKey(_foodEntryForResult(result)),
             ),
           ),
           if (showSearchFallback)
             _SearchFallback(query: query, onAddManually: _addManually),
+          if (_selectionStore case final store? when !store.isEmpty)
+            _SelectionSummaryBar(
+              store: store,
+              onReview: () => _showReviewSheet(store),
+            ),
         ],
       ),
     );
@@ -973,57 +1278,228 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 // WIDGETS
 // ============================================================
 
-class _SearchBarHeader extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final AppLocalizations l10n;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onClear;
-  final VoidCallback onScanBarcode;
+class _SelectionQuantityControl extends StatelessWidget {
+  final String name;
+  final int quantity;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
 
-  const _SearchBarHeader({
-    required this.controller,
-    required this.focusNode,
-    required this.l10n,
-    required this.onChanged,
-    required this.onClear,
-    required this.onScanBarcode,
+  const _SelectionQuantityControl({
+    required this.name,
+    required this.quantity,
+    required this.onIncrement,
+    required this.onDecrement,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          hintText: l10n.search_food_hint,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: controller.text.isNotEmpty
-              ? IconButton(
-                  tooltip: MaterialLocalizations.of(context).clearButtonTooltip,
-                  icon: const Icon(Icons.clear),
-                  onPressed: onClear,
-                )
-              : IconButton(
-                  tooltip: l10n.scan_barcode,
-                  icon: const Icon(Icons.qr_code_scanner_outlined),
-                  onPressed: onScanBarcode,
-                ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)),
-          filled: true,
-          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
-            alpha: 0.5,
+    final l10n = AppLocalizations.of(context)!;
+    return Semantics(
+      container: true,
+      selected: true,
+      label: l10n.food_selection_selected(name, quantity),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: l10n.food_selection_decrement(name),
+            onPressed: onDecrement,
+            icon: const Icon(Icons.remove),
+            visualDensity: VisualDensity.compact,
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 14,
+          Text('$quantity', style: Theme.of(context).textTheme.titleMedium),
+          IconButton(
+            tooltip: l10n.food_selection_increment(name),
+            onPressed: onIncrement,
+            icon: const Icon(Icons.add),
+            visualDensity: VisualDensity.compact,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SelectionSummaryBar extends StatelessWidget {
+  final FoodSelectionStore store;
+  final VoidCallback onReview;
+
+  const _SelectionSummaryBar({required this.store, required this.onReview});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final calorieText = _selectionCaloriesSummary(l10n, store);
+    final unavailable = store.unknownCaloriesCount == 0
+        ? ''
+        : ', ${l10n.food_selection_calories_unavailable(store.unknownCaloriesCount)}';
+    return Semantics(
+      button: true,
+      label:
+          '${l10n.items_count(store.itemCount)}, '
+          '${l10n.serving_amount(store.servingCount)}, $calorieText$unavailable',
+      child: Material(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: InkWell(
+          onTap: onReview,
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${l10n.items_count(store.itemCount)} · '
+                      '${l10n.serving_amount(store.servingCount)} · $calorieText',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: onReview,
+                    child: Text(l10n.food_selection_review),
+                  ),
+                  const Icon(Icons.expand_less),
+                ],
+              ),
+            ),
           ),
         ),
-        onSubmitted: (_) => focusNode.unfocus(),
-        onChanged: onChanged,
+      ),
+    );
+  }
+}
+
+class _SelectionReviewSheet extends StatefulWidget {
+  final FoodSelectionStore store;
+  final String mealLabel;
+
+  const _SelectionReviewSheet({required this.store, required this.mealLabel});
+
+  @override
+  State<_SelectionReviewSheet> createState() => _SelectionReviewSheetState();
+}
+
+class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
+  FoodSelectionStore get store => widget.store;
+
+  @override
+  void initState() {
+    super.initState();
+    store.addListener(onStoreChanged);
+  }
+
+  @override
+  void dispose() {
+    store.removeListener(onStoreChanged);
+    super.dispose();
+  }
+
+  void onStoreChanged() {
+    if (mounted && store.isEmpty) Navigator.pop(context);
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final summary = _selectionCaloriesSummary(l10n, store);
+    return FractionallySizedBox(
+      heightFactor: 0.65,
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.add_items,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).closeButtonTooltip,
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: store.items.length,
+                itemBuilder: (context, index) {
+                  final item = store.items.elementAt(index);
+                  final kcal = item.caloriesKnown
+                      ? l10n.kcal_value(
+                          (item.baseFood.nutrition.energyKcal * item.quantity)
+                              .round()
+                              .toString(),
+                        )
+                      : '— kcal';
+                  return ListTile(
+                    title: Text(item.name),
+                    subtitle: Text(
+                      '${l10n.serving_amount(item.quantity)} · $kcal',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          tooltip: l10n.food_selection_decrement(item.name),
+                          onPressed: () => store.decrement(item.key),
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Text('${item.quantity}'),
+                        IconButton(
+                          tooltip: l10n.food_selection_increment(item.name),
+                          onPressed: () => store.increment(item.key),
+                          icon: const Icon(Icons.add),
+                        ),
+                        IconButton(
+                          tooltip: l10n.food_selection_delete(item.name),
+                          onPressed: () => store.delete(item.key),
+                          icon: const Icon(Icons.delete_outline),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    '${l10n.items_count(store.itemCount)} · '
+                    '${l10n.serving_amount(store.servingCount)} · $summary',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  FilledButton(
+                    onPressed: store.isEmpty
+                        ? null
+                        : () => Navigator.pop(context, true),
+                    child: Text(
+                      l10n.food_selection_confirm(
+                        store.itemCount,
+                        widget.mealLabel,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1042,7 +1518,7 @@ class _QuickSectionTabs extends StatelessWidget {
     required this.l10n,
   });
 
-  String _label(_FoodSearchSection section) {
+  String label(_FoodSearchSection section) {
     return switch (section) {
       _FoodSearchSection.recent => l10n.recent_foods,
       _FoodSearchSection.myItems => l10n.my_saved_items,
@@ -1059,7 +1535,7 @@ class _QuickSectionTabs extends StatelessWidget {
       child: TabBar(
         isScrollable: true,
         onTap: (index) => onChanged(sections[index]),
-        tabs: [for (final section in sections) Tab(text: _label(section))],
+        tabs: [for (final section in sections) Tab(text: label(section))],
       ),
     );
   }
@@ -1102,12 +1578,18 @@ class _HistoryFoodCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onAdd;
   final ThemeData theme;
+  final FoodSelectionStore? selectionStore;
+  final VoidCallback? onIncrement;
+  final VoidCallback? onDecrement;
 
   const _HistoryFoodCard({
     required this.item,
     required this.onTap,
     required this.onAdd,
     required this.theme,
+    this.selectionStore,
+    this.onIncrement,
+    this.onDecrement,
   });
 
   @override
@@ -1115,75 +1597,89 @@ class _HistoryFoodCard extends StatelessWidget {
     final food = item.food;
     final l10n = AppLocalizations.of(context)!;
     final imageUrl = _foodImageUrl(food);
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed)
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
-              : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 44,
-                  height: 44,
-                  child: imageUrl == null
-                      ? _fallbackItemIcon(theme, Icons.restaurant_outlined)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => _fallbackItemIcon(
-                              theme,
-                              Icons.restaurant_outlined,
+    final selected = selectionStore?.itemFor(canonicalFoodSelectionKey(food));
+    return Semantics(
+      selected: selected != null,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        elevation: 0,
+        color: selected == null
+            ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
+            : theme.colorScheme.primaryContainer.withValues(alpha: 0.55),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          overlayColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.pressed)
+                ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                : null,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: imageUrl == null
+                        ? _fallbackItemIcon(theme, Icons.restaurant_outlined)
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => _fallbackItemIcon(
+                                theme,
+                                Icons.restaurant_outlined,
+                              ),
                             ),
                           ),
-                        ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        food.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            ListTileTheme.of(context).titleTextStyle ??
-                            theme.textTheme.bodyLarge,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        _foodServingMetadata(l10n, food),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-                TextButton(
-                  onPressed: onAdd,
-                  style: TextButton.styleFrom(
-                    visualDensity: VisualDensity.compact,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          food.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              ListTileTheme.of(context).titleTextStyle ??
+                              theme.textTheme.bodyLarge,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _foodServingMetadata(l10n, food),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Text(l10n.add),
-                ),
-              ],
+                  if (selected == null)
+                    TextButton(
+                      onPressed: onAdd,
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      child: Text(l10n.add),
+                    )
+                  else
+                    _SelectionQuantityControl(
+                      name: food.name,
+                      quantity: selected.quantity,
+                      onIncrement: onIncrement!,
+                      onDecrement: onDecrement!,
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1197,31 +1693,43 @@ class _FoodResultCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onAdd;
   final ThemeData theme;
+  final FoodSelectionStore? selectionStore;
+  final String? selectionKey;
+  final VoidCallback? onIncrement;
+  final VoidCallback? onDecrement;
 
   const _FoodResultCard({
     required this.result,
     required this.onTap,
     required this.onAdd,
     required this.theme,
+    this.selectionStore,
+    this.selectionKey,
+    this.onIncrement,
+    this.onDecrement,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final calories = switch (result.originalData) {
-      final UsdaFoodItem food =>
-        food.energyKcal100g * (food.servingSize ?? 100) / 100,
-      _ => result.calories,
-    };
+    final calories = _resultCalories(result);
+    final selected = selectionKey == null
+        ? null
+        : selectionStore?.itemFor(selectionKey!);
     final metadata = [
       l10n.serving_amount(1),
-      if (calories != null) l10n.kcal_value(calories.round().toString()),
+      if (calories == null)
+        '— kcal'
+      else
+        l10n.kcal_value(calories.round().toString()),
     ].join(' · ');
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: selected == null
+          ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
+          : theme.colorScheme.primaryContainer.withValues(alpha: 0.55),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -1283,13 +1791,21 @@ class _FoodResultCard extends StatelessWidget {
                   ],
                 ),
               ),
-              TextButton(
-                onPressed: onAdd,
-                style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
+              if (selected == null)
+                TextButton(
+                  onPressed: onAdd,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(l10n.add),
+                )
+              else
+                _SelectionQuantityControl(
+                  name: result.name,
+                  quantity: selected.quantity,
+                  onIncrement: onIncrement!,
+                  onDecrement: onDecrement!,
                 ),
-                child: Text(l10n.add),
-              ),
             ],
           ),
         ),
@@ -1453,6 +1969,8 @@ class _FoodSearchListView extends StatelessWidget {
   final VoidCallback onRetry;
   final bool allowMeals;
   final bool showServingHint;
+  final FoodSelectionStore? selectionStore;
+  final String Function(UnifiedFoodResult)? selectionKeyForResult;
 
   const _FoodSearchListView({
     required this.scrollController,
@@ -1483,25 +2001,27 @@ class _FoodSearchListView extends StatelessWidget {
     required this.onRetry,
     this.allowMeals = true,
     required this.showServingHint,
+    this.selectionStore,
+    this.selectionKeyForResult,
   });
 
-  bool _isAllowedTemplate(studyu.SavedFoodTemplate template) {
+  bool isAllowedTemplate(studyu.SavedFoodTemplate template) {
     return allowMeals ||
         template.prototype.entryType != studyu.FoodEntryType.meal;
   }
 
-  List<studyu.SavedFoodTemplate> _personalMatches() {
+  List<studyu.SavedFoodTemplate> personalMatches0() {
     final query = searchController.text.trim().toLowerCase();
     return templateViewModel.foodTemplates
         .where(
           (template) =>
-              _isAllowedTemplate(template) &&
+              isAllowedTemplate(template) &&
               template.name.toLowerCase().contains(query),
         )
         .toList();
   }
 
-  List<FoodSearchHistoryItem> _recentItems() {
+  List<FoodSearchHistoryItem> recentItems0() {
     final items = [...history.frequentlyUsed, ...history.recent]
         .where(
           (item) =>
@@ -1538,6 +2058,23 @@ class _FoodSearchListView extends StatelessWidget {
         listHeader: showServingHint ? _ServingHint(l10n: l10n) : null,
         onTap: onSelectFoodTemplate,
         onAdd: onAddFoodTemplate,
+        isSelected: (template) {
+          final food = templateViewModel.applyFoodTemplate(template);
+          return selectionStore?.itemFor(canonicalFoodSelectionKey(food)) !=
+              null;
+        },
+        selectedQuantity: (template) {
+          final food = templateViewModel.applyFoodTemplate(template);
+          return selectionStore
+                  ?.itemFor(canonicalFoodSelectionKey(food))
+                  ?.quantity ??
+              1;
+        },
+        onIncrement: onAddFoodTemplate,
+        onDecrement: (template) {
+          final food = templateViewModel.applyFoodTemplate(template);
+          selectionStore?.decrement(canonicalFoodSelectionKey(food));
+        },
       );
     }
 
@@ -1555,7 +2092,7 @@ class _FoodSearchListView extends StatelessWidget {
         ),
       );
       children.add(const SizedBox(height: 4));
-      final recentItems = _recentItems();
+      final recentItems = recentItems0();
       if (recentItems.isEmpty) {
         children.add(_EmptySectionMessage(message: l10n.no_recent_items));
       } else {
@@ -1567,6 +2104,11 @@ class _FoodSearchListView extends StatelessWidget {
               onTap: () => onSelectHistory(item),
               onAdd: () => onAddHistory(item),
               theme: theme,
+              selectionStore: selectionStore,
+              onIncrement: () => onAddHistory(item),
+              onDecrement: () => selectionStore?.decrement(
+                canonicalFoodSelectionKey(item.food),
+              ),
             ),
           ),
         );
@@ -1588,7 +2130,7 @@ class _FoodSearchListView extends StatelessWidget {
     );
     children.add(const SizedBox(height: 12));
 
-    final personalMatches = _personalMatches();
+    final personalMatches = personalMatches0();
     final showPersonal = selectedFilter != _FoodSearchFilter.database;
     final showDatabase = selectedFilter != _FoodSearchFilter.myItems;
     final databaseComplete = offSearched && usdaSearched;
@@ -1599,8 +2141,7 @@ class _FoodSearchListView extends StatelessWidget {
     final noVisibleResults =
         !(showPersonal && personalMatches.isNotEmpty) &&
         !(showDatabase && combinedResults.isNotEmpty);
-    final showGlobalNoResults =
-        selectedSearchComplete && errorMessage == null && noVisibleResults;
+    final showGlobalNoResults = selectedSearchComplete && noVisibleResults;
     if (showServingHint &&
         ((showDatabase && combinedResults.isNotEmpty) ||
             (showPersonal && personalMatches.isNotEmpty))) {
@@ -1630,6 +2171,28 @@ class _FoodSearchListView extends StatelessWidget {
                 template: template,
                 onTap: onSelectFoodTemplate,
                 onAdd: onAddFoodTemplate,
+                isSelected:
+                    selectionStore?.itemFor(
+                      canonicalFoodSelectionKey(
+                        templateViewModel.applyFoodTemplate(template),
+                      ),
+                    ) !=
+                    null,
+                selectedQuantity:
+                    selectionStore
+                        ?.itemFor(
+                          canonicalFoodSelectionKey(
+                            templateViewModel.applyFoodTemplate(template),
+                          ),
+                        )
+                        ?.quantity ??
+                    1,
+                onIncrement: () => onAddFoodTemplate(template),
+                onDecrement: () => selectionStore?.decrement(
+                  canonicalFoodSelectionKey(
+                    templateViewModel.applyFoodTemplate(template),
+                  ),
+                ),
               ),
             ),
           );
@@ -1662,6 +2225,12 @@ class _FoodSearchListView extends StatelessWidget {
                   onTap: () => onSelectResult(result),
                   onAdd: () => onAddResult(result),
                   theme: theme,
+                  selectionStore: selectionStore,
+                  selectionKey: selectionKeyForResult?.call(result),
+                  onIncrement: () => onAddResult(result),
+                  onDecrement: () => selectionStore?.decrement(
+                    selectionKeyForResult?.call(result) ?? result.id,
+                  ),
                 ),
               ),
             );
@@ -1725,7 +2294,7 @@ class _SearchFilterChips extends StatelessWidget {
     required this.l10n,
   });
 
-  String _label(_FoodSearchFilter filter) => switch (filter) {
+  String label(_FoodSearchFilter filter) => switch (filter) {
     _FoodSearchFilter.all => l10n.filter_all,
     _FoodSearchFilter.myItems => l10n.my_saved_items,
     _FoodSearchFilter.database => l10n.database,
@@ -1740,7 +2309,7 @@ class _SearchFilterChips extends StatelessWidget {
           for (final filter in _FoodSearchFilter.values) ...[
             FilterChip(
               selected: selectedFilter == filter,
-              label: Text(_label(filter)),
+              label: Text(label(filter)),
               onSelected: (_) => onChanged(filter),
               visualDensity: VisualDensity.compact,
             ),

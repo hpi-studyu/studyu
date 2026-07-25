@@ -804,7 +804,7 @@
   "template_saved": "Added to My items",
   "select_meal": "My meals",
   "select_food": "My foods",
-  "search_templates": "Search My items...",
+  "search_templates": "Search My Items...",
   "no_templates_saved": "No items yet",
   "save_templates_hint": "Save your favorite meals and foods for quick access",
   "from_template": "From My items",
@@ -823,7 +823,92 @@
     }
   },
   "add": "Add",
-  "serving_amount": "{amount, plural, =1 {1 serving} other {{amount} servings}}",
+  "food_selection_add_to_selection": "Add to selection",
+  "food_selection_added": "Added {name} to selection",
+  "@food_selection_added": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_update_selection": "Update selection",
+  "food_selection_review": "Review",
+  "food_selection_undo": "Undo",
+  "food_selection_increment": "Increase {name}",
+  "@food_selection_increment": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_decrement": "Decrease {name}",
+  "@food_selection_decrement": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_delete": "Delete {name}",
+  "@food_selection_delete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_selected": "{name}, selected, quantity {quantity}",
+  "@food_selection_selected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_known_calories": "{value} kcal known · {count} unavailable",
+  "@food_selection_known_calories": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_unknown_calories": "— kcal · {count} unavailable",
+  "@food_selection_unknown_calories": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_calories_unavailable": "Calories unavailable for {count, plural, =1 {one item} other {{count} items}}",
+  "@food_selection_calories_unavailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_confirm": "{count, plural, =1 {Add 1 item to {meal}} other {Add {count} items to {meal}}}",
+  "@food_selection_confirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "serving_amount": "{amount, plural, =1 {1 serving} other {{amount} servings}}", 
   "@serving_amount": {
     "placeholders": {
       "amount": {
@@ -905,6 +990,8 @@
   "food_quantity_carbs": "Carbohydrates",
   "food_quantity_fat": "Fat",
   "food_quantity_add_to_meal": "Add to {meal}",
+  "food_quantity_add_to_selection": "Add to selection",
+  "food_quantity_update_selection": "Update selection",
   "save_to_my_items": "Save to My items for future use",
   "save_and_add_to_meal": "Save and add to {meal}",
   "@save_and_add_to_meal": {
@@ -926,7 +1013,22 @@
   "basic_information": "Basic Information",
   "macronutrients": "Macronutrients",
   "detailed_nutrients": "Detailed Nutrients",
-  "daily_nutrition_total": "Daily Nutrition Total",
+  "daily_nutrition_total": "Today's nutrition",
+  "energy_by_macronutrient": "Energy by macronutrient",
+  "total_energy": "Total energy",
+  "show": "Show",
+  "hide": "Hide",
+  "carbohydrates": "Carbohydrates",
+  "fibre": "Fibre",
+  "other": "Other",
+  "some_values_unavailable": "Some nutrient values are unavailable for {count} {count, plural, =1 {item} other {items}}.",
+  "@some_values_unavailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "meal_nutrition": "Meal Nutrition",
   "nutrition_summary": "Nutrition Summary",
   "calorie_distribution": "Calorie Distribution",

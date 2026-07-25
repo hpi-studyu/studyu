@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
@@ -15,6 +16,10 @@ class FoodLibrary extends StatefulWidget {
   final Widget? listHeader;
   final ValueChanged<studyu.SavedFoodTemplate>? onTap;
   final ValueChanged<studyu.SavedFoodTemplate>? onAdd;
+  final bool Function(studyu.SavedFoodTemplate)? isSelected;
+  final int Function(studyu.SavedFoodTemplate)? selectedQuantity;
+  final ValueChanged<studyu.SavedFoodTemplate>? onIncrement;
+  final ValueChanged<studyu.SavedFoodTemplate>? onDecrement;
 
   const FoodLibrary({
     this.allowMeals = true,
@@ -24,6 +29,10 @@ class FoodLibrary extends StatefulWidget {
     this.listHeader,
     this.onTap,
     this.onAdd,
+    this.isSelected,
+    this.selectedQuantity,
+    this.onIncrement,
+    this.onDecrement,
     super.key,
   });
 
@@ -55,17 +64,10 @@ class _FoodLibraryState extends State<FoodLibrary> {
     return Column(
       children: [
         if (widget.showSearch)
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: l10n.search_templates,
-                prefixIcon: const Icon(Icons.search),
-                border: const OutlineInputBorder(),
-              ),
-              onChanged: viewModel.setSearchQuery,
-            ),
+          FoodSearchBar(
+            controller: _searchController,
+            hintText: l10n.search_templates,
+            onChanged: viewModel.setSearchQuery,
           ),
         if (widget.header != null)
           Padding(
@@ -96,6 +98,15 @@ class _FoodLibraryState extends State<FoodLibrary> {
                         template: template,
                         onTap: widget.onTap,
                         onAdd: widget.onAdd,
+                        isSelected: widget.isSelected?.call(template) ?? false,
+                        selectedQuantity:
+                            widget.selectedQuantity?.call(template) ?? 1,
+                        onIncrement: widget.onIncrement == null
+                            ? null
+                            : () => widget.onIncrement!(template),
+                        onDecrement: widget.onDecrement == null
+                            ? null
+                            : () => widget.onDecrement!(template),
                       ),
                     const SizedBox(height: 24),
                   ],
@@ -110,11 +121,19 @@ class FoodLibraryItemCard extends StatelessWidget {
   final studyu.SavedFoodTemplate template;
   final ValueChanged<studyu.SavedFoodTemplate>? onTap;
   final ValueChanged<studyu.SavedFoodTemplate>? onAdd;
+  final bool isSelected;
+  final int selectedQuantity;
+  final VoidCallback? onIncrement;
+  final VoidCallback? onDecrement;
 
   const FoodLibraryItemCard({
     required this.template,
     this.onTap,
     this.onAdd,
+    this.isSelected = false,
+    this.selectedQuantity = 1,
+    this.onIncrement,
+    this.onDecrement,
     super.key,
   });
 
@@ -129,13 +148,17 @@ class FoodLibraryItemCard extends StatelessWidget {
         : Icons.restaurant_outlined;
     final imageUrl = _foodImageUrl(template.prototype);
     final metadata = _isMeal
-        ? '${l10n.template_type_meal} · ${l10n.items_count(template.prototype.componentFoods?.length ?? 0)}'
+        ? '${l10n.template_type_meal} · '
+              '${l10n.items_count(template.prototype.componentFoods?.length ?? 0)} · '
+              '${l10n.kcal_value((template.prototype.nutrition.energyKcal * template.prototype.amount).round().toString())}'
         : _foodServingMetadata(l10n, template.prototype);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: isSelected
+          ? theme.colorScheme.primaryContainer.withValues(alpha: 0.55)
+          : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: InkWell(
         onTap: () {
           if (onTap case final onTap?) {
@@ -197,10 +220,22 @@ class FoodLibraryItemCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (isSelected && onIncrement != null && onDecrement != null)
+                  _LibraryQuantityControl(
+                    name: template.name,
+                    quantity: selectedQuantity,
+                    onIncrement: onIncrement!,
+                    onDecrement: onDecrement!,
+                  )
+                else if (onAdd != null)
+                  TextButton(
+                    onPressed: () => onAdd!(template),
+                    child: Text(l10n.add),
+                  ),
                 PopupMenuButton<_FoodLibraryAction>(
                   onSelected: (action) => _handleAction(context, action),
                   itemBuilder: (_) => [
-                    if (onAdd != null)
+                    if (onAdd != null && !isSelected)
                       PopupMenuItem(
                         value: _FoodLibraryAction.add,
                         child: _menuItem(Icons.add, l10n.add),
@@ -356,6 +391,48 @@ class _FoodLibraryToolbar extends StatelessWidget {
             ),
             const SizedBox(width: 6),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LibraryQuantityControl extends StatelessWidget {
+  final String name;
+  final int quantity;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
+
+  const _LibraryQuantityControl({
+    required this.name,
+    required this.quantity,
+    required this.onIncrement,
+    required this.onDecrement,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Semantics(
+      container: true,
+      selected: true,
+      label: l10n.food_selection_selected(name, quantity),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: l10n.food_selection_decrement(name),
+            onPressed: onDecrement,
+            icon: const Icon(Icons.remove),
+            visualDensity: VisualDensity.compact,
+          ),
+          Text('$quantity'),
+          IconButton(
+            tooltip: l10n.food_selection_increment(name),
+            onPressed: onIncrement,
+            icon: const Icon(Icons.add),
+            visualDensity: VisualDensity.compact,
+          ),
         ],
       ),
     );

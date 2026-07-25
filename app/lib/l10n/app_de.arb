@@ -617,7 +617,92 @@
     }
   },
   "add": "Hinzufügen",
-  "serving_amount": "{amount, plural, =1 {1 Portion} other {{amount} Portionen}}",
+  "food_selection_add_to_selection": "Zur Auswahl hinzufügen",
+  "food_selection_added": "{name} zur Auswahl hinzugefügt",
+  "@food_selection_added": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_update_selection": "Auswahl aktualisieren",
+  "food_selection_review": "Überprüfen",
+  "food_selection_undo": "Rückgängig",
+  "food_selection_increment": "{name} erhöhen",
+  "@food_selection_increment": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_decrement": "{name} verringern",
+  "@food_selection_decrement": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_delete": "{name} löschen",
+  "@food_selection_delete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "food_selection_selected": "{name}, ausgewählt, Menge {quantity}",
+  "@food_selection_selected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_known_calories": "{value} kcal bekannt · {count} nicht verfügbar",
+  "@food_selection_known_calories": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_unknown_calories": "— kcal · {count} nicht verfügbar",
+  "@food_selection_unknown_calories": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_calories_unavailable": "Kalorien für {count, plural, =1 {ein Element} other {{count} Elemente}} nicht verfügbar",
+  "@food_selection_calories_unavailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "food_selection_confirm": "{count, plural, =1 {1 Element zu {meal} hinzufügen} other {{count} Elemente zu {meal} hinzufügen}}",
+  "@food_selection_confirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "serving_amount": "{amount, plural, =1 {1 Portion} other {{amount} Portionen}}", 
   "@serving_amount": {
     "placeholders": {
       "amount": {
@@ -782,6 +867,8 @@
   "food_quantity_carbs": "Kohlenhydrate",
   "food_quantity_fat": "Fett",
   "food_quantity_add_to_meal": "Zu {meal} hinzufügen",
+  "food_quantity_add_to_selection": "Zur Auswahl hinzufügen",
+  "food_quantity_update_selection": "Auswahl aktualisieren",
   "save_to_my_items": "Für später in Meine Elemente speichern",
   "save_and_add_to_meal": "Speichern und zu {meal} hinzufügen",
   "@save_and_add_to_meal": {
@@ -837,5 +924,21 @@
   "required_error": "Erforderlich",
   "more_options": "Weitere Optionen",
   "edit": "Bearbeiten",
-  "delete": "Löschen"
+  "delete": "Löschen",
+  "daily_nutrition_total": "Heutige Ernährung",
+  "energy_by_macronutrient": "Energie nach Makronährstoffen",
+  "total_energy": "Gesamtenergie",
+  "show": "Anzeigen",
+  "hide": "Ausblenden",
+  "carbohydrates": "Kohlenhydrate",
+  "fibre": "Ballaststoffe",
+  "other": "Sonstige",
+  "some_values_unavailable": "Einige Nährwerte sind für {count} {count, plural, =1 {Eintrag} other {Einträge}} nicht verfügbar.",
+  "@some_values_unavailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

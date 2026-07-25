@@ -2056,6 +2056,75 @@ class AppLocalizationsDe extends AppLocalizations {
   String get add => 'Hinzufügen';
 
   @override
+  String get food_selection_add_to_selection => 'Zur Auswahl hinzufügen';
+
+  @override
+  String food_selection_added(String name) {
+    return '$name zur Auswahl hinzugefügt';
+  }
+
+  @override
+  String get food_selection_update_selection => 'Auswahl aktualisieren';
+
+  @override
+  String get food_selection_review => 'Überprüfen';
+
+  @override
+  String get food_selection_undo => 'Rückgängig';
+
+  @override
+  String food_selection_increment(String name) {
+    return '$name erhöhen';
+  }
+
+  @override
+  String food_selection_decrement(String name) {
+    return '$name verringern';
+  }
+
+  @override
+  String food_selection_delete(String name) {
+    return '$name löschen';
+  }
+
+  @override
+  String food_selection_selected(String name, int quantity) {
+    return '$name, ausgewählt, Menge $quantity';
+  }
+
+  @override
+  String food_selection_known_calories(String value, int count) {
+    return '$value kcal bekannt · $count nicht verfügbar';
+  }
+
+  @override
+  String food_selection_unknown_calories(int count) {
+    return '— kcal · $count nicht verfügbar';
+  }
+
+  @override
+  String food_selection_calories_unavailable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Elemente',
+      one: 'ein Element',
+    );
+    return 'Kalorien für $_temp0 nicht verfügbar';
+  }
+
+  @override
+  String food_selection_confirm(int count, String meal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Elemente zu $meal hinzufügen',
+      one: '1 Element zu $meal hinzufügen',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String serving_amount(num amount) {
     String _temp0 = intl.Intl.pluralLogic(
       amount,
@@ -2170,6 +2239,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get food_quantity_add_to_selection => 'Zur Auswahl hinzufügen';
+
+  @override
+  String get food_quantity_update_selection => 'Auswahl aktualisieren';
+
+  @override
   String get save_to_my_items => 'Für später in Meine Elemente speichern';
 
   @override
@@ -2193,7 +2268,39 @@ class AppLocalizationsDe extends AppLocalizations {
   String get detailed_nutrients => 'Detailed Nutrients';
 
   @override
-  String get daily_nutrition_total => 'Daily Nutrition Total';
+  String get daily_nutrition_total => 'Heutige Ernährung';
+
+  @override
+  String get energy_by_macronutrient => 'Energie nach Makronährstoffen';
+
+  @override
+  String get total_energy => 'Gesamtenergie';
+
+  @override
+  String get show => 'Anzeigen';
+
+  @override
+  String get hide => 'Ausblenden';
+
+  @override
+  String get carbohydrates => 'Kohlenhydrate';
+
+  @override
+  String get fibre => 'Ballaststoffe';
+
+  @override
+  String get other => 'Sonstige';
+
+  @override
+  String some_values_unavailable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Einträge',
+      one: 'Eintrag',
+    );
+    return 'Einige Nährwerte sind für $count $_temp0 nicht verfügbar.';
+  }
 
   @override
   String get meal_nutrition => 'Meal Nutrition';

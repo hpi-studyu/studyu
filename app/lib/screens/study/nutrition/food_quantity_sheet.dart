@@ -4,21 +4,31 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_core/core.dart';
 
+enum FoodQuantityAction { existingMeal, addToSelection, updateSelection }
+
 class FoodQuantitySheet extends StatefulWidget {
   final FoodEntry food;
   final String? mealLabel;
+  final FoodQuantityAction action;
 
-  const FoodQuantitySheet({required this.food, this.mealLabel, super.key});
+  const FoodQuantitySheet({
+    required this.food,
+    this.mealLabel,
+    this.action = FoodQuantityAction.existingMeal,
+    super.key,
+  });
 
   static Future<FoodEntry?> show(
     BuildContext context, {
     required FoodEntry food,
     String? mealLabel,
+    FoodQuantityAction action = FoodQuantityAction.existingMeal,
   }) => showModalBottomSheet<FoodEntry>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) => FoodQuantitySheet(food: food, mealLabel: mealLabel),
+    builder: (_) =>
+        FoodQuantitySheet(food: food, mealLabel: mealLabel, action: action),
   );
 
   @override
@@ -191,11 +201,16 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
               onPressed: _scaledFood == null
                   ? null
                   : () => Navigator.pop(context, _scaledFood),
-              child: Text(
-                widget.mealLabel == null
-                    ? l10n.add_food
-                    : l10n.food_quantity_add_to_meal(widget.mealLabel!),
-              ),
+              child: Text(switch (widget.action) {
+                FoodQuantityAction.addToSelection =>
+                  l10n.food_quantity_add_to_selection,
+                FoodQuantityAction.updateSelection =>
+                  l10n.food_quantity_update_selection,
+                FoodQuantityAction.existingMeal =>
+                  widget.mealLabel == null
+                      ? l10n.add_food
+                      : l10n.food_quantity_add_to_meal(widget.mealLabel!),
+              }),
             ),
           ],
         ),
