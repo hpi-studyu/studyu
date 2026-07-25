@@ -6,11 +6,13 @@ class NutritionSummaryCard extends StatefulWidget {
   final NutritionProfile nutrition;
   final String? title;
   final String? subtitle;
+  final bool inCard;
 
   const NutritionSummaryCard({
     required this.nutrition,
     this.title,
     this.subtitle,
+    this.inCard = false,
     super.key,
   });
 
@@ -23,27 +25,45 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
 
   @override
   Widget build(BuildContext context) {
+    final content = _content(context, includeHeader: true);
+    if (!widget.inCard) return content;
+
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: content,
+      ),
+    );
+  }
+
+  Widget _content(BuildContext context, {required bool includeHeader}) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.only(top: includeHeader ? 16 : 0, bottom: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.title ?? l10n.nutrition_summary,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+              if (includeHeader) ...[
+                Text(
+                  widget.title ?? l10n.nutrition_summary,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              if (widget.subtitle != null) ...[
-                const SizedBox(height: 4),
-                Text(widget.subtitle!, style: theme.textTheme.bodySmall),
+                if (widget.subtitle != null) ...[
+                  const SizedBox(height: 4),
+                  Text(widget.subtitle!, style: theme.textTheme.bodySmall),
+                ],
+                const SizedBox(height: 12),
               ],
-              const SizedBox(height: 12),
               Text(
                 '${widget.nutrition.energyKcal.round()} kcal',
                 style: theme.textTheme.headlineSmall?.copyWith(
@@ -345,6 +365,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
         if (!meal.isSkipped) ...meal.foods,
     ]),
     title: AppLocalizations.of(context)!.daily_nutrition_total,
+    inCard: true,
   );
 }
 

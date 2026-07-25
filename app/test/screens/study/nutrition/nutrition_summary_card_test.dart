@@ -47,6 +47,7 @@ void main() {
             child: NutritionSummaryCard(
               nutrition: nutrition,
               title: 'Today’s nutrition',
+              inCard: true,
             ),
           ),
         ),
@@ -54,26 +55,27 @@ void main() {
     );
     await tester.pump();
 
+    expect(find.byType(Card), findsOneWidget);
     expect(find.text('Today’s nutrition'), findsOneWidget);
     expect(find.text('555 kcal'), findsOneWidget);
     expect(find.text('30.7 g'), findsOneWidget);
     expect(find.text('50.4 g'), findsOneWidget);
     expect(find.text('Energy by macronutrient'), findsOneWidget);
+    expect(find.text('Detailed Nutrients'), findsOneWidget);
     expect(find.text('Show'), findsOneWidget);
+    expect(find.text('Hide'), findsNothing);
     expect(
       find.textContaining('Some nutrient values are unavailable for 1 item.'),
       findsOneWidget,
     );
+    expect(find.text('—'), findsNothing);
 
     await tester.tap(find.widgetWithText(TextButton, 'Show'));
     await tester.pumpAndSettle();
+
     expect(find.text('Hide'), findsOneWidget);
     expect(find.text('—'), findsOneWidget);
     expect(find.text('0 g'), findsAtLeastNWidgets(1));
-
-    await tester.tap(find.widgetWithText(TextButton, 'Hide'));
-    await tester.pumpAndSettle();
-    expect(find.text('Show'), findsOneWidget);
 
     semantics.dispose();
   });
