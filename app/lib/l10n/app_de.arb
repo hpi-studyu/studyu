@@ -752,6 +752,7 @@
     }
   },
   "cant_find_it": "Nicht gefunden?",
+  "create": "Erstellen",
   "create_food_from_search": "„{query}“ manuell erstellen",
   "@create_food_from_search": {
     "placeholders": {

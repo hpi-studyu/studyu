@@ -835,9 +835,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
               : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
-          IconButton(
-            tooltip: l10n.add_manually,
-            icon: const Icon(Icons.note_add_outlined),
+          TextButton.icon(
+            icon: const Icon(Icons.add),
+            label: Text(l10n.create),
             onPressed: _addManually,
           ),
         ],
@@ -1060,7 +1060,9 @@ class _TemplateCard extends StatelessWidget {
     final isMeal =
         foodTemplate.prototype.entryType == studyu.FoodEntryType.meal;
     final name = foodTemplate.name;
-    final icon = isMeal ? Icons.menu_book_outlined : Icons.fastfood_outlined;
+    final icon = isMeal
+        ? Icons.restaurant_menu_outlined
+        : Icons.fastfood_outlined;
     final imageUrl = _foodImageUrl(foodTemplate.prototype);
 
     final metadata = isMeal

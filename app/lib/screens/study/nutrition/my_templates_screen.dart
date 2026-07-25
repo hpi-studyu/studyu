@@ -86,7 +86,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
                     value: _NewItemType.meal,
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.menu_book),
+                      leading: const Icon(Icons.restaurant_menu_outlined),
                       title: Text(l10n.create_meal),
                     ),
                   ),
@@ -263,7 +263,7 @@ class _MyTemplatesScreenContentState extends State<_MyTemplatesScreenContent> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: Icon(
-          isMeal ? Icons.menu_book_outlined : Icons.fastfood_outlined,
+          isMeal ? Icons.restaurant_menu_outlined : Icons.fastfood_outlined,
         ),
         title: Text(name, maxLines: 2, overflow: TextOverflow.ellipsis),
         subtitle: Text(metadata, maxLines: 2, overflow: TextOverflow.ellipsis),

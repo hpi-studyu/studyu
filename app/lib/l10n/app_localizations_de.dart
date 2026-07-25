@@ -2226,6 +2226,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get quick_actions => 'Quick Actions';
 
   @override
+  String get create => 'Erstellen';
+
+  @override
   String get create_meal => 'Create meal';
 
   @override

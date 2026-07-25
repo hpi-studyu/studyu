@@ -4127,6 +4127,12 @@ abstract class AppLocalizations {
   /// **'Quick Actions'**
   String get quick_actions;
 
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
   /// No description provided for @create_meal.
   ///
   /// In en, this message translates to:

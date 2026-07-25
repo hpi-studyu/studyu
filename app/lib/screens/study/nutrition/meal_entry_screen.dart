@@ -1439,7 +1439,7 @@ class _FoodCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     final icon = food.entryType == FoodEntryType.meal
-        ? Icons.menu_book_outlined
+        ? Icons.restaurant_menu_outlined
         : Icons.fastfood_outlined;
     final imageUrl = _getFoodImageUrl(food);
 

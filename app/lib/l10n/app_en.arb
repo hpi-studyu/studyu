@@ -937,6 +937,7 @@
   "frequently_used_foods": "Frequently Used",
   "global_database": "Database",
   "quick_actions": "Quick Actions",
+  "create": "Create",
   "create_meal": "Create meal",
   "create_meal_subtitle": "Combine multiple foods",
   "add_manually": "Create food manually",
