@@ -2041,18 +2041,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_selection_add_to_selection => 'Add to selection';
 
   @override
-  String food_selection_added(String name) {
-    return 'Added $name to selection';
-  }
-
-  @override
   String get food_selection_update_selection => 'Update selection';
 
   @override
-  String get food_selection_review => 'Review';
+  String get food_selection_selected_items => 'Selected items';
 
   @override
-  String get food_selection_undo => 'Undo';
+  String food_selection_view_all(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count selected items',
+      one: '1 selected item',
+    );
+    return 'View all $_temp0';
+  }
 
   @override
   String food_selection_increment(String name) {

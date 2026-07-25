@@ -189,9 +189,12 @@ final class FoodSelectionItem {
 /// Temporary, route-scoped state for the multi-select Add items flow.
 final class FoodSelectionStore extends ChangeNotifier {
   final LinkedHashMap<String, FoodSelectionItem> _items = LinkedHashMap();
-  String? _lastAddedKey;
+  final List<String> _recentKeys = [];
 
   Iterable<FoodSelectionItem> get items => _items.values;
+  Iterable<FoodSelectionItem> get recentItems => _recentKeys.reversed
+      .map((key) => _items[key])
+      .whereType<FoodSelectionItem>();
   int get itemCount => _items.length;
   int get servingCount =>
       _items.values.fold(0, (sum, item) => sum + item.quantity);
@@ -216,7 +219,9 @@ final class FoodSelectionStore extends ChangeNotifier {
     } else {
       existing.quantity++;
     }
-    _lastAddedKey = key;
+    _recentKeys
+      ..remove(key)
+      ..add(key);
     notifyListeners();
   }
 
@@ -224,7 +229,6 @@ final class FoodSelectionStore extends ChangeNotifier {
     final item = _items[key];
     if (item == null) return;
     item.quantity++;
-    _lastAddedKey = key;
     notifyListeners();
   }
 
@@ -233,6 +237,7 @@ final class FoodSelectionStore extends ChangeNotifier {
     if (item == null) return;
     if (item.quantity <= 1) {
       _items.remove(key);
+      _recentKeys.remove(key);
     } else {
       item.quantity--;
     }
@@ -241,6 +246,7 @@ final class FoodSelectionStore extends ChangeNotifier {
 
   void delete(String key) {
     if (_items.remove(key) == null) return;
+    _recentKeys.remove(key);
     notifyListeners();
   }
 
@@ -255,13 +261,6 @@ final class FoodSelectionStore extends ChangeNotifier {
       ..baseFood = cloneFoodEntry(food)
       ..caloriesKnown = caloriesKnown;
     notifyListeners();
-  }
-
-  void undoLatestAdd() {
-    final key = _lastAddedKey;
-    if (key == null) return;
-    decrement(key);
-    _lastAddedKey = null;
   }
 
   double knownCalories() => _items.values
@@ -975,11 +974,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       builder: (_) =>
           _SelectionReviewSheet(store: store, mealLabel: widget.mealLabel!),
     );
-    if (confirmed != true || !mounted || _isConfirming || store.isEmpty) return;
-    _isConfirming = true;
+    if (confirmed == true && mounted) _confirmSelection(store);
+  }
+
+  void _confirmSelection(FoodSelectionStore store) {
+    if (_isConfirming || store.isEmpty) return;
+    setState(() => _isConfirming = true);
     final foods = store.materialize();
-    if (!mounted) return;
-    Navigator.pop(context, FoodSearchSelection(foods));
+    if (mounted) Navigator.pop(context, FoodSearchSelection(foods));
   }
 
   void _addToSelection(
@@ -992,20 +994,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       return;
     }
     _selectionStore.addOrIncrement(key, food, caloriesKnown: caloriesKnown);
-    final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 72),
-          content: Text(l10n.food_selection_added(food.name)),
-          action: SnackBarAction(
-            label: l10n.food_selection_undo,
-            onPressed: _selectionStore.undoLatestAdd,
-          ),
-        ),
-      );
   }
 
   void _completeSingleSelection(studyu.FoodEntry foodEntry) {
@@ -1262,9 +1250,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
           if (showSearchFallback)
             _SearchFallback(query: query, onAddManually: _addManually),
           if (_selectionStore case final store? when !store.isEmpty)
-            _SelectionSummaryBar(
+            _SelectionPeekTray(
               store: store,
+              mealLabel: widget.mealLabel!,
+              isConfirming: _isConfirming,
               onReview: () => _showReviewSheet(store),
+              onConfirm: () => _confirmSelection(store),
             ),
         ],
       ),
@@ -1318,52 +1309,178 @@ class _SelectionQuantityControl extends StatelessWidget {
   }
 }
 
-class _SelectionSummaryBar extends StatelessWidget {
+class _SelectionPeekTray extends StatelessWidget {
   final FoodSelectionStore store;
+  final String mealLabel;
+  final bool isConfirming;
   final VoidCallback onReview;
+  final VoidCallback onConfirm;
 
-  const _SelectionSummaryBar({required this.store, required this.onReview});
+  const _SelectionPeekTray({
+    required this.store,
+    required this.mealLabel,
+    required this.isConfirming,
+    required this.onReview,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final mediaQuery = MediaQuery.of(context);
+    final keyboardOpen = mediaQuery.viewInsets.bottom > 0;
+    final largeText = mediaQuery.textScaler.scale(1) > 1.3;
+    final previewLimit = keyboardOpen ? 0 : (largeText ? 1 : 2);
+    final previewItems = store.recentItems.take(previewLimit).toList();
+    final showViewAll = !keyboardOpen && store.itemCount > previewItems.length;
     final calorieText = _selectionCaloriesSummary(l10n, store);
+    final totals =
+        '${l10n.items_count(store.itemCount)} · '
+        '${l10n.serving_amount(store.servingCount)} · $calorieText';
     final unavailable = store.unknownCaloriesCount == 0
         ? ''
         : ', ${l10n.food_selection_calories_unavailable(store.unknownCaloriesCount)}';
-    return Semantics(
-      button: true,
-      label:
-          '${l10n.items_count(store.itemCount)}, '
-          '${l10n.serving_amount(store.servingCount)}, $calorieText$unavailable',
+    final totalsSemantics =
+        '${l10n.items_count(store.itemCount)}, '
+        '${l10n.serving_amount(store.servingCount)}, $calorieText$unavailable';
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onVerticalDragEnd: (details) {
+        if ((details.primaryVelocity ?? 0) < -200) onReview();
+      },
       child: Material(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        child: InkWell(
-          onTap: onReview,
-          child: SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
-              child: Row(
-                children: [
-                  Expanded(
+        elevation: 8,
+        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: onReview,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${l10n.food_selection_selected_items} · ${store.itemCount}',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: l10n.food_selection_view_all(
+                            store.itemCount,
+                          ),
+                          onPressed: onReview,
+                          icon: const Icon(Icons.expand_less),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (previewItems.isNotEmpty)
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 180),
+                    child: Column(
+                      key: ValueKey(
+                        previewItems.map((item) => item.key).join('|'),
+                      ),
+                      children: [
+                        for (final item in previewItems)
+                          _SelectionPreviewRow(item: item, store: store),
+                      ],
+                    ),
+                  ),
+                if (showViewAll)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: onReview,
+                      child: Text(
+                        l10n.food_selection_view_all(store.itemCount),
+                      ),
+                    ),
+                  ),
+                Semantics(
+                  label: totalsSemantics,
+                  child: ExcludeSemantics(
                     child: Text(
-                      '${l10n.items_count(store.itemCount)} · '
-                      '${l10n.serving_amount(store.servingCount)} · $calorieText',
+                      totals,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  TextButton(
-                    onPressed: onReview,
-                    child: Text(l10n.food_selection_review),
+                ),
+                const SizedBox(height: 8),
+                FilledButton(
+                  onPressed: isConfirming ? null : onConfirm,
+                  child: Text(
+                    l10n.food_selection_confirm(store.itemCount, mealLabel),
                   ),
-                  const Icon(Icons.expand_less),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SelectionPreviewRow extends StatelessWidget {
+  final FoodSelectionItem item;
+  final FoodSelectionStore store;
+
+  const _SelectionPreviewRow({required this.item, required this.store});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Semantics(
+      selected: true,
+      label: l10n.food_selection_selected(item.name, item.quantity),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              item.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          IconButton(
+            tooltip: l10n.food_selection_decrement(item.name),
+            onPressed: () => store.decrement(item.key),
+            icon: const Icon(Icons.remove),
+          ),
+          Text('${item.quantity}'),
+          IconButton(
+            tooltip: l10n.food_selection_increment(item.name),
+            onPressed: () => store.increment(item.key),
+            icon: const Icon(Icons.add),
+          ),
+          IconButton(
+            tooltip: l10n.food_selection_delete(item.name),
+            onPressed: () => store.delete(item.key),
+            icon: const Icon(Icons.delete_outline),
+          ),
+        ],
       ),
     );
   }
@@ -1380,6 +1497,8 @@ class _SelectionReviewSheet extends StatefulWidget {
 }
 
 class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
+  bool _isConfirming = false;
+
   FoodSelectionStore get store => widget.store;
 
   @override
@@ -1415,7 +1534,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
                 children: [
                   Expanded(
                     child: Text(
-                      l10n.add_items,
+                      l10n.food_selection_selected_items,
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
@@ -1483,9 +1602,12 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
                   ),
                   const SizedBox(height: 8),
                   FilledButton(
-                    onPressed: store.isEmpty
+                    onPressed: store.isEmpty || _isConfirming
                         ? null
-                        : () => Navigator.pop(context, true),
+                        : () {
+                            setState(() => _isConfirming = true);
+                            Navigator.pop(context, true);
+                          },
                     child: Text(
                       l10n.food_selection_confirm(
                         store.itemCount,

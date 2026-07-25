@@ -3845,29 +3845,23 @@ abstract class AppLocalizations {
   /// **'Add to selection'**
   String get food_selection_add_to_selection;
 
-  /// No description provided for @food_selection_added.
-  ///
-  /// In en, this message translates to:
-  /// **'Added {name} to selection'**
-  String food_selection_added(String name);
-
   /// No description provided for @food_selection_update_selection.
   ///
   /// In en, this message translates to:
   /// **'Update selection'**
   String get food_selection_update_selection;
 
-  /// No description provided for @food_selection_review.
+  /// No description provided for @food_selection_selected_items.
   ///
   /// In en, this message translates to:
-  /// **'Review'**
-  String get food_selection_review;
+  /// **'Selected items'**
+  String get food_selection_selected_items;
 
-  /// No description provided for @food_selection_undo.
+  /// No description provided for @food_selection_view_all.
   ///
   /// In en, this message translates to:
-  /// **'Undo'**
-  String get food_selection_undo;
+  /// **'View all {count, plural, =1 {1 selected item} other {{count} selected items}}'**
+  String food_selection_view_all(int count);
 
   /// No description provided for @food_selection_increment.
   ///

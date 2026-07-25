@@ -2060,18 +2060,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_selection_add_to_selection => 'Zur Auswahl hinzufügen';
 
   @override
-  String food_selection_added(String name) {
-    return '$name zur Auswahl hinzugefügt';
-  }
-
-  @override
   String get food_selection_update_selection => 'Auswahl aktualisieren';
 
   @override
-  String get food_selection_review => 'Überprüfen';
+  String get food_selection_selected_items => 'Ausgewählte Elemente';
 
   @override
-  String get food_selection_undo => 'Rückgängig';
+  String food_selection_view_all(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ausgewählten Elemente',
+      one: '1 ausgewähltes Element',
+    );
+    return 'Alle $_temp0 anzeigen';
+  }
 
   @override
   String food_selection_increment(String name) {

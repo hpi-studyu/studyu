@@ -618,17 +618,16 @@
   },
   "add": "Hinzufügen",
   "food_selection_add_to_selection": "Zur Auswahl hinzufügen",
-  "food_selection_added": "{name} zur Auswahl hinzugefügt",
-  "@food_selection_added": {
+  "food_selection_update_selection": "Auswahl aktualisieren",
+  "food_selection_selected_items": "Ausgewählte Elemente",
+  "food_selection_view_all": "Alle {count, plural, =1 {1 ausgewähltes Element} other {{count} ausgewählten Elemente}} anzeigen",
+  "@food_selection_view_all": {
     "placeholders": {
-      "name": {
-        "type": "String"
+      "count": {
+        "type": "int"
       }
     }
   },
-  "food_selection_update_selection": "Auswahl aktualisieren",
-  "food_selection_review": "Überprüfen",
-  "food_selection_undo": "Rückgängig",
   "food_selection_increment": "{name} erhöhen",
   "@food_selection_increment": {
     "placeholders": {
