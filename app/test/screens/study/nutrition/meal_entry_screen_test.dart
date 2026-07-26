@@ -191,12 +191,11 @@ void main() {
       find.descendant(of: find.byType(AppBar), matching: find.text('Log meal')),
       findsOneWidget,
     );
-    expect(find.widgetWithText(TextButton, 'Save'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Save'), findsNothing);
+    expect(find.widgetWithText(FilledButton, 'Done'), findsOneWidget);
     expect(find.text('Delete meal'), findsNothing);
     expect(find.text('Select a time'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Done'));
     await tester.pump();
     expect(find.text('Required'), findsOneWidget);
 
@@ -237,7 +236,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -324,7 +323,7 @@ void main() {
       findsNothing,
     );
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isA<SavedMealEntryResult>());
@@ -356,7 +355,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Evening snack'), findsWidgets);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     final meal = (result! as SavedMealEntryResult).meal;
@@ -402,7 +401,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Log meal'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     final meal = (result! as SavedMealEntryResult).meal;
@@ -474,7 +473,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Home • Family'), findsOneWidget);
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
     expect(
       (result! as SavedMealEntryResult).meal.companyContext,
@@ -536,7 +535,7 @@ void main() {
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     final meal = (result! as SavedMealEntryResult).meal;
@@ -555,12 +554,12 @@ void main() {
     var reasonField = tester.widget<TextField>(find.byType(TextField));
     expect(reasonField.decoration?.errorText, isNull);
 
-    final saveButton = tester.widget<TextButton>(
-      find.widgetWithText(TextButton, 'Save'),
+    final saveButton = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Save'),
     );
     expect(saveButton.onPressed, isNotNull);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pump();
 
     reasonField = tester.widget<TextField>(find.byType(TextField));
@@ -605,12 +604,12 @@ void main() {
         ),
         findsNothing,
       );
-      final saveButton = tester.widget<TextButton>(
-        find.widgetWithText(TextButton, 'Save'),
+      final saveButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Save'),
       );
       expect(saveButton.onPressed, isNotNull);
 
-      await tester.tap(find.widgetWithText(TextButton, 'Save'));
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
       expect(result, isNull);
@@ -878,7 +877,7 @@ void main() {
       customLabel: 'Edited supper',
     );
 
-    final addFoodButton = find.widgetWithText(FilledButton, 'Add Food');
+    final addFoodButton = find.widgetWithText(TextButton, 'Add items');
     await tester.ensureVisible(addFoodButton);
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
@@ -905,7 +904,7 @@ void main() {
     expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -946,10 +945,10 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My items'));
     await tester.pumpAndSettle();
@@ -972,7 +971,7 @@ void main() {
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('Saved Pear'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -1037,8 +1036,8 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
-    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
+    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My items'));
     await tester.pumpAndSettle();
@@ -1047,7 +1046,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Afternoon Snack'), findsOneWidget);
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -1126,10 +1125,10 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
@@ -1138,7 +1137,7 @@ void main() {
     expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Add Food'));
+    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My items'));
     await tester.pumpAndSettle();
@@ -1154,7 +1153,7 @@ void main() {
     expect(find.text('Edited supper'), findsWidgets);
     expect(find.text('Apple'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -1177,7 +1176,7 @@ void main() {
 
     await tester.tap(find.text('Skipped this meal'));
     await tester.pump();
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
@@ -1193,7 +1192,7 @@ void main() {
     final original = skippedMeal(reason: 'Not hungry');
     await openMealEntry(tester, original, onResult: (value) => result = value);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);

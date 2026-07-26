@@ -827,10 +827,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         appBar: AppBar(
           title: Text(_pageTitle),
           actions: [
-            TextButton(
-              onPressed: _saveMeal,
-              child: Text(
-                widget.existingMeal == null ? l10n.done_label : l10n.save,
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: FilledButton(
+                onPressed: _saveMeal,
+                child: Text(
+                  widget.existingMeal == null ? l10n.done_label : l10n.save,
+                ),
               ),
             ),
           ],
@@ -1304,26 +1307,10 @@ class _FoodListSection extends StatelessWidget {
                     icon: const Icon(Icons.bookmark_add_outlined),
                     label: Text(l10n.save_meal),
                   ),
-                Semantics(
-                  label: l10n.add_items,
-                  button: true,
-                  child: FilledButton(
-                    onPressed: onAddFood,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.add, size: 18),
-                        const SizedBox(width: 6),
-                        Text(l10n.add_items),
-                      ],
-                    ),
-                  ),
+                TextButton.icon(
+                  onPressed: onAddFood,
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.add_items),
                 ),
               ],
             ),
