@@ -152,11 +152,12 @@ class FoodLibraryItemCard extends StatelessWidget {
         ? Icons.restaurant_menu_outlined
         : Icons.restaurant_outlined;
     final imageUrl = _foodImageUrl(template.prototype);
+    final quantity = isSelected ? selectedQuantity : 1;
     final metadata = _isMeal
         ? '${l10n.template_type_meal} · '
               '${l10n.items_count(template.prototype.componentFoods?.length ?? 0)} · '
-              '${l10n.kcal_value((template.prototype.nutrition.energyKcal * template.prototype.amount).round().toString())}'
-        : _foodServingMetadata(l10n, template.prototype);
+              '${l10n.kcal_value((template.prototype.nutrition.energyKcal * template.prototype.amount * quantity).round().toString())}'
+        : _selectedFoodServingMetadata(l10n, template.prototype, quantity);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -474,12 +475,24 @@ String _formatNumber(double value) => value == value.roundToDouble()
     ? value.round().toString()
     : value.toStringAsFixed(1);
 
-String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) {
+num _servingAmount(double value) =>
+    value == value.roundToDouble() ? value.round() : value;
+
+String _selectedFoodServingMetadata(
+  AppLocalizations l10n,
+  studyu.FoodEntry food,
+  int quantity,
+) {
   final unit = food.unit.trim();
-  final serving = unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(food.amount)
+  final baseServing = unit.isEmpty || unit.toLowerCase() == 'serving'
+      ? l10n.serving_amount(_servingAmount(food.amount))
       : '${_formatNumber(food.amount)} $unit';
-  return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
+  final serving = quantity == 1
+      ? baseServing
+      : unit.isEmpty || unit.toLowerCase() == 'serving'
+      ? l10n.serving_amount(_servingAmount(food.amount * quantity))
+      : '$quantity × $baseServing';
+  return '$serving · ${l10n.kcal_value((food.nutrition.energyKcal * quantity).round().toString())}';
 }
 
 String? _foodImageUrl(studyu.FoodEntry food) {

@@ -92,12 +92,34 @@ String _formatNumber(double value) => value == value.roundToDouble()
     ? value.round().toString()
     : value.toStringAsFixed(1);
 
+num _servingAmount(double value) =>
+    value == value.roundToDouble() ? value.round() : value;
+
 String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) {
+  return _selectedFoodServingMetadata(l10n, food, 1, caloriesKnown: true);
+}
+
+String _selectedFoodServingMetadata(
+  AppLocalizations l10n,
+  studyu.FoodEntry food,
+  int quantity, {
+  required bool caloriesKnown,
+}) {
   final unit = food.unit.trim();
-  final serving = unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(food.amount)
+  final baseServing = unit.isEmpty || unit.toLowerCase() == 'serving'
+      ? l10n.serving_amount(_servingAmount(food.amount))
       : '${_formatNumber(food.amount)} $unit';
-  return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
+  final serving = quantity == 1
+      ? baseServing
+      : unit.isEmpty || unit.toLowerCase() == 'serving'
+      ? l10n.serving_amount(_servingAmount(food.amount * quantity))
+      : '$quantity × $baseServing';
+  final calories = caloriesKnown
+      ? l10n.kcal_value(
+          (food.nutrition.energyKcal * quantity).round().toString(),
+        )
+      : '— kcal';
+  return '$serving · $calories';
 }
 
 double? _resultCalories(UnifiedFoodResult result) {
@@ -1778,7 +1800,14 @@ class _HistoryFoodCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          _foodServingMetadata(l10n, food),
+                          selected == null
+                              ? _foodServingMetadata(l10n, food)
+                              : _selectedFoodServingMetadata(
+                                  l10n,
+                                  selected.baseFood,
+                                  selected.quantity,
+                                  caloriesKnown: selected.caloriesKnown,
+                                ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
@@ -1841,13 +1870,20 @@ class _FoodResultCard extends StatelessWidget {
     final selected = selectionKey == null
         ? null
         : selectionStore?.itemFor(selectionKey!);
-    final metadata = [
-      l10n.serving_amount(1),
-      if (calories == null)
-        '— kcal'
-      else
-        l10n.kcal_value(calories.round().toString()),
-    ].join(' · ');
+    final metadata = selected == null
+        ? [
+            l10n.serving_amount(1),
+            if (calories == null)
+              '— kcal'
+            else
+              l10n.kcal_value(calories.round().toString()),
+          ].join(' · ')
+        : _selectedFoodServingMetadata(
+            l10n,
+            selected.baseFood,
+            selected.quantity,
+            caloriesKnown: selected.caloriesKnown,
+          );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
