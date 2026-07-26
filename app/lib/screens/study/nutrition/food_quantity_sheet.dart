@@ -4,19 +4,26 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_core/core.dart';
 
-enum FoodQuantityAction { existingMeal, addToSelection, updateSelection }
+enum FoodQuantityAction {
+  existingMeal,
+  addToSelection,
+  addMealToSelection,
+  updateSelection,
+}
 
 class FoodQuantitySheet extends StatefulWidget {
   final FoodEntry food;
   final String? mealLabel;
   final FoodQuantityAction action;
   final double? initialAmount;
+  final bool caloriesKnown;
 
   const FoodQuantitySheet({
     required this.food,
     this.mealLabel,
     this.action = FoodQuantityAction.existingMeal,
     this.initialAmount,
+    this.caloriesKnown = true,
     super.key,
   });
 
@@ -26,6 +33,7 @@ class FoodQuantitySheet extends StatefulWidget {
     String? mealLabel,
     FoodQuantityAction action = FoodQuantityAction.existingMeal,
     double? initialAmount,
+    bool caloriesKnown = true,
   }) => showModalBottomSheet<FoodEntry>(
     context: context,
     isScrollControlled: true,
@@ -35,6 +43,7 @@ class FoodQuantitySheet extends StatefulWidget {
       mealLabel: mealLabel,
       action: action,
       initialAmount: initialAmount,
+      caloriesKnown: caloriesKnown,
     ),
   );
 
@@ -91,12 +100,57 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
     _updateAmount(_amountController.text);
   }
 
+  String _servingDescription(AppLocalizations l10n) {
+    final portionReference = widget.food.portionReference?.trim();
+    if (portionReference != null && portionReference.isNotEmpty) {
+      return portionReference;
+    }
+    final unit = widget.food.unit.trim();
+    return l10n.food_quantity_serving_value(
+      _formatNumber(widget.food.servingSizeGrams),
+      unit.isEmpty ? l10n.food_quantity_serving_unit(1) : unit,
+    );
+  }
+
+  String _amountUnit(AppLocalizations l10n, double amount) {
+    final unit = widget.food.unit.trim();
+    return unit.isEmpty || unit.toLowerCase() == 'serving'
+        ? l10n.food_quantity_serving_unit(amount)
+        : unit;
+  }
+
+  String? _foodImageUrl() {
+    for (final key in [
+      'image_front_small_url',
+      'image_front_url',
+      'image_url',
+      'imageUrl',
+    ]) {
+      final value = widget.food.originalValues[key];
+      if (value is String && value.trim().isNotEmpty) return value;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final food = _scaledFood ?? widget.food;
-    final serving = widget.food.portionReference?.trim();
+    final amount = food.amount;
+    final servings = amount / widget.food.amount;
+    final unavailable = widget.food.nutrition.unavailableNutrients;
+    final caloriesKnown =
+        widget.caloriesKnown && !unavailable.contains('energyKcal');
+    final nutritionUnavailable =
+        !caloriesKnown ||
+        const {'protein', 'carbs', 'fat'}.any(unavailable.contains);
+    final brand = widget.food.brandName?.trim();
+    final imageUrl = _foodImageUrl();
+    final subtitle = [
+      if (brand != null && brand.isNotEmpty) brand,
+      _servingDescription(l10n),
+    ].join(' · ');
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -105,130 +159,222 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
         24,
         24 + MediaQuery.viewInsetsOf(context).bottom,
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: Container(
-                width: 32,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.outlineVariant,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(widget.food.name, style: theme.textTheme.headlineSmall),
-            if (widget.food.brandName case final brand?) ...[
-              const SizedBox(height: 4),
-              Text(brand, style: theme.textTheme.bodyMedium),
-            ],
-            const SizedBox(height: 24),
-            Text(l10n.food_quantity_amount, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton.filledTonal(
-                  onPressed: (_scaledFood?.amount ?? widget.food.amount) > 1
-                      ? () => _changeAmount(-1)
-                      : null,
-                  icon: const Icon(Icons.remove),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    controller: _amountController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 32,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.outlineVariant,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (imageUrl != null) ...[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            imageUrl,
+                            width: 64,
+                            height: 64,
+                            fit: BoxFit.cover,
+                            semanticLabel: widget.food.name,
+                            errorBuilder: (_, _, _) => ColoredBox(
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              child: Icon(
+                                Icons.restaurant_outlined,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.food.name,
+                              style: theme.textTheme.headlineSmall,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              subtitle,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        tooltip: l10n.close,
+                        icon: const Icon(Icons.close),
+                      ),
                     ],
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      errorText: _scaledFood == null
-                          ? l10n.food_quantity_invalid_amount
-                          : null,
-                      suffixText: widget.food.unit,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    l10n.food_quantity_amount,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    constraints: const BoxConstraints(minHeight: 56),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    onChanged: _updateAmount,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                IconButton.filledTonal(
-                  onPressed: () => _changeAmount(1),
-                  icon: const Icon(Icons.add),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.food_quantity_serving,
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              serving != null && serving.isNotEmpty
-                  ? serving
-                  : l10n.food_quantity_serving_value(
-                      _formatNumber(widget.food.servingSizeGrams),
-                      widget.food.unit,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: amount > 1
+                              ? () => _changeAmount(-1)
+                              : null,
+                          tooltip: l10n.food_selection_decrement(
+                            widget.food.name,
+                          ),
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _amountController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]'),
+                              ),
+                            ],
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.titleMedium,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16,
+                              ),
+                              suffixText: _amountUnit(l10n, amount),
+                            ),
+                            onChanged: _updateAmount,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _changeAmount(1),
+                          tooltip: l10n.food_selection_increment(
+                            widget.food.name,
+                          ),
+                          icon: const Icon(Icons.add),
+                        ),
+                      ],
                     ),
-            ),
-            if (widget.action != FoodQuantityAction.existingMeal) ...[
-              const SizedBox(height: 20),
-              Text(
-                l10n.food_quantity_per_serving(
-                  l10n.kcal_value(
-                    widget.food.nutrition.energyKcal.toStringAsFixed(0),
                   ),
-                ),
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                l10n.food_quantity_selection_total(
-                  l10n.kcal_value(food.nutrition.energyKcal.toStringAsFixed(0)),
-                ),
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-            const SizedBox(height: 20),
-            Wrap(
-              spacing: 16,
-              runSpacing: 8,
-              children: [
-                _NutrientValue(
-                  label: l10n.food_quantity_energy,
-                  value: l10n.kcal_value(
-                    food.nutrition.energyKcal.toStringAsFixed(0),
+                  if (_scaledFood == null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.food_quantity_invalid_amount,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+                  Text(
+                    l10n.food_quantity_selection_total,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
-                _NutrientValue(
-                  label: l10n.food_quantity_protein,
-                  value: '${food.nutrition.protein.toStringAsFixed(1)} g',
-                ),
-                _NutrientValue(
-                  label: l10n.food_quantity_carbs,
-                  value: '${food.nutrition.carbs.toStringAsFixed(1)} g',
-                ),
-                _NutrientValue(
-                  label: l10n.food_quantity_fat,
-                  value: '${food.nutrition.fat.toStringAsFixed(1)} g',
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    caloriesKnown
+                        ? l10n.kcal_value(
+                            food.nutrition.energyKcal.toStringAsFixed(0),
+                          )
+                        : '— kcal',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (caloriesKnown &&
+                      servings > 1 &&
+                      widget.food.nutrition.energyKcal != 0) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.food_quantity_per_serving(
+                        l10n.kcal_value(
+                          widget.food.nutrition.energyKcal.toStringAsFixed(0),
+                        ),
+                      ),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                  if (nutritionUnavailable) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.food_quantity_nutrition_unavailable,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+                  _NutrientGrid(
+                    nutrients: [
+                      (
+                        l10n.food_quantity_protein,
+                        unavailable.contains('protein')
+                            ? '—'
+                            : '${food.nutrition.protein.toStringAsFixed(1)} g',
+                      ),
+                      (
+                        l10n.food_quantity_carbs,
+                        unavailable.contains('carbs')
+                            ? '—'
+                            : '${food.nutrition.carbs.toStringAsFixed(1)} g',
+                      ),
+                      (
+                        l10n.food_quantity_fat,
+                        unavailable.contains('fat')
+                            ? '—'
+                            : '${food.nutrition.fat.toStringAsFixed(1)} g',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            FilledButton(
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 48,
+            child: FilledButton(
               onPressed: _scaledFood == null
                   ? null
                   : () => Navigator.pop(context, _scaledFood),
               child: Text(switch (widget.action) {
                 FoodQuantityAction.addToSelection =>
                   l10n.food_quantity_add_to_selection,
+                FoodQuantityAction.addMealToSelection =>
+                  l10n.food_quantity_add_meal_to_selection,
                 FoodQuantityAction.updateSelection =>
                   l10n.food_quantity_update_selection,
                 FoodQuantityAction.existingMeal =>
@@ -237,11 +383,38 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                       : l10n.food_quantity_add_to_meal(widget.mealLabel!),
               }),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+class _NutrientGrid extends StatelessWidget {
+  final List<(String, String)> nutrients;
+
+  const _NutrientGrid({required this.nutrients});
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final largeText = MediaQuery.textScalerOf(context).scale(1) > 1.3;
+      final columns = constraints.maxWidth < 360 || largeText ? 2 : 3;
+      const spacing = 16.0;
+      final width = (constraints.maxWidth - spacing * (columns - 1)) / columns;
+      return Wrap(
+        spacing: spacing,
+        runSpacing: 16,
+        children: [
+          for (final nutrient in nutrients)
+            SizedBox(
+              width: width,
+              child: _NutrientValue(label: nutrient.$1, value: nutrient.$2),
+            ),
+        ],
+      );
+    },
+  );
 }
 
 class _NutrientValue extends StatelessWidget {

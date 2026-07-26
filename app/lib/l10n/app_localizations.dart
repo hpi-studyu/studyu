@@ -4061,6 +4061,12 @@ abstract class AppLocalizations {
   /// **'Serving'**
   String get food_quantity_serving;
 
+  /// No description provided for @food_quantity_serving_unit.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount, plural, =1 {serving} other {servings}}'**
+  String food_quantity_serving_unit(num amount);
+
   /// No description provided for @food_quantity_serving_value.
   ///
   /// In en, this message translates to:
@@ -4082,7 +4088,7 @@ abstract class AppLocalizations {
   /// No description provided for @food_quantity_carbs.
   ///
   /// In en, this message translates to:
-  /// **'Carbohydrates'**
+  /// **'Carbs'**
   String get food_quantity_carbs;
 
   /// No description provided for @food_quantity_fat.
@@ -4103,6 +4109,12 @@ abstract class AppLocalizations {
   /// **'Add to selection'**
   String get food_quantity_add_to_selection;
 
+  /// No description provided for @food_quantity_add_meal_to_selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add meal to selection'**
+  String get food_quantity_add_meal_to_selection;
+
   /// No description provided for @food_quantity_update_selection.
   ///
   /// In en, this message translates to:
@@ -4112,14 +4124,20 @@ abstract class AppLocalizations {
   /// No description provided for @food_quantity_per_serving.
   ///
   /// In en, this message translates to:
-  /// **'Per serving: {calories}'**
+  /// **'{calories} per serving'**
   String food_quantity_per_serving(String calories);
 
   /// No description provided for @food_quantity_selection_total.
   ///
   /// In en, this message translates to:
-  /// **'Selection total: {calories}'**
-  String food_quantity_selection_total(String calories);
+  /// **'Selection total'**
+  String get food_quantity_selection_total;
+
+  /// No description provided for @food_quantity_nutrition_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition information unavailable'**
+  String get food_quantity_nutrition_unavailable;
 
   /// No description provided for @save_to_my_items.
   ///

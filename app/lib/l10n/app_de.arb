@@ -868,6 +868,7 @@
   "food_quantity_amount": "Menge",
   "food_quantity_invalid_amount": "Geben Sie eine Menge größer als null ein",
   "food_quantity_serving": "Portion",
+  "food_quantity_serving_unit": "{amount, plural, =1 {Portion} other {Portionen}}",
   "food_quantity_serving_value": "{value} g pro {unit}",
   "food_quantity_energy": "Energie",
   "food_quantity_protein": "Protein",
@@ -875,8 +876,9 @@
   "food_quantity_fat": "Fett",
   "food_quantity_add_to_meal": "Zu {meal} hinzufügen",
   "food_quantity_add_to_selection": "Zur Auswahl hinzufügen",
+  "food_quantity_add_meal_to_selection": "Mahlzeit zur Auswahl hinzufügen",
   "food_quantity_update_selection": "Auswahl aktualisieren",
-  "food_quantity_per_serving": "Pro Portion: {calories}",
+  "food_quantity_per_serving": "{calories} pro Portion",
   "@food_quantity_per_serving": {
     "placeholders": {
       "calories": {
@@ -884,14 +886,8 @@
       }
     }
   },
-  "food_quantity_selection_total": "Auswahl gesamt: {calories}",
-  "@food_quantity_selection_total": {
-    "placeholders": {
-      "calories": {
-        "type": "String"
-      }
-    }
-  },
+  "food_quantity_selection_total": "Auswahl gesamt",
+  "food_quantity_nutrition_unavailable": "Nährwertangaben nicht verfügbar",
   "save_to_my_items": "Für später in Meine Elemente speichern",
   "save_and_add_to_meal": "Speichern und zu {meal} hinzufügen",
   "@save_and_add_to_meal": {

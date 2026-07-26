@@ -981,6 +981,14 @@
   "food_quantity_amount": "Amount",
   "food_quantity_invalid_amount": "Enter an amount greater than zero",
   "food_quantity_serving": "Serving",
+  "food_quantity_serving_unit": "{amount, plural, =1 {serving} other {servings}}",
+  "@food_quantity_serving_unit": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
   "food_quantity_serving_value": "{value} g per {unit}",
   "@food_quantity_serving_value": {
     "placeholders": {
@@ -994,12 +1002,13 @@
   },
   "food_quantity_energy": "Energy",
   "food_quantity_protein": "Protein",
-  "food_quantity_carbs": "Carbohydrates",
+  "food_quantity_carbs": "Carbs",
   "food_quantity_fat": "Fat",
   "food_quantity_add_to_meal": "Add to {meal}",
   "food_quantity_add_to_selection": "Add to selection",
+  "food_quantity_add_meal_to_selection": "Add meal to selection",
   "food_quantity_update_selection": "Update selection",
-  "food_quantity_per_serving": "Per serving: {calories}",
+  "food_quantity_per_serving": "{calories} per serving",
   "@food_quantity_per_serving": {
     "placeholders": {
       "calories": {
@@ -1007,14 +1016,8 @@
       }
     }
   },
-  "food_quantity_selection_total": "Selection total: {calories}",
-  "@food_quantity_selection_total": {
-    "placeholders": {
-      "calories": {
-        "type": "String"
-      }
-    }
-  },
+  "food_quantity_selection_total": "Selection total",
+  "food_quantity_nutrition_unavailable": "Nutrition information unavailable",
   "save_to_my_items": "Save to My items for future use",
   "save_and_add_to_meal": "Save and add to {meal}",
   "@save_and_add_to_meal": {

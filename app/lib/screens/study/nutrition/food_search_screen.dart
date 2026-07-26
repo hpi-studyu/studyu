@@ -96,7 +96,11 @@ num _servingAmount(double value) =>
     value == value.roundToDouble() ? value.round() : value;
 
 String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) {
-  return _selectedFoodServingMetadata(l10n, food, 1, caloriesKnown: true);
+  final unit = food.unit.trim();
+  final serving = unit.isEmpty || unit.toLowerCase() == 'serving'
+      ? l10n.serving_amount(_servingAmount(food.amount))
+      : '${_formatNumber(food.amount)} $unit';
+  return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
 }
 
 String _selectedFoodServingMetadata(
@@ -105,21 +109,13 @@ String _selectedFoodServingMetadata(
   int quantity, {
   required bool caloriesKnown,
 }) {
-  final unit = food.unit.trim();
-  final baseServing = unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(_servingAmount(food.amount))
-      : '${_formatNumber(food.amount)} $unit';
-  final serving = quantity == 1
-      ? baseServing
-      : unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(_servingAmount(food.amount * quantity))
-      : '$quantity × $baseServing';
+  final grams = food.servingSizeGrams * food.amount * quantity;
   final calories = caloriesKnown
       ? l10n.kcal_value(
           (food.nutrition.energyKcal * quantity).round().toString(),
         )
       : '— kcal';
-  return '$serving · $calories';
+  return '${_formatNumber(grams)} g · $calories';
 }
 
 double? _resultCalories(UnifiedFoodResult result) {
@@ -793,6 +789,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         sodium: food.sodium100g * scale,
         waterContent: 0,
         micros: {},
+        unavailableNutrients: {
+          if (food.getNutrientValue(1008) == null) 'energyKcal',
+          if (food.getNutrientValue(1003) == null) 'protein',
+          if (food.getNutrientValue(1005) == null) 'carbs',
+          if (food.getNutrientValue(1004) == null) 'fat',
+        },
       ),
       foodCode: food.gtinUpc,
       externalId: food.fdcId.toString(),
@@ -827,6 +829,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     final sodium =
         (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) *
         1000;
+    bool isUnavailable(Nutrient nutrient) =>
+        nutriments?.getValue(nutrient, PerSize.oneHundredGrams) == null;
+    final unavailableNutrients = {
+      if (isUnavailable(Nutrient.energyKCal)) 'energyKcal',
+      if (isUnavailable(Nutrient.proteins)) 'protein',
+      if (isUnavailable(Nutrient.carbohydrates)) 'carbs',
+      if (isUnavailable(Nutrient.fat)) 'fat',
+    };
     double servingSizeGrams = 100.0;
     if (product.servingSize != null) {
       final match = RegExp(
@@ -862,6 +872,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         sodium: sodium * servingSizeGrams / 100,
         waterContent: 0,
         micros: {},
+        unavailableNutrients: unavailableNutrients,
       ),
       foodCode: product.barcode,
       externalId: product.barcode,
@@ -888,7 +899,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       selected?.baseFood ?? food,
       key: key,
       action: selected == null
-          ? FoodQuantityAction.addToSelection
+          ? food.entryType == studyu.FoodEntryType.meal
+                ? FoodQuantityAction.addMealToSelection
+                : FoodQuantityAction.addToSelection
           : FoodQuantityAction.updateSelection,
     );
   }
@@ -952,7 +965,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       selected?.baseFood ?? foodEntry,
       key: key,
       action: selected == null
-          ? FoodQuantityAction.addToSelection
+          ? foodEntry.entryType == studyu.FoodEntryType.meal
+                ? FoodQuantityAction.addMealToSelection
+                : FoodQuantityAction.addToSelection
           : FoodQuantityAction.updateSelection,
     );
   }
@@ -981,6 +996,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       initialAmount: selected == null
           ? null
           : selected.baseFood.amount * selected.quantity,
+      caloriesKnown: caloriesKnown,
     );
     if (result == null || !mounted) return;
     if (action == FoodQuantityAction.updateSelection && key != null) {
@@ -990,7 +1006,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
         caloriesKnown:
             _selectionStore.itemFor(key)?.caloriesKnown ?? caloriesKnown,
       );
-    } else if (action == FoodQuantityAction.addToSelection) {
+    } else if (action == FoodQuantityAction.addToSelection ||
+        action == FoodQuantityAction.addMealToSelection) {
       _addToSelection(
         result,
         key: key ?? canonicalFoodSelectionKey(result),
@@ -1581,17 +1598,15 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
                 itemCount: store.items.length,
                 itemBuilder: (context, index) {
                   final item = store.items.elementAt(index);
-                  final kcal = item.caloriesKnown
-                      ? l10n.kcal_value(
-                          (item.baseFood.nutrition.energyKcal * item.quantity)
-                              .round()
-                              .toString(),
-                        )
-                      : '— kcal';
                   return ListTile(
                     title: Text(item.name),
                     subtitle: Text(
-                      '${l10n.serving_amount(item.quantity)} · $kcal',
+                      _selectedFoodServingMetadata(
+                        l10n,
+                        item.baseFood,
+                        item.quantity,
+                        caloriesKnown: item.caloriesKnown,
+                      ),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,

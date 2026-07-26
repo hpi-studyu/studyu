@@ -7,9 +7,15 @@ MealLog cloneMealLog(MealLog meal) => MealLog.fromJson(
   jsonDecode(jsonEncode(meal.toJson())) as Map<String, dynamic>,
 );
 
-FoodEntry cloneFoodEntry(FoodEntry food) => FoodEntry.fromJson(
-  jsonDecode(jsonEncode(food.toJson())) as Map<String, dynamic>,
-);
+FoodEntry cloneFoodEntry(FoodEntry food) {
+  final clone = FoodEntry.fromJson(
+    jsonDecode(jsonEncode(food.toJson())) as Map<String, dynamic>,
+  );
+  clone.nutrition
+    ..unavailableNutrients = {...food.nutrition.unavailableNutrients}
+    ..unavailableItemCount = food.nutrition.unavailableItemCount;
+  return clone;
+}
 
 FoodEntry duplicateFoodEntry(FoodEntry food) {
   final duplicate = cloneFoodEntry(food)
