@@ -344,6 +344,7 @@ class MealNutritionSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) => NutritionSummaryCard(
     nutrition: _sumFoods(meal.foods),
     title: AppLocalizations.of(context)!.meal_nutrition,
+    inCard: true,
   );
 }
 

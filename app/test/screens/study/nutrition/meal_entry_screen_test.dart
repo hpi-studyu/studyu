@@ -629,12 +629,25 @@ void main() {
     },
   );
 
-  testWidgets('food workspace appears before meal details', (tester) async {
+  testWidgets('meal nutrition appears below meal details in a card', (
+    tester,
+  ) async {
     await openMealEntry(tester, editableMeal());
 
     expect(
       tester.getTopLeft(find.text('Food items')).dy,
       lessThan(tester.getTopLeft(find.text('Meal label')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Meal details')).dy,
+      lessThan(tester.getTopLeft(find.text('Meal Nutrition')).dy),
+    );
+    expect(
+      find.ancestor(
+        of: find.text('Meal Nutrition'),
+        matching: find.byType(Card),
+      ),
+      findsOneWidget,
     );
   });
 

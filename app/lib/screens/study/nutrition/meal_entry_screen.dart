@@ -912,18 +912,19 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   value: l10n.photoRecallSubtitle,
                   onTap: _showPhotoRecall,
                 ),
-                if (_meal.foods.isNotEmpty) ...[
+                if (widget.task?.collectMealContext ?? true) ...[
                   const SizedBox(height: 16),
-                  MealNutritionSummaryCard(meal: _meal),
-                ],
-                const SizedBox(height: 16),
-                if (widget.task?.collectMealContext ?? true)
                   _SettingsRow(
                     icon: Icons.tune,
                     label: l10n.meal_details,
                     value: _mealDetailsSummary(l10n),
                     onTap: _editMealDetails,
                   ),
+                ],
+                if (_meal.foods.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  MealNutritionSummaryCard(meal: _meal),
+                ],
               ],
               if (widget.existingMeal != null) ...[
                 const SizedBox(height: 24),
