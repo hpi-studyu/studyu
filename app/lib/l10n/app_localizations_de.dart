@@ -2097,6 +2097,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get food_selection_item_removed => 'Element entfernt';
+
+  @override
+  String get food_selection_undo => 'Rückgängig';
+
+  @override
   String food_selection_selected(String name, int quantity) {
     return '$name, ausgewählt, Menge $quantity';
   }

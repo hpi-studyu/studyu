@@ -859,6 +859,8 @@
     }
   },
   "food_selection_delete": "Delete {name}",
+  "food_selection_item_removed": "Item removed",
+  "food_selection_undo": "Undo",
   "@food_selection_delete": {
     "placeholders": {
       "name": {

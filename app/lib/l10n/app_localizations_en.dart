@@ -2078,6 +2078,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get food_selection_item_removed => 'Item removed';
+
+  @override
+  String get food_selection_undo => 'Undo';
+
+  @override
   String food_selection_selected(String name, int quantity) {
     return '$name, selected, quantity $quantity';
   }

@@ -202,11 +202,21 @@ IconData _foodIcon(studyu.FoodEntry food) =>
     ? Icons.restaurant_menu_outlined
     : Icons.restaurant_outlined;
 
-ImageProvider? _cachedTransferImage(String? imageUrl) {
+ImageInfo? _cachedTransferImage(BuildContext context, String? imageUrl) {
   if (imageUrl == null || imageUrl.trim().isEmpty) return null;
   final provider = NetworkImage(imageUrl);
   final status = PaintingBinding.instance.imageCache.statusForKey(provider);
-  return !status.pending && (status.live || status.keepAlive) ? provider : null;
+  if (status.pending || !status.keepAlive) return null;
+
+  ImageInfo? resolvedImage;
+  final stream = provider.resolve(createLocalImageConfiguration(context));
+  late final ImageStreamListener listener;
+  listener = ImageStreamListener((image, synchronousCall) {
+    if (synchronousCall) resolvedImage = image.clone();
+  });
+  stream.addListener(listener);
+  stream.removeListener(listener);
+  return resolvedImage;
 }
 
 Offset _quadraticPoint(
@@ -484,11 +494,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   int _transferGeneration = 0;
   String? _activeTransferKey;
   bool _activeTransferPending = false;
-  bool _activeTransferIsIncrement = false;
-  int _activeTransferCount = 0;
-  int _summaryPulse = 0;
-  final Map<String, int> _rowPulses = {};
-  final Map<String, int> _quantityPulses = {};
+  ImageInfo? _activeTransferImage;
 
   // Debounce timer for live search
   Timer? _debounceTimer;
@@ -570,11 +576,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   }
 
   void _onTransferStatus(AnimationStatus status) {
-    if (status != AnimationStatus.completed) return;
-    final key = _activeTransferKey;
-    final quantity = _activeTransferIsIncrement;
-    _removeTransfer(stopController: false);
-    if (key != null) _pulseDestination(key, quantity: quantity);
+    if (status == AnimationStatus.completed) {
+      _removeTransfer(stopController: false);
+    }
   }
 
   void _removeTransfer({bool stopController = true}) {
@@ -582,10 +586,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     if (stopController) _transferController.stop();
     _transferEntry?.remove();
     _transferEntry = null;
+    _activeTransferImage?.dispose();
+    _activeTransferImage = null;
     _activeTransferKey = null;
     _activeTransferPending = false;
-    _activeTransferIsIncrement = false;
-    _activeTransferCount = 0;
   }
 
   GlobalKey _rowAnchorFor(String key) =>
@@ -601,27 +605,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
             renderObject.hasSize
         ? renderObject
         : null;
-  }
-
-  void _pulseDestination(String key, {required bool quantity}) {
-    if (!mounted || MediaQuery.disableAnimationsOf(context)) return;
-    setState(() {
-      if (quantity && _renderBoxFor(_quantityAnchorKeys[key]) != null) {
-        _quantityPulses[key] = (_quantityPulses[key] ?? 0) + 1;
-      } else if (_renderBoxFor(_rowAnchorKeys[key]) != null) {
-        _rowPulses[key] = (_rowPulses[key] ?? 0) + 1;
-      } else {
-        _summaryPulse++;
-      }
-    });
-  }
-
-  void _scheduleDestinationPulse(String key, {required bool quantity}) {
-    final generation = _transferGeneration;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || generation != _transferGeneration) return;
-      _pulseDestination(key, quantity: quantity);
-    });
   }
 
   Offset? _transferDestination(
@@ -650,17 +633,16 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     BuildContext context, {
     required double size,
     required IconData icon,
-    required ImageProvider? image,
-    required int badgeCount,
+    required ImageInfo? image,
+    required bool showIncrementBadge,
   }) {
     final theme = Theme.of(context);
-    final radius = BorderRadius.circular(10);
     final fallback = _fallbackItemIcon(theme, icon, size: 20);
     return Material(
       elevation: 2,
       color: theme.colorScheme.surfaceContainerHigh,
       shape: RoundedRectangleBorder(
-        borderRadius: radius,
+        borderRadius: BorderRadius.circular(10),
         side: BorderSide(color: theme.colorScheme.outlineVariant),
       ),
       clipBehavior: Clip.antiAlias,
@@ -672,12 +654,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
             if (image == null)
               fallback
             else
-              Image(
-                image: image,
+              RawImage(
+                image: image.image,
+                scale: image.scale,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => fallback,
               ),
-            if (badgeCount > 0)
+            if (showIncrementBadge)
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -688,7 +670,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '+$badgeCount',
+                    '+1',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onPrimary,
                       fontSize: 9,
@@ -707,27 +689,26 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     Offset? source, {
     required String key,
     required IconData icon,
-    required ImageProvider? image,
-    required bool isIncrement,
+    required ImageInfo? image,
     required bool firstSelection,
+    required bool isIncrement,
   }) {
-    if (_activeTransferKey == key &&
+    if (isIncrement &&
+        _activeTransferKey == key &&
         (_activeTransferPending || _transferEntry != null)) {
-      _activeTransferCount++;
-      _transferEntry?.markNeedsBuild();
+      image?.dispose();
       return;
     }
 
     _removeTransfer();
     if (!mounted || source == null || MediaQuery.disableAnimationsOf(context)) {
-      _scheduleDestinationPulse(key, quantity: isIncrement);
+      image?.dispose();
       return;
     }
 
+    _activeTransferImage = image;
     _activeTransferKey = key;
     _activeTransferPending = true;
-    _activeTransferIsIncrement = isIncrement;
-    _activeTransferCount = 1;
     final generation = _transferGeneration;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || generation != _transferGeneration) return;
@@ -738,7 +719,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
             !overlayBox.attached ||
             !overlayBox.hasSize) {
           _removeTransfer();
-          _scheduleDestinationPulse(key, quantity: isIncrement);
           return;
         }
 
@@ -751,7 +731,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         if (end == null ||
             !(Offset.zero & overlayBox.size).inflate(24).contains(start)) {
           _removeTransfer();
-          _scheduleDestinationPulse(key, quantity: isIncrement);
           return;
         }
 
@@ -783,18 +762,15 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                 destination,
                 progress,
               );
+              final entrance = (elapsed / 0.12).clamp(0.0, 1.0);
               final fade = ((elapsed - 0.75) / 0.25).clamp(0.0, 1.0);
-              final badgeCount =
-                  _activeTransferIsIncrement || _activeTransferCount > 1
-                  ? _activeTransferCount
-                  : 0;
               return Positioned(
                 left: position.dx - size / 2,
                 top: position.dy - size / 2,
                 child: IgnorePointer(
                   child: ExcludeSemantics(
                     child: Opacity(
-                      opacity: 1 - fade,
+                      opacity: entrance * (1 - fade),
                       child: Transform.scale(
                         scale: 1 - 0.3 * progress,
                         child: _transferToken(
@@ -802,7 +778,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                           size: size,
                           icon: icon,
                           image: image,
-                          badgeCount: badgeCount,
+                          showIncrementBadge: isIncrement,
                         ),
                       ),
                     ),
@@ -818,7 +794,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         debugPrint('Selection transfer animation skipped: $error');
         if (mounted && generation == _transferGeneration) {
           _removeTransfer();
-          _scheduleDestinationPulse(key, quantity: isIncrement);
         }
       }
     });
@@ -1370,42 +1345,34 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     }
     final existing = _selectionStore.itemFor(key);
     final firstSelection = _selectionStore.isEmpty;
-    final image = _cachedTransferImage(imageUrl ?? _foodImageUrl(food));
+    final image = _cachedTransferImage(
+      context,
+      imageUrl ?? _foodImageUrl(food),
+    );
     _selectionStore.addOrIncrement(key, food, caloriesKnown: caloriesKnown);
+
     try {
       _animateTransfer(
         source,
         key: key,
         icon: _foodIcon(food),
         image: image,
-        isIncrement: existing != null,
         firstSelection: firstSelection,
+        isIncrement: existing != null,
       );
     } catch (error) {
+      _removeTransfer();
       debugPrint('Selection transfer animation skipped: $error');
-      _scheduleDestinationPulse(key, quantity: existing != null);
     }
   }
 
   void _decrementSelection(String key) {
     _removeTransfer();
     _selectionStore?.decrement(key);
-    _scheduleDestinationPulse(key, quantity: false);
   }
 
-  void _incrementTraySelection(String key, Offset? source) {
-    final item = _selectionStore?.itemFor(key);
-    if (item == null) return;
-    final image = _cachedTransferImage(_foodImageUrl(item.baseFood));
-    _selectionStore!.increment(key);
-    _animateTransfer(
-      source,
-      key: key,
-      icon: _foodIcon(item.baseFood),
-      image: image,
-      isIncrement: true,
-      firstSelection: false,
-    );
+  void _incrementTraySelection(String key, Offset? _) {
+    _selectionStore?.increment(key);
   }
 
   void _completeSingleSelection(studyu.FoodEntry foodEntry) {
@@ -1691,11 +1658,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                   key: const ValueKey('selection-tray'),
                   anchorKey: _trayAnchorKey,
                   headerAnchorKey: _trayHeaderAnchorKey,
-                  summaryPulse: _summaryPulse,
                   rowAnchorFor: _rowAnchorFor,
                   quantityAnchorFor: _quantityAnchorFor,
-                  rowPulseFor: (key) => _rowPulses[key] ?? 0,
-                  quantityPulseFor: (key) => _quantityPulses[key] ?? 0,
                   store: store,
                   mealLabel: widget.mealLabel!,
                   isConfirming: _isConfirming,
@@ -1723,7 +1687,6 @@ class _SelectionQuantityControl extends StatelessWidget {
   final ValueChanged<Offset?> onIncrement;
   final VoidCallback onDecrement;
   final GlobalKey? quantityAnchorKey;
-  final int pulse;
 
   const _SelectionQuantityControl({
     required this.name,
@@ -1731,7 +1694,6 @@ class _SelectionQuantityControl extends StatelessWidget {
     required this.onIncrement,
     required this.onDecrement,
     this.quantityAnchorKey,
-    this.pulse = 0,
   });
 
   @override
@@ -1744,23 +1706,22 @@ class _SelectionQuantityControl extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
+          SelectionQuantityButton(
             tooltip: l10n.food_selection_decrement(name),
             onPressed: onDecrement,
-            icon: const Icon(Icons.remove),
+            icon: Icons.remove,
             visualDensity: VisualDensity.compact,
           ),
           SelectionQuantityText(
             key: quantityAnchorKey,
             quantity: quantity,
-            pulse: pulse,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           Builder(
-            builder: (buttonContext) => IconButton(
+            builder: (buttonContext) => SelectionQuantityButton(
               tooltip: l10n.food_selection_increment(name),
               onPressed: () => onIncrement(_globalCenter(buttonContext)),
-              icon: const Icon(Icons.add),
+              icon: Icons.add,
               visualDensity: VisualDensity.compact,
             ),
           ),
@@ -1770,36 +1731,11 @@ class _SelectionQuantityControl extends StatelessWidget {
   }
 }
 
-class _ArrivalPulse extends StatelessWidget {
-  final int pulse;
-  final Widget child;
-
-  const _ArrivalPulse({required this.pulse, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      key: ValueKey(pulse),
-      tween: Tween(begin: pulse == 0 ? 1 : 1.03, end: 1),
-      duration: MediaQuery.disableAnimationsOf(context)
-          ? Duration.zero
-          : const Duration(milliseconds: 120),
-      curve: Curves.easeOutCubic,
-      builder: (context, scale, child) =>
-          Transform.scale(scale: scale, child: child),
-      child: child,
-    );
-  }
-}
-
 class _SelectionPeekTray extends StatelessWidget {
   final GlobalKey anchorKey;
   final GlobalKey headerAnchorKey;
-  final int summaryPulse;
   final GlobalKey Function(String key) rowAnchorFor;
   final GlobalKey Function(String key) quantityAnchorFor;
-  final int Function(String key) rowPulseFor;
-  final int Function(String key) quantityPulseFor;
   final FoodSelectionStore store;
   final String mealLabel;
   final bool isConfirming;
@@ -1811,11 +1747,8 @@ class _SelectionPeekTray extends StatelessWidget {
   const _SelectionPeekTray({
     required this.anchorKey,
     required this.headerAnchorKey,
-    required this.summaryPulse,
     required this.rowAnchorFor,
     required this.quantityAnchorFor,
-    required this.rowPulseFor,
-    required this.quantityPulseFor,
     required this.store,
     required this.mealLabel,
     required this.isConfirming,
@@ -1877,14 +1810,11 @@ class _SelectionPeekTray extends StatelessWidget {
                           child: Container(
                             key: headerAnchorKey,
                             alignment: Alignment.centerLeft,
-                            child: _ArrivalPulse(
-                              pulse: summaryPulse,
-                              child: Text(
-                                l10n.food_selection_selected_count(
-                                  store.itemCount,
-                                ),
-                                style: Theme.of(context).textTheme.titleSmall,
+                            child: Text(
+                              l10n.food_selection_selected_count(
+                                store.itemCount,
                               ),
+                              style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ),
                         ),
@@ -1902,8 +1832,6 @@ class _SelectionPeekTray extends StatelessWidget {
                   items: previewItems,
                   rowAnchorFor: rowAnchorFor,
                   quantityAnchorFor: quantityAnchorFor,
-                  rowPulseFor: rowPulseFor,
-                  quantityPulseFor: quantityPulseFor,
                   onIncrement: onIncrement,
                   onDecrement: onDecrement,
                 ),
@@ -1951,8 +1879,6 @@ class _SelectionPreviewRows extends StatefulWidget {
   final List<FoodSelectionItem> items;
   final GlobalKey Function(String key) rowAnchorFor;
   final GlobalKey Function(String key) quantityAnchorFor;
-  final int Function(String key) rowPulseFor;
-  final int Function(String key) quantityPulseFor;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -1960,8 +1886,6 @@ class _SelectionPreviewRows extends StatefulWidget {
     required this.items,
     required this.rowAnchorFor,
     required this.quantityAnchorFor,
-    required this.rowPulseFor,
-    required this.quantityPulseFor,
     required this.onIncrement,
     required this.onDecrement,
   });
@@ -2029,9 +1953,7 @@ class _SelectionPreviewRowsState extends State<_SelectionPreviewRows> {
     final row = _SelectionPreviewRow(
       key: ValueKey(outgoing ? 'removing:${item.key}' : item.key),
       anchorKey: outgoing ? null : widget.rowAnchorFor(item.key),
-      pulse: outgoing ? 0 : widget.rowPulseFor(item.key),
       quantityAnchorKey: outgoing ? null : widget.quantityAnchorFor(item.key),
-      quantityPulse: outgoing ? 0 : widget.quantityPulseFor(item.key),
       item: item,
       onIncrement: widget.onIncrement,
       onDecrement: widget.onDecrement,
@@ -2069,18 +1991,14 @@ class _SelectionPreviewRowsState extends State<_SelectionPreviewRows> {
 
 class _SelectionPreviewRow extends StatelessWidget {
   final GlobalKey? anchorKey;
-  final int pulse;
   final GlobalKey? quantityAnchorKey;
-  final int quantityPulse;
   final FoodSelectionItem item;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
   const _SelectionPreviewRow({
     this.anchorKey,
-    required this.pulse,
     this.quantityAnchorKey,
-    required this.quantityPulse,
     required this.item,
     required this.onIncrement,
     required this.onDecrement,
@@ -2091,27 +2009,23 @@ class _SelectionPreviewRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: anchorKey,
-      child: _ArrivalPulse(
-        pulse: pulse,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                item.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              item.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            _SelectionQuantityControl(
-              name: item.name,
-              quantity: item.quantity,
-              quantityAnchorKey: quantityAnchorKey,
-              pulse: quantityPulse,
-              onDecrement: () => onDecrement(item.key),
-              onIncrement: (source) => onIncrement(item.key, source),
-            ),
-          ],
-        ),
+          ),
+          _SelectionQuantityControl(
+            name: item.name,
+            quantity: item.quantity,
+            quantityAnchorKey: quantityAnchorKey,
+            onDecrement: () => onDecrement(item.key),
+            onIncrement: (source) => onIncrement(item.key, source),
+          ),
+        ],
       ),
     );
   }
@@ -2129,6 +2043,8 @@ class _SelectionReviewSheet extends StatefulWidget {
 
 class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
   bool _isConfirming = false;
+  FoodSelectionItem? _removedItem;
+  bool _isRemoving = false;
 
   FoodSelectionStore get store => widget.store;
 
@@ -2145,8 +2061,122 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
   }
 
   void onStoreChanged() {
-    if (mounted && store.isEmpty) Navigator.pop(context);
+    if (mounted && store.isEmpty && _removedItem == null) {
+      Navigator.pop(context);
+    }
     if (mounted) setState(() {});
+  }
+
+  void _decrement(FoodSelectionItem item) {
+    if (item.quantity > 1) {
+      store.decrement(item.key);
+      return;
+    }
+
+    setState(() {
+      _removedItem = FoodSelectionItem(
+        key: item.key,
+        baseFood: cloneFoodEntry(item.baseFood),
+        caloriesKnown: item.caloriesKnown,
+      );
+      _isRemoving = true;
+    });
+    store.decrement(item.key);
+  }
+
+  void _undoRemoval() {
+    final removedItem = _removedItem;
+    if (removedItem == null) return;
+    setState(() {
+      _removedItem = null;
+      _isRemoving = false;
+    });
+    store.addOrIncrement(
+      removedItem.key,
+      removedItem.baseFood,
+      caloriesKnown: removedItem.caloriesKnown,
+    );
+  }
+
+  String _itemMetadata(AppLocalizations l10n, FoodSelectionItem item) {
+    final kcal = item.caloriesKnown
+        ? l10n.kcal_value(
+            (item.baseFood.nutrition.energyKcal * item.quantity)
+                .round()
+                .toString(),
+          )
+        : '— kcal';
+    return '${l10n.serving_amount(item.quantity)} · $kcal';
+  }
+
+  Widget _itemRow(
+    BuildContext context,
+    AppLocalizations l10n,
+    FoodSelectionItem item, {
+    bool enabled = true,
+  }) {
+    final metadata = _itemMetadata(l10n, item);
+    return ListTile(
+      key: ValueKey(item.key),
+      title: Text(item.name),
+      subtitle: AnimatedSwitcher(
+        duration: _selectionAnimationDuration(context),
+        child: Text(metadata, key: ValueKey(metadata)),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SelectionQuantityButton(
+            tooltip: l10n.food_selection_decrement(item.name),
+            onPressed: enabled ? () => _decrement(item) : null,
+            icon: Icons.remove,
+          ),
+          SelectionQuantityText(quantity: item.quantity),
+          SelectionQuantityButton(
+            tooltip: l10n.food_selection_increment(item.name),
+            onPressed: enabled ? () => store.increment(item.key) : null,
+            icon: Icons.add,
+          ),
+          IconButton(
+            tooltip: l10n.food_selection_delete(item.name),
+            onPressed: enabled ? () => store.delete(item.key) : null,
+            icon: const Icon(Icons.delete_outline),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _removingRow(
+    BuildContext context,
+    AppLocalizations l10n,
+    FoodSelectionItem item,
+  ) {
+    return TweenAnimationBuilder<double>(
+      key: ValueKey('removing:${item.key}'),
+      tween: Tween(begin: 1, end: 0),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      onEnd: () {
+        if (mounted && _isRemoving && _removedItem?.key == item.key) {
+          setState(() => _isRemoving = false);
+        }
+      },
+      builder: (context, value, child) => ExcludeSemantics(
+        child: IgnorePointer(
+          child: ClipRect(
+            child: Align(
+              alignment: Alignment.topCenter,
+              heightFactor: value,
+              child: Opacity(opacity: value, child: child),
+            ),
+          ),
+        ),
+      ),
+      child: _itemRow(context, l10n, item, enabled: false),
+    );
   }
 
   @override
@@ -2154,6 +2184,11 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final summary = _selectionCaloriesSummary(l10n, store);
+    final items = store.items.toList(growable: false);
+    final removedItem = _removedItem;
+    final showingRemovedRow = _isRemoving && removedItem != null;
+    final extraItemCount = removedItem == null ? 0 : 1;
+
     return FractionallySizedBox(
       heightFactor: 0.65,
       child: SafeArea(
@@ -2192,42 +2227,25 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: store.items.length,
+                itemCount: items.length + extraItemCount,
                 itemBuilder: (context, index) {
-                  final item = store.items.elementAt(index);
-                  final kcal = item.caloriesKnown
-                      ? l10n.kcal_value(
-                          (item.baseFood.nutrition.energyKcal * item.quantity)
-                              .round()
-                              .toString(),
-                        )
-                      : '— kcal';
-                  final metadata =
-                      '${l10n.serving_amount(item.quantity)} · $kcal';
-                  return ListTile(
-                    title: Text(item.name),
-                    subtitle: AnimatedSwitcher(
-                      duration: _selectionAnimationDuration(context),
-                      child: Text(metadata, key: ValueKey(metadata)),
+                  if (index < items.length) {
+                    return _itemRow(context, l10n, items[index]);
+                  }
+                  if (showingRemovedRow) {
+                    return _removingRow(context, l10n, removedItem);
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Row(
                       children: [
-                        IconButton(
-                          tooltip: l10n.food_selection_decrement(item.name),
-                          onPressed: () => store.decrement(item.key),
-                          icon: const Icon(Icons.remove),
-                        ),
-                        SelectionQuantityText(quantity: item.quantity),
-                        IconButton(
-                          tooltip: l10n.food_selection_increment(item.name),
-                          onPressed: () => store.increment(item.key),
-                          icon: const Icon(Icons.add),
-                        ),
-                        IconButton(
-                          tooltip: l10n.food_selection_delete(item.name),
-                          onPressed: () => store.delete(item.key),
-                          icon: const Icon(Icons.delete_outline),
+                        Expanded(child: Text(l10n.food_selection_item_removed)),
+                        TextButton(
+                          onPressed: _undoRemoval,
+                          child: Text(l10n.food_selection_undo),
                         ),
                       ],
                     ),

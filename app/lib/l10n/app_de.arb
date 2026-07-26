@@ -653,6 +653,8 @@
     }
   },
   "food_selection_delete": "{name} löschen",
+  "food_selection_item_removed": "Element entfernt",
+  "food_selection_undo": "Rückgängig",
   "@food_selection_delete": {
     "placeholders": {
       "name": {

@@ -3887,6 +3887,18 @@ abstract class AppLocalizations {
   /// **'Delete {name}'**
   String food_selection_delete(String name);
 
+  /// No description provided for @food_selection_item_removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Item removed'**
+  String get food_selection_item_removed;
+
+  /// No description provided for @food_selection_undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get food_selection_undo;
+
   /// No description provided for @food_selection_selected.
   ///
   /// In en, this message translates to:

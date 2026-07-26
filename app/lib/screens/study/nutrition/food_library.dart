@@ -62,14 +62,8 @@ class SelectionFeedbackCard extends StatelessWidget {
 class SelectionQuantityText extends StatefulWidget {
   final int quantity;
   final TextStyle? style;
-  final int pulse;
 
-  const SelectionQuantityText({
-    required this.quantity,
-    this.style,
-    this.pulse = 0,
-    super.key,
-  });
+  const SelectionQuantityText({required this.quantity, this.style, super.key});
 
   @override
   State<SelectionQuantityText> createState() => _SelectionQuantityTextState();
@@ -88,40 +82,123 @@ class _SelectionQuantityTextState extends State<SelectionQuantityText> {
 
   @override
   Widget build(BuildContext context) {
-    final duration = _selectionAnimationDuration(context);
-    return TweenAnimationBuilder<double>(
-      key: ValueKey(widget.pulse),
-      tween: Tween(begin: widget.pulse == 0 ? 1 : 1.03, end: 1),
-      duration: MediaQuery.disableAnimationsOf(context)
-          ? Duration.zero
-          : const Duration(milliseconds: 120),
-      curve: Curves.easeOutCubic,
-      builder: (context, scale, child) =>
-          Transform.scale(scale: scale, child: child),
-      child: ClipRect(
-        child: AnimatedSwitcher(
-          duration: duration,
-          transitionBuilder: (child, animation) {
-            final incoming = child.key == ValueKey(widget.quantity);
-            final offset = 0.3 * _direction * (incoming ? 1 : -1);
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween(begin: Offset(0, offset), end: Offset.zero)
-                    .animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeOutCubic,
-                      ),
+    return ClipRect(
+      child: AnimatedSwitcher(
+        duration: _selectionAnimationDuration(context),
+        transitionBuilder: (child, animation) {
+          final incoming = child.key == ValueKey(widget.quantity);
+          final offset = 0.3 * _direction * (incoming ? 1 : -1);
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween(begin: Offset(0, offset), end: Offset.zero)
+                  .animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
                     ),
-                child: child,
-              ),
-            );
-          },
-          child: Text(
-            '${widget.quantity}',
-            key: ValueKey(widget.quantity),
-            style: widget.style,
+                  ),
+              child: child,
+            ),
+          );
+        },
+        child: Text(
+          '${widget.quantity}',
+          key: ValueKey(widget.quantity),
+          style: widget.style,
+        ),
+      ),
+    );
+  }
+}
+
+class SelectionQuantityButton extends StatefulWidget {
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final VisualDensity? visualDensity;
+
+  const SelectionQuantityButton({
+    required this.tooltip,
+    required this.icon,
+    required this.onPressed,
+    this.visualDensity,
+    super.key,
+  });
+
+  @override
+  State<SelectionQuantityButton> createState() =>
+      _SelectionQuantityButtonState();
+}
+
+class _SelectionQuantityButtonState extends State<SelectionQuantityButton> {
+  bool _pressed = false;
+  bool _pointerInteraction = false;
+  int _releaseGeneration = 0;
+
+  bool get _motionDisabled => MediaQuery.disableAnimationsOf(context);
+
+  @override
+  void didUpdateWidget(SelectionQuantityButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.onPressed == null) {
+      _releaseGeneration++;
+      _pressed = false;
+      _pointerInteraction = false;
+    }
+  }
+
+  void _onPointerDown(PointerDownEvent event) {
+    if (widget.onPressed == null || _motionDisabled) return;
+    _releaseGeneration++;
+    _pointerInteraction = true;
+    setState(() => _pressed = true);
+  }
+
+  void _releasePointer(PointerEvent event) {
+    if (!_pointerInteraction) return;
+    _scheduleRelease();
+  }
+
+  void _scheduleRelease() {
+    final generation = ++_releaseGeneration;
+    Future<void>.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted || generation != _releaseGeneration) return;
+      setState(() {
+        _pressed = false;
+        _pointerInteraction = false;
+      });
+    });
+  }
+
+  void _onPressed() {
+    if (!_pointerInteraction && !_motionDisabled) {
+      setState(() => _pressed = true);
+      _scheduleRelease();
+    }
+    widget.onPressed?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final motionDisabled = MediaQuery.disableAnimationsOf(context);
+    return Listener(
+      onPointerDown: _onPointerDown,
+      onPointerUp: _releasePointer,
+      onPointerCancel: _releasePointer,
+      child: AnimatedScale(
+        scale: motionDisabled || !_pressed ? 1 : 0.96,
+        duration: motionDisabled
+            ? Duration.zero
+            : const Duration(milliseconds: 100),
+        curve: Curves.easeOutCubic,
+        child: SizedBox.square(
+          dimension: 48,
+          child: IconButton(
+            tooltip: widget.tooltip,
+            onPressed: widget.onPressed == null ? null : _onPressed,
+            icon: Icon(widget.icon),
+            visualDensity: widget.visualDensity,
           ),
         ),
       ),
@@ -551,18 +628,18 @@ class _LibraryQuantityControl extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
+          SelectionQuantityButton(
             tooltip: l10n.food_selection_decrement(name),
             onPressed: onDecrement,
-            icon: const Icon(Icons.remove),
+            icon: Icons.remove,
             visualDensity: VisualDensity.compact,
           ),
           SelectionQuantityText(quantity: quantity),
           Builder(
-            builder: (buttonContext) => IconButton(
+            builder: (buttonContext) => SelectionQuantityButton(
               tooltip: l10n.food_selection_increment(name),
               onPressed: () => onIncrement(_globalCenter(buttonContext)),
-              icon: const Icon(Icons.add),
+              icon: Icons.add,
               visualDensity: VisualDensity.compact,
             ),
           ),
