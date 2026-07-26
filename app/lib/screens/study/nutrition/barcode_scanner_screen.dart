@@ -205,6 +205,14 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     final sodium =
         (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) *
         1000;
+    bool isUnavailable(Nutrient nutrient) =>
+        nutriments?.getValue(nutrient, PerSize.oneHundredGrams) == null;
+    final unavailableNutrients = {
+      if (isUnavailable(Nutrient.energyKCal)) 'energyKcal',
+      if (isUnavailable(Nutrient.proteins)) 'protein',
+      if (isUnavailable(Nutrient.carbohydrates)) 'carbs',
+      if (isUnavailable(Nutrient.fat)) 'fat',
+    };
 
     // Parse serving size
     double servingSizeGrams = 100.0;
@@ -242,6 +250,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         sodium: sodium * servingSizeGrams / 100,
         waterContent: 0,
         micros: {},
+        unavailableNutrients: unavailableNutrients,
       ),
       foodCode: product.barcode,
       externalId: product.barcode,
@@ -284,6 +293,12 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         sodium: food.sodium100g * scale, // Already in mg
         waterContent: 0,
         micros: {},
+        unavailableNutrients: {
+          if (food.getNutrientValue(1008) == null) 'energyKcal',
+          if (food.getNutrientValue(1003) == null) 'protein',
+          if (food.getNutrientValue(1005) == null) 'carbs',
+          if (food.getNutrientValue(1004) == null) 'fat',
+        },
       ),
       foodCode: food.gtinUpc, // Barcode from USDA
       externalId: food.fdcId.toString(),

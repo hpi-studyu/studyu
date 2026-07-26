@@ -2232,6 +2232,17 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_quantity_serving => 'Portion';
 
   @override
+  String food_quantity_serving_unit(num amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      amount,
+      locale: localeName,
+      other: 'Portionen',
+      one: 'Portion',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String food_quantity_serving_value(String value, String unit) {
     return '$value g pro $unit';
   }
@@ -2257,17 +2268,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_quantity_add_to_selection => 'Zur Auswahl hinzufügen';
 
   @override
+  String get food_quantity_add_meal_to_selection =>
+      'Mahlzeit zur Auswahl hinzufügen';
+
+  @override
   String get food_quantity_update_selection => 'Auswahl aktualisieren';
 
   @override
   String food_quantity_per_serving(String calories) {
-    return 'Pro Portion: $calories';
+    return '$calories pro Portion';
   }
 
   @override
-  String food_quantity_selection_total(String calories) {
-    return 'Auswahl gesamt: $calories';
-  }
+  String get food_quantity_selection_total => 'Auswahl gesamt';
+
+  @override
+  String get food_quantity_nutrition_unavailable =>
+      'Nährwertangaben nicht verfügbar';
 
   @override
   String get save_to_my_items => 'Für später in Meine Elemente speichern';

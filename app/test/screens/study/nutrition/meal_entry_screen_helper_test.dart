@@ -29,6 +29,8 @@ FoodEntry foodEntry({double amount = 2}) => FoodEntry(
     sodium: 10,
     waterContent: 11,
     micros: {'iron': 12, 'vitaminC': 13},
+    unavailableNutrients: const {'fiber'},
+    unavailableItemCount: 1,
   ),
   foodCode: 'code',
   externalId: 'external-id',
@@ -109,6 +111,8 @@ void main() {
     expect(scaled.nutrition.sodium, 20);
     expect(scaled.nutrition.waterContent, 22);
     expect(scaled.nutrition.micros, {'iron': 24, 'vitaminC': 26});
+    expect(scaled.nutrition.unavailableNutrients, {'fiber'});
+    expect(scaled.nutrition.unavailableItemCount, 1);
 
     expect(scaled.id, source.id);
     expect(scaled.servingSizeGrams, 250);

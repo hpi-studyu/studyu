@@ -103,13 +103,12 @@ void main() {
       initialAmount: 2,
     );
 
-    expect(find.text('Per serving: 95 kcal'), findsOneWidget);
-    expect(find.text('Selection total: 190 kcal'), findsOneWidget);
+    expect(find.text('190 kcal'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    expect(find.text('Selection total: 285 kcal'), findsOneWidget);
+    expect(find.text('285 kcal'), findsOneWidget);
     expect(find.text('Update selection'), findsOneWidget);
   });
 
@@ -155,7 +154,7 @@ void main() {
     );
 
     expect(find.text('Zu Snack hinzufügen'), findsOneWidget);
-    await tester.tapAt(const Offset(5, 5));
+    await tester.tap(find.byTooltip('Schließen'));
     await tester.pumpAndSettle();
 
     expect(result, isNull);
