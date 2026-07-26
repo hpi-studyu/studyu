@@ -2962,14 +2962,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Let participants combine food items into reusable meals.';
 
   @override
-  String get form_field_nutrition_require_daily_completion =>
-      'Require daily completion';
-
-  @override
-  String get form_field_nutrition_require_daily_completion_help =>
-      'Require participants to explicitly finish their nutrition log each day.';
-
-  @override
   String get form_field_nutrition_minimum_meals_required =>
       'Minimum meals required';
 

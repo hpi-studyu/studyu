@@ -1465,32 +1465,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get daily_food_diary => 'Daily Food Diary';
 
   @override
-  String get saving => 'Saving...';
-
-  @override
-  String saved_ago(String time) {
-    return 'Saved $time ago';
-  }
-
-  @override
-  String get just_now => 'just now';
-
-  @override
-  String seconds_ago(int seconds) {
-    return '$seconds seconds ago';
-  }
-
-  @override
-  String minutes_ago(int minutes) {
-    return '$minutes minute(s) ago';
-  }
-
-  @override
-  String hours_ago(int hours) {
-    return '$hours hour(s) ago';
-  }
-
-  @override
   String get instructions => 'Instructions';
 
   @override
@@ -2551,11 +2525,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leave_anyway => 'Leave anyway';
-
-  @override
-  String get finish_nutrition_log => 'Finish today’s nutrition log';
-
-  @override
-  String get finish_nutrition_log_description =>
-      'This submits your current nutrition log for today.';
 }

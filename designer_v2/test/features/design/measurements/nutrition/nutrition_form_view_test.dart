@@ -11,25 +11,22 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 void main() {
   setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
 
-  test('new nutrition tasks do not require daily confirmation by default', () {
+  test('preserves the hidden legacy completion setting', () {
     final formViewModel = NutritionFormViewModel(
       study: Study.withId('study-1'),
     );
+    formViewModel.requireDailyCompletionConfirmationControl.value = true;
 
     expect(
-      formViewModel.requireDailyCompletionConfirmationControl.value,
-      isFalse,
-    );
-    expect(
       formViewModel.buildFormData().requireDailyCompletionConfirmation,
-      isFalse,
+      isTrue,
     );
     expect(
       formViewModel
           .buildFormData()
           .toNutritionTask()
           .requireDailyCompletionConfirmation,
-      isFalse,
+      isTrue,
     );
   });
 
@@ -64,11 +61,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Require daily completion'), findsOneWidget);
-    expect(
-      formViewModel.requireDailyCompletionConfirmationControl.value,
-      isFalse,
-    );
+    expect(find.text('Require daily completion'), findsNothing);
 
     await tester.tap(find.text('Add meal type'));
     await tester.pump();

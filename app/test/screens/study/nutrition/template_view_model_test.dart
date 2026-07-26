@@ -1,10 +1,149 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  setUpAll(() => SharedPreferences.setMockInitialValues({}));
+  setUp(() async => (await SharedPreferences.getInstance()).clear());
+
+  test(
+    'custom food and saved meal templates round-trip across managers',
+    () async {
+      final manager = TemplateStorageManager();
+      await manager.saveFoodTemplate(
+        _template(
+          id: 'custom-food',
+          name: 'Custom food',
+          prototype: _foodEntry(
+            id: 'custom-food-prototype',
+            originalValues: {},
+          ),
+        ),
+      );
+      await manager.saveFoodTemplate(
+        _template(
+          id: 'saved-meal',
+          name: 'Saved meal',
+          prototype: _foodEntry(
+            id: 'saved-meal-prototype',
+            entryType: FoodEntryType.meal,
+            originalValues: {},
+          ),
+        ),
+      );
+
+      final templates = await TemplateStorageManager().loadFoodTemplates(
+        'test-user',
+      );
+
+      expect(templates.map((template) => template.id), [
+        'custom-food',
+        'saved-meal',
+      ]);
+      expect(templates[1].prototype.entryType, FoodEntryType.meal);
+      expect(
+        await TemplateStorageManager().loadFoodTemplates('other-user'),
+        isEmpty,
+      );
+    },
+  );
+
+  test('template CRUD persists across managers', () async {
+    final manager = TemplateStorageManager();
+    final food = _template(
+      id: 'custom-food',
+      name: 'Custom food',
+      prototype: _foodEntry(id: 'custom-food-prototype', originalValues: {}),
+    );
+    final meal = _template(
+      id: 'saved-meal',
+      name: 'Saved meal',
+      prototype: _foodEntry(
+        id: 'saved-meal-prototype',
+        entryType: FoodEntryType.meal,
+        originalValues: {},
+      ),
+    );
+
+    await manager.saveFoodTemplate(food);
+    await manager.saveFoodTemplate(meal);
+    food
+      ..name = 'Renamed custom food'
+      ..updatedAt = DateTime.utc(2025, 1, 2);
+    await manager.saveFoodTemplate(food);
+    await manager.deleteFoodTemplate('test-user', meal.id);
+
+    final templates = await TemplateStorageManager().loadFoodTemplates(
+      'test-user',
+    );
+    expect(templates, hasLength(1));
+    expect(templates.single.name, 'Renamed custom food');
+    expect(templates.single.updatedAt, DateTime.utc(2025, 1, 2));
+  });
+
+  test('concurrent template saves preserve both entries', () async {
+    await Future.wait([
+      TemplateStorageManager().saveFoodTemplate(
+        _template(
+          id: 'custom-food',
+          prototype: _foodEntry(
+            id: 'custom-food-prototype',
+            originalValues: {},
+          ),
+        ),
+      ),
+      TemplateStorageManager().saveFoodTemplate(
+        _template(
+          id: 'saved-meal',
+          prototype: _foodEntry(
+            id: 'saved-meal-prototype',
+            entryType: FoodEntryType.meal,
+            originalValues: {},
+          ),
+        ),
+      ),
+    ]);
+
+    final templates = await TemplateStorageManager().loadFoodTemplates(
+      'test-user',
+    );
+    expect(templates.map((template) => template.id).toSet(), {
+      'custom-food',
+      'saved-meal',
+    });
+  });
+
+  test(
+    'corrupt template data surfaces an error without being overwritten',
+    () async {
+      const userId = 'corrupt-user';
+      const key = 'studyu_food_templates_$userId';
+      final prefs = await SharedPreferences.getInstance();
+      final manager = TemplateStorageManager();
+
+      for (final corruptJson in ['{', '[{}]']) {
+        await prefs.setString(key, corruptJson);
+
+        await expectLater(manager.loadFoodTemplates(userId), throwsA(anything));
+        await expectLater(
+          manager.saveFoodTemplate(
+            _template(
+              id: 'replacement',
+              userId: userId,
+              prototype: _foodEntry(
+                id: 'replacement-prototype',
+                originalValues: {},
+              ),
+            ),
+          ),
+          throwsA(anything),
+        );
+        expect(prefs.getString(key), corruptJson);
+      }
+    },
+  );
 
   test('applyFoodTemplate isolates mutable food data', () async {
     final prototype = _foodEntry(
@@ -134,10 +273,12 @@ Future<TemplateViewModel> _viewModel() async {
 SavedFoodTemplate _template({
   required String id,
   required FoodEntry prototype,
+  String userId = 'test-user',
+  String name = 'Template',
 }) => SavedFoodTemplate(
   id: id,
-  userId: 'test-user',
-  name: 'Template',
+  userId: userId,
+  name: name,
   isPublic: false,
   createdAt: DateTime.utc(2025),
   prototype: prototype,

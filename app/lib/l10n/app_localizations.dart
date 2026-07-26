@@ -2765,42 +2765,6 @@ abstract class AppLocalizations {
   /// **'Daily Food Diary'**
   String get daily_food_diary;
 
-  /// No description provided for @saving.
-  ///
-  /// In en, this message translates to:
-  /// **'Saving...'**
-  String get saving;
-
-  /// No description provided for @saved_ago.
-  ///
-  /// In en, this message translates to:
-  /// **'Saved {time} ago'**
-  String saved_ago(String time);
-
-  /// No description provided for @just_now.
-  ///
-  /// In en, this message translates to:
-  /// **'just now'**
-  String get just_now;
-
-  /// No description provided for @seconds_ago.
-  ///
-  /// In en, this message translates to:
-  /// **'{seconds} seconds ago'**
-  String seconds_ago(int seconds);
-
-  /// No description provided for @minutes_ago.
-  ///
-  /// In en, this message translates to:
-  /// **'{minutes} minute(s) ago'**
-  String minutes_ago(int minutes);
-
-  /// No description provided for @hours_ago.
-  ///
-  /// In en, this message translates to:
-  /// **'{hours} hour(s) ago'**
-  String hours_ago(int hours);
-
   /// No description provided for @instructions.
   ///
   /// In en, this message translates to:
@@ -4648,18 +4612,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leave anyway'**
   String get leave_anyway;
-
-  /// No description provided for @finish_nutrition_log.
-  ///
-  /// In en, this message translates to:
-  /// **'Finish today’s nutrition log'**
-  String get finish_nutrition_log;
-
-  /// No description provided for @finish_nutrition_log_description.
-  ///
-  /// In en, this message translates to:
-  /// **'This submits your current nutrition log for today.'**
-  String get finish_nutrition_log_description;
 }
 
 class _AppLocalizationsDelegate

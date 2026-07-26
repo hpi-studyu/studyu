@@ -567,40 +567,6 @@
     }
   },
   "daily_food_diary": "Daily Food Diary",
-  "saving": "Saving...",
-  "saved_ago": "Saved {time} ago",
-  "@saved_ago": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "just_now": "just now",
-  "seconds_ago": "{seconds} seconds ago",
-  "@seconds_ago": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
-  "minutes_ago": "{minutes} minute(s) ago",
-  "@minutes_ago": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hours_ago": "{hours} hour(s) ago",
-  "@hours_ago": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
   "instructions": "Instructions",
   "nutrition_instructions_default": "Please record all the foods and beverages you consumed today. For each meal or snack, provide as much detail as possible including portion sizes and preparation methods.",
   "min_meals_required": "Please record at least {count} meal(s)",
@@ -1165,7 +1131,5 @@
       }
     }
   },
-  "leave_anyway": "Leave anyway",
-  "finish_nutrition_log": "Finish today’s nutrition log",
-  "finish_nutrition_log_description": "This submits your current nutrition log for today."
+  "leave_anyway": "Leave anyway"
 }

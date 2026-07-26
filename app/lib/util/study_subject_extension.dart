@@ -66,6 +66,7 @@ extension StudySubjectExtension on StudySubject {
       resultType: resultObject.type,
     )..completedAt = (existingCompletedAt ?? completionDate).toUtc();
 
+    var updatedLocalProgress = false;
     try {
       final saved = await progressToSave.save();
       if (existingIndex >= 0) {
@@ -73,14 +74,18 @@ extension StudySubjectExtension on StudySubject {
       } else {
         progress.add(saved);
       }
+      updatedLocalProgress = true;
       await save(onlyUpdate: true);
     } on SocketException {
-      // Offline - just update local progress
-      if (existingIndex >= 0) {
-        progress[existingIndex] = progressToSave;
-      } else {
-        progress.add(progressToSave);
+      // Preserve progress for the open recall, but let the autosave retry it.
+      if (!updatedLocalProgress) {
+        if (existingIndex >= 0) {
+          progress[existingIndex] = progressToSave;
+        } else {
+          progress.add(progressToSave);
+        }
       }
+      rethrow;
     }
   }
 

@@ -121,12 +121,21 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   );
 
   int getDayOfStudyFor(DateTime date) {
-    return date.differenceInDays(startedAt!);
+    final localDate = date.toLocal();
+    final localStartDate = startedAt!.toLocal();
+    return DateTime.utc(localDate.year, localDate.month, localDate.day)
+        .difference(
+          DateTime.utc(
+            localStartDate.year,
+            localStartDate.month,
+            localStartDate.day,
+          ),
+        )
+        .inDays;
   }
 
   int getInterventionIndexForDate(DateTime date) {
-    final test = date.differenceInDays(startedAt!);
-    return test ~/ study.schedule.phaseDuration;
+    return getDayOfStudyFor(date) ~/ study.schedule.phaseDuration;
   }
 
   Intervention? getInterventionForDate(DateTime date) {
@@ -215,6 +224,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     DateTime dateTime,
   ) {
     return getTaskProgressForDay(taskId, dateTime).any((progress) {
+      final result = progress.result.result;
+      if (result is DailyRecall && result.entryCompletedAt == null) {
+        return false;
+      }
       if (progress.result.periodId == null) {
         // fallback to support studies without periodIds
         return progress.completedAt!.isSameDate(dateTime);

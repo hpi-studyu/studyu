@@ -144,9 +144,7 @@ DailyRecall recall(List<MealLog> meals) => DailyRecall(
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  testWidgets('hides daily completion controls when confirmation is optional', (
-    tester,
-  ) async {
+  testWidgets('never renders manual completion controls', (tester) async {
     await tester.pumpWidget(
       nutritionTaskApp(
         nutritionTask(requireDailyCompletionConfirmation: false),
@@ -162,21 +160,8 @@ void main() {
     );
   });
 
-  testWidgets('disables required completion for an empty day', (tester) async {
-    await tester.pumpWidget(
-      nutritionTaskApp(nutritionTask(), existingRecall: recall([])),
-    );
-    await tester.pump();
-
-    final finishButton = tester.widget<FilledButton>(
-      find.widgetWithText(FilledButton, 'Finish today’s nutrition log'),
-    );
-    expect(finishButton.onPressed, isNull);
-  });
-
-  testWidgets('required completion still returns a completed recall', (
-    tester,
-  ) async {
+  testWidgets('task-mode exit returns no completion result', (tester) async {
+    var didReturn = false;
     DailyRecall? result;
     await tester.pumpWidget(
       ChangeNotifierProvider(
@@ -188,35 +173,10 @@ void main() {
           home: _NutritionLauncher(
             task: nutritionTask(),
             existingRecall: recall([meal('meal', MealType.breakfast)]),
-            onResult: (value) => result = value,
-          ),
-        ),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
-
-    await tester.tap(find.text('Finish today’s nutrition log'));
-    await tester.pumpAndSettle();
-
-    expect(result, isA<DailyRecall>());
-    expect(result!.entryCompletedAt, isNotNull);
-  });
-
-  testWidgets('optional completion leaves a non-completed recall', (
-    tester,
-  ) async {
-    DailyRecall? result;
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (_) => AppState(),
-        child: MaterialApp(
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          locale: const Locale('en'),
-          home: _NutritionLauncher(
-            task: nutritionTask(requireDailyCompletionConfirmation: false),
-            onResult: (value) => result = value,
+            onResult: (value) {
+              didReturn = true;
+              result = value;
+            },
           ),
         ),
       ),
@@ -227,8 +187,43 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    expect(result, isA<DailyRecall>());
-    expect(result!.entryCompletedAt, isNull);
+    expect(didReturn, isTrue);
+    expect(result, isNull);
+  });
+
+  testWidgets('warns before leaving without the minimum meals', (tester) async {
+    var didReturn = false;
+    DailyRecall? result;
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          home: _NutritionLauncher(
+            task: nutritionTask(minimumMeals: 1),
+            existingRecall: recall([]),
+            onResult: (value) {
+              didReturn = true;
+              result = value;
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Minimum meals not reached'), findsOneWidget);
+    await tester.tap(find.text('Leave anyway'));
+    await tester.pumpAndSettle();
+
+    expect(didReturn, isTrue);
+    expect(result, isNull);
   });
 
   testWidgets('shows the recall date as non-interactive header text', (
@@ -270,7 +265,10 @@ void main() {
     await tester.tap(find.text('Log meal'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add items to meal'), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Log meal')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('German nutrition timeline uses participant translations', (
@@ -288,7 +286,13 @@ void main() {
     await tester.tap(find.text('Mahlzeit erfassen'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Elemente zu mahlzeit hinzufügen'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Mahlzeit erfassen'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Lunch'), findsNothing);
   });
 
@@ -302,8 +306,6 @@ void main() {
     );
     await tester.pump();
     await tester.tap(find.text('Log meal'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Meal label'));
     await tester.pumpAndSettle();
