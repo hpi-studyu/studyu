@@ -8,6 +8,127 @@ import 'package:studyu_core/core.dart' as studyu;
 
 enum _FoodLibraryAction { add, edit, duplicate, delete }
 
+typedef FoodLibrarySelectionAction =
+    void Function(studyu.SavedFoodTemplate template, Offset? source);
+
+Duration _selectionAnimationDuration(BuildContext context) =>
+    MediaQuery.disableAnimationsOf(context)
+    ? Duration.zero
+    : const Duration(milliseconds: 180);
+
+Offset? _globalCenter(BuildContext context) {
+  final renderObject = context.findRenderObject();
+  if (renderObject is! RenderBox ||
+      !renderObject.attached ||
+      !renderObject.hasSize) {
+    return null;
+  }
+  return renderObject.localToGlobal(renderObject.size.center(Offset.zero));
+}
+
+class SelectionFeedbackCard extends StatelessWidget {
+  final bool selected;
+  final Widget child;
+
+  const SelectionFeedbackCard({
+    required this.selected,
+    required this.child,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = selected
+        ? colorScheme.primaryContainer.withValues(alpha: 0.55)
+        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
+    return Semantics(
+      selected: selected,
+      child: TweenAnimationBuilder<Color?>(
+        duration: _selectionAnimationDuration(context),
+        tween: ColorTween(end: color),
+        builder: (context, color, child) => Card(
+          margin: const EdgeInsets.only(bottom: 8),
+          elevation: 0,
+          color: color,
+          child: child,
+        ),
+        child: child,
+      ),
+    );
+  }
+}
+
+class SelectionQuantityText extends StatefulWidget {
+  final int quantity;
+  final TextStyle? style;
+  final int pulse;
+
+  const SelectionQuantityText({
+    required this.quantity,
+    this.style,
+    this.pulse = 0,
+    super.key,
+  });
+
+  @override
+  State<SelectionQuantityText> createState() => _SelectionQuantityTextState();
+}
+
+class _SelectionQuantityTextState extends State<SelectionQuantityText> {
+  int _direction = 1;
+
+  @override
+  void didUpdateWidget(SelectionQuantityText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.quantity != oldWidget.quantity) {
+      _direction = widget.quantity > oldWidget.quantity ? 1 : -1;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final duration = _selectionAnimationDuration(context);
+    return TweenAnimationBuilder<double>(
+      key: ValueKey(widget.pulse),
+      tween: Tween(begin: widget.pulse == 0 ? 1 : 1.03, end: 1),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 120),
+      curve: Curves.easeOutCubic,
+      builder: (context, scale, child) =>
+          Transform.scale(scale: scale, child: child),
+      child: ClipRect(
+        child: AnimatedSwitcher(
+          duration: duration,
+          transitionBuilder: (child, animation) {
+            final incoming = child.key == ValueKey(widget.quantity);
+            final offset = 0.3 * _direction * (incoming ? 1 : -1);
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween(begin: Offset(0, offset), end: Offset.zero)
+                    .animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
+                child: child,
+              ),
+            );
+          },
+          child: Text(
+            '${widget.quantity}',
+            key: ValueKey(widget.quantity),
+            style: widget.style,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class FoodLibrary extends StatefulWidget {
   final bool allowMeals;
   final bool showSearch;
@@ -15,10 +136,10 @@ class FoodLibrary extends StatefulWidget {
   final Widget? header;
   final Widget? listHeader;
   final ValueChanged<studyu.SavedFoodTemplate>? onTap;
-  final ValueChanged<studyu.SavedFoodTemplate>? onAdd;
+  final FoodLibrarySelectionAction? onAdd;
   final bool Function(studyu.SavedFoodTemplate)? isSelected;
   final int Function(studyu.SavedFoodTemplate)? selectedQuantity;
-  final ValueChanged<studyu.SavedFoodTemplate>? onIncrement;
+  final FoodLibrarySelectionAction? onIncrement;
   final ValueChanged<studyu.SavedFoodTemplate>? onDecrement;
   final bool showManagementActions;
 
@@ -105,7 +226,7 @@ class _FoodLibraryState extends State<FoodLibrary> {
                             widget.selectedQuantity?.call(template) ?? 1,
                         onIncrement: widget.onIncrement == null
                             ? null
-                            : () => widget.onIncrement!(template),
+                            : (source) => widget.onIncrement!(template, source),
                         onDecrement: widget.onDecrement == null
                             ? null
                             : () => widget.onDecrement!(template),
@@ -123,10 +244,10 @@ class _FoodLibraryState extends State<FoodLibrary> {
 class FoodLibraryItemCard extends StatelessWidget {
   final studyu.SavedFoodTemplate template;
   final ValueChanged<studyu.SavedFoodTemplate>? onTap;
-  final ValueChanged<studyu.SavedFoodTemplate>? onAdd;
+  final FoodLibrarySelectionAction? onAdd;
   final bool isSelected;
   final int selectedQuantity;
-  final VoidCallback? onIncrement;
+  final ValueChanged<Offset?>? onIncrement;
   final VoidCallback? onDecrement;
   final bool showManagementActions;
 
@@ -159,12 +280,8 @@ class FoodLibraryItemCard extends StatelessWidget {
               '${l10n.kcal_value((template.prototype.nutrition.energyKcal * template.prototype.amount * quantity).round().toString())}'
         : _selectedFoodServingMetadata(l10n, template.prototype, quantity);
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 0,
-      color: isSelected
-          ? theme.colorScheme.primaryContainer.withValues(alpha: 0.55)
-          : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+    return SelectionFeedbackCard(
+      selected: isSelected,
       child: InkWell(
         onTap: () {
           if (onTap case final onTap?) {
@@ -215,12 +332,16 @@ class FoodLibraryItemCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        metadata,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                      AnimatedSwitcher(
+                        duration: _selectionAnimationDuration(context),
+                        child: Text(
+                          metadata,
+                          key: ValueKey(metadata),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],
@@ -234,9 +355,12 @@ class FoodLibraryItemCard extends StatelessWidget {
                     onDecrement: onDecrement!,
                   )
                 else if (onAdd != null)
-                  TextButton(
-                    onPressed: () => onAdd!(template),
-                    child: Text(l10n.add),
+                  Builder(
+                    builder: (buttonContext) => TextButton(
+                      onPressed: () =>
+                          onAdd!(template, _globalCenter(buttonContext)),
+                      child: Text(l10n.add),
+                    ),
                   ),
                 if (showManagementActions)
                   PopupMenuButton<_FoodLibraryAction>(
@@ -276,7 +400,7 @@ class FoodLibraryItemCard extends StatelessWidget {
     final viewModel = context.read<TemplateViewModel>();
     switch (action) {
       case _FoodLibraryAction.add:
-        onAdd?.call(template);
+        onAdd?.call(template, null);
       case _FoodLibraryAction.edit:
         await _edit(context);
       case _FoodLibraryAction.duplicate:
@@ -407,7 +531,7 @@ class _FoodLibraryToolbar extends StatelessWidget {
 class _LibraryQuantityControl extends StatelessWidget {
   final String name;
   final int quantity;
-  final VoidCallback onIncrement;
+  final ValueChanged<Offset?> onIncrement;
   final VoidCallback onDecrement;
 
   const _LibraryQuantityControl({
@@ -433,12 +557,14 @@ class _LibraryQuantityControl extends StatelessWidget {
             icon: const Icon(Icons.remove),
             visualDensity: VisualDensity.compact,
           ),
-          Text('$quantity'),
-          IconButton(
-            tooltip: l10n.food_selection_increment(name),
-            onPressed: onIncrement,
-            icon: const Icon(Icons.add),
-            visualDensity: VisualDensity.compact,
+          SelectionQuantityText(quantity: quantity),
+          Builder(
+            builder: (buttonContext) => IconButton(
+              tooltip: l10n.food_selection_increment(name),
+              onPressed: () => onIncrement(_globalCenter(buttonContext)),
+              icon: const Icon(Icons.add),
+              visualDensity: VisualDensity.compact,
+            ),
           ),
         ],
       ),
