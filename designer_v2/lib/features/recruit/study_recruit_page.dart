@@ -15,6 +15,7 @@ import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_form_provider.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dart';
@@ -30,7 +31,8 @@ typedef InterventionProvider = Intervention? Function(String id);
 class StudyRecruitScreen extends StudyPageWidget {
   const StudyRecruitScreen(super.studyId, {super.key});
 
-  static const _searchFieldWidth = 300.0;
+  static const _searchFieldWidth = 250.0;
+  static const _contentMaxWidth = 750.0;
   static const _sectionSpacing = 24.0;
   static const _headerControlSpacing = 16.0;
   static const _titleSubtitleSpacing = 4.0;
@@ -62,24 +64,30 @@ class StudyRecruitScreen extends StudyPageWidget {
     );
     return AsyncValueWidget<Study>(
       value: state.study,
-      data: (study) => study.participation == Participation.invite
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _inviteCodesSectionHeader(context, ref),
-                const SizedBox(height: _sectionSpacing),
-                _inviteCodesContent(context, ref, state, controller),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: EmptyBody(
-                icon: Icons.share_rounded,
-                title: tr.code_public_disabled,
-                description: tr.code_public_disabled_description,
-                button: _publicStudyActionButtons(context, ref),
-              ),
-            ),
+      data: (study) => Align(
+        alignment: Alignment.topLeft,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: _contentMaxWidth),
+          child: study.participation == Participation.invite
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    _inviteCodesSectionHeader(context, ref),
+                    const SizedBox(height: _sectionSpacing),
+                    _inviteCodesContent(context, ref, state, controller),
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: EmptyBody(
+                    icon: Icons.share_rounded,
+                    title: tr.code_public_disabled,
+                    description: tr.code_public_disabled_description,
+                    button: _publicStudyActionButtons(context, ref),
+                  ),
+                ),
+        ),
+      ),
     );
   }
 

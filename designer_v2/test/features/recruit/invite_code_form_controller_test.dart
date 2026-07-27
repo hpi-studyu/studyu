@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
-import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.dart';
 
-class _FakeInviteCodeRepository implements IInviteCodeRepository {
+class _FakeInviteCodeRepository implements InviteCodeFormRepository {
   _FakeInviteCodeRepository({Set<String>? usedCodes})
     : _usedCodes = usedCodes ?? <String>{};
 

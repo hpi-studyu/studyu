@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_pagination.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -81,7 +82,6 @@ class StudyRecruitController extends _$StudyRecruitController
 
     final trimmedQuery = state.inviteCodeSearchQuery.trim();
     final query = trimmedQuery.isEmpty ? null : trimmedQuery;
-    final filters = state.inviteCodeFilters.normalized();
     final offset = pageIndex * state.inviteCodePageSize;
 
     try {
@@ -90,17 +90,27 @@ class StudyRecruitController extends _$StudyRecruitController
           offset: offset,
           limit: state.inviteCodePageSize,
           query: query,
-          filters: filters,
           sortBy: state.inviteCodeSortColumn,
           ascending: state.inviteCodeSortAscending,
         ),
-        state.inviteCodeRepository.count(query: query, filters: filters),
+        state.inviteCodeRepository.count(query: query),
       ]);
 
       if (token != _fetchToken) return;
 
       final invites = results[0] as List<StudyInvite>;
       final inviteCount = results[1] as int;
+      final clampedPageIndex = clampInviteCodePageIndex(
+        requestedPageIndex: pageIndex,
+        totalCount: inviteCount,
+        pageSize: state.inviteCodePageSize,
+      );
+
+      if (clampedPageIndex != pageIndex) {
+        await loadInviteCodePage(clampedPageIndex, showLoading: false);
+        return;
+      }
+
       state = state.copyWith(
         invites: AsyncValue.data(invites),
         inviteCodePageIndex: pageIndex,
@@ -141,13 +151,6 @@ class StudyRecruitController extends _$StudyRecruitController
     _searchDebounce = Timer(_searchDebounceDuration, () {
       unawaited(loadInviteCodePage(0));
     });
-  }
-
-  Future<void> setInviteCodeFilters(InviteCodeFilters filters) async {
-    final normalized = filters.normalized();
-    if (normalized == state.inviteCodeFilters) return;
-    state = state.copyWith(inviteCodeFilters: normalized);
-    await loadInviteCodePage(0);
   }
 
   Future<void> setInviteCodeSorting(InviteCodesSortColumn column) async {
@@ -191,11 +194,8 @@ class StudyRecruitController extends _$StudyRecruitController
     final query = state.inviteCodeSearchQuery.trim().toLowerCase();
     final matchesCurrentQuery =
         query.isEmpty || invite.code.toLowerCase().contains(query);
-    final canOptimisticallyInsert = state.inviteCodeFilters.isEmpty;
 
-    if (canOptimisticallyInsert &&
-        state.inviteCodePageIndex == 0 &&
-        matchesCurrentQuery) {
+    if (state.inviteCodePageIndex == 0 && matchesCurrentQuery) {
       final updatedInvites = [
         invite,
         ...currentInvites.where((item) => item.code != invite.code),
@@ -210,7 +210,7 @@ class StudyRecruitController extends _$StudyRecruitController
         clearPendingInviteCodePageIndex: true,
         clearPaginationError: true,
       );
-    } else if (query.isEmpty && canOptimisticallyInsert) {
+    } else if (query.isEmpty) {
       state = state.copyWith(inviteCodeCount: state.inviteCodeCount + 1);
     }
 

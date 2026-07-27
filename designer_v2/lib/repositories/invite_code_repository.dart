@@ -5,6 +5,7 @@ import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -22,6 +23,12 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 part 'invite_code_repository.g.dart';
 
 const int defaultInviteCodePageSize = 50;
+const _copyInviteLinkActionValue = 'copy_link';
+const _showQrCodeActionValue = 'qr_code';
+const _rowMenuItemHorizontalPadding = 8.0;
+const _rowMenuItemHorizontalTitleGap = 4.0;
+const _rowMenuIconFallbackSize = 14.0;
+const _shareMenuElevation = 5.0;
 
 abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
@@ -30,19 +37,15 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
     required int offset,
     required int limit,
     String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
     bool ascending = true,
   });
 
-  Future<int> count({
-    String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
-  });
+  Future<int> count({String? query});
 }
 
 class InviteCodeRepository extends ModelRepository<StudyInvite>
-    implements IInviteCodeRepository {
+    implements IInviteCodeRepository, InviteCodeFormRepository {
   InviteCodeRepository({
     required this.studyId,
     required this.apiClient,
@@ -95,7 +98,6 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     required int offset,
     required int limit,
     String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
     bool ascending = true,
   }) async {
@@ -104,7 +106,6 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       offset: offset,
       limit: limit,
       query: query,
-      filters: filters,
       sortBy: sortBy,
       ascending: ascending,
     );
@@ -117,11 +118,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   }
 
   @override
-  Future<int> count({
-    String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
-  }) {
-    return apiClient.countStudyInvites(studyId, query: query, filters: filters);
+  Future<int> count({String? query}) {
+    return apiClient.countStudyInvites(studyId, query: query);
   }
 
   @override
@@ -218,29 +216,33 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     showMenu<String>(
       context: context,
       position: position,
-      elevation: 5,
+      elevation: _shareMenuElevation,
       items: [
         PopupMenuItem<String>(
-          value: 'copy_link',
+          value: _copyInviteLinkActionValue,
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-            horizontalTitleGap: 4.0,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: _rowMenuItemHorizontalPadding,
+            ),
+            horizontalTitleGap: _rowMenuItemHorizontalTitleGap,
             leading: Icon(
               Icons.link_rounded,
-              size: theme.iconTheme.size ?? 14.0,
+              size: theme.iconTheme.size ?? _rowMenuIconFallbackSize,
               color: iconColorDefault,
             ),
             title: Text(tr.action_copy_invite_link, style: textTheme),
           ),
         ),
         PopupMenuItem<String>(
-          value: 'qr_code',
+          value: _showQrCodeActionValue,
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-            horizontalTitleGap: 4.0,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: _rowMenuItemHorizontalPadding,
+            ),
+            horizontalTitleGap: _rowMenuItemHorizontalTitleGap,
             leading: Icon(
               Icons.qr_code_rounded,
-              size: theme.iconTheme.size ?? 14.0,
+              size: theme.iconTheme.size ?? _rowMenuIconFallbackSize,
               color: iconColorDefault,
             ),
             title: Text(ModelActionType.qrCodeShow.string, style: textTheme),
@@ -248,9 +250,9 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         ),
       ],
     ).then((value) {
-      if (value == 'copy_link') {
+      if (value == _copyInviteLinkActionValue) {
         _copy(deepLink, Notifications.inviteLinkCopied);
-      } else if (value == 'qr_code' && effectiveContext.mounted) {
+      } else if (value == _showQrCodeActionValue && effectiveContext.mounted) {
         _showQrCode(effectiveContext, deepLink, filename);
       }
     });
@@ -347,7 +349,6 @@ class InviteCodeRepositoryDelegate
 
 @riverpod
 InviteCodeRepository inviteCodeRepository(Ref ref, StudyID studyId) {
-  print("inviteCodeRepositoryProvider($studyId");
   // Initialize repository for a given study
   final repository = InviteCodeRepository(
     studyId: studyId,
@@ -358,7 +359,6 @@ InviteCodeRepository inviteCodeRepository(Ref ref, StudyID studyId) {
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
-    print("inviteCodeRepositoryProvider($studyId.DISPOSE");
     repository.dispose();
   });
   return repository;

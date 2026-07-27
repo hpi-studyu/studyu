@@ -21,7 +21,6 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     this.inviteCodePageIndex = 0,
     this.inviteCodePageSize = defaultInviteCodePageSize,
     this.inviteCodeSearchQuery = '',
-    this.inviteCodeFilters = const InviteCodeFilters(),
     this.inviteCodeCount = 0,
     this.hasNextInviteCodePage = false,
     this.inviteCodeSortColumn = InviteCodesSortColumn.code,
@@ -45,8 +44,6 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
   final int inviteCodePageSize;
 
   final String inviteCodeSearchQuery;
-
-  final InviteCodeFilters inviteCodeFilters;
 
   final int inviteCodeCount;
 
@@ -113,7 +110,6 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     int? inviteCodePageIndex,
     int? inviteCodePageSize,
     String? inviteCodeSearchQuery,
-    InviteCodeFilters? inviteCodeFilters,
     int? inviteCodeCount,
     bool? hasNextInviteCodePage,
     InviteCodesSortColumn? inviteCodeSortColumn,
@@ -137,7 +133,6 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       inviteCodePageSize: inviteCodePageSize ?? this.inviteCodePageSize,
       inviteCodeSearchQuery:
           inviteCodeSearchQuery ?? this.inviteCodeSearchQuery,
-      inviteCodeFilters: inviteCodeFilters ?? this.inviteCodeFilters,
       inviteCodeCount: inviteCodeCount ?? this.inviteCodeCount,
       hasNextInviteCodePage:
           hasNextInviteCodePage ?? this.hasNextInviteCodePage,
@@ -164,7 +159,6 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     inviteCodePageIndex,
     inviteCodePageSize,
     inviteCodeSearchQuery,
-    inviteCodeFilters,
     inviteCodeCount,
     hasNextInviteCodePage,
     inviteCodeSortColumn,

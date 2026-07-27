@@ -30,16 +30,11 @@ abstract class StudyUApi {
     required int offset,
     required int limit,
     String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
     bool ascending = true,
   });
 
-  Future<int> countStudyInvites(
-    StudyID studyId, {
-    String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
-  });
+  Future<int> countStudyInvites(StudyID studyId, {String? query});
 
   Future<Study> fetchStudyFromInvite(String code);
 
@@ -287,19 +282,16 @@ class StudyUApiClient extends SupabaseClientDependant
     required int offset,
     required int limit,
     String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
     bool ascending = true,
   }) async {
     await _testDelay();
-    final normalizedFilters = filters.normalized();
-    final request = _applyInviteCodeFilters(
+    final request = _applyInviteCodeQuery(
       supabaseClient
           .from(StudyInvite.tableName)
           .select('*,study_invite_participant_count'),
       studyId: studyId,
       query: query,
-      filters: normalizedFilters,
     );
     final response = await _awaitGuarded(
       _applyInviteCodeSorting(
@@ -312,19 +304,13 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<int> countStudyInvites(
-    StudyID studyId, {
-    String? query,
-    InviteCodeFilters filters = const InviteCodeFilters(),
-  }) async {
+  Future<int> countStudyInvites(StudyID studyId, {String? query}) async {
     await _testDelay();
-    final normalizedFilters = filters.normalized();
     final response = await _awaitGuarded(
-      _applyInviteCodeFilters(
+      _applyInviteCodeQuery(
         supabaseClient.from(StudyInvite.tableName).select(),
         studyId: studyId,
         query: query,
-        filters: normalizedFilters,
       ).count(),
     );
     return response.count;
@@ -364,11 +350,10 @@ class StudyUApiClient extends SupabaseClientDependant
     };
   }
 
-  PostgrestTransformBuilder<PostgrestList> _applyInviteCodeFilters(
+  PostgrestFilterBuilder<PostgrestList> _applyInviteCodeQuery(
     PostgrestFilterBuilder<PostgrestList> request, {
     required StudyID studyId,
     required String? query,
-    required InviteCodeFilters filters,
   }) {
     PostgrestFilterBuilder<PostgrestList> filtered = request.eq(
       'study_id',
@@ -378,41 +363,6 @@ class StudyUApiClient extends SupabaseClientDependant
     final trimmedQuery = _trimmedOrNull(query);
     if (trimmedQuery != null) {
       filtered = filtered.ilike('code', '%$trimmedQuery%');
-    }
-
-    switch (filters.enrolled) {
-      case InviteCodeEnrolledFilter.all:
-        break;
-      case InviteCodeEnrolledFilter.unused:
-        filtered = filtered.eq('study_invite_participant_count', 0);
-      case InviteCodeEnrolledFilter.used:
-        filtered = filtered.gt('study_invite_participant_count', 0);
-    }
-
-    if (filters.enrolledMin != null) {
-      filtered = filtered.gte(
-        'study_invite_participant_count',
-        filters.enrolledMin!,
-      );
-    }
-    if (filters.enrolledMax != null) {
-      filtered = filtered.lte(
-        'study_invite_participant_count',
-        filters.enrolledMax!,
-      );
-    }
-
-    switch (filters.intervention) {
-      case InviteCodeInterventionFilter.all:
-        break;
-      case InviteCodeInterventionFilter.defaultAssignment:
-        filtered = filtered.or(
-          'preselected_intervention_ids.is.null,preselected_intervention_ids.eq.{}',
-        );
-      case InviteCodeInterventionFilter.interventionA:
-        filtered = filtered.not('preselected_intervention_ids->0', 'is', null);
-      case InviteCodeInterventionFilter.interventionB:
-        filtered = filtered.not('preselected_intervention_ids->1', 'is', null);
     }
 
     return filtered;

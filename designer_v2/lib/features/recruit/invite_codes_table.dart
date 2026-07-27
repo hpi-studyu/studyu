@@ -14,6 +14,18 @@ typedef ParticipantCountProvider = int Function(StudyInvite invite);
 
 enum InviteCodesTableColumn { code, enrolled, interventionA, interventionB }
 
+class _InviteCodeTableWidthConfig {
+  const _InviteCodeTableWidthConfig({
+    required this.codeWidth,
+    required this.enrolledWidth,
+    required this.interventionWidth,
+  });
+
+  final double codeWidth;
+  final double enrolledWidth;
+  final double interventionWidth;
+}
+
 class StudyInvitesTable extends StatelessWidget {
   const StudyInvitesTable({
     required this.invites,
@@ -29,14 +41,19 @@ class StudyInvitesTable extends StatelessWidget {
   });
 
   static const _tableMinRowHeight = 34.0;
-  static const _compactBreakpoint = 860.0;
-  static const _narrowBreakpoint = 780.0;
-  static const _codeColumnMinWidth = 210.0;
-  static const _actionColumnWidth = 88.0;
-  static const _countColumnWidth = 100.0;
-  static const _interventionColumnWidth = 140.0;
+  static const _compactBreakpoint = 640.0;
+  static const _narrowBreakpoint = 520.0;
+  static const _codeColumnMinWidth = 168.0;
+  static const _codeColumnMaxWidth = 256.0;
+  static const _codeColumnWidthFactor = 0.3;
+  static const _actionColumnWidth = 64.0;
+  static const _countColumnMinWidth = 64.0;
+  static const _countColumnMaxWidth = 84.0;
+  static const _countColumnWidthFactor = 0.09;
+  static const _interventionColumnMinWidth = 96.0;
+  static const _interventionColumnMaxWidth = 148.0;
   static const _headerVerticalPadding = 12.0;
-  static const _codeCellSpacing = 12.0;
+  static const _codeCellSpacing = 8.0;
   static const _copyIconSize = 18.0;
   static const _copyButtonSize = 20.0;
   static const _rowActionSplashRadius = 18.0;
@@ -58,7 +75,8 @@ class StudyInvitesTable extends StatelessWidget {
       builder: (context, constraints) {
         final activeColumns = _visibleColumnsForWidth(constraints.maxWidth);
         final columns = [
-          for (final column in activeColumns) _buildColumnDefinition(column),
+          for (final column in activeColumns)
+            _buildColumnDefinition(column, constraints.maxWidth, activeColumns),
         ];
 
         return StandardTable<StudyInvite>(
@@ -99,34 +117,73 @@ class StudyInvitesTable extends StatelessWidget {
     return columns;
   }
 
-  StandardTableColumn _buildColumnDefinition(InviteCodesTableColumn column) {
+  StandardTableColumn _buildColumnDefinition(
+    InviteCodesTableColumn column,
+    double tableWidth,
+    List<InviteCodesTableColumn> activeColumns,
+  ) {
+    final widthConfig = _columnWidthConfig(tableWidth, activeColumns);
     switch (column) {
       case InviteCodesTableColumn.code:
         return StandardTableColumn(
           label: tr.code_list_header_code,
-          columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(_codeColumnMinWidth),
-            FlexColumnWidth(),
-          ),
+          columnWidth: FixedColumnWidth(widthConfig.codeWidth),
           sortable: true,
         );
       case InviteCodesTableColumn.enrolled:
         return StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
-          columnWidth: const FixedColumnWidth(_countColumnWidth),
+          columnWidth: FixedColumnWidth(widthConfig.enrolledWidth),
           sortable: true,
         );
       case InviteCodesTableColumn.interventionA:
         return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
-          columnWidth: const FixedColumnWidth(_interventionColumnWidth),
+          columnWidth: FixedColumnWidth(widthConfig.interventionWidth),
         );
       case InviteCodesTableColumn.interventionB:
         return StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_b,
-          columnWidth: const FixedColumnWidth(_interventionColumnWidth),
+          columnWidth: FixedColumnWidth(widthConfig.interventionWidth),
         );
     }
+  }
+
+  _InviteCodeTableWidthConfig _columnWidthConfig(
+    double tableWidth,
+    List<InviteCodesTableColumn> activeColumns,
+  ) {
+    final interventionColumnCount = activeColumns
+        .where(
+          (column) =>
+              column == InviteCodesTableColumn.interventionA ||
+              column == InviteCodesTableColumn.interventionB,
+        )
+        .length;
+
+    final codeWidth = (tableWidth * _codeColumnWidthFactor).clamp(
+      _codeColumnMinWidth,
+      _codeColumnMaxWidth,
+    );
+    final enrolledWidth = (tableWidth * _countColumnWidthFactor).clamp(
+      _countColumnMinWidth,
+      _countColumnMaxWidth,
+    );
+
+    final availableInterventionWidth =
+        tableWidth - codeWidth - enrolledWidth - _actionColumnWidth;
+    final interventionWidth = interventionColumnCount == 0
+        ? 0.0
+        : (availableInterventionWidth / interventionColumnCount).clamp(
+            _interventionColumnMinWidth,
+            _interventionColumnMaxWidth,
+          );
+
+    return _InviteCodeTableWidthConfig(
+      codeWidth: codeWidth,
+      enrolledWidth: enrolledWidth,
+      interventionWidth: interventionWidth,
+    );
   }
 
   TableRow _buildHeaderRow(
@@ -266,36 +323,39 @@ class StudyInvitesTable extends StatelessWidget {
     Widget buildCell(InviteCodesTableColumn column) {
       switch (column) {
         case InviteCodesTableColumn.code:
-          return Row(
-            children: [
-              Flexible(
-                child: Text(
-                  item.code,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (copyCodeAction != null) ...[
-                const SizedBox(width: _codeCellSpacing),
-                Tooltip(
-                  message: copyCodeAction.label,
-                  child: IconButton(
-                    onPressed: () => copyCodeAction!.execute(context),
-                    constraints: const BoxConstraints.tightFor(
-                      width: _copyButtonSize,
-                      height: _copyButtonSize,
-                    ),
-                    padding: EdgeInsets.zero,
-                    splashRadius: _rowActionSplashRadius,
-                    icon: Icon(
-                      copyCodeAction.icon,
-                      size: _copyIconSize,
-                      color: ThemeConfig.bodyTextMuted(theme).color,
-                    ),
+          return Tooltip(
+            message: item.code,
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    item.code,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                if (copyCodeAction != null) ...[
+                  const SizedBox(width: _codeCellSpacing),
+                  Tooltip(
+                    message: copyCodeAction.label,
+                    child: IconButton(
+                      onPressed: () => copyCodeAction!.execute(context),
+                      constraints: const BoxConstraints.tightFor(
+                        width: _copyButtonSize,
+                        height: _copyButtonSize,
+                      ),
+                      padding: EdgeInsets.zero,
+                      splashRadius: _rowActionSplashRadius,
+                      icon: Icon(
+                        copyCodeAction.icon,
+                        size: _copyIconSize,
+                        color: ThemeConfig.bodyTextMuted(theme).color,
+                      ),
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           );
         case InviteCodesTableColumn.enrolled:
           return EnrolledBadge(enrolledCount: participantCount);

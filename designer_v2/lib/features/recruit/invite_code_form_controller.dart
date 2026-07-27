@@ -1,19 +1,14 @@
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:uuid/uuid.dart';
-
-part 'invite_code_form_controller.g.dart';
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({
@@ -25,7 +20,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   });
 
   final Study study;
-  final IInviteCodeRepository inviteCodeRepository;
+  final InviteCodeFormRepository inviteCodeRepository;
 
   @override
   Map<FormMode, String> get titles => {
@@ -232,20 +227,4 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
       rethrow;
     }
   }
-}
-
-/// Provide a controller parametrized by [StudyID]
-///
-/// Note: This is not safe to use in widgets (or other providers) that are built
-/// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-@riverpod
-InviteCodeFormViewModel inviteCodeFormViewModel(Ref ref, StudyID studyId) {
-  // Reactively bind to and obtain [StudyController]'s current study
-  final state = ref.watch(studyControllerProvider(studyId));
-  final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
-
-  return InviteCodeFormViewModel(
-    study: state.studyValueRequired,
-    inviteCodeRepository: inviteCodeRepository,
-  );
 }
