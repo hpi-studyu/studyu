@@ -13,7 +13,6 @@ import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
@@ -53,7 +52,6 @@ class StudyRecruitScreen extends StudyPageWidget {
   static const _footerDropdownMenuElevation = 5.0;
   static const _footerDropdownMenuOffsetX = -6.0;
   static const _feedbackBorderRadius = 8.0;
-  static const _loadingIndicatorHeight = 3.0;
   static const _inviteCodePageSizes = [15, 25, 50, 100];
 
   @override
@@ -95,22 +93,16 @@ class StudyRecruitScreen extends StudyPageWidget {
       data: (studyInvites) {
         if (studyInvites == null || studyInvites.isEmpty) {
           final hasSearchQuery = state.inviteCodeSearchQuery.trim().isNotEmpty;
+          if (state.isSearchPending && !hasSearchQuery) {
+            return const Center(child: CircularProgressIndicator());
+          }
           if (hasSearchQuery) {
             return Padding(
               padding: const EdgeInsets.only(top: _sectionSpacing),
               child: EmptyBody(
-                icon: Icons.filter_alt_off_rounded,
+                icon: Icons.find_in_page_outlined,
                 title: tr.code_list_no_results_title,
                 description: tr.code_list_no_results_description,
-                button: SecondaryButton(
-                  text: tr.code_list_clear_filters,
-                  onPressed: () async {
-                    await controller.setInviteCodeSearchQuery('');
-                    await controller.setInviteCodeFilters(
-                      const InviteCodeFilters(),
-                    );
-                  },
-                ),
               ),
             );
           }
@@ -127,8 +119,6 @@ class StudyRecruitScreen extends StudyPageWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (state.isPageTransitionLoading)
-              const LinearProgressIndicator(minHeight: _loadingIndicatorHeight),
             StudyInvitesTable(
               invites: studyInvites,
               onSelect: _onSelectInvite(context, ref),
@@ -151,7 +141,7 @@ class StudyRecruitScreen extends StudyPageWidget {
         );
       },
       error: (error, stackTrace) => Center(child: Text(error.toString())),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const SizedBox.shrink(),
     );
   }
 
@@ -236,22 +226,23 @@ class StudyRecruitScreen extends StudyPageWidget {
       text: tr.action_button_code_new,
       onPressed: isStudyClosed
           ? null
-          : () {
-              final formViewModel = ref.watch(
-                inviteCodeFormViewModelProvider(studyId),
-              );
-              showFormSideSheet<InviteCodeFormViewModel>(
-                context: context,
-                formViewModel: formViewModel,
-                formViewBuilder: (formViewModel) =>
-                    InviteCodeFormView(formViewModel: formViewModel),
-                actionButtons: _inviteCodeFormActionButtons(
-                  context,
-                  ref,
-                  formViewModel,
-                ),
-              );
-            },
+          : () => _showNewInviteCodeForm(context, ref),
+    );
+  }
+
+  InviteCodeFormViewModel _freshInviteCodeFormViewModel(WidgetRef ref) {
+    ref.invalidate(inviteCodeFormViewModelProvider(studyId));
+    return ref.read(inviteCodeFormViewModelProvider(studyId));
+  }
+
+  void _showNewInviteCodeForm(BuildContext context, WidgetRef ref) {
+    final formViewModel = _freshInviteCodeFormViewModel(ref);
+    showFormSideSheet<InviteCodeFormViewModel>(
+      context: context,
+      formViewModel: formViewModel,
+      formViewBuilder: (formViewModel) =>
+          InviteCodeFormView(formViewModel: formViewModel),
+      actionButtons: _inviteCodeFormActionButtons(context, ref, formViewModel),
     );
   }
 
@@ -269,7 +260,9 @@ class StudyRecruitScreen extends StudyPageWidget {
       ReactiveFormConsumer(
         builder: (context, form, child) {
           return PrimaryButton(
-            text: tr.dialog_save,
+            text: formViewModel.formMode == FormMode.edit
+                ? tr.action_button_code_save
+                : tr.dialog_save,
             icon: null,
             enabled: formViewModel.isValid,
             onPressedFuture: formViewModel.isValid
@@ -468,12 +461,6 @@ class StudyRecruitScreen extends StudyPageWidget {
     if (state.inviteCodeCount == 0) {
       return tr.code_list_page_range(0, 0, 0);
     }
-    if (state.isPageTransitionLoading) {
-      return tr.code_list_page_loading(
-        state.pendingInviteCodeRangeStart,
-        state.pendingInviteCodeRangeEnd,
-      );
-    }
     return tr.code_list_page_range(
       state.inviteCodeRangeStart,
       state.inviteCodeRangeEnd,
@@ -522,13 +509,19 @@ class StudyRecruitScreen extends StudyPageWidget {
     WidgetRef ref,
   ) {
     return (StudyInvite invite) {
-      final formViewModel = ref.watch(inviteCodeFormViewModelProvider(studyId));
-      formViewModel.read(invite);
+      final formViewModel = _freshInviteCodeFormViewModel(ref);
+      formViewModel.formData = invite;
+      formViewModel.formMode = FormMode.edit;
       showFormSideSheet<InviteCodeFormViewModel>(
         context: context,
         formViewModel: formViewModel,
         formViewBuilder: (formViewModel) =>
             InviteCodeFormView(formViewModel: formViewModel),
+        actionButtons: _inviteCodeFormActionButtons(
+          context,
+          ref,
+          formViewModel,
+        ),
       );
     };
   }

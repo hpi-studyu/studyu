@@ -163,10 +163,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
           type: ModelActionType.delete,
           label: tr.action_delete_code,
           confirmation: ModelActionConfirmation(
-            title: tr.dialog_delete_invite_code_title(
-              _formattedDeleteCode(model.code),
-            ),
-            message: tr.dialog_delete_invite_code_message,
+            title: tr.dialog_delete_invite_code_title,
+            message: tr.dialog_delete_invite_code_message(model.code),
             confirmLabel: tr.action_delete_code,
           ),
           onExecute: () async {
@@ -192,14 +190,6 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Future<void> _copy(String value, SnackbarIntent notification) async {
     await ref.read(clipboardServiceProvider).copy(value);
     ref.read(notificationServiceProvider).show(notification);
-  }
-
-  String _formattedDeleteCode(String code) {
-    const visiblePrefixLength = 8;
-    if (code.length <= visiblePrefixLength) {
-      return code;
-    }
-    return '${code.substring(0, visiblePrefixLength)}...';
   }
 
   void _showSharePopup(BuildContext context, String deepLink, String filename) {

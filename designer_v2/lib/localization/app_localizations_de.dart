@@ -550,13 +550,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dialog_subject_invite_code => 'Teilnahmecode';
 
   @override
-  String dialog_delete_invite_code_title(Object code) {
-    return 'Teilnahmecode $code löschen?';
-  }
+  String get dialog_delete_invite_code_title => 'Teilnahmecode löschen?';
 
   @override
-  String get dialog_delete_invite_code_message =>
-      'Jeder mit diesem Code kann ihn danach nicht mehr verwenden.';
+  String dialog_delete_invite_code_message(Object code) {
+    return 'Jeder mit dem Teilnahmecode $code kann ihn danach nicht mehr verwenden.';
+  }
 
   @override
   String get dialog_subject_fitbit_credentials => 'Fitbit-Zugangsdaten';
@@ -2128,6 +2127,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_button_code_new => 'Neuer Code';
 
   @override
+  String get action_button_code_save => 'Code speichern';
+
+  @override
   String get participant_details_title => 'Teilnehmerdetails';
 
   @override
@@ -3006,10 +3008,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get code_list_no_results_description =>
-      'Ändere Suche oder Filter, um mehr Einladungscodes zu sehen.';
-
-  @override
-  String get code_list_clear_filters => 'Filter zurücksetzen';
+      'Ändere deine Suche, um mehr Einladungscodes zu sehen.';
 
   @override
   String get code_list_search_hint => 'Einladungscodes suchen';

@@ -26,6 +26,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     this.hasNextInviteCodePage = false,
     this.inviteCodeSortColumn = InviteCodesSortColumn.code,
     this.inviteCodeSortAscending = true,
+    this.isSearchPending = false,
     this.paginationStatus = InviteCodePaginationStatus.idle,
     this.pendingInviteCodePageIndex,
     this.paginationError,
@@ -54,6 +55,8 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
   final InviteCodesSortColumn inviteCodeSortColumn;
 
   final bool inviteCodeSortAscending;
+
+  final bool isSearchPending;
 
   final InviteCodePaginationStatus paginationStatus;
 
@@ -115,6 +118,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     bool? hasNextInviteCodePage,
     InviteCodesSortColumn? inviteCodeSortColumn,
     bool? inviteCodeSortAscending,
+    bool? isSearchPending,
     InviteCodePaginationStatus? paginationStatus,
     int? pendingInviteCodePageIndex,
     bool clearPendingInviteCodePageIndex = false,
@@ -140,6 +144,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       inviteCodeSortColumn: inviteCodeSortColumn ?? this.inviteCodeSortColumn,
       inviteCodeSortAscending:
           inviteCodeSortAscending ?? this.inviteCodeSortAscending,
+      isSearchPending: isSearchPending ?? this.isSearchPending,
       paginationStatus: paginationStatus ?? this.paginationStatus,
       pendingInviteCodePageIndex: clearPendingInviteCodePageIndex
           ? null
@@ -164,6 +169,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     hasNextInviteCodePage,
     inviteCodeSortColumn,
     inviteCodeSortAscending,
+    isSearchPending,
     paginationStatus,
     pendingInviteCodePageIndex,
     paginationError,

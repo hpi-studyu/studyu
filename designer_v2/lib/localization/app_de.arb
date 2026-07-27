@@ -200,13 +200,13 @@
   "dialog_subject_consent_item": "Einwilligungspunkt",
   "dialog_subject_report_section": "Berichtsabschnitt",
   "dialog_subject_invite_code": "Teilnahmecode",
-  "dialog_delete_invite_code_title": "Teilnahmecode {code} löschen?",
-  "@dialog_delete_invite_code_title": {
+  "dialog_delete_invite_code_title": "Teilnahmecode löschen?",
+  "dialog_delete_invite_code_message": "Jeder mit dem Teilnahmecode {code} kann ihn danach nicht mehr verwenden.",
+  "@dialog_delete_invite_code_message": {
     "placeholders": {
       "code": {}
     }
   },
-  "dialog_delete_invite_code_message": "Jeder mit diesem Code kann ihn danach nicht mehr verwenden.",
   "dialog_subject_fitbit_credentials": "Fitbit-Zugangsdaten",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
   "form_question_create": "Neue Frage",
@@ -806,6 +806,7 @@
   "code_list_header_code": "Code",
   "code_list_header_actions": "Aktionen",
   "action_button_code_new": "Neuer Code",
+  "action_button_code_save": "Code speichern",
   "notification_code_deleted": "Teilnahmecode gelöscht",
   "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",
   "notification_invite_code_copied": "Teilnahmecode kopiert",
@@ -1126,8 +1127,7 @@
   "filter_button_clear": "Filter entfernen",
   "filter_button_main": "Filtern",
   "code_list_no_results_title": "Keine passenden Einladungscodes",
-  "code_list_no_results_description": "Ändere Suche oder Filter, um mehr Einladungscodes zu sehen.",
-  "code_list_clear_filters": "Filter zurücksetzen",
+  "code_list_no_results_description": "Ändere deine Suche, um mehr Einladungscodes zu sehen.",
   "code_list_search_hint": "Einladungscodes suchen",
   "code_list_active_count": "{count} aktive Einladungscodes",
   "@code_list_active_count": {

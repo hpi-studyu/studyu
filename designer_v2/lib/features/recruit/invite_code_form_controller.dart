@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:uuid/uuid.dart';
 
 part 'invite_code_form_controller.g.dart';
@@ -29,6 +30,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   @override
   Map<FormMode, String> get titles => {
     FormMode.create: tr.form_code_create,
+    FormMode.edit: tr.form_code_readonly,
     FormMode.readonly: tr.form_code_readonly,
   };
 
@@ -125,7 +127,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   Future<Map<String, dynamic>?> _uniqueInviteCode(
     AbstractControl control,
   ) async {
-    final code = control.value as String;
+    final code = _normalizeCode(control.value as String?);
+    if (code.isEmpty || _matchesExistingInviteCode(code)) {
+      return null;
+    }
+
     final isCodeAlreadyUsed = await inviteCodeRepository.isCodeAlreadyUsed(
       code,
     );
@@ -136,6 +142,18 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
       return error;
     }
     return null;
+  }
+
+  bool _matchesExistingInviteCode(String code) {
+    final existingCode = formData?.code;
+    if (existingCode == null) {
+      return false;
+    }
+    return code == _normalizeCode(existingCode);
+  }
+
+  String _normalizeCode(String? code) {
+    return code?.trim().toLowerCase() ?? '';
   }
 
   void regenerateCode() {
@@ -170,14 +188,49 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Future<StudyInvite> save({bool updateState = true}) {
-    return inviteCodeRepository
-        .save(buildFormData(), runOptimistically: false)
-        .then((wrapped) {
-          if (updateState) {
-            finalizeInitializationBaseline();
-          }
-          return wrapped!.model;
-        });
+    final previousInvite = formData;
+    final nextInvite = buildFormData();
+
+    final saveOperation =
+        formMode == FormMode.edit &&
+            previousInvite != null &&
+            _normalizeCode(previousInvite.code) != nextInvite.code
+        ? _replaceExistingInvite(previousInvite, nextInvite)
+        : inviteCodeRepository.save(nextInvite, runOptimistically: false);
+
+    return saveOperation.then((wrapped) {
+      if (updateState) {
+        formData = wrapped!.model;
+        finalizeInitializationBaseline();
+      }
+      return wrapped!.model;
+    });
+  }
+
+  Future<WrappedModel<StudyInvite>?> _replaceExistingInvite(
+    StudyInvite previousInvite,
+    StudyInvite nextInvite,
+  ) async {
+    final savedInvite = await inviteCodeRepository.save(
+      nextInvite,
+      runOptimistically: false,
+    );
+
+    try {
+      await inviteCodeRepository.delete(
+        previousInvite.code,
+        runOptimistically: false,
+      );
+      return savedInvite;
+    } catch (_) {
+      try {
+        await inviteCodeRepository.delete(
+          nextInvite.code,
+          runOptimistically: false,
+        );
+      } catch (_) {}
+      rethrow;
+    }
   }
 }
 

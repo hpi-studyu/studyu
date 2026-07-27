@@ -1061,14 +1061,14 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_delete_invite_code_title.
   ///
   /// In en, this message translates to:
-  /// **'Delete invite code {code}?'**
-  String dialog_delete_invite_code_title(Object code);
+  /// **'Delete invite code?'**
+  String get dialog_delete_invite_code_title;
 
   /// No description provided for @dialog_delete_invite_code_message.
   ///
   /// In en, this message translates to:
-  /// **'Anyone with this code will no longer be able to use it.'**
-  String get dialog_delete_invite_code_message;
+  /// **'Anyone with invite code {code} will no longer be able to use it.'**
+  String dialog_delete_invite_code_message(Object code);
 
   /// No description provided for @dialog_subject_fitbit_credentials.
   ///
@@ -3645,6 +3645,12 @@ abstract class AppLocalizations {
   /// **'New code'**
   String get action_button_code_new;
 
+  /// No description provided for @action_button_code_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save code'**
+  String get action_button_code_save;
+
   /// No description provided for @participant_details_title.
   ///
   /// In en, this message translates to:
@@ -5112,14 +5118,8 @@ abstract class AppLocalizations {
   /// No description provided for @code_list_no_results_description.
   ///
   /// In en, this message translates to:
-  /// **'Try changing search or filters to see more invite codes.'**
+  /// **'Try changing your search to see more invite codes.'**
   String get code_list_no_results_description;
-
-  /// No description provided for @code_list_clear_filters.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear filters'**
-  String get code_list_clear_filters;
 
   /// No description provided for @code_list_search_hint.
   ///

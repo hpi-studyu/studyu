@@ -204,13 +204,13 @@
   "dialog_subject_consent_item": "consent item",
   "dialog_subject_report_section": "report section",
   "dialog_subject_invite_code": "invite code",
-  "dialog_delete_invite_code_title": "Delete invite code {code}?",
-  "@dialog_delete_invite_code_title": {
+  "dialog_delete_invite_code_title": "Delete invite code?",
+  "dialog_delete_invite_code_message": "Anyone with invite code {code} will no longer be able to use it.",
+  "@dialog_delete_invite_code_message": {
     "placeholders": {
       "code": {}
     }
   },
-  "dialog_delete_invite_code_message": "Anyone with this code will no longer be able to use it.",
   "dialog_subject_fitbit_credentials": "fitbit credentials",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
   "form_question_create": "New Question",
@@ -810,6 +810,7 @@
   "code_list_header_code": "Code",
   "code_list_header_actions": "Actions",
   "action_button_code_new": "New code",
+  "action_button_code_save": "Save code",
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Participant details",
   "participant_details_study_days_overview": "Study days overview",
@@ -1126,8 +1127,7 @@
   "filter_button_clear": "Clear filter",
   "filter_button_main": "Filter",
   "code_list_no_results_title": "No matching invite codes",
-  "code_list_no_results_description": "Try changing search or filters to see more invite codes.",
-  "code_list_clear_filters": "Clear filters",
+  "code_list_no_results_description": "Try changing your search to see more invite codes.",
   "code_list_search_hint": "Search invite codes",
   "code_list_active_count": "{count} active invite codes",
   "@code_list_active_count": {

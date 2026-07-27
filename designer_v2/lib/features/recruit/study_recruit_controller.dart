@@ -58,11 +58,13 @@ class StudyRecruitController extends _$StudyRecruitController
         state = state.copyWith(
           paginationStatus: InviteCodePaginationStatus.loading,
           pendingInviteCodePageIndex: pageIndex,
+          isSearchPending: false,
           clearPaginationError: true,
         );
       } else {
         state = state.copyWith(
           invites: const AsyncValue.loading(),
+          isSearchPending: false,
           paginationStatus: InviteCodePaginationStatus.idle,
           clearPendingInviteCodePageIndex: true,
           clearPaginationError: true,
@@ -72,6 +74,7 @@ class StudyRecruitController extends _$StudyRecruitController
       state = state.copyWith(
         paginationStatus: InviteCodePaginationStatus.loading,
         pendingInviteCodePageIndex: pageIndex,
+        isSearchPending: false,
         clearPaginationError: true,
       );
     }
@@ -103,6 +106,7 @@ class StudyRecruitController extends _$StudyRecruitController
         inviteCodePageIndex: pageIndex,
         inviteCodeCount: inviteCount,
         hasNextInviteCodePage: offset + invites.length < inviteCount,
+        isSearchPending: false,
         paginationStatus: InviteCodePaginationStatus.idle,
         clearPendingInviteCodePageIndex: true,
         clearPaginationError: true,
@@ -113,6 +117,7 @@ class StudyRecruitController extends _$StudyRecruitController
         state = state.copyWith(
           paginationStatus: InviteCodePaginationStatus.error,
           pendingInviteCodePageIndex: pageIndex,
+          isSearchPending: false,
           paginationError: error,
         );
       } else {
@@ -120,6 +125,7 @@ class StudyRecruitController extends _$StudyRecruitController
           invites: AsyncValue.error(error, stackTrace),
           inviteCodeCount: 0,
           hasNextInviteCodePage: false,
+          isSearchPending: false,
           paginationStatus: InviteCodePaginationStatus.idle,
           clearPendingInviteCodePageIndex: true,
           clearPaginationError: true,
@@ -130,7 +136,7 @@ class StudyRecruitController extends _$StudyRecruitController
 
   Future<void> setInviteCodeSearchQuery(String query) async {
     if (query == state.inviteCodeSearchQuery) return;
-    state = state.copyWith(inviteCodeSearchQuery: query);
+    state = state.copyWith(inviteCodeSearchQuery: query, isSearchPending: true);
     _searchDebounce?.cancel();
     _searchDebounce = Timer(_searchDebounceDuration, () {
       unawaited(loadInviteCodePage(0));
