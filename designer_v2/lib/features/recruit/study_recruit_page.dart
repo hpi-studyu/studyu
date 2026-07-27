@@ -42,15 +42,16 @@ class StudyRecruitScreen extends StudyPageWidget {
   static const _paginationSpacing = 8.0;
   static const _paginationGroupSpacing = 16.0;
   static const _paginationButtonSize = 40.0;
-  static const _footerDropdownWidth = 64.0;
+  static const _footerDropdownWidth = 72.0;
   static const _footerDropdownHeight = 40.0;
   static const _footerDropdownBorderRadius = 50.0;
   static const _footerDropdownHorizontalPadding = 10.0;
   static const _footerDropdownIconSize = 20.0;
-  static const _footerDropdownSplashRadius = 18.0;
-  static const _footerDropdownMenuWidth = 96.0;
-  static const _footerDropdownMenuItemHeight = 48.0;
+  static const _footerDropdownSplashRadius = 24.0;
+  static const _footerDropdownMenuWidth = 101.0;
+  static const _footerDropdownMenuItemHeight = 53.0;
   static const _footerDropdownMenuElevation = 5.0;
+  static const _footerDropdownMenuOffsetX = -6.0;
   static const _feedbackBorderRadius = 8.0;
   static const _loadingIndicatorHeight = 3.0;
   static const _inviteCodePageSizes = [15, 25, 50, 100];
@@ -328,16 +329,14 @@ class StudyRecruitScreen extends StudyPageWidget {
             child: PopupMenuButton<int>(
               enabled: !isPaginationDisabled,
               tooltip: '',
+              position: PopupMenuPosition.under,
+              offset: const Offset(_footerDropdownMenuOffsetX, 0),
               padding: EdgeInsets.zero,
               splashRadius: _footerDropdownSplashRadius,
               elevation: _footerDropdownMenuElevation,
-              shadowColor: theme.shadowColor,
-              surfaceTintColor: Colors.transparent,
-              color: theme.colorScheme.surface,
               constraints: const BoxConstraints.tightFor(
                 width: _footerDropdownMenuWidth,
               ),
-              menuPadding: EdgeInsets.zero,
               onSelected: controller.setInviteCodePageSize,
               itemBuilder: (context) => [
                 for (final pageSize in _inviteCodePageSizes)
@@ -351,12 +350,7 @@ class StudyRecruitScreen extends StudyPageWidget {
                       color: pageSize == state.inviteCodePageSize
                           ? theme.colorScheme.surfaceContainerHighest
                           : Colors.transparent,
-                      child: Text(
-                        pageSize.toString(),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
+                      child: Text(pageSize.toString()),
                     ),
                   ),
               ],
