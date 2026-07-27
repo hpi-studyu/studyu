@@ -20,6 +20,7 @@ import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
+import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
 part 'food_search/food_search_view_model.dart';
@@ -186,6 +187,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   late final FoodSearchViewModel _searchViewModel;
   bool _showServingHint = true;
   bool _isConfirming = false;
+  bool _allowPop = false;
 
   @override
   void initState() {
@@ -651,8 +653,45 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     if (_isConfirming || store.isEmpty) return;
     _removeTransfer();
     setState(() => _isConfirming = true);
-    final foods = store.materialize();
-    if (mounted) Navigator.pop(context, FoodSearchSelection(foods));
+    _pop(FoodSearchSelection(store.materialize()));
+  }
+
+  void _pop([Object? result]) {
+    setState(() => _allowPop = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Navigator.of(context).pop(result);
+    });
+  }
+
+  Future<void> _confirmDiscard() async {
+    final store = _selectionStore;
+    if (store == null || store.isEmpty) {
+      _pop();
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final action = await showUnsavedChangesDialog(
+      context,
+      title: l10n.unsaved_changes_title,
+      message: l10n.unsaved_changes_message,
+      saveLabel: l10n.food_selection_confirm(
+        store.itemCount,
+        widget.mealLabel!,
+      ),
+      discardLabel: l10n.discard_changes,
+      continueLabel: l10n.continue_editing,
+    );
+    if (!mounted) return;
+
+    switch (action) {
+      case UnsavedChangesAction.save:
+        _confirmSelection(store);
+      case UnsavedChangesAction.discard:
+        _pop();
+      case null:
+        return;
+    }
   }
 
   void _addToSelection(
@@ -696,11 +735,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   }
 
   void _completeSingleSelection(studyu.FoodEntry foodEntry) {
-    if (widget.mealLabel != null) {
-      Navigator.pop(context, FoodSearchSelection.single(foodEntry));
-    } else {
-      Navigator.pop(context, foodEntry);
-    }
+    _pop(
+      widget.mealLabel != null
+          ? FoodSearchSelection.single(foodEntry)
+          : foodEntry,
+    );
   }
 
   void _navigateToEdit(studyu.FoodEntry foodEntry) {
@@ -831,7 +870,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       searchStatus = l10n.food_search_results_count(visibleResultCount);
     }
 
-    return Scaffold(
+    final scaffold = Scaffold(
       appBar: AppBar(
         leading: widget.mealLabel == null ? null : const CloseButton(),
         centerTitle: true,
@@ -995,6 +1034,14 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
           ),
         ],
       ),
+    );
+
+    return PopScope(
+      canPop: _allowPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmDiscard();
+      },
+      child: scaffold,
     );
   }
 }

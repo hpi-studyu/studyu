@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +9,7 @@ import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
+import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class MealCreatorScreen extends StatefulWidget {
@@ -58,6 +61,8 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   final List<FoodEntry> _componentFoods = [];
   PreparationDetails? _preparationDetails;
   NutritionProfile? _cachedNutrition;
+  late final String _initialSnapshot;
+  bool _allowPop = false;
 
   @override
   void initState() {
@@ -112,6 +117,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     _quickNameController = TextEditingController();
     _quickAmountController = TextEditingController(text: '1');
     _quickCaloriesController = TextEditingController();
+    _initialSnapshot = _snapshot;
 
     _servingsController.addListener(() {
       setState(() {
@@ -351,13 +357,67 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   void _saveMeal() {
     final meal = _buildMeal();
     if (meal != null) {
-      Navigator.of(context).pop(meal);
+      _pop(meal);
     } else if (_foods.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one food')),
       );
     }
   }
+
+  void _pop([FoodEntry? result]) {
+    setState(() => _allowPop = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Navigator.of(context).pop(result);
+    });
+  }
+
+  Future<void> _confirmDiscard() async {
+    final l10n = AppLocalizations.of(context)!;
+    final action = await showUnsavedChangesDialog(
+      context,
+      title: l10n.unsaved_changes_title,
+      message: l10n.unsaved_changes_message,
+      saveLabel: l10n.save_and_leave,
+      discardLabel: l10n.discard_changes,
+      continueLabel: l10n.continue_editing,
+    );
+    if (!mounted) return;
+
+    switch (action) {
+      case UnsavedChangesAction.save:
+        _saveMeal();
+      case UnsavedChangesAction.discard:
+        _pop();
+      case null:
+        return;
+    }
+  }
+
+  String get _snapshot => jsonEncode({
+    'name': _nameController.text,
+    'description': _descriptionController.text,
+    'servings': _servingsController.text,
+    'rawWeight': _rawWeightController.text,
+    'cookedWeight': _cookedWeightController.text,
+    'preparationMethod': _preparationMethodController.text,
+    'quickName': _quickNameController.text,
+    'quickAmount': _quickAmountController.text,
+    'quickCalories': _quickCaloriesController.text,
+    'foodIds': [for (final food in _componentFoods) food.id],
+    'compositions': [
+      for (final food in _foods)
+        {
+          'id': food.id,
+          'foodId': food.foodId,
+          'amount': food.amount,
+          'unit': food.unit,
+          'sortOrder': food.sortOrder,
+        },
+    ],
+  });
+
+  bool get _hasUnsavedChanges => _snapshot != _initialSnapshot;
 
   Future<void> _saveAsTemplate() async {
     final meal = _buildMeal();
@@ -408,7 +468,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     final servingsCount = (double.tryParse(_servingsController.text) ?? 1)
         .toInt();
 
-    return Scaffold(
+    final scaffold = Scaffold(
       appBar: AppBar(
         title: const Text('Meal Creator'),
         actions: [
@@ -513,6 +573,19 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
           ],
         ),
       ),
+    );
+
+    return PopScope(
+      canPop: _allowPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (_hasUnsavedChanges) {
+          _confirmDiscard();
+        } else {
+          _pop();
+        }
+      },
+      child: scaffold,
     );
   }
 }

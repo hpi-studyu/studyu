@@ -387,6 +387,41 @@ void main() {
     expect(find.textContaining('90 kcal'), findsOneWidget);
   });
 
+  testWidgets('timeline deletion asks for confirmation', (tester) async {
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal(
+            'breakfast',
+            MealType.breakfast,
+            foods: [food('apple', 'Apple', 52)],
+          ),
+        ]),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Delete this meal?'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Apple'), findsNothing);
+  });
+
   testWidgets('deleted editor result removes only the selected meal', (
     tester,
   ) async {

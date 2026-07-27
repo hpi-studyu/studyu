@@ -18,6 +18,7 @@ import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/photo_recall_section.dart';
 import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
+import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 sealed class MealEntryResult {
@@ -33,8 +34,6 @@ final class SavedMealEntryResult extends MealEntryResult {
 final class DeletedMealEntryResult extends MealEntryResult {
   const DeletedMealEntryResult();
 }
-
-enum _UnsavedMealAction { save, discard, continueEditing }
 
 enum _FoodAction { adjustQuantity, edit, saveTemplate, remove }
 
@@ -381,39 +380,21 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   Future<void> _confirmDiscard() async {
     final l10n = AppLocalizations.of(context)!;
-    final action = await showDialog<_UnsavedMealAction>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.discard_meal_changes_title),
-        content: Text(l10n.discard_meal_changes_message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(
-              dialogContext,
-            ).pop(_UnsavedMealAction.continueEditing),
-            child: Text(l10n.continue_editing),
-          ),
-          TextButton(
-            onPressed: () =>
-                Navigator.of(dialogContext).pop(_UnsavedMealAction.discard),
-            child: Text(l10n.discard_changes),
-          ),
-          FilledButton(
-            onPressed: () =>
-                Navigator.of(dialogContext).pop(_UnsavedMealAction.save),
-            child: Text(l10n.save_and_leave),
-          ),
-        ],
-      ),
+    final action = await showUnsavedChangesDialog(
+      context,
+      title: l10n.discard_meal_changes_title,
+      message: l10n.discard_meal_changes_message,
+      saveLabel: l10n.save_and_leave,
+      discardLabel: l10n.discard_changes,
+      continueLabel: l10n.continue_editing,
     );
     if (!mounted) return;
 
     switch (action) {
-      case _UnsavedMealAction.save:
+      case UnsavedChangesAction.save:
         _saveMeal();
-      case _UnsavedMealAction.discard:
+      case UnsavedChangesAction.discard:
         _pop();
-      case _UnsavedMealAction.continueEditing:
       case null:
         return;
     }

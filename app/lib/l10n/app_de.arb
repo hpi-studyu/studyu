@@ -812,6 +812,8 @@
   "nutrition_values_are_for": "Nährwerte gelten für",
   "new_item": "Neu",
   "discard": "Verwerfen",
+  "unsaved_changes_title": "Nicht gespeicherte Änderungen verwerfen?",
+  "unsaved_changes_message": "Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie weiter.",
   "discard_meal_changes_title": "Mahlzeit verlassen?",
   "discard_meal_changes_message": "Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie die Mahlzeit weiter.",
   "save_and_leave": "Speichern und verlassen",

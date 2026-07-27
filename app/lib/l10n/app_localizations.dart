@@ -3047,6 +3047,18 @@ abstract class AppLocalizations {
   /// **'Discard'**
   String get discard;
 
+  /// No description provided for @unsaved_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard unsaved changes?'**
+  String get unsaved_changes_title;
+
+  /// No description provided for @unsaved_changes_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your changes, discard them, or continue editing.'**
+  String get unsaved_changes_message;
+
   /// No description provided for @discard_meal_changes_title.
   ///
   /// In en, this message translates to:

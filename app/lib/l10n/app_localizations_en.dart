@@ -1616,6 +1616,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discard => 'Discard';
 
   @override
+  String get unsaved_changes_title => 'Discard unsaved changes?';
+
+  @override
+  String get unsaved_changes_message =>
+      'Save your changes, discard them, or continue editing.';
+
+  @override
   String get discard_meal_changes_title => 'Leave this meal?';
 
   @override

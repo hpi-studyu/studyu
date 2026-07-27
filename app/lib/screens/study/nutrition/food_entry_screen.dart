@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +7,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class FoodEntryScreen extends StatefulWidget {
@@ -70,6 +73,8 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
   bool _saveToMyItems = true;
+  late final String _initialSnapshot;
+  bool _allowPop = false;
 
   bool get _isNewFoodForMeal =>
       widget.existingFood == null && widget.mealLabel != null;
@@ -155,6 +160,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       _saturatedFatController = TextEditingController();
       _sodiumController = TextEditingController();
     }
+    _initialSnapshot = _snapshot;
   }
 
   @override
@@ -195,7 +201,36 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       }
     }
 
-    if (mounted) Navigator.of(context).pop(food);
+    if (mounted) _pop(food);
+  }
+
+  void _pop([FoodEntry? result]) {
+    setState(() => _allowPop = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Navigator.of(context).pop(result);
+    });
+  }
+
+  Future<void> _confirmDiscard({FoodEntry? replacement}) async {
+    final l10n = AppLocalizations.of(context)!;
+    final action = await showUnsavedChangesDialog(
+      context,
+      title: l10n.unsaved_changes_title,
+      message: l10n.unsaved_changes_message,
+      saveLabel: replacement == null ? l10n.save_and_leave : null,
+      discardLabel: l10n.discard_changes,
+      continueLabel: l10n.continue_editing,
+    );
+    if (!mounted) return;
+
+    switch (action) {
+      case UnsavedChangesAction.save:
+        await _saveFood();
+      case UnsavedChangesAction.discard:
+        _pop(replacement);
+      case null:
+        return;
+    }
   }
 
   FoodEntry? _buildFoodEntry() {
@@ -284,6 +319,31 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     );
   }
 
+  String get _snapshot => jsonEncode({
+    'name': _nameController.text,
+    'brand': _brandController.text,
+    'description': _descriptionController.text,
+    'amount': _amountController.text,
+    'unit': _unitController.text,
+    'servingSize': _servingSizeController.text,
+    'portionReference': _portionReferenceController.text,
+    'yieldFactor': _yieldFactorController.text,
+    'ediblePortion': _ediblePortionController.text,
+    'energy': _energyController.text,
+    'protein': _proteinController.text,
+    'carbs': _carbsController.text,
+    'fat': _fatController.text,
+    'sugars': _sugarsController.text,
+    'fiber': _fiberController.text,
+    'saturatedFat': _saturatedFatController.text,
+    'sodium': _sodiumController.text,
+    'entryType': _entryType.name,
+    'portionMethod': _portionMethod.name,
+    'portionState': _portionState.name,
+  });
+
+  bool get _hasUnsavedChanges => _snapshot != _initialSnapshot;
+
   String? get _productImageUrl {
     final value = widget.existingFood?.originalValues['image_front_small_url'];
     return value is String && value.trim().isNotEmpty ? value : null;
@@ -295,7 +355,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     final l10n = AppLocalizations.of(context)!;
     final isEditing = widget.existingFood != null;
 
-    return Scaffold(
+    final scaffold = Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? l10n.edit_food_title : l10n.add_food_manually),
         actions: [
@@ -306,9 +366,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                   context,
                   FoodSearchScreen.route(),
                 );
-                if (result != null) {
-                  if (!context.mounted) return;
-                  Navigator.of(context).pop(result);
+                if (result == null || !context.mounted) return;
+                if (_hasUnsavedChanges) {
+                  await _confirmDiscard(replacement: result);
+                } else {
+                  _pop(result);
                 }
               },
               icon: const Icon(Icons.search_outlined),
@@ -424,6 +486,19 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           ],
         ),
       ),
+    );
+
+    return PopScope(
+      canPop: _allowPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (_hasUnsavedChanges) {
+          _confirmDiscard();
+        } else {
+          _pop();
+        }
+      },
+      child: scaffold,
     );
   }
 }

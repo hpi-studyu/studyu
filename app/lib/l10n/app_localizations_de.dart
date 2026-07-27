@@ -1631,6 +1631,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get discard => 'Verwerfen';
 
   @override
+  String get unsaved_changes_title =>
+      'Nicht gespeicherte Änderungen verwerfen?';
+
+  @override
+  String get unsaved_changes_message =>
+      'Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie weiter.';
+
+  @override
   String get discard_meal_changes_title => 'Mahlzeit verlassen?';
 
   @override

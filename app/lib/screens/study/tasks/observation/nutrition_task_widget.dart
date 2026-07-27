@@ -351,7 +351,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               categoryLabel: groups[groupIndex].category.label,
               onTap: () => _editMeal(context, model, entry.meal),
               onSaveTemplate: () => _saveMealAsTemplate(context, entry.meal),
-              onDelete: () => model.removeMealById(entry.meal.id),
+              onDelete: () => _confirmDeleteMeal(context, model, entry.meal.id),
             ),
         ],
       ],
@@ -483,6 +483,35 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       case null:
         break;
     }
+  }
+
+  Future<void> _confirmDeleteMeal(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+    String mealId,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.delete_meal_title),
+        content: Text(l10n.delete_meal_message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              l10n.delete,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) model.removeMealById(mealId);
   }
 
   DateTime? _knownTimestamp(MealLog meal) =>
