@@ -965,6 +965,88 @@
   },
   "nutrition_tracking": "Ernährungserfassung",
   "nutrition_statistics": "Statistik",
+  "nutrition_recent_7_days": "Letzte 7 Tage",
+  "nutrition_recent_30_days": "Letzte 30 Tage",
+  "nutrition_days_recorded": "{recorded} von {total} Tagen erfasst",
+  "@nutrition_days_recorded": {
+    "placeholders": {
+      "recorded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "nutrition_daily_average": "Tagesdurchschnitt",
+  "nutrition_energy_by_study_day": "Energie pro Studientag",
+  "nutrition_average_value": "Durchschnitt {value}",
+  "@nutrition_average_value": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "nutrition_tap_bar_hint": "Tippen Sie auf einen Balken, um den Wert anzuzeigen oder den Tag zu öffnen.",
+  "nutrition_nutrient_trend": "Nährstoffverlauf",
+  "nutrition_carbs": "Kohlenhydrate",
+  "nutrition_average_per_recorded_day": "Durchschnitt {value} pro erfasstem Tag",
+  "@nutrition_average_per_recorded_day": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "nutrition_compared_previous_days": "Verglichen mit den vorherigen {count} Tagen",
+  "@nutrition_compared_previous_days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nutrition_record_more_comparisons": "Erfassen Sie mehr Studientage, um Zeiträume zu vergleichen.",
+  "nutrition_energy": "Energie",
+  "nutrition_today_so_far": "Heute bisher",
+  "nutrition_chart_day_value": "{date}, {value}",
+  "@nutrition_chart_day_value": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "nutrition_chart_day_missing": "{date}, nicht erfasst",
+  "@nutrition_chart_day_missing": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nutrition_view_day_hint": "Drücken Sie die Eingabetaste, um diesen Tag zu öffnen.",
+  "nutrition_statistics_help_message": "Durchschnittswerte berücksichtigen nur abgeschlossene Studientage. Der heutige Tag erscheint in Diagrammen als ‚Heute bisher‘ und wird erst nach Abschluss des Tagebuchs in Durchschnittswerte einbezogen. Fehlende Tage bleiben leer.",
+  "nutrition_kcal_per_day": "{value} kcal/Tag",
+  "@nutrition_kcal_per_day": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "nutrition_grams_per_day": "{value} g/Tag",
+  "@nutrition_grams_per_day": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "nutrition_recent_days": "Letzte Tage",
   "nutrition_history": "Verlauf",
   "nutrition_history_empty": "Noch keine vergangenen Ernährungstagebücher.",

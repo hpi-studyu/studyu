@@ -2569,6 +2569,86 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nutrition_statistics => 'Statistik';
 
   @override
+  String get nutrition_recent_7_days => 'Letzte 7 Tage';
+
+  @override
+  String get nutrition_recent_30_days => 'Letzte 30 Tage';
+
+  @override
+  String nutrition_days_recorded(int recorded, int total) {
+    return '$recorded von $total Tagen erfasst';
+  }
+
+  @override
+  String get nutrition_daily_average => 'Tagesdurchschnitt';
+
+  @override
+  String get nutrition_energy_by_study_day => 'Energie pro Studientag';
+
+  @override
+  String nutrition_average_value(String value) {
+    return 'Durchschnitt $value';
+  }
+
+  @override
+  String get nutrition_tap_bar_hint =>
+      'Tippen Sie auf einen Balken, um den Wert anzuzeigen oder den Tag zu öffnen.';
+
+  @override
+  String get nutrition_nutrient_trend => 'Nährstoffverlauf';
+
+  @override
+  String get nutrition_carbs => 'Kohlenhydrate';
+
+  @override
+  String nutrition_average_per_recorded_day(String value) {
+    return 'Durchschnitt $value pro erfasstem Tag';
+  }
+
+  @override
+  String nutrition_compared_previous_days(int count) {
+    return 'Verglichen mit den vorherigen $count Tagen';
+  }
+
+  @override
+  String get nutrition_record_more_comparisons =>
+      'Erfassen Sie mehr Studientage, um Zeiträume zu vergleichen.';
+
+  @override
+  String get nutrition_energy => 'Energie';
+
+  @override
+  String get nutrition_today_so_far => 'Heute bisher';
+
+  @override
+  String nutrition_chart_day_value(String date, String value) {
+    return '$date, $value';
+  }
+
+  @override
+  String nutrition_chart_day_missing(String date) {
+    return '$date, nicht erfasst';
+  }
+
+  @override
+  String get nutrition_view_day_hint =>
+      'Drücken Sie die Eingabetaste, um diesen Tag zu öffnen.';
+
+  @override
+  String get nutrition_statistics_help_message =>
+      'Durchschnittswerte berücksichtigen nur abgeschlossene Studientage. Der heutige Tag erscheint in Diagrammen als ‚Heute bisher‘ und wird erst nach Abschluss des Tagebuchs in Durchschnittswerte einbezogen. Fehlende Tage bleiben leer.';
+
+  @override
+  String nutrition_kcal_per_day(String value) {
+    return '$value kcal/Tag';
+  }
+
+  @override
+  String nutrition_grams_per_day(String value) {
+    return '$value g/Tag';
+  }
+
+  @override
   String get nutrition_recent_days => 'Letzte Tage';
 
   @override
