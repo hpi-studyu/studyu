@@ -57,6 +57,7 @@ class NutritionTaskWidget extends StatefulWidget {
 class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     with WidgetsBindingObserver {
   DailyRecallEntryViewModel? _viewModel;
+  TemplateViewModel? _templateViewModel;
   int _selectedDestination = 0;
 
   @override
@@ -74,6 +75,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _viewModel?.dispose();
+    _templateViewModel?.dispose();
     super.dispose();
   }
 
@@ -90,10 +92,16 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         interventionId: widget.interventionId,
         readOnly: widget.readOnly,
       )..shouldSaveToDb = appState.trackParticipantProgress;
+      _templateViewModel = TemplateViewModel(
+        userId: appState.activeSubject?.id ?? 'anonymous',
+      );
     }
 
-    return ChangeNotifierProvider.value(
-      value: _viewModel!,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: _viewModel!),
+        ChangeNotifierProvider.value(value: _templateViewModel!),
+      ],
       child: Consumer<DailyRecallEntryViewModel>(
         builder: (context, model, child) {
           final l10n = AppLocalizations.of(context)!;
@@ -203,20 +211,12 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     AppLocalizations l10n,
     StudySubject? subject,
   ) => AppBar(
-    title: Text(widget.task?.title ?? l10n.daily_food_diary),
+    title: Text(switch (_selectedDestination) {
+      0 => l10n.nutrition_tracking,
+      1 => l10n.nutrition_statistics,
+      _ => l10n.food_library,
+    }),
     actions: [
-      if (_selectedDestination == 0)
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text(
-              MaterialLocalizations.of(
-                context,
-              ).formatMediumDate(model.recall.date),
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ),
-        ),
       if (widget.readOnly)
         Center(
           child: Padding(
@@ -224,7 +224,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             child: Text(l10n.nutrition_read_only),
           ),
         ),
-      if (widget.task != null)
+      if (_selectedDestination == 0 && widget.task != null)
         IconButton(
           icon: const Icon(Icons.history_outlined),
           tooltip: l10n.nutrition_history,
@@ -232,6 +232,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               ? null
               : () => _openHistory(context, subject, widget.task!),
         ),
+      if (_selectedDestination == 2) FoodLibraryScreen.newItemButton(context),
       if (widget.task != null)
         IconButton(
           icon: const Icon(Icons.help_outline),
@@ -264,6 +265,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               (widget.task?.instructions?.trim().isNotEmpty == true ||
                   widget.task?.minimumMealsRequired != null))
             _buildInstructionsCard(context, theme, l10n),
+          const SizedBox(height: 24),
           _buildMealsSection(context, model, recall, theme, l10n),
           if (widget.task?.footer != null) ...[
             const SizedBox(height: 16),
@@ -392,6 +394,10 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 minimum: widget.task!.minimumMealsRequired!,
                 theme: theme,
               ),
+            Text(
+              MaterialLocalizations.of(context).formatMediumDate(recall.date),
+              style: theme.textTheme.bodyMedium,
+            ),
           ],
         ),
         const SizedBox(height: 12),

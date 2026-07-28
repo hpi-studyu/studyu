@@ -2271,7 +2271,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detailed_nutrients => 'Detailed Nutrients';
 
   @override
-  String get daily_nutrition_total => 'Today\'s nutrition';
+  String get daily_nutrition_total => 'Nutrition summary';
 
   @override
   String get energy_by_macronutrient => 'Energy by macronutrient';
@@ -2534,13 +2534,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leave_anyway => 'Leave anyway';
 
   @override
+  String get nutrition_tracking => 'Nutrition tracking';
+
+  @override
   String get nutrition_statistics => 'Statistics';
+
+  @override
+  String get nutrition_recent_days => 'Recent days';
 
   @override
   String get nutrition_history => 'History';
 
   @override
   String get nutrition_history_empty => 'No past food diaries yet.';
+
+  @override
+  String get nutrition_history_latest_study_day => 'Latest study day';
+
+  @override
+  String get nutrition_history_latest_study_day_description =>
+      'Your latest study day remains editable so you can add or correct entries the following morning.';
+
+  @override
+  String get nutrition_history_previous_study_days => 'Previous study days';
+
+  @override
+  String get nutrition_history_no_foods_logged => 'No foods logged';
 
   @override
   String get nutrition_statistics_empty =>

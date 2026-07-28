@@ -2292,7 +2292,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get detailed_nutrients => 'Detailed Nutrients';
 
   @override
-  String get daily_nutrition_total => 'Heutige Ernährung';
+  String get daily_nutrition_total => 'Ernährungsübersicht';
 
   @override
   String get energy_by_macronutrient => 'Energie nach Makronährstoffen';
@@ -2560,7 +2560,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get leave_anyway => 'Trotzdem verlassen';
 
   @override
+  String get nutrition_tracking => 'Ernährungserfassung';
+
+  @override
   String get nutrition_statistics => 'Statistik';
+
+  @override
+  String get nutrition_recent_days => 'Letzte Tage';
 
   @override
   String get nutrition_history => 'Verlauf';
@@ -2568,6 +2574,19 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get nutrition_history_empty =>
       'Noch keine vergangenen Ernährungstagebücher.';
+
+  @override
+  String get nutrition_history_latest_study_day => 'Letzter Studientag';
+
+  @override
+  String get nutrition_history_latest_study_day_description =>
+      'Ihr letzter Studientag bleibt bearbeitbar, sodass Sie Einträge am folgenden Morgen hinzufügen oder korrigieren können.';
+
+  @override
+  String get nutrition_history_previous_study_days => 'Frühere Studientage';
+
+  @override
+  String get nutrition_history_no_foods_logged => 'Keine Lebensmittel erfasst';
 
   @override
   String get nutrition_statistics_empty =>

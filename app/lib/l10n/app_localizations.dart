@@ -4172,7 +4172,7 @@ abstract class AppLocalizations {
   /// No description provided for @daily_nutrition_total.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s nutrition'**
+  /// **'Nutrition summary'**
   String get daily_nutrition_total;
 
   /// No description provided for @energy_by_macronutrient.
@@ -4625,11 +4625,23 @@ abstract class AppLocalizations {
   /// **'Leave anyway'**
   String get leave_anyway;
 
+  /// No description provided for @nutrition_tracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition tracking'**
+  String get nutrition_tracking;
+
   /// No description provided for @nutrition_statistics.
   ///
   /// In en, this message translates to:
   /// **'Statistics'**
   String get nutrition_statistics;
+
+  /// No description provided for @nutrition_recent_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent days'**
+  String get nutrition_recent_days;
 
   /// No description provided for @nutrition_history.
   ///
@@ -4642,6 +4654,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No past food diaries yet.'**
   String get nutrition_history_empty;
+
+  /// No description provided for @nutrition_history_latest_study_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest study day'**
+  String get nutrition_history_latest_study_day;
+
+  /// No description provided for @nutrition_history_latest_study_day_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your latest study day remains editable so you can add or correct entries the following morning.'**
+  String get nutrition_history_latest_study_day_description;
+
+  /// No description provided for @nutrition_history_previous_study_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous study days'**
+  String get nutrition_history_previous_study_days;
+
+  /// No description provided for @nutrition_history_no_foods_logged.
+  ///
+  /// In en, this message translates to:
+  /// **'No foods logged'**
+  String get nutrition_history_no_foods_logged;
 
   /// No description provided for @nutrition_statistics_empty.
   ///
