@@ -3056,7 +3056,7 @@ abstract class AppLocalizations {
   /// No description provided for @unsaved_changes_message.
   ///
   /// In en, this message translates to:
-  /// **'Save your changes, discard them, or continue editing.'**
+  /// **'Discard your changes or continue editing.'**
   String get unsaved_changes_message;
 
   /// No description provided for @discard_meal_changes_title.
@@ -3068,7 +3068,7 @@ abstract class AppLocalizations {
   /// No description provided for @discard_meal_changes_message.
   ///
   /// In en, this message translates to:
-  /// **'Save your changes, discard them, or continue editing.'**
+  /// **'Discard your changes or continue editing.'**
   String get discard_meal_changes_message;
 
   /// No description provided for @save_and_leave.

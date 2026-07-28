@@ -384,15 +384,12 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       context,
       title: l10n.discard_meal_changes_title,
       message: l10n.discard_meal_changes_message,
-      saveLabel: l10n.save_and_leave,
       discardLabel: l10n.discard_changes,
       continueLabel: l10n.continue_editing,
     );
     if (!mounted) return;
 
     switch (action) {
-      case UnsavedChangesAction.save:
-        _saveMeal();
       case UnsavedChangesAction.discard:
         _pop();
       case null:
@@ -410,14 +407,15 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.cancel),
+            child: Text(l10n.continue_label),
           ),
-          TextButton(
+          FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(
-              l10n.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogContext).colorScheme.error,
+              foregroundColor: Theme.of(dialogContext).colorScheme.onError,
             ),
+            child: Text(l10n.delete),
           ),
         ],
       ),

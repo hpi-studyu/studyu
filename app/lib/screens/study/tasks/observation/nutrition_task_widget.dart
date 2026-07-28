@@ -156,6 +156,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                   _selectedDestination == 0 && !widget.readOnly
                   ? FloatingActionButton.extended(
                       onPressed: () => _addMeal(context, model),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       icon: const Icon(Icons.add),
                       label: Text(l10n.log_meal),
                     )
@@ -577,14 +579,15 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.cancel),
+            child: Text(l10n.continue_label),
           ),
-          TextButton(
+          FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(
-              l10n.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogContext).colorScheme.error,
+              foregroundColor: Theme.of(dialogContext).colorScheme.onError,
             ),
+            child: Text(l10n.delete),
           ),
         ],
       ),

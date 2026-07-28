@@ -1636,14 +1636,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get unsaved_changes_message =>
-      'Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie weiter.';
+      'Verwerfen Sie Ihre Änderungen oder bearbeiten Sie weiter.';
 
   @override
   String get discard_meal_changes_title => 'Mahlzeit verlassen?';
 
   @override
   String get discard_meal_changes_message =>
-      'Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie die Mahlzeit weiter.';
+      'Verwerfen Sie Ihre Änderungen oder bearbeiten Sie weiter.';
 
   @override
   String get save_and_leave => 'Speichern und verlassen';
