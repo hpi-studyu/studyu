@@ -69,12 +69,16 @@ class _NutritionLauncherState extends State<_NutritionLauncher> {
   Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
+const nutritionInstructionsShownKey =
+    'nutrition_instructions_shown_nutrition-task';
+
 NutritionTask nutritionTask({
   String? instructions,
   int? minimumMeals,
   List<String>? customMealTypes,
   bool requireDailyCompletionConfirmation = true,
 }) => NutritionTask.withId()
+  ..id = 'nutrition-task'
   ..title = 'Nutrition'
   ..instructions = instructions
   ..minimumMealsRequired = minimumMeals
@@ -142,7 +146,11 @@ DailyRecall recall(List<MealLog> meals) => DailyRecall(
 );
 
 void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  setUp(
+    () => SharedPreferences.setMockInitialValues({
+      nutritionInstructionsShownKey: true,
+    }),
+  );
 
   testWidgets('never renders manual completion controls', (tester) async {
     await tester.pumpWidget(
@@ -486,29 +494,53 @@ void main() {
     expect(find.text('Yogurt'), findsOneWidget);
   });
 
-  testWidgets('shows nutrition instructions without a collapsed section', (
+  testWidgets('shows instructions on first open and keeps them in help', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      nutritionTaskApp(nutritionTask(instructions: 'Record every meal.')),
-    );
-    await tester.pump();
+    SharedPreferences.setMockInitialValues({});
+    final task = nutritionTask(instructions: 'Record every meal.');
+
+    await tester.pumpWidget(nutritionTaskApp(task));
+    await tester.pumpAndSettle();
 
     expect(find.text('Instructions'), findsOneWidget);
     expect(find.text('Record every meal.'), findsOneWidget);
-    expect(find.byType(ExpansionTile), findsNothing);
+    expect(find.text('Close'), findsOneWidget);
+
+    await tester.tap(find.text('Close'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Help'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Instructions'), findsOneWidget);
+    expect(find.text('Record every meal.'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await tester.pumpWidget(nutritionTaskApp(task));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Close'), findsNothing);
   });
 
-  testWidgets(
-    'shows the minimum meal requirement without custom instructions',
-    (tester) async {
-      await tester.pumpWidget(nutritionTaskApp(nutritionTask(minimumMeals: 2)));
-      await tester.pump();
+  testWidgets('uses the default instructions and minimum meal requirement', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
 
-      expect(find.text('Instructions'), findsOneWidget);
-      expect(find.text('Please record at least 2 meal(s)'), findsOneWidget);
-    },
-  );
+    await tester.pumpWidget(nutritionTaskApp(nutritionTask(minimumMeals: 2)));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(
+        'Please record all the foods and beverages you consumed today. '
+        'For each meal or snack, provide as much detail as possible including '
+        'portion sizes and preparation methods.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Please record at least 2 meal(s)'), findsOneWidget);
+  });
 
   testWidgets('groups unknown-time entries at the end', (tester) async {
     await tester.pumpWidget(

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
@@ -66,6 +69,48 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_showInstructionsIfNeeded());
+    });
+  }
+
+  Future<void> _showInstructionsIfNeeded() async {
+    final task = widget.task;
+    if (task == null || widget.readOnly) return;
+
+    final preferences = await SharedPreferences.getInstance();
+    final key = 'nutrition_instructions_shown_${task.id}';
+    if (!mounted || preferences.getBool(key) == true) return;
+
+    await preferences.setBool(key, true);
+    if (!mounted) return;
+
+    final l10n = AppLocalizations.of(context)!;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.instructions),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(nutritionInstructionsText(context, task)),
+              if (task.minimumMealsRequired case final minimumMeals?) ...[
+                const SizedBox(height: 8),
+                Text(l10n.min_meals_required(minimumMeals)),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.close),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -287,10 +332,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             HtmlText(widget.task!.header, centered: true),
             const SizedBox(height: 16),
           ],
-          if (model.isInTaskMode &&
-              (widget.task?.instructions?.trim().isNotEmpty == true ||
-                  widget.task?.minimumMealsRequired != null))
-            _buildInstructionsCard(context, theme, l10n),
           const SizedBox(height: 24),
           _buildMealsSection(context, model, recall, theme, l10n),
           const SizedBox(height: 24),
@@ -362,46 +403,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       if (period.id == id) return period;
     }
     return null;
-  }
-
-  Widget _buildInstructionsCard(
-    BuildContext context,
-    ThemeData theme,
-    AppLocalizations l10n,
-  ) {
-    final instructions = widget.task?.instructions?.trim();
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.info_outline, color: theme.colorScheme.primary),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.instructions, style: theme.textTheme.titleMedium),
-                  if (instructions?.isNotEmpty == true) ...[
-                    const SizedBox(height: 8),
-                    Text(instructions!),
-                  ],
-                  if (widget.task?.minimumMealsRequired != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.min_meals_required(
-                        widget.task!.minimumMealsRequired!,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildMealsSection(

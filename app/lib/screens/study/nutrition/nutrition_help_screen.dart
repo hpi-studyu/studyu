@@ -4,6 +4,13 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
+String nutritionInstructionsText(BuildContext context, NutritionTask task) {
+  final instructions = task.instructions?.trim();
+  return instructions?.isNotEmpty == true
+      ? instructions!
+      : AppLocalizations.of(context)!.nutrition_instructions_default;
+}
+
 class NutritionHelpScreen extends StatelessWidget {
   final NutritionTask task;
 
@@ -15,21 +22,22 @@ class NutritionHelpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final instructions = task.instructions?.trim();
     return Scaffold(
       appBar: AppBar(title: Text(l10n.help)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          if (instructions?.isNotEmpty == true) ...[
-            Text(
-              l10n.instructions,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+          Text(
+            l10n.instructions,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(nutritionInstructionsText(context, task)),
+          if (task.minimumMealsRequired case final minimumMeals?) ...[
             const SizedBox(height: 8),
-            Text(instructions!),
-            const SizedBox(height: 24),
+            Text(l10n.min_meals_required(minimumMeals)),
           ],
+          const SizedBox(height: 24),
           Text(
             l10n.daily_food_diary,
             style: Theme.of(context).textTheme.titleMedium,
