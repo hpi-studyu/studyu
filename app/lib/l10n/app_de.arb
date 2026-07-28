@@ -961,5 +961,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "nutrition_statistics": "Statistik",
+  "nutrition_history": "Verlauf",
+  "nutrition_history_empty": "Noch keine vergangenen Ernährungstagebücher.",
+  "nutrition_statistics_empty": "Noch keine Ernährungsdaten verfügbar.",
+  "nutrition_editable": "Bearbeitbar",
+  "nutrition_read_only": "Nur lesen",
+  "nutrition_logging_guidance": "Erfassen Sie jede Mahlzeit und jedes Getränk so genau wie möglich. Geben Sie Portionen und Zubereitungsdetails an, wenn Sie sie kennen.",
+  "open_faq": "FAQ öffnen",
+  "nutrition_calories": "Kalorien"
 }

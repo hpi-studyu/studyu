@@ -2558,4 +2558,34 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get leave_anyway => 'Trotzdem verlassen';
+
+  @override
+  String get nutrition_statistics => 'Statistik';
+
+  @override
+  String get nutrition_history => 'Verlauf';
+
+  @override
+  String get nutrition_history_empty =>
+      'Noch keine vergangenen Ernährungstagebücher.';
+
+  @override
+  String get nutrition_statistics_empty =>
+      'Noch keine Ernährungsdaten verfügbar.';
+
+  @override
+  String get nutrition_editable => 'Bearbeitbar';
+
+  @override
+  String get nutrition_read_only => 'Nur lesen';
+
+  @override
+  String get nutrition_logging_guidance =>
+      'Erfassen Sie jede Mahlzeit und jedes Getränk so genau wie möglich. Geben Sie Portionen und Zubereitungsdetails an, wenn Sie sie kennen.';
+
+  @override
+  String get open_faq => 'FAQ öffnen';
+
+  @override
+  String get nutrition_calories => 'Kalorien';
 }

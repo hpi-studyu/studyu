@@ -4624,6 +4624,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leave anyway'**
   String get leave_anyway;
+
+  /// No description provided for @nutrition_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get nutrition_statistics;
+
+  /// No description provided for @nutrition_history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get nutrition_history;
+
+  /// No description provided for @nutrition_history_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No past food diaries yet.'**
+  String get nutrition_history_empty;
+
+  /// No description provided for @nutrition_statistics_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No nutrition data is available yet.'**
+  String get nutrition_statistics_empty;
+
+  /// No description provided for @nutrition_editable.
+  ///
+  /// In en, this message translates to:
+  /// **'Editable'**
+  String get nutrition_editable;
+
+  /// No description provided for @nutrition_read_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only'**
+  String get nutrition_read_only;
+
+  /// No description provided for @nutrition_logging_guidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Log each meal and drink as accurately as you can. Include portions and preparation details when you know them.'**
+  String get nutrition_logging_guidance;
+
+  /// No description provided for @open_faq.
+  ///
+  /// In en, this message translates to:
+  /// **'Open FAQ'**
+  String get open_faq;
+
+  /// No description provided for @nutrition_calories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get nutrition_calories;
 }
 
 class _AppLocalizationsDelegate

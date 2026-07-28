@@ -64,8 +64,14 @@ class NutritionRecallAutoSaveManager {
     required String interventionId,
     required String periodId,
     required int studyDaySnapshot,
+    DateTime? progressCompletedAt,
   }) {
-    final storageKey = _buildStorageKey(subjectId, taskId, studyDaySnapshot);
+    final storageKey = _buildStorageKey(
+      subjectId,
+      taskId,
+      periodId,
+      studyDaySnapshot,
+    );
     final now = DateTime.now().toIso8601String();
     final dataJson = jsonEncode({
       'recall': recall.toJson(),
@@ -75,6 +81,7 @@ class NutritionRecallAutoSaveManager {
         'interventionId': interventionId,
         'periodId': periodId,
         'studyDaySnapshot': studyDaySnapshot,
+        'progressCompletedAt': progressCompletedAt?.toIso8601String(),
         'createdAt': now,
         'lastModifiedAt': now,
       },
@@ -83,11 +90,18 @@ class NutritionRecallAutoSaveManager {
     return _mutateForSubject(subjectId, () async {
       final prefs = await _getPrefs();
       await _writeString(prefs, storageKey, dataJson);
-      await _updateIndex(prefs, subjectId, taskId, studyDaySnapshot);
+      await _updateIndex(prefs, subjectId, taskId, periodId, studyDaySnapshot);
+      await _removeMatchingLegacyCache(
+        prefs,
+        subjectId,
+        taskId,
+        periodId,
+        studyDaySnapshot,
+      );
 
       StudyULogger.debug(
-        '[AutoSave] Saved recall | subject=$subjectId task=$taskId studyDay=$studyDaySnapshot '
-        'meals=${recall.meals.length} recallMode=${recall.recallMode} lastSaved=${recall.lastAutoSavedAt}',
+        '[AutoSave] Saved recall | subject=$subjectId task=$taskId '
+        'period=$periodId studyDay=$studyDaySnapshot meals=${recall.meals.length}',
       );
     });
   }
@@ -128,119 +142,163 @@ class NutritionRecallAutoSaveManager {
     }
   }
 
+  /// Reads a recall for an exact period. Without [periodId], it returns the
+  /// only matching task/day cache for backward-compatible standalone callers.
   Future<DailyRecall?> loadRecall({
     required String subjectId,
     required String taskId,
     required int studyDay,
+    String? periodId,
+  }) async {
+    if (periodId != null) {
+      final pending = await loadPendingRecall(
+        subjectId: subjectId,
+        taskId: taskId,
+        periodId: periodId,
+        studyDay: studyDay,
+      );
+      return pending?.recall;
+    }
+    final matches = (await scanPendingRecalls(subjectId))
+        .where(
+          (pending) =>
+              pending.taskId == taskId && pending.studyDaySnapshot == studyDay,
+        )
+        .toList();
+    return matches.length == 1 ? matches.single.recall : null;
+  }
+
+  Future<PendingRecall?> loadPendingRecall({
+    required String subjectId,
+    required String taskId,
+    required String periodId,
+    required int studyDay,
   }) async {
     final prefs = await _getPrefs();
-    final storageKey = _buildStorageKey(subjectId, taskId, studyDay);
+    final storageKey = _buildStorageKey(subjectId, taskId, periodId, studyDay);
+    final stored = prefs.getString(storageKey);
+    final current = stored == null
+        ? null
+        : _pendingFromJson(stored, storageKey: storageKey);
+    if (current != null) return current;
 
-    final dataJson = prefs.getString(storageKey);
-    if (dataJson == null) return null;
-
-    try {
-      final data = jsonDecode(dataJson) as Map<String, dynamic>;
-      return DailyRecall.fromJson(data['recall'] as Map<String, dynamic>);
-    } catch (e) {
-      StudyULogger.error('Failed to load auto-saved recall: $e');
-      return null;
-    }
+    final legacyKey = _buildLegacyStorageKey(subjectId, taskId, studyDay);
+    final legacy = prefs.getString(legacyKey);
+    final legacyPending = legacy == null
+        ? null
+        : _pendingFromJson(legacy, storageKey: legacyKey);
+    return legacyPending?.periodId == periodId ? legacyPending : null;
   }
 
   Future<List<PendingRecall>> scanPendingRecalls(String subjectId) async {
     final prefs = await _getPrefs();
-    final indexKey = '${_keyPrefix}_index_$subjectId';
-    final indexJson = prefs.getString(indexKey);
-
-    if (indexJson == null) return [];
-
-    final index = List<String>.from(jsonDecode(indexJson) as List);
-    final pending = <PendingRecall>[];
+    final index = await _readIndex(prefs, subjectId);
+    final pendingByIdentity = <String, PendingRecall>{};
 
     for (final entry in index) {
-      final parts = entry.split('_');
-      if (parts.length != 2) continue;
-
-      final taskId = parts[0];
-      final studyDay = int.tryParse(parts[1]);
-      if (studyDay == null) continue;
-
-      final storageKey = _buildStorageKey(subjectId, taskId, studyDay);
-      final dataJson = prefs.getString(storageKey);
-
-      if (dataJson != null) {
-        try {
-          final data = jsonDecode(dataJson) as Map<String, dynamic>;
-          final metadata = data['metadata'] as Map<String, dynamic>;
-
-          pending.add(
-            PendingRecall(
-              recall: DailyRecall.fromJson(
-                data['recall'] as Map<String, dynamic>,
-              ),
-              subjectId: metadata['subjectId'] as String,
-              taskId: metadata['taskId'] as String,
-              interventionId: metadata['interventionId'] as String,
-              periodId: metadata['periodId'] as String,
-              studyDaySnapshot: metadata['studyDaySnapshot'] as int,
-              lastModifiedAt: metadata['lastModifiedAt'] as String,
-            ),
-          );
-        } catch (e) {
-          StudyULogger.error('Failed to parse pending recall: $e');
-        }
+      final location = _indexLocation(subjectId, entry);
+      if (location == null) continue;
+      final dataJson = prefs.getString(location.storageKey);
+      if (dataJson == null) continue;
+      final pending = _pendingFromJson(
+        dataJson,
+        storageKey: location.storageKey,
+      );
+      if (pending == null) continue;
+      final identity = _identity(
+        pending.taskId,
+        pending.periodId,
+        pending.studyDaySnapshot,
+      );
+      final existing = pendingByIdentity[identity];
+      if (existing == null ||
+          pending.lastModifiedAtDate.isAfter(existing.lastModifiedAtDate)) {
+        pendingByIdentity[identity] = pending;
       }
     }
 
     StudyULogger.debug(
-      '[AutoSave] scanPendingRecalls | subject=$subjectId found=${pending.length}',
+      '[AutoSave] scanPendingRecalls | subject=$subjectId '
+      'found=${pendingByIdentity.length}',
     );
+    return pendingByIdentity.values.toList();
+  }
 
-    return pending;
+  PendingRecall? _pendingFromJson(
+    String dataJson, {
+    required String storageKey,
+  }) {
+    try {
+      final data = Map<String, dynamic>.from(
+        jsonDecode(dataJson) as Map<String, dynamic>,
+      );
+      final metadata = Map<String, dynamic>.from(
+        data['metadata'] as Map<String, dynamic>,
+      );
+      final progressCompletedAt = metadata['progressCompletedAt'] as String?;
+      return PendingRecall(
+        recall: DailyRecall.fromJson(
+          Map<String, dynamic>.from(data['recall'] as Map<String, dynamic>),
+        ),
+        subjectId: metadata['subjectId'] as String,
+        taskId: metadata['taskId'] as String,
+        interventionId: metadata['interventionId'] as String,
+        periodId: metadata['periodId'] as String? ?? defaultPeriodId,
+        studyDaySnapshot: (metadata['studyDaySnapshot'] as num).toInt(),
+        lastModifiedAt: metadata['lastModifiedAt'] as String,
+        progressCompletedAt: progressCompletedAt == null
+            ? null
+            : DateTime.tryParse(progressCompletedAt),
+        storageKey: storageKey,
+      );
+    } catch (error) {
+      StudyULogger.error('Failed to parse pending recall: $error');
+      return null;
+    }
   }
 
   Future<void> deleteRecall({
     required String subjectId,
     required String taskId,
     required int studyDay,
+    String? periodId,
   }) => _mutateForSubject(subjectId, () async {
     final prefs = await _getPrefs();
-    final storageKey = _buildStorageKey(subjectId, taskId, studyDay);
-
-    await _removeKey(prefs, storageKey);
-    await _removeFromIndex(prefs, subjectId, taskId, studyDay);
-
-    StudyULogger.info(
-      'Deleted auto-save for task $taskId, study day $studyDay',
-    );
+    final pending = await scanPendingRecalls(subjectId);
+    final matches = pending.where((entry) {
+      return entry.taskId == taskId &&
+          entry.studyDaySnapshot == studyDay &&
+          (periodId == null || entry.periodId == periodId);
+    });
+    for (final entry in matches) {
+      await _removeKey(prefs, entry.storageKey);
+      await _removeFromIndex(
+        prefs,
+        subjectId,
+        entry.taskId,
+        entry.periodId,
+        entry.studyDaySnapshot,
+      );
+    }
   });
 
   Future<void> _deleteRecallIfUnchanged(PendingRecall pending) {
     return _mutateForSubject(pending.subjectId, () async {
       final prefs = await _getPrefs();
-      final storageKey = _buildStorageKey(
-        pending.subjectId,
-        pending.taskId,
-        pending.studyDaySnapshot,
-      );
-      final dataJson = prefs.getString(storageKey);
+      final dataJson = prefs.getString(pending.storageKey);
       if (dataJson == null) return;
+      final current = _pendingFromJson(
+        dataJson,
+        storageKey: pending.storageKey,
+      );
+      if (current?.lastModifiedAt != pending.lastModifiedAt) return;
 
-      try {
-        final data = jsonDecode(dataJson) as Map<String, dynamic>;
-        final metadata = data['metadata'] as Map<String, dynamic>;
-        if (metadata['lastModifiedAt'] != pending.lastModifiedAt) return;
-      } catch (error) {
-        StudyULogger.error('Failed to compare pending recall revision: $error');
-        return;
-      }
-
-      await _removeKey(prefs, storageKey);
+      await _removeKey(prefs, pending.storageKey);
       await _removeFromIndex(
         prefs,
         pending.subjectId,
         pending.taskId,
+        pending.periodId,
         pending.studyDaySnapshot,
       );
     });
@@ -255,31 +313,17 @@ class NutritionRecallAutoSaveManager {
 
     try {
       final todayStudyDay = subject.getDayOfStudyFor(DateTime.now());
-      StudyULogger.debug(
-        '[AutoSave] submitPendingRecalls start | subject=${subject.id} todayStudyDay=$todayStudyDay trackProgress=$trackProgress',
-      );
-
       final pendingRecalls = await scanPendingRecalls(subject.id);
-
       for (final pending in pendingRecalls) {
-        if (pending.studyDaySnapshot > todayStudyDay) {
-          StudyULogger.debug(
-            '[AutoSave] skip pending submit (future day) | studyDay=${pending.studyDaySnapshot} today=$todayStudyDay',
-          );
-          continue;
-        }
-        if (pending.studyDaySnapshot < 0) {
-          StudyULogger.warning(
-            '[AutoSave] skip pending submit (invalid negative day) | studyDay=${pending.studyDaySnapshot}',
-          );
+        if (pending.studyDaySnapshot > todayStudyDay ||
+            pending.studyDaySnapshot < 0) {
           continue;
         }
 
         final isPreviousDay = pending.studyDaySnapshot < todayStudyDay;
-        final recall = isPreviousDay
+        final recall = isPreviousDay && pending.progressCompletedAt == null
             ? _finalizeRecall(pending.recall, pending.studyDaySnapshot)
             : pending.recall;
-
         try {
           if (_submitter != null) {
             await _submitter(pending, recall);
@@ -291,25 +335,34 @@ class NutritionRecallAutoSaveManager {
               completionDateOverride: isPreviousDay
                   ? recall.entryCompletedAt
                   : null,
+              interventionIdOverride:
+                  pending.interventionId == unknownInterventionId
+                  ? null
+                  : pending.interventionId,
+              persistenceTarget: pending.progressCompletedAt == null
+                  ? null
+                  : NutritionRecallPersistenceTarget(
+                      taskId: pending.taskId,
+                      periodId: pending.periodId,
+                      interventionId: pending.interventionId,
+                      completedAt: pending.progressCompletedAt!,
+                      studyDaySnapshot: pending.studyDaySnapshot,
+                    ),
             );
           }
-
-          if (isPreviousDay) {
-            await _deleteRecallIfUnchanged(pending);
-          }
-        } on SocketException catch (_) {
+          if (isPreviousDay) await _deleteRecallIfUnchanged(pending);
+        } on SocketException {
           StudyULogger.warning(
-            'Network error while submitting pending recall for study day '
+            'Network error while submitting nutrition recall for study day '
             '${pending.studyDaySnapshot}. Will retry later.',
           );
-        } catch (e) {
+        } catch (error) {
           StudyULogger.error(
-            'Failed to submit pending recall for study day '
-            '${pending.studyDaySnapshot}: $e',
+            'Failed to submit nutrition recall for study day '
+            '${pending.studyDaySnapshot}: $error',
           );
         }
       }
-
       await updateLastKnownStudyDay(subject.id, todayStudyDay);
     } finally {
       _isSubmitting = false;
@@ -338,7 +391,6 @@ class NutritionRecallAutoSaveManager {
         : completionCandidate.isAfter(dayEnd)
         ? dayEnd
         : completionCandidate;
-
     return DailyRecall(
       id: recall.id,
       date: recall.date,
@@ -355,63 +407,160 @@ class NutritionRecallAutoSaveManager {
 
   Future<int?> getLastKnownStudyDay(String subjectId) async {
     final prefs = await _getPrefs();
-    final key = '${_keyPrefix}_last_study_day_$subjectId';
-    final value = prefs.getString(key);
-    return value != null ? int.tryParse(value) : null;
+    final value = prefs.getString('${_keyPrefix}_last_study_day_$subjectId');
+    return value == null ? null : int.tryParse(value);
   }
 
   Future<void> updateLastKnownStudyDay(String subjectId, int studyDay) async {
     final prefs = await _getPrefs();
-    final key = '${_keyPrefix}_last_study_day_$subjectId';
-    await _writeString(prefs, key, studyDay.toString());
+    await _writeString(
+      prefs,
+      '${_keyPrefix}_last_study_day_$subjectId',
+      studyDay.toString(),
+    );
   }
 
-  String _buildStorageKey(String subjectId, String taskId, int studyDay) {
-    return '${_keyPrefix}_${subjectId}_${taskId}_$studyDay';
+  String _buildStorageKey(
+    String subjectId,
+    String taskId,
+    String periodId,
+    int studyDay,
+  ) => '${_keyPrefix}_${subjectId}_${taskId}_${periodId}_$studyDay';
+
+  String _buildLegacyStorageKey(
+    String subjectId,
+    String taskId,
+    int studyDay,
+  ) => '${_keyPrefix}_${subjectId}_${taskId}_$studyDay';
+
+  String _identity(String taskId, String periodId, int studyDay) =>
+      '$taskId\u0000$periodId\u0000$studyDay';
+
+  Future<List<dynamic>> _readIndex(
+    SharedPreferences prefs,
+    String subjectId,
+  ) async {
+    final indexJson = prefs.getString('${_keyPrefix}_index_$subjectId');
+    if (indexJson == null) return [];
+    try {
+      return List<dynamic>.from(jsonDecode(indexJson) as List);
+    } catch (error) {
+      StudyULogger.error('Failed to parse nutrition recall index: $error');
+      return [];
+    }
+  }
+
+  _IndexLocation? _indexLocation(String subjectId, dynamic entry) {
+    if (entry is Map) {
+      final data = Map<String, dynamic>.from(entry);
+      final taskId = data['taskId'] as String?;
+      final periodId = data['periodId'] as String?;
+      final studyDay = data['studyDaySnapshot'];
+      if (taskId == null || periodId == null || studyDay is! num) return null;
+      return _IndexLocation(
+        _buildStorageKey(subjectId, taskId, periodId, studyDay.toInt()),
+      );
+    }
+    if (entry is! String) return null;
+    final separator = entry.lastIndexOf('_');
+    if (separator <= 0) return null;
+    final taskId = entry.substring(0, separator);
+    final studyDay = int.tryParse(entry.substring(separator + 1));
+    if (studyDay == null) return null;
+    return _IndexLocation(_buildLegacyStorageKey(subjectId, taskId, studyDay));
   }
 
   Future<void> _updateIndex(
     SharedPreferences prefs,
     String subjectId,
     String taskId,
+    String periodId,
     int studyDay,
   ) async {
-    final indexKey = '${_keyPrefix}_index_$subjectId';
-    final indexJson = prefs.getString(indexKey);
-
-    final index = indexJson != null
-        ? List<String>.from(jsonDecode(indexJson) as List)
-        : <String>[];
-
-    final entry = '${taskId}_$studyDay';
-    if (!index.contains(entry)) {
-      index.add(entry);
-      await _writeString(prefs, indexKey, jsonEncode(index));
+    final index = await _readIndex(prefs, subjectId);
+    final contains = index.any((entry) {
+      if (entry is! Map) return false;
+      return entry['taskId'] == taskId &&
+          entry['periodId'] == periodId &&
+          entry['studyDaySnapshot'] == studyDay;
+    });
+    if (!contains) {
+      index.add({
+        'taskId': taskId,
+        'periodId': periodId,
+        'studyDaySnapshot': studyDay,
+      });
+      await _writeString(
+        prefs,
+        '${_keyPrefix}_index_$subjectId',
+        jsonEncode(index),
+      );
     }
+  }
+
+  Future<void> _removeMatchingLegacyCache(
+    SharedPreferences prefs,
+    String subjectId,
+    String taskId,
+    String periodId,
+    int studyDay,
+  ) async {
+    final legacyKey = _buildLegacyStorageKey(subjectId, taskId, studyDay);
+    final dataJson = prefs.getString(legacyKey);
+    final legacy = dataJson == null
+        ? null
+        : _pendingFromJson(dataJson, storageKey: legacyKey);
+    if (legacy?.periodId != periodId) return;
+    await _removeKey(prefs, legacyKey);
+    final index = await _readIndex(prefs, subjectId);
+    final retained = index
+        .where((entry) => entry is! String || entry != '${taskId}_$studyDay')
+        .toList();
+    final indexKey = '${_keyPrefix}_index_$subjectId';
+    if (retained.length == index.length) return;
+    await _writeString(prefs, indexKey, jsonEncode(retained));
   }
 
   Future<void> _removeFromIndex(
     SharedPreferences prefs,
     String subjectId,
     String taskId,
+    String periodId,
     int studyDay,
   ) async {
-    final indexKey = '${_keyPrefix}_index_$subjectId';
-    final indexJson = prefs.getString(indexKey);
-
-    if (indexJson == null) return;
-
-    final index = List<String>.from(jsonDecode(indexJson) as List);
-    final entry = '${taskId}_$studyDay';
-
-    if (index.remove(entry)) {
-      if (index.isEmpty) {
-        await _removeKey(prefs, indexKey);
-      } else {
-        await _writeString(prefs, indexKey, jsonEncode(index));
+    final index = await _readIndex(prefs, subjectId);
+    final legacyKey = _buildLegacyStorageKey(subjectId, taskId, studyDay);
+    final legacyJson = prefs.getString(legacyKey);
+    final legacy = legacyJson == null
+        ? null
+        : _pendingFromJson(legacyJson, storageKey: legacyKey);
+    final retained = index.where((entry) {
+      if (entry is Map) {
+        return !(entry['taskId'] == taskId &&
+            entry['periodId'] == periodId &&
+            entry['studyDaySnapshot'] == studyDay);
       }
+      if (entry is! String) return true;
+      final separator = entry.lastIndexOf('_');
+      return !(separator > 0 &&
+          entry.substring(0, separator) == taskId &&
+          int.tryParse(entry.substring(separator + 1)) == studyDay &&
+          legacy?.periodId == periodId);
+    }).toList();
+    final indexKey = '${_keyPrefix}_index_$subjectId';
+    if (retained.length == index.length) return;
+    if (retained.isEmpty) {
+      await _removeKey(prefs, indexKey);
+    } else {
+      await _writeString(prefs, indexKey, jsonEncode(retained));
     }
   }
+}
+
+class _IndexLocation {
+  final String storageKey;
+
+  const _IndexLocation(this.storageKey);
 }
 
 class PendingRecall {
@@ -422,6 +571,8 @@ class PendingRecall {
   final String periodId;
   final int studyDaySnapshot;
   final String lastModifiedAt;
+  final DateTime? progressCompletedAt;
+  final String storageKey;
 
   PendingRecall({
     required this.recall,
@@ -431,5 +582,11 @@ class PendingRecall {
     required this.periodId,
     required this.studyDaySnapshot,
     required this.lastModifiedAt,
+    this.progressCompletedAt,
+    required this.storageKey,
   });
+
+  DateTime get lastModifiedAtDate =>
+      DateTime.tryParse(lastModifiedAt) ??
+      DateTime.fromMillisecondsSinceEpoch(0);
 }
