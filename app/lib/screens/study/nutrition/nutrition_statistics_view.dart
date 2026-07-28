@@ -261,7 +261,12 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
                   drawVerticalLine: false,
                   horizontalInterval: maxY / 4,
                 ),
-                titlesData: _titlesData(context, current),
+                titlesData: _titlesData(
+                  context,
+                  current,
+                  maxY: maxY,
+                  unit: 'kcal',
+                ),
                 extraLinesData: ExtraLinesData(
                   horizontalLines: average == null
                       ? []
@@ -494,7 +499,7 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
               drawVerticalLine: false,
               horizontalInterval: maxY / 4,
             ),
-            titlesData: _titlesData(context, current),
+            titlesData: _titlesData(context, current, maxY: maxY, unit: 'g'),
             lineBarsData: _lineSegments(
               current,
               _selectedNutrient,
@@ -604,18 +609,38 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
 
   FlTitlesData _titlesData(
     BuildContext context,
-    NutritionStatisticsPeriod period,
-  ) => FlTitlesData(
+    NutritionStatisticsPeriod period, {
+    required double maxY,
+    required String unit,
+  }) => FlTitlesData(
     topTitles: const AxisTitles(),
     rightTitles: const AxisTitles(),
-    leftTitles: const AxisTitles(),
+    leftTitles: AxisTitles(
+      axisNameWidget: Text(unit, style: Theme.of(context).textTheme.bodySmall),
+      axisNameSize: 20,
+      sideTitles: SideTitles(
+        showTitles: true,
+        reservedSize: 44,
+        interval: maxY / 4,
+        getTitlesWidget: (value, meta) => SideTitleWidget(
+          meta: meta,
+          child: Text(
+            _axisLabel(context, value, interval: maxY / 4),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+      ),
+    ),
     bottomTitles: AxisTitles(
       sideTitles: SideTitles(
         showTitles: true,
-        reservedSize: 28,
+        reservedSize: 32,
+        interval: 1,
         getTitlesWidget: (value, meta) {
           final index = value.round();
-          if (index < 0 || index >= period.days.length) {
+          if ((value - index).abs() > 0.001 ||
+              index < 0 ||
+              index >= period.days.length) {
             return const SizedBox.shrink();
           }
           if (period.days.length > 7 &&
@@ -628,8 +653,8 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
           final label = day.isToday
               ? AppLocalizations.of(context)!.today
               : (period.days.length == 7
-                    ? DateFormat.E(locale).format(day.date).substring(0, 1)
-                    : DateFormat.d(locale).format(day.date));
+                    ? DateFormat.E(locale).format(day.date)
+                    : DateFormat('d MMM', locale).format(day.date));
           return SideTitleWidget(
             meta: meta,
             child: Text(
@@ -758,12 +783,49 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
       NumberFormat.decimalPattern(Localizations.localeOf(context).toString())
         ..maximumFractionDigits = maximumFractionDigits;
 
+  String _axisLabel(
+    BuildContext context,
+    double value, {
+    required double interval,
+  }) {
+    final locale = Localizations.localeOf(context).toString();
+    if (value.abs() >= 1000) {
+      return NumberFormat.compact(locale: locale).format(value);
+    }
+    var scaledInterval = interval.abs();
+    var fractionDigits = 0;
+    while (fractionDigits < 4 &&
+        (scaledInterval - scaledInterval.round()).abs() > 0.000001) {
+      scaledInterval *= 10;
+      fractionDigits++;
+    }
+    return _numberFormat(
+      context,
+      maximumFractionDigits: fractionDigits,
+    ).format(value);
+  }
+
   double _chartMax(Iterable<double> values) {
     var maximum = 0.0;
     for (final value in values) {
       maximum = math.max(maximum, value);
     }
-    return math.max(1, maximum * 1.15);
+    if (maximum <= 0) return 4;
+
+    final rawStep = maximum / 4;
+    final magnitude = math
+        .pow(10, (math.log(rawStep) / math.ln10).floor())
+        .toDouble();
+    final normalized = rawStep / magnitude;
+    final niceStep = switch (normalized) {
+      <= 1 => 1,
+      <= 2 => 2,
+      <= 2.5 => 2.5,
+      <= 5 => 5,
+      <= 7.5 => 7.5,
+      _ => 10,
+    };
+    return niceStep * magnitude * 4;
   }
 }
 

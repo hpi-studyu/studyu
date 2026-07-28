@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
@@ -12,6 +13,10 @@ void main() {
   testWidgets('shows localized averages for completed study days', (
     tester,
   ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 1600);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
     final semantics = tester.ensureSemantics();
     final today = DateUtils.dateOnly(DateTime.now());
     final subject = StudySubject('subject', 'study', 'user', [])
@@ -37,16 +42,75 @@ void main() {
     expect(find.text('Tagesdurchschnitt'), findsOneWidget);
     expect(find.text('1.234 kcal'), findsWidgets);
     expect(find.text('1,5 g'), findsOneWidget);
+    final energyCard = find.ancestor(
+      of: find.text('Energie pro Studientag'),
+      matching: find.byType(Card),
+    );
+    expect(
+      find.descendant(of: energyCard, matching: find.text('kcal')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: energyCard, matching: find.text('Heute')),
+      findsOneWidget,
+    );
     expect(
       find.bySemanticsLabel(RegExp('Heute bisher, 1\\.234 kcal')),
       findsOneWidget,
     );
+
+    final nutrientTitle = find.text('Nährstoffverlauf').first;
+    final nutrientCard = find
+        .ancestor(of: nutrientTitle, matching: find.byType(Card))
+        .first;
+    expect(
+      find.descendant(of: nutrientCard, matching: find.text('g')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: nutrientCard, matching: find.text('Heute')),
+      findsOneWidget,
+    );
+    for (final label in ['0', '0,05', '0,1', '0,15', '0,2']) {
+      expect(
+        find.descendant(of: nutrientCard, matching: find.text(label)),
+        findsOneWidget,
+      );
+    }
+    for (var offset = 6; offset > 0; offset--) {
+      final label = DateFormat.E('de').format(addCalendarDays(today, -offset));
+      expect(
+        find.descendant(of: nutrientCard, matching: find.text(label)),
+        findsOneWidget,
+      );
+    }
     semantics.dispose();
 
+    await tester.ensureVisible(find.text('Letzte 30 Tage'));
     await tester.tap(find.text('Letzte 30 Tage'));
     await tester.pumpAndSettle();
 
     expect(find.textContaining('1 von 30 Tagen erfasst'), findsOneWidget);
+    final thirtyDayEnergyCard = find
+        .ancestor(
+          of: find.text('Energie pro Studientag'),
+          matching: find.byType(Card),
+        )
+        .first;
+    for (final index in [0, 5, 10, 15, 20, 25]) {
+      final label = DateFormat(
+        'd MMM',
+        'de',
+      ).format(addCalendarDays(today, index - 29));
+      expect(
+        find.descendant(of: thirtyDayEnergyCard, matching: find.text(label)),
+        findsOneWidget,
+      );
+    }
+    expect(
+      find.descendant(of: thirtyDayEnergyCard, matching: find.text('Heute')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -204,7 +268,7 @@ FoodEntry _food({required double energyKcal}) => FoodEntry(
   nutrition: NutritionProfile(
     energyKcal: energyKcal,
     protein: 1.5,
-    carbs: 2.5,
+    carbs: 0.2,
     fat: 3.5,
     sugars: 0,
     fiber: 4.5,

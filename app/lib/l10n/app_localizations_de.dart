@@ -2180,7 +2180,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get new_name => 'Neuer Name';
 
   @override
-  String get today => 'Today';
+  String get today => 'Heute';
 
   @override
   String get meals => 'Mahlzeiten';
