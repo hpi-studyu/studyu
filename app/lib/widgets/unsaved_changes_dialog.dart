@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum UnsavedChangesAction { save, discard }
+enum UnsavedChangesAction { discard }
 
 Future<UnsavedChangesAction?> showUnsavedChangesDialog(
   BuildContext context, {
@@ -8,7 +8,6 @@ Future<UnsavedChangesAction?> showUnsavedChangesDialog(
   required String message,
   required String discardLabel,
   required String continueLabel,
-  String? saveLabel,
 }) => showDialog<UnsavedChangesAction>(
   context: context,
   builder: (dialogContext) => AlertDialog(
@@ -19,20 +18,15 @@ Future<UnsavedChangesAction?> showUnsavedChangesDialog(
         onPressed: () => Navigator.pop(dialogContext),
         child: Text(continueLabel),
       ),
-      TextButton(
+      FilledButton(
         onPressed: () =>
             Navigator.pop(dialogContext, UnsavedChangesAction.discard),
-        child: Text(
-          discardLabel,
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: FilledButton.styleFrom(
+          backgroundColor: Theme.of(dialogContext).colorScheme.error,
+          foregroundColor: Theme.of(dialogContext).colorScheme.onError,
         ),
+        child: Text(discardLabel),
       ),
-      if (saveLabel != null)
-        FilledButton(
-          onPressed: () =>
-              Navigator.pop(dialogContext, UnsavedChangesAction.save),
-          child: Text(saveLabel),
-        ),
     ],
   ),
 );

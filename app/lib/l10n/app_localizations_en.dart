@@ -1620,14 +1620,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unsaved_changes_message =>
-      'Save your changes, discard them, or continue editing.';
+      'Discard your changes or continue editing.';
 
   @override
   String get discard_meal_changes_title => 'Leave this meal?';
 
   @override
   String get discard_meal_changes_message =>
-      'Save your changes, discard them, or continue editing.';
+      'Discard your changes or continue editing.';
 
   @override
   String get save_and_leave => 'Save and leave';
@@ -2532,4 +2532,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leave_anyway => 'Leave anyway';
+
+  @override
+  String get nutrition_statistics => 'Statistics';
+
+  @override
+  String get nutrition_history => 'History';
+
+  @override
+  String get nutrition_history_empty => 'No past food diaries yet.';
+
+  @override
+  String get nutrition_statistics_empty =>
+      'No nutrition data is available yet.';
+
+  @override
+  String get nutrition_editable => 'Editable';
+
+  @override
+  String get nutrition_read_only => 'Read-only';
+
+  @override
+  String get nutrition_logging_guidance =>
+      'Log each meal and drink as accurately as you can. Include portions and preparation details when you know them.';
+
+  @override
+  String get open_faq => 'Open FAQ';
+
+  @override
+  String get nutrition_calories => 'Calories';
 }

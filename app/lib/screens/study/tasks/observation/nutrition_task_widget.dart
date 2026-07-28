@@ -5,9 +5,12 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_help_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_history_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_statistics_view.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/html_text.dart';
-import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
@@ -15,11 +18,17 @@ class NutritionTaskWidget extends StatefulWidget {
   final DailyRecall? existingRecall;
   final NutritionTask? task;
   final CompletionPeriod? completionPeriod;
+  final NutritionRecallPersistenceTarget? persistenceTarget;
+  final String? interventionId;
+  final bool readOnly;
 
   const NutritionTaskWidget({
     this.existingRecall,
     this.task,
     this.completionPeriod,
+    this.persistenceTarget,
+    this.interventionId,
+    this.readOnly = false,
     super.key,
   });
 
@@ -27,11 +36,17 @@ class NutritionTaskWidget extends StatefulWidget {
     DailyRecall? existingRecall,
     NutritionTask? task,
     CompletionPeriod? completionPeriod,
+    NutritionRecallPersistenceTarget? persistenceTarget,
+    String? interventionId,
+    bool readOnly = false,
   }) => MaterialPageRoute(
     builder: (_) => NutritionTaskWidget(
       existingRecall: existingRecall,
       task: task,
       completionPeriod: completionPeriod,
+      persistenceTarget: persistenceTarget,
+      interventionId: interventionId,
+      readOnly: readOnly,
     ),
   );
 
@@ -42,16 +57,12 @@ class NutritionTaskWidget extends StatefulWidget {
 class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     with WidgetsBindingObserver {
   DailyRecallEntryViewModel? _viewModel;
-  late TextEditingController _specialOccasionController;
-  VoidCallback? _viewModelListener;
+  int _selectedDestination = 0;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _specialOccasionController = TextEditingController(
-      text: widget.existingRecall?.specialOccasion ?? '',
-    );
   }
 
   @override
@@ -60,17 +71,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _specialOccasionController.dispose();
-    if (_viewModelListener != null && _viewModel != null) {
-      _viewModel!.removeListener(_viewModelListener!);
-    }
     _viewModel?.dispose();
     super.dispose();
   }
@@ -84,35 +86,22 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         task: widget.task,
         completionPeriod: widget.completionPeriod,
         existingRecall: widget.existingRecall,
-      );
-      _viewModel!.shouldSaveToDb = appState.trackParticipantProgress;
-
-      _viewModelListener = () {
-        if (_viewModel!.recall.specialOccasion != null &&
-            _specialOccasionController.text !=
-                _viewModel!.recall.specialOccasion) {
-          if (_specialOccasionController.text.isEmpty &&
-              _viewModel!.recall.specialOccasion!.isNotEmpty) {
-            _specialOccasionController.text =
-                _viewModel!.recall.specialOccasion!;
-          }
-        }
-      };
-      _viewModel!.addListener(_viewModelListener!);
+        persistenceTarget: widget.persistenceTarget,
+        interventionId: widget.interventionId,
+        readOnly: widget.readOnly,
+      )..shouldSaveToDb = appState.trackParticipantProgress;
     }
 
     return ChangeNotifierProvider.value(
       value: _viewModel!,
       child: Consumer<DailyRecallEntryViewModel>(
         builder: (context, model, child) {
-          final theme = Theme.of(context);
           final l10n = AppLocalizations.of(context)!;
-          final recall = model.recall;
-
+          final appState = context.read<AppState>();
           return PopScope(
-            canPop: !model.isInTaskMode,
-            onPopInvokedWithResult: (bool didPop, _) async {
-              if (didPop) return;
+            canPop: widget.readOnly || !model.isInTaskMode,
+            onPopInvokedWithResult: (didPop, _) async {
+              if (didPop || widget.readOnly) return;
               if (!model.meetsMinimumMeals) {
                 final shouldLeave = await showDialog<bool>(
                   context: context,
@@ -141,70 +130,65 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 await model.flushPendingAutoSave(persistToDatabase: true);
                 if (context.mounted) Navigator.of(context).pop();
               } catch (error) {
-                if (context.mounted) {
-                  StudyULogger.error(
-                    'Failed to save nutrition results: $error',
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.could_not_save_results)),
-                  );
-                }
+                if (!context.mounted) return;
+                StudyULogger.error('Failed to save nutrition results: $error');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(l10n.could_not_save_results)),
+                );
               }
             },
             child: Scaffold(
-              appBar: _buildAppBar(context, model, l10n),
-              floatingActionButton: FloatingActionButton.extended(
-                onPressed: () => _addMeal(context, model),
-                icon: const Icon(Icons.add),
-                label: Text(l10n.log_meal),
+              appBar: _buildAppBar(
+                context,
+                model,
+                l10n,
+                appState.activeSubject,
               ),
-              body: Column(
+              floatingActionButton:
+                  _selectedDestination == 0 && !widget.readOnly
+                  ? FloatingActionButton.extended(
+                      onPressed: () => _addMeal(context, model),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      icon: const Icon(Icons.add),
+                      label: Text(l10n.log_meal),
+                    )
+                  : null,
+              body: IndexedStack(
+                index: _selectedDestination,
                 children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 16),
-                          if (widget.task?.header != null) ...[
-                            HtmlText(widget.task!.header, centered: true),
-                            const SizedBox(height: 16),
-                          ],
-                          if (model.isInTaskMode &&
-                              (widget.task?.instructions?.trim().isNotEmpty ==
-                                      true ||
-                                  widget.task?.minimumMealsRequired != null))
-                            _buildInstructionsCard(context, theme, l10n),
-                          _buildMealsSection(
-                            context,
-                            model,
-                            recall,
-                            theme,
-                            l10n,
-                          ),
-                          if (recall.meals.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            DailyNutritionSummaryCard(dailyRecall: recall),
-                          ],
-                          if (widget.task?.footer != null) ...[
-                            const SizedBox(height: 16),
-                            HtmlText(widget.task!.footer, centered: true),
-                          ],
-                          const SizedBox(height: 24),
-                        ],
-                      ),
-                    ),
+                  _buildToday(context, model, l10n),
+                  NutritionStatisticsView(
+                    subject: appState.activeSubject,
+                    taskId: widget.task?.id,
+                    activeRecall: model.recall,
+                    activeStudyDay: model.studyDaySnapshot,
+                    activePeriodId:
+                        model.persistenceTarget?.periodId ??
+                        widget.completionPeriod?.id,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.push(context, FoodLibraryScreen.route());
-                      },
-                      icon: const Icon(Icons.bookmark_outline),
-                      label: Text(l10n.my_saved_items),
-                    ),
+                  const FoodLibraryScreen(embedded: true),
+                ],
+              ),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: _selectedDestination,
+                onDestinationSelected: (index) =>
+                    setState(() => _selectedDestination = index),
+                destinations: [
+                  NavigationDestination(
+                    icon: const Icon(Icons.today_outlined),
+                    selectedIcon: const Icon(Icons.today),
+                    label: l10n.today,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.bar_chart_outlined),
+                    selectedIcon: const Icon(Icons.bar_chart),
+                    label: l10n.nutrition_statistics,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.bookmark_outline),
+                    selectedIcon: const Icon(Icons.bookmark),
+                    label: l10n.food_library,
                   ),
                 ],
               ),
@@ -219,22 +203,112 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     BuildContext context,
     DailyRecallEntryViewModel model,
     AppLocalizations l10n,
+    StudySubject? subject,
   ) => AppBar(
     title: Text(widget.task?.title ?? l10n.daily_food_diary),
     actions: [
-      Center(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 16),
-          child: Text(
-            MaterialLocalizations.of(
-              context,
-            ).formatMediumDate(model.recall.date),
-            style: Theme.of(context).textTheme.titleSmall,
+      if (_selectedDestination == 0)
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              MaterialLocalizations.of(
+                context,
+              ).formatMediumDate(model.recall.date),
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
           ),
         ),
-      ),
+      if (widget.readOnly)
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(l10n.nutrition_read_only),
+          ),
+        ),
+      if (widget.task != null)
+        IconButton(
+          icon: const Icon(Icons.history_outlined),
+          tooltip: l10n.nutrition_history,
+          onPressed: subject == null
+              ? null
+              : () => _openHistory(context, subject, widget.task!),
+        ),
+      if (widget.task != null)
+        IconButton(
+          icon: const Icon(Icons.help_outline),
+          tooltip: l10n.help,
+          onPressed: () => Navigator.of(
+            context,
+          ).push(NutritionHelpScreen.route(task: widget.task!)),
+        ),
     ],
   );
+
+  Widget _buildToday(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+    AppLocalizations l10n,
+  ) {
+    final theme = Theme.of(context);
+    final recall = model.recall;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          if (widget.task?.header != null) ...[
+            HtmlText(widget.task!.header, centered: true),
+            const SizedBox(height: 16),
+          ],
+          if (model.isInTaskMode &&
+              (widget.task?.instructions?.trim().isNotEmpty == true ||
+                  widget.task?.minimumMealsRequired != null))
+            _buildInstructionsCard(context, theme, l10n),
+          _buildMealsSection(context, model, recall, theme, l10n),
+          if (widget.task?.footer != null) ...[
+            const SizedBox(height: 16),
+            HtmlText(widget.task!.footer, centered: true),
+          ],
+          const SizedBox(height: 96),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _openHistory(
+    BuildContext context,
+    StudySubject subject,
+    NutritionTask task,
+  ) => Navigator.of(context).push(
+    NutritionHistoryScreen.route(
+      subject: subject,
+      task: task,
+      onOpenRecall: (record, editable) {
+        final period = _completionPeriodFor(task, record.periodId);
+        if (editable && period == null) return;
+        Navigator.of(context).push(
+          NutritionTaskWidget.route(
+            existingRecall: record.recall,
+            task: task,
+            completionPeriod: period,
+            persistenceTarget: record.persistenceTarget,
+            interventionId: record.interventionId,
+            readOnly: !editable,
+          ),
+        );
+      },
+    ),
+  );
+
+  CompletionPeriod? _completionPeriodFor(NutritionTask task, String? id) {
+    if (id == null) return null;
+    for (final period in task.schedule.completionPeriods) {
+      if (period.id == id) return period;
+    }
+    return null;
+  }
 
   Widget _buildInstructionsCard(
     BuildContext context,
@@ -242,7 +316,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     AppLocalizations l10n,
   ) {
     final instructions = widget.task?.instructions?.trim();
-
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -301,9 +374,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               ? left.index.compareTo(right.index)
               : comparison;
         });
-
     final groups = _buildTimelineGroups(context, entries);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -319,7 +390,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             ),
             if (widget.task?.minimumMealsRequired != null)
               _MinMealsProgressChip(
-                current: recall.meals.where((m) => !m.isSkipped).length,
+                current: recall.meals.where((meal) => !meal.isSkipped).length,
                 minimum: widget.task!.minimumMealsRequired!,
                 theme: theme,
               ),
@@ -349,9 +420,15 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               key: ValueKey('meal-${entry.meal.id}'),
               meal: entry.meal,
               categoryLabel: groups[groupIndex].category.label,
-              onTap: () => _editMeal(context, model, entry.meal),
-              onSaveTemplate: () => _saveMealAsTemplate(context, entry.meal),
-              onDelete: () => _confirmDeleteMeal(context, model, entry.meal.id),
+              onTap: widget.readOnly
+                  ? null
+                  : () => _editMeal(context, model, entry.meal),
+              onSaveTemplate: widget.readOnly
+                  ? null
+                  : () => _saveMealAsTemplate(context, entry.meal),
+              onDelete: widget.readOnly
+                  ? null
+                  : () => _confirmDeleteMeal(context, model, entry.meal.id),
             ),
         ],
       ],
@@ -395,7 +472,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         label: customLabel!,
       );
     }
-
     switch (meal.mealType) {
       case MealType.breakfast:
         return _MealTimelineCategory(
@@ -458,9 +534,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         occurrenceDate: model.recall.date,
       ),
     );
-    if (result case SavedMealEntryResult(:final meal)) {
-      model.addMeal(meal);
-    }
+    if (result case SavedMealEntryResult(:final meal)) model.addMeal(meal);
   }
 
   Future<void> _editMeal(
@@ -499,14 +573,15 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.cancel),
+            child: Text(l10n.continue_label),
           ),
-          TextButton(
+          FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(
-              l10n.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogContext).colorScheme.error,
+              foregroundColor: Theme.of(dialogContext).colorScheme.onError,
             ),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -521,29 +596,20 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
 
   String _getMealTypeLabel(BuildContext context, MealType type) {
     final l10n = AppLocalizations.of(context)!;
-    switch (type) {
-      case MealType.breakfast:
-        return l10n.meal_type_breakfast;
-      case MealType.brunch:
-        return l10n.meal_type_brunch;
-      case MealType.lunch:
-        return l10n.meal_type_lunch;
-      case MealType.dinner:
-        return l10n.meal_type_dinner;
-      case MealType.snack:
-        return l10n.meal_type_snack;
-      case MealType.other:
-        return l10n.meal_type_other;
-    }
+    return switch (type) {
+      MealType.breakfast => l10n.meal_type_breakfast,
+      MealType.brunch => l10n.meal_type_brunch,
+      MealType.lunch => l10n.meal_type_lunch,
+      MealType.dinner => l10n.meal_type_dinner,
+      MealType.snack => l10n.meal_type_snack,
+      MealType.other => l10n.meal_type_other,
+    };
   }
 
   Future<void> _saveMealAsTemplate(BuildContext context, MealLog meal) async {
     if (meal.isSkipped) return;
-
     final l10n = AppLocalizations.of(context)!;
     final appState = Provider.of<AppState>(context, listen: false);
-    final userId = appState.activeSubject?.id ?? 'anonymous';
-
     final result = await SaveTemplateDialog.show(
       context,
       initialName:
@@ -553,20 +619,14 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               : _getMealTypeLabel(context, meal.mealType)),
       templateType: TemplateType.meal,
     );
-
-    if (result != null && context.mounted) {
-      final viewModel = TemplateViewModel(userId: userId);
-      await viewModel.saveMealAsTemplate(
-        name: result.name,
-        meal: meal,
-        tags: result.tags,
-      );
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
-      }
+    if (result == null || !context.mounted) return;
+    await TemplateViewModel(
+      userId: appState.activeSubject?.id ?? 'anonymous',
+    ).saveMealAsTemplate(name: result.name, meal: meal, tags: result.tags);
+    if (context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
     }
   }
 }
@@ -607,12 +667,12 @@ class _MealTimelineGroupHeader extends StatelessWidget {
     return Semantics(
       container: true,
       label: category.label,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 4),
-        child: Row(
-          children: [
-            ExcludeSemantics(
-              child: Container(
+      child: ExcludeSemantics(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 4),
+          child: Row(
+            children: [
+              Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
@@ -621,15 +681,15 @@ class _MealTimelineGroupHeader extends StatelessWidget {
                 ),
                 child: Icon(category.icon, size: 22, color: category.color),
               ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              category.label,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Text(
+                category.label,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -639,17 +699,17 @@ class _MealTimelineGroupHeader extends StatelessWidget {
 class _MealTimelineCard extends StatelessWidget {
   final MealLog meal;
   final String categoryLabel;
-  final VoidCallback onTap;
-  final VoidCallback onSaveTemplate;
-  final VoidCallback onDelete;
+  final VoidCallback? onTap;
+  final VoidCallback? onSaveTemplate;
+  final VoidCallback? onDelete;
 
   const _MealTimelineCard({
     super.key,
     required this.meal,
     required this.categoryLabel,
-    required this.onTap,
-    required this.onSaveTemplate,
-    required this.onDelete,
+    this.onTap,
+    this.onSaveTemplate,
+    this.onDelete,
   });
 
   @override
@@ -700,69 +760,70 @@ class _MealTimelineCard extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        meal.isSkipped
-                            ? l10n.skipped_this_meal
-                            : foodNames.isEmpty
-                            ? l10n.no_foods_added
-                            : foodNames,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w500,
+                  child: ExcludeSemantics(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          meal.isSkipped
+                              ? l10n.skipped_this_meal
+                              : foodNames.isEmpty
+                              ? l10n.no_foods_added
+                              : foodNames,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          [
+                            time,
+                            if (meal.isSkipped &&
+                                meal.skipReason?.trim().isNotEmpty == true)
+                              meal.skipReason!.trim(),
+                            if (!meal.isSkipped)
+                              l10n.kcal_value(totalEnergy.toStringAsFixed(0)),
+                          ].join(' • '),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (onTap != null)
+                  PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert, size: 20),
+                    tooltip: l10n.more_options,
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'edit':
+                          onTap!();
+                        case 'delete':
+                          onDelete?.call();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: _PopupMenuItem(
+                          icon: Icons.edit_outlined,
+                          label: l10n.edit,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        [
-                          time,
-                          if (meal.isSkipped &&
-                              meal.skipReason?.trim().isNotEmpty == true)
-                            meal.skipReason!.trim(),
-                          if (!meal.isSkipped)
-                            l10n.kcal_value(totalEnergy.toStringAsFixed(0)),
-                        ].join(' • '),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: _PopupMenuItem(
+                          icon: Icons.delete_outline,
+                          label: l10n.delete,
+                          isDestructive: true,
                         ),
                       ),
                     ],
                   ),
-                ),
-                PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert, size: 20),
-                  tooltip: l10n.more_options,
-                  onSelected: (value) {
-                    switch (value) {
-                      case 'edit':
-                        onTap();
-                      case 'save_template':
-                        onSaveTemplate();
-                      case 'delete':
-                        onDelete();
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: _PopupMenuItem(
-                        icon: Icons.edit_outlined,
-                        label: l10n.edit,
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: _PopupMenuItem(
-                        icon: Icons.delete_outline,
-                        label: l10n.delete,
-                        isDestructive: true,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

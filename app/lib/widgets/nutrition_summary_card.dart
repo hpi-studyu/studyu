@@ -327,7 +327,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => NutritionSummaryCard(
-    nutrition: _sumFoods([
+    nutrition: sumNutritionFoods([
       for (final meal in dailyRecall.meals)
         if (!meal.isSkipped) ...meal.foods,
     ]),
@@ -342,13 +342,13 @@ class MealNutritionSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => NutritionSummaryCard(
-    nutrition: _sumFoods(meal.foods),
+    nutrition: sumNutritionFoods(meal.foods),
     title: AppLocalizations.of(context)!.meal_nutrition,
     inCard: true,
   );
 }
 
-NutritionProfile _sumFoods(List<FoodEntry> foods) {
+NutritionProfile sumNutritionFoods(List<FoodEntry> foods) {
   double energy = 0;
   double protein = 0;
   double carbs = 0;

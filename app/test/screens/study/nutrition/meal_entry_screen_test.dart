@@ -747,7 +747,7 @@ void main() {
     expect((result! as SavedMealEntryResult).meal.mealType, MealType.dinner);
   });
 
-  testWidgets('back offers save discard and continue actions', (tester) async {
+  testWidgets('back offers discard and continue actions', (tester) async {
     await openMealEntry(tester, skippedMeal());
     await tester.enterText(find.byType(TextField), 'Not hungry');
     await tester.pump();
@@ -757,12 +757,15 @@ void main() {
 
     expect(find.text('Leave this meal?'), findsOneWidget);
     expect(
-      find.text('Save your changes, discard them, or continue editing.'),
+      find.text('Discard your changes or continue editing.'),
       findsOneWidget,
     );
-    expect(find.text('Save and leave'), findsOneWidget);
-    expect(find.text('Discard changes'), findsOneWidget);
-    expect(find.text('Continue editing'), findsOneWidget);
+    expect(find.text('Save and leave'), findsNothing);
+    expect(
+      find.widgetWithText(FilledButton, 'Discard changes'),
+      findsOneWidget,
+    );
+    expect(find.widgetWithText(TextButton, 'Continue editing'), findsOneWidget);
 
     await tester.tap(find.text('Continue editing'));
     await tester.pumpAndSettle();
@@ -776,42 +779,6 @@ void main() {
 
     expect(find.byType(MealEntryScreen), findsNothing);
     expect(find.text('Open meal'), findsOneWidget);
-  });
-
-  testWidgets('save and leave returns the validated meal', (tester) async {
-    MealLog? result;
-    await openMealEntry(
-      tester,
-      skippedMeal(),
-      onResult: (value) => result = value,
-    );
-    await tester.enterText(find.byType(TextField), 'Not hungry');
-    await tester.pump();
-
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Save and leave'));
-    await tester.pumpAndSettle();
-
-    expect(result, isNotNull);
-    expect(result!.skipReason, 'Not hungry');
-    expect(find.byType(MealEntryScreen), findsNothing);
-  });
-
-  testWidgets('save and leave keeps an invalid meal open', (tester) async {
-    await openMealEntry(tester, emptyMeal());
-    await selectMealType(tester, 'Dinner');
-
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Save and leave'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(MealEntryScreen), findsOneWidget);
-    expect(
-      find.text('Add at least one food item before saving.'),
-      findsOneWidget,
-    );
   });
 
   testWidgets('existing meal can return a typed deleted result', (

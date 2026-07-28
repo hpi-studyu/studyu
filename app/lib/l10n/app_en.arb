@@ -643,9 +643,9 @@
   "new_item": "New",
   "discard": "Discard",
   "unsaved_changes_title": "Discard unsaved changes?",
-  "unsaved_changes_message": "Save your changes, discard them, or continue editing.",
+  "unsaved_changes_message": "Discard your changes or continue editing.",
   "discard_meal_changes_title": "Leave this meal?",
-  "discard_meal_changes_message": "Save your changes, discard them, or continue editing.",
+  "discard_meal_changes_message": "Discard your changes or continue editing.",
   "save_and_leave": "Save and leave",
   "discard_changes": "Discard changes",
   "continue_editing": "Continue editing",
@@ -1133,5 +1133,14 @@
       }
     }
   },
-  "leave_anyway": "Leave anyway"
+  "leave_anyway": "Leave anyway",
+  "nutrition_statistics": "Statistics",
+  "nutrition_history": "History",
+  "nutrition_history_empty": "No past food diaries yet.",
+  "nutrition_statistics_empty": "No nutrition data is available yet.",
+  "nutrition_editable": "Editable",
+  "nutrition_read_only": "Read-only",
+  "nutrition_logging_guidance": "Log each meal and drink as accurately as you can. Include portions and preparation details when you know them.",
+  "open_faq": "Open FAQ",
+  "nutrition_calories": "Calories"
 }

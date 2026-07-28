@@ -675,18 +675,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       context,
       title: l10n.unsaved_changes_title,
       message: l10n.unsaved_changes_message,
-      saveLabel: l10n.food_selection_confirm(
-        store.itemCount,
-        widget.mealLabel!,
-      ),
       discardLabel: l10n.discard_changes,
       continueLabel: l10n.continue_editing,
     );
     if (!mounted) return;
 
     switch (action) {
-      case UnsavedChangesAction.save:
-        _confirmSelection(store);
       case UnsavedChangesAction.discard:
         _pop();
       case null:

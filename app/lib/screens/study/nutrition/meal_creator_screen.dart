@@ -378,15 +378,12 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       context,
       title: l10n.unsaved_changes_title,
       message: l10n.unsaved_changes_message,
-      saveLabel: l10n.save_and_leave,
       discardLabel: l10n.discard_changes,
       continueLabel: l10n.continue_editing,
     );
     if (!mounted) return;
 
     switch (action) {
-      case UnsavedChangesAction.save:
-        _saveMeal();
       case UnsavedChangesAction.discard:
         _pop();
       case null:

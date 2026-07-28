@@ -217,15 +217,12 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       context,
       title: l10n.unsaved_changes_title,
       message: l10n.unsaved_changes_message,
-      saveLabel: replacement == null ? l10n.save_and_leave : null,
       discardLabel: l10n.discard_changes,
       continueLabel: l10n.continue_editing,
     );
     if (!mounted) return;
 
     switch (action) {
-      case UnsavedChangesAction.save:
-        await _saveFood();
       case UnsavedChangesAction.discard:
         _pop(replacement);
       case null:

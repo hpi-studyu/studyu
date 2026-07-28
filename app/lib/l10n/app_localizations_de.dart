@@ -1636,14 +1636,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get unsaved_changes_message =>
-      'Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie weiter.';
+      'Verwerfen Sie Ihre Änderungen oder bearbeiten Sie weiter.';
 
   @override
   String get discard_meal_changes_title => 'Mahlzeit verlassen?';
 
   @override
   String get discard_meal_changes_message =>
-      'Speichern Sie Ihre Änderungen, verwerfen Sie sie oder bearbeiten Sie die Mahlzeit weiter.';
+      'Verwerfen Sie Ihre Änderungen oder bearbeiten Sie die Mahlzeit weiter.';
 
   @override
   String get save_and_leave => 'Speichern und verlassen';
@@ -2558,4 +2558,34 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get leave_anyway => 'Trotzdem verlassen';
+
+  @override
+  String get nutrition_statistics => 'Statistik';
+
+  @override
+  String get nutrition_history => 'Verlauf';
+
+  @override
+  String get nutrition_history_empty =>
+      'Noch keine vergangenen Ernährungstagebücher.';
+
+  @override
+  String get nutrition_statistics_empty =>
+      'Noch keine Ernährungsdaten verfügbar.';
+
+  @override
+  String get nutrition_editable => 'Bearbeitbar';
+
+  @override
+  String get nutrition_read_only => 'Nur lesen';
+
+  @override
+  String get nutrition_logging_guidance =>
+      'Erfassen Sie jede Mahlzeit und jedes Getränk so genau wie möglich. Geben Sie Portionen und Zubereitungsdetails an, wenn Sie sie kennen.';
+
+  @override
+  String get open_faq => 'FAQ öffnen';
+
+  @override
+  String get nutrition_calories => 'Kalorien';
 }
