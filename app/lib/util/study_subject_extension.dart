@@ -23,6 +23,24 @@ class NutritionRecallPersistenceTarget {
     required this.completedAt,
     required this.studyDaySnapshot,
   });
+
+  Map<String, dynamic> toJson() => {
+    'taskId': taskId,
+    'periodId': periodId,
+    'interventionId': interventionId,
+    'completedAt': completedAt.toUtc().toIso8601String(),
+    'studyDaySnapshot': studyDaySnapshot,
+  };
+}
+
+class HistoricalNutritionEditingContext {
+  final NutritionRecallPersistenceTarget target;
+  final DateTime recallDate;
+
+  const HistoricalNutritionEditingContext({
+    required this.target,
+    required this.recallDate,
+  });
 }
 
 extension StudySubjectExtension on StudySubject {

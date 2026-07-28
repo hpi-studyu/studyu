@@ -5,12 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
 Widget nutritionTaskApp(
   NutritionTask task, {
   DailyRecall? existingRecall,
   Locale locale = const Locale('en'),
+  HistoricalNutritionEditingContext? historicalContext,
 }) => ChangeNotifierProvider(
   create: (_) => AppState(),
   child: MaterialApp(
@@ -20,6 +22,8 @@ Widget nutritionTaskApp(
     home: NutritionTaskWidget(
       existingRecall: existingRecall,
       task: task,
+      persistenceTarget: historicalContext?.target,
+      historicalContext: historicalContext,
       completionPeriod: CompletionPeriod(
         id: 'period',
         unlockTime: StudyUTimeOfDay(),
@@ -98,6 +102,8 @@ NutritionProfile nutrition(double energyKcal) => NutritionProfile(
 
 FoodEntry food(String id, String name, double energyKcal) => FoodEntry(
   id: id,
+  foodId: '$id-definition',
+  foodVersionId: '$id-version',
   entryType: FoodEntryType.singleIngredient,
   name: name,
   amount: 1,
@@ -143,6 +149,48 @@ DailyRecall recall(List<MealLog> meals) => DailyRecall(
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  testWidgets('historical mode shows context and hides workspace navigation', (
+    tester,
+  ) async {
+    final date = DateTime(2026, 7, 15);
+    final target = NutritionRecallPersistenceTarget(
+      taskId: 'task',
+      periodId: 'period',
+      interventionId: 'intervention',
+      completedAt: DateTime.utc(2026, 7, 15, 12),
+      studyDaySnapshot: 1,
+    );
+
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        nutritionTask(),
+        existingRecall: recall([
+          meal('meal', MealType.breakfast, foods: [food('food', 'Apple', 100)]),
+        ]),
+        historicalContext: HistoricalNutritionEditingContext(
+          target: target,
+          recallDate: date,
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('Editing'), findsNWidgets(2));
+    expect(
+      find.text('Entry changes apply only to this study day'),
+      findsOneWidget,
+    );
+    expect(find.text('Statistics'), findsNothing);
+    expect(find.text('My items'), findsNothing);
+    expect(find.byIcon(Icons.history_outlined), findsNothing);
+    expect(find.byIcon(Icons.help_outline), findsNothing);
+
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.bookmark_add_outlined), findsNothing);
+    expect(find.text('My items'), findsNothing);
+  });
 
   testWidgets('never renders manual completion controls', (tester) async {
     await tester.pumpWidget(

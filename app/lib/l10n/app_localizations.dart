@@ -4805,6 +4805,24 @@ abstract class AppLocalizations {
   /// **'No foods logged'**
   String get nutrition_history_no_foods_logged;
 
+  /// No description provided for @historical_editing_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing {date}'**
+  String historical_editing_date(String date);
+
+  /// No description provided for @historical_edit_scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry changes apply only to this study day'**
+  String get historical_edit_scope;
+
+  /// No description provided for @historical_edit_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'This study day is no longer editable.'**
+  String get historical_edit_expired;
+
   /// No description provided for @nutrition_statistics_empty.
   ///
   /// In en, this message translates to:

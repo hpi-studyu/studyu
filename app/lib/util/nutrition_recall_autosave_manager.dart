@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
+import 'package:studyu_app/util/nutrition_food_snapshots.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
@@ -257,6 +259,41 @@ class NutritionRecallAutoSaveManager {
     }
   }
 
+  /// Rewrites current-day drafts after the server commits a definition edit.
+  /// Subject serialization ensures older queued writes finish before this one.
+  Future<void> rewriteFoodDefinition({
+    required String subjectId,
+    required int studyDaySnapshot,
+    required FoodEntry definition,
+  }) => _mutateForSubject(subjectId, () async {
+    final prefs = await _getPrefs();
+    final pending = await scanPendingRecalls(subjectId);
+    for (final entry in pending.where(
+      (pending) => pending.studyDaySnapshot == studyDaySnapshot,
+    )) {
+      final updatedRecall = replaceNutritionFoodSnapshots(
+        entry.recall,
+        definition,
+      );
+      if (jsonEncode(updatedRecall.toJson()) ==
+          jsonEncode(entry.recall.toJson())) {
+        continue;
+      }
+      final stored = prefs.getString(entry.storageKey);
+      if (stored == null) continue;
+      final data = Map<String, dynamic>.from(
+        jsonDecode(stored) as Map<String, dynamic>,
+      );
+      final metadata = Map<String, dynamic>.from(
+        data['metadata'] as Map<String, dynamic>,
+      )..['lastModifiedAt'] = DateTime.now().toIso8601String();
+      data
+        ..['recall'] = updatedRecall.toJson()
+        ..['metadata'] = metadata;
+      await _writeString(prefs, entry.storageKey, jsonEncode(data));
+    }
+  });
+
   Future<void> deleteRecall({
     required String subjectId,
     required String taskId,
@@ -325,9 +362,40 @@ class NutritionRecallAutoSaveManager {
             ? _finalizeRecall(pending.recall, pending.studyDaySnapshot)
             : pending.recall;
         try {
+          var pendingForDelete = pending;
           if (_submitter != null) {
             await _submitter(pending, recall);
           } else {
+            final versionsBefore = {
+              for (final food in recall.meals.expand((meal) => meal.foods))
+                food.id: food.foodVersionId,
+            };
+            await NutritionFoodRepository().ensureDefinitions(
+              subjectId: subject.id,
+              foods: recall.meals.expand((meal) => meal.foods),
+            );
+            final linkageChanged = recall.meals
+                .expand((meal) => meal.foods)
+                .any((food) => versionsBefore[food.id] != food.foodVersionId);
+            if (linkageChanged) {
+              await saveRecall(
+                recall: recall,
+                subjectId: pending.subjectId,
+                taskId: pending.taskId,
+                interventionId: pending.interventionId,
+                periodId: pending.periodId,
+                studyDaySnapshot: pending.studyDaySnapshot,
+                progressCompletedAt: pending.progressCompletedAt,
+              );
+              pendingForDelete =
+                  await loadPendingRecall(
+                    subjectId: pending.subjectId,
+                    taskId: pending.taskId,
+                    periodId: pending.periodId,
+                    studyDay: pending.studyDaySnapshot,
+                  ) ??
+                  pending;
+            }
             await subject.upsertNutritionResult(
               taskId: pending.taskId,
               periodId: pending.periodId,
@@ -350,7 +418,9 @@ class NutritionRecallAutoSaveManager {
                     ),
             );
           }
-          if (isPreviousDay) await _deleteRecallIfUnchanged(pending);
+          if (isPreviousDay) {
+            await _deleteRecallIfUnchanged(pendingForDelete);
+          }
         } on SocketException {
           StudyULogger.warning(
             'Network error while submitting nutrition recall for study day '

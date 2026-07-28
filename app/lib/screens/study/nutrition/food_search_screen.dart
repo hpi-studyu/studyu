@@ -18,6 +18,7 @@ import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
@@ -86,19 +87,26 @@ class FoodSearchScreen extends StatelessWidget {
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
+  final NutritionFoodRepository? repository;
+  final bool historicalMode;
 
   const FoodSearchScreen({
     this.allowMeals = true,
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
+    this.repository,
+    this.historicalMode = false,
     super.key,
   });
 
-  static MaterialPageRoute<studyu.FoodEntry> route({bool allowMeals = true}) =>
-      MaterialPageRoute(
-        builder: (_) => FoodSearchScreen(allowMeals: allowMeals),
-      );
+  static MaterialPageRoute<studyu.FoodEntry> route({
+    bool allowMeals = true,
+    NutritionFoodRepository? repository,
+  }) => MaterialPageRoute(
+    builder: (_) =>
+        FoodSearchScreen(allowMeals: allowMeals, repository: repository),
+  );
 
   static Future<FoodSearchSelection?> show(
     BuildContext context, {
@@ -106,6 +114,8 @@ class FoodSearchScreen extends StatelessWidget {
     bool allowMeals = true,
     OpenFoodFactsSearch? openFoodFactsSearch,
     UsdaFoodSearch? usdaFoodSearch,
+    bool historicalMode = false,
+    NutritionFoodRepository? repository,
   }) => Navigator.of(context).push(
     MaterialPageRoute<FoodSearchSelection>(
       fullscreenDialog: true,
@@ -114,6 +124,8 @@ class FoodSearchScreen extends StatelessWidget {
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
+        historicalMode: historicalMode,
+        repository: repository,
       ),
     ),
   );
@@ -131,12 +143,13 @@ class FoodSearchScreen extends StatelessWidget {
           );
 
     return ChangeNotifierProvider(
-      create: (_) => TemplateViewModel(userId: userId),
+      create: (_) => TemplateViewModel(userId: userId, repository: repository),
       child: _FoodSearchScreenContent(
         allowMeals: allowMeals,
         mealLabel: mealLabel,
         openFoodFactsSearch: openFoodFactsSearch,
         usdaFoodSearch: usdaFoodSearch,
+        historicalMode: historicalMode,
         history: history,
       ),
     );
@@ -148,6 +161,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
   final String? mealLabel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
+  final bool historicalMode;
   final FoodSearchHistory history;
 
   const _FoodSearchScreenContent({
@@ -155,6 +169,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
     this.mealLabel,
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
+    required this.historicalMode,
     required this.history,
   });
 
@@ -874,55 +889,56 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
               : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
-          PopupMenuButton<_FoodSearchAction>(
-            tooltip: l10n.create,
-            onSelected: (action) {
-              switch (action) {
-                case _FoodSearchAction.food:
-                  _addManually();
-                case _FoodSearchAction.meal:
-                  _createMeal();
-                case _FoodSearchAction.foodLibrary:
-                  _openFoodLibrary();
-              }
-            },
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                value: _FoodSearchAction.food,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.restaurant_outlined),
-                    const SizedBox(width: 12),
-                    Text(l10n.add_food_action),
-                  ],
+          if (!widget.historicalMode)
+            PopupMenuButton<_FoodSearchAction>(
+              tooltip: l10n.create,
+              onSelected: (action) {
+                switch (action) {
+                  case _FoodSearchAction.food:
+                    _addManually();
+                  case _FoodSearchAction.meal:
+                    _createMeal();
+                  case _FoodSearchAction.foodLibrary:
+                    _openFoodLibrary();
+                }
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  value: _FoodSearchAction.food,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.restaurant_outlined),
+                      const SizedBox(width: 12),
+                      Text(l10n.add_food_action),
+                    ],
+                  ),
                 ),
-              ),
-              PopupMenuItem(
-                value: _FoodSearchAction.meal,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.restaurant_menu_outlined),
-                    const SizedBox(width: 12),
-                    Text(l10n.add_meal_action),
-                  ],
+                PopupMenuItem(
+                  value: _FoodSearchAction.meal,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.restaurant_menu_outlined),
+                      const SizedBox(width: 12),
+                      Text(l10n.add_meal_action),
+                    ],
+                  ),
                 ),
-              ),
-              PopupMenuItem(
-                value: _FoodSearchAction.foodLibrary,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.bookmark_outline),
-                    const SizedBox(width: 12),
-                    Text(l10n.food_library),
-                  ],
+                PopupMenuItem(
+                  value: _FoodSearchAction.foodLibrary,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.bookmark_outline),
+                      const SizedBox(width: 12),
+                      Text(l10n.food_library),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-            icon: const Icon(Icons.more_vert),
-          ),
+              ],
+              icon: const Icon(Icons.more_vert),
+            ),
         ],
       ),
       body: Column(

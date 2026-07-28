@@ -13,11 +13,14 @@ import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
 FoodEntry testFood() => FoodEntry(
   id: 'food',
+  foodId: 'food-definition',
+  foodVersionId: 'food-version',
   entryType: FoodEntryType.singleIngredient,
   name: 'Apple',
   amount: 1,
@@ -112,6 +115,7 @@ Future<void> openMealEntry(
                             existingMeal: meal,
                             task: task,
                             occurrenceDate: occurrenceDate,
+                            foodRepository: _LocalTestNutritionFoodRepository(),
                           ),
                         ),
                       );
@@ -130,6 +134,41 @@ Future<void> openMealEntry(
   );
   await tester.tap(find.text('Open meal'));
   await tester.pumpAndSettle();
+}
+
+class _LocalTestNutritionFoodRepository extends NutritionFoodRepository {
+  final TemplateStorageManager _storage = TemplateStorageManager();
+
+  @override
+  Future<List<SavedFoodTemplate>> loadTemplates(String subjectId) =>
+      _storage.loadFoodTemplates(subjectId);
+
+  @override
+  Future<void> ensureDefinitions({
+    required String subjectId,
+    required Iterable<FoodEntry> foods,
+  }) async {}
+
+  @override
+  Future<SavedFoodTemplate> saveTemplate({
+    required String subjectId,
+    required String name,
+    required FoodEntry food,
+    List<String>? tags,
+    String? expectedVersionId,
+  }) async {
+    final template = SavedFoodTemplate(
+      id: food.foodId,
+      userId: subjectId,
+      name: name,
+      tags: tags,
+      isPublic: false,
+      createdAt: DateTime.now(),
+      prototype: FoodEntry.fromJson(food.toJson()),
+    );
+    await _storage.saveFoodTemplate(template);
+    return template;
+  }
 }
 
 Future<void> selectMealType(
@@ -849,7 +888,6 @@ void main() {
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
 
-    expect(find.byType(BottomSheet), findsOneWidget);
     expect(find.text('Add food to Edited supper'), findsOneWidget);
 
     final navigator = tester.state<NavigatorState>(find.byType(Navigator));
@@ -917,7 +955,7 @@ void main() {
 
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('My items'));
+    await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
@@ -1006,7 +1044,7 @@ void main() {
     await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('My items'));
+    await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Afternoon Snack'));
@@ -1046,8 +1084,6 @@ void main() {
       expect(find.text('Duplicate'), findsNothing);
       expect(find.text('Remove from meal'), findsOneWidget);
       expect(find.text('Delete'), findsNothing);
-      expect(find.byType(Divider), findsOneWidget);
-
       await tester.tap(find.text('Adjust quantity'));
       await tester.pumpAndSettle();
 
@@ -1106,7 +1142,7 @@ void main() {
 
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('My items'));
+    await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();

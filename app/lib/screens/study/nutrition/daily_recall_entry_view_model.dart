@@ -11,6 +11,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   final CompletionPeriod? completionPeriod;
   final String? interventionId;
   final bool readOnly;
+  final bool historicalMode;
   final NutritionRecallAutoSaveManager _autoSaveManager;
 
   NutritionRecallPersistenceTarget? _persistenceTarget;
@@ -28,6 +29,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   String? _periodId;
   bool _isDisposed = false;
   bool _hasExistingRecall = false;
+  bool _historicalEligibilityExpired = false;
   int _recallRevision = 0;
 
   DailyRecallEntryViewModel({
@@ -37,6 +39,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     NutritionRecallPersistenceTarget? persistenceTarget,
     this.interventionId,
     this.readOnly = false,
+    this.historicalMode = false,
     DailyRecall? existingRecall,
     NutritionRecallAutoSaveManager? autoSaveManager,
   }) : _persistenceTarget = persistenceTarget,
@@ -64,6 +67,8 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   NutritionRecallPersistenceTarget? get persistenceTarget => _persistenceTarget;
 
   int? get studyDaySnapshot => _studyDaySnapshot;
+
+  bool get historicalEligibilityExpired => _historicalEligibilityExpired;
 
   bool get isInTaskMode => task != null && completionPeriod != null;
 
@@ -124,11 +129,11 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     }
   }
 
-  bool _hydrateCurrentRemoteRecall() {
+  bool _hydrateCurrentRemoteRecall({bool force = false}) {
     final taskId = task?.id;
     final periodId = _periodId;
     final studyDay = _studyDaySnapshot;
-    if (_hasExistingRecall ||
+    if ((!force && _hasExistingRecall) ||
         taskId == null ||
         periodId == null ||
         studyDay == null) {
@@ -180,6 +185,29 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     }
     lastSaveTime = recall.lastAutoSavedAt;
     return true;
+  }
+
+  Future<void> reloadCanonicalRecall() async {
+    if (subject == null || _periodId == null || _studyDaySnapshot == null) {
+      return;
+    }
+    var changed = _hydrateCurrentRemoteRecall(force: true);
+    final local = await _autoSaveManager.loadPendingRecall(
+      subjectId: subject!.id,
+      taskId: task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
+      periodId: _periodId!,
+      studyDay: _studyDaySnapshot!,
+    );
+    if (_isDisposed) return;
+    if (local != null) {
+      recall = _copyRecall(local.recall);
+      lastSaveTime = recall.lastAutoSavedAt;
+      changed = true;
+    }
+    if (changed) {
+      _recallRevision++;
+      notifyListeners();
+    }
   }
 
   void _ensureStudyDaySnapshot() {
@@ -313,7 +341,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   Future<void> flushPendingAutoSave({bool persistToDatabase = false}) async {
-    if (readOnly) return;
+    if (readOnly || !_validateHistoricalEligibility()) return;
     final hadScheduledSave = _autoSaveTimer != null;
     _autoSaveTimer?.cancel();
     _autoSaveTimer = null;
@@ -351,7 +379,12 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void _persistLocalSnapshot() {
-    if (readOnly || subject == null || _studyDaySnapshot == null) return;
+    if (readOnly ||
+        subject == null ||
+        _studyDaySnapshot == null ||
+        !_validateHistoricalEligibility()) {
+      return;
+    }
     recall = _copyWithRecall(lastAutoSavedAt: DateTime.now());
     final localSave = _autoSaveManager.saveRecall(
       recall: recall,
@@ -377,6 +410,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   Future<void> _performAutoSave() {
     if (readOnly ||
+        !_validateHistoricalEligibility() ||
         subject == null ||
         _studyDaySnapshot == null ||
         !isInTaskMode) {
@@ -413,6 +447,20 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     });
     _remoteSaveQueue = remoteSave;
     return remoteSave;
+  }
+
+  bool _validateHistoricalEligibility() {
+    final target = _persistenceTarget;
+    final activeSubject = subject;
+    if (!historicalMode || target == null || activeSubject == null) return true;
+    final valid =
+        target.studyDaySnapshot ==
+        activeSubject.getDayOfStudyFor(DateTime.now()) - 1;
+    if (!valid && !_historicalEligibilityExpired) {
+      _historicalEligibilityExpired = true;
+      if (!_isDisposed) notifyListeners();
+    }
+    return valid;
   }
 
   bool shouldSaveToDb = true;

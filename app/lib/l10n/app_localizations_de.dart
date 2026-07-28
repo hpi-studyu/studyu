@@ -2672,6 +2672,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nutrition_history_no_foods_logged => 'Keine Lebensmittel erfasst';
 
   @override
+  String historical_editing_date(String date) {
+    return '$date bearbeiten';
+  }
+
+  @override
+  String get historical_edit_scope =>
+      'Eintragsänderungen gelten nur für diesen Studientag';
+
+  @override
+  String get historical_edit_expired =>
+      'Dieser Studientag kann nicht mehr bearbeitet werden.';
+
+  @override
   String get nutrition_statistics_empty =>
       'Noch keine Ernährungsdaten verfügbar.';
 

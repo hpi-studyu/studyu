@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
@@ -93,6 +94,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       }
 
       _foods = meal.componentFoods ?? [];
+      _componentFoods.addAll(meal.componentSnapshots ?? const []);
     } else {
       _nameController = TextEditingController(text: widget.initialName ?? '');
       _descriptionController = TextEditingController();
@@ -105,7 +107,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
         for (var index = 0; index < widget.initialFoods.length; index++)
           FoodComposition.withId(
             parentEntryId: '',
-            foodId: widget.initialFoods[index].id,
+            foodId: widget.initialFoods[index].foodId,
             amount: widget.initialFoods[index].amount,
             unit: widget.initialFoods[index].unit,
             sortOrder: index,
@@ -150,7 +152,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
         _foods.add(
           FoodComposition.withId(
             parentEntryId: '',
-            foodId: result.id,
+            foodId: result.foodId,
             amount: result.amount,
             unit: result.unit,
             sortOrder: _foods.length,
@@ -205,7 +207,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       _foods.add(
         FoodComposition.withId(
           parentEntryId: '',
-          foodId: quickFood.id,
+          foodId: quickFood.foodId,
           amount: amount,
           unit: 'serving',
           sortOrder: _foods.length,
@@ -347,6 +349,10 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
             ),
           )
           .toList(),
+      componentSnapshots: [
+        for (var index = 0; index < _componentFoods.length; index++)
+          rescaleFoodAmount(_componentFoods[index], _foods[index].amount),
+      ],
     );
     for (final composition in meal.componentFoods!) {
       composition.parentEntryId = meal.id;

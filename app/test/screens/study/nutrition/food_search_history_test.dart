@@ -11,12 +11,14 @@ void main() {
         name: 'Apple',
         source: studyu.FoodSource.openfoodfacts,
         externalId: '123',
+        foodId: 'apple-definition',
       );
       final updatedApple = food(
         id: 'apple-new',
         name: 'Green apple',
         source: studyu.FoodSource.openfoodfacts,
         externalId: '123',
+        foodId: 'apple-definition',
       );
       final banana = food(id: 'banana', name: 'Banana');
       final yogurt = food(id: 'yogurt', name: 'Yogurt');
@@ -45,18 +47,20 @@ void main() {
     },
   );
 
-  test('uses normalized food fields when no external identity exists', () {
+  test('groups only matching stable food identities', () {
     final first = food(
       id: 'first',
       name: ' Greek  Yogurt ',
       brandName: ' Dairy ',
       unit: ' Cup ',
+      foodId: 'yogurt-definition',
     );
     final second = food(
       id: 'second',
       name: 'greek yogurt',
       brandName: 'dairy',
       unit: 'cup',
+      foodId: 'yogurt-definition',
     );
 
     final history = buildFoodSearchHistory([
@@ -103,6 +107,8 @@ void main() {
       selected.nutrition.energyKcal = 999;
 
       expect(selected.id, isNot(original.id));
+      expect(selected.foodId, original.foodId);
+      expect(selected.foodVersionId, original.foodVersionId);
       expect(selected.createdAt, isNot(original.createdAt));
       expect(original.nutrition.energyKcal, 100);
       expect(history.recent.single.food.nutrition.energyKcal, 100);
@@ -154,8 +160,11 @@ studyu.FoodEntry food({
   String unit = 'serving',
   studyu.FoodSource source = studyu.FoodSource.manual,
   String? externalId,
+  String? foodId,
 }) => studyu.FoodEntry(
   id: id,
+  foodId: foodId ?? '$id-definition',
+  foodVersionId: '$id-version',
   entryType: studyu.FoodEntryType.singleIngredient,
   name: name,
   brandName: brandName,

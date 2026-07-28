@@ -1226,6 +1226,14 @@
   "nutrition_history_latest_study_day_description": "Your latest study day remains editable so you can add or correct entries the following morning.",
   "nutrition_history_previous_study_days": "Previous study days",
   "nutrition_history_no_foods_logged": "No foods logged",
+  "historical_editing_date": "Editing {date}",
+  "@historical_editing_date": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "historical_edit_scope": "Entry changes apply only to this study day",
+  "historical_edit_expired": "This study day is no longer editable.",
   "nutrition_statistics_empty": "No nutrition data is available yet.",
   "nutrition_editable": "Editable",
   "nutrition_read_only": "Read-only",

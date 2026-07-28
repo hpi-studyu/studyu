@@ -1054,6 +1054,14 @@
   "nutrition_history_latest_study_day_description": "Ihr letzter Studientag bleibt bearbeitbar, sodass Sie Einträge am folgenden Morgen hinzufügen oder korrigieren können.",
   "nutrition_history_previous_study_days": "Frühere Studientage",
   "nutrition_history_no_foods_logged": "Keine Lebensmittel erfasst",
+  "historical_editing_date": "{date} bearbeiten",
+  "@historical_editing_date": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "historical_edit_scope": "Eintragsänderungen gelten nur für diesen Studientag",
+  "historical_edit_expired": "Dieser Studientag kann nicht mehr bearbeitet werden.",
   "nutrition_statistics_empty": "Noch keine Ernährungsdaten verfügbar.",
   "nutrition_editable": "Bearbeitbar",
   "nutrition_read_only": "Nur lesen",

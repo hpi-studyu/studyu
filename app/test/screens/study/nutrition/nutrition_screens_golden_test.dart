@@ -55,6 +55,8 @@ Future<void> _expectGolden(
 
 FoodEntry _food() => FoodEntry(
   id: 'golden-food',
+  foodId: 'golden-food-definition',
+  foodVersionId: 'golden-food-version',
   entryType: FoodEntryType.brandedProduct,
   name: 'Whole Grain Granola Bar',
   brandName: 'Example Foods',

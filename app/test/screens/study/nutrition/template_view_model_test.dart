@@ -292,6 +292,8 @@ FoodEntry _foodEntry({
   List<FoodComposition>? componentFoods,
 }) => FoodEntry(
   id: id,
+  foodId: '$id-definition',
+  foodVersionId: '$id-version',
   entryType: entryType,
   name: 'Food',
   amount: 1,
