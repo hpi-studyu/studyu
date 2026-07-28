@@ -7,12 +7,14 @@ class NutritionSummaryCard extends StatefulWidget {
   final String? title;
   final String? subtitle;
   final bool inCard;
+  final bool showTitle;
 
   const NutritionSummaryCard({
     required this.nutrition,
     this.title,
     this.subtitle,
     this.inCard = false,
+    this.showTitle = true,
     super.key,
   });
 
@@ -51,7 +53,7 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (includeHeader) ...[
+              if (includeHeader && widget.showTitle) ...[
                 Text(
                   widget.title ?? l10n.nutrition_summary,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -323,7 +325,13 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
 
 class DailyNutritionSummaryCard extends StatelessWidget {
   final DailyRecall dailyRecall;
-  const DailyNutritionSummaryCard({required this.dailyRecall, super.key});
+  final bool showTitle;
+
+  const DailyNutritionSummaryCard({
+    required this.dailyRecall,
+    this.showTitle = true,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) => NutritionSummaryCard(
@@ -333,6 +341,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
     ]),
     title: AppLocalizations.of(context)!.daily_nutrition_total,
     inCard: true,
+    showTitle: showTitle,
   );
 }
 

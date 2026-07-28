@@ -1010,6 +1010,7 @@
   "macronutrients": "Macronutrients",
   "detailed_nutrients": "Detailed Nutrients",
   "daily_nutrition_total": "Nutrition summary",
+  "daily_summary": "Daily summary",
   "energy_by_macronutrient": "Energy by macronutrient",
   "total_energy": "Total energy",
   "show": "Show",

@@ -4175,6 +4175,12 @@ abstract class AppLocalizations {
   /// **'Nutrition summary'**
   String get daily_nutrition_total;
 
+  /// No description provided for @daily_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily summary'**
+  String get daily_summary;
+
   /// No description provided for @energy_by_macronutrient.
   ///
   /// In en, this message translates to:

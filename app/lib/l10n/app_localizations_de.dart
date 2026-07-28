@@ -2295,6 +2295,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get daily_nutrition_total => 'Ernährungsübersicht';
 
   @override
+  String get daily_summary => 'Tagesübersicht';
+
+  @override
   String get energy_by_macronutrient => 'Energie nach Makronährstoffen';
 
   @override

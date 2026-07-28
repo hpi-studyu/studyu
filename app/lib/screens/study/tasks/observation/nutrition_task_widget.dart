@@ -11,6 +11,7 @@ import 'package:studyu_app/screens/study/nutrition/nutrition_statistics_view.dar
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/html_text.dart';
+import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
@@ -269,6 +270,15 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             _buildInstructionsCard(context, theme, l10n),
           const SizedBox(height: 24),
           _buildMealsSection(context, model, recall, theme, l10n),
+          const SizedBox(height: 24),
+          Text(
+            l10n.daily_summary,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          DailyNutritionSummaryCard(dailyRecall: recall, showTitle: false),
           if (widget.task?.footer != null) ...[
             const SizedBox(height: 16),
             HtmlText(widget.task!.footer, centered: true),
