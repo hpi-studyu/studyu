@@ -871,6 +871,14 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 ),
               if (!_isSkipped) ...[
                 const SizedBox(height: 16),
+                _TimeSelector(
+                  timestamp: _timestamp,
+                  precision: _timePrecision,
+                  hasSelection: _hasSelectedTime,
+                  showValidationError: _hasAttemptedSave && !_hasSelectedTime,
+                  onSelectTime: _selectTime,
+                ),
+                const SizedBox(height: 8),
                 _SettingsRow(
                   icon: Icons.label_outline,
                   label: l10n.meal_label,
@@ -878,14 +886,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                       ? l10n.no_meal_label
                       : _mealLabel,
                   onTap: _selectMealType,
-                ),
-                const SizedBox(height: 8),
-                _TimeSelector(
-                  timestamp: _timestamp,
-                  precision: _timePrecision,
-                  hasSelection: _hasSelectedTime,
-                  showValidationError: _hasAttemptedSave && !_hasSelectedTime,
-                  onSelectTime: _selectTime,
                 ),
                 const SizedBox(height: 16),
                 _SettingsRow(
