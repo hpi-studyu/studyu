@@ -2537,6 +2537,85 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutrition_statistics => 'Statistics';
 
   @override
+  String get nutrition_recent_7_days => 'Recent 7 days';
+
+  @override
+  String get nutrition_recent_30_days => 'Recent 30 days';
+
+  @override
+  String nutrition_days_recorded(int recorded, int total) {
+    return '$recorded of $total days recorded';
+  }
+
+  @override
+  String get nutrition_daily_average => 'Daily average';
+
+  @override
+  String get nutrition_energy_by_study_day => 'Energy by study day';
+
+  @override
+  String nutrition_average_value(String value) {
+    return 'Average $value';
+  }
+
+  @override
+  String get nutrition_tap_bar_hint =>
+      'Tap a bar to view its value or open that day.';
+
+  @override
+  String get nutrition_nutrient_trend => 'Nutrient trend';
+
+  @override
+  String get nutrition_carbs => 'Carbs';
+
+  @override
+  String nutrition_average_per_recorded_day(String value) {
+    return 'Average $value per recorded day';
+  }
+
+  @override
+  String nutrition_compared_previous_days(int count) {
+    return 'Compared with the previous $count days';
+  }
+
+  @override
+  String get nutrition_record_more_comparisons =>
+      'Record more study days to see period comparisons.';
+
+  @override
+  String get nutrition_energy => 'Energy';
+
+  @override
+  String get nutrition_today_so_far => 'Today so far';
+
+  @override
+  String nutrition_chart_day_value(String date, String value) {
+    return '$date, $value';
+  }
+
+  @override
+  String nutrition_chart_day_missing(String date) {
+    return '$date, not recorded';
+  }
+
+  @override
+  String get nutrition_view_day_hint => 'Press Enter to view this day.';
+
+  @override
+  String get nutrition_statistics_help_message =>
+      'Averages include only completed study days. Today appears in charts as ‘Today so far’ and is excluded from averages until the diary is complete. Missing days are left blank.';
+
+  @override
+  String nutrition_kcal_per_day(String value) {
+    return '$value kcal/day';
+  }
+
+  @override
+  String nutrition_grams_per_day(String value) {
+    return '$value g/day';
+  }
+
+  @override
   String get nutrition_history => 'History';
 
   @override

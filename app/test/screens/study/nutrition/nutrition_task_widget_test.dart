@@ -160,6 +160,39 @@ void main() {
     );
   });
 
+  testWidgets(
+    'statistics destination uses statistics help and no history action',
+    (tester) async {
+      await tester.pumpWidget(
+        nutritionTaskApp(
+          nutritionTask(),
+          existingRecall: recall([meal('meal', MealType.breakfast)]),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('Statistics'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('Statistics'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byTooltip('History'), findsNothing);
+
+      await tester.tap(find.byTooltip('Help'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.textContaining('Averages include only completed study days'),
+        findsOneWidget,
+      );
+    },
+  );
+
   testWidgets('task-mode exit returns no completion result', (tester) async {
     var didReturn = false;
     DailyRecall? result;

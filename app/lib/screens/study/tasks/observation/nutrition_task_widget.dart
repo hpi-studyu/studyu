@@ -7,6 +7,7 @@ import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_help_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_history_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_statistics_view.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
@@ -166,6 +167,14 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                     activePeriodId:
                         model.persistenceTarget?.periodId ??
                         widget.completionPeriod?.id,
+                    onOpenRecall: widget.task == null
+                        ? null
+                        : (record) => _openRecall(
+                            context,
+                            appState.activeSubject,
+                            widget.task!,
+                            record,
+                          ),
                   ),
                   const FoodLibraryScreen(embedded: true),
                 ],
@@ -205,7 +214,11 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     AppLocalizations l10n,
     StudySubject? subject,
   ) => AppBar(
-    title: Text(widget.task?.title ?? l10n.daily_food_diary),
+    title: Text(
+      _selectedDestination == 1
+          ? l10n.nutrition_statistics
+          : widget.task?.title ?? l10n.daily_food_diary,
+    ),
     actions: [
       if (_selectedDestination == 0)
         Center(
@@ -219,14 +232,14 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             ),
           ),
         ),
-      if (widget.readOnly)
+      if (widget.readOnly && _selectedDestination != 1)
         Center(
           child: Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Text(l10n.nutrition_read_only),
           ),
         ),
-      if (widget.task != null)
+      if (widget.task != null && _selectedDestination != 1)
         IconButton(
           icon: const Icon(Icons.history_outlined),
           tooltip: l10n.nutrition_history,
@@ -238,9 +251,23 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         IconButton(
           icon: const Icon(Icons.help_outline),
           tooltip: l10n.help,
-          onPressed: () => Navigator.of(
-            context,
-          ).push(NutritionHelpScreen.route(task: widget.task!)),
+          onPressed: _selectedDestination == 1
+              ? () => showDialog<void>(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    title: Text(l10n.nutrition_statistics),
+                    content: Text(l10n.nutrition_statistics_help_message),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: Text(l10n.close),
+                      ),
+                    ],
+                  ),
+                )
+              : () => Navigator.of(
+                  context,
+                ).push(NutritionHelpScreen.route(task: widget.task!)),
         ),
     ],
   );
@@ -285,22 +312,41 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     NutritionHistoryScreen.route(
       subject: subject,
       task: task,
-      onOpenRecall: (record, editable) {
-        final period = _completionPeriodFor(task, record.periodId);
-        if (editable && period == null) return;
-        Navigator.of(context).push(
-          NutritionTaskWidget.route(
-            existingRecall: record.recall,
-            task: task,
-            completionPeriod: period,
-            persistenceTarget: record.persistenceTarget,
-            interventionId: record.interventionId,
-            readOnly: !editable,
-          ),
-        );
-      },
+      onOpenRecall: (record, editable) =>
+          _openRecall(context, subject, task, record, editable: editable),
     ),
   );
+
+  Future<void> _openRecall(
+    BuildContext context,
+    StudySubject? subject,
+    NutritionTask task,
+    NutritionRecallRecord record, {
+    bool? editable,
+  }) async {
+    if (subject == null) return;
+    final canEdit =
+        editable ??
+        isEditableNutritionRecallDay(
+          studyDaySnapshot: record.studyDaySnapshot,
+          currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
+          hasUnambiguousPeriod:
+              record.hasUnambiguousPeriod &&
+              _completionPeriodFor(task, record.periodId) != null,
+        );
+    final period = _completionPeriodFor(task, record.periodId);
+    if (canEdit && period == null) return;
+    await Navigator.of(context).push(
+      NutritionTaskWidget.route(
+        existingRecall: record.recall,
+        task: task,
+        completionPeriod: period,
+        persistenceTarget: record.persistenceTarget,
+        interventionId: record.interventionId,
+        readOnly: !canEdit,
+      ),
+    );
+  }
 
   CompletionPeriod? _completionPeriodFor(NutritionTask task, String? id) {
     if (id == null) return null;

@@ -4631,6 +4631,126 @@ abstract class AppLocalizations {
   /// **'Statistics'**
   String get nutrition_statistics;
 
+  /// No description provided for @nutrition_recent_7_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent 7 days'**
+  String get nutrition_recent_7_days;
+
+  /// No description provided for @nutrition_recent_30_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent 30 days'**
+  String get nutrition_recent_30_days;
+
+  /// No description provided for @nutrition_days_recorded.
+  ///
+  /// In en, this message translates to:
+  /// **'{recorded} of {total} days recorded'**
+  String nutrition_days_recorded(int recorded, int total);
+
+  /// No description provided for @nutrition_daily_average.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily average'**
+  String get nutrition_daily_average;
+
+  /// No description provided for @nutrition_energy_by_study_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy by study day'**
+  String get nutrition_energy_by_study_day;
+
+  /// No description provided for @nutrition_average_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Average {value}'**
+  String nutrition_average_value(String value);
+
+  /// No description provided for @nutrition_tap_bar_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a bar to view its value or open that day.'**
+  String get nutrition_tap_bar_hint;
+
+  /// No description provided for @nutrition_nutrient_trend.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrient trend'**
+  String get nutrition_nutrient_trend;
+
+  /// No description provided for @nutrition_carbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get nutrition_carbs;
+
+  /// No description provided for @nutrition_average_per_recorded_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Average {value} per recorded day'**
+  String nutrition_average_per_recorded_day(String value);
+
+  /// No description provided for @nutrition_compared_previous_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Compared with the previous {count} days'**
+  String nutrition_compared_previous_days(int count);
+
+  /// No description provided for @nutrition_record_more_comparisons.
+  ///
+  /// In en, this message translates to:
+  /// **'Record more study days to see period comparisons.'**
+  String get nutrition_record_more_comparisons;
+
+  /// No description provided for @nutrition_energy.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get nutrition_energy;
+
+  /// No description provided for @nutrition_today_so_far.
+  ///
+  /// In en, this message translates to:
+  /// **'Today so far'**
+  String get nutrition_today_so_far;
+
+  /// No description provided for @nutrition_chart_day_value.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, {value}'**
+  String nutrition_chart_day_value(String date, String value);
+
+  /// No description provided for @nutrition_chart_day_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, not recorded'**
+  String nutrition_chart_day_missing(String date);
+
+  /// No description provided for @nutrition_view_day_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press Enter to view this day.'**
+  String get nutrition_view_day_hint;
+
+  /// No description provided for @nutrition_statistics_help_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Averages include only completed study days. Today appears in charts as ‘Today so far’ and is excluded from averages until the diary is complete. Missing days are left blank.'**
+  String get nutrition_statistics_help_message;
+
+  /// No description provided for @nutrition_kcal_per_day.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kcal/day'**
+  String nutrition_kcal_per_day(String value);
+
+  /// No description provided for @nutrition_grams_per_day.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} g/day'**
+  String nutrition_grams_per_day(String value);
+
   /// No description provided for @nutrition_history.
   ///
   /// In en, this message translates to:
