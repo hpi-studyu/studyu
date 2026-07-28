@@ -231,6 +231,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               subjectId: subject.id,
               snapshot: food,
               expectedVersionId: existingFood.foodVersionId,
+              entryId: existingFood.id,
               target: historicalContext.target.toJson(),
               currentStudyDay: currentStudyDay,
               mutationId: _mutationId,
@@ -250,6 +251,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           subjectId: subject.id,
           studyDaySnapshot: historicalContext.target.studyDaySnapshot,
           definition: result.definition.snapshot,
+          entryId: existingFood.id,
         );
       } catch (error, stackTrace) {
         StudyULogger.error(

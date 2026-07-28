@@ -15,16 +15,25 @@ void main() {
               amount: 2,
               energy: 200,
             )
+            ..unit = 'logged servings'
+            ..servingSizeGrams = 80
+            ..portionReference = 'logged reference'
             ..templateId = 'template'
+            ..modifiedAt = DateTime.utc(2026, 7, 15, 9)
             ..parentEntryId = 'meal';
-      final definition = _food(
-        id: 'definition-snapshot',
-        foodId: 'food',
-        versionId: 'new-version',
-        name: 'New',
-        amount: 1,
-        energy: 150,
-      );
+      final definition =
+          _food(
+              id: 'definition-snapshot',
+              foodId: 'food',
+              versionId: 'new-version',
+              name: 'New',
+              amount: 1,
+              energy: 150,
+            )
+            ..unit = 'new serving'
+            ..servingSizeGrams = 120
+            ..portionReference = 'new reference'
+            ..originalValues = const {'reusable': true};
 
       final updated = applyNutritionFoodSnapshot(logged, definition);
 
@@ -33,12 +42,70 @@ void main() {
       expect(updated.foodVersionId, 'new-version');
       expect(updated.name, 'New');
       expect(updated.amount, 2);
-      expect(updated.unit, logged.unit);
+      expect(updated.unit, 'new serving');
+      expect(updated.servingSizeGrams, 120);
+      expect(updated.portionReference, 'new reference');
+      expect(updated.originalValues, {'reusable': true});
       expect(updated.templateId, 'template');
+      expect(updated.createdAt, logged.createdAt);
+      expect(updated.modifiedAt, logged.modifiedAt);
       expect(updated.parentEntryId, 'meal');
       expect(updated.nutrition.energyKcal, 300);
     },
   );
+
+  test('entry-specific replacement leaves same-food siblings unchanged', () {
+    final selected = _food(
+      id: 'selected-entry',
+      foodId: 'food',
+      versionId: 'old-version',
+      name: 'Selected old',
+      amount: 2,
+      energy: 200,
+    );
+    final sibling = _food(
+      id: 'sibling-entry',
+      foodId: 'food',
+      versionId: 'old-version',
+      name: 'Sibling old',
+      amount: 3,
+      energy: 300,
+    );
+    final recall = DailyRecall(
+      id: 'recall',
+      date: DateTime.utc(2026, 7, 15),
+      recallMode: RecallMode.realtimeRecord,
+      entryStartedAt: DateTime.utc(2026, 7, 15, 8),
+      meals: [
+        MealLog(
+          id: 'meal',
+          mealType: MealType.breakfast,
+          mealContext: MealContext.home,
+          timezone: 'UTC',
+          isSkipped: false,
+          foods: [selected, sibling],
+        ),
+      ],
+    );
+    final definition = _food(
+      id: 'definition-snapshot',
+      foodId: 'food',
+      versionId: 'new-version',
+      name: 'New',
+      amount: 1,
+      energy: 150,
+    );
+
+    final updated = replaceNutritionFoodSnapshots(
+      recall,
+      definition,
+      entryId: selected.id,
+    );
+
+    expect(updated.meals.single.foods.first.name, 'New');
+    expect(updated.meals.single.foods.last.name, 'Sibling old');
+    expect(updated.meals.single.foods.last.foodVersionId, 'old-version');
+  });
 
   test('saved meal component snapshots are replaced but not cascaded', () {
     final oldComponent = _food(

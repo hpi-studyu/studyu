@@ -234,7 +234,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         candidateIndex++
       ) {
         final candidate = _meal.foods[candidateIndex];
-        if (candidate.foodId == result.foodId) {
+        if (candidate.foodId == result.foodId &&
+            (widget.historicalContext == null || candidate.id == food.id)) {
           _meal.foods[candidateIndex] = applyNutritionFoodSnapshot(
             candidate,
             result,

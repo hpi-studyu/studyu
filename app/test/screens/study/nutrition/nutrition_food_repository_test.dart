@@ -27,6 +27,31 @@ void main() {
     expect(requestedUri.query, contains('deleted_at=is.null'));
   });
 
+  test('historical mutation identifies the selected logged entry', () async {
+    late Map<String, dynamic> params;
+    final repository = NutritionFoodRepository(
+      client: _client((request) async {
+        params = jsonDecode(request.body) as Map<String, dynamic>;
+        return _jsonResponse(_mutationResponse(), request);
+      }),
+    );
+
+    final result = await repository.mutateHistoricalDefinition(
+      subjectId: 'subject',
+      snapshot: _food(),
+      expectedVersionId: 'version-1',
+      entryId: 'selected-entry',
+      target: const {'taskId': 'task'},
+      currentStudyDay: 5,
+      mutationId: 'mutation',
+    );
+
+    expect(params['p_historical_entry_id'], 'selected-entry');
+    expect(params['p_food_id'], 'food-definition');
+    expect(result.selectedHistoricalUpdateCount, 1);
+    expect(result.todayUpdateCount, 2);
+  });
+
   test('creates missing entry definitions through the mutation RPC', () async {
     final requests = <http.BaseRequest>[];
     final repository = NutritionFoodRepository(
@@ -85,6 +110,8 @@ Map<String, dynamic> _mutationResponse() => {
     'updatedAt': '2026-07-15T08:00:00.000Z',
   },
   'progress': <Map<String, dynamic>>[],
+  'selectedHistoricalUpdateCount': 1,
+  'todayUpdateCount': 2,
 };
 
 FoodEntry _food({String versionId = 'version-1'}) => FoodEntry(

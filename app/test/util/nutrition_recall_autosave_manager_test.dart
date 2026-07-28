@@ -454,6 +454,44 @@ void main() {
   });
 
   test(
+    'historical definition rewrite updates only the selected entry',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final selected = _food('old')..id = 'selected-entry';
+      final sibling = FoodEntry.fromJson(selected.toJson())
+        ..id = 'sibling-entry'
+        ..name = 'sibling old';
+      final recall = _foodRecall('old', studyDay: 4)
+        ..meals.single.foods = [selected, sibling];
+      await manager.saveRecall(
+        recall: recall,
+        subjectId: 'subject',
+        taskId: 'historical-task',
+        interventionId: 'intervention',
+        periodId: 'period',
+        studyDaySnapshot: 4,
+      );
+
+      await manager.rewriteFoodDefinition(
+        subjectId: 'subject',
+        studyDaySnapshot: 4,
+        definition: _food('new', versionId: 'version-2'),
+        entryId: selected.id,
+      );
+
+      final foods = (await manager.scanPendingRecalls(
+        'subject',
+      )).single.recall.meals.single.foods;
+      expect(foods.singleWhere((food) => food.id == selected.id).name, 'new');
+      expect(
+        foods.singleWhere((food) => food.id == sibling.id).name,
+        'sibling old',
+      );
+    },
+  );
+
+  test(
     'definition rewrite updates every matching current-day draft only',
     () async {
       final prefs = await SharedPreferences.getInstance();

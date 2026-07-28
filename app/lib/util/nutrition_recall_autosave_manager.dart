@@ -259,12 +259,13 @@ class NutritionRecallAutoSaveManager {
     }
   }
 
-  /// Rewrites current-day drafts after the server commits a definition edit.
+  /// Rewrites drafts after the server commits a definition edit.
   /// Subject serialization ensures older queued writes finish before this one.
   Future<void> rewriteFoodDefinition({
     required String subjectId,
     required int studyDaySnapshot,
     required FoodEntry definition,
+    String? entryId,
   }) => _mutateForSubject(subjectId, () async {
     final prefs = await _getPrefs();
     final pending = await scanPendingRecalls(subjectId);
@@ -274,6 +275,7 @@ class NutritionRecallAutoSaveManager {
       final updatedRecall = replaceNutritionFoodSnapshots(
         entry.recall,
         definition,
+        entryId: entryId,
       );
       if (jsonEncode(updatedRecall.toJson()) ==
           jsonEncode(entry.recall.toJson())) {

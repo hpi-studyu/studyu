@@ -103,10 +103,14 @@ END;
 $$;
 
 -- Direct definition matches only. Saved-meal component snapshots remain immutable.
+-- Logged occurrences own identity, quantity, placement, and timestamps; all
+-- reusable food, serving, nutrition, composition, and source metadata comes
+-- from the definition snapshot.
 CREATE FUNCTION public.nutrition_replace_food_snapshots(
     p_result jsonb,
     p_food_id uuid,
-    p_snapshot jsonb
+    p_snapshot jsonb,
+    p_entry_id text DEFAULT null
 ) RETURNS jsonb
 LANGUAGE sql
 IMMUTABLE
@@ -122,7 +126,8 @@ AS $$
           '{foods}',
           COALESCE((
             SELECT jsonb_agg(
-              CASE WHEN food->>'foodId' = p_food_id::text THEN
+              CASE WHEN food->>'foodId' = p_food_id::text
+                AND (p_entry_id IS NULL OR food->>'id' = p_entry_id) THEN
                 jsonb_set(
                   p_snapshot,
                   '{nutrition}',
@@ -138,13 +143,6 @@ AS $$
                 ) || jsonb_build_object(
                   'id', food->'id',
                   'amount', food->'amount',
-                  'unit', food->'unit',
-                  'servingSizeGrams', food->'servingSizeGrams',
-                  'portionReference', food->'portionReference',
-                  'portionEstimationMethod', food->'portionEstimationMethod',
-                  'portionState', food->'portionState',
-                  'yieldFactor', food->'yieldFactor',
-                  'ediblePortion', food->'ediblePortion',
                   'templateId', food->'templateId',
                   'createdAt', food->'createdAt',
                   'modifiedAt', food->'modifiedAt',
@@ -167,8 +165,11 @@ AS $$
   );
 $$;
 
-CREATE FUNCTION public.nutrition_result_has_food(p_result jsonb, p_food_id uuid)
-RETURNS boolean
+CREATE FUNCTION public.nutrition_result_has_food(
+    p_result jsonb,
+    p_food_id uuid,
+    p_entry_id text DEFAULT null
+) RETURNS boolean
 LANGUAGE sql
 IMMUTABLE
 SET search_path = public
@@ -178,7 +179,184 @@ AS $$
     FROM jsonb_array_elements(COALESCE(p_result #> '{result,meals}', '[]'::jsonb)) AS meal,
          jsonb_array_elements(COALESCE(meal->'foods', '[]'::jsonb)) AS food
     WHERE food->>'foodId' = p_food_id::text
+      AND (p_entry_id IS NULL OR food->>'id' = p_entry_id)
   );
+$$;
+
+CREATE FUNCTION public.nutrition_food_snapshot_is_valid(
+    p_snapshot jsonb
+) RETURNS boolean
+LANGUAGE plpgsql
+STABLE
+SET search_path = public
+AS $$
+DECLARE
+  v_key text;
+  v_component jsonb;
+  v_component_snapshot jsonb;
+BEGIN
+  IF jsonb_typeof(p_snapshot) IS DISTINCT FROM 'object' THEN RETURN false; END IF;
+
+  FOREACH v_key IN ARRAY ARRAY[
+    'id', 'foodId', 'foodVersionId', 'name', 'unit', 'createdAt'
+  ] LOOP
+    IF jsonb_typeof(p_snapshot->v_key) IS DISTINCT FROM 'string'
+       OR NULLIF(p_snapshot->>v_key, '') IS NULL THEN
+      RETURN false;
+    END IF;
+  END LOOP;
+  FOREACH v_key IN ARRAY ARRAY[
+    'entryType', 'portionEstimationMethod', 'portionState', 'source'
+  ] LOOP
+    IF jsonb_typeof(p_snapshot->v_key) IS DISTINCT FROM 'string' THEN RETURN false; END IF;
+  END LOOP;
+  IF p_snapshot->>'entryType' NOT IN (
+      'singleIngredient', 'meal', 'brandedProduct', 'manualCustom'
+    ) OR p_snapshot->>'portionEstimationMethod' NOT IN (
+      'householdMeasure', 'photograph', 'standardUnit', 'userWeighted', 'unknown'
+    ) OR p_snapshot->>'portionState' NOT IN ('raw', 'cooked', 'asServed')
+    OR p_snapshot->>'source' NOT IN ('openfoodfacts', 'usda', 'mealdb', 'manual') THEN
+    RETURN false;
+  END IF;
+  FOREACH v_key IN ARRAY ARRAY[
+    'amount', 'servingSizeGrams', 'confidenceScore'
+  ] LOOP
+    IF jsonb_typeof(p_snapshot->v_key) IS DISTINCT FROM 'number' THEN RETURN false; END IF;
+  END LOOP;
+  IF jsonb_typeof(p_snapshot->'originalValues') IS DISTINCT FROM 'object' THEN
+    RETURN false;
+  END IF;
+
+  FOREACH v_key IN ARRAY ARRAY[
+    'brandName', 'description', 'portionReference', 'foodCode', 'externalId',
+    'templateId', 'parentEntryId'
+  ] LOOP
+    IF p_snapshot ? v_key AND jsonb_typeof(p_snapshot->v_key) NOT IN ('string', 'null') THEN
+      RETURN false;
+    END IF;
+  END LOOP;
+  FOREACH v_key IN ARRAY ARRAY['yieldFactor', 'ediblePortion'] LOOP
+    IF p_snapshot ? v_key AND jsonb_typeof(p_snapshot->v_key) NOT IN ('number', 'null') THEN
+      RETURN false;
+    END IF;
+  END LOOP;
+
+  BEGIN
+    IF p_snapshot->>'createdAt' !~ '^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}' THEN
+      RETURN false;
+    END IF;
+    PERFORM (p_snapshot->>'createdAt')::timestamptz;
+    IF p_snapshot ? 'modifiedAt' AND jsonb_typeof(p_snapshot->'modifiedAt') <> 'null' THEN
+      IF jsonb_typeof(p_snapshot->'modifiedAt') IS DISTINCT FROM 'string'
+         OR p_snapshot->>'modifiedAt' !~ '^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}' THEN
+        RETURN false;
+      END IF;
+      PERFORM (p_snapshot->>'modifiedAt')::timestamptz;
+    END IF;
+  EXCEPTION WHEN others THEN
+    RETURN false;
+  END;
+
+  IF jsonb_typeof(p_snapshot->'nutrition') IS DISTINCT FROM 'object' THEN RETURN false; END IF;
+  FOREACH v_key IN ARRAY ARRAY[
+    'energyKcal', 'protein', 'carbs', 'fat', 'sugars', 'fiber',
+    'saturatedFat', 'transFat', 'cholesterol', 'sodium', 'waterContent'
+  ] LOOP
+    IF jsonb_typeof(p_snapshot->'nutrition'->v_key) IS DISTINCT FROM 'number' THEN
+      RETURN false;
+    END IF;
+  END LOOP;
+  IF jsonb_typeof(p_snapshot #> '{nutrition,micros}') IS DISTINCT FROM 'object' THEN
+    RETURN false;
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM jsonb_each(p_snapshot #> '{nutrition,micros}')
+    WHERE jsonb_typeof(value) <> 'number'
+  ) THEN
+    RETURN false;
+  END IF;
+
+  IF p_snapshot ? 'preparationDetails'
+     AND jsonb_typeof(p_snapshot->'preparationDetails') <> 'null' THEN
+    IF jsonb_typeof(p_snapshot->'preparationDetails') IS DISTINCT FROM 'object' THEN
+      RETURN false;
+    END IF;
+    FOREACH v_key IN ARRAY ARRAY['rawWeight', 'cookedWeight', 'yieldFactor'] LOOP
+      IF jsonb_typeof(p_snapshot->'preparationDetails'->v_key) IS DISTINCT FROM 'number' THEN
+        RETURN false;
+      END IF;
+    END LOOP;
+    IF jsonb_typeof(p_snapshot #> '{preparationDetails,preparationMethod}') IS DISTINCT FROM 'string'
+       OR jsonb_typeof(p_snapshot #> '{preparationDetails,retentionFactors}') IS DISTINCT FROM 'object' THEN
+      RETURN false;
+    END IF;
+    IF EXISTS (
+      SELECT 1 FROM jsonb_each(p_snapshot #> '{preparationDetails,retentionFactors}')
+      WHERE jsonb_typeof(value) <> 'number'
+    ) THEN
+      RETURN false;
+    END IF;
+  END IF;
+
+  IF p_snapshot ? 'componentFoods' AND jsonb_typeof(p_snapshot->'componentFoods') <> 'null' THEN
+    IF jsonb_typeof(p_snapshot->'componentFoods') IS DISTINCT FROM 'array' THEN
+      RETURN false;
+    END IF;
+    IF EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(p_snapshot->'componentFoods') AS component
+      WHERE jsonb_typeof(component) IS DISTINCT FROM 'object'
+         OR jsonb_typeof(component->'id') IS DISTINCT FROM 'string'
+         OR NULLIF(component->>'id', '') IS NULL
+         OR jsonb_typeof(component->'parentEntryId') IS DISTINCT FROM 'string'
+         OR NULLIF(component->>'parentEntryId', '') IS NULL
+         OR jsonb_typeof(component->'foodId') IS DISTINCT FROM 'string'
+         OR NULLIF(component->>'foodId', '') IS NULL
+         OR jsonb_typeof(component->'amount') IS DISTINCT FROM 'number'
+         OR jsonb_typeof(component->'unit') IS DISTINCT FROM 'string'
+         OR NULLIF(component->>'unit', '') IS NULL
+         OR (component ? 'sortOrder' AND jsonb_typeof(component->'sortOrder') NOT IN ('number', 'null'))
+    ) THEN
+      RETURN false;
+    END IF;
+  END IF;
+  IF p_snapshot ? 'componentSnapshots'
+     AND jsonb_typeof(p_snapshot->'componentSnapshots') <> 'null' THEN
+    IF jsonb_typeof(p_snapshot->'componentSnapshots') IS DISTINCT FROM 'array' THEN
+      RETURN false;
+    END IF;
+    IF EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(p_snapshot->'componentSnapshots') AS component
+      WHERE NOT public.nutrition_food_snapshot_is_valid(component)
+    ) THEN
+      RETURN false;
+    END IF;
+  END IF;
+
+  IF p_snapshot->>'entryType' = 'meal' THEN
+    IF jsonb_typeof(p_snapshot->'componentFoods') IS DISTINCT FROM 'array'
+       OR jsonb_typeof(p_snapshot->'componentSnapshots') IS DISTINCT FROM 'array'
+       OR jsonb_array_length(p_snapshot->'componentFoods') <>
+          jsonb_array_length(p_snapshot->'componentSnapshots') THEN
+      RETURN false;
+    END IF;
+    FOR v_component, v_component_snapshot IN
+      SELECT foods.value, snapshots.value
+      FROM jsonb_array_elements(p_snapshot->'componentFoods')
+        WITH ORDINALITY AS foods(value, ordinality)
+      INNER JOIN jsonb_array_elements(p_snapshot->'componentSnapshots')
+        WITH ORDINALITY AS snapshots(value, ordinality)
+        USING (ordinality)
+    LOOP
+      IF v_component->>'foodId' IS DISTINCT FROM v_component_snapshot->>'foodId' THEN
+        RETURN false;
+      END IF;
+    END LOOP;
+  END IF;
+
+  RETURN true;
+END;
 $$;
 
 CREATE FUNCTION public.apply_nutrition_food_mutation(
@@ -190,7 +368,8 @@ CREATE FUNCTION public.apply_nutrition_food_mutation(
     p_deleted boolean DEFAULT false,
     p_historical_target jsonb DEFAULT null,
     p_propagate_study_day integer DEFAULT null,
-    p_library_visible boolean DEFAULT null
+    p_library_visible boolean DEFAULT null,
+    p_historical_entry_id text DEFAULT null
 ) RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -205,6 +384,8 @@ DECLARE
   v_target_count integer;
   v_progress jsonb := '[]'::jsonb;
   v_progress_row jsonb;
+  v_selected_historical_update_count integer := 0;
+  v_today_update_count integer := 0;
   v_response jsonb;
 BEGIN
   IF auth.uid() IS NULL OR NOT EXISTS (
@@ -225,29 +406,8 @@ BEGIN
 
   IF p_food_id IS NULL OR p_snapshot IS NULL OR
       p_snapshot->>'foodId' IS DISTINCT FROM p_food_id::text OR
-      NULLIF(p_snapshot->>'id', '') IS NULL OR
-      NULLIF(p_snapshot->>'foodVersionId', '') IS NULL OR
-      NULLIF(p_snapshot->>'name', '') IS NULL OR
-      p_snapshot->'nutrition' IS NULL THEN
+      NOT public.nutrition_food_snapshot_is_valid(p_snapshot) THEN
     RAISE EXCEPTION 'invalid nutrition mutation payload' USING ERRCODE = '22023';
-  END IF;
-  IF p_snapshot->>'entryType' = 'meal' AND (
-      jsonb_typeof(p_snapshot->'componentFoods') IS DISTINCT FROM 'array' OR
-      jsonb_typeof(p_snapshot->'componentSnapshots') IS DISTINCT FROM 'array' OR
-      jsonb_array_length(p_snapshot->'componentFoods') <>
-        jsonb_array_length(p_snapshot->'componentSnapshots') OR
-      EXISTS (
-        SELECT 1
-        FROM jsonb_array_elements(p_snapshot->'componentSnapshots') AS component
-        WHERE NULLIF(component->>'id', '') IS NULL
-           OR NULLIF(component->>'foodId', '') IS NULL
-           OR NULLIF(component->>'foodVersionId', '') IS NULL
-           OR NULLIF(component->>'name', '') IS NULL
-           OR component->'nutrition' IS NULL
-      )
-  ) THEN
-    RAISE EXCEPTION 'saved meal versions require complete component snapshots'
-      USING ERRCODE = '22023';
   END IF;
 
   PERFORM pg_advisory_xact_lock(hashtextextended(p_food_id::text, 1));
@@ -309,6 +469,7 @@ BEGIN
 
   IF p_historical_target IS NOT NULL THEN
     IF p_deleted OR p_propagate_study_day IS NULL OR
+       NULLIF(p_historical_entry_id, '') IS NULL OR
        (p_historical_target->>'studyDaySnapshot')::integer <> p_propagate_study_day - 1 THEN
       RAISE EXCEPTION 'historical nutrition recall is no longer editable'
         USING ERRCODE = '22023';
@@ -339,14 +500,19 @@ BEGIN
       AND (result #>> '{result,studyDaySnapshot}')::integer =
           (p_historical_target->>'studyDaySnapshot')::integer
     FOR UPDATE;
-    IF NOT public.nutrition_result_has_food(v_target.result, p_food_id) THEN
-      RAISE EXCEPTION 'historical target does not contain food definition'
+    IF NOT public.nutrition_result_has_food(
+      v_target.result, p_food_id, p_historical_entry_id
+    ) THEN
+      RAISE EXCEPTION 'historical target entry does not contain food definition'
         USING ERRCODE = 'P0002';
     END IF;
     UPDATE public.subject_progress
-    SET result = public.nutrition_replace_food_snapshots(result, p_food_id, v_snapshot)
+    SET result = public.nutrition_replace_food_snapshots(
+      result, p_food_id, v_snapshot, p_historical_entry_id
+    )
     WHERE completed_at = v_target.completed_at AND subject_id = v_target.subject_id
     RETURNING to_jsonb(public.subject_progress.*) INTO v_progress_row;
+    GET DIAGNOSTICS v_selected_historical_update_count = ROW_COUNT;
     v_progress := v_progress || jsonb_build_array(v_progress_row);
   END IF;
 
@@ -360,8 +526,10 @@ BEGIN
         AND public.nutrition_result_has_food(result, p_food_id)
       RETURNING to_jsonb(public.subject_progress.*) AS row
     )
-    SELECT v_progress || COALESCE(jsonb_agg(row), '[]'::jsonb)
-    INTO v_progress
+    SELECT
+      v_progress || COALESCE(jsonb_agg(row), '[]'::jsonb),
+      count(*)::integer
+    INTO v_progress, v_today_update_count
     FROM updated;
   END IF;
 
@@ -376,7 +544,9 @@ BEGIN
       'createdAt', definition.created_at,
       'updatedAt', definition.updated_at
     ),
-    'progress', v_progress
+    'progress', v_progress,
+    'selectedHistoricalUpdateCount', v_selected_historical_update_count,
+    'todayUpdateCount', v_today_update_count
   ) INTO v_response
   FROM public.nutrition_food_definition AS definition
   WHERE definition.id = p_food_id;
@@ -389,17 +559,19 @@ $$;
 
 REVOKE ALL ON FUNCTION public.nutrition_scale_json_numbers(jsonb, numeric)
 FROM public, anon, authenticated;
+REVOKE ALL ON FUNCTION public.nutrition_food_snapshot_is_valid(jsonb)
+FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.nutrition_replace_food_snapshots(
-    jsonb, uuid, jsonb
+    jsonb, uuid, jsonb, text
 )
 FROM public, anon, authenticated;
-REVOKE ALL ON FUNCTION public.nutrition_result_has_food(jsonb, uuid)
+REVOKE ALL ON FUNCTION public.nutrition_result_has_food(jsonb, uuid, text)
 FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.apply_nutrition_food_mutation(
-    uuid, uuid, uuid, uuid, jsonb, boolean, jsonb, integer, boolean
+    uuid, uuid, uuid, uuid, jsonb, boolean, jsonb, integer, boolean, text
 ) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.apply_nutrition_food_mutation(
-    uuid, uuid, uuid, uuid, jsonb, boolean, jsonb, integer, boolean
+    uuid, uuid, uuid, uuid, jsonb, boolean, jsonb, integer, boolean, text
 ) TO authenticated;
 GRANT SELECT ON TABLE public.nutrition_food_definition,
 public.nutrition_food_version TO authenticated, service_role;

@@ -1,53 +1,36 @@
 import 'package:studyu_core/core.dart';
 
-/// Applies definition data while retaining fields owned by the logged entry.
+/// Applies reusable definition fields while retaining occurrence-owned fields.
+///
+/// Occurrences own identity, quantity, template/meal placement, and logged
+/// timestamps. Every other field, including serving metadata and composition,
+/// comes from the reusable definition.
 FoodEntry applyNutritionFoodSnapshot(FoodEntry logged, FoodEntry definition) {
   final updated = FoodEntry.fromJson(definition.toJson());
   final definitionAmount = definition.amount;
   if (definitionAmount.isFinite && definitionAmount > 0) {
     _scaleNutrition(updated.nutrition, logged.amount / definitionAmount);
   }
-  return FoodEntry(
-    id: logged.id,
-    foodId: definition.foodId,
-    foodVersionId: definition.foodVersionId,
-    entryType: updated.entryType,
-    name: updated.name,
-    brandName: updated.brandName,
-    description: updated.description,
-    amount: logged.amount,
-    unit: logged.unit,
-    servingSizeGrams: logged.servingSizeGrams,
-    portionReference: logged.portionReference,
-    portionEstimationMethod: logged.portionEstimationMethod,
-    portionState: logged.portionState,
-    yieldFactor: logged.yieldFactor,
-    ediblePortion: logged.ediblePortion,
-    nutrition: updated.nutrition,
-    foodCode: updated.foodCode,
-    externalId: updated.externalId,
-    source: updated.source,
-    confidenceScore: updated.confidenceScore,
-    templateId: logged.templateId,
-    createdAt: logged.createdAt,
-    modifiedAt: logged.modifiedAt,
-    originalValues: updated.originalValues,
-    parentEntryId: logged.parentEntryId,
-    preparationDetails: updated.preparationDetails,
-    componentFoods: updated.componentFoods,
-    componentSnapshots: updated.componentSnapshots,
-  );
+  return updated
+    ..id = logged.id
+    ..amount = logged.amount
+    ..templateId = logged.templateId
+    ..createdAt = logged.createdAt
+    ..modifiedAt = logged.modifiedAt
+    ..parentEntryId = logged.parentEntryId;
 }
 
 DailyRecall replaceNutritionFoodSnapshots(
   DailyRecall recall,
-  FoodEntry definition,
-) {
+  FoodEntry definition, {
+  String? entryId,
+}) {
   final updated = DailyRecall.fromJson(recall.toJson());
   for (final meal in updated.meals) {
     for (var index = 0; index < meal.foods.length; index++) {
       final logged = meal.foods[index];
-      if (logged.foodId == definition.foodId) {
+      if (logged.foodId == definition.foodId &&
+          (entryId == null || logged.id == entryId)) {
         meal.foods[index] = applyNutritionFoodSnapshot(logged, definition);
       }
     }

@@ -43,6 +43,9 @@ NutritionFoodMutationResult _$NutritionFoodMutationResultFromJson(
   progress: (json['progress'] as List<dynamic>)
       .map((e) => e as Map<String, dynamic>)
       .toList(),
+  selectedHistoricalUpdateCount: (json['selectedHistoricalUpdateCount'] as num)
+      .toInt(),
+  todayUpdateCount: (json['todayUpdateCount'] as num).toInt(),
 );
 
 Map<String, dynamic> _$NutritionFoodMutationResultToJson(
@@ -50,4 +53,6 @@ Map<String, dynamic> _$NutritionFoodMutationResultToJson(
 ) => <String, dynamic>{
   'definition': instance.definition.toJson(),
   'progress': instance.progress,
+  'selectedHistoricalUpdateCount': instance.selectedHistoricalUpdateCount,
+  'todayUpdateCount': instance.todayUpdateCount,
 };

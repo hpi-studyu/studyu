@@ -32,15 +32,19 @@ class NutritionFoodDefinition {
   Map<String, dynamic> toJson() => _$NutritionFoodDefinitionToJson(this);
 }
 
-/// Canonical RPC result; progress rows are returned as raw Supabase payloads.
+/// Canonical RPC result with explicit persisted-row update counts.
 @JsonSerializable()
 class NutritionFoodMutationResult {
   final NutritionFoodDefinition definition;
   final List<Map<String, dynamic>> progress;
+  final int selectedHistoricalUpdateCount;
+  final int todayUpdateCount;
 
   const NutritionFoodMutationResult({
     required this.definition,
     required this.progress,
+    required this.selectedHistoricalUpdateCount,
+    required this.todayUpdateCount,
   });
 
   factory NutritionFoodMutationResult.fromJson(Map<String, dynamic> json) =>
