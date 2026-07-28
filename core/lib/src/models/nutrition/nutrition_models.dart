@@ -3,6 +3,7 @@ export 'enums.dart';
 export 'food_composition.dart';
 export 'food_entry.dart';
 export 'meal_log.dart';
+export 'nutrition_food_definition.dart';
 export 'nutrition_profile.dart';
 export 'preparation_details.dart';
 export 'saved_food_template.dart';

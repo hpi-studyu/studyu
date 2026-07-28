@@ -9,7 +9,14 @@ part 'food_entry.g.dart';
 
 @JsonSerializable()
 class FoodEntry {
+  /// UUID for this occurrence in a recall. It is never a definition ID.
   String id;
+
+  /// Stable, subject-scoped definition identity.
+  String foodId;
+
+  /// Immutable definition revision used for this logged snapshot.
+  String foodVersionId;
   FoodEntryType entryType;
   String name;
   String? brandName;
@@ -37,8 +44,13 @@ class FoodEntry {
   PreparationDetails? preparationDetails;
   List<FoodComposition>? componentFoods;
 
+  /// Ordered, immutable component snapshots for a saved meal definition.
+  List<FoodEntry>? componentSnapshots;
+
   FoodEntry({
     required this.id,
+    required this.foodId,
+    required this.foodVersionId,
     required this.entryType,
     required this.name,
     this.brandName,
@@ -63,9 +75,12 @@ class FoodEntry {
     this.parentEntryId,
     this.preparationDetails,
     this.componentFoods,
+    this.componentSnapshots,
   });
 
   FoodEntry.withId({
+    String? foodId,
+    String? foodVersionId,
     required this.entryType,
     required this.name,
     this.brandName,
@@ -89,7 +104,10 @@ class FoodEntry {
     this.parentEntryId,
     this.preparationDetails,
     this.componentFoods,
+    this.componentSnapshots,
   }) : id = const Uuid().v4(),
+       foodId = foodId ?? const Uuid().v4(),
+       foodVersionId = foodVersionId ?? const Uuid().v4(),
        createdAt = DateTime.now();
 
   factory FoodEntry.fromJson(Map<String, dynamic> json) =>

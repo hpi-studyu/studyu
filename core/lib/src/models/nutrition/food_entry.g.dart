@@ -8,6 +8,8 @@ part of 'food_entry.dart';
 
 FoodEntry _$FoodEntryFromJson(Map<String, dynamic> json) => FoodEntry(
   id: json['id'] as String,
+  foodId: json['foodId'] as String,
+  foodVersionId: json['foodVersionId'] as String,
   entryType: $enumDecode(_$FoodEntryTypeEnumMap, json['entryType']),
   name: json['name'] as String,
   brandName: json['brandName'] as String?,
@@ -45,10 +47,15 @@ FoodEntry _$FoodEntryFromJson(Map<String, dynamic> json) => FoodEntry(
   componentFoods: (json['componentFoods'] as List<dynamic>?)
       ?.map((e) => FoodComposition.fromJson(e as Map<String, dynamic>))
       .toList(),
+  componentSnapshots: (json['componentSnapshots'] as List<dynamic>?)
+      ?.map((e) => FoodEntry.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$FoodEntryToJson(FoodEntry instance) => <String, dynamic>{
   'id': instance.id,
+  'foodId': instance.foodId,
+  'foodVersionId': instance.foodVersionId,
   'entryType': instance.entryType.toJson(),
   'name': instance.name,
   'brandName': ?instance.brandName,
@@ -73,6 +80,9 @@ Map<String, dynamic> _$FoodEntryToJson(FoodEntry instance) => <String, dynamic>{
   'parentEntryId': ?instance.parentEntryId,
   'preparationDetails': ?instance.preparationDetails?.toJson(),
   'componentFoods': ?instance.componentFoods?.map((e) => e.toJson()).toList(),
+  'componentSnapshots': ?instance.componentSnapshots
+      ?.map((e) => e.toJson())
+      .toList(),
 };
 
 const _$FoodEntryTypeEnumMap = {

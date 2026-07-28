@@ -281,6 +281,8 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 
     return FoodEntry(
       id: existingFood.id,
+      foodId: existingFood.foodId,
+      foodVersionId: existingFood.foodVersionId,
       entryType: _entryType,
       name: _nameController.text,
       brandName: _brandController.text.isEmpty ? null : _brandController.text,
@@ -313,6 +315,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       parentEntryId: existingFood.parentEntryId,
       preparationDetails: existingFood.preparationDetails,
       componentFoods: existingFood.componentFoods,
+      componentSnapshots: existingFood.componentSnapshots,
     );
   }
 
