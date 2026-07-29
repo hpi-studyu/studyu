@@ -59,9 +59,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
 
     final criteria = widget.study!.eligibilityCriteria;
-    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
-      (element) => element.isViolated(qs),
-    );
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull((
+      element,
+    ) {
+      return element.isViolated(qs);
+    });
     if (failingResult == null) return true;
     // QuestionnaireWidget reports null after the continuation predicate stops.
     _ignoreNextNullResponse = true;
@@ -89,21 +91,19 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final isEligible = criteria.every((criterion) {
+      final firstFailed = criteria.firstWhereOrNull((criterion) {
         // freetext quickfix start
         /*if (_isFreeTextCriterion(criterion)) {
           print('Criterion is free text, automatically satisfying it.');
-          return true;
+          return false;
         }*/
         // freetext quickfix end
-        return criterion.isSatisfied(qs);
+        return !criterion.isSatisfied(qs);
       });
+      final isEligible = firstFailed == null;
       if (isEligible) {
         activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
-        final firstFailed = criteria.firstWhere(
-          (criterion) => criterion.isViolated(qs),
-        );
         activeResult = EligibilityResult(
           qs,
           eligible: isEligible,
