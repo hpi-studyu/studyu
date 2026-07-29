@@ -2,6 +2,9 @@ import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
+export 'package:studyu_app/util/study_subject_extension.dart'
+    show nutritionStudyDayFor;
+
 class NutritionRecallRecord {
   final DailyRecall recall;
   final String taskId;
@@ -54,7 +57,7 @@ Future<List<NutritionRecallRecord>> loadNutritionRecallRecords({
   NutritionRecallAutoSaveManager? autoSaveManager,
   DateTime? now,
 }) async {
-  final todayStudyDay = subject.getDayOfStudyFor(now ?? DateTime.now());
+  final todayStudyDay = nutritionStudyDayFor(subject, now ?? DateTime.now());
   final records = <String, NutritionRecallRecord>{};
 
   for (final progress in subject.progress) {
@@ -67,7 +70,7 @@ Future<List<NutritionRecallRecord>> loadNutritionRecallRecords({
         result.studyDaySnapshot ??
         (progress.completedAt == null
             ? null
-            : subject.getDayOfStudyFor(progress.completedAt!.toLocal()));
+            : nutritionStudyDayFor(subject, progress.completedAt!));
     if (studyDay == null) continue;
     final record = NutritionRecallRecord(
       recall: result,

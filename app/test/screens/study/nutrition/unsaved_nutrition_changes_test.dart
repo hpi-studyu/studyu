@@ -8,6 +8,8 @@ import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 
+import 'fake_nutrition_food_repository.dart';
+
 Widget testApp(Widget home) => ChangeNotifierProvider(
   create: (_) => AppState(),
   child: MaterialApp(
@@ -101,6 +103,7 @@ void main() {
                 result = await FoodSearchScreen.show(
                   context,
                   mealLabel: 'Lunch',
+                  repository: FakeNutritionFoodRepository(),
                 );
                 returned = true;
               },

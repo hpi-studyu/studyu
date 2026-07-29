@@ -49,7 +49,10 @@ class _NutritionHistoryScreenState extends State<NutritionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentStudyDay = widget.subject.getDayOfStudyFor(DateTime.now());
+    final currentStudyDay = nutritionStudyDayFor(
+      widget.subject,
+      DateTime.now(),
+    );
     return Scaffold(
       appBar: AppBar(title: Text(l10n.nutrition_history)),
       body: FutureBuilder<List<NutritionRecallRecord>>(
@@ -112,12 +115,15 @@ class _NutritionHistoryScreenState extends State<NutritionHistoryScreen> {
   }) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final editable = isEditableNutritionRecallDay(
-      studyDaySnapshot: record.studyDaySnapshot,
-      currentStudyDay: currentStudyDay,
-      hasUnambiguousPeriod:
-          record.hasUnambiguousPeriod && _hasCompletionPeriod(record.periodId),
-    );
+    final editable =
+        record.persistenceTarget != null &&
+        isEditableNutritionRecallDay(
+          studyDaySnapshot: record.studyDaySnapshot,
+          currentStudyDay: currentStudyDay,
+          hasUnambiguousPeriod:
+              record.hasUnambiguousPeriod &&
+              _hasCompletionPeriod(record.periodId),
+        );
     final foodNames = record.recall.meals
         .expand((meal) => meal.foods)
         .map((food) => food.name)

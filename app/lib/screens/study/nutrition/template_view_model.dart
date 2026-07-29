@@ -1,14 +1,15 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:studyu_app/util/template_storage_manager.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_core/core.dart';
 import 'package:uuid/uuid.dart';
 
 enum TemplateFilter { all, foods, meals }
 
 class TemplateViewModel extends ChangeNotifier {
-  final TemplateStorageManager _storageManager = TemplateStorageManager();
+  final NutritionFoodRepository _repository;
   final String userId;
 
   List<SavedFoodTemplate> _foodTemplates = [];
@@ -18,7 +19,8 @@ class TemplateViewModel extends ChangeNotifier {
   TemplateFilter _currentFilter = TemplateFilter.all;
   String _searchQuery = '';
 
-  TemplateViewModel({required this.userId}) {
+  TemplateViewModel({required this.userId, NutritionFoodRepository? repository})
+    : _repository = repository ?? NutritionFoodRepository() {
     loadAllTemplates();
   }
 
@@ -55,7 +57,7 @@ class TemplateViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _foodTemplates = await _storageManager.loadFoodTemplates(userId);
+      _foodTemplates = await _repository.loadTemplates(userId);
     } catch (e) {
       _error = e.toString();
       StudyULogger.error('Failed to load templates: $e');
@@ -82,65 +84,62 @@ class TemplateViewModel extends ChangeNotifier {
     required FoodEntry food,
     List<String>? tags,
   }) async {
-    final template = SavedFoodTemplate.withId(
-      userId: userId,
+    final template = await _repository.saveTemplate(
+      subjectId: userId,
       name: name,
+      food: _cloneFoodEntry(food),
       tags: tags,
-      isPublic: false,
-      prototype: _cloneFoodEntry(food),
     );
-
-    await _storageManager.saveFoodTemplate(template);
+    food
+      ..foodId = template.prototype.foodId
+      ..foodVersionId = template.prototype.foodVersionId
+      ..templateId = template.id;
     await loadAllTemplates();
     return template.id;
-  }
-
-  Future<void> renameFoodTemplate(String templateId, String newName) async {
-    final templates = await _storageManager.loadFoodTemplates(userId);
-    final index = templates.indexWhere((t) => t.id == templateId);
-    if (index >= 0) {
-      templates[index].name = newName;
-      templates[index].updatedAt = DateTime.now();
-      await _storageManager.saveFoodTemplate(templates[index]);
-      await loadAllTemplates();
-    }
   }
 
   Future<void> updateFoodTemplatePrototype(
     String templateId,
     FoodEntry prototype,
   ) async {
-    final templates = await _storageManager.loadFoodTemplates(userId);
-    final index = templates.indexWhere((template) => template.id == templateId);
-    if (index < 0) return;
-
-    templates[index]
-      ..name = prototype.name
-      ..prototype = _cloneFoodEntry(prototype)
-      ..updatedAt = DateTime.now();
-    await _storageManager.saveFoodTemplate(templates[index]);
+    final template = _foodTemplates.firstWhereOrNull(
+      (item) => item.id == templateId,
+    );
+    if (template == null) return;
+    final updated = _cloneFoodEntry(prototype)..foodId = template.id;
+    await _repository.saveTemplate(
+      subjectId: userId,
+      name: updated.name,
+      food: updated,
+      tags: template.tags,
+      expectedVersionId: template.prototype.foodVersionId,
+    );
     await loadAllTemplates();
   }
 
   Future<void> duplicateFoodTemplate(String templateId) async {
-    final templates = await _storageManager.loadFoodTemplates(userId);
-    final source = templates.firstWhere(
+    final source = _foodTemplates.firstWhere(
       (template) => template.id == templateId,
     );
-    await _storageManager.saveFoodTemplate(
-      SavedFoodTemplate.withId(
-        userId: userId,
-        name: source.name,
-        tags: source.tags == null ? null : List<String>.from(source.tags!),
-        isPublic: source.isPublic,
-        prototype: _cloneFoodEntry(source.prototype),
-      ),
+    final duplicate = _cloneFoodEntry(source.prototype)
+      ..id = const Uuid().v4()
+      ..foodId = const Uuid().v4()
+      ..foodVersionId = const Uuid().v4();
+    await _repository.saveTemplate(
+      subjectId: userId,
+      name: source.name,
+      food: duplicate,
+      tags: source.tags == null ? null : List<String>.from(source.tags!),
     );
     await loadAllTemplates();
   }
 
   Future<void> deleteFoodTemplate(String templateId) async {
-    await _storageManager.deleteFoodTemplate(userId, templateId);
+    final template = _foodTemplates.firstWhereOrNull(
+      (item) => item.id == templateId,
+    );
+    if (template == null) return;
+    await _repository.deleteTemplate(subjectId: userId, template: template);
     await loadAllTemplates();
   }
 
@@ -207,12 +206,13 @@ class TemplateViewModel extends ChangeNotifier {
       confidenceScore: 0.9,
       originalValues: {},
       componentFoods: [],
+      componentSnapshots: foods.map(_cloneFoodEntry).toList(),
     );
     meal.componentFoods = foods
         .map(
           (food) => FoodComposition.withId(
             parentEntryId: meal.id,
-            foodId: food.id,
+            foodId: food.foodId,
             amount: food.amount,
             unit: food.unit,
           ),

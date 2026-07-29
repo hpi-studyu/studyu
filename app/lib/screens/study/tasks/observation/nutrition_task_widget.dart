@@ -8,6 +8,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_help_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_history_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
@@ -24,16 +25,20 @@ class NutritionTaskWidget extends StatefulWidget {
   final NutritionTask? task;
   final CompletionPeriod? completionPeriod;
   final NutritionRecallPersistenceTarget? persistenceTarget;
+  final DateTime? historicalDate;
   final String? interventionId;
   final bool readOnly;
+  final NutritionFoodRepository? foodRepository;
 
   const NutritionTaskWidget({
     this.existingRecall,
     this.task,
     this.completionPeriod,
     this.persistenceTarget,
+    this.historicalDate,
     this.interventionId,
     this.readOnly = false,
+    this.foodRepository,
     super.key,
   });
 
@@ -42,16 +47,20 @@ class NutritionTaskWidget extends StatefulWidget {
     NutritionTask? task,
     CompletionPeriod? completionPeriod,
     NutritionRecallPersistenceTarget? persistenceTarget,
+    DateTime? historicalDate,
     String? interventionId,
     bool readOnly = false,
+    NutritionFoodRepository? foodRepository,
   }) => MaterialPageRoute(
     builder: (_) => NutritionTaskWidget(
       existingRecall: existingRecall,
       task: task,
       completionPeriod: completionPeriod,
       persistenceTarget: persistenceTarget,
+      historicalDate: historicalDate,
       interventionId: interventionId,
       readOnly: readOnly,
+      foodRepository: foodRepository,
     ),
   );
 
@@ -64,6 +73,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   DailyRecallEntryViewModel? _viewModel;
   TemplateViewModel? _templateViewModel;
   int _selectedDestination = 0;
+  bool _didHandleExpiredHistoricalEdit = false;
 
   @override
   void initState() {
@@ -138,23 +148,34 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         persistenceTarget: widget.persistenceTarget,
         interventionId: widget.interventionId,
         readOnly: widget.readOnly,
+        historicalMode: _isHistoricalMode,
       )..shouldSaveToDb = appState.trackParticipantProgress;
-      _templateViewModel = TemplateViewModel(
-        userId: appState.activeSubject?.id ?? 'anonymous',
-      );
+      if (!_isHistoricalMode) {
+        _templateViewModel = TemplateViewModel(
+          userId: appState.activeSubject?.id ?? 'anonymous',
+          repository: widget.foodRepository,
+        );
+      }
     }
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _viewModel!),
-        ChangeNotifierProvider.value(value: _templateViewModel!),
+        if (_templateViewModel != null)
+          ChangeNotifierProvider.value(value: _templateViewModel!),
       ],
       child: Consumer<DailyRecallEntryViewModel>(
         builder: (context, model, child) {
           final l10n = AppLocalizations.of(context)!;
           final appState = context.read<AppState>();
+          if (model.historicalEligibilityExpired) {
+            _returnToHistoryAfterExpiration(context, l10n);
+          }
           return PopScope(
-            canPop: widget.readOnly || !model.isInTaskMode,
+            canPop:
+                widget.readOnly ||
+                model.historicalEligibilityExpired ||
+                !model.isInTaskMode,
             onPopInvokedWithResult: (didPop, _) async {
               if (didPop || widget.readOnly) return;
               if (!model.meetsMinimumMeals) {
@@ -200,7 +221,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 appState.activeSubject,
               ),
               floatingActionButton:
-                  _selectedDestination == 0 && !widget.readOnly
+                  (_isHistoricalMode || _selectedDestination == 0) &&
+                      !widget.readOnly
                   ? FloatingActionButton.extended(
                       onPressed: () => _addMeal(context, model),
                       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -209,57 +231,89 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                       label: Text(l10n.log_meal),
                     )
                   : null,
-              body: IndexedStack(
-                index: _selectedDestination,
-                children: [
-                  _buildToday(context, model, l10n),
-                  NutritionStatisticsView(
-                    subject: appState.activeSubject,
-                    taskId: widget.task?.id,
-                    activeRecall: model.recall,
-                    activeStudyDay: model.studyDaySnapshot,
-                    activePeriodId:
-                        model.persistenceTarget?.periodId ??
-                        widget.completionPeriod?.id,
-                    onOpenRecall: widget.task == null
-                        ? null
-                        : (record) => _openRecall(
-                            context,
-                            appState.activeSubject,
-                            widget.task!,
-                            record,
-                          ),
-                  ),
-                  const FoodLibraryScreen(embedded: true),
-                ],
-              ),
-              bottomNavigationBar: NavigationBar(
-                selectedIndex: _selectedDestination,
-                onDestinationSelected: (index) =>
-                    setState(() => _selectedDestination = index),
-                destinations: [
-                  NavigationDestination(
-                    icon: const Icon(Icons.today_outlined),
-                    selectedIcon: const Icon(Icons.today),
-                    label: l10n.today,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.bar_chart_outlined),
-                    selectedIcon: const Icon(Icons.bar_chart),
-                    label: l10n.nutrition_statistics,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.bookmark_outline),
-                    selectedIcon: const Icon(Icons.bookmark),
-                    label: l10n.food_library,
-                  ),
-                ],
-              ),
+              body: _isHistoricalMode
+                  ? _buildToday(context, model, l10n)
+                  : IndexedStack(
+                      index: _selectedDestination,
+                      children: [
+                        _buildToday(context, model, l10n),
+                        NutritionStatisticsView(
+                          subject: appState.activeSubject,
+                          taskId: widget.task?.id,
+                          activeRecall: model.recall,
+                          activeStudyDay: model.studyDaySnapshot,
+                          activePeriodId:
+                              model.persistenceTarget?.periodId ??
+                              widget.completionPeriod?.id,
+                          onOpenRecall: widget.task == null
+                              ? null
+                              : (record) => _openRecall(
+                                  context,
+                                  appState.activeSubject,
+                                  widget.task!,
+                                  record,
+                                ),
+                        ),
+                        const FoodLibraryScreen(embedded: true),
+                      ],
+                    ),
+              bottomNavigationBar: _isHistoricalMode
+                  ? null
+                  : NavigationBar(
+                      selectedIndex: _selectedDestination,
+                      onDestinationSelected: (index) =>
+                          setState(() => _selectedDestination = index),
+                      destinations: [
+                        NavigationDestination(
+                          icon: const Icon(Icons.today_outlined),
+                          selectedIcon: const Icon(Icons.today),
+                          label: l10n.today,
+                        ),
+                        NavigationDestination(
+                          icon: const Icon(Icons.bar_chart_outlined),
+                          selectedIcon: const Icon(Icons.bar_chart),
+                          label: l10n.nutrition_statistics,
+                        ),
+                        NavigationDestination(
+                          icon: const Icon(Icons.bookmark_outline),
+                          selectedIcon: const Icon(Icons.bookmark),
+                          label: l10n.food_library,
+                        ),
+                      ],
+                    ),
             ),
           );
         },
       ),
     );
+  }
+
+  bool get _isHistoricalMode => widget.historicalDate != null;
+
+  void _returnToHistoryAfterExpiration(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    if (_didHandleExpiredHistoricalEdit) return;
+    _didHandleExpiredHistoricalEdit = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      final historicalRoute = ModalRoute.of(context);
+      if (historicalRoute == null) return;
+      final navigator = Navigator.of(context);
+      navigator.popUntil((route) => route == historicalRoute);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.historical_edit_expired)));
+      navigator.maybePop();
+    });
+  }
+
+  String _historicalDateTitle(BuildContext context, AppLocalizations l10n) {
+    final date = MaterialLocalizations.of(
+      context,
+    ).formatMediumDate(widget.historicalDate!);
+    return widget.readOnly ? date : l10n.historical_editing_date(date);
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -268,51 +322,58 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     AppLocalizations l10n,
     StudySubject? subject,
   ) => AppBar(
-    title: Text(switch (_selectedDestination) {
-      0 => l10n.nutrition_tracking,
-      1 => l10n.nutrition_statistics,
-      _ => l10n.food_library,
-    }),
-    actions: [
-      if (widget.readOnly && _selectedDestination != 1)
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text(l10n.nutrition_read_only),
-          ),
-        ),
-      if (_selectedDestination == 0 && widget.task != null)
-        IconButton(
-          icon: const Icon(Icons.history_outlined),
-          tooltip: l10n.nutrition_history,
-          onPressed: subject == null
-              ? null
-              : () => _openHistory(context, subject, widget.task!),
-        ),
-      if (_selectedDestination == 2) FoodLibraryScreen.newItemButton(context),
-      if (widget.task != null)
-        IconButton(
-          icon: const Icon(Icons.help_outline),
-          tooltip: l10n.help,
-          onPressed: _selectedDestination == 1
-              ? () => showDialog<void>(
-                  context: context,
-                  builder: (dialogContext) => AlertDialog(
-                    title: Text(l10n.nutrition_statistics),
-                    content: Text(l10n.nutrition_statistics_help_message),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(l10n.close),
-                      ),
-                    ],
-                  ),
-                )
-              : () => Navigator.of(
-                  context,
-                ).push(NutritionHelpScreen.route(task: widget.task!)),
-        ),
-    ],
+    title: Text(
+      _isHistoricalMode
+          ? _historicalDateTitle(context, l10n)
+          : switch (_selectedDestination) {
+              0 => l10n.nutrition_tracking,
+              1 => l10n.nutrition_statistics,
+              _ => l10n.food_library,
+            },
+    ),
+    actions: _isHistoricalMode
+        ? const []
+        : [
+            if (widget.readOnly && _selectedDestination != 1)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(l10n.nutrition_read_only),
+                ),
+              ),
+            if (_selectedDestination == 0 && widget.task != null)
+              IconButton(
+                icon: const Icon(Icons.history_outlined),
+                tooltip: l10n.nutrition_history,
+                onPressed: subject == null
+                    ? null
+                    : () => _openHistory(context, subject, widget.task!),
+              ),
+            if (_selectedDestination == 2)
+              FoodLibraryScreen.newItemButton(context),
+            if (widget.task != null)
+              IconButton(
+                icon: const Icon(Icons.help_outline),
+                tooltip: l10n.help,
+                onPressed: _selectedDestination == 1
+                    ? () => showDialog<void>(
+                        context: context,
+                        builder: (dialogContext) => AlertDialog(
+                          title: Text(l10n.nutrition_statistics),
+                          content: Text(l10n.nutrition_statistics_help_message),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(dialogContext),
+                              child: Text(l10n.close),
+                            ),
+                          ],
+                        ),
+                      )
+                    : () => Navigator.of(
+                        context,
+                      ).push(NutritionHelpScreen.route(task: widget.task!)),
+              ),
+          ],
   );
 
   Widget _buildToday(
@@ -328,7 +389,21 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          if (widget.task?.header != null) ...[
+          if (_isHistoricalMode) ...[
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.edit_calendar_outlined),
+                title: Text(_historicalDateTitle(context, l10n)),
+                subtitle: Text(
+                  widget.readOnly
+                      ? l10n.nutrition_read_only
+                      : l10n.historical_edit_scope,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+          if (!_isHistoricalMode && widget.task?.header != null) ...[
             HtmlText(widget.task!.header, centered: true),
             const SizedBox(height: 16),
           ],
@@ -343,7 +418,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           ),
           const SizedBox(height: 12),
           DailyNutritionSummaryCard(dailyRecall: recall, showTitle: false),
-          if (widget.task?.footer != null) ...[
+          if (!_isHistoricalMode && widget.task?.footer != null) ...[
             const SizedBox(height: 16),
             HtmlText(widget.task!.footer, centered: true),
           ],
@@ -357,14 +432,19 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     BuildContext context,
     StudySubject subject,
     NutritionTask task,
-  ) => Navigator.of(context).push(
-    NutritionHistoryScreen.route(
-      subject: subject,
-      task: task,
-      onOpenRecall: (record, editable) =>
-          _openRecall(context, subject, task, record, editable: editable),
-    ),
-  );
+  ) async {
+    await _viewModel?.flushPendingAutoSave(persistToDatabase: true);
+    if (!context.mounted) return;
+    await Navigator.of(context).push(
+      NutritionHistoryScreen.route(
+        subject: subject,
+        task: task,
+        onOpenRecall: (record, editable) =>
+            _openRecall(context, subject, task, record, editable: editable),
+      ),
+    );
+    await _viewModel?.reloadCanonicalRecall();
+  }
 
   Future<void> _openRecall(
     BuildContext context,
@@ -374,27 +454,45 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     bool? editable,
   }) async {
     if (subject == null) return;
-    final canEdit =
-        editable ??
-        isEditableNutritionRecallDay(
-          studyDaySnapshot: record.studyDaySnapshot,
-          currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
-          hasUnambiguousPeriod:
-              record.hasUnambiguousPeriod &&
-              _completionPeriodFor(task, record.periodId) != null,
-        );
+    await _viewModel?.flushPendingAutoSave(persistToDatabase: true);
+    if (!context.mounted) return;
     final period = _completionPeriodFor(task, record.periodId);
-    if (canEdit && period == null) return;
+    final target = record.persistenceTarget;
+    final canEdit =
+        (editable ??
+            isEditableNutritionRecallDay(
+              studyDaySnapshot: record.studyDaySnapshot,
+              currentStudyDay: nutritionStudyDayFor(subject, DateTime.now()),
+              hasUnambiguousPeriod:
+                  record.hasUnambiguousPeriod && period != null,
+            )) &&
+        target != null;
     await Navigator.of(context).push(
       NutritionTaskWidget.route(
         existingRecall: record.recall,
         task: task,
         completionPeriod: period,
-        persistenceTarget: record.persistenceTarget,
+        persistenceTarget: target,
+        historicalDate: record.recall.date,
         interventionId: record.interventionId,
         readOnly: !canEdit,
+        foodRepository: widget.foodRepository,
       ),
     );
+    if (!context.mounted) return;
+    await _templateViewModel?.loadAllTemplates();
+    if (canEdit &&
+        context.mounted &&
+        ModalRoute.of(context)?.isCurrent == true &&
+        !isEditableNutritionRecallDay(
+          studyDaySnapshot: record.studyDaySnapshot,
+          currentStudyDay: nutritionStudyDayFor(subject, DateTime.now()),
+          hasUnambiguousPeriod: period != null,
+        )) {
+      await _openHistory(context, subject, task);
+      return;
+    }
+    await _viewModel?.reloadCanonicalRecall();
   }
 
   CompletionPeriod? _completionPeriodFor(NutritionTask task, String? id) {
@@ -482,7 +580,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
               onTap: widget.readOnly
                   ? null
                   : () => _editMeal(context, model, entry.meal),
-              onSaveTemplate: widget.readOnly
+              onSaveTemplate: widget.readOnly || _isHistoricalMode
                   ? null
                   : () => _saveMealAsTemplate(context, entry.meal),
               onDelete: widget.readOnly
@@ -585,12 +683,16 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     MealType? initialMealType,
     String? initialCustomMealLabel,
   }) async {
-    final result = await Navigator.of(context).push(
+    final result = await _pushMealEditor(
+      context,
+      model,
       MealEntryScreen.route(
         task: widget.task,
         initialMealType: initialMealType,
         initialCustomMealLabel: initialCustomMealLabel,
         occurrenceDate: model.recall.date,
+        historicalTarget: widget.persistenceTarget,
+        foodRepository: widget.foodRepository,
       ),
     );
     if (result case SavedMealEntryResult(:final meal)) model.addMeal(meal);
@@ -601,11 +703,15 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     DailyRecallEntryViewModel model,
     MealLog meal,
   ) async {
-    final result = await Navigator.of(context).push(
+    final result = await _pushMealEditor(
+      context,
+      model,
       MealEntryScreen.route(
         existingMeal: meal,
         task: widget.task,
         occurrenceDate: model.recall.date,
+        historicalTarget: widget.persistenceTarget,
+        foodRepository: widget.foodRepository,
       ),
     );
     switch (result) {
@@ -613,8 +719,61 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         model.updateMealById(meal.id, meal);
       case DeletedMealEntryResult():
         model.removeMealById(meal.id);
-      case null:
+      case DiscardedMealEntryResult() || null:
         break;
+    }
+  }
+
+  Future<MealEntryResult?> _pushMealEditor(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+    Route<MealEntryResult> route,
+  ) async {
+    if (!await _flushHistoricalRecallBeforeNestedMutation(context, model) ||
+        !context.mounted) {
+      return null;
+    }
+
+    final suspendPersistence = _isHistoricalMode && !widget.readOnly;
+    if (suspendPersistence) model.suspendPersistence();
+    try {
+      final result = await Navigator.of(context).push(route);
+      if (!model.revalidateHistoricalEligibility()) return null;
+      final definitionMutated = switch (result) {
+        SavedMealEntryResult(:final definitionMutated) => definitionMutated,
+        DiscardedMealEntryResult() => true,
+        _ => false,
+      };
+      if (definitionMutated) await model.reloadCanonicalRecall();
+      return result;
+    } finally {
+      if (suspendPersistence) model.resumePersistence();
+    }
+  }
+
+  Future<bool> _flushHistoricalRecallBeforeNestedMutation(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+  ) async {
+    if (!_isHistoricalMode || widget.readOnly) return true;
+    try {
+      await model.flushPendingAutoSave(
+        persistToDatabase: true,
+        requireRemoteSuccess: true,
+      );
+      return !model.historicalEligibilityExpired;
+    } catch (error, stackTrace) {
+      StudyULogger.error(
+        'Failed to flush historical nutrition recall: $error\n$stackTrace',
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.could_not_save_results),
+          ),
+        );
+      }
+      return false;
     }
   }
 
@@ -681,6 +840,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     if (result == null || !context.mounted) return;
     await TemplateViewModel(
       userId: appState.activeSubject?.id ?? 'anonymous',
+      repository: widget.foodRepository,
     ).saveMealAsTemplate(name: result.name, meal: meal, tags: result.tags);
     if (context.mounted) {
       ScaffoldMessenger.of(

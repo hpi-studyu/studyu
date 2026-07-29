@@ -5,13 +5,24 @@ import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
+typedef NutritionRecallRemoteSaver =
+    Future<void> Function({
+      required String taskId,
+      required String periodId,
+      required DailyRecall recall,
+      required NutritionRecallPersistenceTarget? persistenceTarget,
+      String? interventionIdOverride,
+    });
+
 class DailyRecallEntryViewModel extends ChangeNotifier {
   final StudySubject? subject;
   final NutritionTask? task;
   final CompletionPeriod? completionPeriod;
   final String? interventionId;
   final bool readOnly;
+  final bool historicalMode;
   final NutritionRecallAutoSaveManager _autoSaveManager;
+  final NutritionRecallRemoteSaver? _remoteSaver;
 
   NutritionRecallPersistenceTarget? _persistenceTarget;
 
@@ -20,14 +31,15 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   DateTime? lastSaveTime;
 
   Timer? _autoSaveTimer;
-  Future<void>? _autoSaveFuture;
   Future<void> _localSaveFuture = Future.value();
   Future<void> _remoteSaveQueue = Future.value();
   int? _studyDaySnapshot;
   String? _interventionId;
   String? _periodId;
   bool _isDisposed = false;
+  bool _persistenceSuspended = false;
   bool _hasExistingRecall = false;
+  bool _historicalEligibilityExpired = false;
   int _recallRevision = 0;
 
   DailyRecallEntryViewModel({
@@ -37,10 +49,13 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     NutritionRecallPersistenceTarget? persistenceTarget,
     this.interventionId,
     this.readOnly = false,
+    this.historicalMode = false,
     DailyRecall? existingRecall,
     NutritionRecallAutoSaveManager? autoSaveManager,
+    NutritionRecallRemoteSaver? remoteSaver,
   }) : _persistenceTarget = persistenceTarget,
-       _autoSaveManager = autoSaveManager ?? NutritionRecallAutoSaveManager() {
+       _autoSaveManager = autoSaveManager ?? NutritionRecallAutoSaveManager(),
+       _remoteSaver = remoteSaver {
     _hasExistingRecall = existingRecall != null;
     if (existingRecall != null) {
       recall = existingRecall;
@@ -65,6 +80,8 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   int? get studyDaySnapshot => _studyDaySnapshot;
 
+  bool get historicalEligibilityExpired => _historicalEligibilityExpired;
+
   bool get isInTaskMode => task != null && completionPeriod != null;
 
   bool get meetsMinimumMeals {
@@ -75,6 +92,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   Future<void> _initialize() async {
     if (subject == null) return;
+    if (!revalidateHistoricalEligibility()) return;
 
     _studyDaySnapshot ??= subject!.getDayOfStudyFor(
       _hasExistingRecall ? recall.date : DateTime.now(),
@@ -124,11 +142,11 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     }
   }
 
-  bool _hydrateCurrentRemoteRecall() {
+  bool _hydrateCurrentRemoteRecall({bool force = false}) {
     final taskId = task?.id;
     final periodId = _periodId;
     final studyDay = _studyDaySnapshot;
-    if (_hasExistingRecall ||
+    if ((!force && _hasExistingRecall) ||
         taskId == null ||
         periodId == null ||
         studyDay == null) {
@@ -182,6 +200,29 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     return true;
   }
 
+  Future<void> reloadCanonicalRecall() async {
+    if (subject == null || _periodId == null || _studyDaySnapshot == null) {
+      return;
+    }
+    var changed = _hydrateCurrentRemoteRecall(force: true);
+    final local = await _autoSaveManager.loadPendingRecall(
+      subjectId: subject!.id,
+      taskId: task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
+      periodId: _periodId!,
+      studyDay: _studyDaySnapshot!,
+    );
+    if (_isDisposed) return;
+    if (local != null) {
+      recall = _copyRecall(local.recall);
+      lastSaveTime = recall.lastAutoSavedAt;
+      changed = true;
+    }
+    if (changed) {
+      _recallRevision++;
+      notifyListeners();
+    }
+  }
+
   void _ensureStudyDaySnapshot() {
     if (recall.studyDaySnapshot == _studyDaySnapshot) return;
     recall = _copyWithRecall();
@@ -191,14 +232,33 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     _autoSaveTimer?.cancel();
-    if (!readOnly && _hasRecallContent && subject != null) {
+    if (!readOnly &&
+        !_persistenceSuspended &&
+        _hasRecallContent &&
+        subject != null) {
       _performAutoSaveSync();
     }
     super.dispose();
   }
 
+  void suspendPersistence() {
+    _autoSaveTimer?.cancel();
+    _autoSaveTimer = null;
+    _persistenceSuspended = true;
+  }
+
+  void resumePersistence() {
+    _persistenceSuspended = false;
+    revalidateHistoricalEligibility();
+  }
+
   void onAppLifecycleStateChanged(AppLifecycleState state) {
-    if (!readOnly && state == AppLifecycleState.paused && _hasRecallContent) {
+    if (state == AppLifecycleState.resumed) {
+      revalidateHistoricalEligibility();
+    } else if (!readOnly &&
+        !_persistenceSuspended &&
+        state == AppLifecycleState.paused &&
+        _hasRecallContent) {
       _autoSaveTimer?.cancel();
       _performAutoSaveSync();
     }
@@ -229,7 +289,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void addMeal(MealLog meal) {
-    if (readOnly) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     recall.meals.add(meal);
     _recallRevision++;
     notifyListeners();
@@ -237,7 +297,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void updateMeal(int index, MealLog meal) {
-    if (readOnly) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     recall.meals[index] = meal;
     _recallRevision++;
     notifyListeners();
@@ -250,7 +310,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void removeMeal(int index) {
-    if (readOnly) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     recall.meals.removeAt(index);
     _recallRevision++;
     notifyListeners();
@@ -312,22 +372,29 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     return recall;
   }
 
-  Future<void> flushPendingAutoSave({bool persistToDatabase = false}) async {
-    if (readOnly) return;
+  Future<void> flushPendingAutoSave({
+    bool persistToDatabase = false,
+    bool requireRemoteSuccess = false,
+  }) async {
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     final hadScheduledSave = _autoSaveTimer != null;
     _autoSaveTimer?.cancel();
     _autoSaveTimer = null;
     await _localSaveFuture;
-    if (persistToDatabase && hadScheduledSave) {
-      await _performAutoSave();
+    if (persistToDatabase && (hadScheduledSave || requireRemoteSuccess)) {
+      await _performAutoSave(propagateErrors: requireRemoteSuccess);
     } else {
-      final pendingSave = _autoSaveFuture;
-      if (pendingSave != null) await pendingSave;
+      await _remoteSaveQueue;
     }
   }
 
   void _scheduleAutoSave([String reason = 'unspecified']) {
-    if (readOnly || subject == null || _studyDaySnapshot == null) return;
+    if (readOnly ||
+        _persistenceSuspended ||
+        subject == null ||
+        _studyDaySnapshot == null) {
+      return;
+    }
     StudyULogger.debug(
       '[DailyRecallVM] Schedule auto-save ($reason) | '
       'studyDay=$_studyDaySnapshot subject=${subject?.id}',
@@ -336,7 +403,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     _autoSaveTimer?.cancel();
     _autoSaveTimer = Timer(NutritionRecallAutoSaveManager.debounceDuration, () {
       _autoSaveTimer = null;
-      _autoSaveFuture = _performAutoSave();
+      _performAutoSave();
     });
   }
 
@@ -346,12 +413,23 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
       recall.isUsualIntakeDay != null;
 
   void _performAutoSaveSync() {
-    if (readOnly || subject == null || _studyDaySnapshot == null) return;
+    if (readOnly ||
+        _persistenceSuspended ||
+        subject == null ||
+        _studyDaySnapshot == null) {
+      return;
+    }
     _persistLocalSnapshot();
   }
 
   void _persistLocalSnapshot() {
-    if (readOnly || subject == null || _studyDaySnapshot == null) return;
+    if (readOnly ||
+        _persistenceSuspended ||
+        subject == null ||
+        _studyDaySnapshot == null ||
+        !revalidateHistoricalEligibility()) {
+      return;
+    }
     recall = _copyWithRecall(lastAutoSavedAt: DateTime.now());
     final localSave = _autoSaveManager.saveRecall(
       recall: recall,
@@ -375,8 +453,10 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> _performAutoSave() {
+  Future<void> _performAutoSave({bool propagateErrors = false}) {
     if (readOnly ||
+        _persistenceSuspended ||
+        !revalidateHistoricalEligibility() ||
         subject == null ||
         _studyDaySnapshot == null ||
         !isInTaskMode) {
@@ -389,16 +469,27 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
       notifyListeners();
       try {
         if (shouldSaveToDb) {
-          await subject!.upsertNutritionResult(
-            taskId: persistenceTarget?.taskId ?? task!.id,
-            periodId:
-                persistenceTarget?.periodId ??
-                _periodId ??
-                completionPeriod!.id,
-            recall: recallToSave,
-            persistenceTarget: persistenceTarget,
-            interventionIdOverride: _interventionId,
-          );
+          final taskId = persistenceTarget?.taskId ?? task!.id;
+          final periodId =
+              persistenceTarget?.periodId ?? _periodId ?? completionPeriod!.id;
+          final remoteSaver = _remoteSaver;
+          if (remoteSaver != null) {
+            await remoteSaver(
+              taskId: taskId,
+              periodId: periodId,
+              recall: recallToSave,
+              persistenceTarget: persistenceTarget,
+              interventionIdOverride: _interventionId,
+            );
+          } else {
+            await subject!.upsertNutritionResult(
+              taskId: taskId,
+              periodId: periodId,
+              recall: recallToSave,
+              persistenceTarget: persistenceTarget,
+              interventionIdOverride: _interventionId,
+            );
+          }
         }
         lastSaveTime = now;
       } catch (error, stackTrace) {
@@ -406,13 +497,29 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
           '[DailyRecallVM] Remote auto-save failed; local recall is retained: '
           '$error\n$stackTrace',
         );
+        if (propagateErrors) rethrow;
       } finally {
         isSaving = false;
         notifyListeners();
       }
     });
-    _remoteSaveQueue = remoteSave;
+    _remoteSaveQueue = remoteSave.then<void>((_) {}, onError: (_, _) {});
     return remoteSave;
+  }
+
+  bool revalidateHistoricalEligibility() {
+    final target = _persistenceTarget;
+    if (readOnly || !historicalMode || target == null) return true;
+    final activeSubject = subject;
+    final valid =
+        activeSubject != null &&
+        target.studyDaySnapshot ==
+            nutritionStudyDayFor(activeSubject, DateTime.now()) - 1;
+    if (!valid && !_historicalEligibilityExpired) {
+      _historicalEligibilityExpired = true;
+      if (!_isDisposed) notifyListeners();
+    }
+    return valid;
   }
 
   bool shouldSaveToDb = true;

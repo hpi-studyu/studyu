@@ -4,6 +4,8 @@ import 'package:studyu_core/core.dart';
 
 FoodEntry foodEntry({double amount = 2}) => FoodEntry(
   id: 'food-id',
+  foodId: 'food-definition',
+  foodVersionId: 'food-version',
   entryType: FoodEntryType.meal,
   name: 'Soup',
   brandName: 'Kitchen',
@@ -69,6 +71,8 @@ void main() {
     final duplicate = duplicateFoodEntry(source);
 
     expect(duplicate.id, isNot(source.id));
+    expect(duplicate.foodId, source.foodId);
+    expect(duplicate.foodVersionId, source.foodVersionId);
     expect(duplicate.createdAt, isNot(source.createdAt));
     expect(duplicate.modifiedAt, isNull);
     expect(duplicate.parentEntryId, isNull);
@@ -115,6 +119,8 @@ void main() {
     expect(scaled.nutrition.unavailableItemCount, 1);
 
     expect(scaled.id, source.id);
+    expect(scaled.foodId, source.foodId);
+    expect(scaled.foodVersionId, source.foodVersionId);
     expect(scaled.servingSizeGrams, 250);
     expect(scaled.source, FoodSource.usda);
     expect(scaled.externalId, 'external-id');

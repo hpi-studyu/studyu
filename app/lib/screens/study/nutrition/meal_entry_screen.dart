@@ -10,9 +10,14 @@ import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/food_analysis_service.dart';
 import 'package:studyu_app/services/photo_gallery_service.dart';
+import 'package:studyu_app/util/nutrition_food_snapshots.dart';
+import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/food_item_selection_dialog.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/photo_recall_section.dart';
@@ -20,6 +25,7 @@ import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart';
+import 'package:uuid/uuid.dart';
 
 sealed class MealEntryResult {
   const MealEntryResult();
@@ -27,15 +33,20 @@ sealed class MealEntryResult {
 
 final class SavedMealEntryResult extends MealEntryResult {
   final MealLog meal;
+  final bool definitionMutated;
 
-  const SavedMealEntryResult(this.meal);
+  const SavedMealEntryResult(this.meal, {this.definitionMutated = false});
 }
 
 final class DeletedMealEntryResult extends MealEntryResult {
   const DeletedMealEntryResult();
 }
 
-enum _FoodAction { adjustQuantity, edit, saveTemplate, remove }
+final class DiscardedMealEntryResult extends MealEntryResult {
+  const DiscardedMealEntryResult();
+}
+
+enum _FoodAction { adjustQuantity, edit, editDefinition, saveTemplate, remove }
 
 class _MealTypeSelection {
   final MealType type;
@@ -71,6 +82,8 @@ class MealEntryScreen extends StatefulWidget {
   final MealType? initialMealType;
   final String? initialCustomMealLabel;
   final DateTime? occurrenceDate;
+  final NutritionRecallPersistenceTarget? historicalTarget;
+  final NutritionFoodRepository? foodRepository;
   final bool openFoodSearch;
 
   const MealEntryScreen({
@@ -79,6 +92,8 @@ class MealEntryScreen extends StatefulWidget {
     this.initialMealType,
     this.initialCustomMealLabel,
     this.occurrenceDate,
+    this.historicalTarget,
+    this.foodRepository,
     this.openFoodSearch = false,
     super.key,
   });
@@ -89,6 +104,8 @@ class MealEntryScreen extends StatefulWidget {
     MealType? initialMealType,
     String? initialCustomMealLabel,
     DateTime? occurrenceDate,
+    NutritionRecallPersistenceTarget? historicalTarget,
+    NutritionFoodRepository? foodRepository,
     bool openFoodSearch = false,
   }) => MaterialPageRoute(
     builder: (_) => MealEntryScreen(
@@ -97,6 +114,8 @@ class MealEntryScreen extends StatefulWidget {
       initialMealType: initialMealType,
       initialCustomMealLabel: initialCustomMealLabel,
       occurrenceDate: occurrenceDate,
+      historicalTarget: historicalTarget,
+      foodRepository: foodRepository,
       openFoodSearch: openFoodSearch,
     ),
   );
@@ -122,6 +141,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   late final String _initialMealSnapshot;
   bool _allowPop = false;
   bool _hasAttemptedSave = false;
+  bool _definitionMutated = false;
+  final Map<String, String> _compositeMutationIds = {};
 
   late TextEditingController _skipReasonController;
 
@@ -187,27 +208,143 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       context,
       mealLabel: _mealLabel,
       allowMeals: widget.task?.allowMeals ?? true,
+      historicalMode: widget.historicalTarget != null,
+      repository: widget.foodRepository,
     );
-    if (result != null && mounted) {
-      setState(() => _meal.foods.addAll(result.foods));
-    }
+    if (!mounted || !_revalidateHistoricalEligibility()) return;
+    if (result != null) setState(() => _meal.foods.addAll(result.foods));
   }
 
   int _foodIndex(String foodId) =>
       _meal.foods.indexWhere((food) => food.id == foodId);
 
-  Future<void> _editFood(FoodEntry food) async {
-    final result = await Navigator.of(
-      context,
-    ).push(FoodEntryScreen.route(existingFood: food, showSearchAction: false));
-    if (result == null || !mounted) return;
+  Future<void> _editFood(
+    FoodEntry food, {
+    bool editReusableDefinition = false,
+  }) async {
+    if (editReusableDefinition && food.entryType == FoodEntryType.meal) {
+      await _editCompositeMealDefinition(food);
+      return;
+    }
+    final result = await Navigator.of(context).push(
+      FoodEntryScreen.route(
+        existingFood: food,
+        showSearchAction: false,
+        historicalTarget: widget.historicalTarget,
+        editReusableDefinition: editReusableDefinition,
+        repository: widget.foodRepository,
+      ),
+    );
+    if (!mounted || !_revalidateHistoricalEligibility()) return;
+    if (result == null) return;
 
     final index = _foodIndex(food.id);
     if (index == -1) return;
-    setState(() => _meal.foods[index] = result);
+    setState(() {
+      _definitionMutated = _definitionMutated || editReusableDefinition;
+      _meal.foods[index] = result;
+    });
+  }
+
+  Future<void> _editCompositeMealDefinition(FoodEntry existingMeal) async {
+    final editableDefinition = normalizeNutritionFoodDefinition(existingMeal);
+    final edited = await Navigator.of(
+      context,
+    ).push(MealCreatorScreen.route(existingMeal: editableDefinition));
+    if (!mounted || !_revalidateHistoricalEligibility() || edited == null) {
+      return;
+    }
+
+    final subject = Provider.of<AppState>(context, listen: false).activeSubject;
+    final historicalTarget = widget.historicalTarget;
+    if (subject == null || historicalTarget == null) return;
+    final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
+    final repository = widget.foodRepository ?? NutritionFoodRepository();
+    final l10n = AppLocalizations.of(context)!;
+    final mutationId = _compositeMutationIds.putIfAbsent(
+      existingMeal.id,
+      () => const Uuid().v4(),
+    );
+    try {
+      final result = await repository.mutateHistoricalDefinition(
+        subjectId: subject.id,
+        snapshot: normalizeCompositeNutritionFoodDefinition(edited),
+        expectedVersionId: existingMeal.foodVersionId,
+        entryId: existingMeal.id,
+        target: historicalTarget.toJson(),
+        currentStudyDay: currentStudyDay,
+        mutationId: mutationId,
+      );
+      final updated = applyNutritionFoodSnapshot(
+        existingMeal,
+        result.definition.snapshot,
+      );
+      _reconcileProgress(subject, result.progress);
+      final autoSaveManager = NutritionRecallAutoSaveManager();
+      await autoSaveManager.rewriteFoodDefinition(
+        subjectId: subject.id,
+        studyDaySnapshot: currentStudyDay,
+        definition: result.definition.snapshot,
+      );
+      await autoSaveManager.rewriteFoodDefinition(
+        subjectId: subject.id,
+        studyDaySnapshot: historicalTarget.studyDaySnapshot,
+        definition: result.definition.snapshot,
+        entryId: existingMeal.id,
+      );
+      if (!mounted || !_revalidateHistoricalEligibility()) return;
+      final index = _foodIndex(existingMeal.id);
+      if (index == -1) return;
+      setState(() {
+        _definitionMutated = true;
+        _meal.foods[index] = updated;
+      });
+      _compositeMutationIds.remove(existingMeal.id);
+      final message = result.todayUpdateCount == 0
+          ? l10n.food_definition_updated_no_today(
+              result.selectedHistoricalUpdateCount,
+            )
+          : l10n.food_definition_updated_today(
+              result.selectedHistoricalUpdateCount,
+              result.todayUpdateCount,
+            );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } catch (error, stackTrace) {
+      StudyULogger.error(
+        'Failed to update historical composite meal definition: '
+        '$error\n$stackTrace',
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+      }
+    }
+  }
+
+  void _reconcileProgress(
+    StudySubject subject,
+    List<Map<String, dynamic>> canonicalRows,
+  ) {
+    for (final row in canonicalRows) {
+      final canonical = SubjectProgress.fromJson(row);
+      final index = subject.progress.indexWhere(
+        (progress) =>
+            progress.subjectId == canonical.subjectId &&
+            progress.completedAt == canonical.completedAt,
+      );
+      if (index < 0) {
+        subject.progress.add(canonical);
+      } else {
+        subject.progress[index] = canonical;
+      }
+    }
   }
 
   void _removeFood(FoodEntry food) {
+    if (!_revalidateHistoricalEligibility()) return;
     final index = _foodIndex(food.id);
     if (index == -1) return;
     setState(() => _meal.foods.removeAt(index));
@@ -219,7 +356,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       food: food,
       mealLabel: _mealLabel,
     );
-    if (result == null || !mounted) return;
+    if (!mounted || !_revalidateHistoricalEligibility()) return;
+    if (result == null) return;
 
     final index = _foodIndex(food.id);
     if (index == -1) return;
@@ -268,7 +406,14 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
               title: Text(l10n.edit_this_entry),
               onTap: () => Navigator.pop(sheetContext, _FoodAction.edit),
             ),
-            if (food.templateId == null)
+            if (widget.historicalTarget != null)
+              ListTile(
+                leading: const Icon(Icons.sync_outlined),
+                title: Text(l10n.edit_food_definition),
+                onTap: () =>
+                    Navigator.pop(sheetContext, _FoodAction.editDefinition),
+              ),
+            if (food.templateId == null && widget.historicalTarget == null)
               ListTile(
                 leading: const Icon(Icons.bookmark_add_outlined),
                 title: Text(l10n.save_to_my_items_action),
@@ -298,6 +443,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         await _adjustFoodQuantity(food);
       case _FoodAction.edit:
         await _editFood(food);
+      case _FoodAction.editDefinition:
+        await _editFood(food, editReusableDefinition: true);
       case _FoodAction.saveTemplate:
         await _saveFoodAsTemplate(food);
       case _FoodAction.remove:
@@ -368,14 +515,39 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     });
   }
 
-  void _saveMeal() {
+  Future<void> _saveMeal() async {
     if (!_isMealValid) {
       setState(() => _hasAttemptedSave = true);
       return;
     }
 
+    final appState = Provider.of<AppState>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
+    final subject = appState.activeSubject;
+    final historicalTarget = widget.historicalTarget;
+    if (!_revalidateHistoricalEligibility()) return;
+    try {
+      if (subject != null) {
+        await (widget.foodRepository ?? NutritionFoodRepository())
+            .ensureDefinitions(subjectId: subject.id, foods: _meal.foods);
+      }
+    } catch (error, stackTrace) {
+      StudyULogger.warning(
+        'Nutrition definitions remain queued for retry: $error\n$stackTrace',
+      );
+      if (historicalTarget != null) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+        }
+        return;
+      }
+    }
+    if (!_revalidateHistoricalEligibility()) return;
+
     _meal = _buildMeal(normalizeSkipped: true);
-    _pop(SavedMealEntryResult(_meal));
+    _pop(SavedMealEntryResult(_meal, definitionMutated: _definitionMutated));
   }
 
   Future<void> _confirmDiscard() async {
@@ -391,7 +563,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     switch (action) {
       case UnsavedChangesAction.discard:
-        _pop();
+        _pop(_definitionMutated ? const DiscardedMealEntryResult() : null);
       case null:
         return;
     }
@@ -420,9 +592,31 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         ],
       ),
     );
-    if (shouldDelete == true && mounted) {
+    if (shouldDelete == true && mounted && _revalidateHistoricalEligibility()) {
       _pop(const DeletedMealEntryResult());
     }
+  }
+
+  bool _revalidateHistoricalEligibility() {
+    final target = widget.historicalTarget;
+    if (target == null) return true;
+    final subject = Provider.of<AppState>(context, listen: false).activeSubject;
+    final valid =
+        subject != null &&
+        isEditableNutritionRecallDay(
+          studyDaySnapshot: target.studyDaySnapshot,
+          currentStudyDay: nutritionStudyDayFor(subject, DateTime.now()),
+          hasUnambiguousPeriod: true,
+        );
+    if (!valid && mounted && !_allowPop) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.historical_edit_expired),
+        ),
+      );
+      _pop();
+    }
+    return valid;
   }
 
   Future<void> _selectMealType() async {
@@ -567,7 +761,10 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
 
     if (result != null && mounted) {
-      final viewModel = TemplateViewModel(userId: userId);
+      final viewModel = TemplateViewModel(
+        userId: userId,
+        repository: widget.foodRepository,
+      );
       food.templateId = await viewModel.saveFoodAsTemplate(
         name: result.name,
         food: food,
@@ -829,7 +1026,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   showValidationError: _hasAttemptedSave && _meal.foods.isEmpty,
                   onAddFood: _addFood,
                   onFoodActions: _showFoodActions,
-                  onSaveToLibrary: _openMealBuilder,
+                  onSaveToLibrary: widget.historicalTarget == null
+                      ? _openMealBuilder
+                      : null,
                 ),
                 const SizedBox(height: 16),
               ],
@@ -1215,7 +1414,7 @@ class _FoodListSection extends StatelessWidget {
   final bool isSkipped;
   final VoidCallback onAddFood;
   final Future<void> Function(FoodEntry) onFoodActions;
-  final VoidCallback onSaveToLibrary;
+  final VoidCallback? onSaveToLibrary;
   final bool showValidationError;
 
   const _FoodListSection({
@@ -1274,18 +1473,19 @@ class _FoodListSection extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (compactActions)
-                  IconButton(
-                    tooltip: l10n.save_meal,
-                    onPressed: onSaveToLibrary,
-                    icon: const Icon(Icons.bookmark_add_outlined),
-                  )
-                else
-                  TextButton.icon(
-                    onPressed: onSaveToLibrary,
-                    icon: const Icon(Icons.bookmark_add_outlined),
-                    label: Text(l10n.save_meal),
-                  ),
+                if (onSaveToLibrary != null)
+                  if (compactActions)
+                    IconButton(
+                      tooltip: l10n.save_meal,
+                      onPressed: onSaveToLibrary,
+                      icon: const Icon(Icons.bookmark_add_outlined),
+                    )
+                  else
+                    TextButton.icon(
+                      onPressed: onSaveToLibrary,
+                      icon: const Icon(Icons.bookmark_add_outlined),
+                      label: Text(l10n.save_meal),
+                    ),
                 TextButton.icon(
                   onPressed: onAddFood,
                   icon: const Icon(Icons.add),

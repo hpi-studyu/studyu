@@ -101,13 +101,7 @@ FoodSearchHistory buildFoodSearchHistory(
   );
 }
 
-String foodHistoryIdentity(FoodEntry food) {
-  final externalId = food.externalId?.trim();
-  if (externalId != null && externalId.isNotEmpty) {
-    return '${food.source.name}|external|${_normalize(externalId)}';
-  }
-  return '${_normalize(food.name)}|${_normalize(food.brandName ?? '')}|${_normalize(food.unit)}';
-}
+String foodHistoryIdentity(FoodEntry food) => food.foodId;
 
 int _compareFrequentlyUsed(
   FoodSearchHistoryItem left,
@@ -123,9 +117,6 @@ int _compareRecent(FoodSearchHistoryItem left, FoodSearchHistoryItem right) {
   if (dateComparison != 0) return dateComparison;
   return left.identity.compareTo(right.identity);
 }
-
-String _normalize(String value) =>
-    value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
 final class _HistoryAccumulator {
   FoodEntry food;

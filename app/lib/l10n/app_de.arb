@@ -1063,6 +1063,29 @@
   "nutrition_history_latest_study_day_description": "Ihr letzter Studientag bleibt bearbeitbar, sodass Sie Einträge am folgenden Morgen hinzufügen oder korrigieren können.",
   "nutrition_history_previous_study_days": "Frühere Studientage",
   "nutrition_history_no_foods_logged": "Keine Lebensmittel erfasst",
+  "historical_editing_date": "{date} bearbeiten",
+  "@historical_editing_date": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "historical_edit_scope": "Eintragsänderungen gelten nur für diesen Studientag",
+  "historical_edit_expired": "Dieser Studientag kann nicht mehr bearbeitet werden.",
+  "edit_food_definition": "Wiederverwendbares Lebensmittel bearbeiten",
+  "food_definition_edit_helper": "Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Lebensmittel in Ihrer Bibliothek und passende heutige Einträge. Die Portionsanzahl dieses historischen Eintrags bleibt erhalten.",
+  "food_definition_updated_no_today": "Das wiederverwendbare Lebensmittel wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} aktualisiert. Heute gibt es keine passenden Einträge.",
+  "@food_definition_updated_no_today": {
+    "placeholders": {
+      "historicalCount": {"type": "int"}
+    }
+  },
+  "food_definition_updated_today": "Das wiederverwendbare Lebensmittel wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} und {todayCount, plural, =1 {1 passenden heutigen Eintrag} other {{todayCount} passende heutige Einträge}} aktualisiert.",
+  "@food_definition_updated_today": {
+    "placeholders": {
+      "historicalCount": {"type": "int"},
+      "todayCount": {"type": "int"}
+    }
+  },
   "nutrition_statistics_empty": "Noch keine Ernährungsdaten verfügbar.",
   "nutrition_editable": "Bearbeitbar",
   "nutrition_read_only": "Nur lesen",

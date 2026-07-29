@@ -4811,6 +4811,48 @@ abstract class AppLocalizations {
   /// **'No foods logged'**
   String get nutrition_history_no_foods_logged;
 
+  /// No description provided for @historical_editing_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing {date}'**
+  String historical_editing_date(String date);
+
+  /// No description provided for @historical_edit_scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry changes apply only to this study day'**
+  String get historical_edit_scope;
+
+  /// No description provided for @historical_edit_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'This study day is no longer editable.'**
+  String get historical_edit_expired;
+
+  /// No description provided for @edit_food_definition.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit reusable food'**
+  String get edit_food_definition;
+
+  /// No description provided for @food_definition_edit_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Serving description, weight, conversions, and nutrition update the reusable food in your library and matching entries logged today. This historical entry keeps its serving count.'**
+  String get food_definition_edit_helper;
+
+  /// No description provided for @food_definition_updated_no_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. No matching entries today.'**
+  String food_definition_updated_no_today(int historicalCount);
+
+  /// No description provided for @food_definition_updated_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}} and {todayCount, plural, =1 {1 matching entry today} other {{todayCount} matching entries today}}.'**
+  String food_definition_updated_today(int historicalCount, int todayCount);
+
   /// No description provided for @nutrition_statistics_empty.
   ///
   /// In en, this message translates to:

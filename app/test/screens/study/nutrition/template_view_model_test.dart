@@ -4,6 +4,8 @@ import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
 
+import 'fake_nutrition_food_repository.dart';
+
 void main() {
   setUpAll(() => SharedPreferences.setMockInitialValues({}));
   setUp(() async => (await SharedPreferences.getInstance()).clear());
@@ -263,7 +265,10 @@ void main() {
 }
 
 Future<TemplateViewModel> _viewModel() async {
-  final viewModel = TemplateViewModel(userId: 'test-user');
+  final viewModel = TemplateViewModel(
+    userId: 'test-user',
+    repository: FakeNutritionFoodRepository(),
+  );
   while (viewModel.isLoading) {
     await Future<void>.delayed(Duration.zero);
   }
@@ -292,6 +297,8 @@ FoodEntry _foodEntry({
   List<FoodComposition>? componentFoods,
 }) => FoodEntry(
   id: id,
+  foodId: '$id-definition',
+  foodVersionId: '$id-version',
   entryType: entryType,
   name: 'Food',
   amount: 1,

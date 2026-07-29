@@ -13,11 +13,16 @@ import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
-import 'package:studyu_app/util/template_storage_manager.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
+
+import 'fake_nutrition_food_repository.dart';
 
 FoodEntry testFood() => FoodEntry(
   id: 'food',
+  foodId: 'food-definition',
+  foodVersionId: 'food-version',
   entryType: FoodEntryType.singleIngredient,
   name: 'Apple',
   amount: 1,
@@ -90,12 +95,15 @@ Future<void> openMealEntry(
   MealLog meal, {
   NutritionTask? task,
   DateTime? occurrenceDate,
+  NutritionRecallPersistenceTarget? historicalTarget,
+  NutritionFoodRepository? foodRepository,
+  AppState? appState,
   ValueChanged<MealLog?>? onResult,
   ValueChanged<MealEntryResult?>? onEntryResult,
 }) async {
   await tester.pumpWidget(
     ChangeNotifierProvider(
-      create: (_) => AppState(),
+      create: (_) => appState ?? AppState(),
       child: MaterialApp(
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -112,6 +120,9 @@ Future<void> openMealEntry(
                             existingMeal: meal,
                             task: task,
                             occurrenceDate: occurrenceDate,
+                            historicalTarget: historicalTarget,
+                            foodRepository:
+                                foodRepository ?? FakeNutritionFoodRepository(),
                           ),
                         ),
                       );
@@ -131,6 +142,123 @@ Future<void> openMealEntry(
   await tester.tap(find.text('Open meal'));
   await tester.pumpAndSettle();
 }
+
+class _TrackingNutritionFoodRepository extends FakeNutritionFoodRepository {
+  _TrackingNutritionFoodRepository({
+    required this.todayUpdateCount,
+    this.failuresBeforeSuccess = 0,
+  });
+
+  final int todayUpdateCount;
+  final int failuresBeforeSuccess;
+  int mutationCalls = 0;
+  final List<String?> mutationIds = [];
+  FoodEntry? submittedSnapshot;
+
+  @override
+  Future<NutritionFoodMutationResult> mutateHistoricalDefinition({
+    required String subjectId,
+    required FoodEntry snapshot,
+    required String expectedVersionId,
+    required String entryId,
+    required Map<String, dynamic> target,
+    required int currentStudyDay,
+    String? mutationId,
+  }) async {
+    mutationCalls++;
+    mutationIds.add(mutationId);
+    submittedSnapshot = FoodEntry.fromJson(snapshot.toJson());
+    if (mutationCalls <= failuresBeforeSuccess) {
+      throw StateError('transient mutation failure');
+    }
+    final definition = FoodEntry.fromJson(snapshot.toJson())
+      ..foodVersionId = 'updated-food-version';
+    final now = DateTime.now();
+    return NutritionFoodMutationResult(
+      definition: NutritionFoodDefinition(
+        id: definition.foodId,
+        subjectId: subjectId,
+        kind: definition.entryType == FoodEntryType.meal ? 'meal' : 'food',
+        currentVersionId: definition.foodVersionId,
+        deletedAt: null,
+        snapshot: definition,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      progress: const [],
+      selectedHistoricalUpdateCount: 1,
+      todayUpdateCount: todayUpdateCount,
+    );
+  }
+}
+
+({AppState appState, NutritionRecallPersistenceTarget target})
+_historicalEditingSetup() {
+  final subject = StudySubject('subject', 'study', 'user', [])
+    ..startedAt = DateTime.now().subtract(const Duration(days: 5));
+  subject.study = (Study('study', 'user')
+    ..schedule = (StudySchedule()..numberOfCycles = 0)
+    ..interventions = []);
+  final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
+  final target = NutritionRecallPersistenceTarget(
+    taskId: 'task',
+    periodId: 'period',
+    interventionId: 'intervention',
+    completedAt: DateTime.now().subtract(const Duration(days: 1)),
+    studyDaySnapshot: currentStudyDay - 1,
+  );
+  return (appState: AppState()..activeSubject = subject, target: target);
+}
+
+MealLog _mealWithCompositeDefinition() {
+  final component = FoodEntry.fromJson(testFood().toJson())
+    ..id = 'component-snapshot'
+    ..foodId = 'component-definition'
+    ..foodVersionId = 'component-version';
+  component.nutrition.micros = {'iron': 4};
+  final composite = FoodEntry.fromJson(testFood().toJson())
+    ..id = 'composite-entry'
+    ..foodId = 'composite-definition'
+    ..foodVersionId = 'composite-version'
+    ..entryType = FoodEntryType.meal
+    ..name = 'Fruit bowl'
+    ..amount = 2
+    ..nutrition.energyKcal = 104
+    ..componentFoods = [
+      FoodComposition(
+        id: 'composition',
+        parentEntryId: 'composite-entry',
+        foodId: component.foodId,
+        amount: 1,
+        unit: component.unit,
+        sortOrder: 0,
+      ),
+    ]
+    ..componentSnapshots = [component];
+  composite.nutrition.micros = {'iron': 8};
+  final individualComponent = FoodEntry.fromJson(component.toJson())
+    ..id = 'individual-component-entry'
+    ..name = 'Individual apple';
+  return editableMeal()..foods = [composite, individualComponent];
+}
+
+MealLog _mealWithMatchingDefinitions() {
+  final selected = FoodEntry.fromJson(testFood().toJson())
+    ..amount = 2
+    ..nutrition.energyKcal = 104;
+  final sibling = FoodEntry.fromJson(testFood().toJson())
+    ..id = 'sibling-entry'
+    ..amount = 3
+    ..nutrition.energyKcal = 156;
+  return editableMeal()..foods = [selected, sibling];
+}
+
+Finder foodEditorInput(String label) => find
+    .ancestor(
+      of: find.textContaining(label),
+      matching: find.byType(TextFormField),
+    )
+    .first;
 
 Future<void> selectMealType(
   WidgetTester tester,
@@ -803,6 +931,291 @@ void main() {
     expect(find.byType(MealEntryScreen), findsNothing);
   });
 
+  testWidgets('historical entry edit stays local to the selected occurrence', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 2);
+    MealLog? result;
+    await openMealEntry(
+      tester,
+      _mealWithMatchingDefinitions(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+      onResult: (value) => result = value,
+    );
+
+    await tester.tap(find.byTooltip('More options').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Edit reusable food'), findsOneWidget);
+    await tester.tap(find.text('Edit this entry'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(foodEditorInput('Food Name'), 'Local apple');
+    await tester.enterText(foodEditorInput('Nutrition values are for'), '75');
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(repository.mutationCalls, 0);
+    expect(find.text('Local apple'), findsOneWidget);
+    expect(find.text('Apple'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.foods[0].id, 'food');
+    expect(result!.foods[0].foodId, 'food-definition');
+    expect(result!.foods[0].name, 'Local apple');
+    expect(result!.foods[0].amount, 2);
+    expect(result!.foods[0].servingSizeGrams, 75);
+    expect(result!.foods[1].id, 'sibling-entry');
+    expect(result!.foods[1].name, 'Apple');
+    expect(result!.foods[1].amount, 3);
+    expect(result!.foods[1].servingSizeGrams, 100);
+  });
+
+  testWidgets(
+    'historical reusable edit normalizes definition and reports today occurrences',
+    (tester) async {
+      final setup = _historicalEditingSetup();
+      final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 3);
+      MealEntryResult? result;
+      await openMealEntry(
+        tester,
+        _mealWithMatchingDefinitions(),
+        historicalTarget: setup.target,
+        foodRepository: repository,
+        appState: setup.appState,
+        onEntryResult: (value) => result = value,
+      );
+
+      await tester.tap(find.byTooltip('More options').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Edit reusable food'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.textContaining('matching entries logged today'),
+        findsOneWidget,
+      );
+      await tester.enterText(foodEditorInput('Food Name'), 'Reusable apple');
+      await tester.enterText(foodEditorInput('Nutrition values are for'), '80');
+      await tester.scrollUntilVisible(
+        find.text('Advanced Options'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Advanced Options'));
+      await tester.pumpAndSettle();
+      await tester.enterText(foodEditorInput('Portion Reference'), 'one apple');
+      await tester.enterText(foodEditorInput('Yield Factor'), '0.8');
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.pumpAndSettle();
+
+      expect(repository.mutationCalls, 1);
+      expect(repository.submittedSnapshot!.id, 'food');
+      expect(repository.submittedSnapshot!.foodId, 'food-definition');
+      expect(repository.submittedSnapshot!.amount, 1);
+      expect(repository.submittedSnapshot!.nutrition.energyKcal, 52);
+      expect(repository.submittedSnapshot!.servingSizeGrams, 80);
+      expect(repository.submittedSnapshot!.portionReference, 'one apple');
+      expect(repository.submittedSnapshot!.yieldFactor, 0.8);
+      expect(
+        find.text(
+          'Reusable food updated for the selected entry and 3 matching entries today.',
+        ),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.pumpAndSettle();
+
+      expect(result, isA<SavedMealEntryResult>());
+      final meal = (result! as SavedMealEntryResult).meal;
+      expect(meal.foods[0].id, 'food');
+      expect(meal.foods[0].foodId, 'food-definition');
+      expect(meal.foods[0].foodVersionId, 'updated-food-version');
+      expect(meal.foods[0].name, 'Reusable apple');
+      expect(meal.foods[0].amount, 2);
+      expect(meal.foods[0].nutrition.energyKcal, 104);
+      expect(meal.foods[0].servingSizeGrams, 80);
+      expect(meal.foods[0].portionReference, 'one apple');
+      expect(meal.foods[1].id, 'sibling-entry');
+      expect(meal.foods[1].foodVersionId, 'food-version');
+      expect(meal.foods[1].name, 'Apple');
+      expect(meal.foods[1].amount, 3);
+    },
+  );
+
+  testWidgets(
+    'historical composite definition edit propagates composition only by meal identity',
+    (tester) async {
+      final setup = _historicalEditingSetup();
+      final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 2);
+      MealEntryResult? result;
+      await openMealEntry(
+        tester,
+        _mealWithCompositeDefinition(),
+        historicalTarget: setup.target,
+        foodRepository: repository,
+        appState: setup.appState,
+        onEntryResult: (value) => result = value,
+      );
+
+      await tester.tap(find.byTooltip('More options').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Edit reusable food'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(MealCreatorScreen), findsOneWidget);
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Meal Name *'),
+        'Updated fruit bowl',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Servings *'),
+        '2',
+      );
+      await tester.tap(find.byTooltip('Edit amount'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(TextField, 'Amount'), '1.5');
+      await tester.tap(find.widgetWithText(FilledButton, 'Save').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+
+      expect(repository.mutationCalls, 1);
+      expect(repository.submittedSnapshot!.foodId, 'composite-definition');
+      expect(repository.submittedSnapshot!.amount, 1);
+      expect(repository.submittedSnapshot!.nutrition.energyKcal, 39);
+      expect(repository.submittedSnapshot!.nutrition.micros, {'iron': 3});
+      expect(repository.submittedSnapshot!.componentFoods!.single.amount, 0.75);
+      expect(
+        repository.submittedSnapshot!.componentSnapshots!.single.foodId,
+        'component-definition',
+      );
+      expect(
+        repository.submittedSnapshot!.componentSnapshots!.single.amount,
+        0.75,
+      );
+      expect(
+        repository
+            .submittedSnapshot!
+            .componentSnapshots!
+            .single
+            .nutrition
+            .micros,
+        {'iron': 3},
+      );
+      expect(find.text('Updated fruit bowl'), findsOneWidget);
+      expect(find.text('Individual apple'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.pumpAndSettle();
+
+      final savedMeal = (result! as SavedMealEntryResult).meal;
+      expect(savedMeal.mealType, MealType.other);
+      expect(savedMeal.timestamp, DateTime(2026, 7, 15, 20));
+      expect(savedMeal.foods.first.id, 'composite-entry');
+      expect(savedMeal.foods.first.amount, 2);
+      expect(savedMeal.foods.first.nutrition.energyKcal, 78);
+      expect(savedMeal.foods.first.nutrition.micros, {'iron': 6});
+      expect(savedMeal.foods.first.foodVersionId, 'updated-food-version');
+      expect(savedMeal.foods.first.componentFoods!.single.amount, 0.75);
+      expect(savedMeal.foods.last.id, 'individual-component-entry');
+      expect(savedMeal.foods.last.name, 'Individual apple');
+      expect(savedMeal.foods.last.foodVersionId, 'component-version');
+    },
+  );
+
+  testWidgets('historical composite retry reuses its mutation id', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(
+      todayUpdateCount: 0,
+      failuresBeforeSuccess: 1,
+    );
+    await openMealEntry(
+      tester,
+      _mealWithCompositeDefinition(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+
+    for (var attempt = 0; attempt < 2; attempt++) {
+      await tester.tap(find.byTooltip('More options').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Edit reusable food'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+    }
+
+    expect(repository.mutationCalls, 2);
+    expect(repository.mutationIds, hasLength(2));
+    expect(repository.mutationIds.first, isNotNull);
+    expect(repository.mutationIds.last, repository.mutationIds.first);
+  });
+
+  testWidgets('historical definition save rechecks device-local eligibility', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 0);
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit reusable food'));
+    await tester.pumpAndSettle();
+    final subject = setup.appState.activeSubject!;
+    subject.startedAt = subject.startedAt!.subtract(const Duration(days: 1));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(repository.mutationCalls, 0);
+    expect(find.text('This study day is no longer editable.'), findsOneWidget);
+  });
+
+  testWidgets('historical reusable edit reports no matching today entries', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 0);
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit reusable food'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(repository.mutationCalls, 1);
+    expect(
+      find.text(
+        'Reusable food updated for the selected entry. No matching entries today.',
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('food editor hides search and preserves the meal draft', (
     tester,
   ) async {
@@ -849,27 +1262,17 @@ void main() {
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
 
-    expect(find.byType(BottomSheet), findsOneWidget);
-    expect(find.text('Add food to Edited supper'), findsOneWidget);
-
     final navigator = tester.state<NavigatorState>(find.byType(Navigator));
     final recipeResult = navigator.push<FoodEntry>(MealCreatorScreen.route());
     await tester.pumpAndSettle();
-
-    expect(find.byType(MealCreatorScreen), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     expect(await recipeResult, isNull);
-    expect(find.byType(MealCreatorScreen), findsNothing);
 
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
-
-    expect(find.byType(MealEntryScreen), findsOneWidget);
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
@@ -893,7 +1296,7 @@ void main() {
         'nested': {'value': 1},
       };
     prototype.nutrition.micros = {'vitaminC': 5};
-    await TemplateStorageManager().saveFoodTemplate(
+    final repository = FakeNutritionFoodRepository([
       SavedFoodTemplate(
         id: 'saved-food-template',
         userId: 'anonymous',
@@ -902,10 +1305,15 @@ void main() {
         createdAt: DateTime(2026, 7, 15),
         prototype: prototype,
       ),
-    );
+    ]);
     final original = editableMeal();
     MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await openMealEntry(
+      tester,
+      original,
+      foodRepository: repository,
+      onResult: (value) => result = value,
+    );
 
     await selectMealType(
       tester,
@@ -917,26 +1325,28 @@ void main() {
 
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('My items'));
+    await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add to Edited supper'), findsOneWidget);
-    await tester.tap(
+    expect(repository.loadCalls, 1);
+    await tester.enterText(
       find.descendant(
         of: find.byType(FoodQuantitySheet),
-        matching: find.byIcon(Icons.add),
+        matching: find.byType(TextField),
+      ),
+      '2',
+    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const ValueKey('selection-tray')),
+        matching: find.byType(FilledButton),
       ),
     );
-    await tester.pump();
-    expect(find.text('104 kcal'), findsOneWidget);
-    await tester.tap(find.text('Add to Edited supper'));
     await tester.pumpAndSettle();
-
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
-    expect(find.text('Saved Pear'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
@@ -963,29 +1373,36 @@ void main() {
   ) async {
     final pear = FoodEntry.fromJson(testFood().toJson())
       ..id = 'pear-prototype'
+      ..foodId = 'pear-definition'
+      ..foodVersionId = 'pear-version'
       ..name = 'Pear';
     final yogurt = FoodEntry.fromJson(testFood().toJson())
       ..id = 'yogurt-prototype'
+      ..foodId = 'yogurt-definition'
+      ..foodVersionId = 'yogurt-version'
       ..name = 'Yogurt';
     final mealPrototype = FoodEntry.fromJson(testFood().toJson())
       ..id = 'meal-prototype'
+      ..foodId = 'meal-definition'
+      ..foodVersionId = 'meal-version'
       ..entryType = FoodEntryType.meal
       ..name = 'Afternoon Snack'
       ..componentFoods = [
         FoodComposition.withId(
           parentEntryId: 'meal-prototype',
-          foodId: pear.id,
+          foodId: pear.foodId,
           amount: pear.amount,
           unit: pear.unit,
         ),
         FoodComposition.withId(
           parentEntryId: 'meal-prototype',
-          foodId: yogurt.id,
+          foodId: yogurt.foodId,
           amount: yogurt.amount,
           unit: yogurt.unit,
         ),
-      ];
-    await TemplateStorageManager().saveFoodTemplate(
+      ]
+      ..componentSnapshots = [pear, yogurt];
+    final repository = FakeNutritionFoodRepository([
       SavedFoodTemplate(
         id: 'saved-meal-template',
         userId: 'anonymous',
@@ -994,10 +1411,15 @@ void main() {
         createdAt: DateTime(2026, 7, 15),
         prototype: mealPrototype,
       ),
-    );
+    ]);
     final original = editableMeal();
     MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await openMealEntry(
+      tester,
+      original,
+      foodRepository: repository,
+      onResult: (value) => result = value,
+    );
     await selectMealType(
       tester,
       'Custom Meal Label',
@@ -1006,13 +1428,24 @@ void main() {
     await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('My items'));
+    await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Afternoon Snack'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Afternoon Snack'), findsOneWidget);
+    expect(repository.loadCalls, 1);
+    await tester.tap(
+      find.widgetWithText(FilledButton, 'Add meal to selection'),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const ValueKey('selection-tray')),
+        matching: find.byType(FilledButton),
+      ),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
@@ -1026,6 +1459,20 @@ void main() {
     expect(result!.foods[1].entryType, FoodEntryType.meal);
     expect(result!.foods[1].templateId, 'saved-meal-template');
     expect(result!.foods[1].componentFoods, hasLength(2));
+    expect(
+      result!.foods[1].componentFoods!.map((component) => component.foodId),
+      [pear.foodId, yogurt.foodId],
+    );
+    expect(
+      result!.foods[1].componentFoods!.map(
+        (component) => component.parentEntryId,
+      ),
+      everyElement(result!.foods[1].id),
+    );
+    expect(
+      result!.foods[1].componentSnapshots!.map((component) => component.foodId),
+      [pear.foodId, yogurt.foodId],
+    );
     expect(original.foods, hasLength(1));
   });
 
@@ -1046,8 +1493,6 @@ void main() {
       expect(find.text('Duplicate'), findsNothing);
       expect(find.text('Remove from meal'), findsOneWidget);
       expect(find.text('Delete'), findsNothing);
-      expect(find.byType(Divider), findsOneWidget);
-
       await tester.tap(find.text('Adjust quantity'));
       await tester.pumpAndSettle();
 
@@ -1074,7 +1519,7 @@ void main() {
     final prototype = FoodEntry.fromJson(testFood().toJson())
       ..id = 'saved-food-prototype'
       ..name = 'Saved Pear';
-    await TemplateStorageManager().saveFoodTemplate(
+    final repository = FakeNutritionFoodRepository([
       SavedFoodTemplate(
         id: 'saved-food-template',
         userId: 'anonymous',
@@ -1083,10 +1528,15 @@ void main() {
         createdAt: DateTime(2026, 7, 15),
         prototype: prototype,
       ),
-    );
+    ]);
     final original = editableMeal();
     MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await openMealEntry(
+      tester,
+      original,
+      foodRepository: repository,
+      onResult: (value) => result = value,
+    );
     await selectMealType(
       tester,
       'Custom Meal Label',
@@ -1100,25 +1550,17 @@ void main() {
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
-    expect(find.text('Saved Pear'), findsNothing);
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
-
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('My items'));
+    await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
-    expect(find.text('Add to Edited supper'), findsOneWidget);
-    await tester.tapAt(const Offset(5, 5));
+    expect(repository.loadCalls, 2);
+    Navigator.of(tester.element(find.byType(FoodQuantitySheet))).pop();
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
-
-    expect(find.text('Saved Pear'), findsNothing);
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();

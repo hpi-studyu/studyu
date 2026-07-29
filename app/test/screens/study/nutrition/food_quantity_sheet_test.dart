@@ -6,6 +6,8 @@ import 'package:studyu_core/core.dart';
 
 FoodEntry apple() => FoodEntry(
   id: 'apple-id',
+  foodId: 'apple-definition',
+  foodVersionId: 'apple-version',
   entryType: FoodEntryType.singleIngredient,
   name: 'Apple',
   amount: 1,

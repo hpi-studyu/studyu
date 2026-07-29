@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
 import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {
@@ -239,6 +241,51 @@ void main() {
     viewModel.dispose();
   });
 
+  test('UTC-current upload is not skipped by local schedule day', () async {
+    final prefs = await SharedPreferences.getInstance();
+    DailyRecall? submitted;
+    final manager = NutritionRecallAutoSaveManager(
+      preferences: prefs,
+      submitter: (_, recall) async => submitted = recall,
+    );
+    final subject = _DivergentStudyDaySubject(localStudyDay: 0)
+      ..startedAt = DateTime.utc(2026, 7, 15, 23, 30);
+    final now = DateTime.utc(2026, 7, 16, 0, 15);
+    await _save(manager, _recall('utc-current', studyDay: 1));
+
+    await manager.submitPendingRecalls(
+      subject: subject,
+      trackProgress: true,
+      now: now,
+    );
+
+    expect(submitted?.id, 'utc-current');
+    expect(submitted?.entryCompletedAt, isNull);
+    expect(await manager.scanPendingRecalls(subject.id), hasLength(1));
+    expect(await manager.getLastKnownStudyDay(subject.id), 1);
+  });
+
+  test('UTC-current upload is not finalized by local schedule day', () async {
+    final prefs = await SharedPreferences.getInstance();
+    DailyRecall? submitted;
+    final manager = NutritionRecallAutoSaveManager(
+      preferences: prefs,
+      submitter: (_, recall) async => submitted = recall,
+    );
+    final subject = _DivergentStudyDaySubject(localStudyDay: 2)
+      ..startedAt = DateTime.utc(2026, 7, 15, 23, 30);
+    await _save(manager, _recall('utc-current', studyDay: 1));
+
+    await manager.submitPendingRecalls(
+      subject: subject,
+      trackProgress: true,
+      now: DateTime.utc(2026, 7, 16, 0, 15),
+    );
+
+    expect(submitted?.entryCompletedAt, isNull);
+    expect(await manager.scanPendingRecalls(subject.id), hasLength(1));
+  });
+
   test('same-day upload remains incomplete and cached', () async {
     final prefs = await SharedPreferences.getInstance();
     DailyRecall? submitted;
@@ -417,6 +464,355 @@ void main() {
     );
   });
 
+  test(
+    'expired historical add edit delete and resume stay non-mutating',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final subject = _subject(daysAgo: 3);
+      final currentDay = subject.getDayOfStudyFor(DateTime.now());
+      final task = NutritionTask.withId();
+      final period = CompletionPeriod(
+        id: 'period',
+        unlockTime: StudyUTimeOfDay(),
+        lockTime: StudyUTimeOfDay(hour: 23),
+      );
+      final viewModel = DailyRecallEntryViewModel(
+        subject: subject,
+        task: task,
+        completionPeriod: period,
+        existingRecall: _recall('historical', studyDay: currentDay - 2),
+        persistenceTarget: NutritionRecallPersistenceTarget(
+          taskId: task.id,
+          periodId: period.id,
+          interventionId: 'intervention',
+          completedAt: DateTime.now().toUtc(),
+          studyDaySnapshot: currentDay - 2,
+        ),
+        historicalMode: true,
+        autoSaveManager: manager,
+      );
+
+      viewModel.addMeal(_meal('added'));
+      viewModel.updateMeal(0, _meal('edited'));
+      viewModel.removeMeal(0);
+      viewModel.onAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await viewModel.flushPendingAutoSave(persistToDatabase: true);
+
+      expect(viewModel.historicalEligibilityExpired, isTrue);
+      expect(viewModel.recall.meals.single.id, 'historical');
+      expect(await manager.scanPendingRecalls(subject.id), isEmpty);
+      viewModel.dispose();
+    },
+  );
+
+  test(
+    'nested definition mutation preserves canonical version through later save',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final subject = _subject(daysAgo: 2);
+      final currentDay = subject.getDayOfStudyFor(DateTime.now());
+      final task = NutritionTask.withId();
+      final period = CompletionPeriod(
+        id: 'period',
+        unlockTime: StudyUTimeOfDay(),
+        lockTime: StudyUTimeOfDay(hour: 23),
+      );
+      final target = NutritionRecallPersistenceTarget(
+        taskId: task.id,
+        periodId: period.id,
+        interventionId: 'intervention',
+        completedAt: DateTime.now().toUtc(),
+        studyDaySnapshot: currentDay - 1,
+      );
+      final remoteStarted = Completer<void>();
+      final releaseRemote = Completer<void>();
+      final events = <String>[];
+      final remotelySaved = <DailyRecall>[];
+      var remoteCall = 0;
+      final viewModel = DailyRecallEntryViewModel(
+        subject: subject,
+        task: task,
+        completionPeriod: period,
+        existingRecall: _foodRecall('old', studyDay: currentDay - 1),
+        persistenceTarget: target,
+        historicalMode: true,
+        autoSaveManager: manager,
+        remoteSaver:
+            ({
+              required taskId,
+              required periodId,
+              required recall,
+              required persistenceTarget,
+              interventionIdOverride,
+            }) async {
+              expect(taskId, target.taskId);
+              expect(periodId, target.periodId);
+              expect(persistenceTarget?.taskId, target.taskId);
+              expect(persistenceTarget?.periodId, target.periodId);
+              expect(persistenceTarget?.interventionId, target.interventionId);
+              expect(persistenceTarget?.completedAt, target.completedAt);
+              expect(
+                persistenceTarget?.studyDaySnapshot,
+                target.studyDaySnapshot,
+              );
+              expect(interventionIdOverride, target.interventionId);
+              remoteCall++;
+              remotelySaved.add(DailyRecall.fromJson(recall.toJson()));
+              events.add('autosave-$remoteCall-started');
+              if (remoteCall == 1) {
+                remoteStarted.complete();
+                await releaseRemote.future;
+              }
+              events.add('autosave-$remoteCall-completed');
+            },
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      viewModel.updateUsualIntake(true);
+      final activeAutoSave = viewModel.flushPendingAutoSave(
+        persistToDatabase: true,
+      );
+      await remoteStarted.future;
+
+      var mutationStarted = false;
+      final nestedMutation = () async {
+        await viewModel.flushPendingAutoSave(
+          persistToDatabase: true,
+          requireRemoteSuccess: true,
+        );
+        mutationStarted = true;
+        viewModel.suspendPersistence();
+        try {
+          events.add('definition-rpc');
+          final canonicalRecall = _foodRecall('new', studyDay: currentDay - 1);
+          canonicalRecall.meals.single.foods.single
+            ..id = 'logged-entry'
+            ..foodVersionId = 'version-2';
+          subject.progress.add(
+            SubjectProgress(
+              subjectId: subject.id,
+              interventionId: target.interventionId,
+              taskId: target.taskId,
+              resultType: 'DailyRecall',
+              result: Result<DailyRecall>.app(
+                type: 'DailyRecall',
+                periodId: target.periodId,
+                result: canonicalRecall,
+              ),
+            )..completedAt = target.completedAt,
+          );
+          await manager.rewriteFoodDefinition(
+            subjectId: subject.id,
+            studyDaySnapshot: currentDay - 1,
+            definition: canonicalRecall.meals.single.foods.single,
+            entryId: 'logged-entry',
+          );
+
+          viewModel.onAppLifecycleStateChanged(AppLifecycleState.paused);
+          await viewModel.flushPendingAutoSave();
+          expect(
+            (await manager.scanPendingRecalls(
+              subject.id,
+            )).single.recall.meals.single.foods.single.foodVersionId,
+            'version-2',
+          );
+          await viewModel.reloadCanonicalRecall();
+        } finally {
+          viewModel.resumePersistence();
+        }
+
+        viewModel.updateSpecialOccasion('after definition mutation');
+        await viewModel.flushPendingAutoSave(
+          persistToDatabase: true,
+          requireRemoteSuccess: true,
+        );
+      }();
+      await Future<void>.delayed(Duration.zero);
+
+      expect(mutationStarted, isFalse);
+      expect(events, ['autosave-1-started']);
+      releaseRemote.complete();
+      await Future.wait([activeAutoSave, nestedMutation]);
+
+      expect(mutationStarted, isTrue);
+      expect(events, [
+        'autosave-1-started',
+        'autosave-1-completed',
+        'autosave-2-started',
+        'autosave-2-completed',
+        'definition-rpc',
+        'autosave-3-started',
+        'autosave-3-completed',
+      ]);
+      expect(
+        viewModel.recall.meals.single.foods.single.foodVersionId,
+        'version-2',
+      );
+      expect(
+        remotelySaved.last.meals.single.foods.single.foodVersionId,
+        'version-2',
+      );
+      viewModel.dispose();
+    },
+  );
+
+  test('failed strict historical flush prevents definition mutation', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+    final subject = _subject(daysAgo: 2);
+    final currentDay = subject.getDayOfStudyFor(DateTime.now());
+    final task = NutritionTask.withId();
+    final period = CompletionPeriod(
+      id: 'period',
+      unlockTime: StudyUTimeOfDay(),
+      lockTime: StudyUTimeOfDay(hour: 23),
+    );
+    final target = NutritionRecallPersistenceTarget(
+      taskId: task.id,
+      periodId: period.id,
+      interventionId: 'intervention',
+      completedAt: DateTime.now().toUtc(),
+      studyDaySnapshot: currentDay - 1,
+    );
+    var mutationStarted = false;
+    final viewModel = DailyRecallEntryViewModel(
+      subject: subject,
+      task: task,
+      completionPeriod: period,
+      existingRecall: _foodRecall('old', studyDay: currentDay - 1),
+      persistenceTarget: target,
+      historicalMode: true,
+      autoSaveManager: manager,
+      remoteSaver:
+          ({
+            required taskId,
+            required periodId,
+            required recall,
+            required persistenceTarget,
+            interventionIdOverride,
+          }) async => throw StateError('remote flush failed'),
+    );
+    await Future<void>.delayed(Duration.zero);
+
+    viewModel.updateUsualIntake(true);
+    final mutation = () async {
+      await viewModel.flushPendingAutoSave(
+        persistToDatabase: true,
+        requireRemoteSuccess: true,
+      );
+      mutationStarted = true;
+    }();
+
+    await expectLater(
+      mutation,
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          'remote flush failed',
+        ),
+      ),
+    );
+    expect(mutationStarted, isFalse);
+    viewModel.dispose();
+  });
+
+  test(
+    'historical definition rewrite updates only the selected entry',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final selected = _food('old')..id = 'selected-entry';
+      final sibling = FoodEntry.fromJson(selected.toJson())
+        ..id = 'sibling-entry'
+        ..name = 'sibling old';
+      final recall = _foodRecall('old', studyDay: 4)
+        ..meals.single.foods = [selected, sibling];
+      await manager.saveRecall(
+        recall: recall,
+        subjectId: 'subject',
+        taskId: 'historical-task',
+        interventionId: 'intervention',
+        periodId: 'period',
+        studyDaySnapshot: 4,
+      );
+
+      await manager.rewriteFoodDefinition(
+        subjectId: 'subject',
+        studyDaySnapshot: 4,
+        definition: _food('new', versionId: 'version-2'),
+        entryId: selected.id,
+      );
+
+      final foods = (await manager.scanPendingRecalls(
+        'subject',
+      )).single.recall.meals.single.foods;
+      expect(foods.singleWhere((food) => food.id == selected.id).name, 'new');
+      expect(
+        foods.singleWhere((food) => food.id == sibling.id).name,
+        'sibling old',
+      );
+    },
+  );
+
+  test(
+    'definition rewrite updates every matching current-day draft only',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final completedAt = DateTime.utc(2026, 7, 15, 12);
+      for (final period in ['morning', 'evening']) {
+        await manager.saveRecall(
+          recall: _foodRecall('old', studyDay: 4),
+          subjectId: 'subject',
+          taskId: 'task-$period',
+          interventionId: 'intervention-$period',
+          periodId: period,
+          studyDaySnapshot: 4,
+          progressCompletedAt: completedAt,
+        );
+      }
+      await manager.saveRecall(
+        recall: _foodRecall('old', studyDay: 3),
+        subjectId: 'subject',
+        taskId: 'task-old-day',
+        interventionId: 'intervention',
+        periodId: 'old-day',
+        studyDaySnapshot: 3,
+      );
+
+      await manager.rewriteFoodDefinition(
+        subjectId: 'subject',
+        studyDaySnapshot: 4,
+        definition: _food('new', versionId: 'version-2'),
+      );
+
+      final pending = await manager.scanPendingRecalls('subject');
+      final current = pending.where((entry) => entry.studyDaySnapshot == 4);
+      expect(current, hasLength(2));
+      for (final entry in current) {
+        final food = entry.recall.meals.single.foods.single;
+        expect(food.id, 'logged-entry');
+        expect(food.name, 'new');
+        expect(food.foodVersionId, 'version-2');
+        expect(entry.progressCompletedAt, completedAt);
+      }
+      expect(
+        pending
+            .singleWhere((entry) => entry.studyDaySnapshot == 3)
+            .recall
+            .meals
+            .single
+            .foods
+            .single
+            .name,
+        'old',
+      );
+    },
+  );
+
   test('failed previous-day upload retains the pending recall', () async {
     final prefs = await SharedPreferences.getInstance();
     final manager = NutritionRecallAutoSaveManager(
@@ -468,6 +864,55 @@ DailyRecall _recall(String id, {required int studyDay}) => DailyRecall(
   studyDaySnapshot: studyDay,
 );
 
+DailyRecall _foodRecall(String name, {required int studyDay}) => DailyRecall(
+  id: 'recall-$studyDay',
+  date: DateTime.now(),
+  recallMode: RecallMode.realtimeRecord,
+  entryStartedAt: DateTime.now(),
+  meals: [
+    MealLog(
+      id: 'meal',
+      mealType: MealType.breakfast,
+      mealContext: MealContext.home,
+      timezone: 'UTC',
+      isSkipped: false,
+      foods: [_food(name)],
+    ),
+  ],
+  studyDaySnapshot: studyDay,
+);
+
+FoodEntry _food(String name, {String versionId = 'version-1'}) => FoodEntry(
+  id: name == 'old' ? 'logged-entry' : 'definition-snapshot',
+  foodId: 'food-definition',
+  foodVersionId: versionId,
+  entryType: FoodEntryType.singleIngredient,
+  name: name,
+  amount: 2,
+  unit: 'serving',
+  servingSizeGrams: 100,
+  portionEstimationMethod: PortionEstimationMethod.standardUnit,
+  portionState: PortionState.asServed,
+  nutrition: NutritionProfile(
+    energyKcal: 100,
+    protein: 1,
+    carbs: 1,
+    fat: 1,
+    sugars: 0,
+    fiber: 0,
+    saturatedFat: 0,
+    transFat: 0,
+    cholesterol: 0,
+    sodium: 0,
+    waterContent: 0,
+    micros: const {},
+  ),
+  source: FoodSource.manual,
+  confidenceScore: 1,
+  createdAt: DateTime.utc(2026, 7, 15),
+  originalValues: const {},
+);
+
 MealLog _meal(String id) => MealLog(
   id: id,
   mealType: MealType.breakfast,
@@ -498,6 +943,16 @@ class _DelayedRecallLoadManager extends NutritionRecallAutoSaveManager {
     _loadStarted.complete();
     return _pending.future;
   }
+}
+
+class _DivergentStudyDaySubject extends StudySubject {
+  _DivergentStudyDaySubject({required this.localStudyDay})
+    : super('subject', 'study', 'user', []);
+
+  final int localStudyDay;
+
+  @override
+  int getDayOfStudyFor(DateTime date) => localStudyDay;
 }
 
 StudySubject _subject({required int daysAgo}) {

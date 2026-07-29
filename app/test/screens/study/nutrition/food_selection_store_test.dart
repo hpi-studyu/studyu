@@ -47,6 +47,8 @@ studyu.FoodEntry food({
   studyu.FoodSource source = studyu.FoodSource.manual,
 }) => studyu.FoodEntry(
   id: id,
+  foodId: '$id-definition',
+  foodVersionId: '$id-version',
   entryType: studyu.FoodEntryType.singleIngredient,
   name: 'Apple',
   amount: 1,

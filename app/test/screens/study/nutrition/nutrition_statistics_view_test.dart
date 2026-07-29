@@ -454,6 +454,8 @@ MealLog _meal({required double energyKcal, required double carbs}) => MealLog(
 FoodEntry _food({required double energyKcal, required double carbs}) =>
     FoodEntry(
       id: 'food-$energyKcal',
+      foodId: 'food-definition-$energyKcal',
+      foodVersionId: 'food-version-$energyKcal',
       entryType: FoodEntryType.singleIngredient,
       name: 'Food',
       amount: 1,

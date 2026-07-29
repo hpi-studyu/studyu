@@ -52,6 +52,8 @@ Future<void> openFoodEntry(
 FoodEntry existingOffFood(Map<String, dynamic> originalValues) {
   return FoodEntry(
     id: 'off-food',
+    foodId: 'off-food-definition',
+    foodVersionId: 'off-food-version',
     entryType: FoodEntryType.brandedProduct,
     name: 'Original product',
     brandName: 'Brand',
