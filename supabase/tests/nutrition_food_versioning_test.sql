@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(49);
+SELECT plan(55);
 
 SELECT
     tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
@@ -8,18 +8,20 @@ SELECT
     tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
-    id, study_id, user_id, selected_intervention_ids
+    id, study_id, user_id, started_at, selected_intervention_ids
 ) VALUES
 (
     '10000000-0000-0000-0000-000000000001',
     (SELECT id FROM public.study LIMIT 1),
     tests.get_supabase_uid('nutrition_owner'),
+    now() - interval '5 days',
     ARRAY[]::text []
 ),
 (
     '10000000-0000-0000-0000-000000000002',
     (SELECT id FROM public.study LIMIT 1),
     tests.get_supabase_uid('nutrition_other'),
+    now() - interval '5 days',
     ARRAY[]::text []
 );
 
@@ -561,6 +563,92 @@ SELECT is(
     ),
     'Individual today old',
     'current-day individual component occurrence is isolated'
+);
+
+CREATE TEMP VIEW mutation_guard_state AS
+SELECT jsonb_build_object(
+    'definition', (
+        SELECT to_jsonb(d.*)
+        FROM public.nutrition_food_definition AS d
+        WHERE d.id = '20000000-0000-0000-0000-000000000001'
+    ),
+    'versions', (
+        SELECT jsonb_agg(to_jsonb(v.*) ORDER BY v.version_number)
+        FROM public.nutrition_food_version AS v
+        WHERE v.food_id = '20000000-0000-0000-0000-000000000001'
+    ),
+    'progress', (
+        SELECT jsonb_agg(to_jsonb(p.*) ORDER BY p.completed_at, p.task_id)
+        FROM public.subject_progress AS p
+        WHERE p.subject_id = '10000000-0000-0000-0000-000000000001'
+    )
+) AS state;
+CREATE TEMP TABLE mutation_guard_baseline AS
+SELECT state FROM mutation_guard_state;
+
+SELECT throws_ok(
+    $$SELECT public.apply_nutrition_food_mutation(
+    '10000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000030',
+    '20000000-0000-0000-0000-000000000001',
+    ((SELECT response FROM nutrition_results WHERE label = 'historical') #>> '{definition,currentVersionId}')::uuid,
+    (SELECT response #> '{definition,snapshot}' FROM nutrition_results WHERE label = 'historical'),
+    false,
+    '{"taskId":"locked-task","periodId":"period-old","interventionId":"intervention-a","completedAt":"2026-07-14T12:00:00Z","studyDaySnapshot":3}'::jsonb,
+    4,
+    NULL,
+    'locked-entry'
+  )$$,
+    '22023',
+    'historical nutrition recall is no longer editable',
+    'callers cannot forge an older historical edit window'
+);
+SELECT is(
+    (SELECT state FROM mutation_guard_state),
+    (SELECT state FROM mutation_guard_baseline),
+    'forged old target rejection leaves definitions, versions, and progress unchanged'
+);
+
+SELECT throws_ok(
+    $$SELECT public.apply_nutrition_food_mutation(
+    '10000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000031',
+    '20000000-0000-0000-0000-000000000001',
+    ((SELECT response FROM nutrition_results WHERE label = 'historical') #>> '{definition,currentVersionId}')::uuid,
+    (SELECT response #> '{definition,snapshot}' FROM nutrition_results WHERE label = 'historical'),
+    false,
+    '{"taskId":"current-task-a","periodId":"period-b","interventionId":"intervention-a","completedAt":"2026-07-16T08:00:00Z","studyDaySnapshot":5}'::jsonb,
+    6,
+    NULL,
+    'current-entry-a'
+  )$$,
+    '22023',
+    'historical nutrition recall is no longer editable',
+    'callers cannot forge the propagation study day'
+);
+SELECT is(
+    (SELECT state FROM mutation_guard_state),
+    (SELECT state FROM mutation_guard_baseline),
+    'forged propagation rejection leaves definitions, versions, and progress unchanged'
+);
+
+SELECT throws_ok(
+    $$SELECT public.apply_nutrition_food_mutation(
+    '10000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000032',
+    '20000000-0000-0000-0000-000000000001',
+    ((SELECT response FROM nutrition_results WHERE label = 'historical') #>> '{definition,currentVersionId}')::uuid,
+    (SELECT response #> '{definition,snapshot}' FROM nutrition_results WHERE label = 'historical'),
+    false, NULL, 5, NULL
+  )$$,
+    '22023',
+    'historical nutrition recall is no longer editable',
+    'propagation requires a historical target'
+);
+SELECT is(
+    (SELECT state FROM mutation_guard_state),
+    (SELECT state FROM mutation_guard_baseline),
+    'targetless propagation rejection leaves definitions, versions, and progress unchanged'
 );
 
 SELECT throws_ok(

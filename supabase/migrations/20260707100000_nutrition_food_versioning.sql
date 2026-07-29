@@ -390,7 +390,9 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
+  v_subject public.study_subject%ROWTYPE;
   v_definition public.nutrition_food_definition%ROWTYPE;
+  v_current_study_day integer;
   v_version_id uuid := gen_random_uuid();
   v_version_number integer;
   v_snapshot jsonb;
@@ -402,13 +404,19 @@ DECLARE
   v_today_update_count integer := 0;
   v_response jsonb;
 BEGIN
-  IF auth.uid() IS NULL OR NOT EXISTS (
-    SELECT 1 FROM public.study_subject
-    WHERE id = p_subject_id AND user_id = auth.uid()
-  ) THEN
+  IF auth.uid() IS NULL THEN
     RAISE EXCEPTION 'nutrition definition subject is not owned by caller'
       USING ERRCODE = '42501';
   END IF;
+  SELECT * INTO v_subject
+  FROM public.study_subject
+  WHERE id = p_subject_id AND user_id = auth.uid();
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'nutrition definition subject is not owned by caller'
+      USING ERRCODE = '42501';
+  END IF;
+  v_current_study_day := public.subject_current_day(v_subject);
+
   IF p_mutation_id IS NULL THEN
     RAISE EXCEPTION 'invalid nutrition mutation payload' USING ERRCODE = '22023';
   END IF;
@@ -422,6 +430,18 @@ BEGIN
       p_snapshot->>'foodId' IS DISTINCT FROM p_food_id::text OR
       NOT public.nutrition_food_snapshot_is_valid(p_snapshot) THEN
     RAISE EXCEPTION 'invalid nutrition mutation payload' USING ERRCODE = '22023';
+  END IF;
+  IF (p_historical_target IS NULL) <> (p_propagate_study_day IS NULL) OR
+      (p_historical_target IS NULL AND p_historical_entry_id IS NOT NULL) OR
+      (p_historical_target IS NOT NULL AND (
+        p_deleted OR
+        NULLIF(p_historical_entry_id, '') IS NULL OR
+        p_propagate_study_day IS DISTINCT FROM v_current_study_day OR
+        (p_historical_target->>'studyDaySnapshot')::integer IS DISTINCT FROM
+            v_current_study_day - 1
+      )) THEN
+    RAISE EXCEPTION 'historical nutrition recall is no longer editable'
+      USING ERRCODE = '22023';
   END IF;
 
   PERFORM pg_advisory_xact_lock(hashtextextended(p_food_id::text, 1));
@@ -482,12 +502,6 @@ BEGIN
   WHERE id = p_food_id;
 
   IF p_historical_target IS NOT NULL THEN
-    IF p_deleted OR p_propagate_study_day IS NULL OR
-       NULLIF(p_historical_entry_id, '') IS NULL OR
-       (p_historical_target->>'studyDaySnapshot')::integer <> p_propagate_study_day - 1 THEN
-      RAISE EXCEPTION 'historical nutrition recall is no longer editable'
-        USING ERRCODE = '22023';
-    END IF;
     SELECT count(*) INTO v_target_count
     FROM public.subject_progress
     WHERE subject_id = p_subject_id
@@ -536,7 +550,7 @@ BEGIN
       SET result = public.nutrition_replace_food_snapshots(result, p_food_id, v_snapshot)
       WHERE subject_id = p_subject_id
         AND result_type = 'DailyRecall'
-        AND (result #>> '{result,studyDaySnapshot}')::integer = p_propagate_study_day
+        AND (result #>> '{result,studyDaySnapshot}')::integer = v_current_study_day
         AND public.nutrition_result_has_food(result, p_food_id)
       RETURNING
         to_jsonb(public.subject_progress.*) AS row,
