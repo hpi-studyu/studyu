@@ -94,7 +94,7 @@ Future<void> openMealEntry(
   MealLog meal, {
   NutritionTask? task,
   DateTime? occurrenceDate,
-  HistoricalNutritionEditingContext? historicalContext,
+  NutritionRecallPersistenceTarget? historicalTarget,
   NutritionFoodRepository? foodRepository,
   AppState? appState,
   ValueChanged<MealLog?>? onResult,
@@ -119,7 +119,7 @@ Future<void> openMealEntry(
                             existingMeal: meal,
                             task: task,
                             occurrenceDate: occurrenceDate,
-                            historicalContext: historicalContext,
+                            historicalTarget: historicalTarget,
                             foodRepository:
                                 foodRepository ??
                                 _LocalTestNutritionFoodRepository(),
@@ -219,7 +219,7 @@ class _TrackingNutritionFoodRepository
   }
 }
 
-({AppState appState, HistoricalNutritionEditingContext context})
+({AppState appState, NutritionRecallPersistenceTarget target})
 _historicalEditingSetup() {
   final subject = StudySubject('subject', 'study', 'user', [])
     ..startedAt = DateTime.now().subtract(const Duration(days: 5));
@@ -227,17 +227,14 @@ _historicalEditingSetup() {
     ..schedule = (StudySchedule()..numberOfCycles = 0)
     ..interventions = []);
   final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
-  final context = HistoricalNutritionEditingContext(
-    target: NutritionRecallPersistenceTarget(
-      taskId: 'task',
-      periodId: 'period',
-      interventionId: 'intervention',
-      completedAt: DateTime.now().subtract(const Duration(days: 1)),
-      studyDaySnapshot: currentStudyDay - 1,
-    ),
-    recallDate: DateTime.now().subtract(const Duration(days: 1)),
+  final target = NutritionRecallPersistenceTarget(
+    taskId: 'task',
+    periodId: 'period',
+    interventionId: 'intervention',
+    completedAt: DateTime.now().subtract(const Duration(days: 1)),
+    studyDaySnapshot: currentStudyDay - 1,
   );
-  return (appState: AppState()..activeSubject = subject, context: context);
+  return (appState: AppState()..activeSubject = subject, target: target);
 }
 
 MealLog _mealWithMatchingDefinitions() {
@@ -938,7 +935,7 @@ void main() {
     await openMealEntry(
       tester,
       _mealWithMatchingDefinitions(),
-      historicalContext: setup.context,
+      historicalTarget: setup.target,
       foodRepository: repository,
       appState: setup.appState,
       onResult: (value) => result = value,
@@ -983,7 +980,7 @@ void main() {
       await openMealEntry(
         tester,
         _mealWithMatchingDefinitions(),
-        historicalContext: setup.context,
+        historicalTarget: setup.target,
         foodRepository: repository,
         appState: setup.appState,
         onEntryResult: (value) => result = value,
@@ -1047,6 +1044,32 @@ void main() {
     },
   );
 
+  testWidgets('historical definition save rechecks device-local eligibility', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 0);
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit reusable food'));
+    await tester.pumpAndSettle();
+    final subject = setup.appState.activeSubject!;
+    subject.startedAt = subject.startedAt!.subtract(const Duration(days: 1));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(repository.mutationCalls, 0);
+    expect(find.text('This study day is no longer editable.'), findsOneWidget);
+  });
+
   testWidgets('historical reusable edit reports no matching today entries', (
     tester,
   ) async {
@@ -1055,7 +1078,7 @@ void main() {
     await openMealEntry(
       tester,
       editableMeal(),
-      historicalContext: setup.context,
+      historicalTarget: setup.target,
       foodRepository: repository,
       appState: setup.appState,
     );

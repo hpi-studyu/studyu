@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
@@ -12,9 +13,12 @@ Widget nutritionTaskApp(
   NutritionTask task, {
   DailyRecall? existingRecall,
   Locale locale = const Locale('en'),
-  HistoricalNutritionEditingContext? historicalContext,
+  DateTime? historicalDate,
+  NutritionRecallPersistenceTarget? persistenceTarget,
+  bool readOnly = false,
+  AppState? appState,
 }) => ChangeNotifierProvider(
-  create: (_) => AppState(),
+  create: (_) => appState ?? AppState(),
   child: MaterialApp(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -22,8 +26,9 @@ Widget nutritionTaskApp(
     home: NutritionTaskWidget(
       existingRecall: existingRecall,
       task: task,
-      persistenceTarget: historicalContext?.target,
-      historicalContext: historicalContext,
+      persistenceTarget: persistenceTarget,
+      historicalDate: historicalDate,
+      readOnly: readOnly,
       completionPeriod: CompletionPeriod(
         id: 'period',
         unlockTime: StudyUTimeOfDay(),
@@ -147,6 +152,46 @@ DailyRecall recall(List<MealLog> meals) => DailyRecall(
   meals: meals,
 );
 
+({NutritionTask task, StudySubject subject}) historicalNavigationSetup(
+  String foodName, {
+  required bool hasPersistenceTarget,
+}) {
+  final task = nutritionTask()..id = 'task';
+  task.schedule.completionPeriods = [
+    CompletionPeriod(
+      id: 'period',
+      unlockTime: StudyUTimeOfDay(),
+      lockTime: StudyUTimeOfDay(hour: 23),
+    ),
+  ];
+  final subject = StudySubject('subject', 'study', 'user', [])
+    ..startedAt = DateTime.now().subtract(const Duration(days: 3));
+  subject.study = (Study('study', 'user')
+    ..schedule = (StudySchedule()..numberOfCycles = 0)
+    ..interventions = []);
+  final historicalRecall = recall([
+    meal('meal', MealType.breakfast, foods: [food('food', foodName, 100)]),
+  ])..studyDaySnapshot = subject.getDayOfStudyFor(DateTime.now()) - 1;
+  final progress = SubjectProgress(
+    subjectId: subject.id,
+    interventionId: 'intervention',
+    taskId: task.id,
+    resultType: 'DailyRecall',
+    result: Result<DailyRecall>.app(
+      type: 'DailyRecall',
+      periodId: 'period',
+      result: historicalRecall,
+    ),
+  );
+  if (hasPersistenceTarget) {
+    progress.completedAt = DateTime.now()
+        .subtract(const Duration(days: 1))
+        .toUtc();
+  }
+  subject.progress.add(progress);
+  return (task: task, subject: subject);
+}
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -154,12 +199,17 @@ void main() {
     tester,
   ) async {
     final date = DateTime(2026, 7, 15);
+    final subject = StudySubject('subject', 'study', 'user', [])
+      ..startedAt = DateTime.now().subtract(const Duration(days: 2));
+    subject.study = (Study('study', 'user')
+      ..schedule = (StudySchedule()..numberOfCycles = 0)
+      ..interventions = []);
     final target = NutritionRecallPersistenceTarget(
       taskId: 'task',
       periodId: 'period',
       interventionId: 'intervention',
       completedAt: DateTime.utc(2026, 7, 15, 12),
-      studyDaySnapshot: 1,
+      studyDaySnapshot: subject.getDayOfStudyFor(DateTime.now()) - 1,
     );
 
     await tester.pumpWidget(
@@ -168,10 +218,9 @@ void main() {
         existingRecall: recall([
           meal('meal', MealType.breakfast, foods: [food('food', 'Apple', 100)]),
         ]),
-        historicalContext: HistoricalNutritionEditingContext(
-          target: target,
-          recallDate: date,
-        ),
+        historicalDate: date,
+        persistenceTarget: target,
+        appState: AppState()..activeSubject = subject,
       ),
     );
     await tester.pump();
@@ -185,11 +234,113 @@ void main() {
     expect(find.text('My items'), findsNothing);
     expect(find.byIcon(Icons.history_outlined), findsNothing);
     expect(find.byIcon(Icons.help_outline), findsNothing);
+  });
 
-    await tester.tap(find.text('Apple'));
+  testWidgets(
+    'read-only historical record without a target stays in historical shell',
+    (tester) async {
+      await tester.pumpWidget(
+        nutritionTaskApp(
+          nutritionTask(),
+          existingRecall: recall([
+            meal(
+              'meal',
+              MealType.breakfast,
+              foods: [food('food', 'Apple', 100)],
+            ),
+          ]),
+          historicalDate: DateTime(2026, 7, 15),
+          readOnly: true,
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('Read-only'), findsOneWidget);
+      expect(find.text('Daily summary'), findsOneWidget);
+      expect(find.text('Statistics'), findsNothing);
+      expect(find.text('My items'), findsNothing);
+      expect(find.byIcon(Icons.history_outlined), findsNothing);
+      expect(find.byIcon(Icons.help_outline), findsNothing);
+      expect(find.text('Log meal'), findsNothing);
+
+      await tester.tap(find.text('Apple'));
+      await tester.pumpAndSettle();
+      expect(find.byType(NutritionTaskWidget), findsOneWidget);
+      expect(find.byType(MealEntryScreen), findsNothing);
+    },
+  );
+
+  testWidgets('history opens a targetless record in the read-only shell', (
+    tester,
+  ) async {
+    final setup = historicalNavigationSetup(
+      'Historical apple',
+      hasPersistenceTarget: false,
+    );
+
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        setup.task,
+        appState: AppState()..activeSubject = setup.subject,
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byTooltip('History'));
     await tester.pumpAndSettle();
-    expect(find.byIcon(Icons.bookmark_add_outlined), findsNothing);
+    await tester.tap(find.text('Historical apple'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Read-only'), findsOneWidget);
+    expect(find.text('Historical apple'), findsOneWidget);
+    expect(find.text('Daily summary'), findsOneWidget);
+    expect(find.text('Statistics'), findsNothing);
     expect(find.text('My items'), findsNothing);
+    expect(find.byTooltip('History'), findsNothing);
+    expect(find.byTooltip('Help'), findsNothing);
+  });
+
+  testWidgets('expired historical edit returns to History on app resume', (
+    tester,
+  ) async {
+    final setup = historicalNavigationSetup(
+      'Editable apple',
+      hasPersistenceTarget: true,
+    );
+
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        setup.task,
+        appState: AppState()..activeSubject = setup.subject,
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Editable apple'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Entry changes apply only to this study day'),
+      findsOneWidget,
+    );
+
+    setup.subject.startedAt = setup.subject.startedAt!.subtract(
+      const Duration(days: 1),
+    );
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('History')),
+      findsOneWidget,
+    );
+    expect(find.text('Editable apple'), findsOneWidget);
+    expect(find.text('This study day is no longer editable.'), findsOneWidget);
   });
 
   testWidgets('never renders manual completion controls', (tester) async {

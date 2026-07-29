@@ -24,7 +24,7 @@ class FoodEntryScreen extends StatefulWidget {
   final double? confidenceScore;
   final bool showSearchAction;
   final String? mealLabel;
-  final HistoricalNutritionEditingContext? historicalContext;
+  final NutritionRecallPersistenceTarget? historicalTarget;
   final bool editReusableDefinition;
   final NutritionFoodRepository? repository;
 
@@ -33,18 +33,18 @@ class FoodEntryScreen extends StatefulWidget {
     this.confidenceScore,
     this.showSearchAction = true,
     this.mealLabel,
-    this.historicalContext,
+    this.historicalTarget,
     this.editReusableDefinition = false,
     this.repository,
     super.key,
-  }) : assert(!editReusableDefinition || historicalContext != null);
+  }) : assert(!editReusableDefinition || historicalTarget != null);
 
   static MaterialPageRoute<FoodEntry> route({
     FoodEntry? existingFood,
     double? confidenceScore,
     bool showSearchAction = true,
     String? mealLabel,
-    HistoricalNutritionEditingContext? historicalContext,
+    NutritionRecallPersistenceTarget? historicalTarget,
     bool editReusableDefinition = false,
     NutritionFoodRepository? repository,
   }) => MaterialPageRoute(
@@ -53,7 +53,7 @@ class FoodEntryScreen extends StatefulWidget {
       confidenceScore: confidenceScore,
       showSearchAction: showSearchAction,
       mealLabel: mealLabel,
-      historicalContext: historicalContext,
+      historicalTarget: historicalTarget,
       editReusableDefinition: editReusableDefinition,
       repository: repository,
     ),
@@ -210,15 +210,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     final appState = Provider.of<AppState>(context, listen: false);
     final l10n = AppLocalizations.of(context)!;
 
-    final historicalContext = widget.historicalContext;
+    final historicalTarget = widget.historicalTarget;
     final subject = appState.activeSubject;
     final existingFood = widget.existingFood;
     int? currentStudyDay;
-    if (historicalContext != null) {
+    if (historicalTarget != null) {
       if (subject == null || existingFood == null) return;
       currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
       if (!isEditableNutritionRecallDay(
-        studyDaySnapshot: historicalContext.target.studyDaySnapshot,
+        studyDaySnapshot: historicalTarget.studyDaySnapshot,
         currentStudyDay: currentStudyDay,
         hasUnambiguousPeriod: true,
       )) {
@@ -239,7 +239,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               snapshot: normalizeNutritionFoodDefinition(food),
               expectedVersionId: existingFood!.foodVersionId,
               entryId: existingFood.id,
-              target: historicalContext!.target.toJson(),
+              target: historicalTarget!.toJson(),
               currentStudyDay: currentStudyDay!,
               mutationId: _mutationId,
             );
@@ -256,7 +256,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         );
         await autoSaveManager.rewriteFoodDefinition(
           subjectId: subject.id,
-          studyDaySnapshot: historicalContext.target.studyDaySnapshot,
+          studyDaySnapshot: historicalTarget.studyDaySnapshot,
           definition: result.definition.snapshot,
           entryId: existingFood.id,
         );

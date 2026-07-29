@@ -33,16 +33,6 @@ class NutritionRecallPersistenceTarget {
   };
 }
 
-class HistoricalNutritionEditingContext {
-  final NutritionRecallPersistenceTarget target;
-  final DateTime recallDate;
-
-  const HistoricalNutritionEditingContext({
-    required this.target,
-    required this.recallDate,
-  });
-}
-
 extension StudySubjectExtension on StudySubject {
   /// Upserts a DailyRecall result without changing an existing recall's
   /// persistence identity.

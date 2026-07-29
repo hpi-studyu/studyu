@@ -21,7 +21,7 @@ class NutritionTaskWidget extends StatefulWidget {
   final NutritionTask? task;
   final CompletionPeriod? completionPeriod;
   final NutritionRecallPersistenceTarget? persistenceTarget;
-  final HistoricalNutritionEditingContext? historicalContext;
+  final DateTime? historicalDate;
   final String? interventionId;
   final bool readOnly;
 
@@ -30,7 +30,7 @@ class NutritionTaskWidget extends StatefulWidget {
     this.task,
     this.completionPeriod,
     this.persistenceTarget,
-    this.historicalContext,
+    this.historicalDate,
     this.interventionId,
     this.readOnly = false,
     super.key,
@@ -41,7 +41,7 @@ class NutritionTaskWidget extends StatefulWidget {
     NutritionTask? task,
     CompletionPeriod? completionPeriod,
     NutritionRecallPersistenceTarget? persistenceTarget,
-    HistoricalNutritionEditingContext? historicalContext,
+    DateTime? historicalDate,
     String? interventionId,
     bool readOnly = false,
   }) => MaterialPageRoute(
@@ -50,7 +50,7 @@ class NutritionTaskWidget extends StatefulWidget {
       task: task,
       completionPeriod: completionPeriod,
       persistenceTarget: persistenceTarget,
-      historicalContext: historicalContext,
+      historicalDate: historicalDate,
       interventionId: interventionId,
       readOnly: readOnly,
     ),
@@ -117,16 +117,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         builder: (context, model, child) {
           final l10n = AppLocalizations.of(context)!;
           final appState = context.read<AppState>();
-          if (model.historicalEligibilityExpired &&
-              !_didHandleExpiredHistoricalEdit) {
-            _didHandleExpiredHistoricalEdit = true;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.historical_edit_expired)),
-              );
-              Navigator.of(context).maybePop();
-            });
+          if (model.historicalEligibilityExpired) {
+            _returnToHistoryAfterExpiration(context, l10n);
           }
           return PopScope(
             canPop:
@@ -245,7 +237,33 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     );
   }
 
-  bool get _isHistoricalMode => widget.historicalContext != null;
+  bool get _isHistoricalMode => widget.historicalDate != null;
+
+  void _returnToHistoryAfterExpiration(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    if (_didHandleExpiredHistoricalEdit) return;
+    _didHandleExpiredHistoricalEdit = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      final historicalRoute = ModalRoute.of(context);
+      if (historicalRoute == null) return;
+      final navigator = Navigator.of(context);
+      navigator.popUntil((route) => route == historicalRoute);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.historical_edit_expired)));
+      navigator.maybePop();
+    });
+  }
+
+  String _historicalDateTitle(BuildContext context, AppLocalizations l10n) {
+    final date = MaterialLocalizations.of(
+      context,
+    ).formatMediumDate(widget.historicalDate!);
+    return widget.readOnly ? date : l10n.historical_editing_date(date);
+  }
 
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
@@ -255,11 +273,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   ) => AppBar(
     title: Text(
       _isHistoricalMode
-          ? l10n.historical_editing_date(
-              MaterialLocalizations.of(
-                context,
-              ).formatMediumDate(widget.historicalContext!.recallDate),
-            )
+          ? _historicalDateTitle(context, l10n)
           : switch (_selectedDestination) {
               0 => l10n.nutrition_tracking,
               1 => l10n.nutrition_statistics,
@@ -328,14 +342,12 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             Card(
               child: ListTile(
                 leading: const Icon(Icons.edit_calendar_outlined),
-                title: Text(
-                  l10n.historical_editing_date(
-                    MaterialLocalizations.of(
-                      context,
-                    ).formatMediumDate(widget.historicalContext!.recallDate),
-                  ),
+                title: Text(_historicalDateTitle(context, l10n)),
+                subtitle: Text(
+                  widget.readOnly
+                      ? l10n.nutrition_read_only
+                      : l10n.historical_edit_scope,
                 ),
-                subtitle: Text(l10n.historical_edit_scope),
               ),
             ),
             const SizedBox(height: 16),
@@ -398,34 +410,39 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     if (subject == null) return;
     await _viewModel?.flushPendingAutoSave(persistToDatabase: true);
     if (!context.mounted) return;
-    final canEdit =
-        editable ??
-        isEditableNutritionRecallDay(
-          studyDaySnapshot: record.studyDaySnapshot,
-          currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
-          hasUnambiguousPeriod:
-              record.hasUnambiguousPeriod &&
-              _completionPeriodFor(task, record.periodId) != null,
-        );
     final period = _completionPeriodFor(task, record.periodId);
-    if (canEdit && period == null) return;
     final target = record.persistenceTarget;
+    final canEdit =
+        (editable ??
+            isEditableNutritionRecallDay(
+              studyDaySnapshot: record.studyDaySnapshot,
+              currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
+              hasUnambiguousPeriod:
+                  record.hasUnambiguousPeriod && period != null,
+            )) &&
+        target != null;
     await Navigator.of(context).push(
       NutritionTaskWidget.route(
         existingRecall: record.recall,
         task: task,
         completionPeriod: period,
         persistenceTarget: target,
-        historicalContext: target == null
-            ? null
-            : HistoricalNutritionEditingContext(
-                target: target,
-                recallDate: record.recall.date,
-              ),
+        historicalDate: record.recall.date,
         interventionId: record.interventionId,
         readOnly: !canEdit,
       ),
     );
+    if (canEdit &&
+        context.mounted &&
+        ModalRoute.of(context)?.isCurrent == true &&
+        !isEditableNutritionRecallDay(
+          studyDaySnapshot: record.studyDaySnapshot,
+          currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
+          hasUnambiguousPeriod: period != null,
+        )) {
+      await _openHistory(context, subject, task);
+      return;
+    }
     await _viewModel?.reloadCanonicalRecall();
   }
 
@@ -665,7 +682,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         initialMealType: initialMealType,
         initialCustomMealLabel: initialCustomMealLabel,
         occurrenceDate: model.recall.date,
-        historicalContext: widget.historicalContext,
+        historicalTarget: widget.persistenceTarget,
       ),
     );
     if (result case SavedMealEntryResult(:final meal)) model.addMeal(meal);
@@ -683,7 +700,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         existingMeal: meal,
         task: widget.task,
         occurrenceDate: model.recall.date,
-        historicalContext: widget.historicalContext,
+        historicalTarget: widget.persistenceTarget,
       ),
     );
     switch (result) {
@@ -710,6 +727,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     if (suspendPersistence) model.suspendPersistence();
     try {
       final result = await Navigator.of(context).push(route);
+      if (!model.revalidateHistoricalEligibility()) return null;
       final definitionMutated = switch (result) {
         SavedMealEntryResult(:final definitionMutated) => definitionMutated,
         DiscardedMealEntryResult() => true,

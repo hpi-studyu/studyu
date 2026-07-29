@@ -419,40 +419,47 @@ void main() {
     );
   });
 
-  test('historical save revalidates exact prior study day', () async {
-    final prefs = await SharedPreferences.getInstance();
-    final manager = NutritionRecallAutoSaveManager(preferences: prefs);
-    final subject = _subject(daysAgo: 3);
-    final currentDay = subject.getDayOfStudyFor(DateTime.now());
-    final task = NutritionTask.withId();
-    final period = CompletionPeriod(
-      id: 'period',
-      unlockTime: StudyUTimeOfDay(),
-      lockTime: StudyUTimeOfDay(hour: 23),
-    );
-    final viewModel = DailyRecallEntryViewModel(
-      subject: subject,
-      task: task,
-      completionPeriod: period,
-      existingRecall: _recall('historical', studyDay: currentDay - 2),
-      persistenceTarget: NutritionRecallPersistenceTarget(
-        taskId: task.id,
-        periodId: period.id,
-        interventionId: 'intervention',
-        completedAt: DateTime.now().toUtc(),
-        studyDaySnapshot: currentDay - 2,
-      ),
-      historicalMode: true,
-      autoSaveManager: manager,
-    );
+  test(
+    'expired historical add edit delete and resume stay non-mutating',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final subject = _subject(daysAgo: 3);
+      final currentDay = subject.getDayOfStudyFor(DateTime.now());
+      final task = NutritionTask.withId();
+      final period = CompletionPeriod(
+        id: 'period',
+        unlockTime: StudyUTimeOfDay(),
+        lockTime: StudyUTimeOfDay(hour: 23),
+      );
+      final viewModel = DailyRecallEntryViewModel(
+        subject: subject,
+        task: task,
+        completionPeriod: period,
+        existingRecall: _recall('historical', studyDay: currentDay - 2),
+        persistenceTarget: NutritionRecallPersistenceTarget(
+          taskId: task.id,
+          periodId: period.id,
+          interventionId: 'intervention',
+          completedAt: DateTime.now().toUtc(),
+          studyDaySnapshot: currentDay - 2,
+        ),
+        historicalMode: true,
+        autoSaveManager: manager,
+      );
 
-    viewModel.addMeal(_meal('changed'));
-    await viewModel.flushPendingAutoSave(persistToDatabase: true);
+      viewModel.addMeal(_meal('added'));
+      viewModel.updateMeal(0, _meal('edited'));
+      viewModel.removeMeal(0);
+      viewModel.onAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await viewModel.flushPendingAutoSave(persistToDatabase: true);
 
-    expect(viewModel.historicalEligibilityExpired, isTrue);
-    expect(await manager.scanPendingRecalls(subject.id), isEmpty);
-    viewModel.dispose();
-  });
+      expect(viewModel.historicalEligibilityExpired, isTrue);
+      expect(viewModel.recall.meals.single.id, 'historical');
+      expect(await manager.scanPendingRecalls(subject.id), isEmpty);
+      viewModel.dispose();
+    },
+  );
 
   test(
     'nested definition mutation preserves canonical version through later save',

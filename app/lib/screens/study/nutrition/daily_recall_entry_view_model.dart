@@ -92,6 +92,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
 
   Future<void> _initialize() async {
     if (subject == null) return;
+    if (!revalidateHistoricalEligibility()) return;
 
     _studyDaySnapshot ??= subject!.getDayOfStudyFor(
       _hasExistingRecall ? recall.date : DateTime.now(),
@@ -246,10 +247,15 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     _persistenceSuspended = true;
   }
 
-  void resumePersistence() => _persistenceSuspended = false;
+  void resumePersistence() {
+    _persistenceSuspended = false;
+    revalidateHistoricalEligibility();
+  }
 
   void onAppLifecycleStateChanged(AppLifecycleState state) {
-    if (!readOnly &&
+    if (state == AppLifecycleState.resumed) {
+      revalidateHistoricalEligibility();
+    } else if (!readOnly &&
         !_persistenceSuspended &&
         state == AppLifecycleState.paused &&
         _hasRecallContent) {
@@ -283,7 +289,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void addMeal(MealLog meal) {
-    if (readOnly) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     recall.meals.add(meal);
     _recallRevision++;
     notifyListeners();
@@ -291,7 +297,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void updateMeal(int index, MealLog meal) {
-    if (readOnly) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     recall.meals[index] = meal;
     _recallRevision++;
     notifyListeners();
@@ -304,7 +310,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   void removeMeal(int index) {
-    if (readOnly) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     recall.meals.removeAt(index);
     _recallRevision++;
     notifyListeners();
@@ -370,7 +376,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     bool persistToDatabase = false,
     bool requireRemoteSuccess = false,
   }) async {
-    if (readOnly || !_validateHistoricalEligibility()) return;
+    if (readOnly || !revalidateHistoricalEligibility()) return;
     final hadScheduledSave = _autoSaveTimer != null;
     _autoSaveTimer?.cancel();
     _autoSaveTimer = null;
@@ -421,7 +427,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
         _persistenceSuspended ||
         subject == null ||
         _studyDaySnapshot == null ||
-        !_validateHistoricalEligibility()) {
+        !revalidateHistoricalEligibility()) {
       return;
     }
     recall = _copyWithRecall(lastAutoSavedAt: DateTime.now());
@@ -450,7 +456,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   Future<void> _performAutoSave({bool propagateErrors = false}) {
     if (readOnly ||
         _persistenceSuspended ||
-        !_validateHistoricalEligibility() ||
+        !revalidateHistoricalEligibility() ||
         subject == null ||
         _studyDaySnapshot == null ||
         !isInTaskMode) {
@@ -501,13 +507,14 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     return remoteSave;
   }
 
-  bool _validateHistoricalEligibility() {
+  bool revalidateHistoricalEligibility() {
     final target = _persistenceTarget;
+    if (readOnly || !historicalMode || target == null) return true;
     final activeSubject = subject;
-    if (!historicalMode || target == null || activeSubject == null) return true;
     final valid =
+        activeSubject != null &&
         target.studyDaySnapshot ==
-        activeSubject.getDayOfStudyFor(DateTime.now()) - 1;
+            activeSubject.getDayOfStudyFor(DateTime.now()) - 1;
     if (!valid && !_historicalEligibilityExpired) {
       _historicalEligibilityExpired = true;
       if (!_isDisposed) notifyListeners();
