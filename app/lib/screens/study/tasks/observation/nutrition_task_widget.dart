@@ -657,7 +657,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     MealType? initialMealType,
     String? initialCustomMealLabel,
   }) async {
-    final result = await Navigator.of(context).push(
+    final result = await _pushMealEditor(
+      context,
+      model,
       MealEntryScreen.route(
         task: widget.task,
         initialMealType: initialMealType,
@@ -674,7 +676,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     DailyRecallEntryViewModel model,
     MealLog meal,
   ) async {
-    final result = await Navigator.of(context).push(
+    final result = await _pushMealEditor(
+      context,
+      model,
       MealEntryScreen.route(
         existingMeal: meal,
         task: widget.task,
@@ -683,13 +687,64 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       ),
     );
     switch (result) {
-      case SavedMealEntryResult(:final meal, :final definitionMutated):
-        if (definitionMutated) await model.reloadCanonicalRecall();
+      case SavedMealEntryResult(:final meal):
         model.updateMealById(meal.id, meal);
       case DeletedMealEntryResult():
         model.removeMealById(meal.id);
-      case null:
+      case DiscardedMealEntryResult() || null:
         break;
+    }
+  }
+
+  Future<MealEntryResult?> _pushMealEditor(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+    Route<MealEntryResult> route,
+  ) async {
+    if (!await _flushHistoricalRecallBeforeNestedMutation(context, model) ||
+        !context.mounted) {
+      return null;
+    }
+
+    final suspendPersistence = _isHistoricalMode && !widget.readOnly;
+    if (suspendPersistence) model.suspendPersistence();
+    try {
+      final result = await Navigator.of(context).push(route);
+      final definitionMutated = switch (result) {
+        SavedMealEntryResult(:final definitionMutated) => definitionMutated,
+        DiscardedMealEntryResult() => true,
+        _ => false,
+      };
+      if (definitionMutated) await model.reloadCanonicalRecall();
+      return result;
+    } finally {
+      if (suspendPersistence) model.resumePersistence();
+    }
+  }
+
+  Future<bool> _flushHistoricalRecallBeforeNestedMutation(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+  ) async {
+    if (!_isHistoricalMode || widget.readOnly) return true;
+    try {
+      await model.flushPendingAutoSave(
+        persistToDatabase: true,
+        requireRemoteSuccess: true,
+      );
+      return !model.historicalEligibilityExpired;
+    } catch (error, stackTrace) {
+      StudyULogger.error(
+        'Failed to flush historical nutrition recall: $error\n$stackTrace',
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.could_not_save_results),
+          ),
+        );
+      }
+      return false;
     }
   }
 

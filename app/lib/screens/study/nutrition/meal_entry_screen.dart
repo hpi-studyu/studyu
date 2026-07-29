@@ -40,6 +40,10 @@ final class DeletedMealEntryResult extends MealEntryResult {
   const DeletedMealEntryResult();
 }
 
+final class DiscardedMealEntryResult extends MealEntryResult {
+  const DiscardedMealEntryResult();
+}
+
 enum _FoodAction { adjustQuantity, edit, saveTemplate, remove }
 
 class _MealTypeSelection {
@@ -467,7 +471,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     switch (action) {
       case UnsavedChangesAction.discard:
-        _pop();
+        _pop(_definitionMutated ? const DiscardedMealEntryResult() : null);
       case null:
         return;
     }

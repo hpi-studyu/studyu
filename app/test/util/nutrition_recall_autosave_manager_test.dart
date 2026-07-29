@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
@@ -450,6 +451,219 @@ void main() {
 
     expect(viewModel.historicalEligibilityExpired, isTrue);
     expect(await manager.scanPendingRecalls(subject.id), isEmpty);
+    viewModel.dispose();
+  });
+
+  test(
+    'nested definition mutation preserves canonical version through later save',
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+      final subject = _subject(daysAgo: 2);
+      final currentDay = subject.getDayOfStudyFor(DateTime.now());
+      final task = NutritionTask.withId();
+      final period = CompletionPeriod(
+        id: 'period',
+        unlockTime: StudyUTimeOfDay(),
+        lockTime: StudyUTimeOfDay(hour: 23),
+      );
+      final target = NutritionRecallPersistenceTarget(
+        taskId: task.id,
+        periodId: period.id,
+        interventionId: 'intervention',
+        completedAt: DateTime.now().toUtc(),
+        studyDaySnapshot: currentDay - 1,
+      );
+      final remoteStarted = Completer<void>();
+      final releaseRemote = Completer<void>();
+      final events = <String>[];
+      final remotelySaved = <DailyRecall>[];
+      var remoteCall = 0;
+      final viewModel = DailyRecallEntryViewModel(
+        subject: subject,
+        task: task,
+        completionPeriod: period,
+        existingRecall: _foodRecall('old', studyDay: currentDay - 1),
+        persistenceTarget: target,
+        historicalMode: true,
+        autoSaveManager: manager,
+        remoteSaver:
+            ({
+              required taskId,
+              required periodId,
+              required recall,
+              required persistenceTarget,
+              interventionIdOverride,
+            }) async {
+              expect(taskId, target.taskId);
+              expect(periodId, target.periodId);
+              expect(persistenceTarget?.taskId, target.taskId);
+              expect(persistenceTarget?.periodId, target.periodId);
+              expect(persistenceTarget?.interventionId, target.interventionId);
+              expect(persistenceTarget?.completedAt, target.completedAt);
+              expect(
+                persistenceTarget?.studyDaySnapshot,
+                target.studyDaySnapshot,
+              );
+              expect(interventionIdOverride, target.interventionId);
+              remoteCall++;
+              remotelySaved.add(DailyRecall.fromJson(recall.toJson()));
+              events.add('autosave-$remoteCall-started');
+              if (remoteCall == 1) {
+                remoteStarted.complete();
+                await releaseRemote.future;
+              }
+              events.add('autosave-$remoteCall-completed');
+            },
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      viewModel.updateUsualIntake(true);
+      final activeAutoSave = viewModel.flushPendingAutoSave(
+        persistToDatabase: true,
+      );
+      await remoteStarted.future;
+
+      var mutationStarted = false;
+      final nestedMutation = () async {
+        await viewModel.flushPendingAutoSave(
+          persistToDatabase: true,
+          requireRemoteSuccess: true,
+        );
+        mutationStarted = true;
+        viewModel.suspendPersistence();
+        try {
+          events.add('definition-rpc');
+          final canonicalRecall = _foodRecall('new', studyDay: currentDay - 1);
+          canonicalRecall.meals.single.foods.single
+            ..id = 'logged-entry'
+            ..foodVersionId = 'version-2';
+          subject.progress.add(
+            SubjectProgress(
+              subjectId: subject.id,
+              interventionId: target.interventionId,
+              taskId: target.taskId,
+              resultType: 'DailyRecall',
+              result: Result<DailyRecall>.app(
+                type: 'DailyRecall',
+                periodId: target.periodId,
+                result: canonicalRecall,
+              ),
+            )..completedAt = target.completedAt,
+          );
+          await manager.rewriteFoodDefinition(
+            subjectId: subject.id,
+            studyDaySnapshot: currentDay - 1,
+            definition: canonicalRecall.meals.single.foods.single,
+            entryId: 'logged-entry',
+          );
+
+          viewModel.onAppLifecycleStateChanged(AppLifecycleState.paused);
+          await viewModel.flushPendingAutoSave();
+          expect(
+            (await manager.scanPendingRecalls(
+              subject.id,
+            )).single.recall.meals.single.foods.single.foodVersionId,
+            'version-2',
+          );
+          await viewModel.reloadCanonicalRecall();
+        } finally {
+          viewModel.resumePersistence();
+        }
+
+        viewModel.updateSpecialOccasion('after definition mutation');
+        await viewModel.flushPendingAutoSave(
+          persistToDatabase: true,
+          requireRemoteSuccess: true,
+        );
+      }();
+      await Future<void>.delayed(Duration.zero);
+
+      expect(mutationStarted, isFalse);
+      expect(events, ['autosave-1-started']);
+      releaseRemote.complete();
+      await Future.wait([activeAutoSave, nestedMutation]);
+
+      expect(mutationStarted, isTrue);
+      expect(events, [
+        'autosave-1-started',
+        'autosave-1-completed',
+        'autosave-2-started',
+        'autosave-2-completed',
+        'definition-rpc',
+        'autosave-3-started',
+        'autosave-3-completed',
+      ]);
+      expect(
+        viewModel.recall.meals.single.foods.single.foodVersionId,
+        'version-2',
+      );
+      expect(
+        remotelySaved.last.meals.single.foods.single.foodVersionId,
+        'version-2',
+      );
+      viewModel.dispose();
+    },
+  );
+
+  test('failed strict historical flush prevents definition mutation', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final manager = NutritionRecallAutoSaveManager(preferences: prefs);
+    final subject = _subject(daysAgo: 2);
+    final currentDay = subject.getDayOfStudyFor(DateTime.now());
+    final task = NutritionTask.withId();
+    final period = CompletionPeriod(
+      id: 'period',
+      unlockTime: StudyUTimeOfDay(),
+      lockTime: StudyUTimeOfDay(hour: 23),
+    );
+    final target = NutritionRecallPersistenceTarget(
+      taskId: task.id,
+      periodId: period.id,
+      interventionId: 'intervention',
+      completedAt: DateTime.now().toUtc(),
+      studyDaySnapshot: currentDay - 1,
+    );
+    var mutationStarted = false;
+    final viewModel = DailyRecallEntryViewModel(
+      subject: subject,
+      task: task,
+      completionPeriod: period,
+      existingRecall: _foodRecall('old', studyDay: currentDay - 1),
+      persistenceTarget: target,
+      historicalMode: true,
+      autoSaveManager: manager,
+      remoteSaver:
+          ({
+            required taskId,
+            required periodId,
+            required recall,
+            required persistenceTarget,
+            interventionIdOverride,
+          }) async => throw StateError('remote flush failed'),
+    );
+    await Future<void>.delayed(Duration.zero);
+
+    viewModel.updateUsualIntake(true);
+    final mutation = () async {
+      await viewModel.flushPendingAutoSave(
+        persistToDatabase: true,
+        requireRemoteSuccess: true,
+      );
+      mutationStarted = true;
+    }();
+
+    await expectLater(
+      mutation,
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          'remote flush failed',
+        ),
+      ),
+    );
+    expect(mutationStarted, isFalse);
     viewModel.dispose();
   });
 
