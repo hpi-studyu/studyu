@@ -1234,6 +1234,21 @@
   },
   "historical_edit_scope": "Entry changes apply only to this study day",
   "historical_edit_expired": "This study day is no longer editable.",
+  "edit_food_definition": "Edit reusable food",
+  "food_definition_edit_helper": "Serving description, weight, conversions, and nutrition update the reusable food in your library and matching entries logged today. This historical entry keeps its serving count.",
+  "food_definition_updated_no_today": "Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. No matching entries today.",
+  "@food_definition_updated_no_today": {
+    "placeholders": {
+      "historicalCount": {"type": "int"}
+    }
+  },
+  "food_definition_updated_today": "Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}} and {todayCount, plural, =1 {1 matching entry today} other {{todayCount} matching entries today}}.",
+  "@food_definition_updated_today": {
+    "placeholders": {
+      "historicalCount": {"type": "int"},
+      "todayCount": {"type": "int"}
+    }
+  },
   "nutrition_statistics_empty": "No nutrition data is available yet.",
   "nutrition_editable": "Editable",
   "nutrition_read_only": "Read-only",

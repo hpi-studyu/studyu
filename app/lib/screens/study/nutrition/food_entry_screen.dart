@@ -25,6 +25,7 @@ class FoodEntryScreen extends StatefulWidget {
   final bool showSearchAction;
   final String? mealLabel;
   final HistoricalNutritionEditingContext? historicalContext;
+  final bool editReusableDefinition;
   final NutritionFoodRepository? repository;
 
   const FoodEntryScreen({
@@ -33,9 +34,10 @@ class FoodEntryScreen extends StatefulWidget {
     this.showSearchAction = true,
     this.mealLabel,
     this.historicalContext,
+    this.editReusableDefinition = false,
     this.repository,
     super.key,
-  });
+  }) : assert(!editReusableDefinition || historicalContext != null);
 
   static MaterialPageRoute<FoodEntry> route({
     FoodEntry? existingFood,
@@ -43,6 +45,7 @@ class FoodEntryScreen extends StatefulWidget {
     bool showSearchAction = true,
     String? mealLabel,
     HistoricalNutritionEditingContext? historicalContext,
+    bool editReusableDefinition = false,
     NutritionFoodRepository? repository,
   }) => MaterialPageRoute(
     builder: (_) => FoodEntryScreen(
@@ -51,6 +54,7 @@ class FoodEntryScreen extends StatefulWidget {
       showSearchAction: showSearchAction,
       mealLabel: mealLabel,
       historicalContext: historicalContext,
+      editReusableDefinition: editReusableDefinition,
       repository: repository,
     ),
   );
@@ -207,11 +211,12 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     final historicalContext = widget.historicalContext;
+    final subject = appState.activeSubject;
+    final existingFood = widget.existingFood;
+    int? currentStudyDay;
     if (historicalContext != null) {
-      final subject = appState.activeSubject;
-      final existingFood = widget.existingFood;
       if (subject == null || existingFood == null) return;
-      final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
+      currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
       if (!isEditableNutritionRecallDay(
         studyDaySnapshot: historicalContext.target.studyDaySnapshot,
         currentStudyDay: currentStudyDay,
@@ -225,15 +230,17 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         }
         return;
       }
+    }
+    if (widget.editReusableDefinition) {
       try {
         final result = await (widget.repository ?? NutritionFoodRepository())
             .mutateHistoricalDefinition(
-              subjectId: subject.id,
-              snapshot: food,
-              expectedVersionId: existingFood.foodVersionId,
+              subjectId: subject!.id,
+              snapshot: normalizeNutritionFoodDefinition(food),
+              expectedVersionId: existingFood!.foodVersionId,
               entryId: existingFood.id,
-              target: historicalContext.target.toJson(),
-              currentStudyDay: currentStudyDay,
+              target: historicalContext!.target.toJson(),
+              currentStudyDay: currentStudyDay!,
               mutationId: _mutationId,
             );
         food = applyNutritionFoodSnapshot(
@@ -253,6 +260,19 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           definition: result.definition.snapshot,
           entryId: existingFood.id,
         );
+        if (mounted) {
+          final message = result.todayUpdateCount == 0
+              ? l10n.food_definition_updated_no_today(
+                  result.selectedHistoricalUpdateCount,
+                )
+              : l10n.food_definition_updated_today(
+                  result.selectedHistoricalUpdateCount,
+                  result.todayUpdateCount,
+                );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(message)));
+        }
       } catch (error, stackTrace) {
         StudyULogger.error(
           'Failed to update historical nutrition definition: '
@@ -502,6 +522,16 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                 theme: theme,
               ),
             if (_isAiAnalyzed) const SizedBox(height: 12),
+
+            if (widget.editReusableDefinition) ...[
+              Text(
+                l10n.food_definition_edit_helper,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
 
             if (_productImageUrl case final imageUrl?)
               Image.network(

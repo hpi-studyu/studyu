@@ -2685,6 +2685,42 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dieser Studientag kann nicht mehr bearbeitet werden.';
 
   @override
+  String get edit_food_definition =>
+      'Wiederverwendbares Lebensmittel bearbeiten';
+
+  @override
+  String get food_definition_edit_helper =>
+      'Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Lebensmittel in Ihrer Bibliothek und passende heutige Einträge. Die Portionsanzahl dieses historischen Eintrags bleibt erhalten.';
+
+  @override
+  String food_definition_updated_no_today(int historicalCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      historicalCount,
+      locale: localeName,
+      other: '$historicalCount ausgewählte Einträge',
+      one: 'den ausgewählten Eintrag',
+    );
+    return 'Das wiederverwendbare Lebensmittel wurde für $_temp0 aktualisiert. Heute gibt es keine passenden Einträge.';
+  }
+
+  @override
+  String food_definition_updated_today(int historicalCount, int todayCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      historicalCount,
+      locale: localeName,
+      other: '$historicalCount ausgewählte Einträge',
+      one: 'den ausgewählten Eintrag',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      todayCount,
+      locale: localeName,
+      other: '$todayCount passende heutige Einträge',
+      one: '1 passenden heutigen Eintrag',
+    );
+    return 'Das wiederverwendbare Lebensmittel wurde für $_temp0 und $_temp1 aktualisiert.';
+  }
+
+  @override
   String get nutrition_statistics_empty =>
       'Noch keine Ernährungsdaten verfügbar.';
 

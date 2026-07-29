@@ -165,6 +165,22 @@ AS $$
   );
 $$;
 
+CREATE FUNCTION public.nutrition_food_occurrence_count(
+    p_result jsonb,
+    p_food_id uuid,
+    p_entry_id text DEFAULT null
+) RETURNS integer
+LANGUAGE sql
+IMMUTABLE
+SET search_path = public
+AS $$
+  SELECT count(*)::integer
+  FROM jsonb_array_elements(COALESCE(p_result #> '{result,meals}', '[]'::jsonb)) AS meal,
+       jsonb_array_elements(COALESCE(meal->'foods', '[]'::jsonb)) AS food
+  WHERE food->>'foodId' = p_food_id::text
+    AND (p_entry_id IS NULL OR food->>'id' = p_entry_id);
+$$;
+
 CREATE FUNCTION public.nutrition_result_has_food(
     p_result jsonb,
     p_food_id uuid,
@@ -174,13 +190,9 @@ LANGUAGE sql
 IMMUTABLE
 SET search_path = public
 AS $$
-  SELECT EXISTS (
-    SELECT 1
-    FROM jsonb_array_elements(COALESCE(p_result #> '{result,meals}', '[]'::jsonb)) AS meal,
-         jsonb_array_elements(COALESCE(meal->'foods', '[]'::jsonb)) AS food
-    WHERE food->>'foodId' = p_food_id::text
-      AND (p_entry_id IS NULL OR food->>'id' = p_entry_id)
-  );
+  SELECT public.nutrition_food_occurrence_count(
+    p_result, p_food_id, p_entry_id
+  ) > 0;
 $$;
 
 CREATE FUNCTION public.nutrition_food_snapshot_is_valid(
@@ -526,11 +538,13 @@ BEGIN
         AND result_type = 'DailyRecall'
         AND (result #>> '{result,studyDaySnapshot}')::integer = p_propagate_study_day
         AND public.nutrition_result_has_food(result, p_food_id)
-      RETURNING to_jsonb(public.subject_progress.*) AS row
+      RETURNING
+        to_jsonb(public.subject_progress.*) AS row,
+        public.nutrition_food_occurrence_count(result, p_food_id) AS occurrence_count
     )
     SELECT
       v_progress || COALESCE(jsonb_agg(row), '[]'::jsonb),
-      count(*)::integer
+      COALESCE(sum(occurrence_count), 0)::integer
     INTO v_progress, v_today_update_count
     FROM updated;
   END IF;
@@ -565,6 +579,10 @@ REVOKE ALL ON FUNCTION public.nutrition_food_snapshot_is_valid(jsonb)
 FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.nutrition_replace_food_snapshots(
     jsonb, uuid, jsonb, text
+)
+FROM public, anon, authenticated;
+REVOKE ALL ON FUNCTION public.nutrition_food_occurrence_count(
+    jsonb, uuid, text
 )
 FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.nutrition_result_has_food(jsonb, uuid, text)

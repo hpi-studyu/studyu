@@ -50,7 +50,7 @@ void main() {
     expect(params['p_food_id'], 'food-definition');
     expect(result.progress, hasLength(3));
     expect(result.selectedHistoricalUpdateCount, 1);
-    expect(result.todayUpdateCount, 2);
+    expect(result.todayUpdateCount, 3);
   });
 
   test('creates missing entry definitions through the mutation RPC', () async {
@@ -116,7 +116,7 @@ Map<String, dynamic> _mutationResponse() => {
     {'task_id': 'today-task-b'},
   ],
   'selectedHistoricalUpdateCount': 1,
-  'todayUpdateCount': 2,
+  'todayUpdateCount': 3,
 };
 
 FoodEntry _food({String versionId = 'version-1'}) => FoodEntry(

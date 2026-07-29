@@ -1,9 +1,11 @@
 BEGIN;
 
-SELECT plan(34);
+SELECT plan(35);
 
-SELECT tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
-SELECT tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
+SELECT
+    tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
+SELECT
+    tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
     id, study_id, user_id, selected_intervention_ids
@@ -64,6 +66,20 @@ INSERT INTO public.subject_progress (
     'DailyRecall',
     '{"type":"DailyRecall","periodId":"period-b","result":{"id":"other","date":"2026-07-16T00:00:00.000","recallMode":"realtimeRecord","meals":[{"id":"other-meal","mealType":"breakfast","mealContext":"home","timezone":"UTC","isSkipped":false,"foods":[{"id":"other-entry","foodId":"20000000-0000-0000-0000-000000000001","foodVersionId":"30000000-0000-0000-0000-000000000000","entryType":"singleIngredient","name":"Other subject old","amount":1,"unit":"serving","servingSizeGrams":100,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":100,"protein":1,"carbs":1,"fat":1,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-16T08:00:00.000Z","originalValues":{}}]}],"studyDaySnapshot":5}}'::jsonb
 );
+
+UPDATE public.subject_progress
+SET
+    result = jsonb_set(
+        result,
+        '{result,meals,0,foods}',
+        (result #> '{result,meals,0,foods}') || jsonb_build_array(
+            (result #> '{result,meals,0,foods,0}')
+            || '{"id":"current-entry-a-second","amount":2,"nutrition":{"energyKcal":200,"protein":2,"carbs":2,"fat":2,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}}}'::jsonb
+        )
+    )
+WHERE
+    subject_id = '10000000-0000-0000-0000-000000000001'
+    AND task_id = 'current-task-a';
 
 SELECT tests.authenticate_as('nutrition_owner');
 
@@ -148,8 +164,8 @@ SELECT is(
         FROM nutrition_results
         WHERE label = 'historical'
     ),
-    2,
-    'mutation reports the current study-day row update count'
+    3,
+    'mutation reports the current study-day occurrence update count'
 );
 SELECT is(
     (
@@ -227,6 +243,17 @@ SELECT is(
     ),
     2,
     'all matching current-day task and period rows are rewritten'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,1,name}'
+        FROM public.subject_progress
+        WHERE
+            subject_id = '10000000-0000-0000-0000-000000000001'
+            AND task_id = 'current-task-a'
+    ),
+    'New',
+    'multiple same-food occurrences in one current-day row are rewritten'
 );
 SELECT is(
     (

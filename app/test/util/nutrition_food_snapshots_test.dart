@@ -4,6 +4,42 @@ import 'package:studyu_core/core.dart';
 
 void main() {
   test(
+    'definition normalization converts occurrence nutrition to one serving',
+    () {
+      final occurrence = _food(
+        id: 'entry',
+        foodId: 'food',
+        versionId: 'version',
+        name: 'Apple',
+        amount: 2,
+        energy: 200,
+      )..nutrition.micros = {'iron': 4};
+
+      final definition = normalizeNutritionFoodDefinition(occurrence);
+
+      expect(definition.amount, 1);
+      expect(definition.nutrition.energyKcal, 100);
+      expect(definition.nutrition.protein, 0.5);
+      expect(definition.nutrition.micros, {'iron': 2});
+      expect(occurrence.amount, 2);
+      expect(occurrence.nutrition.energyKcal, 200);
+      expect(
+        () => normalizeNutritionFoodDefinition(
+          _food(
+            id: 'invalid',
+            foodId: 'food',
+            versionId: 'version',
+            name: 'Invalid',
+            amount: 0,
+            energy: 0,
+          ),
+        ),
+        throwsArgumentError,
+      );
+    },
+  );
+
+  test(
     'definition replacement preserves logged identity and serving state',
     () {
       final logged =

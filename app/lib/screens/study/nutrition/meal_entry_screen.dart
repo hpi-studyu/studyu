@@ -15,7 +15,6 @@ import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/food_analysis_service.dart';
 import 'package:studyu_app/services/photo_gallery_service.dart';
-import 'package:studyu_app/util/nutrition_food_snapshots.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/food_item_selection_dialog.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
@@ -44,7 +43,7 @@ final class DiscardedMealEntryResult extends MealEntryResult {
   const DiscardedMealEntryResult();
 }
 
-enum _FoodAction { adjustQuantity, edit, saveTemplate, remove }
+enum _FoodAction { adjustQuantity, edit, editDefinition, saveTemplate, remove }
 
 class _MealTypeSelection {
   final MealType type;
@@ -216,12 +215,16 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   int _foodIndex(String foodId) =>
       _meal.foods.indexWhere((food) => food.id == foodId);
 
-  Future<void> _editFood(FoodEntry food) async {
+  Future<void> _editFood(
+    FoodEntry food, {
+    bool editReusableDefinition = false,
+  }) async {
     final result = await Navigator.of(context).push(
       FoodEntryScreen.route(
         existingFood: food,
         showSearchAction: false,
         historicalContext: widget.historicalContext,
+        editReusableDefinition: editReusableDefinition,
         repository: widget.foodRepository,
       ),
     );
@@ -230,22 +233,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final index = _foodIndex(food.id);
     if (index == -1) return;
     setState(() {
-      _definitionMutated =
-          _definitionMutated || result.foodVersionId != food.foodVersionId;
-      for (
-        var candidateIndex = 0;
-        candidateIndex < _meal.foods.length;
-        candidateIndex++
-      ) {
-        final candidate = _meal.foods[candidateIndex];
-        if (candidate.foodId == result.foodId &&
-            (widget.historicalContext == null || candidate.id == food.id)) {
-          _meal.foods[candidateIndex] = applyNutritionFoodSnapshot(
-            candidate,
-            result,
-          );
-        }
-      }
+      _definitionMutated = _definitionMutated || editReusableDefinition;
+      _meal.foods[index] = result;
     });
   }
 
@@ -310,6 +299,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
               title: Text(l10n.edit_this_entry),
               onTap: () => Navigator.pop(sheetContext, _FoodAction.edit),
             ),
+            if (widget.historicalContext != null)
+              ListTile(
+                leading: const Icon(Icons.sync_outlined),
+                title: Text(l10n.edit_food_definition),
+                onTap: () =>
+                    Navigator.pop(sheetContext, _FoodAction.editDefinition),
+              ),
             if (food.templateId == null && widget.historicalContext == null)
               ListTile(
                 leading: const Icon(Icons.bookmark_add_outlined),
@@ -340,6 +336,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         await _adjustFoodQuantity(food);
       case _FoodAction.edit:
         await _editFood(food);
+      case _FoodAction.editDefinition:
+        await _editFood(food, editReusableDefinition: true);
       case _FoodAction.saveTemplate:
         await _saveFoodAsTemplate(food);
       case _FoodAction.remove:

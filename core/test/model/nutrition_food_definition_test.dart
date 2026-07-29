@@ -20,13 +20,13 @@ void main() {
         {'task_id': 'today-task-b'},
       ],
       selectedHistoricalUpdateCount: 1,
-      todayUpdateCount: 2,
+      todayUpdateCount: 3,
     );
 
     final restored = NutritionFoodMutationResult.fromJson(result.toJson());
 
     expect(restored.selectedHistoricalUpdateCount, 1);
-    expect(restored.todayUpdateCount, 2);
+    expect(restored.todayUpdateCount, 3);
     expect(restored.progress, hasLength(3));
 
     final missingCount = result.toJson()..remove('todayUpdateCount');

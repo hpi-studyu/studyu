@@ -1,10 +1,17 @@
 import 'package:studyu_core/core.dart';
 
-/// Applies reusable definition fields while retaining occurrence-owned fields.
-///
-/// Occurrences own identity, quantity, template/meal placement, and logged
-/// timestamps. Every other field, including serving metadata and composition,
-/// comes from the reusable definition.
+/// Converts occurrence-scaled nutrition to the reusable one-serving basis.
+FoodEntry normalizeNutritionFoodDefinition(FoodEntry occurrence) {
+  final definition = FoodEntry.fromJson(occurrence.toJson());
+  final occurrenceAmount = occurrence.amount;
+  if (!occurrenceAmount.isFinite || occurrenceAmount <= 0) {
+    throw ArgumentError.value(occurrenceAmount, 'amount');
+  }
+  _scaleNutrition(definition.nutrition, 1 / occurrenceAmount);
+  return definition..amount = 1;
+}
+
+/// Applies reusable fields while retaining occurrence-owned identity/quantity.
 FoodEntry applyNutritionFoodSnapshot(FoodEntry logged, FoodEntry definition) {
   final updated = FoodEntry.fromJson(definition.toJson());
   final definitionAmount = definition.amount;

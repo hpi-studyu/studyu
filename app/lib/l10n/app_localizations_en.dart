@@ -2656,6 +2656,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historical_edit_expired => 'This study day is no longer editable.';
 
   @override
+  String get edit_food_definition => 'Edit reusable food';
+
+  @override
+  String get food_definition_edit_helper =>
+      'Serving description, weight, conversions, and nutrition update the reusable food in your library and matching entries logged today. This historical entry keeps its serving count.';
+
+  @override
+  String food_definition_updated_no_today(int historicalCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      historicalCount,
+      locale: localeName,
+      other: '$historicalCount selected entries',
+      one: 'the selected entry',
+    );
+    return 'Reusable food updated for $_temp0. No matching entries today.';
+  }
+
+  @override
+  String food_definition_updated_today(int historicalCount, int todayCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      historicalCount,
+      locale: localeName,
+      other: '$historicalCount selected entries',
+      one: 'the selected entry',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      todayCount,
+      locale: localeName,
+      other: '$todayCount matching entries today',
+      one: '1 matching entry today',
+    );
+    return 'Reusable food updated for $_temp0 and $_temp1.';
+  }
+
+  @override
   String get nutrition_statistics_empty =>
       'No nutrition data is available yet.';
 
