@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(35);
+SELECT plan(49);
 
 SELECT
     tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
@@ -311,6 +311,258 @@ SELECT is(
     'Other subject old',
     'other subjects are isolated'
 );
+
+INSERT INTO nutrition_results VALUES (
+    'composite-create',
+    public.apply_nutrition_food_mutation(
+        '10000000-0000-0000-0000-000000000001',
+        '40000000-0000-0000-0000-000000000020',
+        '20000000-0000-0000-0000-000000000020',
+        NULL,
+        '{"id":"meal-definition-snapshot","foodId":"20000000-0000-0000-0000-000000000020","foodVersionId":"30000000-0000-0000-0000-000000000020","entryType":"meal","name":"Composite old","amount":1,"unit":"serving","servingSizeGrams":100,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":100,"protein":1,"carbs":1,"fat":1,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-15T08:00:00.000Z","originalValues":{},"componentFoods":[{"id":"composition-a","parentEntryId":"meal-definition-snapshot","foodId":"20000000-0000-0000-0000-000000000002","amount":1,"unit":"serving","sortOrder":0}],"componentSnapshots":[{"id":"component-snapshot","foodId":"20000000-0000-0000-0000-000000000002","foodVersionId":"30000000-0000-0000-0000-000000000099","entryType":"singleIngredient","name":"Component old","amount":1,"unit":"serving","servingSizeGrams":50,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":50,"protein":1,"carbs":1,"fat":1,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-15T08:00:00.000Z","originalValues":{}}]}'::jsonb,
+        FALSE, NULL, NULL, TRUE
+    )
+);
+
+INSERT INTO public.subject_progress (
+    completed_at, subject_id, intervention_id, task_id, result_type, result
+) VALUES
+(
+    '2026-07-15 13:00:00+00',
+    '10000000-0000-0000-0000-000000000001',
+    'intervention-composite',
+    'historical-composite-task',
+    'DailyRecall',
+    '{"type":"DailyRecall","periodId":"period-composite","result":{"id":"historical-composite","date":"2026-07-15T00:00:00.000","recallMode":"realtimeRecord","meals":[{"id":"historical-composite-meal","mealType":"dinner","mealContext":"home","timestamp":"2026-07-15T18:30:00.000Z","timezone":"UTC","isSkipped":false,"foods":[{"id":"historical-composite-entry","foodId":"20000000-0000-0000-0000-000000000020","foodVersionId":"30000000-0000-0000-0000-000000000020","entryType":"meal","name":"Composite old","amount":2,"unit":"serving","servingSizeGrams":100,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":200,"protein":2,"carbs":2,"fat":2,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-15T18:30:00.000Z","originalValues":{},"parentEntryId":"historical-composite-meal","componentFoods":[{"id":"logged-composition","parentEntryId":"historical-composite-entry","foodId":"20000000-0000-0000-0000-000000000002","amount":1,"unit":"serving","sortOrder":0}],"componentSnapshots":[{"id":"logged-component-snapshot","foodId":"20000000-0000-0000-0000-000000000002","foodVersionId":"30000000-0000-0000-0000-000000000099","entryType":"singleIngredient","name":"Embedded old","amount":1,"unit":"serving","servingSizeGrams":50,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":50,"protein":1,"carbs":1,"fat":1,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-15T08:00:00.000Z","originalValues":{}}]},{"id":"historical-individual-component","foodId":"20000000-0000-0000-0000-000000000002","foodVersionId":"30000000-0000-0000-0000-000000000099","entryType":"singleIngredient","name":"Individual old","amount":1,"unit":"serving","servingSizeGrams":50,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":50,"protein":1,"carbs":1,"fat":1,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-15T19:00:00.000Z","originalValues":{}}]}],"studyDaySnapshot":4}}'::jsonb
+),
+(
+    '2026-07-16 13:00:00+00',
+    '10000000-0000-0000-0000-000000000001',
+    'intervention-composite',
+    'current-composite-task',
+    'DailyRecall',
+    '{"type":"DailyRecall","periodId":"period-composite-today","result":{"id":"current-composite","date":"2026-07-16T00:00:00.000","recallMode":"realtimeRecord","meals":[{"id":"current-composite-meal","mealType":"lunch","mealContext":"home","timestamp":"2026-07-16T12:15:00.000Z","timezone":"UTC","isSkipped":false,"foods":[{"id":"current-composite-entry","foodId":"20000000-0000-0000-0000-000000000020","foodVersionId":"30000000-0000-0000-0000-000000000020","entryType":"meal","name":"Composite old","amount":4,"unit":"serving","servingSizeGrams":100,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":400,"protein":4,"carbs":4,"fat":4,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-16T12:15:00.000Z","originalValues":{},"componentFoods":[],"componentSnapshots":[]},{"id":"current-individual-component","foodId":"20000000-0000-0000-0000-000000000002","foodVersionId":"30000000-0000-0000-0000-000000000099","entryType":"singleIngredient","name":"Individual today old","amount":1,"unit":"serving","servingSizeGrams":50,"portionEstimationMethod":"standardUnit","portionState":"asServed","nutrition":{"energyKcal":50,"protein":1,"carbs":1,"fat":1,"sugars":0,"fiber":0,"saturatedFat":0,"transFat":0,"cholesterol":0,"sodium":0,"waterContent":0,"micros":{}},"source":"manual","confidenceScore":1,"createdAt":"2026-07-16T12:30:00.000Z","originalValues":{}}]}],"studyDaySnapshot":5}}'::jsonb
+);
+
+UPDATE public.subject_progress
+SET
+    result = jsonb_set(
+        result,
+        '{result,meals,0,foods}',
+        (result #> '{result,meals,0,foods}') || jsonb_build_array(
+            (result #> '{result,meals,0,foods,0}') || jsonb_build_object(
+                'id', 'current-composite-entry-second',
+                'amount', 3,
+                'nutrition', jsonb_build_object(
+                    'energyKcal', 300,
+                    'protein', 3,
+                    'carbs', 3,
+                    'fat', 3,
+                    'sugars', 0,
+                    'fiber', 0,
+                    'saturatedFat', 0,
+                    'transFat', 0,
+                    'cholesterol', 0,
+                    'sodium', 0,
+                    'waterContent', 0,
+                    'micros', '{}'::jsonb
+                )
+            )
+        )
+    )
+WHERE task_id = 'current-composite-task';
+
+INSERT INTO nutrition_results VALUES (
+    'composite-historical',
+    public.apply_nutrition_food_mutation(
+        '10000000-0000-0000-0000-000000000001',
+        '40000000-0000-0000-0000-000000000021',
+        '20000000-0000-0000-0000-000000000020',
+        (
+            (
+                SELECT response FROM nutrition_results
+                WHERE label = 'composite-create'
+            ) #>> '{definition,currentVersionId}'
+        )::uuid,
+        jsonb_set(
+            jsonb_set(
+                (
+                    SELECT response #> '{definition,snapshot}'
+                    FROM nutrition_results
+                    WHERE label = 'composite-create'
+                ),
+                '{name}', '"Composite new"'::jsonb
+            ),
+            '{componentFoods,0,amount}', '2'::jsonb
+        ) || jsonb_build_object(
+            'componentSnapshots', jsonb_build_array(
+                jsonb_set(
+                    (
+                        SELECT
+                            response
+                            #> '{definition,snapshot,componentSnapshots,0}'
+                        FROM nutrition_results
+                        WHERE label = 'composite-create'
+                    ),
+                    '{amount}', '2'::jsonb
+                )
+            )
+        ),
+        FALSE,
+        '{"taskId":"historical-composite-task","periodId":"period-composite","interventionId":"intervention-composite","completedAt":"2026-07-15T13:00:00Z","studyDaySnapshot":4}'::jsonb,
+        5,
+        NULL,
+        'historical-composite-entry'
+    )
+);
+
+SELECT is(
+    (
+        SELECT (response ->> 'selectedHistoricalUpdateCount')::integer
+        FROM nutrition_results
+        WHERE label = 'composite-historical'
+    ),
+    1,
+    'composite mutation updates the selected historical entry'
+);
+SELECT is(
+    (
+        SELECT (response ->> 'todayUpdateCount')::integer FROM nutrition_results
+        WHERE label = 'composite-historical'
+    ),
+    2,
+    'composite mutation propagates all matching composite occurrences today'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,0,name}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    'Composite new',
+    'historical composite receives the new definition'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,0,amount}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    '2',
+    'historical composite quantity is preserved'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,0,parentEntryId}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    'historical-composite-meal',
+    'historical composite meal placement is preserved'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,timestamp}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    '2026-07-15T18:30:00.000Z',
+    'historical composite meal time is preserved'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,0,componentFoods,0,amount}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    '2',
+    'historical composite persists the new ordered composition'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,0,componentSnapshots,0,amount}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    '2',
+    'historical composite persists the corresponding component snapshot'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,1,name}'
+        FROM public.subject_progress
+        WHERE task_id = 'historical-composite-task'
+    ),
+    'Individual old',
+    'historical individual component occurrence is isolated'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer
+        FROM public.subject_progress,
+            jsonb_array_elements(result #> '{result,meals,0,foods}') AS food
+        WHERE
+            task_id = 'current-composite-task'
+            AND food ->> 'foodId' = '20000000-0000-0000-0000-000000000020'
+            AND food ->> 'name' = 'Composite new'
+    ),
+    2,
+    'all current-day composite occurrences receive the new name'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer
+        FROM public.subject_progress,
+            jsonb_array_elements(result #> '{result,meals,0,foods}') AS food
+        WHERE
+            task_id = 'current-composite-task'
+            AND food ->> 'foodId' = '20000000-0000-0000-0000-000000000020'
+            AND food #>> '{componentFoods,0,amount}' = '2'
+            AND food #>> '{componentFoods,0,foodId}'
+            = '20000000-0000-0000-0000-000000000002'
+    ),
+    2,
+    'all current-day composite occurrences receive the new composition'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer
+        FROM public.subject_progress,
+            jsonb_array_elements(result #> '{result,meals,0,foods}') AS food
+        WHERE
+            task_id = 'current-composite-task'
+            AND food ->> 'foodId' = '20000000-0000-0000-0000-000000000020'
+            AND food #>> '{componentSnapshots,0,amount}' = '2'
+            AND food #>> '{componentSnapshots,0,foodId}'
+            = '20000000-0000-0000-0000-000000000002'
+    ),
+    2,
+    'all current-day composites receive corresponding component snapshots'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer
+        FROM public.subject_progress,
+            jsonb_array_elements(result #> '{result,meals,0,foods}') AS food
+        WHERE
+            task_id = 'current-composite-task'
+            AND food ->> 'foodId' = '20000000-0000-0000-0000-000000000020'
+            AND (food #>> '{nutrition,energyKcal}')::numeric
+            = (food ->> 'amount')::numeric * 100
+    ),
+    2,
+    'one-serving composite nutrition scales to every current-day quantity'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,1,name}'
+        FROM public.subject_progress
+        WHERE task_id = 'current-composite-task'
+    ),
+    'Individual today old',
+    'current-day individual component occurrence is isolated'
+);
+
 SELECT throws_ok(
     $$SELECT public.apply_nutrition_food_mutation(
     '10000000-0000-0000-0000-000000000001',
@@ -374,7 +626,7 @@ SELECT throws_ok(
 );
 SELECT is(
     (SELECT count(*)::integer FROM public.nutrition_food_version),
-    2,
+    4,
     'malformed snapshot mutations roll back without adding versions'
 );
 
@@ -482,7 +734,7 @@ SELECT throws_ok(
 );
 SELECT is(
     (SELECT count(*)::integer FROM public.nutrition_food_version),
-    2,
+    4,
     'post-version target failures roll back the entire mutation'
 );
 

@@ -15,6 +15,8 @@ import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/food_analysis_service.dart';
 import 'package:studyu_app/services/photo_gallery_service.dart';
+import 'package:studyu_app/util/nutrition_food_snapshots.dart';
+import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/food_item_selection_dialog.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
@@ -23,6 +25,7 @@ import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart';
+import 'package:uuid/uuid.dart';
 
 sealed class MealEntryResult {
   const MealEntryResult();
@@ -139,6 +142,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   bool _allowPop = false;
   bool _hasAttemptedSave = false;
   bool _definitionMutated = false;
+  final Map<String, String> _compositeMutationIds = {};
 
   late TextEditingController _skipReasonController;
 
@@ -218,6 +222,10 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     FoodEntry food, {
     bool editReusableDefinition = false,
   }) async {
+    if (editReusableDefinition && food.entryType == FoodEntryType.meal) {
+      await _editCompositeMealDefinition(food);
+      return;
+    }
     final result = await Navigator.of(context).push(
       FoodEntryScreen.route(
         existingFood: food,
@@ -236,6 +244,103 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       _definitionMutated = _definitionMutated || editReusableDefinition;
       _meal.foods[index] = result;
     });
+  }
+
+  Future<void> _editCompositeMealDefinition(FoodEntry existingMeal) async {
+    final editableDefinition = normalizeNutritionFoodDefinition(existingMeal);
+    final edited = await Navigator.of(
+      context,
+    ).push(MealCreatorScreen.route(existingMeal: editableDefinition));
+    if (!mounted || !_revalidateHistoricalEligibility() || edited == null) {
+      return;
+    }
+
+    final subject = Provider.of<AppState>(context, listen: false).activeSubject;
+    final historicalTarget = widget.historicalTarget;
+    if (subject == null || historicalTarget == null) return;
+    final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
+    final repository = widget.foodRepository ?? NutritionFoodRepository();
+    final l10n = AppLocalizations.of(context)!;
+    final mutationId = _compositeMutationIds.putIfAbsent(
+      existingMeal.id,
+      () => const Uuid().v4(),
+    );
+    try {
+      final result = await repository.mutateHistoricalDefinition(
+        subjectId: subject.id,
+        snapshot: normalizeCompositeNutritionFoodDefinition(edited),
+        expectedVersionId: existingMeal.foodVersionId,
+        entryId: existingMeal.id,
+        target: historicalTarget.toJson(),
+        currentStudyDay: currentStudyDay,
+        mutationId: mutationId,
+      );
+      final updated = applyNutritionFoodSnapshot(
+        existingMeal,
+        result.definition.snapshot,
+      );
+      _reconcileProgress(subject, result.progress);
+      final autoSaveManager = NutritionRecallAutoSaveManager();
+      await autoSaveManager.rewriteFoodDefinition(
+        subjectId: subject.id,
+        studyDaySnapshot: currentStudyDay,
+        definition: result.definition.snapshot,
+      );
+      await autoSaveManager.rewriteFoodDefinition(
+        subjectId: subject.id,
+        studyDaySnapshot: historicalTarget.studyDaySnapshot,
+        definition: result.definition.snapshot,
+        entryId: existingMeal.id,
+      );
+      if (!mounted || !_revalidateHistoricalEligibility()) return;
+      final index = _foodIndex(existingMeal.id);
+      if (index == -1) return;
+      setState(() {
+        _definitionMutated = true;
+        _meal.foods[index] = updated;
+      });
+      _compositeMutationIds.remove(existingMeal.id);
+      final message = result.todayUpdateCount == 0
+          ? l10n.food_definition_updated_no_today(
+              result.selectedHistoricalUpdateCount,
+            )
+          : l10n.food_definition_updated_today(
+              result.selectedHistoricalUpdateCount,
+              result.todayUpdateCount,
+            );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } catch (error, stackTrace) {
+      StudyULogger.error(
+        'Failed to update historical composite meal definition: '
+        '$error\n$stackTrace',
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+      }
+    }
+  }
+
+  void _reconcileProgress(
+    StudySubject subject,
+    List<Map<String, dynamic>> canonicalRows,
+  ) {
+    for (final row in canonicalRows) {
+      final canonical = SubjectProgress.fromJson(row);
+      final index = subject.progress.indexWhere(
+        (progress) =>
+            progress.subjectId == canonical.subjectId &&
+            progress.completedAt == canonical.completedAt,
+      );
+      if (index < 0) {
+        subject.progress.add(canonical);
+      } else {
+        subject.progress[index] = canonical;
+      }
+    }
   }
 
   void _removeFood(FoodEntry food) {

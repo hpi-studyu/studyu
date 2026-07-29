@@ -31,9 +31,10 @@ class NutritionFoodRepository {
     List<String>? tags,
     String? expectedVersionId,
   }) async {
-    if (food.componentSnapshots case final components?) {
-      await ensureDefinitions(subjectId: subjectId, foods: components);
-    }
+    await ensureDefinitions(
+      subjectId: subjectId,
+      foods: _validatedComponents(food),
+    );
     final definitionId = food.foodId;
     final snapshot = Map<String, dynamic>.from(food.toJson())
       ..['foodId'] = definitionId
@@ -136,16 +137,41 @@ class NutritionFoodRepository {
     required Map<String, dynamic> target,
     required int currentStudyDay,
     String? mutationId,
-  }) => _mutate(
-    subjectId: subjectId,
-    foodId: snapshot.foodId,
-    expectedVersionId: expectedVersionId,
-    snapshot: snapshot.toJson(),
-    historicalTarget: target,
-    historicalEntryId: entryId,
-    propagateStudyDay: currentStudyDay,
-    mutationId: mutationId,
-  );
+  }) async {
+    await ensureDefinitions(
+      subjectId: subjectId,
+      foods: _validatedComponents(snapshot),
+    );
+    return _mutate(
+      subjectId: subjectId,
+      foodId: snapshot.foodId,
+      expectedVersionId: expectedVersionId,
+      snapshot: snapshot.toJson(),
+      historicalTarget: target,
+      historicalEntryId: entryId,
+      propagateStudyDay: currentStudyDay,
+      mutationId: mutationId,
+    );
+  }
+
+  Iterable<FoodEntry> _validatedComponents(FoodEntry food) {
+    if (food.entryType != FoodEntryType.meal) {
+      return food.componentSnapshots ?? const [];
+    }
+    final compositions = food.componentFoods;
+    final snapshots = food.componentSnapshots;
+    if (compositions == null ||
+        snapshots == null ||
+        compositions.length != snapshots.length) {
+      throw StateError('Saved meals require complete component snapshots');
+    }
+    for (var index = 0; index < compositions.length; index++) {
+      if (compositions[index].foodId != snapshots[index].foodId) {
+        throw StateError('Saved meal components must match in order');
+      }
+    }
+    return snapshots;
+  }
 
   Future<NutritionFoodMutationResult> _mutate({
     required String subjectId,

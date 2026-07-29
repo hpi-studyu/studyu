@@ -143,6 +143,96 @@ void main() {
     expect(updated.meals.single.foods.last.foodVersionId, 'old-version');
   });
 
+  test(
+    'composite normalization keeps ordered components on a one-serving basis',
+    () {
+      final first = _food(
+        id: 'first-entry',
+        foodId: 'first',
+        versionId: 'first-v1',
+        name: 'First',
+        amount: 2,
+        energy: 100,
+      );
+      final second = _food(
+        id: 'second-entry',
+        foodId: 'second',
+        versionId: 'second-v1',
+        name: 'Second',
+        amount: 4,
+        energy: 200,
+      );
+      final creatorResult =
+          _food(
+              id: 'meal-snapshot',
+              foodId: 'meal-definition',
+              versionId: 'meal-v1',
+              name: 'Meal',
+              amount: 2,
+              energy: 150,
+            )
+            ..entryType = FoodEntryType.meal
+            ..componentFoods = [
+              _composition('first-composition', 'meal-snapshot', first, 0),
+              _composition('second-composition', 'meal-snapshot', second, 1),
+            ]
+            ..componentSnapshots = [first, second];
+
+      final definition = normalizeCompositeNutritionFoodDefinition(
+        creatorResult,
+      );
+      final selected = applyNutritionFoodSnapshot(
+        _food(
+          id: 'selected-meal',
+          foodId: 'meal-definition',
+          versionId: 'meal-v1',
+          name: 'Old',
+          amount: 2,
+          energy: 0,
+        )..entryType = FoodEntryType.meal,
+        definition,
+      );
+      final current = applyNutritionFoodSnapshot(
+        _food(
+          id: 'current-meal',
+          foodId: 'meal-definition',
+          versionId: 'meal-v1',
+          name: 'Old',
+          amount: 3,
+          energy: 0,
+        )..entryType = FoodEntryType.meal,
+        definition,
+      );
+
+      expect(definition.amount, 1);
+      expect(definition.nutrition.energyKcal, 150);
+      expect(definition.componentFoods!.map((component) => component.foodId), [
+        'first',
+        'second',
+      ]);
+      expect(definition.componentFoods!.map((component) => component.amount), [
+        1,
+        2,
+      ]);
+      expect(
+        definition.componentSnapshots!.map((component) => component.amount),
+        [1, 2],
+      );
+      expect(
+        definition.componentSnapshots!.map(
+          (component) => component.nutrition.energyKcal,
+        ),
+        [50, 100],
+      );
+      expect(selected.amount, 2);
+      expect(selected.nutrition.energyKcal, 300);
+      expect(current.amount, 3);
+      expect(current.nutrition.energyKcal, 450);
+      expect(creatorResult.amount, 2);
+      expect(creatorResult.componentFoods!.first.amount, 2);
+    },
+  );
+
   test('saved meal component snapshots are replaced but not cascaded', () {
     final oldComponent = _food(
       id: 'component-entry',
@@ -178,6 +268,20 @@ void main() {
     expect(oldComponent.name, 'Component old');
   });
 }
+
+FoodComposition _composition(
+  String id,
+  String parentEntryId,
+  FoodEntry food,
+  int sortOrder,
+) => FoodComposition(
+  id: id,
+  parentEntryId: parentEntryId,
+  foodId: food.foodId,
+  amount: food.amount,
+  unit: food.unit,
+  sortOrder: sortOrder,
+);
 
 FoodEntry _food({
   required String id,

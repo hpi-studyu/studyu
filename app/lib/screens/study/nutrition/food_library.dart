@@ -4,6 +4,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
@@ -297,58 +298,20 @@ class FoodLibraryItemCard extends StatelessWidget {
   }
 
   Future<void> _edit(BuildContext context) async {
-    if (_isMeal) {
-      await _rename(context);
-      return;
-    }
-
     final prototype = studyu.FoodEntry.fromJson(template.prototype.toJson());
     final edited = await Navigator.push<studyu.FoodEntry>(
       context,
-      FoodEntryScreen.route(existingFood: prototype, showSearchAction: false),
+      _isMeal
+          ? MealCreatorScreen.route(existingMeal: prototype)
+          : FoodEntryScreen.route(
+              existingFood: prototype,
+              showSearchAction: false,
+            ),
     );
     if (edited == null || !context.mounted) return;
     await context.read<TemplateViewModel>().updateFoodTemplatePrototype(
       template.id,
       edited,
-    );
-  }
-
-  Future<void> _rename(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-    final controller = TextEditingController(text: template.name);
-    final name = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.rename_template),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: l10n.new_name,
-            border: const OutlineInputBorder(),
-          ),
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(l10n.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final name = controller.text.trim();
-              if (name.isNotEmpty) Navigator.pop(dialogContext, name);
-            },
-            child: Text(l10n.save),
-          ),
-        ],
-      ),
-    );
-    controller.dispose();
-    if (name == null || name == template.name || !context.mounted) return;
-    await context.read<TemplateViewModel>().renameFoodTemplate(
-      template.id,
-      name,
     );
   }
 

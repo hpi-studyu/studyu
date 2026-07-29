@@ -11,6 +11,35 @@ FoodEntry normalizeNutritionFoodDefinition(FoodEntry occurrence) {
   return definition..amount = 1;
 }
 
+/// Converts a meal creator result to a one-serving reusable definition.
+FoodEntry normalizeCompositeNutritionFoodDefinition(FoodEntry meal) {
+  final servings = meal.amount;
+  if (meal.entryType != FoodEntryType.meal ||
+      !servings.isFinite ||
+      servings <= 0) {
+    throw ArgumentError.value(servings, 'amount');
+  }
+  final definition = FoodEntry.fromJson(meal.toJson());
+  final compositions = definition.componentFoods;
+  final snapshots = definition.componentSnapshots;
+  if (compositions == null ||
+      snapshots == null ||
+      compositions.length != snapshots.length) {
+    throw StateError('Saved meals require complete component snapshots');
+  }
+  for (var index = 0; index < compositions.length; index++) {
+    final composition = compositions[index];
+    final snapshot = snapshots[index];
+    if (composition.foodId != snapshot.foodId) {
+      throw StateError('Saved meal components must match in order');
+    }
+    final amount = composition.amount / servings;
+    composition.amount = amount;
+    snapshots[index] = _rescaleFoodAmount(snapshot, amount);
+  }
+  return definition..amount = 1;
+}
+
 /// Applies reusable fields while retaining occurrence-owned identity/quantity.
 FoodEntry applyNutritionFoodSnapshot(FoodEntry logged, FoodEntry definition) {
   final updated = FoodEntry.fromJson(definition.toJson());
@@ -43,6 +72,18 @@ DailyRecall replaceNutritionFoodSnapshots(
     }
   }
   return updated;
+}
+
+FoodEntry _rescaleFoodAmount(FoodEntry food, double amount) {
+  if (!food.amount.isFinite ||
+      food.amount <= 0 ||
+      !amount.isFinite ||
+      amount <= 0) {
+    throw ArgumentError.value(amount, 'amount');
+  }
+  final scaled = FoodEntry.fromJson(food.toJson());
+  _scaleNutrition(scaled.nutrition, amount / food.amount);
+  return scaled..amount = amount;
 }
 
 void _scaleNutrition(NutritionProfile nutrition, double factor) {

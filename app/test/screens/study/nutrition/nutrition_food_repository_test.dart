@@ -53,6 +53,83 @@ void main() {
     expect(result.todayUpdateCount, 3);
   });
 
+  test(
+    'composite mutation creates missing components without versioning existing ones',
+    () async {
+      final postedFoodIds = <String>[];
+      late Map<String, dynamic> mealParams;
+      var getCount = 0;
+      final existing = _food(
+        id: 'existing-component',
+        foodId: 'existing-definition',
+        versionId: 'existing-version',
+      );
+      final missing = _food(
+        id: 'missing-component',
+        foodId: 'missing-definition',
+        versionId: 'missing-version',
+      );
+      final meal = _meal([existing, missing]);
+      final repository = NutritionFoodRepository(
+        client: _client((request) async {
+          if (request.method == 'GET') {
+            getCount++;
+            return _jsonResponse(
+              getCount == 1
+                  ? [
+                      {
+                        'id': existing.foodId,
+                        'current_version_id': existing.foodVersionId,
+                      },
+                    ]
+                  : [
+                      {
+                        'id': existing.foodVersionId,
+                        'food_id': existing.foodId,
+                      },
+                    ],
+              request,
+            );
+          }
+          final params = jsonDecode(request.body) as Map<String, dynamic>;
+          final foodId = params['p_food_id'] as String;
+          postedFoodIds.add(foodId);
+          if (foodId == meal.foodId) mealParams = params;
+          final responseFood = foodId == missing.foodId ? missing : meal;
+          return _jsonResponse(
+            _mutationResponse(
+              food: responseFood,
+              kind: foodId == meal.foodId ? 'meal' : 'food',
+            ),
+            request,
+          );
+        }),
+      );
+
+      await repository.mutateHistoricalDefinition(
+        subjectId: 'subject',
+        snapshot: meal,
+        expectedVersionId: meal.foodVersionId,
+        entryId: 'selected-meal',
+        target: const {'taskId': 'task'},
+        currentStudyDay: 5,
+      );
+
+      expect(postedFoodIds, ['missing-definition', 'meal-definition']);
+      expect(
+        (mealParams['p_snapshot']
+            as Map<String, dynamic>)['componentSnapshots'],
+        hasLength(2),
+      );
+      expect(
+        ((mealParams['p_snapshot'] as Map<String, dynamic>)['componentFoods']
+                as List<dynamic>)
+            .map((component) => (component as Map<String, dynamic>)['foodId']),
+        ['existing-definition', 'missing-definition'],
+      );
+    },
+  );
+
   test('creates missing entry definitions through the mutation RPC', () async {
     final requests = <http.BaseRequest>[];
     final repository = NutritionFoodRepository(
@@ -99,14 +176,17 @@ Map<String, dynamic> _definitionRow() => {
   'nutrition_food_version': {'snapshot': _food().toJson()},
 };
 
-Map<String, dynamic> _mutationResponse() => {
+Map<String, dynamic> _mutationResponse({
+  FoodEntry? food,
+  String kind = 'food',
+}) => {
   'definition': {
-    'id': 'food-definition',
+    'id': food?.foodId ?? 'food-definition',
     'subjectId': 'subject',
-    'kind': 'food',
-    'currentVersionId': 'version-1',
+    'kind': kind,
+    'currentVersionId': food?.foodVersionId ?? 'version-1',
     'deletedAt': null,
-    'snapshot': _food().toJson(),
+    'snapshot': (food ?? _food()).toJson(),
     'createdAt': '2026-07-15T08:00:00.000Z',
     'updatedAt': '2026-07-15T08:00:00.000Z',
   },
@@ -119,9 +199,34 @@ Map<String, dynamic> _mutationResponse() => {
   'todayUpdateCount': 3,
 };
 
-FoodEntry _food({String versionId = 'version-1'}) => FoodEntry(
-  id: 'snapshot',
-  foodId: 'food-definition',
+FoodEntry _meal(List<FoodEntry> components) {
+  final meal = _food(
+    id: 'meal-snapshot',
+    foodId: 'meal-definition',
+    versionId: 'meal-version',
+  )..entryType = FoodEntryType.meal;
+  meal.componentFoods = [
+    for (var index = 0; index < components.length; index++)
+      FoodComposition(
+        id: 'composition-$index',
+        parentEntryId: meal.id,
+        foodId: components[index].foodId,
+        amount: components[index].amount,
+        unit: components[index].unit,
+        sortOrder: index,
+      ),
+  ];
+  meal.componentSnapshots = components;
+  return meal;
+}
+
+FoodEntry _food({
+  String id = 'snapshot',
+  String foodId = 'food-definition',
+  String versionId = 'version-1',
+}) => FoodEntry(
+  id: id,
+  foodId: foodId,
   foodVersionId: versionId,
   entryType: FoodEntryType.singleIngredient,
   name: 'Apple',

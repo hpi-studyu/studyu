@@ -98,22 +98,6 @@ class TemplateViewModel extends ChangeNotifier {
     return template.id;
   }
 
-  Future<void> renameFoodTemplate(String templateId, String newName) async {
-    final template = _foodTemplates.firstWhereOrNull(
-      (item) => item.id == templateId,
-    );
-    if (template == null) return;
-    final prototype = _cloneFoodEntry(template.prototype)..name = newName;
-    await _repository.saveTemplate(
-      subjectId: userId,
-      name: newName,
-      food: prototype,
-      tags: template.tags,
-      expectedVersionId: template.prototype.foodVersionId,
-    );
-    await loadAllTemplates();
-  }
-
   Future<void> updateFoodTemplatePrototype(
     String templateId,
     FoodEntry prototype,

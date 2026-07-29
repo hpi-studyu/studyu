@@ -180,10 +180,15 @@ class _LocalTestNutritionFoodRepository extends NutritionFoodRepository {
 
 class _TrackingNutritionFoodRepository
     extends _LocalTestNutritionFoodRepository {
-  _TrackingNutritionFoodRepository({required this.todayUpdateCount});
+  _TrackingNutritionFoodRepository({
+    required this.todayUpdateCount,
+    this.failuresBeforeSuccess = 0,
+  });
 
   final int todayUpdateCount;
+  final int failuresBeforeSuccess;
   int mutationCalls = 0;
+  final List<String?> mutationIds = [];
   FoodEntry? submittedSnapshot;
 
   @override
@@ -197,7 +202,11 @@ class _TrackingNutritionFoodRepository
     String? mutationId,
   }) async {
     mutationCalls++;
+    mutationIds.add(mutationId);
     submittedSnapshot = FoodEntry.fromJson(snapshot.toJson());
+    if (mutationCalls <= failuresBeforeSuccess) {
+      throw StateError('transient mutation failure');
+    }
     final definition = FoodEntry.fromJson(snapshot.toJson())
       ..foodVersionId = 'updated-food-version';
     final now = DateTime.now();
@@ -205,7 +214,7 @@ class _TrackingNutritionFoodRepository
       definition: NutritionFoodDefinition(
         id: definition.foodId,
         subjectId: subjectId,
-        kind: 'food',
+        kind: definition.entryType == FoodEntryType.meal ? 'meal' : 'food',
         currentVersionId: definition.foodVersionId,
         deletedAt: null,
         snapshot: definition,
@@ -235,6 +244,38 @@ _historicalEditingSetup() {
     studyDaySnapshot: currentStudyDay - 1,
   );
   return (appState: AppState()..activeSubject = subject, target: target);
+}
+
+MealLog _mealWithCompositeDefinition() {
+  final component = FoodEntry.fromJson(testFood().toJson())
+    ..id = 'component-snapshot'
+    ..foodId = 'component-definition'
+    ..foodVersionId = 'component-version';
+  component.nutrition.micros = {'iron': 4};
+  final composite = FoodEntry.fromJson(testFood().toJson())
+    ..id = 'composite-entry'
+    ..foodId = 'composite-definition'
+    ..foodVersionId = 'composite-version'
+    ..entryType = FoodEntryType.meal
+    ..name = 'Fruit bowl'
+    ..amount = 2
+    ..nutrition.energyKcal = 104
+    ..componentFoods = [
+      FoodComposition(
+        id: 'composition',
+        parentEntryId: 'composite-entry',
+        foodId: component.foodId,
+        amount: 1,
+        unit: component.unit,
+        sortOrder: 0,
+      ),
+    ]
+    ..componentSnapshots = [component];
+  composite.nutrition.micros = {'iron': 8};
+  final individualComponent = FoodEntry.fromJson(component.toJson())
+    ..id = 'individual-component-entry'
+    ..name = 'Individual apple';
+  return editableMeal()..foods = [composite, individualComponent];
 }
 
 MealLog _mealWithMatchingDefinitions() {
@@ -1043,6 +1084,118 @@ void main() {
       expect(meal.foods[1].amount, 3);
     },
   );
+
+  testWidgets(
+    'historical composite definition edit propagates composition only by meal identity',
+    (tester) async {
+      final setup = _historicalEditingSetup();
+      final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 2);
+      MealEntryResult? result;
+      await openMealEntry(
+        tester,
+        _mealWithCompositeDefinition(),
+        historicalTarget: setup.target,
+        foodRepository: repository,
+        appState: setup.appState,
+        onEntryResult: (value) => result = value,
+      );
+
+      await tester.tap(find.byTooltip('More options').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Edit reusable food'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(MealCreatorScreen), findsOneWidget);
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Meal Name *'),
+        'Updated fruit bowl',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Servings *'),
+        '2',
+      );
+      await tester.tap(find.byTooltip('Edit amount'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(TextField, 'Amount'), '1.5');
+      await tester.tap(find.widgetWithText(FilledButton, 'Save').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+
+      expect(repository.mutationCalls, 1);
+      expect(repository.submittedSnapshot!.foodId, 'composite-definition');
+      expect(repository.submittedSnapshot!.amount, 1);
+      expect(repository.submittedSnapshot!.nutrition.energyKcal, 39);
+      expect(repository.submittedSnapshot!.nutrition.micros, {'iron': 3});
+      expect(repository.submittedSnapshot!.componentFoods!.single.amount, 0.75);
+      expect(
+        repository.submittedSnapshot!.componentSnapshots!.single.foodId,
+        'component-definition',
+      );
+      expect(
+        repository.submittedSnapshot!.componentSnapshots!.single.amount,
+        0.75,
+      );
+      expect(
+        repository
+            .submittedSnapshot!
+            .componentSnapshots!
+            .single
+            .nutrition
+            .micros,
+        {'iron': 3},
+      );
+      expect(find.text('Updated fruit bowl'), findsOneWidget);
+      expect(find.text('Individual apple'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.pumpAndSettle();
+
+      final savedMeal = (result! as SavedMealEntryResult).meal;
+      expect(savedMeal.mealType, MealType.other);
+      expect(savedMeal.timestamp, DateTime(2026, 7, 15, 20));
+      expect(savedMeal.foods.first.id, 'composite-entry');
+      expect(savedMeal.foods.first.amount, 2);
+      expect(savedMeal.foods.first.nutrition.energyKcal, 78);
+      expect(savedMeal.foods.first.nutrition.micros, {'iron': 6});
+      expect(savedMeal.foods.first.foodVersionId, 'updated-food-version');
+      expect(savedMeal.foods.first.componentFoods!.single.amount, 0.75);
+      expect(savedMeal.foods.last.id, 'individual-component-entry');
+      expect(savedMeal.foods.last.name, 'Individual apple');
+      expect(savedMeal.foods.last.foodVersionId, 'component-version');
+    },
+  );
+
+  testWidgets('historical composite retry reuses its mutation id', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(
+      todayUpdateCount: 0,
+      failuresBeforeSuccess: 1,
+    );
+    await openMealEntry(
+      tester,
+      _mealWithCompositeDefinition(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+
+    for (var attempt = 0; attempt < 2; attempt++) {
+      await tester.tap(find.byTooltip('More options').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Edit reusable food'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+    }
+
+    expect(repository.mutationCalls, 2);
+    expect(repository.mutationIds, hasLength(2));
+    expect(repository.mutationIds.first, isNotNull);
+    expect(repository.mutationIds.last, repository.mutationIds.first);
+  });
 
   testWidgets('historical definition save rechecks device-local eligibility', (
     tester,

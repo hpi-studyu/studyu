@@ -93,8 +93,19 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
         _preparationMethodController = TextEditingController();
       }
 
-      _foods = meal.componentFoods ?? [];
-      _componentFoods.addAll(meal.componentSnapshots ?? const []);
+      final compositions = meal.componentFoods;
+      final snapshots = meal.componentSnapshots;
+      if (compositions == null ||
+          snapshots == null ||
+          compositions.length != snapshots.length) {
+        throw StateError('Saved meals require complete component snapshots');
+      }
+      _foods = compositions
+          .map((composition) => FoodComposition.fromJson(composition.toJson()))
+          .toList();
+      _componentFoods.addAll(
+        snapshots.map((food) => FoodEntry.fromJson(food.toJson())),
+      );
     } else {
       _nameController = TextEditingController(text: widget.initialName ?? '');
       _descriptionController = TextEditingController();
@@ -295,7 +306,9 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       cholesterol: totalCholesterol / servings,
       sodium: totalSodium / servings,
       waterContent: totalWater / servings,
-      micros: totalMicros,
+      micros: totalMicros.map(
+        (nutrient, value) => MapEntry(nutrient, value / servings),
+      ),
     );
   }
 
@@ -321,39 +334,74 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       );
     }
 
-    final meal = FoodEntry.withId(
-      entryType: FoodEntryType.meal,
-      name: _nameController.text,
-      description: _descriptionController.text.isEmpty
-          ? null
-          : _descriptionController.text,
-      amount: double.parse(_servingsController.text),
-      unit: 'serving',
-      servingSizeGrams: nutrition.energyKcal * 0.24,
-      portionEstimationMethod: PortionEstimationMethod.householdMeasure,
-      portionState: PortionState.cooked,
-      nutrition: nutrition,
-      source: FoodSource.manual,
-      confidenceScore: 0.9,
-      originalValues: {},
-      preparationDetails: preparationDetails,
-      componentFoods: _foods
-          .map(
-            (comp) => FoodComposition(
-              id: comp.id,
-              parentEntryId: '',
-              foodId: comp.foodId,
-              amount: comp.amount,
-              unit: comp.unit,
-              sortOrder: comp.sortOrder,
-            ),
+    final existing = widget.existingMeal;
+    final components = [
+      for (var index = 0; index < _foods.length; index++)
+        FoodComposition(
+          id: _foods[index].id,
+          parentEntryId: '',
+          foodId: _foods[index].foodId,
+          amount: _foods[index].amount,
+          unit: _foods[index].unit,
+          sortOrder: index,
+        ),
+    ];
+    final snapshots = [
+      for (var index = 0; index < _componentFoods.length; index++)
+        rescaleFoodAmount(_componentFoods[index], _foods[index].amount),
+    ];
+    final meal = existing == null
+        ? FoodEntry.withId(
+            entryType: FoodEntryType.meal,
+            name: _nameController.text,
+            description: _descriptionController.text.isEmpty
+                ? null
+                : _descriptionController.text,
+            amount: double.parse(_servingsController.text),
+            unit: 'serving',
+            servingSizeGrams: nutrition.energyKcal * 0.24,
+            portionEstimationMethod: PortionEstimationMethod.householdMeasure,
+            portionState: PortionState.cooked,
+            nutrition: nutrition,
+            source: FoodSource.manual,
+            confidenceScore: 0.9,
+            originalValues: {},
+            preparationDetails: preparationDetails,
+            componentFoods: components,
+            componentSnapshots: snapshots,
           )
-          .toList(),
-      componentSnapshots: [
-        for (var index = 0; index < _componentFoods.length; index++)
-          rescaleFoodAmount(_componentFoods[index], _foods[index].amount),
-      ],
-    );
+        : FoodEntry(
+            id: existing.id,
+            foodId: existing.foodId,
+            foodVersionId: existing.foodVersionId,
+            entryType: FoodEntryType.meal,
+            name: _nameController.text,
+            brandName: existing.brandName,
+            description: _descriptionController.text.isEmpty
+                ? null
+                : _descriptionController.text,
+            amount: double.parse(_servingsController.text),
+            unit: existing.unit,
+            servingSizeGrams: nutrition.energyKcal * 0.24,
+            portionReference: existing.portionReference,
+            portionEstimationMethod: existing.portionEstimationMethod,
+            portionState: existing.portionState,
+            yieldFactor: existing.yieldFactor,
+            ediblePortion: existing.ediblePortion,
+            nutrition: nutrition,
+            foodCode: existing.foodCode,
+            externalId: existing.externalId,
+            source: existing.source,
+            confidenceScore: existing.confidenceScore,
+            templateId: existing.templateId,
+            createdAt: existing.createdAt,
+            modifiedAt: DateTime.now(),
+            originalValues: existing.originalValues,
+            parentEntryId: existing.parentEntryId,
+            preparationDetails: preparationDetails,
+            componentFoods: components,
+            componentSnapshots: snapshots,
+          );
     for (final composition in meal.componentFoods!) {
       composition.parentEntryId = meal.id;
     }
@@ -671,9 +719,8 @@ class _MealInfoCard extends StatelessWidget {
                       ),
                     ],
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Required';
-                      }
+                      final servings = double.tryParse(value ?? '');
+                      if (servings == null || servings <= 0) return 'Required';
                       return null;
                     },
                   ),
