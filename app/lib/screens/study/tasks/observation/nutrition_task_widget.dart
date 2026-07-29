@@ -5,6 +5,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_help_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_history_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
@@ -24,6 +25,7 @@ class NutritionTaskWidget extends StatefulWidget {
   final DateTime? historicalDate;
   final String? interventionId;
   final bool readOnly;
+  final NutritionFoodRepository? foodRepository;
 
   const NutritionTaskWidget({
     this.existingRecall,
@@ -33,6 +35,7 @@ class NutritionTaskWidget extends StatefulWidget {
     this.historicalDate,
     this.interventionId,
     this.readOnly = false,
+    this.foodRepository,
     super.key,
   });
 
@@ -44,6 +47,7 @@ class NutritionTaskWidget extends StatefulWidget {
     DateTime? historicalDate,
     String? interventionId,
     bool readOnly = false,
+    NutritionFoodRepository? foodRepository,
   }) => MaterialPageRoute(
     builder: (_) => NutritionTaskWidget(
       existingRecall: existingRecall,
@@ -53,6 +57,7 @@ class NutritionTaskWidget extends StatefulWidget {
       historicalDate: historicalDate,
       interventionId: interventionId,
       readOnly: readOnly,
+      foodRepository: foodRepository,
     ),
   );
 
@@ -103,6 +108,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       if (!_isHistoricalMode) {
         _templateViewModel = TemplateViewModel(
           userId: appState.activeSubject?.id ?? 'anonymous',
+          repository: widget.foodRepository,
         );
       }
     }
@@ -683,6 +689,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         initialCustomMealLabel: initialCustomMealLabel,
         occurrenceDate: model.recall.date,
         historicalTarget: widget.persistenceTarget,
+        foodRepository: widget.foodRepository,
       ),
     );
     if (result case SavedMealEntryResult(:final meal)) model.addMeal(meal);
@@ -701,6 +708,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         task: widget.task,
         occurrenceDate: model.recall.date,
         historicalTarget: widget.persistenceTarget,
+        foodRepository: widget.foodRepository,
       ),
     );
     switch (result) {
@@ -829,6 +837,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     if (result == null || !context.mounted) return;
     await TemplateViewModel(
       userId: appState.activeSubject?.id ?? 'anonymous',
+      repository: widget.foodRepository,
     ).saveMealAsTemplate(name: result.name, meal: meal, tags: result.tags);
     if (context.mounted) {
       ScaffoldMessenger.of(

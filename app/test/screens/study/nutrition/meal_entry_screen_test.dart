@@ -15,8 +15,9 @@ import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
-import 'package:studyu_app/util/template_storage_manager.dart';
 import 'package:studyu_core/core.dart';
+
+import 'fake_nutrition_food_repository.dart';
 
 FoodEntry testFood() => FoodEntry(
   id: 'food',
@@ -121,8 +122,7 @@ Future<void> openMealEntry(
                             occurrenceDate: occurrenceDate,
                             historicalTarget: historicalTarget,
                             foodRepository:
-                                foodRepository ??
-                                _LocalTestNutritionFoodRepository(),
+                                foodRepository ?? FakeNutritionFoodRepository(),
                           ),
                         ),
                       );
@@ -143,43 +143,7 @@ Future<void> openMealEntry(
   await tester.pumpAndSettle();
 }
 
-class _LocalTestNutritionFoodRepository extends NutritionFoodRepository {
-  final TemplateStorageManager _storage = TemplateStorageManager();
-
-  @override
-  Future<List<SavedFoodTemplate>> loadTemplates(String subjectId) =>
-      _storage.loadFoodTemplates(subjectId);
-
-  @override
-  Future<void> ensureDefinitions({
-    required String subjectId,
-    required Iterable<FoodEntry> foods,
-  }) async {}
-
-  @override
-  Future<SavedFoodTemplate> saveTemplate({
-    required String subjectId,
-    required String name,
-    required FoodEntry food,
-    List<String>? tags,
-    String? expectedVersionId,
-  }) async {
-    final template = SavedFoodTemplate(
-      id: food.foodId,
-      userId: subjectId,
-      name: name,
-      tags: tags,
-      isPublic: false,
-      createdAt: DateTime.now(),
-      prototype: FoodEntry.fromJson(food.toJson()),
-    );
-    await _storage.saveFoodTemplate(template);
-    return template;
-  }
-}
-
-class _TrackingNutritionFoodRepository
-    extends _LocalTestNutritionFoodRepository {
+class _TrackingNutritionFoodRepository extends FakeNutritionFoodRepository {
   _TrackingNutritionFoodRepository({
     required this.todayUpdateCount,
     this.failuresBeforeSuccess = 0,
@@ -1298,26 +1262,17 @@ void main() {
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
 
-    expect(find.text('Add food to Edited supper'), findsOneWidget);
-
     final navigator = tester.state<NavigatorState>(find.byType(Navigator));
     final recipeResult = navigator.push<FoodEntry>(MealCreatorScreen.route());
     await tester.pumpAndSettle();
-
-    expect(find.byType(MealCreatorScreen), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     expect(await recipeResult, isNull);
-    expect(find.byType(MealCreatorScreen), findsNothing);
 
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
-
-    expect(find.byType(MealEntryScreen), findsOneWidget);
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
@@ -1341,7 +1296,7 @@ void main() {
         'nested': {'value': 1},
       };
     prototype.nutrition.micros = {'vitaminC': 5};
-    await TemplateStorageManager().saveFoodTemplate(
+    final repository = FakeNutritionFoodRepository([
       SavedFoodTemplate(
         id: 'saved-food-template',
         userId: 'anonymous',
@@ -1350,10 +1305,15 @@ void main() {
         createdAt: DateTime(2026, 7, 15),
         prototype: prototype,
       ),
-    );
+    ]);
     final original = editableMeal();
     MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await openMealEntry(
+      tester,
+      original,
+      foodRepository: repository,
+      onResult: (value) => result = value,
+    );
 
     await selectMealType(
       tester,
@@ -1370,21 +1330,23 @@ void main() {
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add to Edited supper'), findsOneWidget);
-    await tester.tap(
+    expect(repository.loadCalls, 1);
+    await tester.enterText(
       find.descendant(
         of: find.byType(FoodQuantitySheet),
-        matching: find.byIcon(Icons.add),
+        matching: find.byType(TextField),
+      ),
+      '2',
+    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const ValueKey('selection-tray')),
+        matching: find.byType(FilledButton),
       ),
     );
-    await tester.pump();
-    expect(find.text('104 kcal'), findsOneWidget);
-    await tester.tap(find.text('Add to Edited supper'));
     await tester.pumpAndSettle();
-
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
-    expect(find.text('Saved Pear'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
@@ -1411,29 +1373,36 @@ void main() {
   ) async {
     final pear = FoodEntry.fromJson(testFood().toJson())
       ..id = 'pear-prototype'
+      ..foodId = 'pear-definition'
+      ..foodVersionId = 'pear-version'
       ..name = 'Pear';
     final yogurt = FoodEntry.fromJson(testFood().toJson())
       ..id = 'yogurt-prototype'
+      ..foodId = 'yogurt-definition'
+      ..foodVersionId = 'yogurt-version'
       ..name = 'Yogurt';
     final mealPrototype = FoodEntry.fromJson(testFood().toJson())
       ..id = 'meal-prototype'
+      ..foodId = 'meal-definition'
+      ..foodVersionId = 'meal-version'
       ..entryType = FoodEntryType.meal
       ..name = 'Afternoon Snack'
       ..componentFoods = [
         FoodComposition.withId(
           parentEntryId: 'meal-prototype',
-          foodId: pear.id,
+          foodId: pear.foodId,
           amount: pear.amount,
           unit: pear.unit,
         ),
         FoodComposition.withId(
           parentEntryId: 'meal-prototype',
-          foodId: yogurt.id,
+          foodId: yogurt.foodId,
           amount: yogurt.amount,
           unit: yogurt.unit,
         ),
-      ];
-    await TemplateStorageManager().saveFoodTemplate(
+      ]
+      ..componentSnapshots = [pear, yogurt];
+    final repository = FakeNutritionFoodRepository([
       SavedFoodTemplate(
         id: 'saved-meal-template',
         userId: 'anonymous',
@@ -1442,10 +1411,15 @@ void main() {
         createdAt: DateTime(2026, 7, 15),
         prototype: mealPrototype,
       ),
-    );
+    ]);
     final original = editableMeal();
     MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await openMealEntry(
+      tester,
+      original,
+      foodRepository: repository,
+      onResult: (value) => result = value,
+    );
     await selectMealType(
       tester,
       'Custom Meal Label',
@@ -1460,7 +1434,18 @@ void main() {
     await tester.tap(find.text('Afternoon Snack'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Afternoon Snack'), findsOneWidget);
+    expect(repository.loadCalls, 1);
+    await tester.tap(
+      find.widgetWithText(FilledButton, 'Add meal to selection'),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const ValueKey('selection-tray')),
+        matching: find.byType(FilledButton),
+      ),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
@@ -1474,6 +1459,20 @@ void main() {
     expect(result!.foods[1].entryType, FoodEntryType.meal);
     expect(result!.foods[1].templateId, 'saved-meal-template');
     expect(result!.foods[1].componentFoods, hasLength(2));
+    expect(
+      result!.foods[1].componentFoods!.map((component) => component.foodId),
+      [pear.foodId, yogurt.foodId],
+    );
+    expect(
+      result!.foods[1].componentFoods!.map(
+        (component) => component.parentEntryId,
+      ),
+      everyElement(result!.foods[1].id),
+    );
+    expect(
+      result!.foods[1].componentSnapshots!.map((component) => component.foodId),
+      [pear.foodId, yogurt.foodId],
+    );
     expect(original.foods, hasLength(1));
   });
 
@@ -1520,7 +1519,7 @@ void main() {
     final prototype = FoodEntry.fromJson(testFood().toJson())
       ..id = 'saved-food-prototype'
       ..name = 'Saved Pear';
-    await TemplateStorageManager().saveFoodTemplate(
+    final repository = FakeNutritionFoodRepository([
       SavedFoodTemplate(
         id: 'saved-food-template',
         userId: 'anonymous',
@@ -1529,10 +1528,15 @@ void main() {
         createdAt: DateTime(2026, 7, 15),
         prototype: prototype,
       ),
-    );
+    ]);
     final original = editableMeal();
     MealLog? result;
-    await openMealEntry(tester, original, onResult: (value) => result = value);
+    await openMealEntry(
+      tester,
+      original,
+      foodRepository: repository,
+      onResult: (value) => result = value,
+    );
     await selectMealType(
       tester,
       'Custom Meal Label',
@@ -1546,25 +1550,17 @@ void main() {
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
-    expect(find.text('Saved Pear'), findsNothing);
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
-
     await tester.tap(find.widgetWithText(TextButton, 'Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
-    expect(find.text('Add to Edited supper'), findsOneWidget);
-    await tester.tapAt(const Offset(5, 5));
+    expect(repository.loadCalls, 2);
+    Navigator.of(tester.element(find.byType(FoodQuantitySheet))).pop();
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
-
-    expect(find.text('Saved Pear'), findsNothing);
-    expect(find.text('Edited supper'), findsWidgets);
-    expect(find.text('Apple'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();

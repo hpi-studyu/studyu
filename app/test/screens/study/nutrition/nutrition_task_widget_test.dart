@@ -9,6 +9,8 @@ import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
+import 'fake_nutrition_food_repository.dart';
+
 Widget nutritionTaskApp(
   NutritionTask task, {
   DailyRecall? existingRecall,
@@ -29,6 +31,7 @@ Widget nutritionTaskApp(
       persistenceTarget: persistenceTarget,
       historicalDate: historicalDate,
       readOnly: readOnly,
+      foodRepository: FakeNutritionFoodRepository(),
       completionPeriod: CompletionPeriod(
         id: 'period',
         unlockTime: StudyUTimeOfDay(),
@@ -63,6 +66,7 @@ class _NutritionLauncherState extends State<_NutritionLauncher> {
         NutritionTaskWidget.route(
           existingRecall: widget.existingRecall,
           task: widget.task,
+          foodRepository: FakeNutritionFoodRepository(),
           completionPeriod: CompletionPeriod(
             id: 'period',
             unlockTime: StudyUTimeOfDay(),

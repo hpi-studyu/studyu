@@ -9,6 +9,8 @@ import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
 import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_core/core.dart';
 
+import 'fake_nutrition_food_repository.dart';
+
 const _goldenKey = Key('nutrition-golden');
 const _sizes = {'mobile': Size(414, 844), 'wide': Size(1280, 800)};
 
@@ -168,6 +170,7 @@ void main() {
           existingRecall: _dailyRecall(),
           task: _nutritionTask(),
           completionPeriod: _completionPeriod(),
+          foodRepository: FakeNutritionFoodRepository(),
         ),
         name: 'nutrition_task_${size.key}',
       );
