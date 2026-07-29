@@ -1,9 +1,11 @@
 BEGIN;
 
-SELECT plan(89);
+SELECT plan(90);
 
-SELECT tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
-SELECT tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
+SELECT
+    tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
+SELECT
+    tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
     id, study_id, user_id, started_at, selected_intervention_ids
@@ -1122,6 +1124,14 @@ SELECT throws_ok(
     '22023',
     'study subject clock and identity are immutable',
     'service role cannot directly rewrite the authoritative nutrition clock'
+);
+SELECT throws_ok(
+    $$UPDATE public.study_subject
+      SET id = '10000000-0000-0000-0000-000000000099'
+      WHERE id = '10000000-0000-0000-0000-000000000001'$$,
+    '22023',
+    'study subject clock and identity are immutable',
+    'service role cannot directly rewrite authoritative subject identity'
 );
 SELECT throws_ok(
     $$INSERT INTO public.subject_progress (

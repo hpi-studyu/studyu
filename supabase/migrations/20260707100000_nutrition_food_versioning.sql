@@ -393,6 +393,10 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 BEGIN
+  IF NEW.id IS DISTINCT FROM OLD.id THEN
+    RAISE EXCEPTION 'study subject clock and identity are immutable'
+      USING ERRCODE = '22023';
+  END IF;
   IF current_setting('studyu.nutrition_maintenance', true) =
       'advance:' || OLD.id::text THEN
     RETURN NEW;
