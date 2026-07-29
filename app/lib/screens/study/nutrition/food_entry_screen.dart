@@ -216,7 +216,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     int? currentStudyDay;
     if (historicalTarget != null) {
       if (subject == null || existingFood == null) return;
-      currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
+      currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
       if (!isEditableNutritionRecallDay(
         studyDaySnapshot: historicalTarget.studyDaySnapshot,
         currentStudyDay: currentStudyDay,

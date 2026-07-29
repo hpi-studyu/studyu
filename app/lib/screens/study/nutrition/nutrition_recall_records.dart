@@ -54,7 +54,7 @@ Future<List<NutritionRecallRecord>> loadNutritionRecallRecords({
   NutritionRecallAutoSaveManager? autoSaveManager,
   DateTime? now,
 }) async {
-  final todayStudyDay = subject.getDayOfStudyFor(now ?? DateTime.now());
+  final todayStudyDay = nutritionStudyDayFor(subject, now ?? DateTime.now());
   final records = <String, NutritionRecallRecord>{};
 
   for (final progress in subject.progress) {
@@ -67,7 +67,7 @@ Future<List<NutritionRecallRecord>> loadNutritionRecallRecords({
         result.studyDaySnapshot ??
         (progress.completedAt == null
             ? null
-            : subject.getDayOfStudyFor(progress.completedAt!.toLocal()));
+            : nutritionStudyDayFor(subject, progress.completedAt!));
     if (studyDay == null) continue;
     final record = NutritionRecallRecord(
       recall: result,
@@ -120,6 +120,16 @@ Future<List<NutritionRecallRecord>> loadNutritionRecallRecords({
       (left, right) => right.studyDaySnapshot.compareTo(left.studyDaySnapshot),
     );
   return result;
+}
+
+int nutritionStudyDayFor(StudySubject subject, DateTime date) {
+  final current = date.toUtc();
+  final started = subject.startedAt!.toUtc();
+  return DateTime.utc(
+    current.year,
+    current.month,
+    current.day,
+  ).difference(DateTime.utc(started.year, started.month, started.day)).inDays;
 }
 
 bool isEditableNutritionRecallDay({

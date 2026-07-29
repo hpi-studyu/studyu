@@ -49,7 +49,10 @@ class _NutritionHistoryScreenState extends State<NutritionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentStudyDay = widget.subject.getDayOfStudyFor(DateTime.now());
+    final currentStudyDay = nutritionStudyDayFor(
+      widget.subject,
+      DateTime.now(),
+    );
     return Scaffold(
       appBar: AppBar(title: Text(l10n.nutrition_history)),
       body: FutureBuilder<List<NutritionRecallRecord>>(

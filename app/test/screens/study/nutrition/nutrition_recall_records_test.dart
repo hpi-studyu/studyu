@@ -9,6 +9,18 @@ import 'package:studyu_core/core.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
+  test('nutrition study day uses the UTC calendar across offset midnights', () {
+    final subject = _subject(DateTime.parse('2026-07-15T23:30:00-10:00'));
+
+    expect(
+      nutritionStudyDayFor(
+        subject,
+        DateTime.parse('2026-07-17T00:15:00+14:00'),
+      ),
+      0,
+    );
+  });
+
   test(
     'only the immediately previous study day with a known period is editable',
     () {

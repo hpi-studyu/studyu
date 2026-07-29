@@ -1,11 +1,9 @@
 BEGIN;
 
-SELECT plan(55);
+SELECT plan(69);
 
-SELECT
-    tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
-SELECT
-    tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
+SELECT tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
+SELECT tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
     id, study_id, user_id, started_at, selected_intervention_ids
@@ -565,6 +563,90 @@ SELECT is(
     'current-day individual component occurrence is isolated'
 );
 
+SELECT throws_ok(
+    $$UPDATE public.study_subject
+      SET started_at = started_at - interval '1 day'
+      WHERE id = '10000000-0000-0000-0000-000000000001'$$,
+    '22023',
+    'study subject clock and identity are immutable',
+    'callers cannot rewrite the authoritative nutrition clock'
+);
+SELECT is(
+    (
+        SELECT (
+            (now() AT TIME ZONE 'UTC')::date
+            - (started_at AT TIME ZONE 'UTC')::date
+        )::integer
+        FROM public.study_subject
+        WHERE id = '10000000-0000-0000-0000-000000000001'
+    ),
+    5,
+    'rejected clock changes leave the UTC nutrition study day unchanged'
+);
+
+SELECT throws_ok(
+    $$UPDATE public.subject_progress
+      SET result = jsonb_set(result, '{result,meals,0,foods,0,name}', '"Forged"')
+      WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+        AND task_id = 'locked-task'$$,
+    '22023',
+    'nutrition recall study day is not writable',
+    'direct writes cannot update locked historical recalls'
+);
+SELECT is(
+    (
+        SELECT result #>> '{result,meals,0,foods,0,name}'
+        FROM public.subject_progress
+        WHERE task_id = 'locked-task'
+    ),
+    'Old',
+    'rejected direct updates leave locked recalls unchanged'
+);
+SELECT throws_ok(
+    $$DELETE FROM public.subject_progress
+      WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+        AND task_id = 'locked-task'$$,
+    '22023',
+    'nutrition recall study day is not writable',
+    'direct writes cannot delete locked historical recalls'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer FROM public.subject_progress
+        WHERE task_id = 'locked-task'
+    ),
+    1,
+    'rejected direct deletes preserve locked recalls'
+);
+SELECT throws_ok(
+    $$INSERT INTO public.subject_progress (
+        completed_at, subject_id, intervention_id, task_id, result_type, result
+      ) SELECT
+        '2026-07-13T12:00:00Z', subject_id, intervention_id, 'forged-old-task',
+        result_type,
+        jsonb_set(result, '{result,studyDaySnapshot}', '2')
+      FROM public.subject_progress WHERE task_id = 'locked-task'$$,
+    '22023',
+    'nutrition recall study day is not writable',
+    'direct writes cannot insert out-of-window historical recalls'
+);
+SELECT throws_ok(
+    $$UPDATE public.subject_progress
+      SET result = jsonb_set(result, '{result,studyDaySnapshot}', '3')
+      WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+        AND task_id = 'historical-task'$$,
+    '22023',
+    'nutrition recall study day is not writable',
+    'direct writes cannot change a recall study-day identity'
+);
+SELECT lives_ok(
+    $$UPDATE public.subject_progress
+      SET result = jsonb_set(result, '{result,specialOccasion}', '"holiday"')
+      WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+        AND task_id = 'historical-task'$$,
+    'direct entry-local writes remain allowed for the latest historical day'
+);
+
 CREATE TEMP VIEW mutation_guard_state AS
 SELECT jsonb_build_object(
     'definition', (
@@ -926,6 +1008,48 @@ SELECT throws_ok(
     '42501',
     'nutrition definition subject is not owned by caller',
     'RPC rejects cross-subject mutation'
+);
+
+SELECT tests.authenticate_as('nutrition_owner');
+SELECT lives_ok(
+    $$SELECT public.advance_owned_study_subject_day(
+      '10000000-0000-0000-0000-000000000001', 1
+    )$$,
+    'owned preview day advance uses the guarded atomic path'
+);
+SELECT is(
+    (
+        SELECT (
+            (now() AT TIME ZONE 'UTC')::date
+            - (started_at AT TIME ZONE 'UTC')::date
+        )::integer
+        FROM public.study_subject
+        WHERE id = '10000000-0000-0000-0000-000000000001'
+    ),
+    6,
+    'preview day advance updates the authoritative UTC nutrition clock'
+);
+SELECT is(
+    (
+        SELECT max(completed_at) FROM public.subject_progress
+        WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+    ),
+    '2026-07-15 13:00:00+00'::timestamptz,
+    'preview day advance shifts persisted progress atomically'
+);
+SELECT lives_ok(
+    $$SELECT public.delete_owned_subject_progress(
+      '10000000-0000-0000-0000-000000000001'
+    )$$,
+    'owned cleanup can remove protected historical progress'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer FROM public.subject_progress
+        WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+    ),
+    0,
+    'owned cleanup removes all subject progress'
 );
 
 SELECT * FROM finish();

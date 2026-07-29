@@ -422,7 +422,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         (editable ??
             isEditableNutritionRecallDay(
               studyDaySnapshot: record.studyDaySnapshot,
-              currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
+              currentStudyDay: nutritionStudyDayFor(subject, DateTime.now()),
               hasUnambiguousPeriod:
                   record.hasUnambiguousPeriod && period != null,
             )) &&
@@ -436,14 +436,16 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         historicalDate: record.recall.date,
         interventionId: record.interventionId,
         readOnly: !canEdit,
+        foodRepository: widget.foodRepository,
       ),
     );
+    await _templateViewModel?.loadAllTemplates();
     if (canEdit &&
         context.mounted &&
         ModalRoute.of(context)?.isCurrent == true &&
         !isEditableNutritionRecallDay(
           studyDaySnapshot: record.studyDaySnapshot,
-          currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
+          currentStudyDay: nutritionStudyDayFor(subject, DateTime.now()),
           hasUnambiguousPeriod: period != null,
         )) {
       await _openHistory(context, subject, task);

@@ -258,7 +258,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final subject = Provider.of<AppState>(context, listen: false).activeSubject;
     final historicalTarget = widget.historicalTarget;
     if (subject == null || historicalTarget == null) return;
-    final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
+    final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
     final repository = widget.foodRepository ?? NutritionFoodRepository();
     final l10n = AppLocalizations.of(context)!;
     final mutationId = _compositeMutationIds.putIfAbsent(
@@ -605,7 +605,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         subject != null &&
         isEditableNutritionRecallDay(
           studyDaySnapshot: target.studyDaySnapshot,
-          currentStudyDay: subject.getDayOfStudyFor(DateTime.now()),
+          currentStudyDay: nutritionStudyDayFor(subject, DateTime.now()),
           hasUnambiguousPeriod: true,
         );
     if (!valid && mounted && !_allowPop) {

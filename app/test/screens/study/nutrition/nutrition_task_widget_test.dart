@@ -19,6 +19,7 @@ Widget nutritionTaskApp(
   NutritionRecallPersistenceTarget? persistenceTarget,
   bool readOnly = false,
   AppState? appState,
+  FakeNutritionFoodRepository? foodRepository,
 }) => ChangeNotifierProvider(
   create: (_) => appState ?? AppState(),
   child: MaterialApp(
@@ -31,7 +32,7 @@ Widget nutritionTaskApp(
       persistenceTarget: persistenceTarget,
       historicalDate: historicalDate,
       readOnly: readOnly,
-      foodRepository: FakeNutritionFoodRepository(),
+      foodRepository: foodRepository ?? FakeNutritionFoodRepository(),
       completionPeriod: CompletionPeriod(
         id: 'period',
         unlockTime: StudyUTimeOfDay(),
@@ -301,6 +302,35 @@ void main() {
     expect(find.text('My items'), findsNothing);
     expect(find.byTooltip('History'), findsNothing);
     expect(find.byTooltip('Help'), findsNothing);
+  });
+
+  testWidgets('returning from history refreshes the mounted food library', (
+    tester,
+  ) async {
+    final setup = historicalNavigationSetup(
+      'Historical apple',
+      hasPersistenceTarget: false,
+    );
+    final repository = FakeNutritionFoodRepository();
+
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        setup.task,
+        appState: AppState()..activeSubject = setup.subject,
+        foodRepository: repository,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(repository.loadCalls, 1);
+
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Historical apple'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(repository.loadCalls, 2);
   });
 
   testWidgets('expired historical edit returns to History on app resume', (

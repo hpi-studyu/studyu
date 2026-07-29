@@ -373,6 +373,161 @@ BEGIN
 END;
 $$;
 
+CREATE FUNCTION public.nutrition_subject_current_day(
+    p_subject public.study_subject
+) RETURNS integer
+LANGUAGE sql
+STABLE
+SET search_path = ''
+AS $$
+  SELECT (
+    (now() AT TIME ZONE 'UTC')::date
+    - (p_subject.started_at AT TIME ZONE 'UTC')::date
+  )::integer;
+$$;
+
+CREATE FUNCTION public.guard_nutrition_subject_clock()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+  IF auth.uid() IS NULL OR
+     current_setting('studyu.nutrition_maintenance', true) = 'on' THEN
+    RETURN NEW;
+  END IF;
+  IF auth.uid() = OLD.user_id AND (
+      NEW.started_at IS DISTINCT FROM OLD.started_at OR
+      NEW.study_id IS DISTINCT FROM OLD.study_id OR
+      NEW.user_id IS DISTINCT FROM OLD.user_id
+  ) THEN
+    RAISE EXCEPTION 'study subject clock and identity are immutable'
+      USING ERRCODE = '22023';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER guard_nutrition_subject_clock
+BEFORE UPDATE ON public.study_subject
+FOR EACH ROW EXECUTE FUNCTION public.guard_nutrition_subject_clock();
+
+CREATE FUNCTION public.guard_nutrition_progress_mutation()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_subject public.study_subject%ROWTYPE;
+  v_subject_id uuid := CASE WHEN TG_OP = 'DELETE' THEN OLD.subject_id ELSE NEW.subject_id END;
+  v_old_day integer;
+  v_new_day integer;
+  v_current_day integer;
+BEGIN
+  IF auth.uid() IS NULL OR
+     current_setting('studyu.nutrition_maintenance', true) = 'on' THEN
+    RETURN CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END;
+  END IF;
+
+  SELECT * INTO v_subject
+  FROM public.study_subject
+  WHERE id = v_subject_id AND user_id = auth.uid();
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'nutrition progress subject is not owned by caller'
+      USING ERRCODE = '42501';
+  END IF;
+  v_current_day := public.nutrition_subject_current_day(v_subject);
+
+  BEGIN
+    IF TG_OP <> 'INSERT' AND OLD.result_type = 'DailyRecall' THEN
+      v_old_day := (OLD.result #>> '{result,studyDaySnapshot}')::integer;
+    END IF;
+    IF TG_OP <> 'DELETE' AND NEW.result_type = 'DailyRecall' THEN
+      v_new_day := (NEW.result #>> '{result,studyDaySnapshot}')::integer;
+    END IF;
+  EXCEPTION WHEN invalid_text_representation THEN
+    RAISE EXCEPTION 'invalid nutrition progress study day'
+      USING ERRCODE = '22023';
+  END;
+
+  IF TG_OP = 'INSERT' AND NEW.result_type = 'DailyRecall' THEN
+    IF v_new_day IS NULL OR v_new_day NOT IN (v_current_day - 1, v_current_day) THEN
+      RAISE EXCEPTION 'nutrition recall study day is not writable'
+        USING ERRCODE = '22023';
+    END IF;
+  ELSIF TG_OP = 'UPDATE' AND
+        (OLD.result_type = 'DailyRecall' OR NEW.result_type = 'DailyRecall') THEN
+    IF OLD.result_type IS DISTINCT FROM 'DailyRecall' OR
+       NEW.result_type IS DISTINCT FROM 'DailyRecall' OR
+       NEW.subject_id IS DISTINCT FROM OLD.subject_id OR
+       v_old_day IS NULL OR
+       v_new_day IS DISTINCT FROM v_old_day OR
+       v_old_day NOT IN (v_current_day - 1, v_current_day) THEN
+      RAISE EXCEPTION 'nutrition recall study day is not writable'
+        USING ERRCODE = '22023';
+    END IF;
+  ELSIF TG_OP = 'DELETE' AND OLD.result_type = 'DailyRecall' AND
+        (v_old_day IS NULL OR v_old_day NOT IN (v_current_day - 1, v_current_day)) THEN
+    RAISE EXCEPTION 'nutrition recall study day is not writable'
+      USING ERRCODE = '22023';
+  END IF;
+
+  RETURN CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END;
+END;
+$$;
+
+CREATE TRIGGER guard_nutrition_progress_mutation
+BEFORE INSERT OR UPDATE OR DELETE ON public.subject_progress
+FOR EACH ROW EXECUTE FUNCTION public.guard_nutrition_progress_mutation();
+
+CREATE FUNCTION public.advance_owned_study_subject_day(
+    p_subject_id uuid,
+    p_days integer
+) RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+  IF auth.uid() IS NULL OR p_days IS DISTINCT FROM 1 OR NOT EXISTS (
+    SELECT 1 FROM public.study_subject
+    WHERE id = p_subject_id AND user_id = auth.uid()
+  ) THEN
+    RAISE EXCEPTION 'invalid study subject day advance'
+      USING ERRCODE = '22023';
+  END IF;
+  PERFORM set_config('studyu.nutrition_maintenance', 'on', true);
+  UPDATE public.subject_progress
+  SET completed_at = completed_at - interval '1 day'
+  WHERE subject_id = p_subject_id;
+  UPDATE public.study_subject
+  SET started_at = started_at - interval '1 day'
+  WHERE id = p_subject_id;
+END;
+$$;
+
+CREATE FUNCTION public.delete_owned_subject_progress(
+    p_subject_id uuid
+) RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+  IF auth.uid() IS NULL OR NOT EXISTS (
+    SELECT 1 FROM public.study_subject
+    WHERE id = p_subject_id AND user_id = auth.uid()
+  ) THEN
+    RAISE EXCEPTION 'study subject is not owned by caller'
+      USING ERRCODE = '42501';
+  END IF;
+  PERFORM set_config('studyu.nutrition_maintenance', 'on', true);
+  DELETE FROM public.subject_progress WHERE subject_id = p_subject_id;
+END;
+$$;
+
 CREATE FUNCTION public.apply_nutrition_food_mutation(
     p_subject_id uuid,
     p_mutation_id uuid,
@@ -415,7 +570,7 @@ BEGIN
     RAISE EXCEPTION 'nutrition definition subject is not owned by caller'
       USING ERRCODE = '42501';
   END IF;
-  v_current_study_day := public.subject_current_day(v_subject);
+  v_current_study_day := public.nutrition_subject_current_day(v_subject);
 
   IF p_mutation_id IS NULL THEN
     RAISE EXCEPTION 'invalid nutrition mutation payload' USING ERRCODE = '22023';
@@ -589,6 +744,22 @@ $$;
 
 REVOKE ALL ON FUNCTION public.nutrition_scale_json_numbers(jsonb, numeric)
 FROM public, anon, authenticated;
+REVOKE ALL ON FUNCTION public.nutrition_subject_current_day(
+    public.study_subject
+)
+FROM public, anon, authenticated;
+REVOKE ALL ON FUNCTION public.guard_nutrition_subject_clock()
+FROM public, anon, authenticated;
+REVOKE ALL ON FUNCTION public.guard_nutrition_progress_mutation()
+FROM public, anon, authenticated;
+REVOKE ALL ON FUNCTION public.advance_owned_study_subject_day(uuid, integer)
+FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.advance_owned_study_subject_day(uuid, integer)
+TO authenticated;
+REVOKE ALL ON FUNCTION public.delete_owned_subject_progress(uuid)
+FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.delete_owned_subject_progress(uuid)
+TO authenticated;
 REVOKE ALL ON FUNCTION public.nutrition_food_snapshot_is_valid(jsonb)
 FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.nutrition_replace_food_snapshots(

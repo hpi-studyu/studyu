@@ -346,12 +346,20 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> setStartDateBackBy({required int days}) async {
-    await deleteProgress();
-    progress = await SupabaseQuery.batchUpsert<SubjectProgress>(
-      progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList(),
-    );
-    startedAt = startedAt!.subtract(Duration(days: days));
-    save(onlyUpdate: true);
+    try {
+      await env.client.rpc(
+        'advance_owned_study_subject_day',
+        params: {'p_subject_id': id, 'p_days': days},
+      );
+      for (final item in progress) {
+        item.setStartDateBackBy(days: days);
+      }
+      startedAt = startedAt!.subtract(Duration(days: days));
+      _controller.add(this);
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
   }
 
   @override
@@ -386,10 +394,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> deleteProgress() async {
     try {
-      await env.client
-          .from(SubjectProgress.tableName)
-          .delete()
-          .eq('subject_id', id);
+      await env.client.rpc(
+        'delete_owned_subject_progress',
+        params: {'p_subject_id': id},
+      );
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;

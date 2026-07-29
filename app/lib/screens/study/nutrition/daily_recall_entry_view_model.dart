@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
 import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
@@ -514,7 +515,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
     final valid =
         activeSubject != null &&
         target.studyDaySnapshot ==
-            activeSubject.getDayOfStudyFor(DateTime.now()) - 1;
+            nutritionStudyDayFor(activeSubject, DateTime.now()) - 1;
     if (!valid && !_historicalEligibilityExpired) {
       _historicalEligibilityExpired = true;
       if (!_isDisposed) notifyListeners();
