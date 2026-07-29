@@ -242,13 +242,15 @@ BEGIN
   END LOOP;
 
   BEGIN
-    IF p_snapshot->>'createdAt' !~ '^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}' THEN
+    IF p_snapshot->>'createdAt' !~
+       '^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt ][0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]{1,6})?([Zz]|[+-][0-9]{2}:?[0-9]{2})?$' THEN
       RETURN false;
     END IF;
     PERFORM (p_snapshot->>'createdAt')::timestamptz;
     IF p_snapshot ? 'modifiedAt' AND jsonb_typeof(p_snapshot->'modifiedAt') <> 'null' THEN
       IF jsonb_typeof(p_snapshot->'modifiedAt') IS DISTINCT FROM 'string'
-         OR p_snapshot->>'modifiedAt' !~ '^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}' THEN
+         OR p_snapshot->>'modifiedAt' !~
+            '^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt ][0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]{1,6})?([Zz]|[+-][0-9]{2}:?[0-9]{2})?$' THEN
         RETURN false;
       END IF;
       PERFORM (p_snapshot->>'modifiedAt')::timestamptz;

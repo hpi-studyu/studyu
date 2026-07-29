@@ -1,11 +1,9 @@
 BEGIN;
 
-SELECT plan(33);
+SELECT plan(34);
 
-SELECT
-    tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
-SELECT
-    tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
+SELECT tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
+SELECT tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
     id, study_id, user_id, selected_intervention_ids
@@ -330,6 +328,22 @@ SELECT throws_ok(
     '22023',
     'invalid nutrition mutation payload',
     'snapshots with invalid nested JSON types are rejected'
+);
+SELECT throws_ok(
+    $$SELECT public.apply_nutrition_food_mutation(
+    '10000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-00000000000e',
+    '20000000-0000-0000-0000-000000000001',
+    ((SELECT response FROM nutrition_results WHERE label = 'historical') #>> '{definition,currentVersionId}')::uuid,
+    jsonb_set(
+      (SELECT response #> '{definition,snapshot}' FROM nutrition_results WHERE label = 'historical'),
+      '{createdAt}', '"2026-07-15T08:00:00 UTC"'::jsonb
+    ),
+    false, NULL, NULL, NULL
+  )$$,
+    '22023',
+    'invalid nutrition mutation payload',
+    'timestamps unsupported by Dart DateTime.parse are rejected'
 );
 SELECT is(
     (SELECT count(*)::integer FROM public.nutrition_food_version),

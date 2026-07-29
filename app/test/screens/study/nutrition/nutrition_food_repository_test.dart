@@ -27,7 +27,7 @@ void main() {
     expect(requestedUri.query, contains('deleted_at=is.null'));
   });
 
-  test('historical mutation identifies the selected logged entry', () async {
+  test('historical mutation returns explicit update counts', () async {
     late Map<String, dynamic> params;
     final repository = NutritionFoodRepository(
       client: _client((request) async {
@@ -48,6 +48,7 @@ void main() {
 
     expect(params['p_historical_entry_id'], 'selected-entry');
     expect(params['p_food_id'], 'food-definition');
+    expect(result.progress, hasLength(3));
     expect(result.selectedHistoricalUpdateCount, 1);
     expect(result.todayUpdateCount, 2);
   });
@@ -109,7 +110,11 @@ Map<String, dynamic> _mutationResponse() => {
     'createdAt': '2026-07-15T08:00:00.000Z',
     'updatedAt': '2026-07-15T08:00:00.000Z',
   },
-  'progress': <Map<String, dynamic>>[],
+  'progress': const [
+    {'task_id': 'historical-task'},
+    {'task_id': 'today-task-a'},
+    {'task_id': 'today-task-b'},
+  ],
   'selectedHistoricalUpdateCount': 1,
   'todayUpdateCount': 2,
 };

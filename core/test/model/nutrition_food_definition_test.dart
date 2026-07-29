@@ -2,7 +2,7 @@ import 'package:studyu_core/core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('mutation result round-trips explicit update counts', () {
+  test('mutation result round-trips and requires explicit update counts', () {
     final result = NutritionFoodMutationResult(
       definition: NutritionFoodDefinition(
         id: 'food-definition',
@@ -28,6 +28,12 @@ void main() {
     expect(restored.selectedHistoricalUpdateCount, 1);
     expect(restored.todayUpdateCount, 2);
     expect(restored.progress, hasLength(3));
+
+    final missingCount = result.toJson()..remove('todayUpdateCount');
+    expect(
+      () => NutritionFoodMutationResult.fromJson(missingCount),
+      throwsA(isA<TypeError>()),
+    );
   });
 }
 
