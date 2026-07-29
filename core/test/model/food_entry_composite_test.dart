@@ -1,6 +1,10 @@
 import 'package:studyu_core/core.dart';
 import 'package:test/test.dart';
 
+final _uuidPattern = RegExp(
+  r'^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+);
+
 void main() {
   test('composite snapshots round-trip in composition order', () {
     final first = _food('first', 'First');
@@ -27,6 +31,27 @@ void main() {
       'First',
       'Second',
     ]);
+  });
+
+  test('legacy JSON receives deterministic version identities', () {
+    final legacyJson = _food('legacy', 'Legacy').toJson()
+      ..remove('foodId')
+      ..remove('foodVersionId');
+
+    final first = FoodEntry.fromJson(legacyJson);
+    final repeated = FoodEntry.fromJson(legacyJson);
+    final otherJson = Map<String, dynamic>.from(legacyJson)
+      ..['id'] = 'other-entry';
+    final other = FoodEntry.fromJson(otherJson);
+
+    expect(first.foodId, repeated.foodId);
+    expect(first.foodVersionId, repeated.foodVersionId);
+    expect(first.foodId, isNot(first.foodVersionId));
+    expect(other.foodId, isNot(first.foodId));
+    expect(first.foodId, matches(_uuidPattern));
+    expect(first.foodVersionId, matches(_uuidPattern));
+    expect(first.toJson(), containsPair('foodId', first.foodId));
+    expect(first.toJson(), containsPair('foodVersionId', first.foodVersionId));
   });
 }
 

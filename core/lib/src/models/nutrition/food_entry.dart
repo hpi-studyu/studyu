@@ -110,8 +110,24 @@ class FoodEntry {
        foodVersionId = foodVersionId ?? const Uuid().v4(),
        createdAt = DateTime.now();
 
-  factory FoodEntry.fromJson(Map<String, dynamic> json) =>
-      _$FoodEntryFromJson(json);
+  factory FoodEntry.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('foodId') && json.containsKey('foodVersionId')) {
+      return _$FoodEntryFromJson(json);
+    }
+
+    final id = json['id'] as String;
+    return _$FoodEntryFromJson({
+      ...json,
+      if (!json.containsKey('foodId')) 'foodId': _legacyIdentity('food', id),
+      if (!json.containsKey('foodVersionId'))
+        'foodVersionId': _legacyIdentity('version', id),
+    });
+  }
+
+  static String _legacyIdentity(String kind, String entryId) => const Uuid().v5(
+    Namespace.url.value,
+    'studyu:nutrition:legacy:$kind:$entryId',
+  );
 
   Map<String, dynamic> toJson() => _$FoodEntryToJson(this);
 

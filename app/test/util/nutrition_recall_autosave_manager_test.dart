@@ -77,6 +77,53 @@ void main() {
     );
   });
 
+  test('legacy food draft survives scan and submission', () async {
+    final prefs = await SharedPreferences.getInstance();
+    DailyRecall? submitted;
+    final manager = NutritionRecallAutoSaveManager(
+      preferences: prefs,
+      submitter: (_, recall) async => submitted = recall,
+    );
+    final subject = _subject(daysAgo: 0);
+    final studyDay = nutritionStudyDayFor(subject, DateTime.now());
+    await _save(manager, _foodRecall('legacy', studyDay: studyDay));
+
+    final storageKey =
+        'studyu_nutrition_autosave_subject_task_period_$studyDay';
+    final stored = Map<String, dynamic>.from(
+      jsonDecode(prefs.getString(storageKey)!) as Map,
+    );
+    final recallJson = Map<String, dynamic>.from(stored['recall'] as Map);
+    final meals = List<dynamic>.from(recallJson['meals'] as List);
+    final meal = Map<String, dynamic>.from(meals.single as Map);
+    final foods = List<dynamic>.from(meal['foods'] as List);
+    final legacyFood = Map<String, dynamic>.from(foods.single as Map)
+      ..remove('foodId')
+      ..remove('foodVersionId');
+    meal['foods'] = [legacyFood];
+    recallJson['meals'] = [meal];
+    stored['recall'] = recallJson;
+    await prefs.setString(storageKey, jsonEncode(stored));
+
+    final firstScan = await manager.scanPendingRecalls(subject.id);
+    final secondScan = await manager.scanPendingRecalls(subject.id);
+    final firstFood = firstScan.single.recall.meals.single.foods.single;
+    final repeatedFood = secondScan.single.recall.meals.single.foods.single;
+    expect(firstFood.foodId, repeatedFood.foodId);
+    expect(firstFood.foodVersionId, repeatedFood.foodVersionId);
+    expect(firstFood.foodId, isNot(firstFood.foodVersionId));
+    expect(firstFood.toJson(), contains('foodId'));
+    expect(firstFood.toJson(), contains('foodVersionId'));
+
+    await manager.submitPendingRecalls(subject: subject, trackProgress: true);
+
+    expect(submitted?.meals.single.foods.single.foodId, firstFood.foodId);
+    expect(
+      submitted?.meals.single.foods.single.foodVersionId,
+      firstFood.foodVersionId,
+    );
+  });
+
   test(
     'period-distinct drafts coexist and retain persistence metadata',
     () async {
