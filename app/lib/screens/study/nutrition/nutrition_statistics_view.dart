@@ -128,7 +128,8 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
             const SizedBox(height: 12),
             Text(
               '${_periodLabel(context, current.startDate, current.endDate)} · '
-              '${l10n.nutrition_days_recorded(current.recordedCount, current.days.length)}',
+              '${l10n.nutrition_completed_days(current.recordedCount)}'
+              '${current.hasTodaySoFar ? ' · ${l10n.nutrition_today_so_far}' : ''}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -221,6 +222,7 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
                 ),
                 Tooltip(
                   message: l10n.nutrition_statistics_help_message,
+                  triggerMode: TooltipTriggerMode.tap,
                   child: const Icon(Icons.info_outline, size: 18),
                 ),
               ],
@@ -296,20 +298,20 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
                                   top: Radius.circular(4),
                                 ),
                                 color: current.days[index].isToday
-                                    ? theme.colorScheme.tertiary
-                                    : theme.colorScheme.primary,
-                                borderSide: current.days[index].isToday
-                                    ? BorderSide(
-                                        color: theme.colorScheme.onSurface,
-                                        width: 2,
+                                    ? theme.colorScheme.primary.withValues(
+                                        alpha: 0.65,
                                       )
-                                    : BorderSide.none,
+                                    : theme.colorScheme.primary,
                               ),
                             ]
                           : [],
                     ),
                 ],
                 barTouchData: BarTouchData(
+                  touchExtraThreshold: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   touchCallback: (event, response) {
                     if (event is! FlTapUpEvent || response?.spot == null) {
                       return;
@@ -390,16 +392,18 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
             : null,
         button: canOpen,
         onTap: canOpen ? () => unawaited(_openDay(day)) : null,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: _focusedEnergyDay == index
-                ? Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  )
-                : null,
+        child: IgnorePointer(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: _focusedEnergyDay == index
+                  ? Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    )
+                  : null,
+            ),
+            child: const SizedBox.expand(),
           ),
-          child: const SizedBox.expand(),
         ),
       ),
     );
@@ -411,7 +415,9 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
     if (record == null || openRecall == null) return;
     await openRecall(record);
     if (!mounted) return;
-    setState(() => _records = _loadRecords());
+    setState(() {
+      _records = _loadRecords();
+    });
   }
 
   Widget _nutrientCard(
@@ -506,6 +512,7 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
               theme.colorScheme.primary,
             ),
             lineTouchData: LineTouchData(
+              touchSpotThreshold: 24,
               touchTooltipData: LineTouchTooltipData(
                 fitInsideHorizontally: true,
                 getTooltipItems: (spots) => [
@@ -620,10 +627,11 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
       axisNameSize: 20,
       sideTitles: SideTitles(
         showTitles: true,
-        reservedSize: 44,
+        reservedSize: 36,
         interval: maxY / 4,
         getTitlesWidget: (value, meta) => SideTitleWidget(
           meta: meta,
+          space: 4,
           child: Text(
             _axisLabel(context, value, interval: maxY / 4),
             style: Theme.of(context).textTheme.bodySmall,
@@ -870,6 +878,8 @@ class NutritionStatisticsPeriod {
   DateTime get startDate => days.first.date;
   DateTime get endDate => days.last.date;
   int get recordedCount => days.where((day) => day.isRecorded).length;
+  bool get hasTodaySoFar =>
+      days.any((day) => day.isToday && !day.isRecorded && day.hasChartData);
 
   double? average(double Function(NutritionProfile nutrition) value) {
     final recordedDays = days.where((day) => day.isRecorded).toList();
@@ -922,7 +932,6 @@ List<NutritionStatisticsDay> nutritionStatisticsDays(
   for (final record in mergedRecords) {
     byDay.putIfAbsent(record.studyDaySnapshot, () => []).add(record);
   }
-  final currentDate = DateUtils.dateOnly(today ?? DateTime.now());
   final days = byDay.entries.map((entry) {
     final recordsForDay = entry.value;
     final date = DateUtils.dateOnly(recordsForDay.first.recall.date.toLocal());
@@ -934,13 +943,12 @@ List<NutritionStatisticsDay> nutritionStatisticsDays(
     final completed = recordsForDay.where(
       (record) => record.recall.entryCompletedAt != null,
     );
-    final isToday = DateUtils.isSameDay(date, currentDate);
     return NutritionStatisticsDay(
       studyDaySnapshot: entry.key,
       date: date,
       nutrition: sumNutritionFoods(foods),
-      isRecorded: !isToday || completed.isNotEmpty,
-      hasData: foods.isNotEmpty || recordsForDay.isNotEmpty,
+      isRecorded: completed.isNotEmpty,
+      hasData: foods.isNotEmpty,
       record: completed.isNotEmpty ? completed.first : recordsForDay.first,
     );
   }).toList()..sort((left, right) => left.date.compareTo(right.date));

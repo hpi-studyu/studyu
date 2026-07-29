@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Tagesdurchschnitt'), findsOneWidget);
+    expect(find.text('Durchschnitt abgeschlossener Tage'), findsOneWidget);
     expect(find.text('1.234 kcal'), findsWidgets);
     expect(find.text('1,5 g'), findsOneWidget);
     final energyCard = find.ancestor(
@@ -58,6 +59,14 @@ void main() {
       find.bySemanticsLabel(RegExp('Heute bisher, 1\\.234 kcal')),
       findsOneWidget,
     );
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(NutritionStatisticsView)),
+    )!;
+    await tester.tap(find.byIcon(Icons.info_outline));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text(l10n.nutrition_statistics_help_message), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.info_outline));
+    await tester.pump();
 
     final nutrientTitle = find.text('Nährstoffverlauf').first;
     final nutrientCard = find
@@ -90,7 +99,7 @@ void main() {
     await tester.tap(find.text('Letzte 30 Tage'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('1 von 30 Tagen erfasst'), findsOneWidget);
+    expect(find.textContaining('1 abgeschlossener Tag'), findsOneWidget);
     final thirtyDayEnergyCard = find
         .ancestor(
           of: find.text('Energie pro Studientag'),
@@ -111,6 +120,65 @@ void main() {
       find.descendant(of: thirtyDayEnergyCard, matching: find.text('Heute')),
       findsOneWidget,
     );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('chart data responds to taps', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 1600);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    final today = DateUtils.dateOnly(DateTime.now());
+    final yesterday = addCalendarDays(today, -1);
+    final subject = StudySubject('subject', 'study', 'user', [])
+      ..startedAt = yesterday;
+    final recall = _recall(
+      date: yesterday,
+      studyDay: 1,
+      energyKcal: 500,
+      completed: true,
+    );
+    subject.progress.add(_progress(recall));
+    NutritionRecallRecord? openedRecord;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('de'),
+        home: NutritionStatisticsView(
+          subject: subject,
+          taskId: 'task',
+          onOpenRecall: (record) async => openedRecord = record,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final barRect = tester.getRect(find.byType(BarChart));
+    const historicalIndex = 5;
+    final barPlotLeft = barRect.left + 50;
+    await tester.tapAt(
+      Offset(
+        barPlotLeft +
+            (barRect.right - barPlotLeft) * (historicalIndex + 0.5) / 7,
+        barRect.bottom - 70,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(openedRecord?.recall.id, recall.id);
+
+    final lineChart = tester.widget<LineChart>(find.byType(LineChart));
+    expect(lineChart.data.lineTouchData.touchSpotThreshold, 24);
+    final lineRect = tester.getRect(find.byType(LineChart));
+    final linePlotLeft = lineRect.left + 50;
+    await tester.tapAt(
+      Offset(
+        linePlotLeft + (lineRect.right - linePlotLeft) * historicalIndex / 6,
+        lineRect.center.dy,
+      ),
+    );
+    await tester.pump();
     expect(tester.takeException(), isNull);
   });
 
@@ -146,7 +214,129 @@ void main() {
     expect(period.average((value) => value.energyKcal), 150);
     expect(period.days.last.isRecorded, isFalse);
     expect(period.days.last.hasChartData, isTrue);
+    expect(period.hasTodaySoFar, isTrue);
     expect(period.days.first.hasChartData, isFalse);
+  });
+
+  testWidgets('separates nutrient lines at missing days', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 1600);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    final today = DateUtils.dateOnly(DateTime.now());
+    final subject = StudySubject('subject', 'study', 'user', [])
+      ..startedAt = addCalendarDays(today, -6);
+    for (final (offset, studyDay) in [(6, 1), (4, 3)]) {
+      final recall = _recall(
+        date: addCalendarDays(today, -offset),
+        studyDay: studyDay,
+        energyKcal: 100,
+        completed: true,
+      );
+      subject.progress.add(_progress(recall));
+    }
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('de'),
+        home: NutritionStatisticsView(subject: subject, taskId: 'task'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final segments = tester
+        .widget<LineChart>(find.byType(LineChart))
+        .data
+        .lineBarsData;
+    expect(segments, hasLength(2));
+    expect(segments.map((segment) => segment.spots.single.x), [0, 2]);
+  });
+
+  testWidgets('labels incomplete today as today so far', (tester) async {
+    final today = DateUtils.dateOnly(DateTime.now());
+    final yesterday = addCalendarDays(today, -1);
+    final subject = StudySubject('subject', 'study', 'user', [])
+      ..startedAt = yesterday;
+    final completedRecall = _recall(
+      date: yesterday,
+      studyDay: 1,
+      energyKcal: 500,
+      completed: true,
+    );
+    subject.progress.add(_progress(completedRecall));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('de'),
+        home: NutritionStatisticsView(
+          subject: subject,
+          taskId: 'task',
+          activeRecall: _recall(date: today, studyDay: 2, energyKcal: 100),
+          activeStudyDay: 2,
+          activePeriodId: 'period',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining('1 abgeschlossener Tag · Heute bisher'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Durchschnitt 500 kcal über abgeschlossene Tage'),
+      findsOneWidget,
+    );
+    final todayRod = tester
+        .widget<BarChart>(find.byType(BarChart))
+        .data
+        .barGroups
+        .last
+        .barRods
+        .single;
+    final theme = Theme.of(
+      tester.element(find.byType(NutritionStatisticsView)),
+    );
+    expect(todayRod.color, theme.colorScheme.primary.withValues(alpha: 0.65));
+    expect(todayRod.borderSide.width, 0);
+  });
+
+  test('shows recorded zeros but hides incomplete and missing days', () {
+    final today = DateUtils.dateOnly(DateTime.now());
+    final period = nutritionStatisticsPeriod(
+      nutritionStatisticsDays([
+        _record(
+          date: addCalendarDays(today, -3),
+          studyDay: 1,
+          energyKcal: 0,
+          carbs: 0,
+        ),
+        _record(
+          date: addCalendarDays(today, -2),
+          studyDay: 2,
+          energyKcal: 0,
+          carbs: 0,
+          completed: false,
+        ),
+      ]),
+      endDate: today,
+      dayCount: 7,
+    );
+
+    final recordedZero = period.days[3];
+    final incomplete = period.days[4];
+    final missing = period.days[5];
+    expect(recordedZero.isRecorded, isTrue);
+    expect(recordedZero.hasChartData, isTrue);
+    expect(period.average((nutrition) => nutrition.carbs), 0);
+    expect(incomplete.isRecorded, isFalse);
+    expect(incomplete.hasChartData, isFalse);
+    expect(missing.data, isNull);
+    expect(missing.hasChartData, isFalse);
   });
 
   test('adds calendar days without carrying an elapsed-time offset', () {
@@ -205,11 +395,15 @@ NutritionRecallRecord _record({
   required DateTime date,
   required int studyDay,
   required double energyKcal,
+  double carbs = 0.2,
+  bool completed = true,
 }) {
   final recall = _recall(
     date: date,
     studyDay: studyDay,
     energyKcal: energyKcal,
+    carbs: carbs,
+    completed: completed,
   );
   return NutritionRecallRecord(
     recall: recall,
@@ -237,50 +431,52 @@ DailyRecall _recall({
   required DateTime date,
   required int studyDay,
   required double energyKcal,
+  double carbs = 0.2,
   bool completed = false,
 }) => DailyRecall(
   id: 'recall-$studyDay-$energyKcal',
   date: date,
   recallMode: RecallMode.realtimeRecord,
   entryCompletedAt: completed ? date.add(const Duration(hours: 12)) : null,
-  meals: [_meal(energyKcal: energyKcal)],
+  meals: [_meal(energyKcal: energyKcal, carbs: carbs)],
   studyDaySnapshot: studyDay,
 );
 
-MealLog _meal({required double energyKcal}) => MealLog(
+MealLog _meal({required double energyKcal, required double carbs}) => MealLog(
   id: 'meal-$energyKcal',
   mealType: MealType.breakfast,
   mealContext: MealContext.home,
   timezone: 'UTC',
   isSkipped: false,
-  foods: [_food(energyKcal: energyKcal)],
+  foods: [_food(energyKcal: energyKcal, carbs: carbs)],
 );
 
-FoodEntry _food({required double energyKcal}) => FoodEntry(
-  id: 'food-$energyKcal',
-  entryType: FoodEntryType.singleIngredient,
-  name: 'Food',
-  amount: 1,
-  unit: 'serving',
-  servingSizeGrams: 100,
-  portionEstimationMethod: PortionEstimationMethod.standardUnit,
-  portionState: PortionState.asServed,
-  nutrition: NutritionProfile(
-    energyKcal: energyKcal,
-    protein: 1.5,
-    carbs: 0.2,
-    fat: 3.5,
-    sugars: 0,
-    fiber: 4.5,
-    saturatedFat: 0,
-    transFat: 0,
-    cholesterol: 0,
-    sodium: 0,
-    waterContent: 0,
-    micros: {},
-  ),
-  source: FoodSource.manual,
-  confidenceScore: 1,
-  createdAt: DateTime.now(),
-  originalValues: {},
-);
+FoodEntry _food({required double energyKcal, required double carbs}) =>
+    FoodEntry(
+      id: 'food-$energyKcal',
+      entryType: FoodEntryType.singleIngredient,
+      name: 'Food',
+      amount: 1,
+      unit: 'serving',
+      servingSizeGrams: 100,
+      portionEstimationMethod: PortionEstimationMethod.standardUnit,
+      portionState: PortionState.asServed,
+      nutrition: NutritionProfile(
+        energyKcal: energyKcal,
+        protein: 1.5,
+        carbs: carbs,
+        fat: 3.5,
+        sugars: 0,
+        fiber: 4.5,
+        saturatedFat: 0,
+        transFat: 0,
+        cholesterol: 0,
+        sodium: 0,
+        waterContent: 0,
+        micros: {},
+      ),
+      source: FoodSource.manual,
+      confidenceScore: 1,
+      createdAt: DateTime.now(),
+      originalValues: {},
+    );

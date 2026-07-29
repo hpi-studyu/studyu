@@ -2580,14 +2580,25 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get nutrition_daily_average => 'Tagesdurchschnitt';
+  String nutrition_completed_days(int completed) {
+    String _temp0 = intl.Intl.pluralLogic(
+      completed,
+      locale: localeName,
+      other: '$completed abgeschlossene Tage',
+      one: '$completed abgeschlossener Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nutrition_daily_average => 'Durchschnitt abgeschlossener Tage';
 
   @override
   String get nutrition_energy_by_study_day => 'Energie pro Studientag';
 
   @override
   String nutrition_average_value(String value) {
-    return 'Durchschnitt $value';
+    return 'Durchschnitt $value über abgeschlossene Tage';
   }
 
   @override
@@ -2602,7 +2613,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String nutrition_average_per_recorded_day(String value) {
-    return 'Durchschnitt $value pro erfasstem Tag';
+    return 'Durchschnitt $value pro abgeschlossenem Tag';
   }
 
   @override

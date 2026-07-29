@@ -2554,14 +2554,25 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get nutrition_daily_average => 'Daily average';
+  String nutrition_completed_days(int completed) {
+    String _temp0 = intl.Intl.pluralLogic(
+      completed,
+      locale: localeName,
+      other: '$completed completed days',
+      one: '$completed completed day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nutrition_daily_average => 'Average across completed days';
 
   @override
   String get nutrition_energy_by_study_day => 'Energy by study day';
 
   @override
   String nutrition_average_value(String value) {
-    return 'Average $value';
+    return 'Average $value across completed days';
   }
 
   @override
@@ -2576,7 +2587,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String nutrition_average_per_recorded_day(String value) {
-    return 'Average $value per recorded day';
+    return 'Average $value per completed day';
   }
 
   @override

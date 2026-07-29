@@ -979,9 +979,17 @@
       }
     }
   },
-  "nutrition_daily_average": "Tagesdurchschnitt",
+  "nutrition_completed_days": "{completed, plural, =1{{completed} abgeschlossener Tag} other{{completed} abgeschlossene Tage}}",
+  "@nutrition_completed_days": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
+  "nutrition_daily_average": "Durchschnitt abgeschlossener Tage",
   "nutrition_energy_by_study_day": "Energie pro Studientag",
-  "nutrition_average_value": "Durchschnitt {value}",
+  "nutrition_average_value": "Durchschnitt {value} über abgeschlossene Tage",
   "@nutrition_average_value": {
     "placeholders": {
       "value": {
@@ -992,7 +1000,7 @@
   "nutrition_tap_bar_hint": "Tippen Sie auf einen Balken, um den Wert anzuzeigen oder den Tag zu öffnen.",
   "nutrition_nutrient_trend": "Nährstoffverlauf",
   "nutrition_carbs": "Kohlenhydrate",
-  "nutrition_average_per_recorded_day": "Durchschnitt {value} pro erfasstem Tag",
+  "nutrition_average_per_recorded_day": "Durchschnitt {value} pro abgeschlossenem Tag",
   "@nutrition_average_per_recorded_day": {
     "placeholders": {
       "value": {

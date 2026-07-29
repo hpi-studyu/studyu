@@ -1150,9 +1150,17 @@
       }
     }
   },
-  "nutrition_daily_average": "Daily average",
+  "nutrition_completed_days": "{completed, plural, =1{{completed} completed day} other{{completed} completed days}}",
+  "@nutrition_completed_days": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
+  "nutrition_daily_average": "Average across completed days",
   "nutrition_energy_by_study_day": "Energy by study day",
-  "nutrition_average_value": "Average {value}",
+  "nutrition_average_value": "Average {value} across completed days",
   "@nutrition_average_value": {
     "placeholders": {
       "value": {
@@ -1163,7 +1171,7 @@
   "nutrition_tap_bar_hint": "Tap a bar to view its value or open that day.",
   "nutrition_nutrient_trend": "Nutrient trend",
   "nutrition_carbs": "Carbs",
-  "nutrition_average_per_recorded_day": "Average {value} per recorded day",
+  "nutrition_average_per_recorded_day": "Average {value} per completed day",
   "@nutrition_average_per_recorded_day": {
     "placeholders": {
       "value": {

@@ -4661,10 +4661,16 @@ abstract class AppLocalizations {
   /// **'{recorded} of {total} days recorded'**
   String nutrition_days_recorded(int recorded, int total);
 
+  /// No description provided for @nutrition_completed_days.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed, plural, =1{{completed} completed day} other{{completed} completed days}}'**
+  String nutrition_completed_days(int completed);
+
   /// No description provided for @nutrition_daily_average.
   ///
   /// In en, this message translates to:
-  /// **'Daily average'**
+  /// **'Average across completed days'**
   String get nutrition_daily_average;
 
   /// No description provided for @nutrition_energy_by_study_day.
@@ -4676,7 +4682,7 @@ abstract class AppLocalizations {
   /// No description provided for @nutrition_average_value.
   ///
   /// In en, this message translates to:
-  /// **'Average {value}'**
+  /// **'Average {value} across completed days'**
   String nutrition_average_value(String value);
 
   /// No description provided for @nutrition_tap_bar_hint.
@@ -4700,7 +4706,7 @@ abstract class AppLocalizations {
   /// No description provided for @nutrition_average_per_recorded_day.
   ///
   /// In en, this message translates to:
-  /// **'Average {value} per recorded day'**
+  /// **'Average {value} per completed day'**
   String nutrition_average_per_recorded_day(String value);
 
   /// No description provided for @nutrition_compared_previous_days.
