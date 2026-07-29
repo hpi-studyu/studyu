@@ -393,15 +393,13 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 BEGIN
-  IF auth.uid() IS NULL OR
-     current_setting('studyu.nutrition_maintenance', true) = 'on' THEN
+  IF current_setting('studyu.nutrition_maintenance', true) =
+      'advance:' || OLD.id::text THEN
     RETURN NEW;
   END IF;
-  IF auth.uid() = OLD.user_id AND (
-      NEW.started_at IS DISTINCT FROM OLD.started_at OR
-      NEW.study_id IS DISTINCT FROM OLD.study_id OR
-      NEW.user_id IS DISTINCT FROM OLD.user_id
-  ) THEN
+  IF NEW.started_at IS DISTINCT FROM OLD.started_at OR
+     NEW.study_id IS DISTINCT FROM OLD.study_id OR
+     NEW.user_id IS DISTINCT FROM OLD.user_id THEN
     RAISE EXCEPTION 'study subject clock and identity are immutable'
       USING ERRCODE = '22023';
   END IF;
@@ -425,9 +423,23 @@ DECLARE
   v_old_day integer;
   v_new_day integer;
   v_current_day integer;
+  v_maintenance text :=
+      current_setting('studyu.nutrition_maintenance', true);
 BEGIN
-  IF auth.uid() IS NULL OR
-     current_setting('studyu.nutrition_maintenance', true) = 'on' THEN
+  IF (TG_OP = 'UPDATE' AND v_maintenance IN (
+        'advance:' || v_subject_id::text,
+        'mutation:' || v_subject_id::text
+      )) OR
+     (TG_OP = 'DELETE' AND
+      v_maintenance = 'delete:' || v_subject_id::text) THEN
+    RETURN CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END;
+  END IF;
+
+  IF (TG_OP = 'INSERT' AND NEW.result_type IS DISTINCT FROM 'DailyRecall') OR
+     (TG_OP = 'UPDATE' AND
+      OLD.result_type IS DISTINCT FROM 'DailyRecall' AND
+      NEW.result_type IS DISTINCT FROM 'DailyRecall') OR
+     (TG_OP = 'DELETE' AND OLD.result_type IS DISTINCT FROM 'DailyRecall') THEN
     RETURN CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END;
   END IF;
 
@@ -492,6 +504,8 @@ SET search_path = ''
 AS $$
 DECLARE
   v_completed_at timestamptz;
+  v_previous_maintenance text :=
+      current_setting('studyu.nutrition_maintenance', true);
   v_is_service_role boolean :=
       current_setting('role', true) = 'service_role';
 BEGIN
@@ -503,7 +517,9 @@ BEGIN
     RAISE EXCEPTION 'invalid study subject day advance'
       USING ERRCODE = '22023';
   END IF;
-  PERFORM set_config('studyu.nutrition_maintenance', 'on', true);
+  PERFORM set_config(
+    'studyu.nutrition_maintenance', 'advance:' || p_subject_id::text, true
+  );
   FOR v_completed_at IN
     SELECT completed_at
     FROM public.subject_progress
@@ -517,6 +533,9 @@ BEGIN
   UPDATE public.study_subject
   SET started_at = started_at - interval '1 day'
   WHERE id = p_subject_id;
+  PERFORM set_config(
+    'studyu.nutrition_maintenance', COALESCE(v_previous_maintenance, ''), true
+  );
 END;
 $$;
 
@@ -528,6 +547,8 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
+  v_previous_maintenance text :=
+      current_setting('studyu.nutrition_maintenance', true);
   v_is_service_role boolean :=
       current_setting('role', true) = 'service_role';
 BEGIN
@@ -539,8 +560,13 @@ BEGIN
     RAISE EXCEPTION 'study subject is not owned by caller'
       USING ERRCODE = '42501';
   END IF;
-  PERFORM set_config('studyu.nutrition_maintenance', 'on', true);
+  PERFORM set_config(
+    'studyu.nutrition_maintenance', 'delete:' || p_subject_id::text, true
+  );
   DELETE FROM public.subject_progress WHERE subject_id = p_subject_id;
+  PERFORM set_config(
+    'studyu.nutrition_maintenance', COALESCE(v_previous_maintenance, ''), true
+  );
 END;
 $$;
 
@@ -574,6 +600,8 @@ DECLARE
   v_selected_historical_update_count integer := 0;
   v_today_update_count integer := 0;
   v_response jsonb;
+  v_previous_maintenance text :=
+      current_setting('studyu.nutrition_maintenance', true);
   v_is_service_role boolean :=
       current_setting('role', true) = 'service_role';
 BEGIN
@@ -671,6 +699,10 @@ BEGIN
       updated_at = now()
   WHERE id = p_food_id;
 
+  PERFORM set_config(
+    'studyu.nutrition_maintenance', 'mutation:' || p_subject_id::text, true
+  );
+
   IF p_historical_target IS NOT NULL THEN
     SELECT count(*) INTO v_target_count
     FROM public.subject_progress
@@ -751,6 +783,9 @@ BEGIN
   FROM public.nutrition_food_definition AS definition
   WHERE definition.id = p_food_id;
 
+  PERFORM set_config(
+    'studyu.nutrition_maintenance', COALESCE(v_previous_maintenance, ''), true
+  );
   INSERT INTO public.nutrition_food_mutation (subject_id, mutation_id, response)
   VALUES (p_subject_id, p_mutation_id, v_response);
   RETURN v_response;

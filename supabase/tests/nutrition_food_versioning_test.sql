@@ -1,11 +1,9 @@
 BEGIN;
 
-SELECT plan(85);
+SELECT plan(89);
 
-SELECT
-    tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
-SELECT
-    tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
+SELECT tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
+SELECT tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
     id, study_id, user_id, started_at, selected_intervention_ids
@@ -25,6 +23,7 @@ INSERT INTO public.study_subject (
     ARRAY[]::text []
 );
 
+SET LOCAL session_replication_role = replica;
 INSERT INTO public.subject_progress (
     completed_at, subject_id, intervention_id, task_id, result_type, result
 ) VALUES
@@ -82,6 +81,7 @@ SET
 WHERE
     subject_id = '10000000-0000-0000-0000-000000000001'
     AND task_id = 'current-task-a';
+SET LOCAL session_replication_role = origin;
 
 SELECT tests.authenticate_as('nutrition_owner');
 
@@ -1113,6 +1113,47 @@ SELECT is(
     3::bigint,
     'service role can execute every guarded RPC'
 );
+SELECT set_config('role', 'service_role', TRUE);
+SELECT set_config('request.jwt.claims', '{}', TRUE);
+SELECT throws_ok(
+    $$UPDATE public.study_subject
+      SET started_at = started_at - interval '1 day'
+      WHERE id = '10000000-0000-0000-0000-000000000001'$$,
+    '22023',
+    'study subject clock and identity are immutable',
+    'service role cannot directly rewrite the authoritative nutrition clock'
+);
+SELECT throws_ok(
+    $$INSERT INTO public.subject_progress (
+        completed_at, subject_id, intervention_id, task_id, result_type, result
+      ) SELECT
+        '2026-07-13T13:00:00Z', subject_id, intervention_id,
+        'service-forged-old-task', result_type,
+        jsonb_set(result, '{result,studyDaySnapshot}', '2')
+      FROM public.subject_progress WHERE task_id = 'locked-task'$$,
+    '42501',
+    'nutrition progress subject is not owned by caller',
+    'service role cannot directly insert an out-of-window recall'
+);
+SELECT throws_ok(
+    $$UPDATE public.subject_progress
+      SET result = jsonb_set(
+        result, '{result,meals,0,foods,0,name}', '"Service forged"'
+      )
+      WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+        AND task_id = 'locked-task'$$,
+    '42501',
+    'nutrition progress subject is not owned by caller',
+    'service role cannot directly update a protected recall'
+);
+SELECT throws_ok(
+    $$DELETE FROM public.subject_progress
+      WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+        AND task_id = 'locked-task'$$,
+    '42501',
+    'nutrition progress subject is not owned by caller',
+    'service role cannot directly delete a protected recall'
+);
 SELECT set_config('role', 'postgres', TRUE);
 CREATE FUNCTION pg_temp.reject_preview_clock_update()
 RETURNS trigger
@@ -1127,7 +1168,7 @@ BEFORE UPDATE OF started_at ON public.study_subject
 FOR EACH ROW
 WHEN (old.id = '10000000-0000-0000-0000-000000000001')
 EXECUTE FUNCTION pg_temp.reject_preview_clock_update();
-SELECT set_config('role', 'authenticated', TRUE);
+SELECT tests.authenticate_as('nutrition_owner');
 SELECT throws_ok(
     $$SELECT public.advance_owned_study_subject_day(
       '10000000-0000-0000-0000-000000000001', 1
@@ -1189,6 +1230,7 @@ SELECT is(
 );
 
 SELECT set_config('role', 'service_role', TRUE);
+SELECT set_config('request.jwt.claims', '{}', TRUE);
 SELECT lives_ok(
     $$SELECT public.apply_nutrition_food_mutation(
       '10000000-0000-0000-0000-000000000001',
