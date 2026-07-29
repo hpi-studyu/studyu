@@ -346,12 +346,16 @@ class NutritionRecallAutoSaveManager {
   Future<void> submitPendingRecalls({
     required StudySubject subject,
     required bool trackProgress,
+    DateTime? now,
   }) async {
     if (_isSubmitting || !trackProgress) return;
     _isSubmitting = true;
 
     try {
-      final todayStudyDay = subject.getDayOfStudyFor(DateTime.now());
+      final todayStudyDay = nutritionStudyDayFor(
+        subject,
+        now ?? DateTime.now(),
+      );
       final pendingRecalls = await scanPendingRecalls(subject.id);
       for (final pending in pendingRecalls) {
         if (pending.studyDaySnapshot > todayStudyDay ||

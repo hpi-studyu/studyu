@@ -333,6 +333,35 @@ void main() {
     expect(repository.loadCalls, 2);
   });
 
+  testWidgets('disposing during history does not refresh the food library', (
+    tester,
+  ) async {
+    final setup = historicalNavigationSetup(
+      'Historical apple',
+      hasPersistenceTarget: false,
+    );
+    final repository = FakeNutritionFoodRepository();
+
+    await tester.pumpWidget(
+      nutritionTaskApp(
+        setup.task,
+        appState: AppState()..activeSubject = setup.subject,
+        foodRepository: repository,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Historical apple'));
+    await tester.pumpAndSettle();
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+
+    expect(repository.loadCalls, 1);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('expired historical edit returns to History on app resume', (
     tester,
   ) async {

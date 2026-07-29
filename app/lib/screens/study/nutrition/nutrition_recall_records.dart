@@ -2,6 +2,9 @@ import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_core/core.dart';
 
+export 'package:studyu_app/util/study_subject_extension.dart'
+    show nutritionStudyDayFor;
+
 class NutritionRecallRecord {
   final DailyRecall recall;
   final String taskId;
@@ -120,16 +123,6 @@ Future<List<NutritionRecallRecord>> loadNutritionRecallRecords({
       (left, right) => right.studyDaySnapshot.compareTo(left.studyDaySnapshot),
     );
   return result;
-}
-
-int nutritionStudyDayFor(StudySubject subject, DateTime date) {
-  final current = date.toUtc();
-  final started = subject.startedAt!.toUtc();
-  return DateTime.utc(
-    current.year,
-    current.month,
-    current.day,
-  ).difference(DateTime.utc(started.year, started.month, started.day)).inDays;
 }
 
 bool isEditableNutritionRecallDay({

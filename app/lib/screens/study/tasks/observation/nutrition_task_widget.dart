@@ -439,6 +439,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         foodRepository: widget.foodRepository,
       ),
     );
+    if (!context.mounted) return;
     await _templateViewModel?.loadAllTemplates();
     if (canEdit &&
         context.mounted &&

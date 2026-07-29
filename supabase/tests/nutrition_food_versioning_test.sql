@@ -1,9 +1,11 @@
 BEGIN;
 
-SELECT plan(69);
+SELECT plan(85);
 
-SELECT tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
-SELECT tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
+SELECT
+    tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
+SELECT
+    tests.create_supabase_user('nutrition_other', 'nutrition_other@studyu.health');
 
 INSERT INTO public.study_subject (
     id, study_id, user_id, started_at, selected_intervention_ids
@@ -1009,8 +1011,142 @@ SELECT throws_ok(
     'nutrition definition subject is not owned by caller',
     'RPC rejects cross-subject mutation'
 );
+SELECT throws_ok(
+    $$SELECT public.advance_owned_study_subject_day(
+      '10000000-0000-0000-0000-000000000001', 1
+    )$$,
+    '22023',
+    'invalid study subject day advance',
+    'preview RPC rejects cross-subject advancement'
+);
+SELECT throws_ok(
+    $$SELECT public.delete_owned_subject_progress(
+      '10000000-0000-0000-0000-000000000001'
+    )$$,
+    '42501',
+    'study subject is not owned by caller',
+    'cleanup RPC rejects cross-subject deletion'
+);
 
 SELECT tests.authenticate_as('nutrition_owner');
+SELECT throws_ok(
+    $$SELECT public.advance_owned_study_subject_day(
+      '10000000-0000-0000-0000-000000000001', 2
+    )$$,
+    '22023',
+    'invalid study subject day advance',
+    'preview RPC rejects unsupported day advances'
+);
+SELECT throws_ok(
+    $$SELECT public.advance_owned_study_subject_day(NULL, 1)$$,
+    '22023',
+    'invalid study subject day advance',
+    'preview RPC rejects a null subject'
+);
+SELECT throws_ok(
+    $$SELECT public.delete_owned_subject_progress(NULL)$$,
+    '42501',
+    'study subject is not owned by caller',
+    'cleanup RPC rejects a null subject'
+);
+SELECT is(
+    (
+        SELECT (
+            (now() AT TIME ZONE 'UTC')::date
+            - (started_at AT TIME ZONE 'UTC')::date
+        )::integer
+        FROM public.study_subject
+        WHERE id = '10000000-0000-0000-0000-000000000001'
+    ),
+    5,
+    'rejected preview arguments leave the subject clock unchanged'
+);
+SELECT is(
+    (
+        SELECT count(*)
+        FROM pg_proc AS procedure
+        INNER JOIN pg_namespace AS namespace
+            ON procedure.pronamespace = namespace.oid
+        WHERE
+            namespace.nspname = 'public'
+            AND procedure.proname IN (
+                'advance_owned_study_subject_day',
+                'delete_owned_subject_progress',
+                'apply_nutrition_food_mutation'
+            )
+            AND pg_get_userbyid(procedure.proowner) = 'postgres'
+    ),
+    3::bigint,
+    'guarded RPCs remain owned by postgres'
+);
+SELECT is(
+    (
+        SELECT count(*)
+        FROM pg_proc AS procedure
+        INNER JOIN pg_namespace AS namespace
+            ON procedure.pronamespace = namespace.oid
+        WHERE
+            namespace.nspname = 'public'
+            AND procedure.proname IN (
+                'advance_owned_study_subject_day',
+                'delete_owned_subject_progress',
+                'apply_nutrition_food_mutation'
+            )
+            AND array_to_string(procedure.proconfig, ',') = 'search_path=""'
+    ),
+    3::bigint,
+    'guarded RPCs use empty search paths'
+);
+SELECT is(
+    (
+        SELECT count(*)
+        FROM (
+            VALUES
+            ('public.advance_owned_study_subject_day(uuid,integer)'),
+            ('public.delete_owned_subject_progress(uuid)'),
+            (
+                'public.apply_nutrition_food_mutation(uuid,uuid,uuid,uuid,jsonb,boolean,jsonb,integer,boolean,text)'
+            )
+        ) AS rpc (signature)
+        WHERE has_function_privilege('service_role', signature, 'EXECUTE')
+    ),
+    3::bigint,
+    'service role can execute every guarded RPC'
+);
+SELECT set_config('role', 'postgres', TRUE);
+CREATE FUNCTION pg_temp.reject_preview_clock_update()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RAISE EXCEPTION 'forced preview failure';
+END;
+$$;
+CREATE TRIGGER reject_preview_clock_update
+BEFORE UPDATE OF started_at ON public.study_subject
+FOR EACH ROW
+WHEN (old.id = '10000000-0000-0000-0000-000000000001')
+EXECUTE FUNCTION pg_temp.reject_preview_clock_update();
+SELECT set_config('role', 'authenticated', TRUE);
+SELECT throws_ok(
+    $$SELECT public.advance_owned_study_subject_day(
+      '10000000-0000-0000-0000-000000000001', 1
+    )$$,
+    'P0001',
+    'forced preview failure',
+    'preview failure rolls back the guarded atomic path'
+);
+SELECT is(
+    (
+        SELECT max(completed_at) FROM public.subject_progress
+        WHERE subject_id = '10000000-0000-0000-0000-000000000001'
+    ),
+    '2026-07-16 13:00:00+00'::timestamptz,
+    'failed preview leaves all progress timestamps unchanged'
+);
+SELECT set_config('role', 'postgres', TRUE);
+DROP TRIGGER reject_preview_clock_update ON public.study_subject;
+SELECT set_config('role', 'authenticated', TRUE);
 SELECT lives_ok(
     $$SELECT public.advance_owned_study_subject_day(
       '10000000-0000-0000-0000-000000000001', 1
@@ -1050,6 +1186,45 @@ SELECT is(
     ),
     0,
     'owned cleanup removes all subject progress'
+);
+
+SELECT set_config('role', 'service_role', TRUE);
+SELECT lives_ok(
+    $$SELECT public.apply_nutrition_food_mutation(
+      '10000000-0000-0000-0000-000000000001',
+      '40000000-0000-0000-0000-000000000001',
+      '20000000-0000-0000-0000-000000000001',
+      NULL, '{}'::jsonb, false, NULL, NULL, NULL
+    )$$,
+    'service role can retry an atomic mutation without a user JWT'
+);
+SELECT lives_ok(
+    $$SELECT public.advance_owned_study_subject_day(
+      '10000000-0000-0000-0000-000000000002', 1
+    )$$,
+    'service role can advance a subject without a user JWT'
+);
+SELECT is(
+    (
+        SELECT max(completed_at) FROM public.subject_progress
+        WHERE subject_id = '10000000-0000-0000-0000-000000000002'
+    ),
+    '2026-07-15 08:00:00+00'::timestamptz,
+    'service preview shifts progress through the guarded path'
+);
+SELECT lives_ok(
+    $$SELECT public.delete_owned_subject_progress(
+      '10000000-0000-0000-0000-000000000002'
+    )$$,
+    'service role can clean up a subject without a user JWT'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer FROM public.subject_progress
+        WHERE subject_id = '10000000-0000-0000-0000-000000000002'
+    ),
+    0,
+    'service cleanup removes only the requested subject progress'
 );
 
 SELECT * FROM finish();

@@ -9,6 +9,16 @@ import 'package:studyu_core/core.dart';
 ///
 /// Keeping this with the upsert API prevents a correction from being treated
 /// as a new completion in a different period or intervention.
+int nutritionStudyDayFor(StudySubject subject, DateTime date) {
+  final current = date.toUtc();
+  final started = subject.startedAt!.toUtc();
+  return DateTime.utc(
+    current.year,
+    current.month,
+    current.day,
+  ).difference(DateTime.utc(started.year, started.month, started.day)).inDays;
+}
+
 class NutritionRecallPersistenceTarget {
   final String taskId;
   final String periodId;

@@ -490,18 +490,30 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
 AS $$
+DECLARE
+  v_completed_at timestamptz;
+  v_is_service_role boolean :=
+      current_setting('role', true) = 'service_role';
 BEGIN
-  IF auth.uid() IS NULL OR p_days IS DISTINCT FROM 1 OR NOT EXISTS (
+  IF p_subject_id IS NULL OR p_days IS DISTINCT FROM 1 OR NOT EXISTS (
     SELECT 1 FROM public.study_subject
-    WHERE id = p_subject_id AND user_id = auth.uid()
+    WHERE id = p_subject_id
+      AND (v_is_service_role OR user_id = auth.uid())
   ) THEN
     RAISE EXCEPTION 'invalid study subject day advance'
       USING ERRCODE = '22023';
   END IF;
   PERFORM set_config('studyu.nutrition_maintenance', 'on', true);
-  UPDATE public.subject_progress
-  SET completed_at = completed_at - interval '1 day'
-  WHERE subject_id = p_subject_id;
+  FOR v_completed_at IN
+    SELECT completed_at
+    FROM public.subject_progress
+    WHERE subject_id = p_subject_id
+    ORDER BY completed_at
+  LOOP
+    UPDATE public.subject_progress
+    SET completed_at = v_completed_at - interval '1 day'
+    WHERE subject_id = p_subject_id AND completed_at = v_completed_at;
+  END LOOP;
   UPDATE public.study_subject
   SET started_at = started_at - interval '1 day'
   WHERE id = p_subject_id;
@@ -515,10 +527,14 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
 AS $$
+DECLARE
+  v_is_service_role boolean :=
+      current_setting('role', true) = 'service_role';
 BEGIN
-  IF auth.uid() IS NULL OR NOT EXISTS (
+  IF p_subject_id IS NULL OR NOT EXISTS (
     SELECT 1 FROM public.study_subject
-    WHERE id = p_subject_id AND user_id = auth.uid()
+    WHERE id = p_subject_id
+      AND (v_is_service_role OR user_id = auth.uid())
   ) THEN
     RAISE EXCEPTION 'study subject is not owned by caller'
       USING ERRCODE = '42501';
@@ -542,7 +558,7 @@ CREATE FUNCTION public.apply_nutrition_food_mutation(
 ) RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public
+SET search_path = ''
 AS $$
 DECLARE
   v_subject public.study_subject%ROWTYPE;
@@ -558,14 +574,13 @@ DECLARE
   v_selected_historical_update_count integer := 0;
   v_today_update_count integer := 0;
   v_response jsonb;
+  v_is_service_role boolean :=
+      current_setting('role', true) = 'service_role';
 BEGIN
-  IF auth.uid() IS NULL THEN
-    RAISE EXCEPTION 'nutrition definition subject is not owned by caller'
-      USING ERRCODE = '42501';
-  END IF;
   SELECT * INTO v_subject
   FROM public.study_subject
-  WHERE id = p_subject_id AND user_id = auth.uid();
+  WHERE id = p_subject_id
+    AND (v_is_service_role OR user_id = auth.uid());
   IF NOT FOUND THEN
     RAISE EXCEPTION 'nutrition definition subject is not owned by caller'
       USING ERRCODE = '42501';
@@ -755,11 +770,11 @@ FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.advance_owned_study_subject_day(uuid, integer)
 FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.advance_owned_study_subject_day(uuid, integer)
-TO authenticated;
+TO authenticated, service_role;
 REVOKE ALL ON FUNCTION public.delete_owned_subject_progress(uuid)
 FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.delete_owned_subject_progress(uuid)
-TO authenticated;
+TO authenticated, service_role;
 REVOKE ALL ON FUNCTION public.nutrition_food_snapshot_is_valid(jsonb)
 FROM public, anon, authenticated;
 REVOKE ALL ON FUNCTION public.nutrition_replace_food_snapshots(
@@ -777,7 +792,7 @@ REVOKE ALL ON FUNCTION public.apply_nutrition_food_mutation(
 ) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.apply_nutrition_food_mutation(
     uuid, uuid, uuid, uuid, jsonb, boolean, jsonb, integer, boolean, text
-) TO authenticated;
+) TO authenticated, service_role;
 GRANT SELECT ON TABLE public.nutrition_food_definition,
 public.nutrition_food_version TO authenticated, service_role;
 GRANT ALL ON TABLE public.nutrition_food_definition,

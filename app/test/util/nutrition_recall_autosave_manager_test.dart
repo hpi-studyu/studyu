@@ -241,6 +241,51 @@ void main() {
     viewModel.dispose();
   });
 
+  test('UTC-current upload is not skipped by local schedule day', () async {
+    final prefs = await SharedPreferences.getInstance();
+    DailyRecall? submitted;
+    final manager = NutritionRecallAutoSaveManager(
+      preferences: prefs,
+      submitter: (_, recall) async => submitted = recall,
+    );
+    final subject = _DivergentStudyDaySubject(localStudyDay: 0)
+      ..startedAt = DateTime.utc(2026, 7, 15, 23, 30);
+    final now = DateTime.utc(2026, 7, 16, 0, 15);
+    await _save(manager, _recall('utc-current', studyDay: 1));
+
+    await manager.submitPendingRecalls(
+      subject: subject,
+      trackProgress: true,
+      now: now,
+    );
+
+    expect(submitted?.id, 'utc-current');
+    expect(submitted?.entryCompletedAt, isNull);
+    expect(await manager.scanPendingRecalls(subject.id), hasLength(1));
+    expect(await manager.getLastKnownStudyDay(subject.id), 1);
+  });
+
+  test('UTC-current upload is not finalized by local schedule day', () async {
+    final prefs = await SharedPreferences.getInstance();
+    DailyRecall? submitted;
+    final manager = NutritionRecallAutoSaveManager(
+      preferences: prefs,
+      submitter: (_, recall) async => submitted = recall,
+    );
+    final subject = _DivergentStudyDaySubject(localStudyDay: 2)
+      ..startedAt = DateTime.utc(2026, 7, 15, 23, 30);
+    await _save(manager, _recall('utc-current', studyDay: 1));
+
+    await manager.submitPendingRecalls(
+      subject: subject,
+      trackProgress: true,
+      now: DateTime.utc(2026, 7, 16, 0, 15),
+    );
+
+    expect(submitted?.entryCompletedAt, isNull);
+    expect(await manager.scanPendingRecalls(subject.id), hasLength(1));
+  });
+
   test('same-day upload remains incomplete and cached', () async {
     final prefs = await SharedPreferences.getInstance();
     DailyRecall? submitted;
@@ -898,6 +943,16 @@ class _DelayedRecallLoadManager extends NutritionRecallAutoSaveManager {
     _loadStarted.complete();
     return _pending.future;
   }
+}
+
+class _DivergentStudyDaySubject extends StudySubject {
+  _DivergentStudyDaySubject({required this.localStudyDay})
+    : super('subject', 'study', 'user', []);
+
+  final int localStudyDay;
+
+  @override
+  int getDayOfStudyFor(DateTime date) => localStudyDay;
 }
 
 StudySubject _subject({required int daysAgo}) {
