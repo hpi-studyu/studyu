@@ -151,5 +151,8 @@ Future<String> findWorkingSupabaseUrl(
     }
   }
 
-  throw Exception("No Supabase URL worked!");
+  debugPrint(
+    "⚠️ No Supabase URL responded. Initializing with ${supabaseUrls.first} for offline use.",
+  );
+  return supabaseUrls.first;
 }
