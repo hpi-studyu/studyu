@@ -228,7 +228,8 @@ class QuestionnaireController extends ChangeNotifier {
   ) {
     final conditional = question.conditional;
     if (conditional == null) return true;
-    return conditional.condition.evaluate(evaluationState) == true;
+    final result = conditional.condition.evaluate(evaluationState);
+    return result == true;
   }
 
   Answer? _defaultAnswerForHiddenQuestion(Question question) {
