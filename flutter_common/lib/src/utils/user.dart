@@ -27,6 +27,13 @@ Future<bool> signInParticipant() async {
       final authResponse = await Supabase.instance.client.auth
           .signInWithPassword(email: fakeEmail, password: fakePassword!);
       return authResponse.session != null;
+    } on AuthApiException catch (error, stacktrace) {
+      if (error.code == 'invalid_credentials') {
+        await SecureStorage.delete(userEmailKey);
+        await SecureStorage.delete(userPasswordKey);
+        return false;
+      }
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
     }
