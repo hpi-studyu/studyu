@@ -11,6 +11,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  bip39: ^1.0.6
   collection: ^1.19.1
   csv: ^8.0.0
   json_annotation: ^4.12.0

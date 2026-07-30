@@ -41,27 +41,22 @@ class StudyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ListTile(
-          contentPadding: contentPadding,
-          onTap: onTap,
-          title: Center(
-            child: Text(
-              title!,
-              style: theme.textTheme.titleLarge!.copyWith(
-                color: theme.primaryColor,
-              ),
-            ),
-          ),
-          subtitle: Center(child: Text(description ?? '')),
-          leading: Icon(
-            MdiIconsHelper.fromString(iconName),
+    return ListTile(
+      contentPadding: contentPadding,
+      onTap: onTap,
+      title: Center(
+        child: Text(
+          title!,
+          style: theme.textTheme.titleLarge!.copyWith(
             color: theme.primaryColor,
           ),
         ),
-      ],
+      ),
+      subtitle: Center(child: Text(description ?? '')),
+      leading: Icon(
+        MdiIconsHelper.fromString(iconName),
+        color: theme.primaryColor,
+      ),
     );
   }
 }

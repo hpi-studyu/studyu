@@ -44,6 +44,15 @@ class DeepLinkNeedsAuth extends DeepLinkResult {
 enum DeepLinkErrorType { studyNotFound, inviteOnly, invalidInvite }
 
 class DeepLinkService {
+  @visibleForTesting
+  static Future<(StudyInvite?, Study?)> Function(String code)
+  fetchInviteForDeepLink = Study.fetchByInviteCode;
+
+  @visibleForTesting
+  static void resetTestOverrides() {
+    fetchInviteForDeepLink = Study.fetchByInviteCode;
+  }
+
   /// Fetches a study by its ID
   static Future<Study?> fetchStudyById(String studyId) async {
     try {
@@ -86,6 +95,7 @@ class DeepLinkService {
       final result = await _processInviteDeepLink(
         inviteCode: inviteCode,
         isAuthenticated: isAuthenticated,
+        activeStudyId: activeStudyId,
       );
       if (result is DeepLinkError && result.errorValue == null) {
         return DeepLinkError(
@@ -145,9 +155,10 @@ class DeepLinkService {
   static Future<DeepLinkResult> _processInviteDeepLink({
     required String inviteCode,
     required bool isAuthenticated,
+    String? activeStudyId,
   }) async {
     try {
-      final (invite, study) = await Study.fetchByInviteCode(inviteCode);
+      final (invite, study) = await fetchInviteForDeepLink(inviteCode);
 
       if (invite == null || study == null) {
         return DeepLinkError(DeepLinkErrorType.invalidInvite, inviteCode);
@@ -165,6 +176,7 @@ class DeepLinkService {
         study: study,
         inviteCode: inviteCode,
         preselectedInterventionIds: invite.preselectedInterventionIds,
+        alreadyEnrolled: activeStudyId == study.id,
       );
     } catch (e) {
       debugPrint('Failed to fetch study by invite code: $e');

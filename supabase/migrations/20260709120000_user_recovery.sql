@@ -1,0 +1,194 @@
+BEGIN;
+
+/*
+ * User Recovery Table Migration
+ * 
+ * Creates a separate table for recovery IDs to decouple recovery phrases from user IDs.
+ * This prevents potential session hijacking if user IDs are accidentally shared.
+ */
+
+-- Create the user_recovery table
+CREATE TABLE IF NOT EXISTS public.user_recovery (
+    recovery_id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id uuid NOT NULL UNIQUE REFERENCES public.user(id) ON DELETE CASCADE,
+    created_at timestamptz DEFAULT now() NOT NULL
+);
+
+ALTER TABLE public.user_recovery OWNER TO postgres;
+
+COMMENT ON TABLE public.user_recovery IS 'Maps recovery IDs to users for secure account recovery. Recovery phrases are derived from recovery_id, not user_id.';
+
+-- Enable RLS
+ALTER TABLE public.user_recovery ENABLE ROW LEVEL SECURITY;
+
+-- Users can only see their own recovery entry
+CREATE POLICY "Users can view their own recovery entry"
+    ON public.user_recovery
+    FOR SELECT
+    TO authenticated
+    USING (user_id = auth.uid());
+
+/*
+ * Function to get or create a recovery ID for the current user.
+ * Called when user accesses the settings/recovery phrase screen.
+ *
+ * @returns jsonb - {
+ *   "recovery_id": "uuid-string",
+ *   "created": true/false (whether a new entry was created)
+ * }
+ */
+CREATE OR REPLACE FUNCTION public.get_or_create_recovery()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_user_id uuid;
+    v_recovery_id uuid;
+    v_created boolean := false;
+BEGIN
+    -- Get current user ID
+    v_user_id := auth.uid();
+    
+    IF v_user_id IS NULL THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'error', 'Not authenticated'
+        );
+    END IF;
+    
+    -- Try to get existing recovery_id
+    SELECT recovery_id INTO v_recovery_id
+    FROM public.user_recovery
+    WHERE user_id = v_user_id;
+    
+    -- If not found, create one
+    IF v_recovery_id IS NULL THEN
+        INSERT INTO public.user_recovery (user_id)
+        VALUES (v_user_id)
+        ON CONFLICT (user_id) DO UPDATE SET user_id = EXCLUDED.user_id
+        RETURNING recovery_id INTO v_recovery_id;
+        v_created := true;
+    END IF;
+    
+    RETURN jsonb_build_object(
+        'success', true,
+        'recovery_id', v_recovery_id,
+        'created', v_created
+    );
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_or_create_recovery() TO authenticated;
+
+COMMENT ON FUNCTION public.get_or_create_recovery() IS 'Gets existing recovery_id or creates one for the current authenticated user.';
+
+/*
+ * Updated account recovery function that uses recovery_id instead of user_id.
+ *
+ * @param p_recovery_id - The UUID of the recovery entry (decoded from 13-word recovery phrase)
+ *
+ * @returns jsonb - {
+ *   "success": true/false,
+ *   "email": "user-email@domain.com",
+ *   "password": "newly-generated-password",
+ *   "subject_id": "study-subject-uuid-or-null",
+ *   "error": "error-message-if-failed"
+ * }
+ */
+CREATE OR REPLACE FUNCTION public.recover_account(
+    p_recovery_id uuid
+) RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_user_id uuid;
+    v_user_email text;
+    v_new_password text;
+    v_encrypted_password text;
+    v_subject_id uuid;
+BEGIN
+    -- 1. Look up user_id from recovery table
+    SELECT user_id INTO v_user_id
+    FROM public.user_recovery
+    WHERE recovery_id = p_recovery_id;
+    
+    IF v_user_id IS NULL THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'error', 'Recovery ID not found'
+        );
+    END IF;
+
+    -- 2. Validate user exists in auth.users
+    SELECT email INTO v_user_email
+    FROM auth.users
+    WHERE id = v_user_id;
+
+    IF v_user_email IS NULL THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'error', 'User not found'
+        );
+    END IF;
+
+    -- 3. Generate new random password
+    v_new_password := gen_random_uuid()::text;
+    v_encrypted_password := extensions.crypt(v_new_password, extensions.gen_salt('bf', 12));
+
+    -- 4. Update user's password in auth.users
+    UPDATE auth.users
+    SET
+        encrypted_password = v_encrypted_password,
+        updated_at = now() at time zone 'utc'
+    WHERE id = v_user_id;
+
+    -- 5. Find latest active study subject
+    -- Priority: most recent progress > most recent start date > deterministic ID ordering
+    SELECT
+        ss.id
+    INTO v_subject_id
+
+    FROM public.study_subject ss
+    LEFT JOIN public.subject_progress sp ON sp.subject_id = ss.id
+    WHERE
+        ss.user_id = v_user_id
+        AND ss.is_deleted = false
+        AND ss.started_at IS NOT NULL
+    GROUP BY ss.id
+    ORDER BY
+        MAX(sp.completed_at) DESC NULLS LAST,  -- Most recent progress first
+        ss.started_at DESC,                     -- Most recent start date as tiebreaker
+        ss.id DESC                               -- Deterministic ordering for identical dates
+    LIMIT 1;
+
+    -- 6. Return success with credentials and optional subject_id
+    RETURN jsonb_build_object(
+        'success', true,
+        'email', v_user_email,
+        'password', v_new_password,
+        'subject_id', v_subject_id  -- Will be null if no active studies found
+    );
+
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Log error and return failure
+        RAISE WARNING 'Error in recover_account for recovery_id %: %', p_recovery_id, SQLERRM;
+        RETURN jsonb_build_object(
+            'success', false,
+            'error', 'Recovery failed: ' || SQLERRM
+        );
+END;
+$$;
+
+-- Grant execute permission to anon and authenticated roles
+-- (anon is required since users call this before authentication)
+GRANT EXECUTE ON FUNCTION public.recover_account(uuid) TO anon, authenticated;
+
+COMMENT ON FUNCTION public.recover_account(uuid) IS 
+'Recovers user account by looking up user via recovery_id, generating new password, and finding latest active study.';
+
+COMMIT;

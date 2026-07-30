@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +6,9 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -33,14 +34,16 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     if (consentGiven != null && consentGiven) {
       context.push('/${RouteNames.kickoff}');
     } else {
+      await PendingDeepLinkService.clear(context.read<AppState>());
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context)!.user_did_not_give_consent,
           ),
-          duration: const Duration(seconds: 30),
         ),
       );
+      context.go('/${RouteNames.studySelection}');
     }
   }
 
@@ -54,8 +57,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.your_journey),
-        leading: const Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -63,7 +66,11 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                //StudyTile.fromUserStudy(study: study),
+                StudyOnboardingDescription(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.journey_overview_description,
+                ),
                 Timeline(subject: subject),
               ],
             ),

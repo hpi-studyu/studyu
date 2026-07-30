@@ -66,8 +66,13 @@ Future<void> main() async {
   final queryParameters = Uri.base.queryParameters;
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   AppConfig? appConfig;
-  String initialRoute = '/${RouteNames.loading}';
+  final platformInitialRoute =
+      WidgetsBinding.instance.platformDispatcher.defaultRouteName;
+  String initialRoute = platformInitialRoute == '/'
+      ? '/${RouteNames.loading}'
+      : platformInitialRoute;
   try {
     appConfig = await AppConfig.getAppConfig();
   } on PostgrestException catch (e) {

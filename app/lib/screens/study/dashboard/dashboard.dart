@@ -18,8 +18,27 @@ import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overvi
 import 'package:studyu_app/theme.dart' as app_theme;
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
+import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+@visibleForTesting
+bool isDashboardShowcaseEligible({
+  required DateTime? startedAt,
+  required DateTime now,
+  required bool isPreview,
+  required bool checkStarted,
+}) {
+  return !checkStarted &&
+      !isPreview &&
+      startedAt != null &&
+      !startedAt.isAfter(now);
+}
+
+@visibleForTesting
+bool shouldMarkDashboardShowcaseCompleted({required bool wasStarted}) {
+  return wasStarted;
+}
 
 class DashboardScreen extends StatefulWidget {
   final String? error;
@@ -53,6 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
   bool _showcaseCheckStarted = false;
+  bool _dashboardShowcaseStarted = false;
   bool _redirectingToLoading = false;
   bool _isDisposing = false;
 
@@ -99,6 +119,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           setState(() {
             scheduleToday = subject!.scheduleFor(DateTime.now());
           });
+          unawaited(_startDashboardShowcaseIfNeeded());
         }
       case AppLifecycleState.inactive:
         break;
@@ -124,7 +145,26 @@ class _DashboardScreenState extends State<DashboardScreen>
           ).showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
-      unawaited(_startDashboardShowcaseIfNeeded());
+      final inMemory = context.read<AppState>().showRecoveryPhraseOnDashboard;
+      if (inMemory) {
+        context.read<AppState>().showRecoveryPhraseOnDashboard = false;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        final shouldShow =
+            inMemory || await RecoveryPhraseStorage.isPending(subject!.id);
+        if (!mounted) return;
+        if (shouldShow) {
+          final accepted = await _showRecoveryPhraseDialog();
+          if (!mounted) return;
+          if (accepted) {
+            await RecoveryPhraseStorage.clearPending(subject!.id);
+          }
+          unawaited(_startDashboardShowcaseIfNeeded());
+          return;
+        }
+        unawaited(_startDashboardShowcaseIfNeeded());
+      });
     }
   }
 
@@ -395,6 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     setState(() {
                       scheduleToday = subject!.scheduleFor(DateTime.now());
                     });
+                    unawaited(_startDashboardShowcaseIfNeeded());
                   } on SocketException catch (_) {}
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
@@ -470,11 +511,19 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _startDashboardShowcaseIfNeeded() async {
-    if (_showcaseCheckStarted || context.read<AppState>().isPreview) return;
+    if (!isDashboardShowcaseEligible(
+      startedAt: subject?.startedAt,
+      now: DateTime.now(),
+      isPreview: context.read<AppState>().isPreview,
+      checkStarted: _showcaseCheckStarted,
+    )) {
+      return;
+    }
+
     _showcaseCheckStarted = true;
 
     final completed = await DashboardShowcaseStorage.isCompleted();
-    if (completed || !mounted || subject == null) return;
+    if (completed || !mounted) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -486,6 +535,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         _reportShowcaseKey,
         _menuShowcaseKey,
       ], delay: const Duration(milliseconds: 300));
+      _dashboardShowcaseStarted = true;
     });
   }
 
@@ -495,8 +545,68 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _markDashboardShowcaseCompleted() {
-    if (_isDisposing) return;
+    if (_isDisposing ||
+        !shouldMarkDashboardShowcaseCompleted(
+          wasStarted: _dashboardShowcaseStarted,
+        )) {
+      return;
+    }
     unawaited(DashboardShowcaseStorage.markCompleted());
+  }
+
+  Future<bool> _showRecoveryPhraseDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+    return await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) {
+            var isChecked = kDebugMode;
+            return PopScope(
+              canPop: false,
+              child: StatefulBuilder(
+                builder: (context, setDialogState) {
+                  return AlertDialog(
+                    title: Text(l10n.recovery_phrase_header),
+                    content: SizedBox(
+                      width: double.maxFinite,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(l10n.recovery_phrase_save_hint),
+                            ),
+                            RecoveryPhraseContent(
+                              useGridLayout: false,
+                              isChecked: isChecked,
+                              showSuccessFeedback: false,
+                              onCheckedChanged: (value) {
+                                setDialogState(
+                                  () => isChecked = value ?? false,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    actions: [
+                      FilledButton(
+                        onPressed: isChecked
+                            ? () => Navigator.of(dialogContext).pop(true)
+                            : null,
+                        child: Text(l10n.continue_to_study),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
+        ) ??
+        false;
   }
 }
 

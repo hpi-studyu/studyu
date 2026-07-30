@@ -9,7 +9,6 @@ import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart';
 import 'package:supabase/supabase.dart';
 
 void main() {
