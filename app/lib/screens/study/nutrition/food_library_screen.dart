@@ -40,15 +40,14 @@ class FoodLibraryScreen extends StatelessWidget {
 
   static Widget newItemButton(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final viewModel = context.read<TemplateViewModel>();
     return PopupMenuButton<_NewItemType>(
       tooltip: l10n.new_item,
       onSelected: (type) {
         switch (type) {
           case _NewItemType.food:
-            _createFood(context, viewModel);
+            _createFood(context);
           case _NewItemType.meal:
-            _createMeal(context, viewModel);
+            _createMeal(context);
         }
       },
       itemBuilder: (_) => [
@@ -79,28 +78,20 @@ class FoodLibraryScreen extends StatelessWidget {
     );
   }
 
-  static Future<void> _createMeal(
-    BuildContext context,
-    TemplateViewModel viewModel,
-  ) async {
+  static Future<void> _createMeal(BuildContext context) async {
     final meal = await Navigator.push<FoodEntry>(
       context,
       MealCreatorScreen.route(),
     );
     if (meal == null || !context.mounted) return;
-    await viewModel.saveFoodAsTemplate(name: meal.name, food: meal);
   }
 
-  static Future<void> _createFood(
-    BuildContext context,
-    TemplateViewModel viewModel,
-  ) async {
+  static Future<void> _createFood(BuildContext context) async {
     final food = await Navigator.push<FoodEntry>(
       context,
       FoodEntryScreen.route(showSearchAction: false),
     );
     if (food == null || !context.mounted) return;
-    await viewModel.saveFoodAsTemplate(name: food.name, food: food);
   }
 
   @override

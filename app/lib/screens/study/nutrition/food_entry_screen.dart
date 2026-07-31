@@ -103,15 +103,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       PortionEstimationMethod.householdMeasure;
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
-  bool _saveToMyItems = true;
   bool _propagateToCurrentStudyDay = false;
   late final String _initialSnapshot;
   bool _allowPop = false;
   bool _isSaving = false;
   final String _mutationId = const Uuid().v4();
-
-  bool get _isNewFoodForMeal =>
-      widget.existingFood == null && widget.mealLabel != null;
 
   /// Whether the food entry data comes from AI analysis.
   bool get _isAiAnalyzed => widget.confidenceScore != null;
@@ -312,12 +308,17 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       }
     }
 
-    if (_isNewFoodForMeal && _saveToMyItems) {
+    if (widget.existingFood == null) {
+      if (!mounted) return;
       final userId = appState.activeSubject?.id ?? 'anonymous';
       try {
-        food.templateId = await TemplateViewModel(
-          userId: userId,
-        ).saveFoodAsTemplate(name: food.name, food: food);
+        final viewModel =
+            Provider.of<TemplateViewModel?>(context, listen: false) ??
+            TemplateViewModel(userId: userId, repository: widget.repository);
+        food.templateId = await viewModel.saveFoodAsTemplate(
+          name: food.name,
+          food: food,
+        );
       } catch (error) {
         StudyULogger.error('Failed to save food to My items: $error');
       }
@@ -534,7 +535,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
             label: Text(
               widget.isExternalLibraryCopy
                   ? l10n.external_library_save_copy
-                  : _isNewFoodForMeal
+                  : widget.mealLabel != null
                   ? l10n.save_and_add_to_meal(widget.mealLabel!)
                   : l10n.save,
             ),
@@ -632,16 +633,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               theme: theme,
               isEditing: isEditing,
             ),
-
-            if (_isNewFoodForMeal)
-              CheckboxListTile(
-                value: _saveToMyItems,
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.save_to_my_items),
-                controlAffinity: ListTileControlAffinity.leading,
-                onChanged: (value) =>
-                    setState(() => _saveToMyItems = value ?? false),
-              ),
 
             const SizedBox(height: 12),
 

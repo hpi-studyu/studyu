@@ -1913,6 +1913,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit_this_entry => 'Edit this entry';
 
   @override
+  String get library_edit_title => 'Update reusable item?';
+
+  @override
+  String get library_edit_message =>
+      'This entry comes from your library. Choose where to save your changes.';
+
+  @override
+  String get library_edit_current_entry => 'Only this logged item';
+
+  @override
+  String get library_edit_current_entry_and_library =>
+      'This item and reusable library item';
+
+  @override
   String get save_to_my_items_action => 'Save to My items';
 
   @override

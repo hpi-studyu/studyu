@@ -98,16 +98,22 @@ class TemplateViewModel extends ChangeNotifier {
     return template.id;
   }
 
-  Future<void> updateFoodTemplatePrototype(
+  Future<SavedFoodTemplate?> updateFoodTemplatePrototype(
     String templateId,
     FoodEntry prototype,
   ) async {
-    final template = _foodTemplates.firstWhereOrNull(
+    var template = _foodTemplates.firstWhereOrNull(
       (item) => item.id == templateId,
     );
-    if (template == null) return;
+    if (template == null) {
+      await loadAllTemplates();
+      template = _foodTemplates.firstWhereOrNull(
+        (item) => item.id == templateId,
+      );
+    }
+    if (template == null) return null;
     final updated = _cloneFoodEntry(prototype)..foodId = template.id;
-    await _repository.saveTemplate(
+    final result = await _repository.saveTemplate(
       subjectId: userId,
       name: updated.name,
       food: updated,
@@ -115,6 +121,7 @@ class TemplateViewModel extends ChangeNotifier {
       expectedVersionId: template.prototype.foodVersionId,
     );
     await loadAllTemplates();
+    return result;
   }
 
   Future<void> duplicateFoodTemplate(String templateId) async {

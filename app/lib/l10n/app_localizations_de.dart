@@ -1931,6 +1931,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get edit_this_entry => 'Diesen Eintrag bearbeiten';
 
   @override
+  String get library_edit_title => 'Wiederverwendbares Element aktualisieren?';
+
+  @override
+  String get library_edit_message =>
+      'Dieser Eintrag stammt aus Ihrer Bibliothek. Wählen Sie, wo Ihre Änderungen gespeichert werden sollen.';
+
+  @override
+  String get library_edit_current_entry => 'Nur dieses protokollierte Element';
+
+  @override
+  String get library_edit_current_entry_and_library =>
+      'Dieses Element und Bibliothekselement';
+
+  @override
   String get save_to_my_items_action => 'In Meine Elemente speichern';
 
   @override
