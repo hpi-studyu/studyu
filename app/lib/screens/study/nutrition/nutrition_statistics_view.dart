@@ -162,6 +162,17 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
     final averageCarbs = current.average((nutrition) => nutrition.carbs);
     final averageProtein = current.average((nutrition) => nutrition.protein);
     final averageFat = current.average((nutrition) => nutrition.fat);
+    final unavailable = current.unavailableNutrients;
+    final macroEnergy =
+        averageCarbs == null || averageProtein == null || averageFat == null
+        ? 0
+        : averageCarbs * 4 + averageProtein * 4 + averageFat * 9;
+    final contradictoryEnergy =
+        averageEnergy != null && averageEnergy <= 0 && macroEnergy > 0;
+    final energyUnavailable = current.hasUnavailableEnergy;
+    final distributionUnavailable =
+        contradictoryEnergy ||
+        unavailable.any((key) => {'carbs', 'protein', 'fat'}.contains(key));
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -174,27 +185,40 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
             ),
             const SizedBox(height: 12),
             Text(
-              _calories(context, averageEnergy),
+              energyUnavailable ? '—' : _calories(context, averageEnergy),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 16),
-            _value(l10n.carbohydrates, _grams(context, averageCarbs)),
-            _value(l10n.protein, _grams(context, averageProtein)),
-            _value(l10n.fat, _grams(context, averageFat)),
+            _value(
+              l10n.carbohydrates,
+              _grams(
+                context,
+                unavailable.contains('carbs') ? null : averageCarbs,
+              ),
+            ),
+            _value(
+              l10n.protein,
+              _grams(
+                context,
+                unavailable.contains('protein') ? null : averageProtein,
+              ),
+            ),
+            _value(
+              l10n.fat,
+              _grams(context, unavailable.contains('fat') ? null : averageFat),
+            ),
             if (averageCarbs != null &&
                 averageProtein != null &&
-                averageFat != null) ...[
+                averageFat != null &&
+                !distributionUnavailable) ...[
               const SizedBox(height: 10),
               NutritionMacroDistributionBar(
                 carbs: averageCarbs,
                 protein: averageProtein,
                 fat: averageFat,
+                unavailableNutrients: unavailable,
               ),
             ],
-            _value(
-              l10n.fibre,
-              _grams(context, current.average((value) => value.fiber)),
-            ),
           ],
         ),
       ),
@@ -203,10 +227,13 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
 
   Widget _energyCard(BuildContext context, NutritionStatisticsPeriod current) {
     final l10n = AppLocalizations.of(context)!;
-    final average = current.average((nutrition) => nutrition.energyKcal);
+    final average = current.hasUnavailableEnergy
+        ? null
+        : current.average((nutrition) => nutrition.energyKcal);
     final values = [
       for (final day in current.days)
-        if (day.hasChartData) day.data!.nutrition.energyKcal,
+        if (day.hasChartData && !_energyUnavailable(day.data!.nutrition))
+          day.data!.nutrition.energyKcal,
     ];
     final maxY = _chartMax(values);
     final theme = Theme.of(context);
@@ -289,7 +316,11 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
                   for (var index = 0; index < current.days.length; index++)
                     BarChartGroupData(
                       x: index,
-                      barRods: current.days[index].hasChartData
+                      barRods:
+                          current.days[index].hasChartData &&
+                              !_energyUnavailable(
+                                current.days[index].data!.nutrition,
+                              )
                           ? [
                               BarChartRodData(
                                 toY: current
@@ -330,8 +361,13 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
                     fitInsideHorizontally: true,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       final day = current.days[group.x];
+                      final nutrition = day.data?.nutrition;
+                      if (nutrition == null || _energyUnavailable(nutrition)) {
+                        return null;
+                      }
                       return BarTooltipItem(
-                        '${_tooltipDate(context, day)} · ${_calories(context, rod.toY)}',
+                        '${_tooltipDate(context, day)} · '
+                        '${_calories(context, nutrition.energyKcal)}',
                         TextStyle(color: theme.colorScheme.onInverseSurface),
                       );
                     },
@@ -388,7 +424,12 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
           context,
           day,
           day.hasChartData
-              ? _calories(context, day.data!.nutrition.energyKcal)
+              ? _calories(
+                  context,
+                  _energyUnavailable(day.data!.nutrition)
+                      ? null
+                      : day.data!.nutrition.energyKcal,
+                )
               : null,
         ),
         hint: canOpen
@@ -841,6 +882,13 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
   }
 }
 
+bool _energyUnavailable(NutritionProfile nutrition) {
+  final macroEnergy =
+      nutrition.carbs * 4 + nutrition.protein * 4 + nutrition.fat * 9;
+  return nutrition.unavailableNutrients.contains('energyKcal') ||
+      (nutrition.energyKcal <= 0 && macroEnergy > 0);
+}
+
 class NutritionStatisticsDay {
   final int studyDaySnapshot;
   final DateTime date;
@@ -882,6 +930,13 @@ class NutritionStatisticsPeriod {
   DateTime get startDate => days.first.date;
   DateTime get endDate => days.last.date;
   int get recordedCount => days.where((day) => day.isRecorded).length;
+  Set<String> get unavailableNutrients => {
+    for (final day in days)
+      if (day.isRecorded) ...day.data!.nutrition.unavailableNutrients,
+  };
+  bool get hasUnavailableEnergy => days.any(
+    (day) => day.isRecorded && _energyUnavailable(day.data!.nutrition),
+  );
   bool get hasTodaySoFar =>
       days.any((day) => day.isToday && !day.isRecorded && day.hasChartData);
 

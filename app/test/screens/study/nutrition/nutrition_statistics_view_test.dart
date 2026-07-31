@@ -309,6 +309,112 @@ void main() {
     expect(todayRod.borderSide.width, 0);
   });
 
+  testWidgets('average preserves unavailable nutrient placeholders', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 1600);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    final today = DateUtils.dateOnly(DateTime.now());
+    final subject = StudySubject('subject', 'study', 'user', [])
+      ..startedAt = today.subtract(const Duration(days: 1));
+    subject.progress.add(
+      _progress(
+        _recall(
+          date: today,
+          studyDay: 1,
+          energyKcal: 500,
+          completed: true,
+          unavailableNutrients: {'energyKcal', 'protein'},
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        home: NutritionStatisticsView(subject: subject, taskId: 'task'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final overview = find.ancestor(
+      of: find.text('Average across completed days'),
+      matching: find.byType(Card),
+    );
+    expect(overview, findsOneWidget);
+    expect(
+      find.descendant(of: overview, matching: find.text('—')),
+      findsNWidgets(2),
+    );
+    expect(
+      find.descendant(
+        of: overview,
+        matching: find.text('Energy by macronutrient'),
+      ),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('hides contradictory zero energy from trend output', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 1600);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    final semantics = tester.ensureSemantics();
+    final today = DateUtils.dateOnly(DateTime.now());
+    final subject = StudySubject('subject', 'study', 'user', [])
+      ..startedAt = today.subtract(const Duration(days: 1));
+    subject.progress.add(
+      _progress(
+        _recall(
+          date: today.subtract(const Duration(days: 1)),
+          studyDay: 1,
+          energyKcal: 0,
+          completed: true,
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('de'),
+        home: NutritionStatisticsView(subject: subject, taskId: 'task'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final energyCard = find.ancestor(
+      of: find.text('Energie pro Studientag'),
+      matching: find.byType(Card),
+    );
+    expect(
+      find.descendant(
+        of: energyCard,
+        matching: find.text('Durchschnitt — über abgeschlossene Tage'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: energyCard, matching: find.text('0 kcal')),
+      findsNothing,
+    );
+    expect(
+      tester.widget<BarChart>(find.byType(BarChart)).data.barGroups[5].barRods,
+      isEmpty,
+    );
+    expect(find.bySemanticsLabel(RegExp(r', —$')), findsOneWidget);
+    semantics.dispose();
+    expect(tester.takeException(), isNull);
+  });
+
   test('shows recorded zeros but hides incomplete and missing days', () {
     final today = DateUtils.dateOnly(DateTime.now());
     final period = nutritionStatisticsPeriod(
@@ -401,6 +507,7 @@ NutritionRecallRecord _record({
   required double energyKcal,
   double carbs = 0.2,
   bool completed = true,
+  Set<String> unavailableNutrients = const {},
 }) {
   final recall = _recall(
     date: date,
@@ -408,6 +515,7 @@ NutritionRecallRecord _record({
     energyKcal: energyKcal,
     carbs: carbs,
     completed: completed,
+    unavailableNutrients: unavailableNutrients,
   );
   return NutritionRecallRecord(
     recall: recall,
@@ -437,52 +545,73 @@ DailyRecall _recall({
   required double energyKcal,
   double carbs = 0.2,
   bool completed = false,
+  Set<String> unavailableNutrients = const {},
 }) => DailyRecall(
   id: 'recall-$studyDay-$energyKcal',
   date: date,
   recallMode: RecallMode.realtimeRecord,
   entryCompletedAt: completed ? date.add(const Duration(hours: 12)) : null,
-  meals: [_meal(energyKcal: energyKcal, carbs: carbs)],
+  meals: [
+    _meal(
+      energyKcal: energyKcal,
+      carbs: carbs,
+      unavailableNutrients: unavailableNutrients,
+    ),
+  ],
   studyDaySnapshot: studyDay,
 );
 
-MealLog _meal({required double energyKcal, required double carbs}) => MealLog(
+MealLog _meal({
+  required double energyKcal,
+  required double carbs,
+  Set<String> unavailableNutrients = const {},
+}) => MealLog(
   id: 'meal-$energyKcal',
   mealType: MealType.breakfast,
   mealContext: MealContext.home,
   timezone: 'UTC',
   isSkipped: false,
-  foods: [_food(energyKcal: energyKcal, carbs: carbs)],
+  foods: [
+    _food(
+      energyKcal: energyKcal,
+      carbs: carbs,
+      unavailableNutrients: unavailableNutrients,
+    ),
+  ],
 );
 
-FoodEntry _food({required double energyKcal, required double carbs}) =>
-    FoodEntry(
-      id: 'food-$energyKcal',
-      foodId: 'food-definition-$energyKcal',
-      foodVersionId: 'food-version-$energyKcal',
-      entryType: FoodEntryType.singleIngredient,
-      name: 'Food',
-      amount: 1,
-      unit: 'serving',
-      servingSizeGrams: 100,
-      portionEstimationMethod: PortionEstimationMethod.standardUnit,
-      portionState: PortionState.asServed,
-      nutrition: NutritionProfile(
-        energyKcal: energyKcal,
-        protein: 1.5,
-        carbs: carbs,
-        fat: 3.5,
-        sugars: 0,
-        fiber: 4.5,
-        saturatedFat: 0,
-        transFat: 0,
-        cholesterol: 0,
-        sodium: 0,
-        waterContent: 0,
-        micros: {},
-      ),
-      source: FoodSource.manual,
-      confidenceScore: 1,
-      createdAt: DateTime.now(),
-      originalValues: {},
-    );
+FoodEntry _food({
+  required double energyKcal,
+  required double carbs,
+  Set<String> unavailableNutrients = const {},
+}) => FoodEntry(
+  id: 'food-$energyKcal',
+  foodId: 'food-definition-$energyKcal',
+  foodVersionId: 'food-version-$energyKcal',
+  entryType: FoodEntryType.singleIngredient,
+  name: 'Food',
+  amount: 1,
+  unit: 'serving',
+  servingSizeGrams: 100,
+  portionEstimationMethod: PortionEstimationMethod.standardUnit,
+  portionState: PortionState.asServed,
+  nutrition: NutritionProfile(
+    energyKcal: energyKcal,
+    protein: 1.5,
+    carbs: carbs,
+    fat: 3.5,
+    sugars: 0,
+    fiber: 4.5,
+    saturatedFat: 0,
+    transFat: 0,
+    cholesterol: 0,
+    sodium: 0,
+    waterContent: 0,
+    micros: {},
+    unavailableNutrients: unavailableNutrients,
+  ),
+  source: FoodSource.manual,
+  confidenceScore: 1,
+  createdAt: DateTime.now(),
+  originalValues: {},
+);

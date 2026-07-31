@@ -2,51 +2,201 @@ import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
-class NutritionMacroDistributionBar extends StatelessWidget {
+class NutritionMacroDistributionBar extends StatefulWidget {
   final double carbs;
   final double protein;
   final double fat;
+  final Set<String> unavailableNutrients;
 
   const NutritionMacroDistributionBar({
     required this.carbs,
     required this.protein,
     required this.fat,
+    this.unavailableNutrients = const {},
     super.key,
   });
+
+  @override
+  State<NutritionMacroDistributionBar> createState() =>
+      _NutritionMacroDistributionBarState();
+}
+
+class _NutritionMacroDistributionBarState
+    extends State<NutritionMacroDistributionBar> {
+  int? _selectedMacro;
+
+  void _selectMacro(int index) => setState(() => _selectedMacro = index);
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final total = carbs * 4 + protein * 4 + fat * 9;
-    if (total <= 0) return const SizedBox.shrink();
+    final total = widget.carbs * 4 + widget.protein * 4 + widget.fat * 9;
+    final distributionUnavailable = widget.unavailableNutrients.any(
+      (key) => {'carbs', 'protein', 'fat'}.contains(key),
+    );
+    if (total <= 0 || distributionUnavailable) return const SizedBox.shrink();
 
-    final macros = [
-      (l10n.carbohydrates, carbs * 4 / total * 100, theme.colorScheme.primary),
-      (l10n.protein, protein * 4 / total * 100, theme.colorScheme.secondary),
-      (l10n.fat, fat * 9 / total * 100, theme.colorScheme.tertiary),
-    ];
+    final macros = _macros(context, total);
+    final contextLabel =
+        '${l10n.energy_by_macronutrient}: '
+        '${macros.map((macro) => '${macro.label} ${macro.percent.round()}%').join(', ')}';
     return Semantics(
-      label: macros
-          .map((macro) => '${macro.$1} ${macro.$2.round()}%')
-          .join(', '),
-      child: ClipRRect(
+      label: contextLabel,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.energy_by_macronutrient,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _bar(context, macros),
+          const SizedBox(height: 8),
+          _legend(context, macros),
+          if (_selectedMacro case final selected?) ...[
+            const SizedBox(height: 4),
+            Text(
+              '${macros[selected].label}: ${macros[selected].percent.round()}% · '
+              '${macros[selected].kcal.round()} kcal',
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  List<_NutritionMacroData> _macros(BuildContext context, double total) {
+    final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    return [
+      _NutritionMacroData(
+        label: l10n.carbohydrates,
+        shortLabel: l10n.nutrition_carbs,
+        grams: widget.carbs,
+        kcal: widget.carbs * 4,
+        percent: widget.carbs * 4 / total * 100,
+        color: colors.primary,
+      ),
+      _NutritionMacroData(
+        label: l10n.protein,
+        shortLabel: l10n.protein,
+        grams: widget.protein,
+        kcal: widget.protein * 4,
+        percent: widget.protein * 4 / total * 100,
+        color: colors.secondary,
+      ),
+      _NutritionMacroData(
+        label: l10n.fat,
+        shortLabel: l10n.fat,
+        grams: widget.fat,
+        kcal: widget.fat * 9,
+        percent: widget.fat * 9 / total * 100,
+        color: colors.tertiary,
+      ),
+    ];
+  }
+
+  Widget _bar(BuildContext context, List<_NutritionMacroData> macros) =>
+      ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: Row(
           children: [
-            for (final macro in macros)
+            for (var index = 0; index < macros.length; index++)
               Expanded(
-                flex: macro.$2.round().clamp(1, 100),
-                child: ColoredBox(
-                  color: macro.$3,
-                  child: const SizedBox(height: 8),
+                flex: macros[index].percent.round().clamp(1, 100),
+                child: Semantics(
+                  button: true,
+                  label:
+                      '${macros[index].label}, '
+                      '${macros[index].percent.round()}%',
+                  onTap: () => _selectMacro(index),
+                  child: GestureDetector(
+                    onTap: () => _selectMacro(index),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      height: _selectedMacro == index ? 16 : 10,
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      decoration: BoxDecoration(
+                        color: macros[index].color,
+                        border: _selectedMacro == index
+                            ? Border.all(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                width: 2,
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
                 ),
               ),
           ],
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _legend(
+    BuildContext context,
+    List<_NutritionMacroData> macros,
+  ) => Wrap(
+    spacing: 12,
+    runSpacing: 4,
+    children: [
+      for (var index = 0; index < macros.length; index++)
+        Semantics(
+          button: true,
+          label:
+              '${macros[index].shortLabel}, '
+              '${macros[index].percent.round()}%',
+          onTap: () => _selectMacro(index),
+          child: GestureDetector(
+            onTap: () => _selectMacro(index),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: macros[index].color,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${macros[index].shortLabel} ${macros[index].percent.round()}%',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+    ],
+  );
+}
+
+class _NutritionMacroData {
+  final String label;
+  final String shortLabel;
+  final double grams;
+  final double kcal;
+  final double percent;
+  final Color color;
+
+  const _NutritionMacroData({
+    required this.label,
+    required this.shortLabel,
+    required this.grams,
+    required this.kcal,
+    required this.percent,
+    required this.color,
+  });
 }
 
 class NutritionSummaryCard extends StatefulWidget {
@@ -114,14 +264,16 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
                 const SizedBox(height: 12),
               ],
               Text(
-                '${widget.nutrition.energyKcal.round()} kcal',
+                _energyUnavailable
+                    ? '—'
+                    : '${widget.nutrition.energyKcal.round()} kcal',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 2),
               Text(l10n.total_energy),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               _macronutrients(context),
             ],
           ),
@@ -135,6 +287,18 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
     );
   }
 
+  bool get _energyContradictory {
+    final macroEnergy =
+        widget.nutrition.carbs * 4 +
+        widget.nutrition.protein * 4 +
+        widget.nutrition.fat * 9;
+    return widget.nutrition.energyKcal <= 0 && macroEnergy > 0;
+  }
+
+  bool get _energyUnavailable =>
+      widget.nutrition.unavailableNutrients.contains('energyKcal') ||
+      _energyContradictory;
+
   Widget _macronutrients(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
@@ -142,29 +306,6 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
         widget.nutrition.carbs * 4 +
         widget.nutrition.protein * 4 +
         widget.nutrition.fat * 9;
-    final macros = [
-      (
-        l10n.carbohydrates,
-        widget.nutrition.carbs,
-        'carbs',
-        widget.nutrition.carbs * 4 / (total == 0 ? 1 : total) * 100,
-        theme.colorScheme.primary,
-      ),
-      (
-        l10n.protein,
-        widget.nutrition.protein,
-        'protein',
-        widget.nutrition.protein * 4 / (total == 0 ? 1 : total) * 100,
-        theme.colorScheme.secondary,
-      ),
-      (
-        l10n.fat,
-        widget.nutrition.fat,
-        'fat',
-        widget.nutrition.fat * 9 / (total == 0 ? 1 : total) * 100,
-        theme.colorScheme.tertiary,
-      ),
-    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,25 +317,31 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
           ),
         ),
         const SizedBox(height: 8),
-        for (final macro in macros)
-          _macronutrientRow(
-            label: macro.$1,
-            value: macro.$2,
-            keyName: macro.$3,
-            percent: macro.$4,
-            color: macro.$5,
-          ),
         _macronutrientRow(
-          label: l10n.fibre,
-          value: widget.nutrition.fiber,
-          keyName: 'fiber',
+          label: l10n.carbohydrates,
+          value: widget.nutrition.carbs,
+          keyName: 'carbs',
+        ),
+        _macronutrientRow(
+          label: l10n.protein,
+          value: widget.nutrition.protein,
+          keyName: 'protein',
+        ),
+        _macronutrientRow(
+          label: l10n.fat,
+          value: widget.nutrition.fat,
+          keyName: 'fat',
         ),
         if (total > 0) ...[
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           NutritionMacroDistributionBar(
             carbs: widget.nutrition.carbs,
             protein: widget.nutrition.protein,
             fat: widget.nutrition.fat,
+            unavailableNutrients: {
+              ...widget.nutrition.unavailableNutrients,
+              if (_energyContradictory) 'carbs',
+            },
           ),
         ],
       ],
@@ -205,52 +352,17 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
     required String label,
     required double value,
     required String keyName,
-    double? percent,
-    Color? color,
   }) {
     final theme = Theme.of(context);
-    final unavailable = widget.nutrition.unavailableNutrients.contains(keyName);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          SizedBox(
-            width: 14,
-            child: color == null
-                ? null
-                : Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-          ),
-          const SizedBox(width: 6),
           Expanded(child: Text(label)),
-          SizedBox(
-            width: 64,
-            child: Text(
-              _format(value, 'g', keyName),
-              textAlign: TextAlign.end,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 48,
-            child: Text(
-              percent == null
-                  ? ''
-                  : unavailable
-                  ? '—'
-                  : '${percent.round()}%',
-              textAlign: TextAlign.end,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          Text(
+            _format(value, 'g', keyName),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -264,22 +376,33 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                l10n.detailed_nutrients,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+        Semantics(
+          button: true,
+          toggled: _detailsExpanded,
+          label: l10n.detailed_nutrients,
+          hint: _detailsExpanded ? l10n.hide : l10n.show,
+          onTap: () => setState(() => _detailsExpanded = !_detailsExpanded),
+          child: InkWell(
+            onTap: () => setState(() => _detailsExpanded = !_detailsExpanded),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.detailed_nutrients,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _detailsExpanded ? Icons.expand_less : Icons.expand_more,
+                  ),
+                ],
               ),
             ),
-            TextButton(
-              onPressed: () =>
-                  setState(() => _detailsExpanded = !_detailsExpanded),
-              child: Text(_detailsExpanded ? l10n.hide : l10n.show),
-            ),
-          ],
+          ),
         ),
         if (widget.nutrition.unavailableItemCount > 0)
           Padding(
