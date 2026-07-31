@@ -147,6 +147,44 @@ void main() {
     },
   );
 
+  test('saving a template refreshes My library immediately', () async {
+    final viewModel = await _viewModel();
+
+    await viewModel.saveFoodAsTemplate(
+      name: 'New food',
+      food: _foodEntry(id: 'new-food', originalValues: {}),
+    );
+
+    expect(viewModel.foodTemplates, hasLength(1));
+    expect(viewModel.foodTemplates.single.name, 'New food');
+  });
+
+  test(
+    'saving reports refresh failures after preserving saved template',
+    () async {
+      final repository = _RefreshFailureRepository();
+      final viewModel = TemplateViewModel(
+        userId: 'test-user',
+        repository: repository,
+      );
+      while (viewModel.isLoading) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      repository.failLoads = true;
+
+      await expectLater(
+        viewModel.saveFoodAsTemplate(
+          name: 'New food',
+          food: _foodEntry(id: 'new-food', originalValues: {}),
+        ),
+        throwsA(isA<StateError>()),
+      );
+
+      expect(viewModel.foodTemplates.single.name, 'New food');
+      expect(viewModel.error, contains('refresh failed'));
+    },
+  );
+
   test('applyFoodTemplate isolates mutable food data', () async {
     final prototype = _foodEntry(
       id: 'food-prototype',
@@ -288,6 +326,16 @@ SavedFoodTemplate _template({
   createdAt: DateTime.utc(2025),
   prototype: prototype,
 );
+
+class _RefreshFailureRepository extends FakeNutritionFoodRepository {
+  bool failLoads = false;
+
+  @override
+  Future<List<SavedFoodTemplate>> loadTemplates(String subjectId) {
+    if (failLoads) return Future.error(StateError('refresh failed'));
+    return super.loadTemplates(subjectId);
+  }
+}
 
 FoodEntry _foodEntry({
   required String id,

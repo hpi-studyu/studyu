@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
 void main() {
@@ -21,6 +22,77 @@ void main() {
 
     store.decrement('apple');
     expect(store.isEmpty, isTrue);
+  });
+
+  test('selection weight override retains baseline, scales, and resets', () {
+    final store = FoodSelectionStore();
+    final entry = food(id: 'apple', calories: 95);
+    store
+      ..addOrIncrement('apple', entry)
+      ..addOrIncrement('apple', entry);
+
+    final weighedServing = rescaleFoodAmount(entry, 0.5)
+      ..amount = 1
+      ..servingSizeGrams = 50;
+    store.replaceBase(
+      'apple',
+      rescaleFoodAmount(weighedServing, 2),
+      caloriesKnown: true,
+      gramsKnown: true,
+    );
+
+    final item = store.itemFor('apple')!;
+    expect(entry.servingSizeGrams, 100);
+    expect(entry.nutrition.energyKcal, 95);
+    expect(item.baselineFood.servingSizeGrams, 100);
+    expect(item.baselineFood.nutrition.energyKcal, 95);
+    expect(item.baseFood.servingSizeGrams, 50);
+    expect(item.baseFood.nutrition.energyKcal, 47.5);
+    expect(item.quantity, 2);
+    expect(item.servingWeightOverridden, isTrue);
+
+    store.increment('apple');
+    final materialized = store.materialize().single;
+    expect(materialized.amount, 3);
+    expect(materialized.servingSizeGrams, 50);
+    expect(materialized.nutrition.energyKcal, 142.5);
+
+    store.replaceBase(
+      'apple',
+      rescaleFoodAmount(item.baselineFood, 3),
+      caloriesKnown: true,
+      gramsKnown: true,
+    );
+    expect(item.quantity, 3);
+    expect(item.baseFood.servingSizeGrams, 100);
+    expect(item.baseFood.nutrition.energyKcal, 95);
+    expect(item.servingWeightOverridden, isFalse);
+  });
+
+  test('unknown baseline detects custom weight and survives removal undo', () {
+    final store = FoodSelectionStore();
+    final entry = food(id: 'apple');
+    store.addOrIncrement('apple', entry, gramsKnown: false);
+
+    store.replaceBase(
+      'apple',
+      entry..servingSizeGrams = 80,
+      caloriesKnown: true,
+      gramsKnown: true,
+    );
+    final removed = store.itemFor('apple')!;
+    expect(removed.baselineGramsKnown, isFalse);
+    expect(removed.servingWeightOverridden, isTrue);
+
+    store.delete('apple');
+    store.restore(removed);
+
+    final restored = store.itemFor('apple')!;
+    expect(restored.baselineGramsKnown, isFalse);
+    expect(restored.baselineFood.servingSizeGrams, 100);
+    expect(restored.baseFood.servingSizeGrams, 80);
+    expect(restored.quantity, 1);
+    expect(restored.servingWeightOverridden, isTrue);
   });
 
   test('canonical key prefers template and external identities', () {

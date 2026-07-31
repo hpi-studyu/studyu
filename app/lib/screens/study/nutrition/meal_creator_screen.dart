@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
@@ -20,6 +21,8 @@ class MealCreatorScreen extends StatefulWidget {
   final bool showCurrentDayPropagationOption;
   final bool showCurrentMealOnlyNotice;
   final ValueChanged<bool>? onCurrentDayPropagationChanged;
+  final TemplateViewModel? templateViewModel;
+  final void Function(FoodEntry food, Offset? source)? onSavedToSelection;
 
   const MealCreatorScreen({
     this.existingMeal,
@@ -28,6 +31,8 @@ class MealCreatorScreen extends StatefulWidget {
     this.showCurrentDayPropagationOption = false,
     this.showCurrentMealOnlyNotice = false,
     this.onCurrentDayPropagationChanged,
+    this.templateViewModel,
+    this.onSavedToSelection,
     super.key,
   });
 
@@ -38,6 +43,8 @@ class MealCreatorScreen extends StatefulWidget {
     bool showCurrentDayPropagationOption = false,
     bool showCurrentMealOnlyNotice = false,
     ValueChanged<bool>? onCurrentDayPropagationChanged,
+    TemplateViewModel? templateViewModel,
+    void Function(FoodEntry food, Offset? source)? onSavedToSelection,
   }) => MaterialPageRoute(
     builder: (_) => MealCreatorScreen(
       existingMeal: existingMeal,
@@ -46,6 +53,8 @@ class MealCreatorScreen extends StatefulWidget {
       showCurrentDayPropagationOption: showCurrentDayPropagationOption,
       showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
       onCurrentDayPropagationChanged: onCurrentDayPropagationChanged,
+      templateViewModel: templateViewModel,
+      onSavedToSelection: onSavedToSelection,
     ),
   );
 
@@ -77,6 +86,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   NutritionProfile? _cachedNutrition;
   late final String _initialSnapshot;
   bool _allowPop = false;
+  final GlobalKey _saveButtonKey = GlobalKey();
 
   @override
   void initState() {
@@ -167,9 +177,14 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   }
 
   Future<void> _addFood() async {
-    final result = await Navigator.of(
-      context,
-    ).push(FoodSearchScreen.route(allowMeals: false));
+    final result = await Navigator.of(context).push(
+      FoodSearchScreen.route(
+        allowMeals: false,
+        templateViewModel:
+            widget.templateViewModel ??
+            Provider.of<TemplateViewModel?>(context, listen: false),
+      ),
+    );
     if (result != null) {
       setState(() {
         _componentFoods.add(result);
@@ -432,12 +447,18 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   }
 
   Future<void> _saveMeal() async {
+    Offset? saveSource;
+    final saveContext = _saveButtonKey.currentContext;
+    if (widget.existingMeal == null && saveContext != null) {
+      saveSource = globalCenter(saveContext);
+    }
     final meal = _buildMeal();
     if (meal != null) {
       if (widget.existingMeal == null) {
         final appState = Provider.of<AppState>(context, listen: false);
         try {
           final viewModel =
+              widget.templateViewModel ??
               Provider.of<TemplateViewModel?>(context, listen: false) ??
               TemplateViewModel(
                 userId: appState.activeSubject?.id ?? 'anonymous',
@@ -446,11 +467,26 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
             name: meal.name,
             food: meal,
           );
-        } catch (error) {
-          StudyULogger.error('Failed to save meal to My items: $error');
+        } catch (error, stackTrace) {
+          StudyULogger.error(
+            'Failed to save meal to My items: $error\n$stackTrace',
+          );
+          if (mounted) {
+            final l10n = AppLocalizations.of(context)!;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.could_not_save_results)),
+            );
+          }
+          return;
         }
       }
-      if (mounted) _pop(meal);
+      if (mounted) {
+        final onSavedToSelection =
+            widget.existingMeal == null && widget.onSavedToSelection != null
+            ? () => widget.onSavedToSelection!(meal, saveSource)
+            : null;
+        _pop(meal, onSavedToSelection);
+      }
     } else if (_foods.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one food')),
@@ -458,10 +494,19 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     }
   }
 
-  void _pop([FoodEntry? result]) {
+  void _pop([FoodEntry? result, VoidCallback? afterPop]) {
     setState(() => _allowPop = true);
+    final route = ModalRoute.of(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Navigator.of(context).pop(result);
+      if (!mounted) return;
+      Navigator.of(context).pop(result);
+      if (afterPop == null) return;
+      final completed = route?.completed;
+      if (completed == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => afterPop());
+      } else {
+        completed.then((_) => afterPop());
+      }
     });
   }
 
@@ -531,16 +576,28 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     );
 
     if (result != null && mounted) {
-      final viewModel = TemplateViewModel(userId: userId);
-      await viewModel.saveFoodAsTemplate(
-        name: result.name,
-        food: meal,
-        tags: result.tags,
-      );
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
+      try {
+        final viewModel =
+            widget.templateViewModel ??
+            Provider.of<TemplateViewModel?>(context, listen: false) ??
+            TemplateViewModel(userId: userId);
+        await viewModel.saveFoodAsTemplate(
+          name: result.name,
+          food: meal,
+          tags: result.tags,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
+        }
+      } catch (error, stackTrace) {
+        StudyULogger.error('Failed to save meal template: $error\n$stackTrace');
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+        }
       }
     }
   }
@@ -572,6 +629,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       ),
       floatingActionButton: canSave
           ? FloatingActionButton.extended(
+              key: _saveButtonKey,
               onPressed: _saveMeal,
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,

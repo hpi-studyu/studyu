@@ -4091,6 +4091,78 @@ abstract class AppLocalizations {
   /// **'Amount'**
   String get food_quantity_amount;
 
+  /// No description provided for @food_quantity_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get food_quantity_weight;
+
+  /// No description provided for @food_quantity_weight_for_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight for this meal'**
+  String get food_quantity_weight_for_meal;
+
+  /// No description provided for @food_quantity_custom_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get food_quantity_custom_weight;
+
+  /// No description provided for @food_quantity_library_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Library serving: {weight} g'**
+  String food_quantity_library_serving(String weight);
+
+  /// No description provided for @food_quantity_default_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Default serving: {weight} g'**
+  String food_quantity_default_serving(String weight);
+
+  /// No description provided for @food_quantity_library_serving_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Library serving: weight unavailable'**
+  String get food_quantity_library_serving_unknown;
+
+  /// No description provided for @food_quantity_default_serving_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Default serving: weight unavailable'**
+  String get food_quantity_default_serving_unknown;
+
+  /// No description provided for @food_quantity_override_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes only this meal selection. My Library and the source item remain unchanged.'**
+  String get food_quantity_override_helper;
+
+  /// No description provided for @food_quantity_effective_weight_per_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'{weight} g per serving'**
+  String food_quantity_effective_weight_per_serving(String weight);
+
+  /// No description provided for @food_quantity_effective_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'{perServing} g per serving · {total} g total'**
+  String food_quantity_effective_weight(String perServing, String total);
+
+  /// No description provided for @food_quantity_use_library_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Use library weight ({weight} g)'**
+  String food_quantity_use_library_weight(String weight);
+
+  /// No description provided for @food_quantity_use_default_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Use default weight ({weight} g)'**
+  String food_quantity_use_default_weight(String weight);
+
   /// No description provided for @food_quantity_invalid_amount.
   ///
   /// In en, this message translates to:

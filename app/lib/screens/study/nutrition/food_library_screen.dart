@@ -81,7 +81,12 @@ class FoodLibraryScreen extends StatelessWidget {
   static Future<void> _createMeal(BuildContext context) async {
     final meal = await Navigator.push<FoodEntry>(
       context,
-      MealCreatorScreen.route(),
+      MealCreatorScreen.route(
+        templateViewModel: Provider.of<TemplateViewModel?>(
+          context,
+          listen: false,
+        ),
+      ),
     );
     if (meal == null || !context.mounted) return;
   }
@@ -89,7 +94,13 @@ class FoodLibraryScreen extends StatelessWidget {
   static Future<void> _createFood(BuildContext context) async {
     final food = await Navigator.push<FoodEntry>(
       context,
-      FoodEntryScreen.route(showSearchAction: false),
+      FoodEntryScreen.route(
+        showSearchAction: false,
+        templateViewModel: Provider.of<TemplateViewModel?>(
+          context,
+          listen: false,
+        ),
+      ),
     );
     if (food == null || !context.mounted) return;
   }

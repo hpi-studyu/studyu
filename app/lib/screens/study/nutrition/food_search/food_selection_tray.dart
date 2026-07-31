@@ -10,6 +10,7 @@ class _SelectionPeekTray extends StatelessWidget {
   final bool isConfirming;
   final VoidCallback onReview;
   final VoidCallback onConfirm;
+  final ValueChanged<FoodSelectionItem> onSelect;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -23,6 +24,7 @@ class _SelectionPeekTray extends StatelessWidget {
     required this.isConfirming,
     required this.onReview,
     required this.onConfirm,
+    required this.onSelect,
     required this.onIncrement,
     required this.onDecrement,
     super.key,
@@ -101,6 +103,7 @@ class _SelectionPeekTray extends StatelessWidget {
                   items: previewItems,
                   rowAnchorFor: rowAnchorFor,
                   quantityAnchorFor: quantityAnchorFor,
+                  onSelect: onSelect,
                   onIncrement: onIncrement,
                   onDecrement: onDecrement,
                 ),
@@ -148,6 +151,7 @@ class _SelectionPreviewRows extends StatefulWidget {
   final List<FoodSelectionItem> items;
   final GlobalKey Function(String key) rowAnchorFor;
   final GlobalKey Function(String key) quantityAnchorFor;
+  final ValueChanged<FoodSelectionItem> onSelect;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -155,6 +159,7 @@ class _SelectionPreviewRows extends StatefulWidget {
     required this.items,
     required this.rowAnchorFor,
     required this.quantityAnchorFor,
+    required this.onSelect,
     required this.onIncrement,
     required this.onDecrement,
   });
@@ -224,6 +229,7 @@ class _SelectionPreviewRowsState extends State<_SelectionPreviewRows> {
       anchorKey: outgoing ? null : widget.rowAnchorFor(item.key),
       quantityAnchorKey: outgoing ? null : widget.quantityAnchorFor(item.key),
       item: item,
+      onSelect: widget.onSelect,
       onIncrement: widget.onIncrement,
       onDecrement: widget.onDecrement,
     );
@@ -262,6 +268,7 @@ class _SelectionPreviewRow extends StatelessWidget {
   final GlobalKey? anchorKey;
   final GlobalKey? quantityAnchorKey;
   final FoodSelectionItem item;
+  final ValueChanged<FoodSelectionItem> onSelect;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -269,6 +276,7 @@ class _SelectionPreviewRow extends StatelessWidget {
     this.anchorKey,
     this.quantityAnchorKey,
     required this.item,
+    required this.onSelect,
     required this.onIncrement,
     required this.onDecrement,
     super.key,
@@ -276,15 +284,65 @@ class _SelectionPreviewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final overridden = item.servingWeightOverridden;
+    final weightStyle = theme.textTheme.bodySmall?.copyWith(
+      color: overridden
+          ? theme.colorScheme.primary
+          : theme.colorScheme.onSurfaceVariant,
+      fontWeight: overridden ? FontWeight.w600 : null,
+    );
+    final grams = item.gramsKnown
+        ? formatFoodNumber(
+            item.baseFood.servingSizeGrams *
+                item.baseFood.amount *
+                item.quantity,
+          )
+        : '—';
     return Container(
       key: anchorKey,
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              item.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: InkWell(
+              onTap: () => onSelect(item),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text('$grams g', style: weightStyle),
+                    if (overridden) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          l10n.food_quantity_custom_weight,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
           SelectionQuantityControl(
@@ -346,9 +404,12 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
     setState(() {
       _removedItem = FoodSelectionItem(
         key: item.key,
+        baselineFood: cloneFoodEntry(item.baselineFood),
         baseFood: cloneFoodEntry(item.baseFood),
+        quantity: item.quantity,
         caloriesKnown: item.caloriesKnown,
         gramsKnown: item.gramsKnown,
+        baselineGramsKnown: item.baselineGramsKnown,
       );
       _isRemoving = true;
     });
@@ -362,12 +423,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
       _removedItem = null;
       _isRemoving = false;
     });
-    store.addOrIncrement(
-      removedItem.key,
-      removedItem.baseFood,
-      caloriesKnown: removedItem.caloriesKnown,
-      gramsKnown: removedItem.gramsKnown,
-    );
+    store.restore(removedItem);
   }
 
   String _itemMetadata(AppLocalizations l10n, FoodSelectionItem item) =>

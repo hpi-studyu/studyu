@@ -97,10 +97,10 @@ class _HistoryFoodCard extends StatelessWidget {
         ? _foodServingMetadata(l10n, food)
         : _selectedFoodServingMetadata(
             l10n,
-            selected.baseFood,
+            selected.baselineFood,
             selected.quantity,
             caloriesKnown: selected.caloriesKnown,
-            gramsKnown: selected.gramsKnown,
+            gramsKnown: selected.baselineGramsKnown,
           );
     return SelectionFeedbackCard(
       selected: selected != null,
@@ -234,10 +234,10 @@ class _FoodResultCard extends StatelessWidget {
               '${calories == null ? '— kcal' : l10n.kcal_value(calories.round().toString())}'
         : _selectedFoodServingMetadata(
             l10n,
-            selected.baseFood,
+            selected.baselineFood,
             selected.quantity,
             caloriesKnown: selected.caloriesKnown,
-            gramsKnown: selected.gramsKnown,
+            gramsKnown: selected.baselineGramsKnown,
           );
 
     return SelectionFeedbackCard(
@@ -576,14 +576,17 @@ class _FoodSearchListView extends StatelessWidget {
         allowMeals: allowMeals,
         showSearch: false,
         scrollController: scrollController,
-        header: _QuickSectionTabs(
-          sections: const [
-            _FoodSearchSection.recent,
-            _FoodSearchSection.myItems,
-          ],
-          selectedSection: selectedSection,
-          onChanged: onSectionChanged,
-          l10n: l10n,
+        header: Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: _QuickSectionTabs(
+            sections: const [
+              _FoodSearchSection.recent,
+              _FoodSearchSection.myItems,
+            ],
+            selectedSection: selectedSection,
+            onChanged: onSectionChanged,
+            l10n: l10n,
+          ),
         ),
         listHeader: showServingHint ? _ServingHint(l10n: l10n) : null,
         onTap: onSelectFoodTemplate,
@@ -606,6 +609,7 @@ class _FoodSearchListView extends StatelessWidget {
           onDecrementSelection(canonicalFoodSelectionKey(food));
         },
         showManagementActions: false,
+        showLibraryHeading: false,
       );
     }
 
@@ -686,7 +690,7 @@ class _FoodSearchListView extends StatelessWidget {
           _SectionHeader(
             icon: Icons.bookmark_outline,
             title: l10n.my_saved_items,
-            iconColor: theme.colorScheme.primary,
+            iconColor: theme.colorScheme.onSurfaceVariant,
           ),
         );
         children.add(const SizedBox(height: 8));

@@ -34,6 +34,7 @@ class FoodLibrary extends StatefulWidget {
   final FoodLibrarySelectionAction? onIncrement;
   final ValueChanged<studyu.SavedFoodTemplate>? onDecrement;
   final bool showManagementActions;
+  final bool showLibraryHeading;
   final bool includeExternalLibrary;
   final FoodSearchViewModel? externalSearchViewModel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
@@ -53,6 +54,7 @@ class FoodLibrary extends StatefulWidget {
     this.onIncrement,
     this.onDecrement,
     this.showManagementActions = true,
+    this.showLibraryHeading = true,
     this.includeExternalLibrary = false,
     this.externalSearchViewModel,
     this.openFoodFactsSearch,
@@ -289,12 +291,14 @@ class _FoodLibraryState extends State<FoodLibrary> {
     if (viewModel.isLoading && templates.isEmpty) {
       children.add(const Center(child: CircularProgressIndicator()));
     } else if (viewModel.currentFilter != TemplateFilter.meals) {
-      children.add(
-        _FoodLibrarySectionHeader(
-          title: l10n.my_saved_items,
-          icon: Icons.bookmark_outline,
-        ),
-      );
+      if (widget.showLibraryHeading) {
+        children.add(
+          _FoodLibrarySectionHeader(
+            title: l10n.my_saved_items,
+            icon: Icons.bookmark_outline,
+          ),
+        );
+      }
       if (templates.isEmpty && !showExternal) {
         children.add(
           _FoodLibraryInlineMessage(
@@ -758,8 +762,10 @@ class FoodLibraryItemCard extends StatelessWidget {
             else if (onAdd != null)
               Builder(
                 builder: (buttonContext) => TextButton(
-                  onPressed: () =>
-                      onAdd!(template, globalCenter(buttonContext)),
+                  onPressed: () => onAdd!(
+                    template,
+                    globalCenter(buttonContext) ?? globalCenter(context),
+                  ),
                   child: Text(l10n.add),
                 ),
               ),

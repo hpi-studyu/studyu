@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
+import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_core/core.dart';
 
 FoodEntry apple() => FoodEntry(
@@ -40,8 +41,11 @@ Future<void> pumpSheet(
   WidgetTester tester, {
   Locale locale = const Locale('en'),
   FoodEntry? food,
-  FoodQuantityAction action = FoodQuantityAction.existingMeal,
+  FoodEntry? baselineFood,
+  FoodQuantityAction action = FoodQuantityAction.addToMeal,
   double? initialAmount,
+  bool gramsKnown = true,
+  bool? baselineGramsKnown,
   ValueChanged<FoodEntry?>? onResult,
 }) async {
   await tester.pumpWidget(
@@ -56,9 +60,12 @@ Future<void> pumpSheet(
               final result = await FoodQuantitySheet.show(
                 context,
                 food: food ?? apple(),
+                baselineFood: baselineFood,
                 mealLabel: 'Snack',
                 action: action,
                 initialAmount: initialAmount,
+                gramsKnown: gramsKnown,
+                baselineGramsKnown: baselineGramsKnown,
               );
               onResult?.call(result);
             },
@@ -80,7 +87,6 @@ void main() {
     await pumpSheet(tester, onResult: (value) => result = value);
 
     expect(find.text('Apple'), findsOneWidget);
-    expect(find.text('Medium apple, 182 g'), findsOneWidget);
     expect(find.text('95 kcal'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.add));
@@ -112,6 +118,101 @@ void main() {
 
     expect(find.text('285 kcal'), findsOneWidget);
     expect(find.text('Update selection'), findsOneWidget);
+  });
+
+  testWidgets(
+    'updates selected serving weight without changing baseline food',
+    (tester) async {
+      final baseline = apple()..templateId = 'library-apple';
+      FoodEntry? result;
+      await pumpSheet(
+        tester,
+        food: baseline,
+        baselineFood: baseline,
+        action: FoodQuantityAction.updateSelection,
+        initialAmount: 2,
+        onResult: (value) => result = value,
+      );
+
+      expect(find.text('Library serving: 182 g'), findsOneWidget);
+      expect(find.text('Weight for this meal'), findsOneWidget);
+      await tester.enterText(find.byType(TextField).last, '100');
+      await tester.pump();
+
+      expect(find.text('100 g per serving · 200 g total'), findsOneWidget);
+      expect(find.text('Use library weight (182 g)'), findsOneWidget);
+      expect(find.text('104 kcal'), findsOneWidget);
+      await tester.tap(find.text('Update selection'));
+      await tester.pumpAndSettle();
+
+      expect(baseline.servingSizeGrams, 182);
+      expect(baseline.nutrition.energyKcal, 95);
+      expect(result!.amount, 2);
+      expect(result!.servingSizeGrams, 100);
+      expect(result!.nutrition.energyKcal, closeTo(104.4, 0.1));
+    },
+  );
+
+  testWidgets('reset restores baseline nutrition and keeps quantity', (
+    tester,
+  ) async {
+    final baseline = apple();
+    final overridden = rescaleFoodAmount(baseline, 100 / 182)
+      ..amount = 1
+      ..servingSizeGrams = 100;
+    FoodEntry? result;
+    await pumpSheet(
+      tester,
+      food: overridden,
+      baselineFood: baseline,
+      action: FoodQuantityAction.updateSelection,
+      initialAmount: 2,
+      onResult: (value) => result = value,
+    );
+
+    expect(find.text('Default serving: 182 g'), findsOneWidget);
+    expect(find.text('100 g per serving · 200 g total'), findsOneWidget);
+    await tester.tap(find.text('Use default weight (182 g)'));
+    await tester.pump();
+
+    expect(find.text('100 g per serving · 200 g total'), findsNothing);
+    expect(find.text('190 kcal'), findsOneWidget);
+    await tester.tap(find.text('Update selection'));
+    await tester.pumpAndSettle();
+
+    expect(result!.amount, 2);
+    expect(result!.servingSizeGrams, 182);
+    expect(result!.nutrition.energyKcal, 190);
+    expect(overridden.servingSizeGrams, 100);
+    expect(baseline.servingSizeGrams, 182);
+  });
+
+  testWidgets('unknown baseline keeps quantity editing available', (
+    tester,
+  ) async {
+    final source = apple();
+    FoodEntry? result;
+    await pumpSheet(
+      tester,
+      food: source,
+      baselineFood: source,
+      action: FoodQuantityAction.updateSelection,
+      initialAmount: 2,
+      gramsKnown: false,
+      baselineGramsKnown: false,
+      onResult: (value) => result = value,
+    );
+
+    final updateButton = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Update selection'),
+    );
+    expect(updateButton.onPressed, isNotNull);
+    await tester.tap(find.text('Update selection'));
+    await tester.pumpAndSettle();
+
+    expect(result!.amount, 2);
+    expect(result!.nutrition.energyKcal, 190);
+    expect(source.amount, 1);
   });
 
   testWidgets('invalid direct amounts disable adding', (tester) async {

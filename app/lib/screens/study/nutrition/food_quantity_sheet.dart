@@ -16,41 +16,49 @@ enum FoodQuantityAction {
 
 class FoodQuantitySheet extends StatefulWidget {
   final FoodEntry food;
+  final FoodEntry? baselineFood;
   final String? mealLabel;
   final FoodQuantityAction action;
   final double? initialAmount;
   final bool caloriesKnown;
   final bool gramsKnown;
+  final bool? baselineGramsKnown;
 
   const FoodQuantitySheet({
     required this.food,
+    this.baselineFood,
     this.mealLabel,
     this.action = FoodQuantityAction.existingMeal,
     this.initialAmount,
     this.caloriesKnown = true,
     this.gramsKnown = true,
+    this.baselineGramsKnown,
     super.key,
   });
 
   static Future<FoodEntry?> show(
     BuildContext context, {
     required FoodEntry food,
+    FoodEntry? baselineFood,
     String? mealLabel,
     FoodQuantityAction action = FoodQuantityAction.existingMeal,
     double? initialAmount,
     bool caloriesKnown = true,
     bool gramsKnown = true,
+    bool? baselineGramsKnown,
   }) => showModalBottomSheet<FoodEntry>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => FoodQuantitySheet(
       food: food,
+      baselineFood: baselineFood,
       mealLabel: mealLabel,
       action: action,
       initialAmount: initialAmount,
       caloriesKnown: caloriesKnown,
       gramsKnown: gramsKnown,
+      baselineGramsKnown: baselineGramsKnown,
     ),
   );
 
@@ -60,7 +68,14 @@ class FoodQuantitySheet extends StatefulWidget {
 
 class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
   late final TextEditingController _amountController;
+  late final TextEditingController _servingWeightController;
   FoodEntry? _scaledFood;
+
+  bool get _canEditServingWeight =>
+      widget.action == FoodQuantityAction.updateSelection;
+  FoodEntry get _baselineFood => widget.baselineFood ?? widget.food;
+  bool get _baselineGramsKnown =>
+      widget.baselineGramsKnown ?? widget.gramsKnown;
 
   @override
   void initState() {
@@ -68,12 +83,21 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
     _amountController = TextEditingController(
       text: _formatNumber(widget.initialAmount ?? widget.food.amount),
     );
-    _updateAmount(_amountController.text);
+    _servingWeightController = TextEditingController(
+      text:
+          widget.gramsKnown &&
+              widget.food.servingSizeGrams.isFinite &&
+              widget.food.servingSizeGrams > 0
+          ? _formatNumber(widget.food.servingSizeGrams)
+          : '',
+    );
+    _updateAmount();
   }
 
   @override
   void dispose() {
     _amountController.dispose();
+    _servingWeightController.dispose();
     super.dispose();
   }
 
@@ -81,19 +105,74 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
       ? value.toStringAsFixed(0)
       : value.toString();
 
-  void _updateAmount(String value) {
-    final amount = double.tryParse(value.replaceFirst(',', '.'));
-    final sourceAmount = widget.food.amount;
+  double? _parseNumber(String value) =>
+      double.tryParse(value.replaceFirst(',', '.'));
+
+  void _updateAmount([String? _]) {
+    final amount = _parseNumber(_amountController.text);
+    final weightText = _servingWeightController.text.trim();
+    final weight = _canEditServingWeight
+        ? _parseNumber(weightText)
+        : widget.food.servingSizeGrams;
+    final weightRequired =
+        _canEditServingWeight &&
+        (_baselineGramsKnown || widget.gramsKnown || weightText.isNotEmpty);
+    final weightSource = _baselineGramsKnown ? _baselineFood : widget.food;
+    final sourceAmount = weightSource.amount;
+    final sourceWeight = weightSource.servingSizeGrams;
+    final hasKnownSourceWeight =
+        (_baselineGramsKnown || widget.gramsKnown) &&
+        sourceWeight.isFinite &&
+        sourceWeight > 0;
     setState(() {
-      _scaledFood =
-          amount != null &&
-              amount.isFinite &&
-              amount > 0 &&
-              sourceAmount.isFinite &&
-              sourceAmount > 0
-          ? rescaleFoodAmount(widget.food, amount)
-          : null;
+      if (amount == null ||
+          !amount.isFinite ||
+          amount <= 0 ||
+          (weightRequired &&
+              (weight == null || !weight.isFinite || weight <= 0)) ||
+          !sourceAmount.isFinite ||
+          sourceAmount <= 0) {
+        _scaledFood = null;
+        return;
+      }
+      if (!weightRequired) {
+        _scaledFood = rescaleFoodAmount(widget.food, amount);
+        return;
+      }
+      final foodAtWeight = _canEditServingWeight
+          ? ((hasKnownSourceWeight
+                  ? rescaleFoodAmount(
+                      weightSource,
+                      sourceAmount * weight! / sourceWeight,
+                    )
+                  : cloneFoodEntry(weightSource))
+              ..amount = sourceAmount
+              ..servingSizeGrams = weight!)
+          : widget.food;
+      _scaledFood = rescaleFoodAmount(foodAtWeight, amount);
     });
+  }
+
+  bool get _servingWeightOverridden {
+    final weight = _parseNumber(_servingWeightController.text);
+    if (!_canEditServingWeight || weight == null || !weight.isFinite) {
+      return false;
+    }
+    if (!_baselineGramsKnown) {
+      return widget.gramsKnown ||
+          _servingWeightController.text.trim().isNotEmpty;
+    }
+    return (weight - _baselineFood.servingSizeGrams).abs() > 0.000001;
+  }
+
+  void _resetServingWeight() {
+    _servingWeightController.text = _formatNumber(
+      _baselineFood.servingSizeGrams,
+    );
+    _servingWeightController.selection = TextSelection.collapsed(
+      offset: _servingWeightController.text.length,
+    );
+    _updateAmount();
   }
 
   void _changeAmount(double delta) {
@@ -107,17 +186,19 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
     _updateAmount(_amountController.text);
   }
 
-  String _servingDescription(AppLocalizations l10n) {
+  String _servingDescription(AppLocalizations l10n, FoodEntry food) {
     final portionReference = widget.food.portionReference?.trim();
-    if (!widget.gramsKnown) {
+    if (!widget.gramsKnown && !_servingWeightOverridden) {
       return portionReference == null || portionReference.isEmpty
           ? l10n.serving_amount(1)
           : portionReference;
     }
     final servingWeight = l10n.grams_per_serving(
-      _formatNumber(widget.food.servingSizeGrams),
+      _formatNumber(food.servingSizeGrams),
     );
-    if (portionReference != null && portionReference.isNotEmpty) {
+    if (portionReference != null &&
+        portionReference.isNotEmpty &&
+        food.servingSizeGrams == widget.food.servingSizeGrams) {
       return '$portionReference · $servingWeight';
     }
     return servingWeight;
@@ -128,6 +209,29 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
     return unit.isEmpty || unit.toLowerCase() == 'serving'
         ? l10n.food_quantity_serving_unit(amount)
         : unit;
+  }
+
+  bool get _isLibraryBaseline => _baselineFood.templateId?.isNotEmpty == true;
+
+  String _baselineDescription(AppLocalizations l10n) {
+    if (!_baselineGramsKnown ||
+        !_baselineFood.servingSizeGrams.isFinite ||
+        _baselineFood.servingSizeGrams <= 0) {
+      return _isLibraryBaseline
+          ? l10n.food_quantity_library_serving_unknown
+          : l10n.food_quantity_default_serving_unknown;
+    }
+    final weight = _formatNumber(_baselineFood.servingSizeGrams);
+    return _isLibraryBaseline
+        ? l10n.food_quantity_library_serving(weight)
+        : l10n.food_quantity_default_serving(weight);
+  }
+
+  String _resetLabel(AppLocalizations l10n) {
+    final weight = _formatNumber(_baselineFood.servingSizeGrams);
+    return _isLibraryBaseline
+        ? l10n.food_quantity_use_library_weight(weight)
+        : l10n.food_quantity_use_default_weight(weight);
   }
 
   String? _foodImageUrl() {
@@ -160,7 +264,7 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
     final imageUrl = _foodImageUrl();
     final subtitle = [
       if (brand != null && brand.isNotEmpty) brand,
-      _servingDescription(l10n),
+      _servingDescription(l10n, food),
     ].join(' · ');
 
     return Padding(
@@ -312,6 +416,62 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                       ),
                     ],
                   ),
+                  if (_canEditServingWeight) ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      _baselineDescription(l10n),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _servingWeightController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                      ],
+                      decoration: InputDecoration(
+                        labelText: l10n.food_quantity_weight_for_meal,
+                        suffixText: 'g',
+                        helperText: l10n.food_quantity_override_helper,
+                      ),
+                      onChanged: _updateAmount,
+                    ),
+                    if (_servingWeightOverridden && _scaledFood != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        _scaledFood!.amount > 1
+                            ? l10n.food_quantity_effective_weight(
+                                _formatNumber(_scaledFood!.servingSizeGrams),
+                                _formatNumber(
+                                  _scaledFood!.servingSizeGrams *
+                                      _scaledFood!.amount,
+                                ),
+                              )
+                            : l10n.food_quantity_effective_weight_per_serving(
+                                _formatNumber(_scaledFood!.servingSizeGrams),
+                              ),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                    if (_servingWeightOverridden &&
+                        _baselineGramsKnown &&
+                        _baselineFood.servingSizeGrams.isFinite &&
+                        _baselineFood.servingSizeGrams > 0)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          onPressed: _resetServingWeight,
+                          child: Text(_resetLabel(l10n)),
+                        ),
+                      ),
+                  ],
                   if (_scaledFood == null) ...[
                     const SizedBox(height: 4),
                     Text(
@@ -411,7 +571,8 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                       ? l10n.add_food
                       : l10n.food_quantity_add_to_meal(widget.mealLabel!),
                 FoodQuantityAction.update => l10n.update,
-                FoodQuantityAction.updateSelection => l10n.update,
+                FoodQuantityAction.updateSelection =>
+                  l10n.food_quantity_update_selection,
                 FoodQuantityAction.existingMeal => l10n.update,
               }),
             ),

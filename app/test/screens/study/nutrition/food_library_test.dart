@@ -328,6 +328,55 @@ void main() {
     expect(repository.saved, isNotNull);
   });
 
+  testWidgets('saved meal add exposes quantity controls', (tester) async {
+    final meal = _food('meal', 'Fruit bowl')..entryType = FoodEntryType.meal;
+    final template = _template(meal);
+    var selected = false;
+    var quantity = 1;
+    Offset? addSource;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) => FoodLibraryItemCard(
+              template: template,
+              onAdd: (_, source) => setState(() {
+                addSource = source;
+                selected = true;
+              }),
+              isSelected: selected,
+              selectedQuantity: quantity,
+              onIncrement: (_) => setState(() => quantity++),
+              onDecrement: () => setState(() => selected = false),
+              showManagementActions: false,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Add'), findsOneWidget);
+    await tester.tap(find.text('Add'));
+    await tester.pump();
+
+    expect(find.byTooltip('Increase Fruit bowl'), findsOneWidget);
+    expect(find.byTooltip('Decrease Fruit bowl'), findsOneWidget);
+    expect(addSource, isNotNull);
+    expect(find.text('1'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Increase Fruit bowl'));
+    await tester.pump();
+    expect(find.text('2'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Decrease Fruit bowl'));
+    await tester.pump(const Duration(milliseconds: 150));
+    expect(find.text('Add'), findsOneWidget);
+  });
+
   testWidgets('saved meal edit updates name and ordered composition', (
     tester,
   ) async {

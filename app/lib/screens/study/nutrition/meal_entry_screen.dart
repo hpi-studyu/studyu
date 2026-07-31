@@ -214,6 +214,10 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       allowMeals: widget.task?.allowMeals ?? true,
       historicalMode: widget.historicalTarget != null,
       repository: widget.foodRepository,
+      templateViewModel: Provider.of<TemplateViewModel?>(
+        context,
+        listen: false,
+      ),
     );
     if (!mounted || !_revalidateHistoricalEligibility()) return;
     if (result != null) setState(() => _meal.foods.addAll(result.foods));
