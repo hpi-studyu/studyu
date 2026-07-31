@@ -281,6 +281,26 @@ Future<void> selectMealType(
   }
 }
 
+Future<void> chooseMealTime(
+  WidgetTester tester,
+  String precision, {
+  required String hour,
+  required String minute,
+}) async {
+  await tester.tap(find.text('Time'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(precision));
+  await tester.pumpAndSettle();
+  expect(find.byType(TimePickerDialog), findsOneWidget);
+  await tester.tap(find.byIcon(Icons.keyboard_outlined));
+  await tester.pumpAndSettle();
+  final fields = find.byType(TextField);
+  await tester.enterText(fields.at(0), hour);
+  await tester.enterText(fields.at(1), minute);
+  await tester.tap(find.text('OK'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -371,6 +391,48 @@ void main() {
     expect(result!.timestamp!.year, 2024);
     expect(result!.timestamp!.month, 2);
     expect(result!.timestamp!.day, 3);
+  });
+
+  testWidgets('exact meal time can be reopened and changed', (tester) async {
+    MealLog? result;
+    final meal = editableMeal()
+      ..timePrecision = MealOccurrenceTimePrecision.exact;
+    await openMealEntry(tester, meal, onResult: (value) => result = value);
+
+    await chooseMealTime(tester, 'Exact time', hour: '9', minute: '15');
+    await chooseMealTime(tester, 'Exact time', hour: '10', minute: '30');
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.timestamp, isNotNull);
+    expect(result!.timestamp!.minute, 30);
+    expect(result!.timestamp, isNot(DateTime(2026, 7, 15, 20)));
+    expect(result!.timePrecision, MealOccurrenceTimePrecision.exact);
+  });
+
+  testWidgets('approximate meal time can be reopened and changed', (
+    tester,
+  ) async {
+    MealLog? result;
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      onResult: (value) => result = value,
+    );
+
+    await chooseMealTime(tester, 'Approximate time', hour: '9', minute: '15');
+    await chooseMealTime(tester, 'Approximate time', hour: '10', minute: '30');
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.timestamp, isNotNull);
+    expect(result!.timestamp!.minute, 30);
+    expect(result!.timestamp, isNot(DateTime(2026, 7, 15, 20)));
+    expect(result!.timePrecision, MealOccurrenceTimePrecision.approximate);
   });
 
   testWidgets('new meal uses the requested custom meal label', (tester) async {
