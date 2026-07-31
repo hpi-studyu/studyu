@@ -3635,6 +3635,30 @@ abstract class AppLocalizations {
   /// **'Save to My items'**
   String get save_to_my_items_action;
 
+  /// No description provided for @external_library_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get external_library_copy;
+
+  /// No description provided for @external_library_copy_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {name} to My foods'**
+  String external_library_copy_label(String name);
+
+  /// No description provided for @external_library_copy_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied food saved to My foods'**
+  String get external_library_copy_saved;
+
+  /// No description provided for @external_library_copy_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save copied food'**
+  String get external_library_copy_save_error;
+
   /// No description provided for @remove_from_meal.
   ///
   /// In en, this message translates to:
@@ -3742,6 +3766,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My foods'**
   String get select_food;
+
+  /// No description provided for @food_library_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search My foods and external library…'**
+  String get food_library_search_hint;
 
   /// No description provided for @search_templates.
   ///
@@ -4301,6 +4331,48 @@ abstract class AppLocalizations {
   /// **'Database'**
   String get global_database;
 
+  /// No description provided for @external_library.
+  ///
+  /// In en, this message translates to:
+  /// **'External library'**
+  String get external_library;
+
+  /// No description provided for @external_library_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching external library…'**
+  String get external_library_loading;
+
+  /// No description provided for @external_library_error.
+  ///
+  /// In en, this message translates to:
+  /// **'External library is unavailable. Please try again.'**
+  String get external_library_error;
+
+  /// No description provided for @external_library_results_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1 {1 external result found} other {{count} external results found}}'**
+  String external_library_results_count(int count);
+
+  /// No description provided for @review_copied_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Review copied food'**
+  String get review_copied_food;
+
+  /// No description provided for @external_library_copy_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Review copied food before saving. Saving creates an independent item in My foods.'**
+  String get external_library_copy_notice;
+
+  /// No description provided for @external_library_save_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save copy'**
+  String get external_library_save_copy;
+
   /// No description provided for @quick_actions.
   ///
   /// In en, this message translates to:
@@ -4817,12 +4889,6 @@ abstract class AppLocalizations {
   /// **'Editing {date}'**
   String historical_editing_date(String date);
 
-  /// No description provided for @historical_edit_scope.
-  ///
-  /// In en, this message translates to:
-  /// **'Entry changes apply only to this study day'**
-  String get historical_edit_scope;
-
   /// No description provided for @historical_edit_expired.
   ///
   /// In en, this message translates to:
@@ -4888,6 +4954,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calories'**
   String get nutrition_calories;
+
+  /// No description provided for @historical_edit_mode_heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing a previous study day'**
+  String get historical_edit_mode_heading;
+
+  /// No description provided for @historical_edit_mode_description.
+  ///
+  /// In en, this message translates to:
+  /// **'On this History screen, you can update the meal log from your previous study day. Foods and meals you create here remain available for future meal logs.'**
+  String get historical_edit_mode_description;
+
+  /// No description provided for @update_current_day_entries.
+  ///
+  /// In en, this message translates to:
+  /// **'Also update matching entries in current study day'**
+  String get update_current_day_entries;
 }
 
 class _AppLocalizationsDelegate

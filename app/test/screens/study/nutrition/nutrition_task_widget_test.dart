@@ -239,11 +239,6 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.textContaining('Editing'), findsNWidgets(2));
-    expect(
-      find.text('Entry changes apply only to this study day'),
-      findsOneWidget,
-    );
     expect(find.text('Statistics'), findsNothing);
     expect(find.text('My items'), findsNothing);
     expect(find.byIcon(Icons.history_outlined), findsNothing);
@@ -390,11 +385,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Editable apple'));
     await tester.pumpAndSettle();
-    expect(
-      find.text('Entry changes apply only to this study day'),
-      findsOneWidget,
-    );
-
     setup.subject.startedAt = setup.subject.startedAt!.subtract(
       const Duration(days: 1),
     );

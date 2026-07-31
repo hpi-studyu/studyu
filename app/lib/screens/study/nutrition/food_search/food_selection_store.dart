@@ -148,9 +148,9 @@ String canonicalFoodSelectionKey(studyu.FoodEntry food) {
   if (food.source == studyu.FoodSource.manual) return 'manual:${food.id}';
   return [
     source,
-    _normalizeSearchText(food.name),
-    _normalizeSearchText(food.brandName ?? ''),
-    _normalizeSearchText(food.unit),
+    normalizeFoodSearchText(food.name),
+    normalizeFoodSearchText(food.brandName ?? ''),
+    normalizeFoodSearchText(food.unit),
     food.amount.toString(),
     food.servingSizeGrams.toString(),
   ].join('|');

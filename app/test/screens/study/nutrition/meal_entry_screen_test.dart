@@ -162,7 +162,7 @@ class _TrackingNutritionFoodRepository extends FakeNutritionFoodRepository {
     required String expectedVersionId,
     required String entryId,
     required Map<String, dynamic> target,
-    required int currentStudyDay,
+    int? currentStudyDay,
     String? mutationId,
   }) async {
     mutationCalls++;

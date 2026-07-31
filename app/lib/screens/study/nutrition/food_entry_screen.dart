@@ -26,6 +26,8 @@ class FoodEntryScreen extends StatefulWidget {
   final String? mealLabel;
   final NutritionRecallPersistenceTarget? historicalTarget;
   final bool editReusableDefinition;
+  final bool hasCurrentStudyDayMatches;
+  final bool isExternalLibraryCopy;
   final NutritionFoodRepository? repository;
 
   const FoodEntryScreen({
@@ -35,9 +37,12 @@ class FoodEntryScreen extends StatefulWidget {
     this.mealLabel,
     this.historicalTarget,
     this.editReusableDefinition = false,
+    this.hasCurrentStudyDayMatches = false,
+    this.isExternalLibraryCopy = false,
     this.repository,
     super.key,
-  }) : assert(!editReusableDefinition || historicalTarget != null);
+  }) : assert(!editReusableDefinition || historicalTarget != null),
+       assert(!isExternalLibraryCopy || existingFood != null);
 
   static MaterialPageRoute<FoodEntry> route({
     FoodEntry? existingFood,
@@ -46,6 +51,8 @@ class FoodEntryScreen extends StatefulWidget {
     String? mealLabel,
     NutritionRecallPersistenceTarget? historicalTarget,
     bool editReusableDefinition = false,
+    bool hasCurrentStudyDayMatches = false,
+    bool isExternalLibraryCopy = false,
     NutritionFoodRepository? repository,
   }) => MaterialPageRoute(
     builder: (_) => FoodEntryScreen(
@@ -55,6 +62,8 @@ class FoodEntryScreen extends StatefulWidget {
       mealLabel: mealLabel,
       historicalTarget: historicalTarget,
       editReusableDefinition: editReusableDefinition,
+      hasCurrentStudyDayMatches: hasCurrentStudyDayMatches,
+      isExternalLibraryCopy: isExternalLibraryCopy,
       repository: repository,
     ),
   );
@@ -91,8 +100,10 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
   bool _saveToMyItems = true;
+  bool _propagateToCurrentStudyDay = false;
   late final String _initialSnapshot;
   bool _allowPop = false;
+  bool _isSaving = false;
   final String _mutationId = const Uuid().v4();
 
   bool get _isNewFoodForMeal =>
@@ -205,8 +216,10 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   }
 
   Future<void> _saveFood() async {
+    if (_isSaving) return;
     var food = _buildFoodEntry();
     if (food == null) return;
+    setState(() => _isSaving = true);
     final appState = Provider.of<AppState>(context, listen: false);
     final l10n = AppLocalizations.of(context)!;
 
@@ -215,7 +228,10 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     final existingFood = widget.existingFood;
     int? currentStudyDay;
     if (historicalTarget != null) {
-      if (subject == null || existingFood == null) return;
+      if (subject == null || existingFood == null) {
+        if (mounted) setState(() => _isSaving = false);
+        return;
+      }
       currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
       if (!isEditableNutritionRecallDay(
         studyDaySnapshot: historicalTarget.studyDaySnapshot,
@@ -240,7 +256,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               expectedVersionId: existingFood!.foodVersionId,
               entryId: existingFood.id,
               target: historicalTarget!.toJson(),
-              currentStudyDay: currentStudyDay!,
+              currentStudyDay: _propagateToCurrentStudyDay
+                  ? currentStudyDay
+                  : null,
               mutationId: _mutationId,
             );
         food = applyNutritionFoodSnapshot(
@@ -249,11 +267,13 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         );
         _reconcileProgress(subject, result.progress);
         final autoSaveManager = NutritionRecallAutoSaveManager();
-        await autoSaveManager.rewriteFoodDefinition(
-          subjectId: subject.id,
-          studyDaySnapshot: currentStudyDay,
-          definition: result.definition.snapshot,
-        );
+        if (_propagateToCurrentStudyDay) {
+          await autoSaveManager.rewriteFoodDefinition(
+            subjectId: subject.id,
+            studyDaySnapshot: currentStudyDay!,
+            definition: result.definition.snapshot,
+          );
+        }
         await autoSaveManager.rewriteFoodDefinition(
           subjectId: subject.id,
           studyDaySnapshot: historicalTarget.studyDaySnapshot,
@@ -282,6 +302,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+          setState(() => _isSaving = false);
         }
         return;
       }
@@ -473,7 +494,13 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 
     final scaffold = Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? l10n.edit_food_title : l10n.add_food_manually),
+        title: Text(
+          widget.isExternalLibraryCopy
+              ? l10n.review_copied_food
+              : isEditing
+              ? l10n.edit_food_title
+              : l10n.add_food_manually,
+        ),
         actions: [
           if (widget.showSearchAction)
             IconButton(
@@ -498,10 +525,12 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: FilledButton.icon(
-            onPressed: _saveFood,
+            onPressed: _isSaving ? null : _saveFood,
             icon: const Icon(Icons.check),
             label: Text(
-              _isNewFoodForMeal
+              widget.isExternalLibraryCopy
+                  ? l10n.external_library_save_copy
+                  : _isNewFoodForMeal
                   ? l10n.save_and_add_to_meal(widget.mealLabel!)
                   : l10n.save,
             ),
@@ -523,6 +552,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               ),
             if (_isAiAnalyzed) const SizedBox(height: 12),
 
+            if (widget.isExternalLibraryCopy) ...[
+              _ExternalCopyNotice(theme: theme, l10n: l10n),
+              const SizedBox(height: 12),
+            ],
+
             if (widget.editReusableDefinition) ...[
               Text(
                 l10n.food_definition_edit_helper,
@@ -530,6 +564,16 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              if (widget.hasCurrentStudyDayMatches)
+                CheckboxListTile(
+                  value: _propagateToCurrentStudyDay,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.update_current_day_entries),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  onChanged: (value) => setState(
+                    () => _propagateToCurrentStudyDay = value ?? false,
+                  ),
+                ),
               const SizedBox(height: 12),
             ],
 
@@ -632,6 +676,45 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 // ============================================================
 // WIDGETS
 // ============================================================
+
+class _ExternalCopyNotice extends StatelessWidget {
+  final ThemeData theme;
+  final AppLocalizations l10n;
+
+  const _ExternalCopyNotice({required this.theme, required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      label: l10n.external_library_copy_notice,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.info_outline,
+              color: theme.colorScheme.onSecondaryContainer,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l10n.external_library_copy_notice,
+                style: TextStyle(color: theme.colorScheme.onSecondaryContainer),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 /// Banner displayed when food entry data comes from AI analysis.
 class _AiEstimationBanner extends StatelessWidget {

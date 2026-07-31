@@ -4,7 +4,9 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
 
@@ -12,11 +14,29 @@ enum _NewItemType { food, meal }
 
 class FoodLibraryScreen extends StatelessWidget {
   final bool embedded;
+  final OpenFoodFactsSearch? openFoodFactsSearch;
+  final UsdaFoodSearch? usdaFoodSearch;
+  final NutritionFoodRepository? repository;
 
-  const FoodLibraryScreen({this.embedded = false, super.key});
+  const FoodLibraryScreen({
+    this.embedded = false,
+    this.openFoodFactsSearch,
+    this.usdaFoodSearch,
+    this.repository,
+    super.key,
+  });
 
-  static MaterialPageRoute<void> route() =>
-      MaterialPageRoute(builder: (_) => const FoodLibraryScreen());
+  static MaterialPageRoute<void> route({
+    OpenFoodFactsSearch? openFoodFactsSearch,
+    UsdaFoodSearch? usdaFoodSearch,
+    NutritionFoodRepository? repository,
+  }) => MaterialPageRoute(
+    builder: (_) => FoodLibraryScreen(
+      openFoodFactsSearch: openFoodFactsSearch,
+      usdaFoodSearch: usdaFoodSearch,
+      repository: repository,
+    ),
+  );
 
   static Widget newItemButton(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -85,12 +105,31 @@ class FoodLibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (embedded) return const _FoodLibraryScreenContent(embedded: true);
+    if (embedded) {
+      return ChangeNotifierProvider(
+        create: (_) => FoodSearchViewModel(
+          openFoodFactsSearch: openFoodFactsSearch,
+          usdaFoodSearch: usdaFoodSearch,
+        ),
+        child: const _FoodLibraryScreenContent(embedded: true),
+      );
+    }
 
     final appState = Provider.of<AppState>(context, listen: false);
     final userId = appState.activeSubject?.id ?? 'anonymous';
-    return ChangeNotifierProvider(
-      create: (_) => TemplateViewModel(userId: userId),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) =>
+              TemplateViewModel(userId: userId, repository: repository),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FoodSearchViewModel(
+            openFoodFactsSearch: openFoodFactsSearch,
+            usdaFoodSearch: usdaFoodSearch,
+          ),
+        ),
+      ],
       child: const _FoodLibraryScreenContent(embedded: false),
     );
   }
@@ -104,7 +143,10 @@ class _FoodLibraryScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    const library = FoodLibrary();
+    final library = FoodLibrary(
+      includeExternalLibrary: true,
+      externalSearchViewModel: context.read<FoodSearchViewModel>(),
+    );
 
     if (embedded) return library;
     return Scaffold(

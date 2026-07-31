@@ -17,11 +17,15 @@ class MealCreatorScreen extends StatefulWidget {
   final FoodEntry? existingMeal;
   final List<FoodEntry> initialFoods;
   final String? initialName;
+  final bool showCurrentDayPropagationOption;
+  final ValueChanged<bool>? onCurrentDayPropagationChanged;
 
   const MealCreatorScreen({
     this.existingMeal,
     this.initialFoods = const [],
     this.initialName,
+    this.showCurrentDayPropagationOption = false,
+    this.onCurrentDayPropagationChanged,
     super.key,
   });
 
@@ -29,11 +33,15 @@ class MealCreatorScreen extends StatefulWidget {
     FoodEntry? existingMeal,
     List<FoodEntry> initialFoods = const [],
     String? initialName,
+    bool showCurrentDayPropagationOption = false,
+    ValueChanged<bool>? onCurrentDayPropagationChanged,
   }) => MaterialPageRoute(
     builder: (_) => MealCreatorScreen(
       existingMeal: existingMeal,
       initialFoods: initialFoods,
       initialName: initialName,
+      showCurrentDayPropagationOption: showCurrentDayPropagationOption,
+      onCurrentDayPropagationChanged: onCurrentDayPropagationChanged,
     ),
   );
 
@@ -57,6 +65,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   late TextEditingController _quickAmountController;
   late TextEditingController _quickCaloriesController;
   bool _showQuickAdd = false;
+  bool _updateCurrentDayEntries = false;
 
   List<FoodComposition> _foods = [];
   final List<FoodEntry> _componentFoods = [];
@@ -553,6 +562,19 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
               theme: theme,
               l10n: l10n,
             ),
+
+            if (widget.showCurrentDayPropagationOption)
+              CheckboxListTile(
+                value: _updateCurrentDayEntries,
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.update_current_day_entries),
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (value) {
+                  final selected = value ?? false;
+                  setState(() => _updateCurrentDayEntries = selected);
+                  widget.onCurrentDayPropagationChanged?.call(selected);
+                },
+              ),
 
             const SizedBox(height: 12),
 

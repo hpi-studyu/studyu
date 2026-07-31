@@ -1916,6 +1916,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_to_my_items_action => 'Save to My items';
 
   @override
+  String get external_library_copy => 'Copy';
+
+  @override
+  String external_library_copy_label(String name) {
+    return 'Copy $name to My foods';
+  }
+
+  @override
+  String get external_library_copy_saved => 'Copied food saved to My foods';
+
+  @override
+  String get external_library_copy_save_error => 'Could not save copied food';
+
+  @override
   String get remove_from_meal => 'Remove from meal';
 
   @override
@@ -1971,6 +1985,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get select_food => 'My foods';
+
+  @override
+  String get food_library_search_hint =>
+      'Search My foods and external library…';
 
   @override
   String get search_templates => 'Search saved foods and meals…';
@@ -2345,6 +2363,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get global_database => 'Database';
 
   @override
+  String get external_library => 'External library';
+
+  @override
+  String get external_library_loading => 'Searching external library…';
+
+  @override
+  String get external_library_error =>
+      'External library is unavailable. Please try again.';
+
+  @override
+  String external_library_results_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count external results found',
+      one: '1 external result found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get review_copied_food => 'Review copied food';
+
+  @override
+  String get external_library_copy_notice =>
+      'Review copied food before saving. Saving creates an independent item in My foods.';
+
+  @override
+  String get external_library_save_copy => 'Save copy';
+
+  @override
   String get quick_actions => 'Quick Actions';
 
   @override
@@ -2660,10 +2709,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get historical_edit_scope =>
-      'Entry changes apply only to this study day';
-
-  @override
   String get historical_edit_expired => 'This study day is no longer editable.';
 
   @override
@@ -2720,4 +2765,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutrition_calories => 'Calories';
+
+  @override
+  String get historical_edit_mode_heading => 'Editing a previous study day';
+
+  @override
+  String get historical_edit_mode_description =>
+      'On this History screen, you can update the meal log from your previous study day. Foods and meals you create here remain available for future meal logs.';
+
+  @override
+  String get update_current_day_entries =>
+      'Also update matching entries in current study day';
 }

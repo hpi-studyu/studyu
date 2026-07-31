@@ -747,6 +747,17 @@
   "adjust_quantity": "Adjust quantity",
   "edit_this_entry": "Edit this entry",
   "save_to_my_items_action": "Save to My items",
+  "external_library_copy": "Copy",
+  "external_library_copy_label": "Copy {name} to My foods",
+  "@external_library_copy_label": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "external_library_copy_saved": "Copied food saved to My foods",
+  "external_library_copy_save_error": "Could not save copied food",
   "remove_from_meal": "Remove from meal",
   "duplicate": "Duplicate",
   "save_as_template": "Add to My items",
@@ -772,6 +783,7 @@
   "template_saved": "Added to My items",
   "select_meal": "My meals",
   "select_food": "My foods",
+  "food_library_search_hint": "Search My foods and external library…",
   "search_templates": "Search saved foods and meals…",
   "no_templates_saved": "No items yet",
   "save_templates_hint": "Save your favorite meals and foods for quick access",
@@ -885,7 +897,7 @@
       }
     }
   },
-  "serving_amount": "{amount, plural, =1 {1 serving} other {{amount} servings}}", 
+  "serving_amount": "{amount, plural, =1 {1 serving} other {{amount} servings}}",
   "@serving_amount": {
     "placeholders": {
       "amount": {
@@ -1038,6 +1050,20 @@
   "recent_foods": "Recently added",
   "frequently_used_foods": "Frequently Used",
   "global_database": "Database",
+  "external_library": "External library",
+  "external_library_loading": "Searching external library…",
+  "external_library_error": "External library is unavailable. Please try again.",
+  "external_library_results_count": "{count, plural, =1 {1 external result found} other {{count} external results found}}",
+  "@external_library_results_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "review_copied_food": "Review copied food",
+  "external_library_copy_notice": "Review copied food before saving. Saving creates an independent item in My foods.",
+  "external_library_save_copy": "Save copy",
   "quick_actions": "Quick Actions",
   "create": "Create",
   "create_meal": "Create meal",
@@ -1237,24 +1263,31 @@
   "historical_editing_date": "Editing {date}",
   "@historical_editing_date": {
     "placeholders": {
-      "date": {"type": "String"}
+      "date": {
+        "type": "String"
+      }
     }
   },
-  "historical_edit_scope": "Entry changes apply only to this study day",
   "historical_edit_expired": "This study day is no longer editable.",
   "edit_food_definition": "Edit reusable food",
   "food_definition_edit_helper": "Serving description, weight, conversions, and nutrition update the reusable food in your library and matching entries logged today. This historical entry keeps its serving count.",
   "food_definition_updated_no_today": "Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. No matching entries today.",
   "@food_definition_updated_no_today": {
     "placeholders": {
-      "historicalCount": {"type": "int"}
+      "historicalCount": {
+        "type": "int"
+      }
     }
   },
   "food_definition_updated_today": "Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}} and {todayCount, plural, =1 {1 matching entry today} other {{todayCount} matching entries today}}.",
   "@food_definition_updated_today": {
     "placeholders": {
-      "historicalCount": {"type": "int"},
-      "todayCount": {"type": "int"}
+      "historicalCount": {
+        "type": "int"
+      },
+      "todayCount": {
+        "type": "int"
+      }
     }
   },
   "nutrition_statistics_empty": "No nutrition data is available yet.",
@@ -1262,5 +1295,8 @@
   "nutrition_read_only": "Read-only",
   "nutrition_logging_guidance": "Log each meal and drink as accurately as you can. Include portions and preparation details when you know them.",
   "open_faq": "Open FAQ",
-  "nutrition_calories": "Calories"
+  "nutrition_calories": "Calories",
+  "historical_edit_mode_heading": "Editing a previous study day",
+  "historical_edit_mode_description": "On this History screen, you can update the meal log from your previous study day. Foods and meals you create here remain available for future meal logs.",
+  "update_current_day_entries": "Also update matching entries in current study day"
 }

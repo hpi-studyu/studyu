@@ -142,6 +142,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   bool _allowPop = false;
   bool _hasAttemptedSave = false;
   bool _definitionMutated = false;
+  bool _saveToMyItems = true;
+  bool _propagateToCurrentStudyDay = false;
   final Map<String, String> _compositeMutationIds = {};
 
   late TextEditingController _skipReasonController;
@@ -218,6 +220,50 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   int _foodIndex(String foodId) =>
       _meal.foods.indexWhere((food) => food.id == foodId);
 
+  Future<bool> _hasCurrentStudyDayMatches(String foodId) async {
+    final subject = Provider.of<AppState>(context, listen: false).activeSubject;
+    final target = widget.historicalTarget;
+    if (subject == null || target == null) return false;
+    final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
+
+    bool containsFood(FoodEntry food) {
+      if (food.foodId == foodId) return true;
+      return food.componentSnapshots?.any(containsFood) ?? false;
+    }
+
+    bool recallContains(DailyRecall recall) =>
+        recall.meals.any((meal) => meal.foods.any(containsFood));
+
+    for (final progress in subject.progress) {
+      if (progress.taskId != target.taskId ||
+          progress.resultType != 'DailyRecall' ||
+          progress.result.periodId != target.periodId) {
+        continue;
+      }
+      final result = progress.result.result;
+      if (result is DailyRecall &&
+          (result.studyDaySnapshot == currentStudyDay ||
+              result.studyDaySnapshot == null &&
+                  progress.completedAt != null &&
+                  nutritionStudyDayFor(subject, progress.completedAt!) ==
+                      currentStudyDay) &&
+          recallContains(result)) {
+        return true;
+      }
+    }
+
+    final pending = await NutritionRecallAutoSaveManager().scanPendingRecalls(
+      subject.id,
+    );
+    return pending.any(
+      (draft) =>
+          draft.taskId == target.taskId &&
+          draft.periodId == target.periodId &&
+          draft.studyDaySnapshot == currentStudyDay &&
+          recallContains(draft.recall),
+    );
+  }
+
   Future<void> _editFood(
     FoodEntry food, {
     bool editReusableDefinition = false,
@@ -226,12 +272,16 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       await _editCompositeMealDefinition(food);
       return;
     }
+    final hasCurrentDayMatches =
+        editReusableDefinition && await _hasCurrentStudyDayMatches(food.foodId);
+    if (!mounted) return;
     final result = await Navigator.of(context).push(
       FoodEntryScreen.route(
         existingFood: food,
         showSearchAction: false,
         historicalTarget: widget.historicalTarget,
         editReusableDefinition: editReusableDefinition,
+        hasCurrentStudyDayMatches: hasCurrentDayMatches,
         repository: widget.foodRepository,
       ),
     );
@@ -248,9 +298,20 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   Future<void> _editCompositeMealDefinition(FoodEntry existingMeal) async {
     final editableDefinition = normalizeNutritionFoodDefinition(existingMeal);
-    final edited = await Navigator.of(
-      context,
-    ).push(MealCreatorScreen.route(existingMeal: editableDefinition));
+    final hasCurrentDayMatches = await _hasCurrentStudyDayMatches(
+      existingMeal.foodId,
+    );
+    if (!mounted) return;
+    _propagateToCurrentStudyDay = false;
+    final edited = await Navigator.of(context).push(
+      MealCreatorScreen.route(
+        existingMeal: editableDefinition,
+        showCurrentDayPropagationOption: hasCurrentDayMatches,
+        onCurrentDayPropagationChanged: (value) {
+          _propagateToCurrentStudyDay = value;
+        },
+      ),
+    );
     if (!mounted || !_revalidateHistoricalEligibility() || edited == null) {
       return;
     }
@@ -258,7 +319,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final subject = Provider.of<AppState>(context, listen: false).activeSubject;
     final historicalTarget = widget.historicalTarget;
     if (subject == null || historicalTarget == null) return;
-    final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
+    final currentStudyDay = _propagateToCurrentStudyDay
+        ? nutritionStudyDayFor(subject, DateTime.now())
+        : null;
     final repository = widget.foodRepository ?? NutritionFoodRepository();
     final l10n = AppLocalizations.of(context)!;
     final mutationId = _compositeMutationIds.putIfAbsent(
@@ -281,11 +344,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       );
       _reconcileProgress(subject, result.progress);
       final autoSaveManager = NutritionRecallAutoSaveManager();
-      await autoSaveManager.rewriteFoodDefinition(
-        subjectId: subject.id,
-        studyDaySnapshot: currentStudyDay,
-        definition: result.definition.snapshot,
-      );
+      if (_propagateToCurrentStudyDay) {
+        await autoSaveManager.rewriteFoodDefinition(
+          subjectId: subject.id,
+          studyDaySnapshot: currentStudyDay!,
+          definition: result.definition.snapshot,
+        );
+      }
       await autoSaveManager.rewriteFoodDefinition(
         subjectId: subject.id,
         studyDaySnapshot: historicalTarget.studyDaySnapshot,
@@ -547,6 +612,27 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     if (!_revalidateHistoricalEligibility()) return;
 
     _meal = _buildMeal(normalizeSkipped: true);
+    if (widget.existingMeal == null &&
+        widget.historicalTarget != null &&
+        _saveToMyItems &&
+        !_meal.isSkipped) {
+      try {
+        final userId = subject?.id ?? 'anonymous';
+        await TemplateViewModel(
+          userId: userId,
+          repository: widget.foodRepository,
+        ).saveMealAsTemplate(name: _mealLabel, meal: _meal);
+      } catch (error, stackTrace) {
+        StudyULogger.error(
+          'Failed to save historical meal to My items: $error\n$stackTrace',
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+        }
+      }
+    }
     _pop(SavedMealEntryResult(_meal, definitionMutated: _definitionMutated));
   }
 
@@ -1019,6 +1105,16 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (widget.existingMeal == null &&
+                  widget.historicalTarget != null)
+                CheckboxListTile(
+                  value: _saveToMyItems,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.save_to_my_items),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  onChanged: (value) =>
+                      setState(() => _saveToMyItems = value ?? false),
+                ),
               if (!_isSkipped) ...[
                 _FoodListSection(
                   meal: _meal,

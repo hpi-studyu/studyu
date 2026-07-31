@@ -1934,6 +1934,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_to_my_items_action => 'In Meine Elemente speichern';
 
   @override
+  String get external_library_copy => 'Kopieren';
+
+  @override
+  String external_library_copy_label(String name) {
+    return '$name in Meine Lebensmittel kopieren';
+  }
+
+  @override
+  String get external_library_copy_saved =>
+      'Kopiertes Lebensmittel wurde in Meine Lebensmittel gespeichert';
+
+  @override
+  String get external_library_copy_save_error =>
+      'Kopiertes Lebensmittel konnte nicht gespeichert werden';
+
+  @override
   String get remove_from_meal => 'Aus Mahlzeit entfernen';
 
   @override
@@ -1990,6 +2006,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get select_food => 'Meine Lebensmittel';
+
+  @override
+  String get food_library_search_hint =>
+      'Meine Lebensmittel und externe Bibliothek durchsuchen…';
 
   @override
   String get search_templates =>
@@ -2366,6 +2386,37 @@ class AppLocalizationsDe extends AppLocalizations {
   String get global_database => 'Datenbank';
 
   @override
+  String get external_library => 'Externe Bibliothek';
+
+  @override
+  String get external_library_loading => 'Externe Bibliothek wird durchsucht…';
+
+  @override
+  String get external_library_error =>
+      'Externe Bibliothek ist nicht verfügbar. Bitte versuchen Sie es erneut.';
+
+  @override
+  String external_library_results_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count externe Ergebnisse gefunden',
+      one: '1 externes Ergebnis gefunden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get review_copied_food => 'Kopiertes Lebensmittel prüfen';
+
+  @override
+  String get external_library_copy_notice =>
+      'Prüfen Sie das kopierte Lebensmittel vor dem Speichern. Beim Speichern wird ein unabhängiges Element in Meine Lebensmittel erstellt.';
+
+  @override
+  String get external_library_save_copy => 'Kopie speichern';
+
+  @override
   String get quick_actions => 'Quick Actions';
 
   @override
@@ -2688,10 +2739,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get historical_edit_scope =>
-      'Eintragsänderungen gelten nur für diesen Studientag';
-
-  @override
   String get historical_edit_expired =>
       'Dieser Studientag kann nicht mehr bearbeitet werden.';
 
@@ -2750,4 +2797,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nutrition_calories => 'Kalorien';
+
+  @override
+  String get historical_edit_mode_heading => 'Früheren Studientag bearbeiten';
+
+  @override
+  String get historical_edit_mode_description =>
+      'Im Verlauf kannst du das Essensprotokoll des vorherigen Studientags aktualisieren. Lebensmittel und Mahlzeiten, die du hier erstellst, stehen dir für zukünftige Essensprotokolle weiterhin zur Verfügung.';
+
+  @override
+  String get update_current_day_entries =>
+      'Passende Einträge im aktuellen Studientag ebenfalls aktualisieren';
 }

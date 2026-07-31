@@ -1,4 +1,24 @@
-part of '../food_search_screen.dart';
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
+import 'package:studyu_app/models/unified_food_result.dart';
+import 'package:studyu_app/models/usda_models.dart';
+import 'package:studyu_app/services/usda_api_service.dart';
+import 'package:studyu_core/core.dart' as studyu;
+
+typedef OpenFoodFactsSearch =
+    Future<SearchResult> Function({
+      required String query,
+      required int page,
+      required int pageSize,
+    });
+typedef UsdaFoodSearch =
+    Future<UsdaSearchResponse> Function({
+      required String query,
+      required int page,
+      required int pageSize,
+    });
 
 final class FoodSearchViewModel extends ChangeNotifier {
   FoodSearchViewModel({
@@ -287,7 +307,7 @@ List<UnifiedFoodResult> rankFoodSearchResults(
   Iterable<UnifiedFoodResult> results,
   String query,
 ) {
-  final normalizedQuery = _normalizeSearchText(query);
+  final normalizedQuery = normalizeFoodSearchText(query);
   final indexed = results.indexed.toList();
   if (normalizedQuery.isEmpty) {
     return indexed.map((entry) => entry.$2).toList(growable: false);
@@ -304,7 +324,7 @@ List<UnifiedFoodResult> rankFoodSearchResults(
 }
 
 int _foodSearchScore(UnifiedFoodResult result, String normalizedQuery) {
-  final name = _normalizeSearchText(result.name);
+  final name = normalizeFoodSearchText(result.name);
   final queryTokens = normalizedQuery.split(' ');
   final nameTokens = name.split(' ');
   final isExact = name == normalizedQuery;
@@ -323,7 +343,7 @@ int _foodSearchScore(UnifiedFoodResult result, String normalizedQuery) {
   return matchTier * 2 + (isBranded ? 1 : 0);
 }
 
-String _normalizeSearchText(String value) =>
+String normalizeFoodSearchText(String value) =>
     value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
 double? _gramsFromMetadata(String? value) {
@@ -335,6 +355,16 @@ double? _gramsFromMetadata(String? value) {
   return match == null
       ? null
       : double.tryParse(match.group(1)!.replaceAll(',', '.'));
+}
+
+studyu.FoodEntry convertFoodResultToFoodEntry(UnifiedFoodResult result) {
+  return switch (result.originalData) {
+    final UsdaFoodItem food => convertUsdaToFoodEntry(food),
+    final Product product => convertOpenFoodFactsToFoodEntry(product),
+    _ => throw ArgumentError(
+      'Unsupported food result source: ${result.source}',
+    ),
+  };
 }
 
 studyu.FoodEntry convertUsdaToFoodEntry(UsdaFoodItem food) {
@@ -378,11 +408,7 @@ studyu.FoodEntry convertUsdaToFoodEntry(UsdaFoodItem food) {
     externalId: food.fdcId.toString(),
     source: studyu.FoodSource.usda,
     confidenceScore: 1.0,
-    originalValues: {
-      'fdcId': food.fdcId,
-      'dataType': food.dataType,
-      'description': food.description,
-    },
+    originalValues: food.toJson(),
   );
 }
 

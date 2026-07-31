@@ -390,18 +390,34 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         children: [
           const SizedBox(height: 16),
           if (_isHistoricalMode) ...[
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.edit_calendar_outlined),
-                title: Text(_historicalDateTitle(context, l10n)),
-                subtitle: Text(
-                  widget.readOnly
-                      ? l10n.nutrition_read_only
-                      : l10n.historical_edit_scope,
-                ),
+            MaterialBanner(
+              padding: const EdgeInsets.all(8),
+              leading: const Icon(
+                Icons.edit_calendar_outlined,
+                color: Colors.orange,
+                size: 24,
               ),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.historical_edit_mode_heading,
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    widget.readOnly
+                        ? l10n.nutrition_read_only
+                        : l10n.historical_edit_mode_description,
+                  ),
+                ],
+              ),
+              actions: const [SizedBox.shrink()],
+              elevation: 0,
+              backgroundColor: Colors.yellow[100],
+              dividerColor: Colors.transparent,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
           ],
           if (!_isHistoricalMode && widget.task?.header != null) ...[
             HtmlText(widget.task!.header, centered: true),

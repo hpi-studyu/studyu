@@ -14,33 +14,21 @@ import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
-import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
-part 'food_search/food_search_view_model.dart';
-part 'food_search/food_selection_store.dart';
-part 'food_search/food_search_results_view.dart';
-part 'food_search/food_selection_tray.dart';
+export 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_model.dart';
 
-typedef OpenFoodFactsSearch =
-    Future<SearchResult> Function({
-      required String query,
-      required int page,
-      required int pageSize,
-    });
-typedef UsdaFoodSearch =
-    Future<UsdaSearchResponse> Function({
-      required String query,
-      required int page,
-      required int pageSize,
-    });
+part 'food_search/food_search_results_view.dart';
+part 'food_search/food_selection_store.dart';
+part 'food_search/food_selection_tray.dart';
 
 IconData _foodIcon(studyu.FoodEntry food) =>
     food.entryType == studyu.FoodEntryType.meal
@@ -540,11 +528,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     _addToSelection(food, key: canonicalFoodSelectionKey(food), source: source);
   }
 
-  studyu.FoodEntry _foodEntryForResult(UnifiedFoodResult result) {
-    return result.source == studyu.FoodSource.openfoodfacts
-        ? convertOpenFoodFactsToFoodEntry(result.originalData as Product)
-        : convertUsdaToFoodEntry(result.originalData as UsdaFoodItem);
-  }
+  studyu.FoodEntry _foodEntryForResult(UnifiedFoodResult result) =>
+      convertFoodResultToFoodEntry(result);
 
   bool _caloriesKnownForResult(UnifiedFoodResult result) =>
       resultCaloriesKnown(result);

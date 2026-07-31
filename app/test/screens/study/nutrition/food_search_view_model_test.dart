@@ -122,6 +122,37 @@ void main() {
       [('Apple', null), ('Apple', 'Brand'), ('Apple pie', null)],
     );
   });
+
+  test('conversion creates fresh identities and preserves source metadata', () {
+    final food = UsdaFoodItem(
+      fdcId: 42,
+      description: 'Apple',
+      dataType: 'Branded',
+      brandOwner: 'Example Foods',
+      gtinUpc: '012345678901',
+      ingredients: 'Apple',
+      servingSize: 150,
+      servingSizeUnit: 'g',
+      foodNutrients: [UsdaFoodNutrient(nutrientId: 1008, value: 52)],
+    );
+    final unified = UnifiedFoodResult(
+      id: '42',
+      name: 'Apple',
+      source: studyu.FoodSource.usda,
+      originalData: food,
+    );
+
+    final first = convertFoodResultToFoodEntry(unified);
+    final second = convertFoodResultToFoodEntry(unified);
+
+    expect(first.id, isNot(second.id));
+    expect(first.foodId, isNot(second.foodId));
+    expect(first.foodVersionId, isNot(second.foodVersionId));
+    expect(first.foodCode, food.gtinUpc);
+    expect(first.externalId, food.fdcId.toString());
+    expect(first.source, studyu.FoodSource.usda);
+    expect(first.originalValues, food.toJson());
+  });
 }
 
 UsdaFoodItem usdaFood(int id, String description) => UsdaFoodItem(
