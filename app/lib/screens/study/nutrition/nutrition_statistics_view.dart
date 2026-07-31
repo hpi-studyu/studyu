@@ -158,21 +158,7 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
     NutritionStatisticsPeriod current,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final averageEnergy = current.average((nutrition) => nutrition.energyKcal);
-    final averageCarbs = current.average((nutrition) => nutrition.carbs);
-    final averageProtein = current.average((nutrition) => nutrition.protein);
-    final averageFat = current.average((nutrition) => nutrition.fat);
     final unavailable = current.unavailableNutrients;
-    final macroEnergy =
-        averageCarbs == null || averageProtein == null || averageFat == null
-        ? 0
-        : averageCarbs * 4 + averageProtein * 4 + averageFat * 9;
-    final contradictoryEnergy =
-        averageEnergy != null && averageEnergy <= 0 && macroEnergy > 0;
-    final energyUnavailable = current.hasUnavailableEnergy;
-    final distributionUnavailable =
-        contradictoryEnergy ||
-        unavailable.any((key) => {'carbs', 'protein', 'fat'}.contains(key));
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -184,41 +170,22 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            Text(
-              energyUnavailable ? '—' : _calories(context, averageEnergy),
-              style: Theme.of(context).textTheme.headlineMedium,
+            NutritionSummaryView(
+              energyKcal: current.average((nutrition) => nutrition.energyKcal),
+              energyUnavailable: current.hasUnavailableEnergy,
+              carbs: unavailable.contains('carbs')
+                  ? null
+                  : current.average((nutrition) => nutrition.carbs),
+              protein: unavailable.contains('protein')
+                  ? null
+                  : current.average((nutrition) => nutrition.protein),
+              fat: unavailable.contains('fat')
+                  ? null
+                  : current.average((nutrition) => nutrition.fat),
+              unavailableNutrients: unavailable,
+              formatEnergy: (value) => _calories(context, value),
+              formatGrams: (value) => _grams(context, value),
             ),
-            const SizedBox(height: 16),
-            _value(
-              l10n.carbohydrates,
-              _grams(
-                context,
-                unavailable.contains('carbs') ? null : averageCarbs,
-              ),
-            ),
-            _value(
-              l10n.protein,
-              _grams(
-                context,
-                unavailable.contains('protein') ? null : averageProtein,
-              ),
-            ),
-            _value(
-              l10n.fat,
-              _grams(context, unavailable.contains('fat') ? null : averageFat),
-            ),
-            if (averageCarbs != null &&
-                averageProtein != null &&
-                averageFat != null &&
-                !distributionUnavailable) ...[
-              const SizedBox(height: 10),
-              NutritionMacroDistributionBar(
-                carbs: averageCarbs,
-                protein: averageProtein,
-                fat: averageFat,
-                unavailableNutrients: unavailable,
-              ),
-            ],
           ],
         ),
       ),
@@ -757,16 +724,6 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
         _Nutrient.fat => nutrition.fat,
         _Nutrient.fiber => nutrition.fiber,
       };
-
-  Widget _value(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2),
-    child: Row(
-      children: [
-        Expanded(child: Text(label)),
-        Text(value),
-      ],
-    ),
-  );
 
   String _lineChartSemantics(
     BuildContext context,
