@@ -243,16 +243,32 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
                 ],
                 const SizedBox(height: 12),
               ],
-              Text(
-                _energyUnavailable
-                    ? '—'
-                    : '${widget.nutrition.energyKcal.round()} kcal',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+              Row(
+                children: [
+                  _iconBadge(
+                    icon: Icons.local_fire_department_outlined,
+                    color: theme.colorScheme.secondary,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _energyUnavailable
+                              ? '—'
+                              : '${widget.nutrition.energyKcal.round()} kcal',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(l10n.total_energy),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 2),
-              Text(l10n.total_energy),
               const SizedBox(height: 16),
               _macronutrients(context),
             ],
@@ -372,6 +388,13 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 children: [
+                  _iconBadge(
+                    icon: Icons.eco_outlined,
+                    color: Colors.green.shade700,
+                    size: 32,
+                    iconSize: 18,
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       l10n.detailed_nutrients,
@@ -426,6 +449,23 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
       ],
     );
   }
+
+  Widget _iconBadge({
+    required IconData icon,
+    required Color color,
+    double size = 40,
+    double iconSize = 22,
+  }) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.12),
+      shape: BoxShape.circle,
+    ),
+    child: ExcludeSemantics(
+      child: Icon(icon, color: color, size: iconSize),
+    ),
+  );
 
   Widget _group(BuildContext context, String title, List<Widget> rows) {
     final theme = Theme.of(context);
