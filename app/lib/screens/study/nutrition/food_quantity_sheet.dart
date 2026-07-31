@@ -5,10 +5,13 @@ import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart
 import 'package:studyu_core/core.dart';
 
 enum FoodQuantityAction {
+  /// Legacy actions retained for source compatibility.
   existingMeal,
   addToSelection,
   addMealToSelection,
   updateSelection,
+  addToMeal,
+  update,
 }
 
 class FoodQuantitySheet extends StatefulWidget {
@@ -17,6 +20,7 @@ class FoodQuantitySheet extends StatefulWidget {
   final FoodQuantityAction action;
   final double? initialAmount;
   final bool caloriesKnown;
+  final bool gramsKnown;
 
   const FoodQuantitySheet({
     required this.food,
@@ -24,6 +28,7 @@ class FoodQuantitySheet extends StatefulWidget {
     this.action = FoodQuantityAction.existingMeal,
     this.initialAmount,
     this.caloriesKnown = true,
+    this.gramsKnown = true,
     super.key,
   });
 
@@ -34,6 +39,7 @@ class FoodQuantitySheet extends StatefulWidget {
     FoodQuantityAction action = FoodQuantityAction.existingMeal,
     double? initialAmount,
     bool caloriesKnown = true,
+    bool gramsKnown = true,
   }) => showModalBottomSheet<FoodEntry>(
     context: context,
     isScrollControlled: true,
@@ -44,6 +50,7 @@ class FoodQuantitySheet extends StatefulWidget {
       action: action,
       initialAmount: initialAmount,
       caloriesKnown: caloriesKnown,
+      gramsKnown: gramsKnown,
     ),
   );
 
@@ -102,14 +109,18 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
 
   String _servingDescription(AppLocalizations l10n) {
     final portionReference = widget.food.portionReference?.trim();
-    if (portionReference != null && portionReference.isNotEmpty) {
-      return portionReference;
+    if (!widget.gramsKnown) {
+      return portionReference == null || portionReference.isEmpty
+          ? l10n.serving_amount(1)
+          : portionReference;
     }
-    final unit = widget.food.unit.trim();
-    return l10n.food_quantity_serving_value(
+    final servingWeight = l10n.grams_per_serving(
       _formatNumber(widget.food.servingSizeGrams),
-      unit.isEmpty ? l10n.food_quantity_serving_unit(1) : unit,
     );
+    if (portionReference != null && portionReference.isNotEmpty) {
+      return '$portionReference · $servingWeight';
+    }
+    return servingWeight;
   }
 
   String _amountUnit(AppLocalizations l10n, double amount) {
@@ -182,26 +193,28 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (imageUrl != null) ...[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            imageUrl,
-                            width: 64,
-                            height: 64,
-                            fit: BoxFit.cover,
-                            semanticLabel: widget.food.name,
-                            errorBuilder: (_, _, _) => ColoredBox(
-                              color: theme.colorScheme.surfaceContainerHighest,
-                              child: Icon(
-                                Icons.restaurant_outlined,
-                                color: theme.colorScheme.onSurfaceVariant,
+                      SizedBox(
+                        width: 64,
+                        height: 64,
+                        child: imageUrl == null
+                            ? _FoodImageFallback(
+                                theme: theme,
+                                semanticLabel: widget.food.name,
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  semanticLabel: widget.food.name,
+                                  errorBuilder: (_, _, _) => _FoodImageFallback(
+                                    theme: theme,
+                                    semanticLabel: widget.food.name,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                      ],
+                      ),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,62 +241,76 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    l10n.food_quantity_amount,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    constraints: const BoxConstraints(minHeight: 56),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: amount > 1
-                              ? () => _changeAmount(-1)
-                              : null,
-                          tooltip: l10n.food_selection_decrement(
-                            widget.food.name,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Text(
+                            l10n.food_quantity_amount,
+                            style: theme.textTheme.titleMedium,
                           ),
-                          icon: const Icon(Icons.remove),
                         ),
-                        Expanded(
-                          child: TextField(
-                            controller: _amountController,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp('[0-9.,]'),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          constraints: const BoxConstraints(minHeight: 56),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: amount > 1
+                                    ? () => _changeAmount(-1)
+                                    : null,
+                                tooltip: l10n.food_selection_decrement(
+                                  widget.food.name,
+                                ),
+                                icon: const Icon(Icons.remove),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: _amountController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp('[0-9.,]'),
+                                    ),
+                                  ],
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.titleMedium,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    suffixText: _amountUnit(l10n, amount),
+                                  ),
+                                  onChanged: _updateAmount,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () => _changeAmount(1),
+                                tooltip: l10n.food_selection_increment(
+                                  widget.food.name,
+                                ),
+                                icon: const Icon(Icons.add),
                               ),
                             ],
-                            textAlign: TextAlign.center,
-                            style: theme.textTheme.titleMedium,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                              ),
-                              suffixText: _amountUnit(l10n, amount),
-                            ),
-                            onChanged: _updateAmount,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () => _changeAmount(1),
-                          tooltip: l10n.food_selection_increment(
-                            widget.food.name,
-                          ),
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   if (_scaledFood == null) ...[
                     const SizedBox(height: 4),
@@ -372,15 +399,20 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                   : () => Navigator.pop(context, _scaledFood),
               child: Text(switch (widget.action) {
                 FoodQuantityAction.addToSelection =>
-                  l10n.food_quantity_add_to_selection,
-                FoodQuantityAction.addMealToSelection =>
-                  l10n.food_quantity_add_meal_to_selection,
-                FoodQuantityAction.updateSelection =>
-                  l10n.food_quantity_update_selection,
-                FoodQuantityAction.existingMeal =>
                   widget.mealLabel == null
                       ? l10n.add_food
                       : l10n.food_quantity_add_to_meal(widget.mealLabel!),
+                FoodQuantityAction.addMealToSelection =>
+                  widget.mealLabel == null
+                      ? l10n.add_food
+                      : l10n.food_quantity_add_to_meal(widget.mealLabel!),
+                FoodQuantityAction.addToMeal =>
+                  widget.mealLabel == null
+                      ? l10n.add_food
+                      : l10n.food_quantity_add_to_meal(widget.mealLabel!),
+                FoodQuantityAction.update => l10n.update,
+                FoodQuantityAction.updateSelection => l10n.update,
+                FoodQuantityAction.existingMeal => l10n.update,
               }),
             ),
           ),
@@ -388,6 +420,26 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
       ),
     );
   }
+}
+
+class _FoodImageFallback extends StatelessWidget {
+  final ThemeData theme;
+  final String semanticLabel;
+
+  const _FoodImageFallback({required this.theme, required this.semanticLabel});
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: theme.colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Icon(
+      Icons.restaurant_outlined,
+      color: theme.colorScheme.onSurfaceVariant,
+      semanticLabel: semanticLabel,
+    ),
+  );
 }
 
 class _NutrientGrid extends StatelessWidget {

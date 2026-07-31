@@ -257,6 +257,30 @@ String formatFoodNumber(double value) => value == value.roundToDouble()
 num foodServingAmount(double value) =>
     value == value.roundToDouble() ? value.round() : value;
 
+String foodTotalMetadata(
+  AppLocalizations l10n,
+  studyu.FoodEntry food,
+  int quantity, {
+  bool gramsKnown = true,
+  bool caloriesKnown = true,
+}) {
+  final grams = gramsKnown
+      ? '${formatFoodNumber(food.servingSizeGrams * food.amount * quantity)} g'
+      : '— g';
+  final calories = caloriesKnown
+      ? l10n.kcal_value(
+          (food.nutrition.energyKcal *
+                  (food.entryType == studyu.FoodEntryType.meal
+                      ? food.amount
+                      : 1) *
+                  quantity)
+              .round()
+              .toString(),
+        )
+      : '— kcal';
+  return '$grams · $calories';
+}
+
 String selectedFoodServingMetadata(
   AppLocalizations l10n,
   studyu.FoodEntry food,

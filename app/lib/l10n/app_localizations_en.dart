@@ -2824,4 +2824,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get update_current_day_entries =>
       'Also update matching entries in current study day';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get current_meal_only_banner =>
+      'Changes apply only to this meal. For permanent changes, use Food Library.';
+
+  @override
+  String grams_per_serving(Object grams) {
+    return '$grams g per serving';
+  }
 }

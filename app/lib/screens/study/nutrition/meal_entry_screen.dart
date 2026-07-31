@@ -46,7 +46,7 @@ final class DiscardedMealEntryResult extends MealEntryResult {
   const DiscardedMealEntryResult();
 }
 
-enum _FoodAction { adjustQuantity, edit, editDefinition, saveTemplate, remove }
+enum _FoodAction { details, edit, editDefinition, saveTemplate, remove }
 
 class _MealTypeSelection {
   final MealType type;
@@ -275,25 +275,53 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final hasCurrentDayMatches =
         editReusableDefinition && await _hasCurrentStudyDayMatches(food.foodId);
     if (!mounted) return;
-    final result = await Navigator.of(context).push(
-      FoodEntryScreen.route(
-        existingFood: food,
-        showSearchAction: false,
-        historicalTarget: widget.historicalTarget,
-        editReusableDefinition: editReusableDefinition,
-        hasCurrentStudyDayMatches: hasCurrentDayMatches,
-        repository: widget.foodRepository,
-      ),
-    );
+    final FoodEntry? result;
+    if (food.entryType == FoodEntryType.meal) {
+      result = await Navigator.of(context).push(
+        MealCreatorScreen.route(
+          existingMeal: food,
+          showCurrentMealOnlyNotice: true,
+        ),
+      );
+    } else {
+      result = await Navigator.of(context).push(
+        FoodEntryScreen.route(
+          existingFood: food,
+          showSearchAction: false,
+          historicalTarget: widget.historicalTarget,
+          editReusableDefinition: editReusableDefinition,
+          hasCurrentStudyDayMatches: hasCurrentDayMatches,
+          showCurrentMealOnlyNotice: !editReusableDefinition,
+          repository: widget.foodRepository,
+        ),
+      );
+    }
     if (!mounted || !_revalidateHistoricalEligibility()) return;
-    if (result == null) return;
+    final edited = result;
+    if (edited == null) return;
 
     final index = _foodIndex(food.id);
     if (index == -1) return;
     setState(() {
       _definitionMutated = _definitionMutated || editReusableDefinition;
-      _meal.foods[index] = result;
+      _meal.foods[index] = editReusableDefinition
+          ? edited
+          : _replaceOccurrence(food, edited);
     });
+  }
+
+  FoodEntry _replaceOccurrence(FoodEntry existing, FoodEntry edited) {
+    final replacement = cloneFoodEntry(edited)
+      ..id = existing.id
+      ..foodId = existing.foodId
+      ..foodVersionId = existing.foodVersionId
+      ..templateId = existing.templateId
+      ..createdAt = existing.createdAt
+      ..parentEntryId = existing.parentEntryId;
+    for (final component in replacement.componentFoods ?? <FoodComposition>[]) {
+      component.parentEntryId = replacement.id;
+    }
+    return replacement;
   }
 
   Future<void> _editCompositeMealDefinition(FoodEntry existingMeal) async {
@@ -420,6 +448,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       context,
       food: food,
       mealLabel: _mealLabel,
+      action: FoodQuantityAction.update,
     );
     if (!mounted || !_revalidateHistoricalEligibility()) return;
     if (result == null) return;
@@ -461,10 +490,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.straighten_outlined),
-              title: Text(l10n.adjust_quantity),
-              onTap: () =>
-                  Navigator.pop(sheetContext, _FoodAction.adjustQuantity),
+              leading: const Icon(Icons.info_outline),
+              title: Text(l10n.details),
+              onTap: () => Navigator.pop(sheetContext, _FoodAction.details),
             ),
             ListTile(
               leading: const Icon(Icons.edit_outlined),
@@ -503,7 +531,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
     if (!mounted) return;
     switch (action) {
-      case _FoodAction.adjustQuantity:
+      case _FoodAction.details:
         // The menu is already dismissed before the quantity sheet opens.
         await _adjustFoodQuantity(food);
       case _FoodAction.edit:
@@ -1034,6 +1062,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           context,
           food: item.foodEntry,
           mealLabel: _mealLabel,
+          action: FoodQuantityAction.addToMeal,
         );
         if (food != null && mounted) {
           setState(() => _meal.foods.add(food));
@@ -1062,6 +1091,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           context,
           food: item.foodEntry,
           mealLabel: _mealLabel,
+          action: FoodQuantityAction.addToMeal,
         );
         if (food != null && mounted) {
           setState(() => _meal.foods.add(food));
@@ -1121,6 +1151,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                   isSkipped: false,
                   showValidationError: _hasAttemptedSave && _meal.foods.isEmpty,
                   onAddFood: _addFood,
+                  onFoodTap: _adjustFoodQuantity,
                   onFoodActions: _showFoodActions,
                   onSaveToLibrary: widget.historicalTarget == null
                       ? _openMealBuilder
@@ -1509,6 +1540,7 @@ class _FoodListSection extends StatelessWidget {
   final MealLog meal;
   final bool isSkipped;
   final VoidCallback onAddFood;
+  final Future<void> Function(FoodEntry) onFoodTap;
   final Future<void> Function(FoodEntry) onFoodActions;
   final VoidCallback? onSaveToLibrary;
   final bool showValidationError;
@@ -1517,6 +1549,7 @@ class _FoodListSection extends StatelessWidget {
     required this.meal,
     required this.isSkipped,
     required this.onAddFood,
+    required this.onFoodTap,
     required this.onFoodActions,
     required this.onSaveToLibrary,
     this.showValidationError = false,
@@ -1593,7 +1626,11 @@ class _FoodListSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         ...meal.foods.map(
-          (food) => _FoodCard(food: food, onTap: () => onFoodActions(food)),
+          (food) => _FoodCard(
+            food: food,
+            onTap: () => onFoodTap(food),
+            onOverflow: () => onFoodActions(food),
+          ),
         ),
       ],
     );
@@ -1673,8 +1710,13 @@ class _EmptyFoodState extends StatelessWidget {
 class _FoodCard extends StatelessWidget {
   final FoodEntry food;
   final VoidCallback onTap;
+  final VoidCallback onOverflow;
 
-  const _FoodCard({required this.food, required this.onTap});
+  const _FoodCard({
+    required this.food,
+    required this.onTap,
+    required this.onOverflow,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1688,74 +1730,83 @@ class _FoodCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 44,
-                height: 44,
-                child: imageUrl == null
-                    ? _buildFallbackIcon(theme, icon)
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) =>
-                              _buildFallbackIcon(theme, icon),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: imageUrl == null
+                            ? _buildFallbackIcon(theme, icon)
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) =>
+                                      _buildFallbackIcon(theme, icon),
+                                ),
+                              ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              food.name,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Text(
+                                  '${food.amount} ${food.unit}',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                Text(
+                                  ' • ',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                Text(
+                                  '${food.nutrition.energyKcal.toStringAsFixed(0)} kcal',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      food.name,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        Text(
-                          '${food.amount} ${food.unit}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          ' • ',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          '${food.nutrition.energyKcal.toStringAsFixed(0)} kcal',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.more_vert, size: 20),
-                tooltip: l10n.more_options,
-                onPressed: onTap,
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert, size: 20),
+              tooltip: l10n.more_options,
+              onPressed: onOverflow,
+            ),
+          ],
         ),
       ),
     );

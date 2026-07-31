@@ -18,6 +18,7 @@ class MealCreatorScreen extends StatefulWidget {
   final List<FoodEntry> initialFoods;
   final String? initialName;
   final bool showCurrentDayPropagationOption;
+  final bool showCurrentMealOnlyNotice;
   final ValueChanged<bool>? onCurrentDayPropagationChanged;
 
   const MealCreatorScreen({
@@ -25,6 +26,7 @@ class MealCreatorScreen extends StatefulWidget {
     this.initialFoods = const [],
     this.initialName,
     this.showCurrentDayPropagationOption = false,
+    this.showCurrentMealOnlyNotice = false,
     this.onCurrentDayPropagationChanged,
     super.key,
   });
@@ -34,6 +36,7 @@ class MealCreatorScreen extends StatefulWidget {
     List<FoodEntry> initialFoods = const [],
     String? initialName,
     bool showCurrentDayPropagationOption = false,
+    bool showCurrentMealOnlyNotice = false,
     ValueChanged<bool>? onCurrentDayPropagationChanged,
   }) => MaterialPageRoute(
     builder: (_) => MealCreatorScreen(
@@ -41,6 +44,7 @@ class MealCreatorScreen extends StatefulWidget {
       initialFoods: initialFoods,
       initialName: initialName,
       showCurrentDayPropagationOption: showCurrentDayPropagationOption,
+      showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
       onCurrentDayPropagationChanged: onCurrentDayPropagationChanged,
     ),
   );
@@ -321,12 +325,22 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     );
   }
 
+  double _calculateServingSizeGrams() {
+    final totalGrams = [
+      for (var index = 0; index < _componentFoods.length; index++)
+        _componentFoods[index].servingSizeGrams * _foods[index].amount,
+    ].fold<double>(0, (total, grams) => total + grams);
+    final servings = double.parse(_servingsController.text);
+    return totalGrams / servings;
+  }
+
   FoodEntry? _buildMeal() {
     if (!_formKey.currentState!.validate() || _foods.isEmpty) {
       return null;
     }
 
     final nutrition = _calculateTotalNutrition();
+    final servingSizeGrams = _calculateServingSizeGrams();
 
     PreparationDetails? preparationDetails;
     if (_rawWeightController.text.isNotEmpty &&
@@ -368,7 +382,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
                 : _descriptionController.text,
             amount: double.parse(_servingsController.text),
             unit: 'serving',
-            servingSizeGrams: nutrition.energyKcal * 0.24,
+            servingSizeGrams: servingSizeGrams,
             portionEstimationMethod: PortionEstimationMethod.householdMeasure,
             portionState: PortionState.cooked,
             nutrition: nutrition,
@@ -391,7 +405,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
                 : _descriptionController.text,
             amount: double.parse(_servingsController.text),
             unit: existing.unit,
-            servingSizeGrams: nutrition.energyKcal * 0.24,
+            servingSizeGrams: servingSizeGrams,
             portionReference: existing.portionReference,
             portionEstimationMethod: existing.portionEstimationMethod,
             portionState: existing.portionState,
@@ -554,6 +568,26 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            if (widget.showCurrentMealOnlyNotice &&
+                widget.existingMeal != null) ...[
+              Card(
+                color: theme.colorScheme.secondaryContainer,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.onSecondaryContainer,
+                  ),
+                  title: Text(
+                    l10n.current_meal_only_banner,
+                    style: TextStyle(
+                      color: theme.colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+
             // ========== MEAL DETAILS ==========
             _MealInfoCard(
               nameController: _nameController,

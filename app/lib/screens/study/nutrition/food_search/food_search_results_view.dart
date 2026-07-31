@@ -100,89 +100,101 @@ class _HistoryFoodCard extends StatelessWidget {
             selected.baseFood,
             selected.quantity,
             caloriesKnown: selected.caloriesKnown,
+            gramsKnown: selected.gramsKnown,
           );
     return SelectionFeedbackCard(
       selected: selected != null,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed)
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
-              : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 44,
-                  height: 44,
-                  child: imageUrl == null
-                      ? fallbackFoodIcon(theme, _foodIcon(food))
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) =>
-                                fallbackFoodIcon(theme, _foodIcon(food)),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(12),
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.pressed)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                      : null,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 44,
+                          height: 44,
+                          child: imageUrl == null
+                              ? fallbackFoodIcon(theme, _foodIcon(food))
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, _, _) => fallbackFoodIcon(
+                                      theme,
+                                      _foodIcon(food),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                food.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                    ListTileTheme.of(context).titleTextStyle ??
+                                    theme.textTheme.bodyLarge,
+                              ),
+                              const SizedBox(height: 2),
+                              AnimatedSwitcher(
+                                duration: selectionAnimationDuration(context),
+                                child: Text(
+                                  metadata,
+                                  key: ValueKey(metadata),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        food.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            ListTileTheme.of(context).titleTextStyle ??
-                            theme.textTheme.bodyLarge,
-                      ),
-                      const SizedBox(height: 2),
-                      AnimatedSwitcher(
-                        duration: selectionAnimationDuration(context),
-                        child: Text(
-                          metadata,
-                          key: ValueKey(metadata),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (selected == null)
-                  Builder(
-                    builder: (buttonContext) => TextButton(
-                      onPressed: () => onAdd(globalCenter(buttonContext)),
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      child: Text(l10n.add),
+                      ],
                     ),
-                  )
-                else
-                  SelectionQuantityControl(
-                    name: food.name,
-                    quantity: selected.quantity,
-                    quantityStyle: theme.textTheme.titleMedium,
-                    onIncrement: onIncrement!,
-                    onDecrement: onDecrement!,
                   ),
-              ],
+                ),
+              ),
             ),
-          ),
+            if (selected == null)
+              Builder(
+                builder: (buttonContext) => TextButton(
+                  onPressed: () => onAdd(globalCenter(buttonContext)),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(l10n.add),
+                ),
+              )
+            else
+              SelectionQuantityControl(
+                name: food.name,
+                quantity: selected.quantity,
+                quantityStyle: theme.textTheme.titleMedium,
+                onIncrement: onIncrement!,
+                onDecrement: onDecrement!,
+              ),
+          ],
         ),
       ),
     );
@@ -218,107 +230,112 @@ class _FoodResultCard extends StatelessWidget {
         ? null
         : selectionStore?.itemFor(selectionKey!);
     final metadata = selected == null
-        ? [
-            l10n.serving_amount(1),
-            if (calories == null)
-              '— kcal'
-            else
-              l10n.kcal_value(calories.round().toString()),
-          ].join(' · ')
+        ? '${result.servingSizeGrams == null ? '—' : _formatNumber(result.servingSizeGrams!)} g · '
+              '${calories == null ? '— kcal' : l10n.kcal_value(calories.round().toString())}'
         : _selectedFoodServingMetadata(
             l10n,
             selected.baseFood,
             selected.quantity,
             caloriesKnown: selected.caloriesKnown,
+            gramsKnown: selected.gramsKnown,
           );
 
     return SelectionFeedbackCard(
       selected: selected != null,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed)
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
-              : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 48,
-                height: 48,
-                child: result.imageUrl != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          result.imageUrl!,
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => fallbackFoodIcon(
-                            theme,
-                            Icons.restaurant_outlined,
-                            size: 24,
-                          ),
-                        ),
-                      )
-                    : fallbackFoodIcon(
-                        theme,
-                        Icons.restaurant_outlined,
-                        size: 24,
-                      ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      result.name,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    AnimatedSwitcher(
-                      duration: selectionAnimationDuration(context),
-                      child: Text(
-                        metadata,
-                        key: ValueKey(metadata),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                  ],
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(12),
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.pressed)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                      : null,
                 ),
-              ),
-              if (selected == null)
-                Builder(
-                  builder: (buttonContext) => TextButton(
-                    onPressed: () => onAdd(globalCenter(buttonContext)),
-                    style: TextButton.styleFrom(
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    child: Text(l10n.add),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: result.imageUrl != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  result.imageUrl!,
+                                  width: 48,
+                                  height: 48,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) => fallbackFoodIcon(
+                                    theme,
+                                    Icons.restaurant_outlined,
+                                    size: 24,
+                                  ),
+                                ),
+                              )
+                            : fallbackFoodIcon(
+                                theme,
+                                Icons.restaurant_outlined,
+                                size: 24,
+                              ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              result.name,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            AnimatedSwitcher(
+                              duration: selectionAnimationDuration(context),
+                              child: Text(
+                                metadata,
+                                key: ValueKey(metadata),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              else
-                SelectionQuantityControl(
-                  name: result.name,
-                  quantity: selected.quantity,
-                  quantityStyle: theme.textTheme.titleMedium,
-                  onIncrement: onIncrement!,
-                  onDecrement: onDecrement!,
                 ),
-            ],
-          ),
+              ),
+            ),
+            if (selected == null)
+              Builder(
+                builder: (buttonContext) => TextButton(
+                  onPressed: () => onAdd(globalCenter(buttonContext)),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(l10n.add),
+                ),
+              )
+            else
+              SelectionQuantityControl(
+                name: result.name,
+                quantity: selected.quantity,
+                quantityStyle: theme.textTheme.titleMedium,
+                onIncrement: onIncrement!,
+                onDecrement: onDecrement!,
+              ),
+          ],
         ),
       ),
     );
@@ -839,40 +856,31 @@ String _formatNumber(double value) => value == value.roundToDouble()
     ? value.round().toString()
     : value.toStringAsFixed(1);
 
-num _servingAmount(double value) =>
-    value == value.roundToDouble() ? value.round() : value;
-
-String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) {
-  final unit = food.unit.trim();
-  final serving = unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(_servingAmount(food.amount))
-      : '${_formatNumber(food.amount)} $unit';
-  return '$serving · ${l10n.kcal_value(food.nutrition.energyKcal.round().toString())}';
-}
+String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) =>
+    foodTotalMetadata(
+      l10n,
+      food,
+      1,
+      caloriesKnown: !food.nutrition.unavailableNutrients.contains(
+        'energyKcal',
+      ),
+    );
 
 String _selectedFoodServingMetadata(
   AppLocalizations l10n,
   studyu.FoodEntry food,
   int quantity, {
   required bool caloriesKnown,
-}) {
-  final grams = food.servingSizeGrams * food.amount * quantity;
-  final calories = caloriesKnown
-      ? l10n.kcal_value(
-          (food.nutrition.energyKcal * quantity).round().toString(),
-        )
-      : '— kcal';
-  return '${_formatNumber(grams)} g · $calories';
-}
+  required bool gramsKnown,
+}) => foodTotalMetadata(
+  l10n,
+  food,
+  quantity,
+  gramsKnown: gramsKnown,
+  caloriesKnown: caloriesKnown,
+);
 
-double? _resultCalories(UnifiedFoodResult result) {
-  return switch (result.originalData) {
-    final UsdaFoodItem food when food.getNutrientValue(1008) != null =>
-      food.energyKcal100g * (food.servingSize ?? 100) / 100,
-    final UsdaFoodItem _ => null,
-    _ => result.calories,
-  };
-}
+double? _resultCalories(UnifiedFoodResult result) => result.calories;
 
 bool resultCaloriesKnown(UnifiedFoodResult result) {
   return switch (result.originalData) {

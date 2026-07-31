@@ -274,10 +274,8 @@ UnifiedFoodResult _unifiedOpenFoodFactsResult(Product product) {
     Nutrient.energyKCal,
     PerSize.oneHundredGrams,
   );
-  final calorieBasisGrams =
-      _gramsFromMetadata(product.servingSize) ??
-      _gramsFromMetadata(product.quantity) ??
-      100.0;
+  final servingSizeGrams = _gramsFromMetadata(product.servingSize);
+  final calorieBasisGrams = servingSizeGrams ?? 100.0;
 
   return UnifiedFoodResult(
     id: product.barcode ?? '',
@@ -288,25 +286,42 @@ UnifiedFoodResult _unifiedOpenFoodFactsResult(Product product) {
         ? null
         : caloriesPer100g * calorieBasisGrams / 100,
     calorieBasisGrams: caloriesPer100g == null ? null : calorieBasisGrams,
+    servingSizeGrams: servingSizeGrams,
     source: studyu.FoodSource.openfoodfacts,
     originalData: product,
   );
 }
 
 UnifiedFoodResult _unifiedUsdaResult(UsdaFoodItem food) {
-  final servingSizeGrams = food.servingSize ?? 100;
   final caloriesPer100g = food.getNutrientValue(1008);
+  final servingSize = food.servingSize;
+  final hasGramServing =
+      _isGramServingUnit(food.servingSizeUnit) &&
+      servingSize != null &&
+      servingSize.isFinite &&
+      servingSize > 0;
+  final servingSizeGrams = hasGramServing ? servingSize : null;
+  final calorieBasisGrams = hasGramServing ? servingSize : 100.0;
+
   return UnifiedFoodResult(
     id: food.fdcId.toString(),
     name: food.description ?? 'Unknown',
     brand: food.brandOwner ?? food.brandName,
     calories: caloriesPer100g == null
-        ? null
-        : caloriesPer100g * servingSizeGrams / 100,
-    calorieBasisGrams: caloriesPer100g == null ? null : servingSizeGrams,
+        ? caloriesPer100g
+        : caloriesPer100g * calorieBasisGrams / 100,
+    calorieBasisGrams: caloriesPer100g == null ? null : calorieBasisGrams,
+    servingSizeGrams: servingSizeGrams,
     source: studyu.FoodSource.usda,
     originalData: food,
   );
+}
+
+bool _isGramServingUnit(String? unit) {
+  return switch (unit?.trim().toLowerCase()) {
+    'g' || 'gram' || 'grams' => true,
+    _ => false,
+  };
 }
 
 List<UnifiedFoodResult> rankFoodSearchResults(
@@ -374,8 +389,16 @@ studyu.FoodEntry convertFoodResultToFoodEntry(UnifiedFoodResult result) {
 }
 
 studyu.FoodEntry convertUsdaToFoodEntry(UsdaFoodItem food) {
-  final servingSizeGrams = food.servingSize ?? 100.0;
-  final servingSizeUnit = food.servingSizeUnit ?? 'g';
+  final servingSize = food.servingSize;
+  final hasGramServing =
+      _isGramServingUnit(food.servingSizeUnit) &&
+      servingSize != null &&
+      servingSize.isFinite &&
+      servingSize > 0;
+  final servingSizeGrams = hasGramServing ? servingSize : 100.0;
+  final servingSizeUnit = hasGramServing
+      ? food.servingSizeUnit!.trim()
+      : 'serving';
   final scale = servingSizeGrams / 100.0;
 
   return studyu.FoodEntry.withId(

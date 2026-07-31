@@ -1319,5 +1319,8 @@
   "nutrition_calories": "Calories",
   "historical_edit_mode_heading": "Editing a previous study day",
   "historical_edit_mode_description": "On this History screen, you can update the meal log from your previous study day. Foods and meals you create here remain available for future meal logs.",
-  "update_current_day_entries": "Also update matching entries in current study day"
+  "update_current_day_entries": "Also update matching entries in current study day",
+  "update": "Update",
+  "current_meal_only_banner": "Changes apply only to this meal. For permanent changes, use Food Library.",
+  "grams_per_serving": "{grams} g per serving"
 }

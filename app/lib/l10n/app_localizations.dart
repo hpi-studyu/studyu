@@ -5056,6 +5056,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Also update matching entries in current study day'**
   String get update_current_day_entries;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @current_meal_only_banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes apply only to this meal. For permanent changes, use Food Library.'**
+  String get current_meal_only_banner;
+
+  /// No description provided for @grams_per_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'{grams} g per serving'**
+  String grams_per_serving(Object grams);
 }
 
 class _AppLocalizationsDelegate

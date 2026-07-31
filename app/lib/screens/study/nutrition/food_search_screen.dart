@@ -12,7 +12,6 @@ import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
-import 'package:studyu_app/screens/study/nutrition/food_library_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
@@ -68,7 +67,7 @@ enum _FoodSearchSection { recent, myItems }
 
 enum _FoodSearchFilter { all, myItems, database }
 
-enum _FoodSearchAction { food, meal, foodLibrary }
+enum _FoodSearchAction { food, meal }
 
 class FoodSearchScreen extends StatelessWidget {
   final bool allowMeals;
@@ -506,7 +505,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     if (!_isAllowedFood(item.food)) return;
     final food = item.createSelection();
     if (_selectionStore == null) {
-      _showQuantity(food);
+      _showQuantity(food, action: FoodQuantityAction.addToMeal);
       return;
     }
     final key = canonicalFoodSelectionKey(food);
@@ -515,10 +514,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       selected?.baseFood ?? food,
       key: key,
       action: selected == null
-          ? food.entryType == studyu.FoodEntryType.meal
-                ? FoodQuantityAction.addMealToSelection
-                : FoodQuantityAction.addToSelection
-          : FoodQuantityAction.updateSelection,
+          ? FoodQuantityAction.addToMeal
+          : FoodQuantityAction.update,
     );
   }
 
@@ -546,9 +543,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       selected?.baseFood ?? foodEntry,
       key: key,
       action: selected == null
-          ? FoodQuantityAction.addToSelection
-          : FoodQuantityAction.updateSelection,
+          ? FoodQuantityAction.addToMeal
+          : FoodQuantityAction.update,
       caloriesKnown: _caloriesKnownForResult(result),
+      gramsKnown: result.servingSizeGrams != null,
     );
   }
 
@@ -558,6 +556,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       food,
       key: canonicalFoodSelectionKey(food),
       caloriesKnown: _caloriesKnownForResult(result),
+      gramsKnown: result.servingSizeGrams != null,
       source: source,
       imageUrl: result.imageUrl,
     );
@@ -583,10 +582,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       selected?.baseFood ?? foodEntry,
       key: key,
       action: selected == null
-          ? foodEntry.entryType == studyu.FoodEntryType.meal
-                ? FoodQuantityAction.addMealToSelection
-                : FoodQuantityAction.addToSelection
-          : FoodQuantityAction.updateSelection,
+          ? FoodQuantityAction.addToMeal
+          : FoodQuantityAction.update,
     );
   }
 
@@ -599,8 +596,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   Future<void> _showQuantity(
     studyu.FoodEntry foodEntry, {
     String? key,
-    FoodQuantityAction action = FoodQuantityAction.existingMeal,
+    required FoodQuantityAction action,
     bool caloriesKnown = true,
+    bool gramsKnown = true,
   }) async {
     _removeTransfer();
     if (_showServingHint) {
@@ -616,21 +614,22 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
           ? null
           : selected.baseFood.amount * selected.quantity,
       caloriesKnown: caloriesKnown,
+      gramsKnown: gramsKnown,
     );
     if (result == null || !mounted) return;
-    if (action == FoodQuantityAction.updateSelection && key != null) {
+    if (action == FoodQuantityAction.update && key != null) {
       _selectionStore!.replaceBase(
         key,
         result,
         caloriesKnown:
             _selectionStore.itemFor(key)?.caloriesKnown ?? caloriesKnown,
       );
-    } else if (action == FoodQuantityAction.addToSelection ||
-        action == FoodQuantityAction.addMealToSelection) {
+    } else if (action == FoodQuantityAction.addToMeal) {
       _addToSelection(
         result,
         key: key ?? canonicalFoodSelectionKey(result),
         caloriesKnown: caloriesKnown,
+        gramsKnown: gramsKnown,
       );
     } else {
       _completeSingleSelection(result);
@@ -692,6 +691,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     studyu.FoodEntry food, {
     required String key,
     bool caloriesKnown = true,
+    bool gramsKnown = true,
     Offset? source,
     String? imageUrl,
   }) {
@@ -702,7 +702,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     final existing = _selectionStore.itemFor(key);
     final firstSelection = _selectionStore.isEmpty;
     final image = _cachedTransferImage(context, imageUrl ?? foodImageUrl(food));
-    _selectionStore.addOrIncrement(key, food, caloriesKnown: caloriesKnown);
+    _selectionStore.addOrIncrement(
+      key,
+      food,
+      caloriesKnown: caloriesKnown,
+      gramsKnown: gramsKnown,
+    );
 
     try {
       _animateTransfer(
@@ -782,11 +787,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     });
   }
 
-  void _openFoodLibrary() {
-    _removeTransfer();
-    Navigator.push(context, FoodLibraryScreen.route());
-  }
-
   Future<void> _scanBarcode() async {
     _removeTransfer();
     final result = await Navigator.push<studyu.FoodEntry>(
@@ -803,8 +803,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         selected?.baseFood ?? result,
         key: key,
         action: selected == null
-            ? FoodQuantityAction.addToSelection
-            : FoodQuantityAction.updateSelection,
+            ? FoodQuantityAction.addToMeal
+            : FoodQuantityAction.update,
       );
     }
   }
@@ -883,8 +883,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                     _addManually();
                   case _FoodSearchAction.meal:
                     _createMeal();
-                  case _FoodSearchAction.foodLibrary:
-                    _openFoodLibrary();
                 }
               },
               itemBuilder: (_) => [
@@ -910,19 +908,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                     ],
                   ),
                 ),
-                PopupMenuItem(
-                  value: _FoodSearchAction.foodLibrary,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.bookmark_outline),
-                      const SizedBox(width: 12),
-                      Text(l10n.food_library),
-                    ],
-                  ),
-                ),
               ],
-              icon: const Icon(Icons.more_vert),
+              icon: const Icon(Icons.add),
             ),
         ],
       ),
