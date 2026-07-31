@@ -20,6 +20,13 @@ class _QuickSectionTabs extends StatelessWidget {
     };
   }
 
+  IconData icon(_FoodSearchSection section) {
+    return switch (section) {
+      _FoodSearchSection.recent => Icons.history,
+      _FoodSearchSection.myItems => Icons.bookmark_outline,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedIndex = sections.indexOf(selectedSection);
@@ -30,7 +37,19 @@ class _QuickSectionTabs extends StatelessWidget {
       child: TabBar(
         isScrollable: true,
         onTap: (index) => onChanged(sections[index]),
-        tabs: [for (final section in sections) Tab(text: label(section))],
+        tabs: [
+          for (final section in sections)
+            Tab(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icon(section), size: 18),
+                  const SizedBox(width: 8),
+                  Text(label(section)),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

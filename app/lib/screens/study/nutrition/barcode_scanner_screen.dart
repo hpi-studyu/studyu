@@ -26,7 +26,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   String? _lastScannedCode;
   DateTime? _lastScanTime;
   String? _detectedCode;
-  late String _guidanceMessage;
+  String? _guidanceMessage;
 
   bool _isValidBarcode(String code) {
     // Remove any non-digit characters
@@ -48,9 +48,6 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   @override
   void initState() {
     super.initState();
-    _guidanceMessage = AppLocalizations.of(
-      context,
-    )!.barcode_scanner_guidance_initial;
     // Configure OpenFoodFacts User-Agent
     OpenFoodAPIConfiguration.userAgent = UserAgent(
       name: 'StudyU',
@@ -456,7 +453,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _guidanceMessage,
+                    _guidanceMessage ?? l10n.barcode_scanner_guidance_initial,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
