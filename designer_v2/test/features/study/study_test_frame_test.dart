@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -41,9 +42,22 @@ void main() {
     expect(otherIntervention, isNot(initial));
   });
 
+  test('preview URL contains no serialized session', () {
+    final uri = Uri.parse(
+      buildPreviewAppUrl(
+        baseUrl: 'https://app.example',
+        studyId: 'study id',
+        languageCode: 'en',
+      ),
+    );
+
+    expect(uri.queryParameters, {'studyid': 'study id', 'languageCode': 'en'});
+    expect(uri.queryParameters, isNot(contains('session')));
+  });
+
   test('live edits update the URL used to open the preview', () {
     final controller =
-        WebController('https://app.example/?studyid=study', 'study')
+        WebController('https://app.example/?studyid=study', 'study', 'session')
           ..generateUrl(
             route: 'intervention',
             extra: 'intervention-1',

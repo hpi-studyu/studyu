@@ -32,6 +32,7 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
             ? RecoveryPhraseContent(
                 initialPhrase: widget.initialPhrase,
                 isChecked: _isChecked,
+                showRotation: false,
                 onCheckedChanged: (value) {
                   setState(() {
                     _isChecked = value ?? false;

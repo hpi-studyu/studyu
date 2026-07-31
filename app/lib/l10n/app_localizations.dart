@@ -2636,6 +2636,48 @@ abstract class AppLocalizations {
   /// **'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.'**
   String get recovery_phrase_saved_confirmation;
 
+  /// No description provided for @recovery_phrase_rotate_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Reissue recovery phrase'**
+  String get recovery_phrase_rotate_button;
+
+  /// No description provided for @recovery_phrase_rotate_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reissue recovery phrase?'**
+  String get recovery_phrase_rotate_dialog_title;
+
+  /// No description provided for @recovery_phrase_rotate_dialog_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current recovery phrase will immediately stop working. You must save the new phrase to recover your account in the future.'**
+  String get recovery_phrase_rotate_dialog_description;
+
+  /// No description provided for @recovery_phrase_rotate_acknowledgement.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that my current recovery phrase will immediately stop working.'**
+  String get recovery_phrase_rotate_acknowledgement;
+
+  /// No description provided for @recovery_phrase_rotate_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reissue phrase'**
+  String get recovery_phrase_rotate_confirm;
+
+  /// No description provided for @recovery_phrase_rotate_success.
+  ///
+  /// In en, this message translates to:
+  /// **'A new recovery phrase has been issued. Save it now.'**
+  String get recovery_phrase_rotate_success;
+
+  /// No description provided for @recovery_phrase_rotate_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not issue a new recovery phrase. Please try again.'**
+  String get recovery_phrase_rotate_error;
+
   /// No description provided for @continue_to_study.
   ///
   /// In en, this message translates to:

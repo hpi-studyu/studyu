@@ -20,6 +20,8 @@ class AppState with ChangeNotifier {
   bool get hasPendingDeepLink =>
       pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
 
+  bool get showParticipantRecovery => !isPreview;
+
   void setPendingDeepLink({
     required Study study,
     String? inviteCode,
