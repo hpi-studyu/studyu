@@ -107,6 +107,34 @@ void main() {
     },
   );
 
+  test('clearing a query ignores pending results from the old query', () async {
+    final response = Completer<UsdaSearchResponse>();
+    final viewModel = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch: ({required query, required page, required pageSize}) =>
+          response.future,
+    );
+    addTearDown(viewModel.dispose);
+
+    final search = viewModel.retry('apple');
+    await Future<void>.delayed(Duration.zero);
+    viewModel.search('');
+    response.complete(
+      UsdaSearchResponse(
+        totalHits: 1,
+        currentPage: 1,
+        totalPages: 1,
+        foods: [usdaFood(3, 'Apple')],
+      ),
+    );
+    await search;
+
+    expect(viewModel.results, isEmpty);
+    expect(viewModel.hasSearched, isFalse);
+  });
+
   test('ranking prefers exact and unbranded matches', () {
     final results = [
       result(name: 'Apple pie'),

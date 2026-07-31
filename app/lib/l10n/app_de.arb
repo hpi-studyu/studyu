@@ -573,8 +573,8 @@
   "adjust_quantity": "Menge anpassen",
   "edit_this_entry": "Diesen Eintrag bearbeiten",
   "save_to_my_items_action": "In Meine Elemente speichern",
-  "external_library_copy": "Kopieren",
-  "external_library_copy_label": "{name} in Meine Lebensmittel kopieren",
+  "external_library_copy": "Zu meiner Bibliothek hinzufügen",
+  "external_library_copy_label": "{name} prüfen und zu meiner Bibliothek hinzufügen",
   "@external_library_copy_label": {
     "placeholders": {
       "name": {
@@ -582,8 +582,8 @@
       }
     }
   },
-  "external_library_copy_saved": "Kopiertes Lebensmittel wurde in Meine Lebensmittel gespeichert",
-  "external_library_copy_save_error": "Kopiertes Lebensmittel konnte nicht gespeichert werden",
+  "external_library_copy_saved": "Zu „Meine Bibliothek“ hinzugefügt",
+  "external_library_copy_save_error": "Lebensmittel konnte nicht zu „Meine Bibliothek“ hinzugefügt werden",
   "remove_from_meal": "Aus Mahlzeit entfernen",
   "duplicate": "Duplizieren",
   "save_as_template": "Zu meinen Elementen hinzufügen",
@@ -609,7 +609,7 @@
   "template_saved": "Zu meinen Elementen hinzugefügt",
   "select_meal": "Meine Mahlzeiten",
   "select_food": "Meine Lebensmittel",
-  "food_library_search_hint": "Meine Lebensmittel und externe Bibliothek durchsuchen…",
+  "food_library_search_hint": "Meine Bibliothek und externe Bibliothek durchsuchen…",
   "search_templates": "Gespeicherte Lebensmittel und Mahlzeiten durchsuchen…",
   "no_templates_saved": "Noch keine Elemente",
   "save_templates_hint": "Speichern Sie Ihre Lieblingsmahlzeiten und Lebensmittel für schnellen Zugriff",
@@ -845,7 +845,7 @@
   "add_meal_action": "Mahlzeit erstellen",
   "recent_foods": "Zuletzt verwendet",
   "frequently_used_foods": "Häufig verwendet",
-  "my_saved_items": "Meine Elemente",
+  "my_saved_items": "Meine Bibliothek",
   "global_database": "Datenbank",
   "external_library": "Externe Bibliothek",
   "external_library_loading": "Externe Bibliothek wird durchsucht…",
@@ -858,12 +858,33 @@
       }
     }
   },
-  "review_copied_food": "Kopiertes Lebensmittel prüfen",
-  "external_library_copy_notice": "Prüfen Sie das kopierte Lebensmittel vor dem Speichern. Beim Speichern wird ein unabhängiges Element in Meine Lebensmittel erstellt.",
-  "external_library_save_copy": "Kopie speichern",
+  "review_copied_food": "Lebensmittel prüfen",
+  "external_library_copy_notice": "Prüfen Sie die Details, bevor Sie dieses Lebensmittel zu „Meine Bibliothek“ hinzufügen. Änderungen wirken sich nicht auf die externe Bibliothek aus.",
+  "external_library_save_copy": "In „Meine Bibliothek“ speichern",
   "add_manually": "Lebensmittel manuell erstellen",
   "tap_item_to_choose_serving": "Tippen Sie auf ein Lebensmittel, um Portion oder Menge zu ändern.",
   "scan_barcode": "Barcode scannen",
+  "barcode_scanner_guidance_initial": "Kamera auf den Barcode richten",
+  "barcode_scanner_no_barcode": "Kein Barcode erkannt – Position ändern",
+  "barcode_scanner_processing": "Barcode erkannt! Wird verarbeitet …",
+  "barcode_scanner_invalid": "Ungültiger Barcode – anderen Winkel versuchen",
+  "barcode_scanner_lookup": "Gültiger Barcode. Wird gesucht …",
+  "barcode_scanner_distance_guidance": "Großer Barcode? 15–30 cm zurückgehen\\nKleiner Barcode? Näher herangehen",
+  "barcode_scanner_detected": "ERKANNT",
+  "barcode_scanner_lookup_progress": "Produkt wird gesucht …",
+  "barcode_scanner_toggle_flash": "Blitz umschalten",
+  "barcode_scanner_switch_camera": "Kamera wechseln",
+  "barcode_scanner_not_found_title": "Produkt nicht gefunden",
+  "barcode_scanner_not_found_message": "Für den Barcode {barcode} wurde kein Produkt gefunden.\\n\\nDieses Produkt ist möglicherweise noch nicht in der externen Bibliothek enthalten. Sie können es manuell hinzufügen oder ein anderes Produkt scannen.",
+  "@barcode_scanner_not_found_message": {
+    "placeholders": {
+      "barcode": {
+        "type": "String"
+      }
+    }
+  },
+  "barcode_scanner_scan_again": "Erneut scannen",
+  "barcode_scanner_error_title": "Suche nicht verfügbar",
   "searching_databases": "Datenbanken werden durchsucht...",
   "no_results_found": "Keine Ergebnisse gefunden. Versuchen Sie andere Suchbegriffe.",
   "no_results_for_query": "Keine Ergebnisse für „{query}“",

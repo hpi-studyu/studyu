@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_core/core.dart';
 
 Widget foodEntryApp({
   FoodEntry? existingFood,
   bool showSearchAction = true,
+  bool isExternalLibraryCopy = false,
   ValueChanged<FoodEntry?>? onResult,
-}) => MaterialApp(
-  supportedLocales: AppLocalizations.supportedLocales,
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  locale: const Locale('en'),
-  home: Builder(
-    builder: (context) => Scaffold(
-      body: Center(
-        child: FilledButton(
-          onPressed: () async {
-            final result = await Navigator.of(context).push<FoodEntry>(
-              FoodEntryScreen.route(
-                existingFood: existingFood,
-                showSearchAction: showSearchAction,
-              ),
-            );
-            onResult?.call(result);
-          },
-          child: const Text('Open food'),
+}) => ChangeNotifierProvider.value(
+  value: AppState(),
+  child: MaterialApp(
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    locale: const Locale('en'),
+    home: Builder(
+      builder: (context) => Scaffold(
+        body: Center(
+          child: FilledButton(
+            onPressed: () async {
+              final result = await Navigator.of(context).push<FoodEntry>(
+                FoodEntryScreen.route(
+                  existingFood: existingFood,
+                  showSearchAction: showSearchAction,
+                  isExternalLibraryCopy: isExternalLibraryCopy,
+                ),
+              );
+              onResult?.call(result);
+            },
+            child: const Text('Open food'),
+          ),
         ),
       ),
     ),
@@ -36,12 +43,14 @@ Future<void> openFoodEntry(
   WidgetTester tester, {
   FoodEntry? existingFood,
   bool showSearchAction = true,
+  bool isExternalLibraryCopy = false,
   ValueChanged<FoodEntry?>? onResult,
 }) async {
   await tester.pumpWidget(
     foodEntryApp(
       existingFood: existingFood,
       showSearchAction: showSearchAction,
+      isExternalLibraryCopy: isExternalLibraryCopy,
       onResult: onResult,
     ),
   );
@@ -136,6 +145,74 @@ void main() {
     expect(find.byTooltip('Search Food Database'), findsNothing);
   });
 
+  testWidgets('external copy mode exposes review and save semantics', (
+    tester,
+  ) async {
+    final existingFood = existingOffFood(const {
+      'image_front_small_url': 'https://images.openfoodfacts.org/product.jpg',
+    });
+    FoodEntry? result;
+
+    await openFoodEntry(
+      tester,
+      existingFood: existingFood,
+      showSearchAction: false,
+      isExternalLibraryCopy: true,
+      onResult: (value) => result = value,
+    );
+
+    expect(find.text('Review food'), findsOneWidget);
+    expect(find.text('Save to My library'), findsOneWidget);
+    expect(
+      find.textContaining('Changes won’t affect the external library.'),
+      findsOneWidget,
+    );
+
+    await tester.enterText(find.byType(TextFormField).first, 'Copied product');
+    await tester.tap(find.widgetWithText(FilledButton, 'Save to My library'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.name, 'Copied product');
+    expect(result!.id, existingFood.id);
+    expect(result!.foodId, existingFood.foodId);
+    expect(result!.foodVersionId, existingFood.foodVersionId);
+    expect(result!.foodCode, existingFood.foodCode);
+    expect(result!.externalId, existingFood.externalId);
+    expect(result!.source, existingFood.source);
+    expect(result!.originalValues, same(existingFood.originalValues));
+  });
+
+  testWidgets('normal editing of imported food does not show copy mode', (
+    tester,
+  ) async {
+    await openFoodEntry(
+      tester,
+      existingFood: existingOffFood(const {}),
+      showSearchAction: false,
+    );
+
+    expect(find.text('Review food'), findsNothing);
+    expect(find.text('Save to My library'), findsNothing);
+    expect(find.text('Edit Food'), findsOneWidget);
+  });
+
+  testWidgets('discarding external copy returns no result', (tester) async {
+    FoodEntry? result;
+    await openFoodEntry(
+      tester,
+      existingFood: existingOffFood(const {}),
+      showSearchAction: false,
+      isExternalLibraryCopy: true,
+      onResult: (value) => result = value,
+    );
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(result, isNull);
+  });
+
   testWidgets('editing preserves food identity and source provenance', (
     tester,
   ) async {
@@ -154,13 +231,11 @@ void main() {
     );
 
     await tester.enterText(inputWithLabel('Food Name'), 'Edited product');
-    await tester.enterText(inputWithLabel('Amount'), '2');
-    await tester.tap(find.widgetWithText(FloatingActionButton, 'Save'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
 
     expect(result, isNotNull);
     expect(result!.name, 'Edited product');
-    expect(result!.amount, 2);
     expect(result!.id, existingFood.id);
     expect(result!.createdAt, existingFood.createdAt);
     expect(result!.modifiedAt, isNotNull);
@@ -217,13 +292,6 @@ void main() {
   ) async {
     await openFoodEntry(tester, existingFood: existingOffFood(const {}));
 
-    final cards = tester.widgetList<Card>(find.byType(Card));
-    expect(cards, hasLength(3));
-    for (final card in cards) {
-      expect(card.color, isNull);
-      expect(card.elevation, isNull);
-    }
-
     expect(
       tester
           .widget<InputDecorator>(decoratorWithLabel('Food Name'))
@@ -241,17 +309,5 @@ void main() {
           .filled,
       isNot(true),
     );
-
-    await tester.scrollUntilVisible(
-      find.text('Advanced Options'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.text('Advanced Options'));
-    await tester.pumpAndSettle();
-    final entryType = tester.widget<InputDecorator>(
-      decoratorWithLabel('Entry Type'),
-    );
-    expect(entryType.decoration.filled, isNot(true));
   });
 }

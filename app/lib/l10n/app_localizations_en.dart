@@ -1916,18 +1916,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_to_my_items_action => 'Save to My items';
 
   @override
-  String get external_library_copy => 'Copy';
+  String get external_library_copy => 'Add to My library';
 
   @override
   String external_library_copy_label(String name) {
-    return 'Copy $name to My foods';
+    return 'Review and add $name to My library';
   }
 
   @override
-  String get external_library_copy_saved => 'Copied food saved to My foods';
+  String get external_library_copy_saved => 'Added to My library';
 
   @override
-  String get external_library_copy_save_error => 'Could not save copied food';
+  String get external_library_copy_save_error =>
+      'Could not add food to My library';
 
   @override
   String get remove_from_meal => 'Remove from meal';
@@ -1988,7 +1989,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get food_library_search_hint =>
-      'Search My foods and external library…';
+      'Search My library and external library…';
 
   @override
   String get search_templates => 'Search saved foods and meals…';
@@ -2342,7 +2343,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_food_hint => 'Search foods, meals or brands';
 
   @override
-  String get my_saved_items => 'My food library';
+  String get my_saved_items => 'My library';
 
   @override
   String get food_library => 'Food library';
@@ -2384,14 +2385,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get review_copied_food => 'Review copied food';
+  String get review_copied_food => 'Review food';
 
   @override
   String get external_library_copy_notice =>
-      'Review copied food before saving. Saving creates an independent item in My foods.';
+      'Review the details before adding this food to My library. Changes won’t affect the external library.';
 
   @override
-  String get external_library_save_copy => 'Save copy';
+  String get external_library_save_copy => 'Save to My library';
 
   @override
   String get quick_actions => 'Quick Actions';
@@ -2420,6 +2421,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan_barcode_subtitle => 'Find packaged products quickly';
+
+  @override
+  String get barcode_scanner_guidance_initial => 'Point camera at barcode';
+
+  @override
+  String get barcode_scanner_no_barcode =>
+      'No barcode detected — adjust position';
+
+  @override
+  String get barcode_scanner_processing => 'Barcode detected! Processing…';
+
+  @override
+  String get barcode_scanner_invalid =>
+      'Invalid barcode — try a different angle';
+
+  @override
+  String get barcode_scanner_lookup => 'Valid barcode. Looking up…';
+
+  @override
+  String get barcode_scanner_distance_guidance =>
+      'Large barcode? Move back 15–30 cm\\nSmall barcode? Move closer';
+
+  @override
+  String get barcode_scanner_detected => 'DETECTED';
+
+  @override
+  String get barcode_scanner_lookup_progress => 'Looking up product…';
+
+  @override
+  String get barcode_scanner_toggle_flash => 'Toggle flash';
+
+  @override
+  String get barcode_scanner_switch_camera => 'Switch camera';
+
+  @override
+  String get barcode_scanner_not_found_title => 'Product not found';
+
+  @override
+  String barcode_scanner_not_found_message(String barcode) {
+    return 'No product found for barcode: $barcode\\n\\nThis product may not be in the external library yet. You can add it manually or scan another product.';
+  }
+
+  @override
+  String get barcode_scanner_scan_again => 'Scan again';
+
+  @override
+  String get barcode_scanner_error_title => 'Search unavailable';
 
   @override
   String get search_for_food => 'Search for Food';

@@ -291,11 +291,11 @@ class _FoodLibraryState extends State<FoodLibrary> {
     } else if (viewModel.currentFilter != TemplateFilter.meals) {
       children.add(
         _FoodLibrarySectionHeader(
-          title: l10n.select_food,
+          title: l10n.my_saved_items,
           icon: Icons.bookmark_outline,
         ),
       );
-      if (templates.isEmpty) {
+      if (templates.isEmpty && !showExternal) {
         children.add(
           _FoodLibraryInlineMessage(
             message: query.isEmpty
@@ -303,7 +303,7 @@ class _FoodLibraryState extends State<FoodLibrary> {
                 : l10n.no_matching_templates,
           ),
         );
-      } else {
+      } else if (templates.isNotEmpty) {
         children.addAll(
           templates.map(
             (template) => FoodLibraryItemCard(
@@ -413,7 +413,9 @@ class _FoodLibraryState extends State<FoodLibrary> {
         if (widget.showSearch)
           FoodSearchBar(
             controller: _searchController,
-            hintText: l10n.food_library_search_hint,
+            hintText: _externalEnabled
+                ? l10n.food_library_search_hint
+                : l10n.search_templates,
             onChanged: (value) => _onSearchChanged(value, viewModel),
             onScanBarcode: _externalEnabled ? _scanBarcode : null,
             barcodeTooltip: _externalEnabled ? l10n.scan_barcode : null,
@@ -613,7 +615,7 @@ class FoodLibraryExternalResultCard extends StatelessWidget {
                   minimumSize: const Size(48, 48),
                   tapTargetSize: MaterialTapTargetSize.padded,
                 ),
-                icon: const Icon(Icons.copy_outlined),
+                icon: const Icon(Icons.library_add_outlined),
                 label: Text(l10n.external_library_copy),
               ),
             ),

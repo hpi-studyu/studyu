@@ -1934,20 +1934,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_to_my_items_action => 'In Meine Elemente speichern';
 
   @override
-  String get external_library_copy => 'Kopieren';
+  String get external_library_copy => 'Zu meiner Bibliothek hinzufügen';
 
   @override
   String external_library_copy_label(String name) {
-    return '$name in Meine Lebensmittel kopieren';
+    return '$name prüfen und zu meiner Bibliothek hinzufügen';
   }
 
   @override
-  String get external_library_copy_saved =>
-      'Kopiertes Lebensmittel wurde in Meine Lebensmittel gespeichert';
+  String get external_library_copy_saved => 'Zu „Meine Bibliothek“ hinzugefügt';
 
   @override
   String get external_library_copy_save_error =>
-      'Kopiertes Lebensmittel konnte nicht gespeichert werden';
+      'Lebensmittel konnte nicht zu „Meine Bibliothek“ hinzugefügt werden';
 
   @override
   String get remove_from_meal => 'Aus Mahlzeit entfernen';
@@ -2009,7 +2008,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get food_library_search_hint =>
-      'Meine Lebensmittel und externe Bibliothek durchsuchen…';
+      'Meine Bibliothek und externe Bibliothek durchsuchen…';
 
   @override
   String get search_templates =>
@@ -2365,7 +2364,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get search_food_hint => 'Lebensmittel und Mahlzeiten suchen…';
 
   @override
-  String get my_saved_items => 'Meine Elemente';
+  String get my_saved_items => 'Meine Bibliothek';
 
   @override
   String get food_library => 'Lebensmittelbibliothek';
@@ -2407,14 +2406,14 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get review_copied_food => 'Kopiertes Lebensmittel prüfen';
+  String get review_copied_food => 'Lebensmittel prüfen';
 
   @override
   String get external_library_copy_notice =>
-      'Prüfen Sie das kopierte Lebensmittel vor dem Speichern. Beim Speichern wird ein unabhängiges Element in Meine Lebensmittel erstellt.';
+      'Prüfen Sie die Details, bevor Sie dieses Lebensmittel zu „Meine Bibliothek“ hinzufügen. Änderungen wirken sich nicht auf die externe Bibliothek aus.';
 
   @override
-  String get external_library_save_copy => 'Kopie speichern';
+  String get external_library_save_copy => 'In „Meine Bibliothek“ speichern';
 
   @override
   String get quick_actions => 'Quick Actions';
@@ -2443,6 +2442,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get scan_barcode_subtitle => 'Find packaged products quickly';
+
+  @override
+  String get barcode_scanner_guidance_initial =>
+      'Kamera auf den Barcode richten';
+
+  @override
+  String get barcode_scanner_no_barcode =>
+      'Kein Barcode erkannt – Position ändern';
+
+  @override
+  String get barcode_scanner_processing =>
+      'Barcode erkannt! Wird verarbeitet …';
+
+  @override
+  String get barcode_scanner_invalid =>
+      'Ungültiger Barcode – anderen Winkel versuchen';
+
+  @override
+  String get barcode_scanner_lookup => 'Gültiger Barcode. Wird gesucht …';
+
+  @override
+  String get barcode_scanner_distance_guidance =>
+      'Großer Barcode? 15–30 cm zurückgehen\\nKleiner Barcode? Näher herangehen';
+
+  @override
+  String get barcode_scanner_detected => 'ERKANNT';
+
+  @override
+  String get barcode_scanner_lookup_progress => 'Produkt wird gesucht …';
+
+  @override
+  String get barcode_scanner_toggle_flash => 'Blitz umschalten';
+
+  @override
+  String get barcode_scanner_switch_camera => 'Kamera wechseln';
+
+  @override
+  String get barcode_scanner_not_found_title => 'Produkt nicht gefunden';
+
+  @override
+  String barcode_scanner_not_found_message(String barcode) {
+    return 'Für den Barcode $barcode wurde kein Produkt gefunden.\\n\\nDieses Produkt ist möglicherweise noch nicht in der externen Bibliothek enthalten. Sie können es manuell hinzufügen oder ein anderes Produkt scannen.';
+  }
+
+  @override
+  String get barcode_scanner_scan_again => 'Erneut scannen';
+
+  @override
+  String get barcode_scanner_error_title => 'Suche nicht verfügbar';
 
   @override
   String get search_for_food => 'Search for Food';

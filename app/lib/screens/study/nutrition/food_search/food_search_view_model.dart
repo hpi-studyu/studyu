@@ -293,15 +293,21 @@ UnifiedFoodResult _unifiedOpenFoodFactsResult(Product product) {
   );
 }
 
-UnifiedFoodResult _unifiedUsdaResult(UsdaFoodItem food) => UnifiedFoodResult(
-  id: food.fdcId.toString(),
-  name: food.description ?? 'Unknown',
-  brand: food.brandOwner ?? food.brandName,
-  calories: food.getNutrientValue(1008),
-  calorieBasisGrams: food.getNutrientValue(1008) == null ? null : 100,
-  source: studyu.FoodSource.usda,
-  originalData: food,
-);
+UnifiedFoodResult _unifiedUsdaResult(UsdaFoodItem food) {
+  final servingSizeGrams = food.servingSize ?? 100;
+  final caloriesPer100g = food.getNutrientValue(1008);
+  return UnifiedFoodResult(
+    id: food.fdcId.toString(),
+    name: food.description ?? 'Unknown',
+    brand: food.brandOwner ?? food.brandName,
+    calories: caloriesPer100g == null
+        ? null
+        : caloriesPer100g * servingSizeGrams / 100,
+    calorieBasisGrams: caloriesPer100g == null ? null : servingSizeGrams,
+    source: studyu.FoodSource.usda,
+    originalData: food,
+  );
+}
 
 List<UnifiedFoodResult> rankFoodSearchResults(
   Iterable<UnifiedFoodResult> results,

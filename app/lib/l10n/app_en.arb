@@ -747,8 +747,8 @@
   "adjust_quantity": "Adjust quantity",
   "edit_this_entry": "Edit this entry",
   "save_to_my_items_action": "Save to My items",
-  "external_library_copy": "Copy",
-  "external_library_copy_label": "Copy {name} to My foods",
+  "external_library_copy": "Add to My library",
+  "external_library_copy_label": "Review and add {name} to My library",
   "@external_library_copy_label": {
     "placeholders": {
       "name": {
@@ -756,8 +756,8 @@
       }
     }
   },
-  "external_library_copy_saved": "Copied food saved to My foods",
-  "external_library_copy_save_error": "Could not save copied food",
+  "external_library_copy_saved": "Added to My library",
+  "external_library_copy_save_error": "Could not add food to My library",
   "remove_from_meal": "Remove from meal",
   "duplicate": "Duplicate",
   "save_as_template": "Add to My items",
@@ -783,7 +783,7 @@
   "template_saved": "Added to My items",
   "select_meal": "My meals",
   "select_food": "My foods",
-  "food_library_search_hint": "Search My foods and external library…",
+  "food_library_search_hint": "Search My library and external library…",
   "search_templates": "Search saved foods and meals…",
   "no_templates_saved": "No items yet",
   "save_templates_hint": "Save your favorite meals and foods for quick access",
@@ -1043,7 +1043,7 @@
   "calorie_distribution": "Calorie Distribution",
   "more_options": "More options",
   "search_food_hint": "Search foods, meals or brands",
-  "my_saved_items": "My food library",
+  "my_saved_items": "My library",
   "food_library": "Food library",
   "add_food_action": "Create food",
   "add_meal_action": "Create meal",
@@ -1061,9 +1061,9 @@
       }
     }
   },
-  "review_copied_food": "Review copied food",
-  "external_library_copy_notice": "Review copied food before saving. Saving creates an independent item in My foods.",
-  "external_library_save_copy": "Save copy",
+  "review_copied_food": "Review food",
+  "external_library_copy_notice": "Review the details before adding this food to My library. Changes won’t affect the external library.",
+  "external_library_save_copy": "Save to My library",
   "quick_actions": "Quick Actions",
   "create": "Create",
   "create_meal": "Create meal",
@@ -1073,6 +1073,27 @@
   "tap_item_to_choose_serving": "Tap a food to change the serving or amount.",
   "scan_barcode": "Scan Barcode",
   "scan_barcode_subtitle": "Find packaged products quickly",
+  "barcode_scanner_guidance_initial": "Point camera at barcode",
+  "barcode_scanner_no_barcode": "No barcode detected — adjust position",
+  "barcode_scanner_processing": "Barcode detected! Processing…",
+  "barcode_scanner_invalid": "Invalid barcode — try a different angle",
+  "barcode_scanner_lookup": "Valid barcode. Looking up…",
+  "barcode_scanner_distance_guidance": "Large barcode? Move back 15–30 cm\\nSmall barcode? Move closer",
+  "barcode_scanner_detected": "DETECTED",
+  "barcode_scanner_lookup_progress": "Looking up product…",
+  "barcode_scanner_toggle_flash": "Toggle flash",
+  "barcode_scanner_switch_camera": "Switch camera",
+  "barcode_scanner_not_found_title": "Product not found",
+  "barcode_scanner_not_found_message": "No product found for barcode: {barcode}\\n\\nThis product may not be in the external library yet. You can add it manually or scan another product.",
+  "@barcode_scanner_not_found_message": {
+    "placeholders": {
+      "barcode": {
+        "type": "String"
+      }
+    }
+  },
+  "barcode_scanner_scan_again": "Scan again",
+  "barcode_scanner_error_title": "Search unavailable",
   "search_for_food": "Search for Food",
   "search_food_description": "Try “apple”, “oat milk”, or a brand name.",
   "searching_databases": "Searching databases...",

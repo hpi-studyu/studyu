@@ -3638,25 +3638,25 @@ abstract class AppLocalizations {
   /// No description provided for @external_library_copy.
   ///
   /// In en, this message translates to:
-  /// **'Copy'**
+  /// **'Add to My library'**
   String get external_library_copy;
 
   /// No description provided for @external_library_copy_label.
   ///
   /// In en, this message translates to:
-  /// **'Copy {name} to My foods'**
+  /// **'Review and add {name} to My library'**
   String external_library_copy_label(String name);
 
   /// No description provided for @external_library_copy_saved.
   ///
   /// In en, this message translates to:
-  /// **'Copied food saved to My foods'**
+  /// **'Added to My library'**
   String get external_library_copy_saved;
 
   /// No description provided for @external_library_copy_save_error.
   ///
   /// In en, this message translates to:
-  /// **'Could not save copied food'**
+  /// **'Could not add food to My library'**
   String get external_library_copy_save_error;
 
   /// No description provided for @remove_from_meal.
@@ -3770,7 +3770,7 @@ abstract class AppLocalizations {
   /// No description provided for @food_library_search_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search My foods and external library…'**
+  /// **'Search My library and external library…'**
   String get food_library_search_hint;
 
   /// No description provided for @search_templates.
@@ -4292,7 +4292,7 @@ abstract class AppLocalizations {
   /// No description provided for @my_saved_items.
   ///
   /// In en, this message translates to:
-  /// **'My food library'**
+  /// **'My library'**
   String get my_saved_items;
 
   /// No description provided for @food_library.
@@ -4358,19 +4358,19 @@ abstract class AppLocalizations {
   /// No description provided for @review_copied_food.
   ///
   /// In en, this message translates to:
-  /// **'Review copied food'**
+  /// **'Review food'**
   String get review_copied_food;
 
   /// No description provided for @external_library_copy_notice.
   ///
   /// In en, this message translates to:
-  /// **'Review copied food before saving. Saving creates an independent item in My foods.'**
+  /// **'Review the details before adding this food to My library. Changes won’t affect the external library.'**
   String get external_library_copy_notice;
 
   /// No description provided for @external_library_save_copy.
   ///
   /// In en, this message translates to:
-  /// **'Save copy'**
+  /// **'Save to My library'**
   String get external_library_save_copy;
 
   /// No description provided for @quick_actions.
@@ -4426,6 +4426,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Find packaged products quickly'**
   String get scan_barcode_subtitle;
+
+  /// No description provided for @barcode_scanner_guidance_initial.
+  ///
+  /// In en, this message translates to:
+  /// **'Point camera at barcode'**
+  String get barcode_scanner_guidance_initial;
+
+  /// No description provided for @barcode_scanner_no_barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'No barcode detected — adjust position'**
+  String get barcode_scanner_no_barcode;
+
+  /// No description provided for @barcode_scanner_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode detected! Processing…'**
+  String get barcode_scanner_processing;
+
+  /// No description provided for @barcode_scanner_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid barcode — try a different angle'**
+  String get barcode_scanner_invalid;
+
+  /// No description provided for @barcode_scanner_lookup.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid barcode. Looking up…'**
+  String get barcode_scanner_lookup;
+
+  /// No description provided for @barcode_scanner_distance_guidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Large barcode? Move back 15–30 cm\\nSmall barcode? Move closer'**
+  String get barcode_scanner_distance_guidance;
+
+  /// No description provided for @barcode_scanner_detected.
+  ///
+  /// In en, this message translates to:
+  /// **'DETECTED'**
+  String get barcode_scanner_detected;
+
+  /// No description provided for @barcode_scanner_lookup_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up product…'**
+  String get barcode_scanner_lookup_progress;
+
+  /// No description provided for @barcode_scanner_toggle_flash.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle flash'**
+  String get barcode_scanner_toggle_flash;
+
+  /// No description provided for @barcode_scanner_switch_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch camera'**
+  String get barcode_scanner_switch_camera;
+
+  /// No description provided for @barcode_scanner_not_found_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found'**
+  String get barcode_scanner_not_found_title;
+
+  /// No description provided for @barcode_scanner_not_found_message.
+  ///
+  /// In en, this message translates to:
+  /// **'No product found for barcode: {barcode}\\n\\nThis product may not be in the external library yet. You can add it manually or scan another product.'**
+  String barcode_scanner_not_found_message(String barcode);
+
+  /// No description provided for @barcode_scanner_scan_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan again'**
+  String get barcode_scanner_scan_again;
+
+  /// No description provided for @barcode_scanner_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Search unavailable'**
+  String get barcode_scanner_error_title;
 
   /// No description provided for @search_for_food.
   ///

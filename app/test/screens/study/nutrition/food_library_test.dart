@@ -1,14 +1,333 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {
+  testWidgets('local and external matches appear together', (tester) async {
+    final local = _food('local', 'Local Apple');
+    final repository = _ExternalLibraryRepository([_template(local)]);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              UsdaSearchResponse(
+                totalHits: 1,
+                currentPage: page,
+                totalPages: 1,
+                foods: [_externalFood()],
+              ),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(tester, viewModel: viewModel, search: search);
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump();
+
+    expect(find.text('Local Apple'), findsOneWidget);
+    expect(find.text('External Apple'), findsNothing);
+
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Local Apple'), findsOneWidget);
+    expect(find.text('External Apple'), findsOneWidget);
+  });
+
+  testWidgets('external results stay visible when local results are empty', (
+    tester,
+  ) async {
+    final repository = _ExternalLibraryRepository(const []);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              UsdaSearchResponse(
+                totalHits: 1,
+                currentPage: page,
+                totalPages: 1,
+                foods: [_externalFood()],
+              ),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(tester, viewModel: viewModel, search: search);
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('External library'), findsOneWidget);
+    expect(find.text('External Apple'), findsOneWidget);
+  });
+
+  testWidgets('external failure leaves local matches usable', (tester) async {
+    final local = _food('local', 'Local Apple');
+    final repository = _ExternalLibraryRepository([_template(local)]);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              throw StateError('offline'),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              throw StateError('offline'),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(tester, viewModel: viewModel, search: search);
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Local Apple'), findsOneWidget);
+    expect(find.text('Try again'), findsOneWidget);
+  });
+
+  testWidgets('external cards expose Copy without local management actions', (
+    tester,
+  ) async {
+    final repository = _ExternalLibraryRepository(const []);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              UsdaSearchResponse(
+                totalHits: 1,
+                currentPage: page,
+                totalPages: 1,
+                foods: [_externalFood()],
+              ),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(tester, viewModel: viewModel, search: search);
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Add to My library'), findsOneWidget);
+    expect(find.byType(PopupMenuButton), findsNothing);
+  });
+
+  testWidgets('Meals filter invalidates pending external results', (
+    tester,
+  ) async {
+    final response = Completer<UsdaSearchResponse>();
+    var requests = 0;
+    final meal = _food('meal', 'Fruit bowl')..entryType = FoodEntryType.meal;
+    final repository = _ExternalLibraryRepository([_template(meal)]);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch: ({required query, required page, required pageSize}) {
+        requests++;
+        return response.future;
+      },
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(tester, viewModel: viewModel, search: search);
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(requests, 1);
+
+    await tester.tap(find.widgetWithText(FilterChip, 'Meals'));
+    await tester.pump();
+    response.complete(
+      UsdaSearchResponse(
+        totalHits: 1,
+        currentPage: 1,
+        totalPages: 1,
+        foods: [_externalFood()],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(search.results, isEmpty);
+    expect(find.text('External Apple'), findsNothing);
+  });
+
+  testWidgets('canceling external copy does not save a template', (
+    tester,
+  ) async {
+    final repository = _ExternalLibraryRepository(const []);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              UsdaSearchResponse(
+                totalHits: 1,
+                currentPage: page,
+                totalPages: 1,
+                foods: [_externalFood()],
+              ),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    final appState = AppState();
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(
+      tester,
+      viewModel: viewModel,
+      search: search,
+      appState: appState,
+    );
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add to My library'));
+    await tester.pumpAndSettle();
+    expect(find.text('Review food'), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(repository.saveCount, 0);
+  });
+
+  testWidgets('saving external copy persists once with provenance', (
+    tester,
+  ) async {
+    final repository = _ExternalLibraryRepository(const []);
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              UsdaSearchResponse(
+                totalHits: 1,
+                currentPage: page,
+                totalPages: 1,
+                foods: [_externalFood()],
+              ),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    final appState = AppState();
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(
+      tester,
+      viewModel: viewModel,
+      search: search,
+      appState: appState,
+    );
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add to My library'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save to My library'));
+    await tester.pumpAndSettle();
+
+    expect(repository.saveCount, 1);
+    expect(repository.saved, isNotNull);
+    expect(repository.saved!.foodCode, '012345678901');
+    expect(repository.saved!.externalId, '101');
+    expect(repository.saved!.source, FoodSource.usda);
+    expect(repository.saved!.originalValues, isNotEmpty);
+  });
+
+  testWidgets('save failure can retry the same edited draft', (tester) async {
+    final repository = _ExternalLibraryRepository(const [])
+      ..failuresRemaining = 1;
+    final search = FoodSearchViewModel(
+      openFoodFactsSearch:
+          ({required query, required page, required pageSize}) async =>
+              const SearchResult(products: []),
+      usdaFoodSearch:
+          ({required query, required page, required pageSize}) async =>
+              UsdaSearchResponse(
+                totalHits: 1,
+                currentPage: page,
+                totalPages: 1,
+                foods: [_externalFood()],
+              ),
+    );
+    final viewModel = TemplateViewModel(
+      userId: 'subject',
+      repository: repository,
+    );
+    final appState = AppState();
+    addTearDown(viewModel.dispose);
+    addTearDown(search.dispose);
+
+    await _pumpExternalLibrary(
+      tester,
+      viewModel: viewModel,
+      search: search,
+      appState: appState,
+    );
+    await tester.enterText(find.byType(TextField), 'apple');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add to My library'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save to My library'));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(FilledButton, 'Try again'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Try again'));
+    await tester.pumpAndSettle();
+
+    expect(repository.saveAttempts, 2);
+    expect(repository.saveCount, 1);
+    expect(repository.saved, isNotNull);
+  });
+
   testWidgets('saved meal edit updates name and ordered composition', (
     tester,
   ) async {
@@ -80,6 +399,93 @@ void main() {
     expect(repository.saved!.componentSnapshots!.single.amount, 2);
     expect(repository.expectedVersionId, 'meal-version');
   });
+}
+
+Future<void> _pumpExternalLibrary(
+  WidgetTester tester, {
+  required TemplateViewModel viewModel,
+  required FoodSearchViewModel search,
+  AppState? appState,
+}) async {
+  final providers = <SingleChildWidget>[
+    ChangeNotifierProvider.value(value: viewModel),
+    if (appState != null) ChangeNotifierProvider.value(value: appState),
+  ];
+  await tester.pumpWidget(
+    MultiProvider(
+      providers: providers,
+      child: MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: FoodLibrary(
+            includeExternalLibrary: true,
+            externalSearchViewModel: search,
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+SavedFoodTemplate _template(FoodEntry food) => SavedFoodTemplate(
+  id: food.foodId,
+  userId: 'subject',
+  name: food.name,
+  isPublic: false,
+  createdAt: DateTime.utc(2026, 7, 15),
+  prototype: food,
+);
+
+UsdaFoodItem _externalFood() => UsdaFoodItem(
+  fdcId: 101,
+  description: 'External Apple',
+  brandOwner: 'Example Foods',
+  gtinUpc: '012345678901',
+  servingSize: 150,
+  servingSizeUnit: 'g',
+  foodNutrients: [UsdaFoodNutrient(nutrientId: 1008, value: 52)],
+);
+
+class _ExternalLibraryRepository extends NutritionFoodRepository {
+  _ExternalLibraryRepository(this.templates);
+
+  final List<SavedFoodTemplate> templates;
+  FoodEntry? saved;
+  int saveCount = 0;
+  int saveAttempts = 0;
+  int failuresRemaining = 0;
+
+  @override
+  Future<List<SavedFoodTemplate>> loadTemplates(String subjectId) async =>
+      templates;
+
+  @override
+  Future<SavedFoodTemplate> saveTemplate({
+    required String subjectId,
+    required String name,
+    required FoodEntry food,
+    List<String>? tags,
+    String? expectedVersionId,
+  }) async {
+    saveAttempts++;
+    if (failuresRemaining > 0) {
+      failuresRemaining--;
+      throw StateError('save failed');
+    }
+    saveCount++;
+    saved = FoodEntry.fromJson(food.toJson());
+    return SavedFoodTemplate(
+      id: food.foodId,
+      userId: subjectId,
+      name: name,
+      isPublic: false,
+      createdAt: DateTime.utc(2026, 7, 15),
+      prototype: saved!,
+    );
+  }
 }
 
 class _LibraryRepository extends NutritionFoodRepository {
