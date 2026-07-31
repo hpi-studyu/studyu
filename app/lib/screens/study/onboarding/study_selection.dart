@@ -175,14 +175,19 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         itemCount: studies.length,
                         itemBuilder: (context, index) {
                           final study = studies[index];
-                          return Hero(
-                            tag: 'study_tile_${studies[index].id}',
-                            child: Material(
-                              child: StudyTile.fromStudy(
-                                study: study,
-                                onTap: () async {
-                                  await navigateToStudyOverview(context, study);
-                                },
+                          return Material(
+                            child: InkWell(
+                              onTap: () {
+                                unawaited(
+                                  navigateToStudyOverview(context, study),
+                                );
+                              },
+                              child: Hero(
+                                tag: 'study_tile_${studies[index].id}',
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: StudyTile.fromStudy(study: study),
+                                ),
                               ),
                             ),
                           );

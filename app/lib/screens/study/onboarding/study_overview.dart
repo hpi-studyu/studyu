@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -81,6 +83,27 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     );
   }
 
+  void _clearStudySelection(AppState appState) {
+    appState
+      ..selectedStudy = null
+      ..selectedInterventions = null
+      ..inviteCode = null
+      ..preselectedInterventionIds = null;
+  }
+
+  Future<void> _returnToStudySelection(AppState appState) async {
+    if (!context.canPop()) {
+      _clearStudySelection(appState);
+      context.go('/${RouteNames.studySelection}');
+      return;
+    }
+
+    final route = ModalRoute.of(context);
+    context.pop();
+    await route?.completed;
+    _clearStudySelection(appState);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
@@ -101,7 +124,10 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               children: [
                 Hero(
                   tag: 'study_tile_${study!.id}',
-                  child: Material(child: StudyTile.fromStudy(study: study!)),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: StudyTile.fromStudy(study: study!),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 StudyDetailsView(study: study),
@@ -117,16 +143,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
             context.pop();
             return;
           }
-          appState
-            ..selectedStudy = null
-            ..selectedInterventions = null
-            ..inviteCode = null
-            ..preselectedInterventionIds = null;
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.go('/${RouteNames.studySelection}');
-          }
+          unawaited(_returnToStudySelection(appState));
         },
         nextButtonKey: const ValueKey('study_overview_continue'),
         onNext: () => _continueOnboarding(context),
