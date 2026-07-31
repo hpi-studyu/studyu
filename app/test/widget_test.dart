@@ -140,14 +140,9 @@ void main() {
     expect(find.text('Please select a study.'), findsNothing);
     expect(find.widgetWithText(TextButton, 'Back'), findsNothing);
     expect(
-      find.widgetWithText(OutlinedButton, 'Join with an invite code'),
-      findsOneWidget,
+      find.byKey(const ValueKey('study_selection_invite_code')),
+      findsNothing,
     );
-
-    await tester.tap(find.byKey(const ValueKey('study_selection_invite_code')));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(InviteCodeDialog), findsOneWidget);
   });
 
   testWidgets(

@@ -97,32 +97,17 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
         title: '',
         description: '',
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-        descriptionWidget: Column(
-          children: [
-            StudyOnboardingDescription(
-              text: AppLocalizations.of(context)!.study_selection_single,
-              actionLabel: AppLocalizations.of(
-                context,
-              )!.study_selection_single_why,
-              onAction: () => showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  content: Text(
-                    AppLocalizations.of(context)!.study_selection_single_reason,
-                  ),
-                ),
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.study_selection_single,
+          actionLabel: AppLocalizations.of(context)!.study_selection_single_why,
+          onAction: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text(
+                AppLocalizations.of(context)!.study_selection_single_reason,
               ),
             ),
-            OutlinedButton.icon(
-              key: const ValueKey('study_selection_invite_code'),
-              icon: const Icon(Icons.vpn_key_outlined),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) => const InviteCodeDialog(),
-              ),
-              label: Text(AppLocalizations.of(context)!.invite_code_button),
-            ),
-          ],
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
