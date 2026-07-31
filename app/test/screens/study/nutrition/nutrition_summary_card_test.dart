@@ -61,10 +61,10 @@ void main() {
     expect(find.text('30.7 g'), findsOneWidget);
     expect(find.text('50.4 g'), findsOneWidget);
     expect(find.text('Macronutrients'), findsOneWidget);
-    expect(find.text('Energy by macronutrient'), findsNothing);
-    expect(find.text('23%'), findsOneWidget);
-    expect(find.text('37%'), findsOneWidget);
-    expect(find.text('40%'), findsOneWidget);
+    expect(find.text('Energy by macronutrient'), findsOneWidget);
+    expect(find.text('Carbs 23%'), findsOneWidget);
+    expect(find.text('Protein 37%'), findsOneWidget);
+    expect(find.text('Fat 40%'), findsOneWidget);
     expect(
       tester
           .getSemantics(find.byType(NutritionMacroDistributionBar))
@@ -73,7 +73,16 @@ void main() {
       contains('Carbohydrates 23%, Protein 37%, Fat 40%'),
     );
     expect(find.text('Detailed Nutrients'), findsOneWidget);
-    expect(find.text('Show'), findsOneWidget);
+    expect(find.text('Fibre'), findsNothing);
+    expect(find.byIcon(Icons.expand_more), findsOneWidget);
+    final detailsSemantics = tester.getSemantics(
+      find.bySemanticsLabel('Detailed Nutrients'),
+    );
+    expect(
+      detailsSemantics.getSemanticsData().hasAction(SemanticsAction.tap),
+      isTrue,
+    );
+    expect(find.text('Show'), findsNothing);
     expect(find.text('Hide'), findsNothing);
     expect(
       find.textContaining('Some nutrient values are unavailable for 1 item.'),
@@ -81,14 +90,140 @@ void main() {
     );
     expect(find.text('—'), findsNothing);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Show'));
+    await tester.tap(find.text('Detailed Nutrients'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Hide'), findsOneWidget);
+    expect(find.byIcon(Icons.expand_less), findsOneWidget);
     expect(find.text('—'), findsOneWidget);
     expect(find.text('0 g'), findsAtLeastNWidgets(1));
 
     semantics.dispose();
+  });
+
+  testWidgets('macro distribution selection exposes anchored detail', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      testApp(
+        const NutritionMacroDistributionBar(
+          carbs: 30.7,
+          protein: 50.4,
+          fat: 23.9,
+        ),
+      ),
+    );
+
+    expect(find.text('Energy by macronutrient'), findsOneWidget);
+    expect(find.text('Carbs 23%'), findsOneWidget);
+    await tester.tap(find.text('Carbs 23%'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Carbohydrates: 23% · 123 kcal'), findsOneWidget);
+  });
+
+  testWidgets(
+    'macro segments expose tap semantics and select matching detail',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpWidget(
+        testApp(
+          const NutritionMacroDistributionBar(
+            carbs: 30.7,
+            protein: 50.4,
+            fat: 23.9,
+          ),
+        ),
+      );
+
+      final segment = find.bySemanticsLabel('Carbohydrates, 23%');
+      expect(segment, findsOneWidget);
+      expect(
+        tester
+            .getSemantics(segment)
+            .getSemanticsData()
+            .hasAction(SemanticsAction.tap),
+        isTrue,
+      );
+      await tester.tap(segment);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Carbohydrates: 23% · 123 kcal'), findsOneWidget);
+      semantics.dispose();
+    },
+  );
+
+  testWidgets('zero macro energy has no distribution chart', (tester) async {
+    await tester.pumpWidget(
+      testApp(
+        const NutritionMacroDistributionBar(carbs: 0, protein: 0, fat: 0),
+      ),
+    );
+
+    expect(find.text('Energy by macronutrient'), findsNothing);
+    expect(find.textContaining('%'), findsNothing);
+    expect(find.textContaining('kcal'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('positive macros with nonpositive energy show placeholder', (
+    tester,
+  ) async {
+    final nutrition = NutritionProfile(
+      energyKcal: 0,
+      protein: 10,
+      carbs: 20,
+      fat: 5,
+      sugars: 0,
+      fiber: 0,
+      saturatedFat: 0,
+      transFat: 0,
+      cholesterol: 0,
+      sodium: 0,
+      waterContent: 0,
+      micros: const {},
+    );
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: SingleChildScrollView(
+            child: NutritionSummaryCard(nutrition: nutrition),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('—'), findsOneWidget);
+    expect(find.text('0 kcal'), findsNothing);
+    expect(find.text('Energy by macronutrient'), findsNothing);
+  });
+
+  testWidgets('German distribution wraps at narrow width', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(320, 640);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        locale: Locale('de'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: NutritionMacroDistributionBar(
+              carbs: 30.7,
+              protein: 50.4,
+              fat: 23.9,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Energie nach Makronährstoffen'), findsOneWidget);
+    expect(find.text('Kohlenhydrate 23%'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('recipe builder empty state is passive and fields are unfilled', (
@@ -170,8 +305,8 @@ void main() {
     expect(find.text('Nutrition per Serving'), findsOneWidget);
     expect(find.text('1 serving'), findsOneWidget);
     expect(find.text('100 kcal'), findsOneWidget);
-    expect(find.text('0 g'), findsNWidgets(4));
-    expect(find.text('0%'), findsNWidgets(3));
+    expect(find.text('0 g'), findsNWidgets(3));
+    expect(find.text('0%'), findsNothing);
     expect(find.text('No data yet'), findsNothing);
   });
 }
