@@ -2808,4 +2808,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get update_current_day_entries =>
       'Passende Einträge im aktuellen Studientag ebenfalls aktualisieren';
+
+  @override
+  String get update => 'Aktualisieren';
+
+  @override
+  String get current_meal_only_banner =>
+      'Änderungen gelten nur für diese Mahlzeit. Für dauerhafte Änderungen verwenden Sie die Lebensmittelbibliothek.';
+
+  @override
+  String grams_per_serving(Object grams) {
+    return '$grams g pro Portion';
+  }
 }

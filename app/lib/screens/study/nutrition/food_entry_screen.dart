@@ -27,6 +27,7 @@ class FoodEntryScreen extends StatefulWidget {
   final NutritionRecallPersistenceTarget? historicalTarget;
   final bool editReusableDefinition;
   final bool hasCurrentStudyDayMatches;
+  final bool showCurrentMealOnlyNotice;
   final bool isExternalLibraryCopy;
   final NutritionFoodRepository? repository;
 
@@ -38,6 +39,7 @@ class FoodEntryScreen extends StatefulWidget {
     this.historicalTarget,
     this.editReusableDefinition = false,
     this.hasCurrentStudyDayMatches = false,
+    this.showCurrentMealOnlyNotice = false,
     this.isExternalLibraryCopy = false,
     this.repository,
     super.key,
@@ -52,6 +54,7 @@ class FoodEntryScreen extends StatefulWidget {
     NutritionRecallPersistenceTarget? historicalTarget,
     bool editReusableDefinition = false,
     bool hasCurrentStudyDayMatches = false,
+    bool showCurrentMealOnlyNotice = false,
     bool isExternalLibraryCopy = false,
     NutritionFoodRepository? repository,
   }) => MaterialPageRoute(
@@ -63,6 +66,7 @@ class FoodEntryScreen extends StatefulWidget {
       historicalTarget: historicalTarget,
       editReusableDefinition: editReusableDefinition,
       hasCurrentStudyDayMatches: hasCurrentStudyDayMatches,
+      showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
       isExternalLibraryCopy: isExternalLibraryCopy,
       repository: repository,
     ),
@@ -554,6 +558,28 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 
             if (widget.isExternalLibraryCopy) ...[
               _ExternalCopyNotice(theme: theme, l10n: l10n),
+              const SizedBox(height: 12),
+            ],
+
+            if (widget.showCurrentMealOnlyNotice &&
+                widget.existingFood != null &&
+                !widget.editReusableDefinition &&
+                !widget.isExternalLibraryCopy) ...[
+              Card(
+                color: theme.colorScheme.secondaryContainer,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.onSecondaryContainer,
+                  ),
+                  title: Text(
+                    l10n.current_meal_only_banner,
+                    style: TextStyle(
+                      color: theme.colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 12),
             ],
 

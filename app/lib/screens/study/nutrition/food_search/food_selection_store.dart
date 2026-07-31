@@ -15,12 +15,14 @@ final class FoodSelectionItem {
   studyu.FoodEntry baseFood;
   int quantity;
   bool caloriesKnown;
+  bool gramsKnown;
 
   FoodSelectionItem({
     required this.key,
     required this.baseFood,
     this.quantity = 1,
     this.caloriesKnown = true,
+    this.gramsKnown = true,
   });
 
   String get name => baseFood.name;
@@ -48,6 +50,7 @@ final class FoodSelectionStore extends ChangeNotifier {
     String key,
     studyu.FoodEntry food, {
     bool caloriesKnown = true,
+    bool gramsKnown = true,
   }) {
     final existing = _items[key];
     if (existing == null) {
@@ -55,6 +58,7 @@ final class FoodSelectionStore extends ChangeNotifier {
         key: key,
         baseFood: cloneFoodEntry(food),
         caloriesKnown: caloriesKnown,
+        gramsKnown: gramsKnown,
       );
     } else {
       existing.quantity++;
@@ -94,6 +98,7 @@ final class FoodSelectionStore extends ChangeNotifier {
     String key,
     studyu.FoodEntry food, {
     required bool caloriesKnown,
+    bool? gramsKnown,
   }) {
     final item = _items[key];
     if (item == null) return;
@@ -109,6 +114,7 @@ final class FoodSelectionStore extends ChangeNotifier {
         ..quantity = 1;
     }
     item.caloriesKnown = caloriesKnown;
+    if (gramsKnown != null) item.gramsKnown = gramsKnown;
     notifyListeners();
   }
 

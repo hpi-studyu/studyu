@@ -348,6 +348,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
         key: item.key,
         baseFood: cloneFoodEntry(item.baseFood),
         caloriesKnown: item.caloriesKnown,
+        gramsKnown: item.gramsKnown,
       );
       _isRemoving = true;
     });
@@ -365,6 +366,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
       removedItem.key,
       removedItem.baseFood,
       caloriesKnown: removedItem.caloriesKnown,
+      gramsKnown: removedItem.gramsKnown,
     );
   }
 
@@ -374,6 +376,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
         item.baseFood,
         item.quantity,
         caloriesKnown: item.caloriesKnown,
+        gramsKnown: item.gramsKnown,
       );
 
   Widget _itemRow(

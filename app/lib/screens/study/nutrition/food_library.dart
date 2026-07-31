@@ -552,7 +552,10 @@ class FoodLibraryExternalResultCard extends StatelessWidget {
     final brand = result.brand?.trim();
     final details = [
       if (brand != null && brand.isNotEmpty) brand,
-      l10n.serving_amount(1),
+      if (result.servingSizeGrams == null)
+        '— g'
+      else
+        '${formatFoodNumber(result.servingSizeGrams!)} g',
       if (result.calories == null)
         '— kcal'
       else
@@ -657,121 +660,132 @@ class FoodLibraryItemCard extends StatelessWidget {
         : Icons.restaurant_outlined;
     final imageUrl = foodImageUrl(template.prototype);
     final quantity = isSelected ? selectedQuantity : 1;
-    final metadata = _isMeal
-        ? '${l10n.template_type_meal} · '
-              '${l10n.items_count(template.prototype.componentFoods?.length ?? 0)} · '
-              '${l10n.kcal_value((template.prototype.nutrition.energyKcal * template.prototype.amount * quantity).round().toString())}'
-        : selectedFoodServingMetadata(l10n, template.prototype, quantity);
+    final metadata = foodTotalMetadata(
+      l10n,
+      template.prototype,
+      quantity,
+      caloriesKnown: !template.prototype.nutrition.unavailableNutrients
+          .contains('energyKcal'),
+    );
 
     return SelectionFeedbackCard(
       selected: isSelected,
-      child: InkWell(
-        onTap: () {
-          if (onTap case final onTap?) {
-            onTap(template);
-          } else {
-            _edit(context);
-          }
-        },
-        borderRadius: BorderRadius.circular(12),
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed)
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
-              : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 44,
-                  height: 44,
-                  child: imageUrl == null
-                      ? fallbackFoodIcon(theme, icon)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            excludeFromSemantics: true,
-                            errorBuilder: (_, _, _) =>
-                                fallbackFoodIcon(theme, icon),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  if (onTap case final onTap?) {
+                    onTap(template);
+                  } else {
+                    _edit(context);
+                  }
+                },
+                borderRadius: BorderRadius.circular(12),
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.pressed)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                      : null,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 44,
+                          height: 44,
+                          child: imageUrl == null
+                              ? fallbackFoodIcon(theme, icon)
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                    excludeFromSemantics: true,
+                                    errorBuilder: (_, _, _) =>
+                                        fallbackFoodIcon(theme, icon),
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                template.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              AnimatedSwitcher(
+                                duration: selectionAnimationDuration(context),
+                                child: Text(
+                                  metadata,
+                                  key: ValueKey(metadata),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        template.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      AnimatedSwitcher(
-                        duration: selectionAnimationDuration(context),
-                        child: Text(
-                          metadata,
-                          key: ValueKey(metadata),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (isSelected && onIncrement != null && onDecrement != null)
-                  SelectionQuantityControl(
-                    name: template.name,
-                    quantity: selectedQuantity,
-                    onIncrement: onIncrement!,
-                    onDecrement: onDecrement!,
-                  )
-                else if (onAdd != null)
-                  Builder(
-                    builder: (buttonContext) => TextButton(
-                      onPressed: () =>
-                          onAdd!(template, globalCenter(buttonContext)),
-                      child: Text(l10n.add),
+                      ],
                     ),
                   ),
-                if (showManagementActions)
-                  PopupMenuButton<_FoodLibraryAction>(
-                    onSelected: (action) => _handleAction(context, action),
-                    itemBuilder: (_) => [
-                      if (onAdd != null && !isSelected)
-                        PopupMenuItem(
-                          value: _FoodLibraryAction.add,
-                          child: _menuItem(Icons.add, l10n.add),
-                        ),
-                      PopupMenuItem(
-                        value: _FoodLibraryAction.edit,
-                        child: _menuItem(Icons.edit_outlined, l10n.edit),
-                      ),
-                      PopupMenuItem(
-                        value: _FoodLibraryAction.duplicate,
-                        child: _menuItem(Icons.copy_outlined, l10n.duplicate),
-                      ),
-                      PopupMenuItem(
-                        value: _FoodLibraryAction.delete,
-                        child: _menuItem(Icons.delete_outline, l10n.delete),
-                      ),
-                    ],
-                  ),
-              ],
+                ),
+              ),
             ),
-          ),
+            if (isSelected && onIncrement != null && onDecrement != null)
+              SelectionQuantityControl(
+                name: template.name,
+                quantity: selectedQuantity,
+                onIncrement: onIncrement!,
+                onDecrement: onDecrement!,
+              )
+            else if (onAdd != null)
+              Builder(
+                builder: (buttonContext) => TextButton(
+                  onPressed: () =>
+                      onAdd!(template, globalCenter(buttonContext)),
+                  child: Text(l10n.add),
+                ),
+              ),
+            if (showManagementActions)
+              PopupMenuButton<_FoodLibraryAction>(
+                onSelected: (action) => _handleAction(context, action),
+                itemBuilder: (_) => [
+                  if (onAdd != null && !isSelected)
+                    PopupMenuItem(
+                      value: _FoodLibraryAction.add,
+                      child: _menuItem(Icons.add, l10n.add),
+                    ),
+                  PopupMenuItem(
+                    value: _FoodLibraryAction.edit,
+                    child: _menuItem(Icons.edit_outlined, l10n.edit),
+                  ),
+                  PopupMenuItem(
+                    value: _FoodLibraryAction.duplicate,
+                    child: _menuItem(Icons.copy_outlined, l10n.duplicate),
+                  ),
+                  PopupMenuItem(
+                    value: _FoodLibraryAction.delete,
+                    child: _menuItem(Icons.delete_outline, l10n.delete),
+                  ),
+                ],
+              ),
+          ],
         ),
       ),
     );

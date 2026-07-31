@@ -197,7 +197,7 @@ class TemplateViewModel extends ChangeNotifier {
       unit: 'serving',
       servingSizeGrams: foods.fold(
         0,
-        (total, food) => total + food.servingSizeGrams,
+        (total, food) => total + food.servingSizeGrams * food.amount,
       ),
       portionEstimationMethod: PortionEstimationMethod.householdMeasure,
       portionState: PortionState.asServed,

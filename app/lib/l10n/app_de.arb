@@ -1127,5 +1127,9 @@
   "nutrition_calories": "Kalorien",
   "historical_edit_mode_heading": "Früheren Studientag bearbeiten",
   "historical_edit_mode_description": "Im Verlauf kannst du das Essensprotokoll des vorherigen Studientags aktualisieren. Lebensmittel und Mahlzeiten, die du hier erstellst, stehen dir für zukünftige Essensprotokolle weiterhin zur Verfügung.",
-  "update_current_day_entries": "Passende Einträge im aktuellen Studientag ebenfalls aktualisieren"
+  "update_current_day_entries": "Passende Einträge im aktuellen Studientag ebenfalls aktualisieren",
+  "update": "Aktualisieren",
+  "current_meal_only_banner": "Änderungen gelten nur für diese Mahlzeit. Für dauerhafte Änderungen verwenden Sie die Lebensmittelbibliothek.",
+  "grams_per_serving": "{grams} g pro Portion",
+  "details": "Details"
 }
