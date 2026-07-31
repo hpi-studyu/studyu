@@ -1916,7 +1916,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_to_my_items_action => 'Save to My items';
 
   @override
-  String get external_library_copy => 'Add to My library';
+  String get external_library_copy => 'Import';
 
   @override
   String external_library_copy_label(String name) {

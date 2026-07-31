@@ -1934,7 +1934,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_to_my_items_action => 'In Meine Elemente speichern';
 
   @override
-  String get external_library_copy => 'Zu meiner Bibliothek hinzufügen';
+  String get external_library_copy => 'Importieren';
 
   @override
   String external_library_copy_label(String name) {

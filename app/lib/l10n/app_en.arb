@@ -747,7 +747,7 @@
   "adjust_quantity": "Adjust quantity",
   "edit_this_entry": "Edit this entry",
   "save_to_my_items_action": "Save to My items",
-  "external_library_copy": "Add to My library",
+  "external_library_copy": "Import",
   "external_library_copy_label": "Review and add {name} to My library",
   "@external_library_copy_label": {
     "placeholders": {

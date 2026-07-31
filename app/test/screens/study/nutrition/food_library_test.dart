@@ -142,7 +142,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add to My library'), findsOneWidget);
+    expect(find.text('Import'), findsOneWidget);
     expect(find.byType(PopupMenuButton), findsNothing);
   });
 
@@ -224,7 +224,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'apple');
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Add to My library'));
+    await tester.tap(find.text('Import'));
     await tester.pumpAndSettle();
     expect(find.text('Review food'), findsOneWidget);
 
@@ -268,7 +268,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'apple');
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Add to My library'));
+    await tester.tap(find.text('Import'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Save to My library'));
     await tester.pumpAndSettle();
@@ -314,7 +314,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'apple');
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Add to My library'));
+    await tester.tap(find.text('Import'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Save to My library'));
     await tester.pumpAndSettle();

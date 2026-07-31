@@ -3638,7 +3638,7 @@ abstract class AppLocalizations {
   /// No description provided for @external_library_copy.
   ///
   /// In en, this message translates to:
-  /// **'Add to My library'**
+  /// **'Import'**
   String get external_library_copy;
 
   /// No description provided for @external_library_copy_label.

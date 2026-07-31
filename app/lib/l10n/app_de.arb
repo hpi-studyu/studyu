@@ -573,7 +573,7 @@
   "adjust_quantity": "Menge anpassen",
   "edit_this_entry": "Diesen Eintrag bearbeiten",
   "save_to_my_items_action": "In Meine Elemente speichern",
-  "external_library_copy": "Zu meiner Bibliothek hinzufügen",
+  "external_library_copy": "Importieren",
   "external_library_copy_label": "{name} prüfen und zu meiner Bibliothek hinzufügen",
   "@external_library_copy_label": {
     "placeholders": {

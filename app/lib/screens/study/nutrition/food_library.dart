@@ -609,14 +609,13 @@ class FoodLibraryExternalResultCard extends StatelessWidget {
             ),
             Tooltip(
               message: l10n.external_library_copy_label(result.name),
-              child: TextButton.icon(
+              child: TextButton(
                 onPressed: busy ? null : onCopy,
                 style: TextButton.styleFrom(
                   minimumSize: const Size(48, 48),
                   tapTargetSize: MaterialTapTargetSize.padded,
                 ),
-                icon: const Icon(Icons.library_add_outlined),
-                label: Text(l10n.external_library_copy),
+                child: Text(l10n.external_library_copy),
               ),
             ),
           ],
