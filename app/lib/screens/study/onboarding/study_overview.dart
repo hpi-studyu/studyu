@@ -91,16 +91,23 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Hero(
-              tag: 'study_tile_${study!.id}',
-              child: Material(child: StudyTile.fromStudy(study: study!)),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                Hero(
+                  tag: 'study_tile_${study!.id}',
+                  child: Material(child: StudyTile.fromStudy(study: study!)),
+                ),
+                const SizedBox(height: 16),
+                StudyDetailsView(study: study),
+              ],
             ),
-            const SizedBox(height: 16),
-            StudyDetailsView(study: study),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
