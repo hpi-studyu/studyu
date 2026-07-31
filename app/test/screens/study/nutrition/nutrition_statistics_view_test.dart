@@ -43,6 +43,10 @@ void main() {
     expect(find.text('Durchschnitt abgeschlossener Tage'), findsOneWidget);
     expect(find.text('1.234 kcal'), findsWidgets);
     expect(find.text('1,5 g'), findsOneWidget);
+    expect(
+      tester.getSemantics(find.byType(Card).first).getSemanticsData().label,
+      contains('Kohlenhydrate 2%, Protein 16%, Fett 82%'),
+    );
     final energyCard = find.ancestor(
       of: find.text('Energie pro Studientag'),
       matching: find.byType(Card),

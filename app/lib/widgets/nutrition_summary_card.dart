@@ -2,6 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
+class NutritionMacroDistributionBar extends StatelessWidget {
+  final double carbs;
+  final double protein;
+  final double fat;
+
+  const NutritionMacroDistributionBar({
+    required this.carbs,
+    required this.protein,
+    required this.fat,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final total = carbs * 4 + protein * 4 + fat * 9;
+    if (total <= 0) return const SizedBox.shrink();
+
+    final macros = [
+      (l10n.carbohydrates, carbs * 4 / total * 100, theme.colorScheme.primary),
+      (l10n.protein, protein * 4 / total * 100, theme.colorScheme.tertiary),
+      (l10n.fat, fat * 9 / total * 100, theme.colorScheme.secondary),
+    ];
+    return Semantics(
+      label: macros
+          .map((macro) => '${macro.$1} ${macro.$2.round()}%')
+          .join(', '),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Row(
+          children: [
+            for (final macro in macros)
+              Expanded(
+                flex: macro.$2.round().clamp(1, 100),
+                child: ColoredBox(
+                  color: macro.$3,
+                  child: const SizedBox(height: 8),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class NutritionSummaryCard extends StatefulWidget {
   final NutritionProfile nutrition;
   final String? title;
@@ -144,23 +191,10 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
         ),
         if (total > 0) ...[
           const SizedBox(height: 10),
-          Semantics(
-            label: macros.map((m) => '${m.$1} ${m.$4.round()}%').join(', '),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Row(
-                children: [
-                  for (final macro in macros)
-                    Expanded(
-                      flex: macro.$4.round().clamp(1, 100),
-                      child: ColoredBox(
-                        color: macro.$5,
-                        child: const SizedBox(height: 8),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+          NutritionMacroDistributionBar(
+            carbs: widget.nutrition.carbs,
+            protein: widget.nutrition.protein,
+            fat: widget.nutrition.fat,
           ),
         ],
       ],

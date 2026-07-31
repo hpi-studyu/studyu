@@ -65,6 +65,13 @@ void main() {
     expect(find.text('23%'), findsOneWidget);
     expect(find.text('37%'), findsOneWidget);
     expect(find.text('40%'), findsOneWidget);
+    expect(
+      tester
+          .getSemantics(find.byType(NutritionMacroDistributionBar))
+          .getSemanticsData()
+          .label,
+      contains('Carbohydrates 23%, Protein 37%, Fat 40%'),
+    );
     expect(find.text('Detailed Nutrients'), findsOneWidget);
     expect(find.text('Show'), findsOneWidget);
     expect(find.text('Hide'), findsNothing);

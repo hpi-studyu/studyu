@@ -159,6 +159,9 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
   ) {
     final l10n = AppLocalizations.of(context)!;
     final averageEnergy = current.average((nutrition) => nutrition.energyKcal);
+    final averageCarbs = current.average((nutrition) => nutrition.carbs);
+    final averageProtein = current.average((nutrition) => nutrition.protein);
+    final averageFat = current.average((nutrition) => nutrition.fat);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -175,18 +178,19 @@ class _NutritionStatisticsViewState extends State<NutritionStatisticsView> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 16),
-            _value(
-              l10n.carbohydrates,
-              _grams(context, current.average((value) => value.carbs)),
-            ),
-            _value(
-              l10n.protein,
-              _grams(context, current.average((value) => value.protein)),
-            ),
-            _value(
-              l10n.fat,
-              _grams(context, current.average((value) => value.fat)),
-            ),
+            _value(l10n.carbohydrates, _grams(context, averageCarbs)),
+            _value(l10n.protein, _grams(context, averageProtein)),
+            _value(l10n.fat, _grams(context, averageFat)),
+            if (averageCarbs != null &&
+                averageProtein != null &&
+                averageFat != null) ...[
+              const SizedBox(height: 10),
+              NutritionMacroDistributionBar(
+                carbs: averageCarbs,
+                protein: averageProtein,
+                fat: averageFat,
+              ),
+            ],
             _value(
               l10n.fibre,
               _grams(context, current.average((value) => value.fiber)),
