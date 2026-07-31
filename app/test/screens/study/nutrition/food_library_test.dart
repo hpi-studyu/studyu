@@ -9,7 +9,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/food_library.dart';
-import 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_model.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
@@ -375,6 +375,43 @@ void main() {
     await tester.tap(find.byTooltip('Decrease Fruit bowl'));
     await tester.pump(const Duration(milliseconds: 150));
     expect(find.text('Add'), findsOneWidget);
+  });
+
+  testWidgets('details tap stays separate from selected quantity controls', (
+    tester,
+  ) async {
+    final template = _template(_food('apple', 'Apple'));
+    var detailsTaps = 0;
+    var quantity = 1;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: FoodLibraryItemCard(
+            template: template,
+            isSelected: true,
+            selectedQuantity: quantity,
+            onTap: (_) => detailsTaps++,
+            onIncrement: (_) => quantity++,
+            onDecrement: () {},
+            showManagementActions: false,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Apple'));
+    await tester.pump();
+    expect(detailsTaps, 1);
+
+    await tester.tap(find.byTooltip('Increase Apple'));
+    await tester.pump();
+    expect(detailsTaps, 1);
+    expect(quantity, 2);
+    await tester.pump(const Duration(milliseconds: 150));
   });
 
   testWidgets('saved meal edit updates name and ordered composition', (

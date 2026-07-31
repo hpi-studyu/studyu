@@ -109,68 +109,80 @@ class _HistoryFoodCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: InkWell(
-                onTap: onTap,
-                borderRadius: BorderRadius.circular(12),
-                overlayColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.pressed)
-                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                      : null,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minHeight: 48),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 44,
-                          height: 44,
-                          child: imageUrl == null
-                              ? fallbackFoodIcon(theme, _foodIcon(food))
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, _, _) => fallbackFoodIcon(
-                                      theme,
-                                      _foodIcon(food),
+              child: Semantics(
+                button: true,
+                label: '${food.name}, ${l10n.details}',
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(12),
+                  overlayColor: WidgetStateProperty.resolveWith(
+                    (states) => states.contains(WidgetState.pressed)
+                        ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                        : null,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 44,
+                            height: 44,
+                            child: imageUrl == null
+                                ? fallbackFoodIcon(theme, _foodIcon(food))
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      imageUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, _, _) =>
+                                          fallbackFoodIcon(
+                                            theme,
+                                            _foodIcon(food),
+                                          ),
+                                    ),
+                                  ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  food.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      ListTileTheme.of(
+                                        context,
+                                      ).titleTextStyle ??
+                                      theme.textTheme.bodyLarge,
+                                ),
+                                const SizedBox(height: 2),
+                                AnimatedSwitcher(
+                                  duration: selectionAnimationDuration(context),
+                                  child: Text(
+                                    metadata,
+                                    key: ValueKey(metadata),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                food.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style:
-                                    ListTileTheme.of(context).titleTextStyle ??
-                                    theme.textTheme.bodyLarge,
-                              ),
-                              const SizedBox(height: 2),
-                              AnimatedSwitcher(
-                                duration: selectionAnimationDuration(context),
-                                child: Text(
-                                  metadata,
-                                  key: ValueKey(metadata),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          FoodDetailsAffordance(
+                            showLabel:
+                                MediaQuery.sizeOf(context).width >= 400 &&
+                                MediaQuery.textScalerOf(context).scale(1) < 1.3,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -247,72 +259,81 @@ class _FoodResultCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: InkWell(
-                onTap: onTap,
-                borderRadius: BorderRadius.circular(12),
-                overlayColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.pressed)
-                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                      : null,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: result.imageUrl != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  result.imageUrl!,
-                                  width: 48,
-                                  height: 48,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) => fallbackFoodIcon(
-                                    theme,
-                                    Icons.restaurant_outlined,
-                                    size: 24,
+              child: Semantics(
+                button: true,
+                label: '${result.name}, ${l10n.details}',
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(12),
+                  overlayColor: WidgetStateProperty.resolveWith(
+                    (states) => states.contains(WidgetState.pressed)
+                        ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                        : null,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 48,
+                          height: 48,
+                          child: result.imageUrl != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    result.imageUrl!,
+                                    width: 48,
+                                    height: 48,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, _, _) => fallbackFoodIcon(
+                                      theme,
+                                      Icons.restaurant_outlined,
+                                      size: 24,
+                                    ),
                                   ),
+                                )
+                              : fallbackFoodIcon(
+                                  theme,
+                                  Icons.restaurant_outlined,
+                                  size: 24,
                                 ),
-                              )
-                            : fallbackFoodIcon(
-                                theme,
-                                Icons.restaurant_outlined,
-                                size: 24,
-                              ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              result.name,
-                              style: theme.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 2),
-                            AnimatedSwitcher(
-                              duration: selectionAnimationDuration(context),
-                              child: Text(
-                                metadata,
-                                key: ValueKey(metadata),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                result.name,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              const SizedBox(height: 2),
+                              AnimatedSwitcher(
+                                duration: selectionAnimationDuration(context),
+                                child: Text(
+                                  metadata,
+                                  key: ValueKey(metadata),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        FoodDetailsAffordance(
+                          showLabel:
+                              MediaQuery.sizeOf(context).width >= 400 &&
+                              MediaQuery.textScalerOf(context).scale(1) < 1.3,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
