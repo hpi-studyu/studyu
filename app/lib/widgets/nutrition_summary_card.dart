@@ -23,8 +23,8 @@ class NutritionMacroDistributionBar extends StatelessWidget {
 
     final macros = [
       (l10n.carbohydrates, carbs * 4 / total * 100, theme.colorScheme.primary),
-      (l10n.protein, protein * 4 / total * 100, theme.colorScheme.tertiary),
-      (l10n.fat, fat * 9 / total * 100, theme.colorScheme.secondary),
+      (l10n.protein, protein * 4 / total * 100, theme.colorScheme.secondary),
+      (l10n.fat, fat * 9 / total * 100, theme.colorScheme.tertiary),
     ];
     return Semantics(
       label: macros
@@ -155,14 +155,14 @@ class _NutritionSummaryCardState extends State<NutritionSummaryCard> {
         widget.nutrition.protein,
         'protein',
         widget.nutrition.protein * 4 / (total == 0 ? 1 : total) * 100,
-        theme.colorScheme.tertiary,
+        theme.colorScheme.secondary,
       ),
       (
         l10n.fat,
         widget.nutrition.fat,
         'fat',
         widget.nutrition.fat * 9 / (total == 0 ? 1 : total) * 100,
-        theme.colorScheme.secondary,
+        theme.colorScheme.tertiary,
       ),
     ];
 
