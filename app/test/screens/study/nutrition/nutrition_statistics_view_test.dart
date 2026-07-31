@@ -159,7 +159,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final barRect = tester.getRect(find.byType(BarChart));
+    final energyCard = find.ancestor(
+      of: find.text('Energie pro Studientag'),
+      matching: find.byType(Card),
+    );
+    final energyBar = find.descendant(
+      of: energyCard,
+      matching: find.byType(BarChart),
+    );
+    final barRect = tester.getRect(energyBar);
     const historicalIndex = 5;
     final barPlotLeft = barRect.left + 50;
     await tester.tapAt(
@@ -295,8 +303,14 @@ void main() {
       find.text('Durchschnitt 500 kcal über abgeschlossene Tage'),
       findsOneWidget,
     );
+    final energyCard = find.ancestor(
+      of: find.text('Energie pro Studientag'),
+      matching: find.byType(Card),
+    );
     final todayRod = tester
-        .widget<BarChart>(find.byType(BarChart))
+        .widget<BarChart>(
+          find.descendant(of: energyCard, matching: find.byType(BarChart)),
+        )
         .data
         .barGroups
         .last
