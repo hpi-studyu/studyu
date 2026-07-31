@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
@@ -30,6 +31,8 @@ class FoodEntryScreen extends StatefulWidget {
   final bool showCurrentMealOnlyNotice;
   final bool isExternalLibraryCopy;
   final NutritionFoodRepository? repository;
+  final TemplateViewModel? templateViewModel;
+  final void Function(FoodEntry food, Offset? source)? onSavedToSelection;
 
   const FoodEntryScreen({
     this.existingFood,
@@ -42,6 +45,8 @@ class FoodEntryScreen extends StatefulWidget {
     this.showCurrentMealOnlyNotice = false,
     this.isExternalLibraryCopy = false,
     this.repository,
+    this.templateViewModel,
+    this.onSavedToSelection,
     super.key,
   }) : assert(!editReusableDefinition || historicalTarget != null),
        assert(!isExternalLibraryCopy || existingFood != null);
@@ -57,6 +62,8 @@ class FoodEntryScreen extends StatefulWidget {
     bool showCurrentMealOnlyNotice = false,
     bool isExternalLibraryCopy = false,
     NutritionFoodRepository? repository,
+    TemplateViewModel? templateViewModel,
+    void Function(FoodEntry food, Offset? source)? onSavedToSelection,
   }) => MaterialPageRoute(
     builder: (_) => FoodEntryScreen(
       existingFood: existingFood,
@@ -69,6 +76,8 @@ class FoodEntryScreen extends StatefulWidget {
       showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
       isExternalLibraryCopy: isExternalLibraryCopy,
       repository: repository,
+      templateViewModel: templateViewModel,
+      onSavedToSelection: onSavedToSelection,
     ),
   );
 
@@ -107,6 +116,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   late final String _initialSnapshot;
   bool _allowPop = false;
   bool _isSaving = false;
+  final GlobalKey _saveButtonKey = GlobalKey();
   final String _mutationId = const Uuid().v4();
 
   /// Whether the food entry data comes from AI analysis.
@@ -217,6 +227,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 
   Future<void> _saveFood() async {
     if (_isSaving) return;
+    Offset? saveSource;
+    final saveContext = _saveButtonKey.currentContext;
+    if (widget.existingFood == null && saveContext != null) {
+      saveSource = globalCenter(saveContext);
+    }
     var food = _buildFoodEntry();
     if (food == null) return;
     setState(() => _isSaving = true);
@@ -313,18 +328,35 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       final userId = appState.activeSubject?.id ?? 'anonymous';
       try {
         final viewModel =
+            widget.templateViewModel ??
             Provider.of<TemplateViewModel?>(context, listen: false) ??
             TemplateViewModel(userId: userId, repository: widget.repository);
         food.templateId = await viewModel.saveFoodAsTemplate(
           name: food.name,
           food: food,
         );
-      } catch (error) {
-        StudyULogger.error('Failed to save food to My items: $error');
+      } catch (error, stackTrace) {
+        StudyULogger.error(
+          'Failed to save food to My items: $error\n$stackTrace',
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+          setState(() => _isSaving = false);
+        }
+        return;
       }
     }
 
-    if (mounted) _pop(food);
+    if (mounted) {
+      final savedFood = food;
+      final onSavedToSelection =
+          widget.existingFood == null && widget.onSavedToSelection != null
+          ? () => widget.onSavedToSelection!(savedFood, saveSource)
+          : null;
+      _pop(food, onSavedToSelection);
+    }
   }
 
   void _reconcileProgress(
@@ -346,10 +378,19 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     }
   }
 
-  void _pop([FoodEntry? result]) {
+  void _pop([FoodEntry? result, VoidCallback? afterPop]) {
     setState(() => _allowPop = true);
+    final route = ModalRoute.of(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Navigator.of(context).pop(result);
+      if (!mounted) return;
+      Navigator.of(context).pop(result);
+      if (afterPop == null) return;
+      final completed = route?.completed;
+      if (completed == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => afterPop());
+      } else {
+        completed.then((_) => afterPop());
+      }
     });
   }
 
@@ -512,7 +553,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               onPressed: () async {
                 final result = await Navigator.push(
                   context,
-                  FoodSearchScreen.route(),
+                  FoodSearchScreen.route(
+                    templateViewModel: widget.templateViewModel,
+                  ),
                 );
                 if (result == null || !context.mounted) return;
                 if (_hasUnsavedChanges) {
@@ -530,6 +573,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: FilledButton.icon(
+            key: _saveButtonKey,
             onPressed: _isSaving ? null : _saveFood,
             icon: const Icon(Icons.check),
             label: Text(

@@ -311,6 +311,35 @@ String? foodImageUrl(studyu.FoodEntry food) {
   return null;
 }
 
+class FoodDetailsAffordance extends StatelessWidget {
+  final bool showLabel;
+
+  const FoodDetailsAffordance({this.showLabel = true, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Tooltip(
+      message: l10n.details,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showLabel) ...[
+            Text(
+              l10n.details,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+            const SizedBox(width: 4),
+          ],
+          const Icon(Icons.chevron_right, size: 22),
+        ],
+      ),
+    );
+  }
+}
+
 Widget fallbackFoodIcon(ThemeData theme, IconData icon, {double size = 22}) =>
     Container(
       alignment: Alignment.center,

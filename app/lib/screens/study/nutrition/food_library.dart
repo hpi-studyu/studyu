@@ -34,6 +34,7 @@ class FoodLibrary extends StatefulWidget {
   final FoodLibrarySelectionAction? onIncrement;
   final ValueChanged<studyu.SavedFoodTemplate>? onDecrement;
   final bool showManagementActions;
+  final bool showLibraryHeading;
   final bool includeExternalLibrary;
   final FoodSearchViewModel? externalSearchViewModel;
   final OpenFoodFactsSearch? openFoodFactsSearch;
@@ -53,6 +54,7 @@ class FoodLibrary extends StatefulWidget {
     this.onIncrement,
     this.onDecrement,
     this.showManagementActions = true,
+    this.showLibraryHeading = true,
     this.includeExternalLibrary = false,
     this.externalSearchViewModel,
     this.openFoodFactsSearch,
@@ -289,12 +291,14 @@ class _FoodLibraryState extends State<FoodLibrary> {
     if (viewModel.isLoading && templates.isEmpty) {
       children.add(const Center(child: CircularProgressIndicator()));
     } else if (viewModel.currentFilter != TemplateFilter.meals) {
-      children.add(
-        _FoodLibrarySectionHeader(
-          title: l10n.my_saved_items,
-          icon: Icons.bookmark_outline,
-        ),
-      );
+      if (widget.showLibraryHeading) {
+        children.add(
+          _FoodLibrarySectionHeader(
+            title: l10n.my_saved_items,
+            icon: Icons.bookmark_outline,
+          ),
+        );
+      }
       if (templates.isEmpty && !showExternal) {
         children.add(
           _FoodLibraryInlineMessage(
@@ -676,73 +680,82 @@ class FoodLibraryItemCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: InkWell(
-                onTap: () {
-                  if (onTap case final onTap?) {
-                    onTap(template);
-                  } else {
-                    _edit(context);
-                  }
-                },
-                borderRadius: BorderRadius.circular(12),
-                overlayColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.pressed)
-                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                      : null,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minHeight: 48),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 44,
-                          height: 44,
-                          child: imageUrl == null
-                              ? fallbackFoodIcon(theme, icon)
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                    excludeFromSemantics: true,
-                                    errorBuilder: (_, _, _) =>
-                                        fallbackFoodIcon(theme, icon),
+              child: Semantics(
+                button: true,
+                label: '${template.name}, ${l10n.details}',
+                child: InkWell(
+                  onTap: () {
+                    if (onTap case final onTap?) {
+                      onTap(template);
+                    } else {
+                      _edit(context);
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  overlayColor: WidgetStateProperty.resolveWith(
+                    (states) => states.contains(WidgetState.pressed)
+                        ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                        : null,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 44,
+                            height: 44,
+                            child: imageUrl == null
+                                ? fallbackFoodIcon(theme, icon)
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      imageUrl,
+                                      fit: BoxFit.cover,
+                                      excludeFromSemantics: true,
+                                      errorBuilder: (_, _, _) =>
+                                          fallbackFoodIcon(theme, icon),
+                                    ),
                                   ),
-                                ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                template.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              AnimatedSwitcher(
-                                duration: selectionAnimationDuration(context),
-                                child: Text(
-                                  metadata,
-                                  key: ValueKey(metadata),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  template.name,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 2),
+                                AnimatedSwitcher(
+                                  duration: selectionAnimationDuration(context),
+                                  child: Text(
+                                    metadata,
+                                    key: ValueKey(metadata),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          FoodDetailsAffordance(
+                            showLabel:
+                                MediaQuery.sizeOf(context).width >= 400 &&
+                                MediaQuery.textScalerOf(context).scale(1) < 1.3,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -758,8 +771,10 @@ class FoodLibraryItemCard extends StatelessWidget {
             else if (onAdd != null)
               Builder(
                 builder: (buttonContext) => TextButton(
-                  onPressed: () =>
-                      onAdd!(template, globalCenter(buttonContext)),
+                  onPressed: () => onAdd!(
+                    template,
+                    globalCenter(buttonContext) ?? globalCenter(context),
+                  ),
                   child: Text(l10n.add),
                 ),
               ),

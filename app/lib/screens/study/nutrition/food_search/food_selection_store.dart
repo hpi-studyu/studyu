@@ -12,6 +12,8 @@ final class FoodSearchSelection {
 
 final class FoodSelectionItem {
   final String key;
+  final studyu.FoodEntry baselineFood;
+  final bool baselineGramsKnown;
   studyu.FoodEntry baseFood;
   int quantity;
   bool caloriesKnown;
@@ -19,13 +21,21 @@ final class FoodSelectionItem {
 
   FoodSelectionItem({
     required this.key,
+    required this.baselineFood,
     required this.baseFood,
     this.quantity = 1,
     this.caloriesKnown = true,
     this.gramsKnown = true,
+    this.baselineGramsKnown = true,
   });
 
   String get name => baseFood.name;
+
+  bool get servingWeightOverridden =>
+      gramsKnown &&
+      (!baselineGramsKnown ||
+          (baseFood.servingSizeGrams - baselineFood.servingSizeGrams).abs() >
+              0.000001);
 }
 
 /// Temporary, route-scoped state for the multi-select Add items flow.
@@ -56,9 +66,11 @@ final class FoodSelectionStore extends ChangeNotifier {
     if (existing == null) {
       _items[key] = FoodSelectionItem(
         key: key,
+        baselineFood: cloneFoodEntry(food),
         baseFood: cloneFoodEntry(food),
         caloriesKnown: caloriesKnown,
         gramsKnown: gramsKnown,
+        baselineGramsKnown: gramsKnown,
       );
     } else {
       existing.quantity++;
@@ -66,6 +78,23 @@ final class FoodSelectionStore extends ChangeNotifier {
     _recentKeys
       ..remove(key)
       ..add(key);
+    notifyListeners();
+  }
+
+  void restore(FoodSelectionItem item) {
+    if (_items.containsKey(item.key)) return;
+    _items[item.key] = FoodSelectionItem(
+      key: item.key,
+      baselineFood: cloneFoodEntry(item.baselineFood),
+      baseFood: cloneFoodEntry(item.baseFood),
+      quantity: item.quantity,
+      caloriesKnown: item.caloriesKnown,
+      gramsKnown: item.gramsKnown,
+      baselineGramsKnown: item.baselineGramsKnown,
+    );
+    _recentKeys
+      ..remove(item.key)
+      ..add(item.key);
     notifyListeners();
   }
 
@@ -107,7 +136,9 @@ final class FoodSelectionStore extends ChangeNotifier {
     if (servings.isFinite &&
         roundedServings > 0 &&
         (servings - roundedServings).abs() < 0.000001) {
-      item.quantity = roundedServings;
+      item
+        ..baseFood = rescaleFoodAmount(food, food.amount / roundedServings)
+        ..quantity = roundedServings;
     } else {
       item
         ..baseFood = cloneFoodEntry(food)

@@ -10,6 +10,7 @@ class _SelectionPeekTray extends StatelessWidget {
   final bool isConfirming;
   final VoidCallback onReview;
   final VoidCallback onConfirm;
+  final ValueChanged<FoodSelectionItem> onSelect;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -23,6 +24,7 @@ class _SelectionPeekTray extends StatelessWidget {
     required this.isConfirming,
     required this.onReview,
     required this.onConfirm,
+    required this.onSelect,
     required this.onIncrement,
     required this.onDecrement,
     super.key,
@@ -31,6 +33,7 @@ class _SelectionPeekTray extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
     final keyboardOpen = mediaQuery.viewInsets.bottom > 0;
     final largeText = mediaQuery.textScaler.scale(1) > 1.3;
@@ -55,10 +58,10 @@ class _SelectionPeekTray extends StatelessWidget {
       child: Material(
         key: anchorKey,
         elevation: 8,
-        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        color: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-          side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          side: BorderSide(color: theme.colorScheme.outlineVariant),
         ),
         clipBehavior: Clip.antiAlias,
         child: SafeArea(
@@ -69,31 +72,61 @@ class _SelectionPeekTray extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                InkWell(
-                  onTap: onReview,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            key: headerAnchorKey,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              l10n.food_selection_selected_count(
-                                store.itemCount,
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Semantics(
+                  button: true,
+                  label: totalsSemantics,
+                  child: ExcludeSemantics(
+                    child: InkWell(
+                      onTap: onReview,
+                      child: Container(
+                        key: headerAnchorKey,
+                        constraints: const BoxConstraints(minHeight: 48),
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 12,
+                            runSpacing: 2,
+                            children: [
+                              Text(
+                                l10n.food_selection_selected_count(
+                                  store.itemCount,
+                                ),
+                                style: theme.textTheme.titleSmall,
                               ),
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: 20,
+                                ),
+                                child: AnimatedSwitcher(
+                                  duration: selectionAnimationDuration(context),
+                                  child: Text(
+                                    totals,
+                                    key: ValueKey(totals),
+                                    textAlign: TextAlign.end,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        IconButton(
-                          tooltip: l10n.food_selection_selected_items,
-                          onPressed: onReview,
-                          icon: const Icon(Icons.expand_less),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -101,6 +134,7 @@ class _SelectionPeekTray extends StatelessWidget {
                   items: previewItems,
                   rowAnchorFor: rowAnchorFor,
                   quantityAnchorFor: quantityAnchorFor,
+                  onSelect: onSelect,
                   onIncrement: onIncrement,
                   onDecrement: onDecrement,
                 ),
@@ -114,20 +148,6 @@ class _SelectionPeekTray extends StatelessWidget {
                       ),
                     ),
                   ),
-                Semantics(
-                  label: totalsSemantics,
-                  child: ExcludeSemantics(
-                    child: AnimatedSwitcher(
-                      duration: selectionAnimationDuration(context),
-                      child: Text(
-                        totals,
-                        key: ValueKey(totals),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 8),
                 FilledButton(
                   onPressed: isConfirming ? null : onConfirm,
@@ -148,6 +168,7 @@ class _SelectionPreviewRows extends StatefulWidget {
   final List<FoodSelectionItem> items;
   final GlobalKey Function(String key) rowAnchorFor;
   final GlobalKey Function(String key) quantityAnchorFor;
+  final ValueChanged<FoodSelectionItem> onSelect;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -155,6 +176,7 @@ class _SelectionPreviewRows extends StatefulWidget {
     required this.items,
     required this.rowAnchorFor,
     required this.quantityAnchorFor,
+    required this.onSelect,
     required this.onIncrement,
     required this.onDecrement,
   });
@@ -224,6 +246,7 @@ class _SelectionPreviewRowsState extends State<_SelectionPreviewRows> {
       anchorKey: outgoing ? null : widget.rowAnchorFor(item.key),
       quantityAnchorKey: outgoing ? null : widget.quantityAnchorFor(item.key),
       item: item,
+      onSelect: widget.onSelect,
       onIncrement: widget.onIncrement,
       onDecrement: widget.onDecrement,
     );
@@ -262,6 +285,7 @@ class _SelectionPreviewRow extends StatelessWidget {
   final GlobalKey? anchorKey;
   final GlobalKey? quantityAnchorKey;
   final FoodSelectionItem item;
+  final ValueChanged<FoodSelectionItem> onSelect;
   final void Function(String key, Offset? source) onIncrement;
   final ValueChanged<String> onDecrement;
 
@@ -269,6 +293,7 @@ class _SelectionPreviewRow extends StatelessWidget {
     this.anchorKey,
     this.quantityAnchorKey,
     required this.item,
+    required this.onSelect,
     required this.onIncrement,
     required this.onDecrement,
     super.key,
@@ -276,15 +301,65 @@ class _SelectionPreviewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final overridden = item.servingWeightOverridden;
+    final weightStyle = theme.textTheme.bodySmall?.copyWith(
+      color: overridden
+          ? theme.colorScheme.primary
+          : theme.colorScheme.onSurfaceVariant,
+      fontWeight: overridden ? FontWeight.w600 : null,
+    );
+    final grams = item.gramsKnown
+        ? formatFoodNumber(
+            item.baseFood.servingSizeGrams *
+                item.baseFood.amount *
+                item.quantity,
+          )
+        : '—';
     return Container(
       key: anchorKey,
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              item.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: InkWell(
+              onTap: () => onSelect(item),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text('$grams g', style: weightStyle),
+                    if (overridden) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          l10n.food_quantity_custom_weight,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
           SelectionQuantityControl(
@@ -346,9 +421,12 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
     setState(() {
       _removedItem = FoodSelectionItem(
         key: item.key,
+        baselineFood: cloneFoodEntry(item.baselineFood),
         baseFood: cloneFoodEntry(item.baseFood),
+        quantity: item.quantity,
         caloriesKnown: item.caloriesKnown,
         gramsKnown: item.gramsKnown,
+        baselineGramsKnown: item.baselineGramsKnown,
       );
       _isRemoving = true;
     });
@@ -362,12 +440,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
       _removedItem = null;
       _isRemoving = false;
     });
-    store.addOrIncrement(
-      removedItem.key,
-      removedItem.baseFood,
-      caloriesKnown: removedItem.caloriesKnown,
-      gramsKnown: removedItem.gramsKnown,
-    );
+    store.restore(removedItem);
   }
 
   String _itemMetadata(AppLocalizations l10n, FoodSelectionItem item) =>
@@ -454,6 +527,7 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final summary = _selectionCaloriesSummary(l10n, store);
+    final totals = '${l10n.serving_amount(store.servingCount)} · $summary';
     final items = store.items.toList(growable: false);
     final removedItem = _removedItem;
     final showingRemovedRow = _isRemoving && removedItem != null;
@@ -475,24 +549,51 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      l10n.food_selection_selected_count(store.itemCount),
-                      style: theme.textTheme.titleLarge,
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 12,
+                          runSpacing: 2,
+                          children: [
+                            Text(
+                              l10n.food_selection_selected_count(
+                                store.itemCount,
+                              ),
+                              style: theme.textTheme.titleLarge,
+                            ),
+                            AnimatedSwitcher(
+                              duration: selectionAnimationDuration(context),
+                              child: Text(
+                                totals,
+                                key: ValueKey(totals),
+                                textAlign: TextAlign.end,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    tooltip: MaterialLocalizations.of(
-                      context,
-                    ).closeButtonTooltip,
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+                    IconButton(
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).closeButtonTooltip,
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -528,15 +629,6 @@ class _SelectionReviewSheetState extends State<_SelectionReviewSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AnimatedSwitcher(
-                    duration: selectionAnimationDuration(context),
-                    child: Text(
-                      '${l10n.serving_amount(store.servingCount)} · $summary',
-                      key: ValueKey('${store.servingCount}:$summary'),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
                   FilledButton(
                     onPressed: store.isEmpty || _isConfirming
                         ? null

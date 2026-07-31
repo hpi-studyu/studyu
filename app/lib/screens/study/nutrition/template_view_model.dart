@@ -51,16 +51,17 @@ class TemplateViewModel extends ChangeNotifier {
         .toList();
   }
 
-  Future<void> loadAllTemplates() async {
+  Future<void> loadAllTemplates({bool rethrowOnError = false}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
       _foodTemplates = await _repository.loadTemplates(userId);
-    } catch (e) {
-      _error = e.toString();
-      StudyULogger.error('Failed to load templates: $e');
+    } catch (error, stackTrace) {
+      _error = error.toString();
+      StudyULogger.error('Failed to load templates: $error');
+      if (rethrowOnError) Error.throwWithStackTrace(error, stackTrace);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -94,7 +95,12 @@ class TemplateViewModel extends ChangeNotifier {
       ..foodId = template.prototype.foodId
       ..foodVersionId = template.prototype.foodVersionId
       ..templateId = template.id;
-    await loadAllTemplates();
+    _foodTemplates = [
+      ..._foodTemplates.where((item) => item.id != template.id),
+      template,
+    ];
+    notifyListeners();
+    await loadAllTemplates(rethrowOnError: true);
     return template.id;
   }
 

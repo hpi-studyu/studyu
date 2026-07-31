@@ -2220,6 +2220,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_quantity_amount => 'Amount';
 
   @override
+  String get food_quantity_weight => 'Weight';
+
+  @override
+  String get food_quantity_weight_for_meal => 'Weight for this meal';
+
+  @override
+  String get food_quantity_custom_weight => 'Custom';
+
+  @override
+  String food_quantity_library_serving(String weight) {
+    return 'Library serving: $weight g';
+  }
+
+  @override
+  String food_quantity_default_serving(String weight) {
+    return 'Default serving: $weight g';
+  }
+
+  @override
+  String get food_quantity_library_serving_unknown =>
+      'Library serving: weight unavailable';
+
+  @override
+  String get food_quantity_default_serving_unknown =>
+      'Default serving: weight unavailable';
+
+  @override
+  String get food_quantity_override_helper =>
+      'Changes only this meal selection. My Library and the source item remain unchanged.';
+
+  @override
+  String food_quantity_effective_weight_per_serving(String weight) {
+    return '$weight g per serving';
+  }
+
+  @override
+  String food_quantity_effective_weight(String perServing, String total) {
+    return '$perServing g per serving · $total g total';
+  }
+
+  @override
+  String food_quantity_use_library_weight(String weight) {
+    return 'Use library weight ($weight g)';
+  }
+
+  @override
+  String food_quantity_use_default_weight(String weight) {
+    return 'Use default weight ($weight g)';
+  }
+
+  @override
   String get food_quantity_invalid_amount =>
       'Enter an amount greater than zero';
 

@@ -2240,6 +2240,57 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_quantity_amount => 'Menge';
 
   @override
+  String get food_quantity_weight => 'Gewicht';
+
+  @override
+  String get food_quantity_weight_for_meal => 'Gewicht für diese Mahlzeit';
+
+  @override
+  String get food_quantity_custom_weight => 'Angepasst';
+
+  @override
+  String food_quantity_library_serving(String weight) {
+    return 'Portion aus „Meine Elemente“: $weight g';
+  }
+
+  @override
+  String food_quantity_default_serving(String weight) {
+    return 'Standardportion: $weight g';
+  }
+
+  @override
+  String get food_quantity_library_serving_unknown =>
+      'Portion aus „Meine Elemente“: Gewicht nicht verfügbar';
+
+  @override
+  String get food_quantity_default_serving_unknown =>
+      'Standardportion: Gewicht nicht verfügbar';
+
+  @override
+  String get food_quantity_override_helper =>
+      'Ändert nur die aktuelle Mahlzeitenauswahl. „Meine Elemente“ und das Quellelement bleiben unverändert.';
+
+  @override
+  String food_quantity_effective_weight_per_serving(String weight) {
+    return '$weight g pro Portion';
+  }
+
+  @override
+  String food_quantity_effective_weight(String perServing, String total) {
+    return '$perServing g pro Portion · $total g gesamt';
+  }
+
+  @override
+  String food_quantity_use_library_weight(String weight) {
+    return 'Gewicht aus „Meine Elemente“ verwenden ($weight g)';
+  }
+
+  @override
+  String food_quantity_use_default_weight(String weight) {
+    return 'Standardgewicht verwenden ($weight g)';
+  }
+
+  @override
   String get food_quantity_invalid_amount =>
       'Geben Sie eine Menge größer als null ein';
 

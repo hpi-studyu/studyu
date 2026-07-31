@@ -38,7 +38,7 @@ ImageInfo? _cachedTransferImage(BuildContext context, String? imageUrl) {
   if (imageUrl == null || imageUrl.trim().isEmpty) return null;
   final provider = NetworkImage(imageUrl);
   final status = PaintingBinding.instance.imageCache.statusForKey(provider);
-  if (status.pending || !status.keepAlive) return null;
+  if (status.pending || (!status.live && !status.keepAlive)) return null;
 
   ImageInfo? resolvedImage;
   final stream = provider.resolve(createLocalImageConfiguration(context));
@@ -75,6 +75,7 @@ class FoodSearchScreen extends StatelessWidget {
   final OpenFoodFactsSearch? openFoodFactsSearch;
   final UsdaFoodSearch? usdaFoodSearch;
   final NutritionFoodRepository? repository;
+  final TemplateViewModel? templateViewModel;
   final bool historicalMode;
 
   const FoodSearchScreen({
@@ -83,6 +84,7 @@ class FoodSearchScreen extends StatelessWidget {
     this.openFoodFactsSearch,
     this.usdaFoodSearch,
     this.repository,
+    this.templateViewModel,
     this.historicalMode = false,
     super.key,
   });
@@ -90,9 +92,13 @@ class FoodSearchScreen extends StatelessWidget {
   static MaterialPageRoute<studyu.FoodEntry> route({
     bool allowMeals = true,
     NutritionFoodRepository? repository,
+    TemplateViewModel? templateViewModel,
   }) => MaterialPageRoute(
-    builder: (_) =>
-        FoodSearchScreen(allowMeals: allowMeals, repository: repository),
+    builder: (_) => FoodSearchScreen(
+      allowMeals: allowMeals,
+      repository: repository,
+      templateViewModel: templateViewModel,
+    ),
   );
 
   static Future<FoodSearchSelection?> show(
@@ -103,6 +109,7 @@ class FoodSearchScreen extends StatelessWidget {
     UsdaFoodSearch? usdaFoodSearch,
     bool historicalMode = false,
     NutritionFoodRepository? repository,
+    TemplateViewModel? templateViewModel,
   }) => Navigator.of(context).push(
     MaterialPageRoute<FoodSearchSelection>(
       fullscreenDialog: true,
@@ -113,6 +120,7 @@ class FoodSearchScreen extends StatelessWidget {
         usdaFoodSearch: usdaFoodSearch,
         historicalMode: historicalMode,
         repository: repository,
+        templateViewModel: templateViewModel,
       ),
     ),
   );
@@ -129,16 +137,25 @@ class FoodSearchScreen extends StatelessWidget {
             subjectId: activeSubject.id,
           );
 
+    final inheritedViewModel =
+        templateViewModel ?? Provider.of<TemplateViewModel?>(context);
+    final content = _FoodSearchScreenContent(
+      allowMeals: allowMeals,
+      mealLabel: mealLabel,
+      openFoodFactsSearch: openFoodFactsSearch,
+      usdaFoodSearch: usdaFoodSearch,
+      historicalMode: historicalMode,
+      history: history,
+    );
+    if (inheritedViewModel != null) {
+      return ChangeNotifierProvider.value(
+        value: inheritedViewModel,
+        child: content,
+      );
+    }
     return ChangeNotifierProvider(
       create: (_) => TemplateViewModel(userId: userId, repository: repository),
-      child: _FoodSearchScreenContent(
-        allowMeals: allowMeals,
-        mealLabel: mealLabel,
-        openFoodFactsSearch: openFoodFactsSearch,
-        usdaFoodSearch: usdaFoodSearch,
-        historicalMode: historicalMode,
-        history: history,
-      ),
+      child: content,
     );
   }
 }
@@ -309,7 +326,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     required double size,
     required IconData icon,
     required ImageInfo? image,
-    required bool showIncrementBadge,
   }) {
     final theme = Theme.of(context);
     final fallback = fallbackFoodIcon(theme, icon, size: 20);
@@ -333,26 +349,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                 image: image.image,
                 scale: image.scale,
                 fit: BoxFit.cover,
-              ),
-            if (showIncrementBadge)
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  margin: const EdgeInsets.all(2),
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '+1',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onPrimary,
-                      fontSize: 9,
-                      height: 1.4,
-                    ),
-                  ),
-                ),
               ),
           ],
         ),
@@ -415,7 +411,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         final control = Offset((start.dx + end.dx) / 2, upperY - lift);
         final size = isIncrement ? 32.0 : 34.0;
         _transferController.duration = Duration(
-          milliseconds: isIncrement ? 210 : (firstSelection ? 280 : 260),
+          milliseconds: isIncrement ? 250 : (firstSelection ? 320 : 300),
         );
         _activeTransferPending = false;
         _transferEntry = OverlayEntry(
@@ -453,7 +449,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                           size: size,
                           icon: icon,
                           image: image,
-                          showIncrementBadge: isIncrement,
                         ),
                       ),
                     ),
@@ -515,7 +510,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       key: key,
       action: selected == null
           ? FoodQuantityAction.addToMeal
-          : FoodQuantityAction.update,
+          : FoodQuantityAction.updateSelection,
     );
   }
 
@@ -544,7 +539,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       key: key,
       action: selected == null
           ? FoodQuantityAction.addToMeal
-          : FoodQuantityAction.update,
+          : FoodQuantityAction.updateSelection,
       caloriesKnown: _caloriesKnownForResult(result),
       gramsKnown: result.servingSizeGrams != null,
     );
@@ -583,7 +578,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       key: key,
       action: selected == null
           ? FoodQuantityAction.addToMeal
-          : FoodQuantityAction.update,
+          : FoodQuantityAction.updateSelection,
     );
   }
 
@@ -608,21 +603,31 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     final result = await FoodQuantitySheet.show(
       context,
       food: foodEntry,
+      baselineFood: selected?.baselineFood,
       mealLabel: widget.mealLabel,
       action: action,
       initialAmount: selected == null
           ? null
           : selected.baseFood.amount * selected.quantity,
-      caloriesKnown: caloriesKnown,
-      gramsKnown: gramsKnown,
+      caloriesKnown: selected?.caloriesKnown ?? caloriesKnown,
+      gramsKnown: selected?.gramsKnown ?? gramsKnown,
+      baselineGramsKnown: selected?.baselineGramsKnown,
     );
     if (result == null || !mounted) return;
-    if (action == FoodQuantityAction.update && key != null) {
+    if (action == FoodQuantityAction.updateSelection && key != null) {
+      final weightChanged =
+          selected != null &&
+          (result.servingSizeGrams - selected.baseFood.servingSizeGrams).abs() >
+              0.000001;
       _selectionStore!.replaceBase(
         key,
         result,
         caloriesKnown:
             _selectionStore.itemFor(key)?.caloriesKnown ?? caloriesKnown,
+        gramsKnown:
+            selected?.gramsKnown == true ||
+            selected?.baselineGramsKnown == true ||
+            weightChanged,
       );
     } else if (action == FoodQuantityAction.addToMeal) {
       _addToSelection(
@@ -724,6 +729,16 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     }
   }
 
+  void _selectTrayItem(FoodSelectionItem item) {
+    _showQuantity(
+      item.baseFood,
+      key: item.key,
+      action: FoodQuantityAction.updateSelection,
+      caloriesKnown: item.caloriesKnown,
+      gramsKnown: item.gramsKnown,
+    );
+  }
+
   void _decrementSelection(String key) {
     _removeTransfer();
     _selectionStore?.decrement(key);
@@ -745,7 +760,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     _removeTransfer();
     Navigator.push(
       context,
-      FoodEntryScreen.route(existingFood: foodEntry, showSearchAction: false),
+      FoodEntryScreen.route(
+        existingFood: foodEntry,
+        showSearchAction: false,
+        templateViewModel: context.read<TemplateViewModel>(),
+      ),
     ).then((result) {
       if (result != null && mounted) {
         _completeSingleSelection(result);
@@ -755,34 +774,52 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
 
   void _addManually() {
     _removeTransfer();
+    final onSavedToSelection = _selectionStore == null
+        ? null
+        : (studyu.FoodEntry food, Offset? source) {
+            if (!mounted) return;
+            _addToSelection(
+              food,
+              key: canonicalFoodSelectionKey(food),
+              source: source,
+            );
+          };
     Navigator.push(
       context,
       FoodEntryScreen.route(
         showSearchAction: false,
         mealLabel: widget.mealLabel,
+        templateViewModel: context.read<TemplateViewModel>(),
+        onSavedToSelection: onSavedToSelection,
       ),
     ).then((result) {
-      if (result != null && mounted) {
-        if (_selectionStore == null) {
-          _completeSingleSelection(result);
-        } else {
-          _addToSelection(result, key: canonicalFoodSelectionKey(result));
-        }
+      if (result != null && mounted && _selectionStore == null) {
+        _completeSingleSelection(result);
       }
     });
   }
 
   void _createMeal() {
     _removeTransfer();
-    Navigator.push<studyu.FoodEntry>(context, MealCreatorScreen.route()).then((
-      result,
-    ) {
-      if (result != null && mounted) {
-        if (_selectionStore == null) {
-          _completeSingleSelection(result);
-        } else {
-          _addToSelection(result, key: canonicalFoodSelectionKey(result));
-        }
+    final onSavedToSelection = _selectionStore == null
+        ? null
+        : (studyu.FoodEntry food, Offset? source) {
+            if (!mounted) return;
+            _addToSelection(
+              food,
+              key: canonicalFoodSelectionKey(food),
+              source: source,
+            );
+          };
+    Navigator.push<studyu.FoodEntry>(
+      context,
+      MealCreatorScreen.route(
+        templateViewModel: context.read<TemplateViewModel>(),
+        onSavedToSelection: onSavedToSelection,
+      ),
+    ).then((result) {
+      if (result != null && mounted && _selectionStore == null) {
+        _completeSingleSelection(result);
       }
     });
   }
@@ -804,7 +841,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         key: key,
         action: selected == null
             ? FoodQuantityAction.addToMeal
-            : FoodQuantityAction.update,
+            : FoodQuantityAction.updateSelection,
       );
     }
   }
@@ -1008,6 +1045,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                   isConfirming: _isConfirming,
                   onReview: () => _showReviewSheet(store),
                   onConfirm: () => _confirmSelection(store),
+                  onSelect: _selectTrayItem,
                   onIncrement: _incrementTraySelection,
                   onDecrement: _decrementSelection,
                 ),
