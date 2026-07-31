@@ -431,10 +431,26 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     return meal;
   }
 
-  void _saveMeal() {
+  Future<void> _saveMeal() async {
     final meal = _buildMeal();
     if (meal != null) {
-      _pop(meal);
+      if (widget.existingMeal == null) {
+        final appState = Provider.of<AppState>(context, listen: false);
+        try {
+          final viewModel =
+              Provider.of<TemplateViewModel?>(context, listen: false) ??
+              TemplateViewModel(
+                userId: appState.activeSubject?.id ?? 'anonymous',
+              );
+          meal.templateId = await viewModel.saveFoodAsTemplate(
+            name: meal.name,
+            food: meal,
+          );
+        } catch (error) {
+          StudyULogger.error('Failed to save meal to My items: $error');
+        }
+      }
+      if (mounted) _pop(meal);
     } else if (_foods.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one food')),

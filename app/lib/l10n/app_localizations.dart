@@ -3629,6 +3629,30 @@ abstract class AppLocalizations {
   /// **'Edit this entry'**
   String get edit_this_entry;
 
+  /// No description provided for @library_edit_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Update reusable item?'**
+  String get library_edit_title;
+
+  /// No description provided for @library_edit_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This entry comes from your library. Choose where to save your changes.'**
+  String get library_edit_message;
+
+  /// No description provided for @library_edit_current_entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this logged item'**
+  String get library_edit_current_entry;
+
+  /// No description provided for @library_edit_current_entry_and_library.
+  ///
+  /// In en, this message translates to:
+  /// **'This item and reusable library item'**
+  String get library_edit_current_entry_and_library;
+
   /// No description provided for @save_to_my_items_action.
   ///
   /// In en, this message translates to:

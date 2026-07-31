@@ -48,6 +48,8 @@ final class DiscardedMealEntryResult extends MealEntryResult {
 
 enum _FoodAction { details, edit, editDefinition, saveTemplate, remove }
 
+enum _LibraryEditChoice { currentEntry, currentEntryAndLibrary }
+
 class _MealTypeSelection {
   final MealType type;
   final String? customLabel;
@@ -264,6 +266,44 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
   }
 
+  Future<_LibraryEditChoice?> _chooseLibraryEdit() {
+    final l10n = AppLocalizations.of(context)!;
+    return showDialog<_LibraryEditChoice>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.library_edit_title),
+        content: Text(l10n.library_edit_message),
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(
+                    dialogContext,
+                  ).pop(_LibraryEditChoice.currentEntry),
+                  child: Text(l10n.library_edit_current_entry),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(
+                    dialogContext,
+                  ).pop(_LibraryEditChoice.currentEntryAndLibrary),
+                  child: Text(l10n.library_edit_current_entry_and_library),
+                ),
+              ),
+            ],
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _editFood(
     FoodEntry food, {
     bool editReusableDefinition = false,
@@ -272,15 +312,27 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       await _editCompositeMealDefinition(food);
       return;
     }
+    final isLibraryBacked = food.templateId?.isNotEmpty == true;
+    var updateLibrary = false;
+    if (!editReusableDefinition &&
+        widget.historicalTarget == null &&
+        isLibraryBacked) {
+      final choice = await _chooseLibraryEdit();
+      if (!mounted || choice == null) return;
+      updateLibrary = choice == _LibraryEditChoice.currentEntryAndLibrary;
+    }
     final hasCurrentDayMatches =
         editReusableDefinition && await _hasCurrentStudyDayMatches(food.foodId);
     if (!mounted) return;
     final FoodEntry? result;
+    final showCurrentMealOnlyNotice =
+        (editReusableDefinition || widget.historicalTarget != null) ||
+        !isLibraryBacked;
     if (food.entryType == FoodEntryType.meal) {
       result = await Navigator.of(context).push(
         MealCreatorScreen.route(
           existingMeal: food,
-          showCurrentMealOnlyNotice: true,
+          showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
         ),
       );
     } else {
@@ -291,22 +343,63 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
           historicalTarget: widget.historicalTarget,
           editReusableDefinition: editReusableDefinition,
           hasCurrentStudyDayMatches: hasCurrentDayMatches,
-          showCurrentMealOnlyNotice: !editReusableDefinition,
+          showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
           repository: widget.foodRepository,
         ),
       );
     }
     if (!mounted || !_revalidateHistoricalEligibility()) return;
-    final edited = result;
-    if (edited == null) return;
+    final editedResult = result;
+    if (editedResult == null) return;
+    var edited = editedResult;
+
+    if (updateLibrary) {
+      final subject = Provider.of<AppState>(
+        context,
+        listen: false,
+      ).activeSubject;
+      try {
+        final viewModel =
+            Provider.of<TemplateViewModel?>(context, listen: false) ??
+            TemplateViewModel(
+              userId: subject?.id ?? 'anonymous',
+              repository: widget.foodRepository,
+            );
+        final updatedTemplate = await viewModel.updateFoodTemplatePrototype(
+          food.templateId!,
+          edited,
+        );
+        if (updatedTemplate != null) {
+          edited = cloneFoodEntry(edited)
+            ..foodId = updatedTemplate.prototype.foodId
+            ..foodVersionId = updatedTemplate.prototype.foodVersionId
+            ..templateId = updatedTemplate.id;
+        }
+      } catch (error, stackTrace) {
+        StudyULogger.error(
+          'Failed to update reusable nutrition item: $error\n$stackTrace',
+        );
+        if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
+        }
+      }
+    }
 
     final index = _foodIndex(food.id);
     if (index == -1) return;
+    final updatedOccurrence = editReusableDefinition
+        ? edited
+        : (_replaceOccurrence(food, edited)
+            ..foodId = updateLibrary ? edited.foodId : food.foodId
+            ..foodVersionId = updateLibrary
+                ? edited.foodVersionId
+                : food.foodVersionId);
     setState(() {
       _definitionMutated = _definitionMutated || editReusableDefinition;
-      _meal.foods[index] = editReusableDefinition
-          ? edited
-          : _replaceOccurrence(food, edited);
+      _meal.foods[index] = updatedOccurrence;
     });
   }
 
