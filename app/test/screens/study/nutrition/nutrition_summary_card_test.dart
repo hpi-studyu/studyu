@@ -1,5 +1,6 @@
 import 'dart:ui' show SemanticsAction;
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -61,10 +62,14 @@ void main() {
     expect(find.text('30.7 g'), findsOneWidget);
     expect(find.text('50.4 g'), findsOneWidget);
     expect(find.text('Macronutrients'), findsOneWidget);
-    expect(find.text('Energy by macronutrient'), findsOneWidget);
-    expect(find.text('Carbs 23%'), findsOneWidget);
-    expect(find.text('Protein 37%'), findsOneWidget);
-    expect(find.text('Fat 40%'), findsOneWidget);
+    expect(find.text('Energy by macronutrient'), findsNothing);
+    expect(find.text('Carbohydrates'), findsOneWidget);
+    expect(find.text('23%'), findsOneWidget);
+    expect(find.text('Protein'), findsOneWidget);
+    expect(find.text('37%'), findsOneWidget);
+    expect(find.text('Fat'), findsOneWidget);
+    expect(find.text('23.9 g'), findsOneWidget);
+    expect(find.text('40%'), findsOneWidget);
     expect(
       tester
           .getSemantics(find.byType(NutritionMacroDistributionBar))
@@ -100,7 +105,7 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('macro distribution selection exposes anchored detail', (
+  testWidgets('macro distribution shows amounts and energy percentages', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -113,44 +118,19 @@ void main() {
       ),
     );
 
-    expect(find.text('Energy by macronutrient'), findsOneWidget);
-    expect(find.text('Carbs 23%'), findsOneWidget);
-    await tester.tap(find.text('Carbs 23%'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Carbohydrates: 23% · 123 kcal'), findsOneWidget);
+    expect(find.text('Energy by macronutrient'), findsNothing);
+    expect(find.text('Carbohydrates'), findsOneWidget);
+    expect(find.text('30.7 g'), findsOneWidget);
+    expect(find.text('23%'), findsOneWidget);
+    expect(find.text('Protein'), findsOneWidget);
+    expect(find.text('50.4 g'), findsOneWidget);
+    expect(find.text('37%'), findsOneWidget);
+    expect(find.text('Fat'), findsOneWidget);
+    expect(find.text('23.9 g'), findsOneWidget);
+    expect(find.text('40%'), findsOneWidget);
+    expect(find.byType(BarChart), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Carbs')), findsNothing);
   });
-
-  testWidgets(
-    'macro segments expose tap semantics and select matching detail',
-    (tester) async {
-      final semantics = tester.ensureSemantics();
-      await tester.pumpWidget(
-        testApp(
-          const NutritionMacroDistributionBar(
-            carbs: 30.7,
-            protein: 50.4,
-            fat: 23.9,
-          ),
-        ),
-      );
-
-      final segment = find.bySemanticsLabel('Carbohydrates, 23%');
-      expect(segment, findsOneWidget);
-      expect(
-        tester
-            .getSemantics(segment)
-            .getSemanticsData()
-            .hasAction(SemanticsAction.tap),
-        isTrue,
-      );
-      await tester.tap(segment);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Carbohydrates: 23% · 123 kcal'), findsOneWidget);
-      semantics.dispose();
-    },
-  );
 
   testWidgets('zero macro energy has no distribution chart', (tester) async {
     await tester.pumpWidget(
@@ -221,8 +201,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Energie nach Makronährstoffen'), findsOneWidget);
-    expect(find.text('Kohlenhydrate 23%'), findsOneWidget);
+    expect(find.text('Energie nach Makronährstoffen'), findsNothing);
+    expect(find.text('Kohlenhydrate'), findsOneWidget);
+    expect(find.text('23%'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
