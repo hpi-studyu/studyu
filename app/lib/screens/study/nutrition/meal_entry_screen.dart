@@ -816,14 +816,14 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
     final picked = await showTimePicker(
       context: context,
-      initialTime: _timestamp == null
+      initialTime: selection.timestamp == null
           ? TimeOfDay.now()
-          : TimeOfDay.fromDateTime(_timestamp!),
+          : TimeOfDay.fromDateTime(selection.timestamp!),
     );
     if (picked == null || !mounted) return;
     final date = _timePrecision == MealOccurrenceTimePrecision.unknown
         ? widget.occurrenceDate ?? DateTime.now()
-        : _timestamp ?? widget.occurrenceDate ?? DateTime.now();
+        : selection.timestamp ?? widget.occurrenceDate ?? DateTime.now();
     setState(() {
       _timestamp = DateTime(
         date.year,
@@ -1470,8 +1470,11 @@ class _TimeSelectionSheet extends StatelessWidget {
       child: RadioGroup<MealOccurrenceTimePrecision>(
         groupValue: precision,
         onChanged: (value) {
-          if (value != null) {
-            Navigator.of(context).pop(_TimeSelection(null, value));
+          final selectedPrecision = value ?? precision;
+          if (selectedPrecision != null) {
+            Navigator.of(
+              context,
+            ).pop(_TimeSelection(timestamp, selectedPrecision));
           }
         },
         child: Column(
@@ -1479,18 +1482,21 @@ class _TimeSelectionSheet extends StatelessWidget {
           children: [
             RadioListTile<MealOccurrenceTimePrecision>(
               value: MealOccurrenceTimePrecision.exact,
+              toggleable: true,
               secondary: const Icon(Icons.schedule),
               title: Text(l10n.time_exact),
               subtitle: Text(l10n.time_exact_description),
             ),
             RadioListTile<MealOccurrenceTimePrecision>(
               value: MealOccurrenceTimePrecision.approximate,
+              toggleable: true,
               secondary: const Icon(Icons.more_time),
               title: Text(l10n.time_approximate),
               subtitle: Text(l10n.time_approximate_description),
             ),
             RadioListTile<MealOccurrenceTimePrecision>(
               value: MealOccurrenceTimePrecision.unknown,
+              toggleable: true,
               secondary: const Icon(Icons.help_outline),
               title: Text(l10n.time_unknown),
             ),
