@@ -1319,7 +1319,7 @@ void main() {
       customLabel: 'Edited supper',
     );
 
-    final addFoodButton = find.widgetWithText(TextButton, 'Add items');
+    final addFoodButton = find.byTooltip('Add items');
     await tester.ensureVisible(addFoodButton);
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
@@ -1382,10 +1382,10 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
+    await tester.ensureVisible(find.byTooltip('Add items'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
+    await tester.tap(find.byTooltip('Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
@@ -1487,8 +1487,8 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
-    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
+    await tester.ensureVisible(find.byTooltip('Add items'));
+    await tester.tap(find.byTooltip('Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();
@@ -1604,15 +1604,15 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.widgetWithText(TextButton, 'Add items'));
+    await tester.ensureVisible(find.byTooltip('Add items'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
+    await tester.tap(find.byTooltip('Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(TextButton, 'Add items'));
+    await tester.tap(find.byTooltip('Add items'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My food library'));
     await tester.pumpAndSettle();

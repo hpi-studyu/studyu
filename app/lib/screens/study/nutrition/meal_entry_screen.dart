@@ -1714,10 +1714,10 @@ class _FoodListSection extends StatelessWidget {
                       icon: const Icon(Icons.bookmark_add_outlined),
                       label: Text(l10n.save_meal),
                     ),
-                TextButton.icon(
+                IconButton(
+                  tooltip: l10n.add_items,
                   onPressed: onAddFood,
                   icon: const Icon(Icons.add),
-                  label: Text(l10n.add_items),
                 ),
               ],
             ),
