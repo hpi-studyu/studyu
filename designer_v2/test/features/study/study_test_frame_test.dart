@@ -2,9 +2,11 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
+import 'package:web/web.dart' as web;
 
 void main() {
   test('form rebuilds keep the loaded intervention preview route', () {
@@ -41,22 +43,53 @@ void main() {
     expect(otherIntervention, isNot(initial));
   });
 
-  test('live edits update the URL used to open the preview', () {
+  test('preview URL contains no serialized session', () {
+    final uri = Uri.parse(
+      buildPreviewAppUrl(
+        baseUrl: 'https://app.example',
+        studyId: 'study id',
+        languageCode: 'en',
+      ),
+    );
+
+    expect(uri.queryParameters, {'studyid': 'study id', 'languageCode': 'en'});
+    expect(uri.queryParameters, isNot(contains('session')));
+  });
+
+  test('study data stays in memory across edits, reset, and navigation', () {
     final controller =
-        WebController('https://app.example/?studyid=study', 'study')
+        WebController(
+            'https://app.example/preview?studyid=study',
+            'study',
+            'session',
+          )
           ..generateUrl(
             route: 'intervention',
             extra: 'intervention-1',
-            cmd: 'reset',
             data: '{"title":"old"}',
-          );
+          )
+          ..iFrameElement = web.HTMLIFrameElement();
+    final initialUrl = controller.previewSrc;
 
     controller.updateData('{"title":"edited"}');
 
-    final parameters = Uri.parse(controller.previewSrc).queryParameters;
-    expect(parameters['route'], 'intervention');
-    expect(parameters['extra'], 'intervention-1');
-    expect(parameters['cmd'], 'reset');
-    expect(parameters['data'], '{"title":"edited"}');
+    expect(controller.previewSrc, initialUrl);
+    expect(controller.routeInformation.data, '{"title":"edited"}');
+    expect(Uri.parse(controller.previewSrc).queryParameters, {
+      'studyid': 'study',
+      'route': 'intervention',
+      'extra': 'intervention-1',
+    });
+
+    controller.refresh(cmd: 'reset');
+    expect(controller.routeInformation.data, '{"title":"edited"}');
+    expect(
+      Uri.parse(controller.previewSrc).queryParameters,
+      isNot(contains('data')),
+    );
+
+    controller.navigationEnabled.value = true;
+    controller.navigate(route: 'dashboard');
+    expect(controller.routeInformation.data, '{"title":"edited"}');
   });
 }

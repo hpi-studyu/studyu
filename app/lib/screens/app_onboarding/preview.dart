@@ -45,19 +45,21 @@ class Preview {
     }
   }
 
-  Future<bool> handleAuthorization() async {
-    if (!containsQuery('studyid') && !containsQuery('session')) return false;
+  Future<bool> handleAuthorization(
+    String session, {
+    Study? previewStudy,
+  }) async {
+    if (!containsQuery('studyid') || session.isEmpty) return false;
 
-    if (!containsQuery('session')) return false;
-
-    final String session = Uri.decodeComponent(queryParameters!['session']!);
     try {
       await Supabase.instance.client.auth.recoverSession(session);
     } catch (_) {
       return false;
     }
 
-    if (containsQuery('data')) {
+    if (previewStudy != null) {
+      study = previewStudy;
+    } else if (containsQuery('data')) {
       final data =
           jsonDecode(queryParameters!['data']!) as Map<String, dynamic>;
       study = Study.fromJson(data);

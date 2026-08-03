@@ -468,16 +468,27 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return false;
     }
 
-    StudyULogger.info(
-      "Preview: Found query parameters ${widget.queryParameters}",
-    );
+    StudyULogger.info('Preview: Found preview configuration');
     final lang = AppLanguage(AppLocalizations.supportedLocales);
     final preview = study_preview.Preview(widget.queryParameters, lang);
     state.isPreview = true;
     _iFrameHelper.postPreviewStatus(status: 'loading');
     await preview.init();
 
-    final isAuthorized = await preview.handleAuthorization();
+    _iFrameHelper.listen(
+      state,
+      onNavigate: (route) => _navigatePreviewRoute(state, route, l10n),
+      onStudy: (study) => preview.study = study,
+    );
+    final sessionFuture = _iFrameHelper.requestPreviewSession();
+    final studyFuture = preview.containsQuery('data')
+        ? Future<Study?>.value()
+        : _iFrameHelper.requestPreviewStudy();
+    final session = await sessionFuture;
+    final previewStudy = await studyFuture;
+    final isAuthorized =
+        session != null &&
+        await preview.handleAuthorization(session, previewStudy: previewStudy);
     if (!isAuthorized) {
       _iFrameHelper.postPreviewStatus(
         status: 'error',
@@ -488,11 +499,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     state.selectedStudy = preview.study;
 
     await preview.runCommands();
-
-    _iFrameHelper.listen(
-      state,
-      onNavigate: (route) => _navigatePreviewRoute(state, route, l10n),
-    );
 
     if (preview.hasRoute()) {
       // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');
@@ -642,11 +648,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           if (route != null) 'route': route,
         }, AppLanguage(AppLocalizations.supportedLocales));
         await preview.init();
-        // Recover the Supabase session before making authenticated calls.
-        if (!await preview.handleAuthorization()) return false;
-        // Prefer the already-fetched study from state over the one from
-        // handleAuthorization so the designer's latest edits are used.
-        if (state.selectedStudy != null) preview.study = state.selectedStudy;
+        preview.study = state.selectedStudy;
         state.activeSubject = await preview.getStudySubject(
           state,
           createSubject: true,
