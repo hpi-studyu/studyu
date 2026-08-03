@@ -76,7 +76,7 @@ Future<void> main() async {
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
   AppConfig? appConfig;
-  String initialRoute = '/${RouteNames.preview}';
+  String initialRoute = '/${RouteNames.loading}';
   try {
     appConfig = await AppConfig.getAppConfig();
   } on PostgrestException catch (e) {
