@@ -121,7 +121,7 @@ class _HistoryFoodCard extends StatelessWidget {
                         : null,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 4),
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(minHeight: 48),
                       child: Row(
@@ -176,11 +176,7 @@ class _HistoryFoodCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          FoodDetailsAffordance(
-                            showLabel:
-                                MediaQuery.sizeOf(context).width >= 400 &&
-                                MediaQuery.textScalerOf(context).scale(1) < 1.3,
-                          ),
+                          const FoodDetailsAffordance(),
                         ],
                       ),
                     ),
@@ -271,7 +267,7 @@ class _FoodResultCard extends StatelessWidget {
                         : null,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 4),
                     child: Row(
                       children: [
                         SizedBox(
@@ -327,11 +323,7 @@ class _FoodResultCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        FoodDetailsAffordance(
-                          showLabel:
-                              MediaQuery.sizeOf(context).width >= 400 &&
-                              MediaQuery.textScalerOf(context).scale(1) < 1.3,
-                        ),
+                        const FoodDetailsAffordance(),
                       ],
                     ),
                   ),

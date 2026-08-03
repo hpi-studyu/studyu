@@ -23,6 +23,8 @@ class FoodQuantitySheet extends StatefulWidget {
   final bool caloriesKnown;
   final bool gramsKnown;
   final bool? baselineGramsKnown;
+  final ValueChanged<FoodEntry>? onConfirmed;
+  final VoidCallback? onClose;
 
   const FoodQuantitySheet({
     required this.food,
@@ -33,6 +35,8 @@ class FoodQuantitySheet extends StatefulWidget {
     this.caloriesKnown = true,
     this.gramsKnown = true,
     this.baselineGramsKnown,
+    this.onConfirmed,
+    this.onClose,
     super.key,
   });
 
@@ -273,7 +277,10 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
         24,
         12,
         24,
-        24 + MediaQuery.viewInsetsOf(context).bottom,
+        24 +
+            (widget.onConfirmed == null
+                ? MediaQuery.viewInsetsOf(context).bottom
+                : 0),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -328,7 +335,8 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed:
+                            widget.onClose ?? () => Navigator.pop(context),
                         tooltip: l10n.close,
                         icon: const Icon(Icons.close),
                       ),
@@ -546,12 +554,17 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
             child: FilledButton(
               onPressed: _scaledFood == null
                   ? null
-                  : () => Navigator.pop(context, _scaledFood),
+                  : () {
+                      final result = _scaledFood!;
+                      if (widget.onConfirmed case final callback?) {
+                        callback(result);
+                      } else {
+                        Navigator.pop(context, result);
+                      }
+                    },
               child: Text(switch (widget.action) {
                 FoodQuantityAction.addToSelection =>
-                  widget.mealLabel == null
-                      ? l10n.add_food
-                      : l10n.food_quantity_add_to_meal(widget.mealLabel!),
+                  l10n.food_quantity_add_to_selection,
                 FoodQuantityAction.addMealToSelection =>
                   widget.mealLabel == null
                       ? l10n.add_food

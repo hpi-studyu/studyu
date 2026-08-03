@@ -698,7 +698,7 @@ class FoodLibraryItemCard extends StatelessWidget {
                         : null,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 4),
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(minHeight: 48),
                       child: Row(
@@ -749,11 +749,7 @@ class FoodLibraryItemCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          FoodDetailsAffordance(
-                            showLabel:
-                                MediaQuery.sizeOf(context).width >= 400 &&
-                                MediaQuery.textScalerOf(context).scale(1) < 1.3,
-                          ),
+                          const FoodDetailsAffordance(),
                         ],
                       ),
                     ),
