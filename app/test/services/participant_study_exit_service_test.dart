@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_app/services/participant_fitbit_credentials_service.dart';
 import 'package:studyu_app/services/participant_study_exit_service.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {

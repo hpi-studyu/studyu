@@ -1472,6 +1472,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.';
 
   @override
+  String get recovery_cleanup_failed =>
+      'Die Wiederherstellung war erfolgreich, aber dieses Gerät konnte die lokale Bereinigung nicht abschließen. Bitte versuche es erneut.';
+
+  @override
+  String get recovery_local_persistence_failed =>
+      'Die Wiederherstellung war erfolgreich, aber dieses Gerät konnte deine Kontodaten nicht lokal speichern. Bitte versuche es erneut.';
+
+  @override
   String get restore_account_description =>
       'Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.';
 

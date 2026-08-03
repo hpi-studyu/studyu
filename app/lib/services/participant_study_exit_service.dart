@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/services/participant_fitbit_credentials_service.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart' show PostgrestException;
@@ -42,9 +42,9 @@ class StudyExitResult {
 
 class ParticipantStudyExitService {
   static Future<void> Function(String) _remoteFitbitDeletion =
-      FitbitHandler.deleteRemoteFitbitCredentials;
+      ParticipantFitbitCredentialsService.deleteRemoteFitbitCredentials;
   static Future<void> Function(String) _localFitbitCleanup =
-      FitbitHandler.clearLocalFallbackCredentialsForStudy;
+      ParticipantFitbitCredentialsService.clearLocalFallbackCredentialsForStudy;
   static Future<void> Function() _activeStudyReferenceDeletion =
       deleteActiveStudyReference;
   static Future<void> Function() _localDataDeletion = deleteLocalData;
@@ -163,8 +163,10 @@ class ParticipantStudyExitService {
 
   @visibleForTesting
   static void debugResetTestingOverrides() {
-    _remoteFitbitDeletion = FitbitHandler.deleteRemoteFitbitCredentials;
-    _localFitbitCleanup = FitbitHandler.clearLocalFallbackCredentialsForStudy;
+    _remoteFitbitDeletion =
+        ParticipantFitbitCredentialsService.deleteRemoteFitbitCredentials;
+    _localFitbitCleanup = ParticipantFitbitCredentialsService
+        .clearLocalFallbackCredentialsForStudy;
     _activeStudyReferenceDeletion = deleteActiveStudyReference;
     _localDataDeletion = deleteLocalData;
     _recoveryCacheClearer = RestoreAccountService.clearCache;

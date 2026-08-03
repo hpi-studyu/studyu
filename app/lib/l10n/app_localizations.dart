@@ -2762,6 +2762,18 @@ abstract class AppLocalizations {
   /// **'Network error. Please check your connection and try again.'**
   String get recovery_network_error;
 
+  /// No description provided for @recovery_cleanup_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery completed, but this device could not finish local cleanup. Please try again.'**
+  String get recovery_cleanup_failed;
+
+  /// No description provided for @recovery_local_persistence_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery completed, but this device could not save your account data locally. Please try again.'**
+  String get recovery_local_persistence_failed;
+
   /// No description provided for @restore_account_description.
   ///
   /// In en, this message translates to:

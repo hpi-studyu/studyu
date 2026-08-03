@@ -12,6 +12,7 @@ import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/services/authenticated_language_sync_service.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/services/deferred_link_service.dart';
@@ -80,7 +81,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       await signInParticipant();
       if (!mounted) return false;
-      await context.read<AppLanguage>().syncWithAuthenticatedUser();
+      await syncLanguageForAuthenticatedUser(context);
       return false;
     } on AuthApiException catch (error, stackTrace) {
       StudyULogger.warning(
@@ -431,7 +432,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     if (!mounted) return;
     if (subject != null) {
-      await context.read<AppLanguage>().syncWithAuthenticatedUser();
+      await syncLanguageForAuthenticatedUser(context);
       if (!mounted) return;
       subject = await Cache.synchronize(subject);
       if (!mounted) return;
@@ -456,7 +457,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (await _restoreParticipantSession()) return;
     if (isUserLoggedIn() && !state.isPreview) {
       if (!mounted) return;
-      await context.read<AppLanguage>().syncWithAuthenticatedUser();
+      await syncLanguageForAuthenticatedUser(context);
       if (!mounted) return;
       context.goNamed(RouteNames.welcome);
       return;
@@ -851,45 +852,3 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 }
-
-/*if (!signInRes) {
-        final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
-        if (migrateRes) {
-          print("Successfully migrated to the new database");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to the new database.')));
-        } else {
-          print("Error when trying to migrate to the new database");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error when migrating to the new database.')));
-        }
-        initStudy();
-        return;
-      }*/
-
-/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
-    if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
-      try {
-        // create new account
-        if (await anonymousSignUp()) {
-          // call supabase function to update user_id to new user id
-          // by matching a study_subject entry with the current subject ID
-          try {
-            await Supabase.instance.client.rpc(
-              'migrate_db',
-              params: {
-                'participant_user_id': Supabase.instance.client.auth.currentUser?.id,
-                'participant_subject_id': selectedStudyObjectId,
-              },
-            ).single();
-          } on PostgrestException catch (error) {
-            print('Supabase migrate_db Error: ${error.message}');
-          }
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error, stacktrace) {
-        SupabaseQuery.catchSupabaseException(error, stacktrace);
-      }
-    }
-    return false;
-  }*/

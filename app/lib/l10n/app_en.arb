@@ -535,6 +535,8 @@
   "recovery_failed": "Recovery failed. Please check your recovery phrase and try again.",
   "recovery_user_not_found": "No account found with this recovery phrase.",
   "recovery_network_error": "Network error. Please check your connection and try again.",
+  "recovery_cleanup_failed": "Recovery completed, but this device could not finish local cleanup. Please try again.",
+  "recovery_local_persistence_failed": "Recovery completed, but this device could not save your account data locally. Please try again.",
 
   "restore_account_description": "Restore your account on this device with the recovery phrase you saved before joining a study.",
   "restore_account_help_title": "Restore with your recovery phrase",

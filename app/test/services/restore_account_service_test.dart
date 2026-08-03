@@ -1,21 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_app/services/recovery_local_transition_service.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_core/core.dart';
 
+const _recoveredEmail = 'recovered@test.local';
+const _recoveredPassword = 'password-1';
+
 void main() {
   group('RestoreAccountService', () {
+    setUp(() {
+      RecoveryLocalTransitionService.debugStoredEmailReaderForTesting =
+          () async => null;
+      RecoveryLocalTransitionService.debugStoredPasswordReaderForTesting =
+          () async => null;
+      RecoveryLocalTransitionService.debugStoredEmailDeleterForTesting =
+          () async {};
+      RecoveryLocalTransitionService.debugStoredPasswordDeleterForTesting =
+          () async {};
+      RecoveryLocalTransitionService.debugParticipantSignOutExecutorForTesting =
+          () async {};
+    });
+
     tearDown(() {
       RestoreAccountService.clearCache();
       RestoreAccountService.debugResetCurrentUserIdGetterForTesting();
       RestoreAccountService.debugResetRecoveryIdGetterForTesting();
       RestoreAccountService.debugResetRecoveryIdRotatorForTesting();
       RestoreAccountService.debugResetRecoverAccountExecutorForTesting();
-      RestoreAccountService.debugResetCredentialStorerForTesting();
       RestoreAccountService.debugResetParticipantSignInExecutorForTesting();
       RestoreAccountService.debugResetSubjectValidatorForTesting();
       RestoreAccountService.debugResetActiveSubjectStorerForTesting();
-      RestoreAccountService.debugResetActiveSubjectClearerForTesting();
       RestoreAccountService.debugResetParticipantStateCleanupForTesting();
+      RecoveryLocalTransitionService.debugResetTestingOverrides();
     });
 
     test('decodeRecoveryPhrase accepts German recovery phrases', () {
@@ -124,26 +140,26 @@ void main() {
               events.add('cleanup');
             };
         RestoreAccountService.debugRecoverAccountExecutorForTesting =
-            (_) async => RecoveryResult(
-              success: true,
-              email: 'recovered@test.local',
-              password: 'password-1',
-              subjectId: 'subject-1',
-            );
-        RestoreAccountService.debugCredentialStorerForTesting =
-            (email, password) async {
+            (_) async => _successfulRecoveryResult();
+        RecoveryLocalTransitionService.debugStoredEmailWriterForTesting =
+            (email) async {
               storedEmail = email;
+              events.add('store_email');
+            };
+        RecoveryLocalTransitionService.debugStoredPasswordWriterForTesting =
+            (password) async {
               storedPassword = password;
-              events.add('store_credentials');
+              events.add('store_password');
             };
         RestoreAccountService.debugParticipantSignInExecutorForTesting =
             (email, password) async {
               events.add('sign_in:$email:$password');
               return true;
             };
-        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
-          events.add('clear_subject');
-        };
+        RecoveryLocalTransitionService.debugActiveSubjectClearerForTesting =
+            () async {
+              events.add('clear_subject');
+            };
         RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
             true;
         RestoreAccountService.debugActiveSubjectStorerForTesting =
@@ -161,7 +177,8 @@ void main() {
         expect(storedSubjectId, 'subject-1');
         expect(events, [
           'sign_in:recovered@test.local:password-1',
-          'store_credentials',
+          'store_email',
+          'store_password',
           'clear_subject',
           'cleanup',
           'store_subject',
@@ -197,18 +214,15 @@ void main() {
         RestoreAccountService.debugParticipantStateCleanupForTesting =
             () async {};
         RestoreAccountService.debugRecoverAccountExecutorForTesting =
-            (_) async => RecoveryResult(
-              success: true,
-              email: 'recovered@test.local',
-              password: 'password-1',
-              subjectId: 'subject-1',
-            );
-        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {};
+            (_) async => _successfulRecoveryResult();
+        RecoveryLocalTransitionService.debugCredentialStorerForTesting =
+            (_, _) async {};
         RestoreAccountService.debugParticipantSignInExecutorForTesting =
             (_, _) async => true;
-        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
-          clearedSubject++;
-        };
+        RecoveryLocalTransitionService.debugActiveSubjectClearerForTesting =
+            () async {
+              clearedSubject++;
+            };
         RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
             false;
 
@@ -228,17 +242,15 @@ void main() {
         RestoreAccountService.debugParticipantStateCleanupForTesting =
             () async {};
         RestoreAccountService.debugRecoverAccountExecutorForTesting =
-            (_) async => RecoveryResult(
-              success: true,
-              email: 'recovered@test.local',
-              password: 'password-1',
-            );
-        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {};
+            (_) async => _successfulRecoveryResult(subjectId: null);
+        RecoveryLocalTransitionService.debugCredentialStorerForTesting =
+            (_, _) async {};
         RestoreAccountService.debugParticipantSignInExecutorForTesting =
             (_, _) async => true;
-        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
-          clearedSubject++;
-        };
+        RecoveryLocalTransitionService.debugActiveSubjectClearerForTesting =
+            () async {
+              clearedSubject++;
+            };
 
         final result = await RestoreAccountService.performRecovery(BigInt.one);
 
@@ -258,15 +270,15 @@ void main() {
               cleanupCalls++;
             };
         RestoreAccountService.debugRecoverAccountExecutorForTesting =
-            (_) async => RecoveryResult(
-              success: true,
-              email: 'recovered@test.local',
-              password: 'password-1',
-              subjectId: 'subject-1',
-            );
-        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {
-          credentialStoreCalls++;
-        };
+            (_) async => _successfulRecoveryResult();
+        RecoveryLocalTransitionService.debugStoredEmailWriterForTesting =
+            (email) async {
+              credentialStoreCalls++;
+            };
+        RecoveryLocalTransitionService.debugStoredPasswordWriterForTesting =
+            (password) async {
+              credentialStoreCalls++;
+            };
         RestoreAccountService.debugParticipantSignInExecutorForTesting =
             (_, _) async => false;
 
@@ -285,20 +297,21 @@ void main() {
         var activeSubjectClearCalls = 0;
 
         RestoreAccountService.debugRecoverAccountExecutorForTesting =
-            (_) async => RecoveryResult(
-              success: true,
-              email: 'recovered@test.local',
-              password: 'password-1',
-              subjectId: 'subject-1',
-            );
+            (_) async => _successfulRecoveryResult();
         RestoreAccountService.debugParticipantSignInExecutorForTesting =
             (_, _) async => true;
-        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {
-          credentialStoreCalls++;
-        };
-        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
-          activeSubjectClearCalls++;
-        };
+        RecoveryLocalTransitionService.debugStoredEmailWriterForTesting =
+            (email) async {
+              credentialStoreCalls++;
+            };
+        RecoveryLocalTransitionService.debugStoredPasswordWriterForTesting =
+            (password) async {
+              credentialStoreCalls++;
+            };
+        RecoveryLocalTransitionService.debugActiveSubjectClearerForTesting =
+            () async {
+              activeSubjectClearCalls++;
+            };
         RestoreAccountService.debugParticipantStateCleanupForTesting =
             () async => throw Exception('cleanup failed');
 
@@ -306,9 +319,156 @@ void main() {
 
         expect(result.success, isFalse);
         expect(result.error, 'recovery_cleanup_failed');
-        expect(credentialStoreCalls, 1);
+        expect(credentialStoreCalls, 2);
         expect(activeSubjectClearCalls, 1);
       },
     );
+
+    test('previous credentials are restored when email write throws', () async {
+      final restored = <String>[];
+      var signOutCalls = 0;
+      var validateCalls = 0;
+
+      RestoreAccountService.debugRecoverAccountExecutorForTesting = (_) async =>
+          _successfulRecoveryResult();
+      RestoreAccountService.debugParticipantSignInExecutorForTesting =
+          (_, _) async => true;
+      RecoveryLocalTransitionService.debugStoredEmailReaderForTesting =
+          () async => 'old@test.local';
+      RecoveryLocalTransitionService.debugStoredPasswordReaderForTesting =
+          () async => 'old-password';
+      RecoveryLocalTransitionService
+          .debugStoredEmailWriterForTesting = (email) async {
+        if (email == 'recovered@test.local') throw Exception('email failed');
+        restored.add('email:$email');
+      };
+      RecoveryLocalTransitionService.debugStoredPasswordWriterForTesting =
+          (password) async {
+            restored.add('password:$password');
+          };
+      RecoveryLocalTransitionService.debugParticipantSignOutExecutorForTesting =
+          () async {
+            signOutCalls++;
+          };
+      RestoreAccountService.debugSubjectValidatorForTesting = (_) async {
+        validateCalls++;
+        return true;
+      };
+
+      final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+      expect(result.success, isFalse);
+      expect(result.error, 'recovery_local_persistence_failed');
+      expect(restored, ['email:old@test.local', 'password:old-password']);
+      expect(signOutCalls, 1);
+      expect(validateCalls, 0);
+    });
+
+    test(
+      'previous credentials are restored when password write throws',
+      () async {
+        final restored = <String>[];
+        var signOutCalls = 0;
+        var validateCalls = 0;
+
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async => _successfulRecoveryResult();
+        RestoreAccountService.debugParticipantSignInExecutorForTesting =
+            (_, _) async => true;
+        RecoveryLocalTransitionService.debugStoredEmailReaderForTesting =
+            () async => 'old@test.local';
+        RecoveryLocalTransitionService.debugStoredPasswordReaderForTesting =
+            () async => 'old-password';
+        RecoveryLocalTransitionService.debugStoredEmailWriterForTesting =
+            (email) async {
+              restored.add('email:$email');
+            };
+        RecoveryLocalTransitionService.debugStoredPasswordWriterForTesting =
+            (password) async {
+              if (password == 'password-1') {
+                throw Exception('password failed');
+              }
+              restored.add('password:$password');
+            };
+        RecoveryLocalTransitionService
+            .debugParticipantSignOutExecutorForTesting = () async {
+          signOutCalls++;
+        };
+        RestoreAccountService.debugSubjectValidatorForTesting = (_) async {
+          validateCalls++;
+          return true;
+        };
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isFalse);
+        expect(result.error, 'recovery_local_persistence_failed');
+        expect(restored, [
+          'email:recovered@test.local',
+          'email:old@test.local',
+          'password:old-password',
+        ]);
+        expect(signOutCalls, 1);
+        expect(validateCalls, 0);
+      },
+    );
+
+    test(
+      'previous credentials are restored when active subject clear throws',
+      () async {
+        final restored = <String>[];
+        var signOutCalls = 0;
+        var validateCalls = 0;
+
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async => _successfulRecoveryResult();
+        RestoreAccountService.debugParticipantSignInExecutorForTesting =
+            (_, _) async => true;
+        RecoveryLocalTransitionService.debugStoredEmailReaderForTesting =
+            () async => 'old@test.local';
+        RecoveryLocalTransitionService.debugStoredPasswordReaderForTesting =
+            () async => 'old-password';
+        RecoveryLocalTransitionService.debugStoredEmailWriterForTesting =
+            (email) async {
+              restored.add('email:$email');
+            };
+        RecoveryLocalTransitionService.debugStoredPasswordWriterForTesting =
+            (password) async {
+              restored.add('password:$password');
+            };
+        RecoveryLocalTransitionService.debugActiveSubjectClearerForTesting =
+            () async => throw Exception('clear failed');
+        RecoveryLocalTransitionService
+            .debugParticipantSignOutExecutorForTesting = () async {
+          signOutCalls++;
+        };
+        RestoreAccountService.debugSubjectValidatorForTesting = (_) async {
+          validateCalls++;
+          return true;
+        };
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isFalse);
+        expect(result.error, 'recovery_local_persistence_failed');
+        expect(restored, [
+          'email:recovered@test.local',
+          'password:password-1',
+          'email:old@test.local',
+          'password:old-password',
+        ]);
+        expect(signOutCalls, 1);
+        expect(validateCalls, 0);
+      },
+    );
   });
+}
+
+RecoveryResult _successfulRecoveryResult({String? subjectId = 'subject-1'}) {
+  return RecoveryResult(
+    success: true,
+    email: _recoveredEmail,
+    password: _recoveredPassword,
+    subjectId: subjectId,
+  );
 }

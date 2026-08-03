@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/participant_fitbit_credentials_service.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';

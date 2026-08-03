@@ -1456,6 +1456,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Network error. Please check your connection and try again.';
 
   @override
+  String get recovery_cleanup_failed =>
+      'Recovery completed, but this device could not finish local cleanup. Please try again.';
+
+  @override
+  String get recovery_local_persistence_failed =>
+      'Recovery completed, but this device could not save your account data locally. Please try again.';
+
+  @override
   String get restore_account_description =>
       'Restore your account on this device with the recovery phrase you saved before joining a study.';
 

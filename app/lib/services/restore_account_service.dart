@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/services/participant_fitbit_credentials_service.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
+import 'package:studyu_app/services/recovery_local_transition_service.dart';
 import 'package:studyu_app/util/cache.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -41,15 +42,11 @@ class RestoreAccountService {
   static String? Function() _currentUserIdGetter = _currentUserId;
   static Future<RecoveryResult> Function(BigInt) _recoverAccountExecutor =
       recoverAccount;
-  static Future<void> Function(String, String) _credentialStorer =
-      storeFakeUserEmailAndPassword;
   static Future<bool> Function(String, String) _participantSignInExecutor =
       _signInRecoveredParticipant;
   static Future<bool> Function(String) _subjectValidator = validateSubject;
   static Future<void> Function(String) _activeSubjectStorer =
       storeActiveSubjectId;
-  static Future<void> Function() _activeSubjectClearer =
-      deleteActiveStudyReference;
   static Future<void> Function() _participantStateCleanup =
       _cleanupParticipantStateForRecovery;
 
@@ -122,22 +119,6 @@ class RestoreAccountService {
   }
 
   @visibleForTesting
-  static Future<void> Function(String, String)
-  get debugCredentialStorerForTesting => _credentialStorer;
-
-  @visibleForTesting
-  static set debugCredentialStorerForTesting(
-    Future<void> Function(String, String) storer,
-  ) {
-    _credentialStorer = storer;
-  }
-
-  @visibleForTesting
-  static void debugResetCredentialStorerForTesting() {
-    _credentialStorer = storeFakeUserEmailAndPassword;
-  }
-
-  @visibleForTesting
   static Future<bool> Function(String, String)
   get debugParticipantSignInExecutorForTesting => _participantSignInExecutor;
 
@@ -186,22 +167,6 @@ class RestoreAccountService {
   }
 
   @visibleForTesting
-  static Future<void> Function() get debugActiveSubjectClearerForTesting =>
-      _activeSubjectClearer;
-
-  @visibleForTesting
-  static set debugActiveSubjectClearerForTesting(
-    Future<void> Function() clearer,
-  ) {
-    _activeSubjectClearer = clearer;
-  }
-
-  @visibleForTesting
-  static void debugResetActiveSubjectClearerForTesting() {
-    _activeSubjectClearer = deleteActiveStudyReference;
-  }
-
-  @visibleForTesting
   static Future<void> Function() get debugParticipantStateCleanupForTesting =>
       _participantStateCleanup;
 
@@ -244,23 +209,10 @@ class RestoreAccountService {
     }
   }
 
-  /// Sanitizes a UUID string by removing hyphens and validating format
-  /// Returns null if the UUID format is invalid
   static String? _sanitizeUuid(String uuid) {
-    // Remove all hyphens and convert to lowercase
     final sanitized = uuid.replaceAll('-', '').toLowerCase().trim();
-
-    // UUID without hyphens should be exactly 32 hex characters
-    if (sanitized.length != 32) {
-      return null;
-    }
-
-    // Validate hex characters only
-    final validHex = RegExp(r'^[0-9a-f]+$');
-    if (!validHex.hasMatch(sanitized)) {
-      return null;
-    }
-
+    if (sanitized.length != 32) return null;
+    if (!RegExp(r'^[0-9a-f]+$').hasMatch(sanitized)) return null;
     return sanitized;
   }
 
@@ -285,14 +237,12 @@ class RestoreAccountService {
       final response = await Supabase.instance.client.rpc(
         'get_or_create_recovery',
       );
-
       if (response is Map<String, dynamic> && response['success'] == true) {
         return _cachedRecoveryId = response['recovery_id'] as String?;
-      } else {
-        final error = response is Map ? response['error'] : 'Unknown error';
-        StudyULogger.warning('Failed to get recovery_id: $error');
-        return null;
       }
+      final error = response is Map ? response['error'] : 'Unknown error';
+      StudyULogger.warning('Failed to get recovery_id: $error');
+      return null;
     } catch (e) {
       StudyULogger.warning('Error getting recovery_id: $e');
       return null;
@@ -350,45 +300,38 @@ class RestoreAccountService {
     clearCache();
     await Cache.clearAllSubjectCaches();
     await PendingDeepLinkService.clearStorage();
-    await FitbitHandler.clearLocalFallbackCredentials();
+    await ParticipantFitbitCredentialsService.clearLocalFallbackCredentials();
   }
 
   static BigInt decodeRecoveryPhrase(List<String> words) {
-    // Validate word count first
     if (words.length != RecoveryConstants.totalWordCount) {
       throw ArgumentError(
         'Expected ${RecoveryConstants.totalWordCount} words, got ${words.length}',
       );
     }
 
-    // Try English wordlist first
     try {
       final enWords = words.map((w) => w.toLowerCase().trim()).toList();
       return decode(enWords, wordlist: wordlistEn);
     } catch (e) {
       if (e is! ArgumentError) rethrow;
-
-      // Check if error is due to word not found in English list
       final errorStr = e.toString();
-      if (errorStr.contains('Invalid word') ||
-          errorStr.contains('Checksum mismatch')) {
-        // Try German wordlist
-        try {
-          final deWords = words.map((w) => w.toLowerCase().trim()).toList();
-          return decode(deWords, wordlist: wordlistDe);
-        } catch (deError) {
-          if (deError is! ArgumentError) rethrow;
-
-          // German also failed, throw original English error
-          throw e;
-        }
+      if (!errorStr.contains('Invalid word') &&
+          !errorStr.contains('Checksum mismatch')) {
+        rethrow;
       }
-      rethrow;
+
+      try {
+        final deWords = words.map((w) => w.toLowerCase().trim()).toList();
+        return decode(deWords, wordlist: wordlistDe);
+      } catch (deError) {
+        if (deError is! ArgumentError) rethrow;
+        throw e;
+      }
     }
   }
 
   static String? convertBigIntToUuid(BigInt id) {
-    // Validate the ID fits within 128 bits
     if (id < BigInt.zero || id > _max128BitValue) {
       StudyULogger.warning('Recovery ID out of valid range');
       return null;
@@ -410,17 +353,16 @@ class RestoreAccountService {
       if (uuidString == null) {
         return RecoveryResult(success: false, error: 'invalid_recovery_id');
       }
+
       final response = await Supabase.instance.client.rpc(
         'recover_account',
         params: {'p_recovery_id': uuidString},
       );
-
       if (response is Map<String, dynamic>) {
         return RecoveryResult.fromJson(response);
-      } else {
-        StudyULogger.warning('Unexpected response format: $response');
-        return RecoveryResult(success: false, error: 'recovery_failed');
       }
+      StudyULogger.warning('Unexpected response format: $response');
+      return RecoveryResult(success: false, error: 'recovery_failed');
     } catch (e) {
       StudyULogger.warning('RPC call failed: $e');
       return RecoveryResult(success: false, error: 'recovery_network_error');
@@ -434,7 +376,7 @@ class RestoreAccountService {
         selectedColumns: ['*'],
       );
       return !subject.isDeleted;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }
@@ -442,10 +384,7 @@ class RestoreAccountService {
   static Future<RecoveryResult> performRecovery(BigInt recoveryId) async {
     try {
       final result = await _recoverAccountExecutor(recoveryId);
-
-      if (!result.success) {
-        return result;
-      }
+      if (!result.success) return result;
 
       final recoveredEmail = result.email;
       final recoveredPassword = result.password;
@@ -463,8 +402,17 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
-      await _credentialStorer(recoveredEmail, recoveredPassword);
-      await _activeSubjectClearer();
+      try {
+        await RecoveryLocalTransitionService.prepareForRecoveredAccount(
+          email: recoveredEmail,
+          password: recoveredPassword,
+        );
+      } on RecoveryLocalTransitionException {
+        return RecoveryResult(
+          success: false,
+          error: 'recovery_local_persistence_failed',
+        );
+      }
 
       try {
         await _participantStateCleanup();
@@ -475,20 +423,19 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_cleanup_failed');
       }
 
-      if (result.subjectId != null) {
-        final isValid = await _subjectValidator(result.subjectId!);
+      final subjectId = result.subjectId;
+      if (subjectId == null) return result;
 
-        if (!isValid) {
-          return RecoveryResult(
-            success: true,
-            email: result.email,
-            password: result.password,
-          );
-        }
-
-        await _activeSubjectStorer(result.subjectId!);
+      final isValid = await _subjectValidator(subjectId);
+      if (!isValid) {
+        return RecoveryResult(
+          success: true,
+          email: result.email,
+          password: result.password,
+        );
       }
 
+      await _activeSubjectStorer(subjectId);
       return result;
     } catch (e, stackTrace) {
       StudyULogger.warning('Error in performRecovery: $e\n$stackTrace');
