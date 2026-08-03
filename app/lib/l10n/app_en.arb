@@ -810,15 +810,7 @@
   "food_selection_add_to_selection": "Add to selection",
   "food_selection_update_selection": "Update selection",
   "food_selection_selected_items": "Selected items",
-  "food_selection_selected_count": "{count, plural, =1 {1 item selected} other {{count} items selected}}",
-  "@food_selection_selected_count": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "food_selection_view_more": "View {count} more",
+  "food_selection_view_more": "View all {count} items",
   "@food_selection_view_more": {
     "placeholders": {
       "count": {
@@ -1030,16 +1022,7 @@
   "food_quantity_add_to_meal": "Add to {meal}",
   "food_quantity_add_to_selection": "Add item",
   "food_quantity_add_meal_to_selection": "Add meal to selection",
-  "food_quantity_update_selection": "Update item",
-  "food_quantity_per_serving": "{calories} per serving",
-  "@food_quantity_per_serving": {
-    "placeholders": {
-      "calories": {
-        "type": "String"
-      }
-    }
-  },
-  "food_quantity_selection_total": "Nutrition for this amount",
+  "food_quantity_update_selection": "Save changes",
   "food_quantity_nutrition_unavailable": "Nutrition information unavailable",
   "save_to_my_items": "Save to My items for future use",
   "save_and_add_to_meal": "Save and add to {meal}",
@@ -1374,5 +1357,9 @@
     }
   },
   "food_quantity_decrease_weight": "Decrease weight per serving",
-  "food_quantity_increase_weight": "Increase weight per serving"
+  "food_quantity_increase_weight": "Increase weight per serving",
+  "food_selection_collapse": "Collapse selected items",
+  "food_quantity_edit_amount": "Edit amount",
+  "food_quantity_nutrition_for_amount": "Nutrition for {amount} {unit}",
+  "food_selection_items_count": "{count, plural, =1 {1 item} other {{count} items}}"
 }

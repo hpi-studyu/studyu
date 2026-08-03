@@ -635,16 +635,8 @@
   "add": "Hinzufügen",
   "food_selection_add_to_selection": "Zur Auswahl hinzufügen",
   "food_selection_update_selection": "Auswahl aktualisieren",
-  "food_selection_selected_items": "Ausgewählte Elemente",
-  "food_selection_selected_count": "{count, plural, =1 {1 Element ausgewählt} other {{count} Elemente ausgewählt}}",
-  "@food_selection_selected_count": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "food_selection_view_more": "Weitere {count} anzeigen",
+  "food_selection_selected_items": "Ausgewählte Lebensmittel",
+  "food_selection_view_more": "Alle {count} Lebensmittel anzeigen",
   "@food_selection_view_more": {
     "placeholders": {
       "count": {
@@ -708,7 +700,7 @@
       }
     }
   },
-  "food_selection_calories_unavailable": "Kalorien für {count, plural, =1 {ein Element} other {{count} Elemente}} nicht verfügbar",
+  "food_selection_calories_unavailable": "Kalorien für {count, plural, =1 {ein Lebensmittel} other {{count} Lebensmittel}} nicht verfügbar",
   "@food_selection_calories_unavailable": {
     "placeholders": {
       "count": {
@@ -939,16 +931,7 @@
   "food_quantity_add_to_meal": "Zu {meal} hinzufügen",
   "food_quantity_add_to_selection": "Lebensmittel hinzufügen",
   "food_quantity_add_meal_to_selection": "Mahlzeit zur Auswahl hinzufügen",
-  "food_quantity_update_selection": "Lebensmittel aktualisieren",
-  "food_quantity_per_serving": "{calories} pro Portion",
-  "@food_quantity_per_serving": {
-    "placeholders": {
-      "calories": {
-        "type": "String"
-      }
-    }
-  },
-  "food_quantity_selection_total": "Nährwerte für diese Menge",
+  "food_quantity_update_selection": "Änderungen speichern",
   "food_quantity_nutrition_unavailable": "Nährwertangaben nicht verfügbar",
   "save_to_my_items": "Für später in Meine Elemente speichern",
   "save_and_add_to_meal": "Speichern und zu {meal} hinzufügen",
@@ -1169,5 +1152,9 @@
   "food_quantity_weight_per_serving": "Gewicht pro Portion",
   "food_quantity_total_weight": "Gesamtgewicht: {weight} g",
   "food_quantity_decrease_weight": "Gewicht pro Portion verringern",
-  "food_quantity_increase_weight": "Gewicht pro Portion erhöhen"
+  "food_quantity_increase_weight": "Gewicht pro Portion erhöhen",
+  "food_selection_collapse": "Ausgewählte Lebensmittel einklappen",
+  "food_quantity_edit_amount": "Menge bearbeiten",
+  "food_quantity_nutrition_for_amount": "Nährwerte für {amount} {unit}",
+  "food_selection_items_count": "{count, plural, =1 {1 Lebensmittel} other {{count} Lebensmittel}}"
 }

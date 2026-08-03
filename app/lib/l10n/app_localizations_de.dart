@@ -2078,22 +2078,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_selection_update_selection => 'Auswahl aktualisieren';
 
   @override
-  String get food_selection_selected_items => 'Ausgewählte Elemente';
-
-  @override
-  String food_selection_selected_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count Elemente ausgewählt',
-      one: '1 Element ausgewählt',
-    );
-    return '$_temp0';
-  }
+  String get food_selection_selected_items => 'Ausgewählte Lebensmittel';
 
   @override
   String food_selection_view_more(int count) {
-    return 'Weitere $count anzeigen';
+    return 'Alle $count Lebensmittel anzeigen';
   }
 
   @override
@@ -2137,8 +2126,8 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count Elemente',
-      one: 'ein Element',
+      other: '$count Lebensmittel',
+      one: 'ein Lebensmittel',
     );
     return 'Kalorien für $_temp0 nicht verfügbar';
   }
@@ -2325,15 +2314,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Mahlzeit zur Auswahl hinzufügen';
 
   @override
-  String get food_quantity_update_selection => 'Lebensmittel aktualisieren';
-
-  @override
-  String food_quantity_per_serving(String calories) {
-    return '$calories pro Portion';
-  }
-
-  @override
-  String get food_quantity_selection_total => 'Nährwerte für diese Menge';
+  String get food_quantity_update_selection => 'Änderungen speichern';
 
   @override
   String get food_quantity_nutrition_unavailable =>
@@ -2934,4 +2915,26 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get food_quantity_increase_weight => 'Gewicht pro Portion erhöhen';
+
+  @override
+  String get food_selection_collapse => 'Ausgewählte Lebensmittel einklappen';
+
+  @override
+  String get food_quantity_edit_amount => 'Menge bearbeiten';
+
+  @override
+  String food_quantity_nutrition_for_amount(Object amount, Object unit) {
+    return 'Nährwerte für $amount $unit';
+  }
+
+  @override
+  String food_selection_items_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Lebensmittel',
+      one: '1 Lebensmittel',
+    );
+    return '$_temp0';
+  }
 }

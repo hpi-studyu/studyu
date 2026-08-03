@@ -56,6 +56,8 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
   FoodQuantityAction? _detailAction;
   bool _detailCaloriesKnown = true;
   bool _detailGramsKnown = true;
+  final ScrollController _expandedScrollController = ScrollController();
+  double _expandedScrollOffset = 0;
 
   void showDetails({
     required studyu.FoodEntry food,
@@ -65,6 +67,10 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
     bool gramsKnown = true,
   }) {
     if (!mounted) return;
+    if (_mode == _SelectionSurfaceMode.expanded &&
+        _expandedScrollController.hasClients) {
+      _expandedScrollOffset = _expandedScrollController.offset;
+    }
     setState(() {
       _previousMode = _mode == _SelectionSurfaceMode.details
           ? _previousMode
@@ -87,6 +93,12 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
     widget.onActivityChanged(isActive);
   }
 
+  void _toggleSelector() => _setMode(
+    _mode == _SelectionSurfaceMode.compact
+        ? _SelectionSurfaceMode.expanded
+        : _SelectionSurfaceMode.compact,
+  );
+
   bool handleSystemBack() {
     if (_mode == _SelectionSurfaceMode.details) {
       _closeDetails();
@@ -107,7 +119,22 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
       _detailKey = null;
       _detailAction = null;
     });
+    _restoreExpandedScrollOffset(previousMode);
     widget.onActivityChanged(previousMode != _SelectionSurfaceMode.compact);
+  }
+
+  void _restoreExpandedScrollOffset(_SelectionSurfaceMode mode) {
+    if (mode != _SelectionSurfaceMode.expanded) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_expandedScrollController.hasClients) return;
+      final position = _expandedScrollController.position;
+      _expandedScrollController.jumpTo(
+        _expandedScrollOffset.clamp(
+          position.minScrollExtent,
+          position.maxScrollExtent,
+        ),
+      );
+    });
   }
 
   void _confirmDetails(studyu.FoodEntry result) {
@@ -128,6 +155,7 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
         _detailKey = null;
         _detailAction = null;
       });
+      _restoreExpandedScrollOffset(_previousMode);
       widget.onActivityChanged(_previousMode != _SelectionSurfaceMode.compact);
     }
   }
@@ -146,19 +174,31 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
   }
 
   @override
+  void dispose() {
+    _expandedScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final calorieText = _selectionCaloriesSummary(l10n, widget.store);
-    final totals =
-        '${l10n.serving_amount(widget.store.servingCount)} · $calorieText';
+    final itemCountText = l10n.food_selection_items_count(
+      widget.store.itemCount,
+    );
+    final headerSummary = '$itemCountText · $calorieText';
     final unavailable = widget.store.unknownCaloriesCount == 0
         ? ''
         : ', ${l10n.food_selection_calories_unavailable(widget.store.unknownCaloriesCount)}';
-    final totalsSemantics =
-        '${l10n.items_count(widget.store.itemCount)}, '
-        '${l10n.serving_amount(widget.store.servingCount)}, $calorieText$unavailable';
-    final surfaceHeight = (widget.maxHeight * 0.65).clamp(
+    final headerSemantics =
+        '${l10n.food_selection_selected_items}, $itemCountText, '
+        '$calorieText$unavailable';
+    final detailsHeight = (widget.maxHeight * 0.65).clamp(
+      0.0,
+      widget.maxHeight,
+    );
+    final expandedMaxHeight = (widget.maxHeight * 0.75).clamp(
       0.0,
       widget.maxHeight,
     );
@@ -178,24 +218,26 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
       child: SafeArea(
         top: false,
         child: Column(
-          mainAxisSize: _mode == _SelectionSurfaceMode.compact
-              ? MainAxisSize.min
-              : MainAxisSize.max,
+          mainAxisSize: _mode == _SelectionSurfaceMode.details
+              ? MainAxisSize.max
+              : MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
+            if (_mode != _SelectionSurfaceMode.details)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Center(
+                  child: Container(
+                    key: const ValueKey('selection-drag-handle'),
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
               ),
-            ),
             if (_mode == _SelectionSurfaceMode.details && _detailFood != null)
               Expanded(
                 child: FoodQuantitySheet(
@@ -217,49 +259,48 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
               )
             else ...[
               Semantics(
+                key: const ValueKey('selection-header-semantics'),
                 button: true,
-                label: totalsSemantics,
+                expanded: _mode == _SelectionSurfaceMode.expanded,
+                label: headerSemantics,
+                onTap: _toggleSelector,
                 child: ExcludeSemantics(
                   child: InkWell(
-                    onTap: () => _setMode(
-                      _mode == _SelectionSurfaceMode.compact
-                          ? _SelectionSurfaceMode.expanded
-                          : _SelectionSurfaceMode.compact,
-                    ),
+                    onTap: _toggleSelector,
                     child: Container(
                       key: widget.headerAnchorKey,
-                      constraints: const BoxConstraints(minHeight: 48),
-                      padding: const EdgeInsets.fromLTRB(16, 4, 12, 4),
+                      constraints: const BoxConstraints(minHeight: 56),
+                      padding: const EdgeInsets.fromLTRB(16, 6, 12, 6),
                       child: Row(
                         children: [
                           Expanded(
-                            child: Text(
-                              l10n.food_selection_selected_count(
-                                widget.store.itemCount,
-                              ),
-                              style: _mode == _SelectionSurfaceMode.expanded
-                                  ? theme.textTheme.titleLarge
-                                  : theme.textTheme.titleSmall,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              totals,
-                              textAlign: TextAlign.end,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  l10n.food_selection_selected_items,
+                                  style: _mode == _SelectionSurfaceMode.expanded
+                                      ? theme.textTheme.titleLarge
+                                      : theme.textTheme.titleSmall,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  headerSummary,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           if (_mode == _SelectionSurfaceMode.expanded)
                             IconButton(
-                              tooltip: MaterialLocalizations.of(
-                                context,
-                              ).closeButtonTooltip,
+                              tooltip: l10n.food_selection_collapse,
                               onPressed: () =>
                                   _setMode(_SelectionSurfaceMode.compact),
-                              icon: const Icon(Icons.close),
+                              icon: const Icon(Icons.keyboard_arrow_down),
                             ),
                         ],
                       ),
@@ -268,8 +309,11 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
                 ),
               ),
               if (_mode == _SelectionSurfaceMode.expanded)
-                Expanded(
+                Flexible(
                   child: ListView.builder(
+                    key: const ValueKey('selection-expanded-list'),
+                    controller: _expandedScrollController,
+                    shrinkWrap: true,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: widget.store.items.length,
                     itemBuilder: (context, index) {
@@ -301,22 +345,17 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
                   child: TextButton(
                     onPressed: () => _setMode(_SelectionSurfaceMode.expanded),
                     child: Text(
-                      l10n.food_selection_view_more(
-                        widget.store.itemCount -
-                            widget.store.recentItems
-                                .take(
-                                  MediaQuery.textScalerOf(context).scale(1) >
-                                          1.3
-                                      ? 1
-                                      : 2,
-                                )
-                                .length,
-                      ),
+                      l10n.food_selection_view_more(widget.store.itemCount),
                     ),
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  8,
+                  16,
+                  _mode == _SelectionSurfaceMode.expanded ? 8 : 12,
+                ),
                 child: FilledButton(
                   onPressed: widget.isConfirming || widget.store.isEmpty
                       ? null
@@ -335,6 +374,13 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
       ),
     );
 
+    final constrainedSurface = _mode == _SelectionSurfaceMode.expanded
+        ? ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: expandedMaxHeight),
+            child: surface,
+          )
+        : surface;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onVerticalDragEnd: _mode == _SelectionSurfaceMode.compact
@@ -345,8 +391,8 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
             }
           : null,
       child: SizedBox(
-        height: _mode == _SelectionSurfaceMode.compact ? null : surfaceHeight,
-        child: surface,
+        height: _mode == _SelectionSurfaceMode.details ? detailsHeight : null,
+        child: constrainedSurface,
       ),
     );
   }
@@ -596,6 +642,7 @@ class _SelectionPreviewRow extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
               SelectionQuantityControl(
                 name: item.name,
                 quantity: item.quantity,

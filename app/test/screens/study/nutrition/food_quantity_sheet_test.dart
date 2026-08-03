@@ -111,14 +111,15 @@ void main() {
       initialAmount: 2,
     );
 
-    expect(find.text('Nutrition for this amount'), findsOneWidget);
+    expect(find.text('Nutrition for 364 g'), findsOneWidget);
     expect(find.text('190 kcal'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Increase Apple'));
     await tester.pump();
 
+    expect(find.text('Nutrition for 546 g'), findsOneWidget);
     expect(find.text('285 kcal'), findsOneWidget);
-    expect(find.text('Update item'), findsOneWidget);
+    expect(find.text('Save changes'), findsOneWidget);
   });
 
   testWidgets(
@@ -166,9 +167,10 @@ void main() {
 
       expect(find.text('Total weight: 200 g'), findsOneWidget);
       expect(find.text('Use library weight (182 g)'), findsOneWidget);
+      expect(find.text('Nutrition for 200 g'), findsOneWidget);
       expect(find.text('104 kcal'), findsOneWidget);
-      expect(find.text('52 kcal per serving'), findsOneWidget);
-      await tester.tap(find.text('Update item'));
+      expect(find.text('52 kcal per serving'), findsNothing);
+      await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
 
       expect(baseline.servingSizeGrams, 182);
@@ -190,7 +192,7 @@ void main() {
       onResult: (value) => result = value,
     );
 
-    final updateButton = find.widgetWithText(FilledButton, 'Update item');
+    final updateButton = find.widgetWithText(FilledButton, 'Save changes');
     await tester.enterText(find.byType(TextField).last, '0');
     await tester.pump();
     expect(tester.widget<FilledButton>(updateButton).onPressed, isNull);
@@ -233,7 +235,7 @@ void main() {
 
     expect(find.text('Total weight: 364 g'), findsOneWidget);
     expect(find.text('190 kcal'), findsOneWidget);
-    await tester.tap(find.text('Update item'));
+    await tester.tap(find.text('Save changes'));
     await tester.pumpAndSettle();
 
     expect(result!.amount, 2);
@@ -260,10 +262,10 @@ void main() {
     );
 
     final updateButton = tester.widget<FilledButton>(
-      find.widgetWithText(FilledButton, 'Update item'),
+      find.widgetWithText(FilledButton, 'Save changes'),
     );
     expect(updateButton.onPressed, isNotNull);
-    await tester.tap(find.text('Update item'));
+    await tester.tap(find.text('Save changes'));
     await tester.pumpAndSettle();
 
     expect(result!.amount, 2);
@@ -294,7 +296,7 @@ void main() {
       baselineGramsKnown: false,
     );
 
-    expect(find.text('Nutrition for this amount'), findsOneWidget);
+    expect(find.text('Nutrition for 2 medium'), findsOneWidget);
     expect(find.text('— kcal'), findsOneWidget);
     expect(find.text('—'), findsNWidgets(3));
     expect(find.text('Nutrition information unavailable'), findsOneWidget);

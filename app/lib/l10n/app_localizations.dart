@@ -3887,16 +3887,10 @@ abstract class AppLocalizations {
   /// **'Selected items'**
   String get food_selection_selected_items;
 
-  /// No description provided for @food_selection_selected_count.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1 {1 item selected} other {{count} items selected}}'**
-  String food_selection_selected_count(int count);
-
   /// No description provided for @food_selection_view_more.
   ///
   /// In en, this message translates to:
-  /// **'View {count} more'**
+  /// **'View all {count} items'**
   String food_selection_view_more(int count);
 
   /// No description provided for @food_selection_increment.
@@ -4214,20 +4208,8 @@ abstract class AppLocalizations {
   /// No description provided for @food_quantity_update_selection.
   ///
   /// In en, this message translates to:
-  /// **'Update item'**
+  /// **'Save changes'**
   String get food_quantity_update_selection;
-
-  /// No description provided for @food_quantity_per_serving.
-  ///
-  /// In en, this message translates to:
-  /// **'{calories} per serving'**
-  String food_quantity_per_serving(String calories);
-
-  /// No description provided for @food_quantity_selection_total.
-  ///
-  /// In en, this message translates to:
-  /// **'Nutrition for this amount'**
-  String get food_quantity_selection_total;
 
   /// No description provided for @food_quantity_nutrition_unavailable.
   ///
@@ -5176,6 +5158,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Increase weight per serving'**
   String get food_quantity_increase_weight;
+
+  /// No description provided for @food_selection_collapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse selected items'**
+  String get food_selection_collapse;
+
+  /// No description provided for @food_quantity_edit_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit amount'**
+  String get food_quantity_edit_amount;
+
+  /// No description provided for @food_quantity_nutrition_for_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition for {amount} {unit}'**
+  String food_quantity_nutrition_for_amount(Object amount, Object unit);
+
+  /// No description provided for @food_selection_items_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1 {1 item} other {{count} items}}'**
+  String food_selection_items_count(num count);
 }
 
 class _AppLocalizationsDelegate

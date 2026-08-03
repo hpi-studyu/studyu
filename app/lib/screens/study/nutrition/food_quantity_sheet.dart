@@ -254,9 +254,9 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final embedded = widget.onConfirmed != null;
     final food = _scaledFood ?? widget.food;
     final amount = food.amount;
-    final servings = amount / widget.food.amount;
     final servingWeight = _parseNumber(_servingWeightController.text);
     final servingWeightKnown =
         servingWeight != null && servingWeight.isFinite && servingWeight > 0;
@@ -277,6 +277,15 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
       if (servingSubtitle != null && servingSubtitle.isNotEmpty)
         servingSubtitle,
     ].join(' · ');
+    final totalGrams = food.servingSizeGrams * amount;
+    final currentGramsKnown =
+        (widget.gramsKnown || (_canEditServingWeight && servingWeightKnown)) &&
+        totalGrams.isFinite &&
+        totalGrams > 0;
+    final nutritionHeading = l10n.food_quantity_nutrition_for_amount(
+      currentGramsKnown ? _formatNumber(totalGrams) : _formatNumber(amount),
+      currentGramsKnown ? 'g' : _amountUnit(l10n, amount),
+    );
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -297,6 +306,26 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (embedded) ...[
+                    Row(
+                      children: [
+                        IconButton(
+                          key: const ValueKey('food-quantity-back'),
+                          onPressed: widget.onClose,
+                          tooltip: l10n.back,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            l10n.food_quantity_edit_amount,
+                            style: theme.textTheme.titleLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -342,12 +371,13 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                           ],
                         ),
                       ),
-                      IconButton(
-                        onPressed:
-                            widget.onClose ?? () => Navigator.pop(context),
-                        tooltip: l10n.close,
-                        icon: const Icon(Icons.close),
-                      ),
+                      if (!embedded)
+                        IconButton(
+                          onPressed:
+                              widget.onClose ?? () => Navigator.pop(context),
+                          tooltip: l10n.close,
+                          icon: const Icon(Icons.close),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -542,40 +572,22 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                           children: [
                             Expanded(
                               child: Text(
-                                l10n.food_quantity_selection_total,
+                                nutritionHeading,
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  caloriesKnown
-                                      ? l10n.kcal_value(
-                                          food.nutrition.energyKcal
-                                              .toStringAsFixed(0),
-                                        )
-                                      : '— kcal',
-                                  style: theme.textTheme.bodyMedium,
-                                ),
-                                if (caloriesKnown &&
-                                    servings > 1 &&
-                                    food.nutrition.energyKcal != 0)
-                                  Text(
-                                    l10n.food_quantity_per_serving(
-                                      l10n.kcal_value(
-                                        (food.nutrition.energyKcal / servings)
-                                            .toStringAsFixed(0),
+                            Text(
+                              caloriesKnown
+                                  ? l10n.kcal_value(
+                                      food.nutrition.energyKcal.toStringAsFixed(
+                                        0,
                                       ),
-                                    ),
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                              ],
+                                    )
+                                  : '— kcal',
+                              style: theme.textTheme.bodyMedium,
                             ),
                           ],
                         ),

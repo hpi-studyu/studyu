@@ -2061,19 +2061,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_selection_selected_items => 'Selected items';
 
   @override
-  String food_selection_selected_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count items selected',
-      one: '1 item selected',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String food_selection_view_more(int count) {
-    return 'View $count more';
+    return 'View all $count items';
   }
 
   @override
@@ -2304,15 +2293,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_quantity_add_meal_to_selection => 'Add meal to selection';
 
   @override
-  String get food_quantity_update_selection => 'Update item';
-
-  @override
-  String food_quantity_per_serving(String calories) {
-    return '$calories per serving';
-  }
-
-  @override
-  String get food_quantity_selection_total => 'Nutrition for this amount';
+  String get food_quantity_update_selection => 'Save changes';
 
   @override
   String get food_quantity_nutrition_unavailable =>
@@ -2902,4 +2883,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get food_quantity_increase_weight => 'Increase weight per serving';
+
+  @override
+  String get food_selection_collapse => 'Collapse selected items';
+
+  @override
+  String get food_quantity_edit_amount => 'Edit amount';
+
+  @override
+  String food_quantity_nutrition_for_amount(Object amount, Object unit) {
+    return 'Nutrition for $amount $unit';
+  }
+
+  @override
+  String food_selection_items_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
 }
