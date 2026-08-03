@@ -126,7 +126,7 @@ GoRouter createAppRouter({
         path: '/${RouteNames.preview}',
         name: RouteNames.preview,
         builder: (context, state) =>
-            LoadingScreen(queryParameters: state.uri.queryParameters),
+            LoadingScreen(queryParameters: queryParameters),
       ),
       GoRoute(
         path: '/${RouteNames.appOutdated}',
