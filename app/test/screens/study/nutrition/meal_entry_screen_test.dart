@@ -153,10 +153,12 @@ class _TrackingNutritionFoodRepository extends FakeNutritionFoodRepository {
   _TrackingNutritionFoodRepository({
     required this.todayUpdateCount,
     this.failuresBeforeSuccess = 0,
+    this.failTemplateSave = false,
   });
 
   final int todayUpdateCount;
   final int failuresBeforeSuccess;
+  final bool failTemplateSave;
   int mutationCalls = 0;
   final List<String?> mutationIds = [];
   final List<int?> propagatedStudyDays = [];
@@ -173,6 +175,9 @@ class _TrackingNutritionFoodRepository extends FakeNutritionFoodRepository {
     String? expectedVersionId,
   }) {
     savedTemplateTypes.add(food.entryType);
+    if (failTemplateSave) {
+      throw StateError('template save failure');
+    }
     return super.saveTemplate(
       subjectId: subjectId,
       name: name,
@@ -241,9 +246,13 @@ _historicalEditingSetup() {
 Future<_TrackingNutritionFoodRepository> _openValidNewHistoricalMeal(
   WidgetTester tester, {
   ValueChanged<MealLog?>? onResult,
+  bool failTemplateSave = false,
 }) async {
   final setup = _historicalEditingSetup();
-  final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 0);
+  final repository = _TrackingNutritionFoodRepository(
+    todayUpdateCount: 0,
+    failTemplateSave: failTemplateSave,
+  );
   await openMealEntry(
     tester,
     null,
@@ -499,6 +508,33 @@ void main() {
     expect(repository.savedTemplateTypes, [FoodEntryType.meal]);
     expect(result?.foods.single.name, 'Historical toast');
   });
+
+  testWidgets(
+    'historical new meal reusable save failure keeps editor open until opt-out',
+    (tester) async {
+      MealLog? result;
+      final repository = await _openValidNewHistoricalMeal(
+        tester,
+        failTemplateSave: true,
+        onResult: (value) => result = value,
+      );
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Done'));
+      await tester.pumpAndSettle();
+
+      expect(repository.savedTemplateTypes, [FoodEntryType.meal]);
+      expect(result, isNull);
+      expect(find.byType(MealEntryScreen), findsOneWidget);
+      expect(find.text('Could not save results'), findsOneWidget);
+
+      await tester.tap(find.text('Save to My items for future use'));
+      await tester.tap(find.widgetWithText(FilledButton, 'Done'));
+      await tester.pumpAndSettle();
+
+      expect(repository.savedTemplateTypes, [FoodEntryType.meal]);
+      expect(result?.foods.single.name, 'Historical toast');
+    },
+  );
 
   testWidgets('historical new meal opt-out skips reusable template', (
     tester,
@@ -1268,7 +1304,7 @@ void main() {
       );
       expect(
         find.textContaining(
-          'Entries in the current study day were not updated',
+          'Matching entries in the current study day were not updated',
         ),
         findsOneWidget,
       );
@@ -1352,38 +1388,47 @@ void main() {
     },
   );
 
-  testWidgets(
-    'current-day draft in another task and period shows propagation option',
-    (tester) async {
-      final setup = _historicalEditingSetup();
-      final subject = setup.appState.activeSubject!;
-      final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
-      await NutritionRecallAutoSaveManager().saveRecall(
-        recall: _recallWithFoods([testFood()], studyDay: currentStudyDay),
-        subjectId: subject.id,
-        taskId: 'other-task',
-        interventionId: 'other-intervention',
-        periodId: 'other-period',
-        studyDaySnapshot: currentStudyDay,
-      );
+  testWidgets('draft-only reusable food opt-in reports current-day propagation', (
+    tester,
+  ) async {
+    final setup = _historicalEditingSetup();
+    final subject = setup.appState.activeSubject!;
+    final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
+    await NutritionRecallAutoSaveManager().saveRecall(
+      recall: _recallWithFoods([testFood()], studyDay: currentStudyDay),
+      subjectId: subject.id,
+      taskId: 'other-task',
+      interventionId: 'other-intervention',
+      periodId: 'other-period',
+      studyDaySnapshot: currentStudyDay,
+    );
+    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 0);
 
-      await openMealEntry(
-        tester,
-        editableMeal(),
-        historicalTarget: setup.target,
-        appState: setup.appState,
-      );
-      await tester.tap(find.byTooltip('More options'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Edit reusable food'));
-      await tester.pumpAndSettle();
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit reusable food'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.text('Also update matching entries in current study day'),
+    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.text('Also update matching entries in current study day'),
-        findsOneWidget,
-      );
-    },
-  );
+    expect(repository.propagatedStudyDays, [currentStudyDay]);
+    expect(
+      find.text(
+        'Reusable item updated. Matching entries in the current study day were also updated.',
+      ),
+      findsOneWidget,
+    );
+  });
 
   testWidgets(
     'nested and legacy current-day records do not show propagation option',
@@ -1462,7 +1507,7 @@ void main() {
       expect(repository.submittedSnapshot!.servingSizeGrams, 80);
       expect(
         find.text(
-          'Reusable item updated for the selected entry. Entries in the current study day were not updated.',
+          'Reusable item updated. Matching entries in the current study day were not updated.',
         ),
         findsOneWidget,
       );
@@ -1553,6 +1598,12 @@ void main() {
       );
       expect(find.text('Updated fruit bowl'), findsOneWidget);
       expect(find.text('Individual apple'), findsOneWidget);
+      expect(
+        find.text(
+          'Reusable item updated. Matching entries in the current study day were not updated.',
+        ),
+        findsOneWidget,
+      );
 
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pumpAndSettle();
@@ -1572,7 +1623,7 @@ void main() {
     },
   );
 
-  testWidgets('historical composite propagation forwards current study day', (
+  testWidgets('draft-only composite opt-in reports current-day propagation', (
     tester,
   ) async {
     final setup = _historicalEditingSetup();
@@ -1581,15 +1632,15 @@ void main() {
     final currentComposite = FoodEntry.fromJson(
       _mealWithCompositeDefinition().foods.first.toJson(),
     )..id = 'current-composite-entry';
-    subject.progress.add(
-      _progressWithRecall(
-        _recallWithFoods([currentComposite], studyDay: currentStudyDay),
-        taskId: 'other-task',
-        periodId: 'other-period',
-        completedAt: DateTime.now().toUtc(),
-      ),
+    await NutritionRecallAutoSaveManager().saveRecall(
+      recall: _recallWithFoods([currentComposite], studyDay: currentStudyDay),
+      subjectId: subject.id,
+      taskId: 'other-task',
+      interventionId: 'other-intervention',
+      periodId: 'other-period',
+      studyDaySnapshot: currentStudyDay,
     );
-    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 1);
+    final repository = _TrackingNutritionFoodRepository(todayUpdateCount: 0);
 
     await openMealEntry(
       tester,
@@ -1609,6 +1660,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repository.propagatedStudyDays, [currentStudyDay]);
+    expect(
+      find.text(
+        'Reusable item updated. Matching entries in the current study day were also updated.',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('historical composite retry reuses its mutation id', (
@@ -1668,7 +1725,7 @@ void main() {
     expect(find.text('This study day is no longer editable.'), findsOneWidget);
   });
 
-  testWidgets('opted-in reusable edit reports zero current-day matches', (
+  testWidgets('opted-in reusable edit ignores incomplete server count', (
     tester,
   ) async {
     final setup = _historicalEditingSetup();
@@ -1705,7 +1762,7 @@ void main() {
     expect(repository.propagatedStudyDays, [currentStudyDay]);
     expect(
       find.text(
-        'Reusable item updated for the selected entry. No matching entries were found in the current study day.',
+        'Reusable item updated. Matching entries in the current study day were also updated.',
       ),
       findsOneWidget,
     );

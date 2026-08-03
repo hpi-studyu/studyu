@@ -2864,45 +2864,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Element und den ausgewählten historischen Eintrag. Falls passende Einträge im aktuellen Studientag vorhanden sind, können Sie diese bei Bedarf ebenfalls aktualisieren. Die Portionsanzahl des ausgewählten Eintrags bleibt erhalten.';
 
   @override
-  String food_definition_updated_without_current_day(int historicalCount) {
-    String _temp0 = intl.Intl.pluralLogic(
-      historicalCount,
-      locale: localeName,
-      other: '$historicalCount ausgewählte Einträge',
-      one: 'den ausgewählten Eintrag',
-    );
-    return 'Das wiederverwendbare Element wurde für $_temp0 aktualisiert. Einträge im aktuellen Studientag wurden nicht aktualisiert.';
-  }
-
-  @override
-  String food_definition_updated_no_today(int historicalCount) {
-    String _temp0 = intl.Intl.pluralLogic(
-      historicalCount,
-      locale: localeName,
-      other: '$historicalCount ausgewählte Einträge',
-      one: 'den ausgewählten Eintrag',
-    );
-    return 'Das wiederverwendbare Element wurde für $_temp0 aktualisiert. Im aktuellen Studientag wurden keine passenden Einträge gefunden.';
-  }
-
-  @override
-  String food_definition_updated_today(int historicalCount, int todayCount) {
-    String _temp0 = intl.Intl.pluralLogic(
-      historicalCount,
-      locale: localeName,
-      other: '$historicalCount ausgewählte Einträge',
-      one: 'den ausgewählten Eintrag',
-    );
-    String _temp1 = intl.Intl.pluralLogic(
-      todayCount,
-      locale: localeName,
-      other: '$todayCount passende Einträge im aktuellen Studientag',
-      one: '1 passenden Eintrag im aktuellen Studientag',
-    );
-    return 'Das wiederverwendbare Element wurde für $_temp0 und $_temp1 aktualisiert.';
-  }
-
-  @override
   String get nutrition_statistics_empty =>
       'Noch keine Ernährungsdaten verfügbar.';
 
@@ -2952,4 +2913,12 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get open_food_facts_attribution_launch_error =>
       'Die Nutzungsbedingungen von Open Food Facts konnten nicht geöffnet werden.';
+
+  @override
+  String get food_definition_updated_current_day_opt_out =>
+      'Das wiederverwendbare Element wurde aktualisiert. Passende Einträge im aktuellen Studientag wurden nicht aktualisiert.';
+
+  @override
+  String get food_definition_updated_current_day_opt_in =>
+      'Das wiederverwendbare Element wurde aktualisiert. Passende Einträge im aktuellen Studientag wurden ebenfalls aktualisiert.';
 }

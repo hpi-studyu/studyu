@@ -301,18 +301,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           entryId: existingFood.id,
         );
         if (mounted) {
-          final message = !_propagateToCurrentStudyDay
-              ? l10n.food_definition_updated_without_current_day(
-                  result.selectedHistoricalUpdateCount,
-                )
-              : result.todayUpdateCount == 0
-              ? l10n.food_definition_updated_no_today(
-                  result.selectedHistoricalUpdateCount,
-                )
-              : l10n.food_definition_updated_today(
-                  result.selectedHistoricalUpdateCount,
-                  result.todayUpdateCount,
-                );
+          final message = _propagateToCurrentStudyDay
+              ? l10n.food_definition_updated_current_day_opt_in
+              : l10n.food_definition_updated_current_day_opt_out;
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(message)));

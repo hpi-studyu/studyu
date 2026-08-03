@@ -1137,33 +1137,6 @@
   "historical_edit_expired": "Dieser Studientag kann nicht mehr bearbeitet werden.",
   "edit_food_definition": "Wiederverwendbares Lebensmittel bearbeiten",
   "food_definition_edit_helper": "Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Element und den ausgewählten historischen Eintrag. Falls passende Einträge im aktuellen Studientag vorhanden sind, können Sie diese bei Bedarf ebenfalls aktualisieren. Die Portionsanzahl des ausgewählten Eintrags bleibt erhalten.",
-  "food_definition_updated_without_current_day": "Das wiederverwendbare Element wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} aktualisiert. Einträge im aktuellen Studientag wurden nicht aktualisiert.",
-  "@food_definition_updated_without_current_day": {
-    "placeholders": {
-      "historicalCount": {
-        "type": "int"
-      }
-    }
-  },
-  "food_definition_updated_no_today": "Das wiederverwendbare Element wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} aktualisiert. Im aktuellen Studientag wurden keine passenden Einträge gefunden.",
-  "@food_definition_updated_no_today": {
-    "placeholders": {
-      "historicalCount": {
-        "type": "int"
-      }
-    }
-  },
-  "food_definition_updated_today": "Das wiederverwendbare Element wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} und {todayCount, plural, =1 {1 passenden Eintrag im aktuellen Studientag} other {{todayCount} passende Einträge im aktuellen Studientag}} aktualisiert.",
-  "@food_definition_updated_today": {
-    "placeholders": {
-      "historicalCount": {
-        "type": "int"
-      },
-      "todayCount": {
-        "type": "int"
-      }
-    }
-  },
   "nutrition_statistics_empty": "Noch keine Ernährungsdaten verfügbar.",
   "nutrition_editable": "Bearbeitbar",
   "nutrition_read_only": "Nur lesen",
@@ -1178,5 +1151,7 @@
   "grams_per_serving": "{grams} g pro Portion",
   "details": "Details",
   "open_food_facts_attribution": "(c) Mitwirkende von Open Food Facts",
-  "open_food_facts_attribution_launch_error": "Die Nutzungsbedingungen von Open Food Facts konnten nicht geöffnet werden."
+  "open_food_facts_attribution_launch_error": "Die Nutzungsbedingungen von Open Food Facts konnten nicht geöffnet werden.",
+  "food_definition_updated_current_day_opt_out": "Das wiederverwendbare Element wurde aktualisiert. Passende Einträge im aktuellen Studientag wurden nicht aktualisiert.",
+  "food_definition_updated_current_day_opt_in": "Das wiederverwendbare Element wurde aktualisiert. Passende Einträge im aktuellen Studientag wurden ebenfalls aktualisiert."
 }

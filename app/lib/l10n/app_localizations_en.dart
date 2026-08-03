@@ -2832,45 +2832,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Serving description, weight, conversions, and nutrition update the reusable item and selected historical entry. You can also update matching entries in the current study day when available. Selected entry keeps its serving count.';
 
   @override
-  String food_definition_updated_without_current_day(int historicalCount) {
-    String _temp0 = intl.Intl.pluralLogic(
-      historicalCount,
-      locale: localeName,
-      other: '$historicalCount selected entries',
-      one: 'the selected entry',
-    );
-    return 'Reusable item updated for $_temp0. Entries in the current study day were not updated.';
-  }
-
-  @override
-  String food_definition_updated_no_today(int historicalCount) {
-    String _temp0 = intl.Intl.pluralLogic(
-      historicalCount,
-      locale: localeName,
-      other: '$historicalCount selected entries',
-      one: 'the selected entry',
-    );
-    return 'Reusable item updated for $_temp0. No matching entries were found in the current study day.';
-  }
-
-  @override
-  String food_definition_updated_today(int historicalCount, int todayCount) {
-    String _temp0 = intl.Intl.pluralLogic(
-      historicalCount,
-      locale: localeName,
-      other: '$historicalCount selected entries',
-      one: 'the selected entry',
-    );
-    String _temp1 = intl.Intl.pluralLogic(
-      todayCount,
-      locale: localeName,
-      other: '$todayCount matching entries in the current study day',
-      one: '1 matching entry in the current study day',
-    );
-    return 'Reusable item updated for $_temp0 and $_temp1.';
-  }
-
-  @override
   String get nutrition_statistics_empty =>
       'No nutrition data is available yet.';
 
@@ -2919,4 +2880,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get open_food_facts_attribution_launch_error =>
       'Could not open the Open Food Facts terms of use.';
+
+  @override
+  String get food_definition_updated_current_day_opt_out =>
+      'Reusable item updated. Matching entries in the current study day were not updated.';
+
+  @override
+  String get food_definition_updated_current_day_opt_in =>
+      'Reusable item updated. Matching entries in the current study day were also updated.';
 }

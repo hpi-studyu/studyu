@@ -475,18 +475,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         _meal.foods[index] = updated;
       });
       _compositeMutationIds.remove(existingMeal.id);
-      final message = !_propagateToCurrentStudyDay
-          ? l10n.food_definition_updated_without_current_day(
-              result.selectedHistoricalUpdateCount,
-            )
-          : result.todayUpdateCount == 0
-          ? l10n.food_definition_updated_no_today(
-              result.selectedHistoricalUpdateCount,
-            )
-          : l10n.food_definition_updated_today(
-              result.selectedHistoricalUpdateCount,
-              result.todayUpdateCount,
-            );
+      final message = _propagateToCurrentStudyDay
+          ? l10n.food_definition_updated_current_day_opt_in
+          : l10n.food_definition_updated_current_day_opt_out;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
@@ -745,6 +736,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
             context,
           ).showSnackBar(SnackBar(content: Text(l10n.could_not_save_results)));
         }
+        return;
       }
     }
     _pop(SavedMealEntryResult(_meal, definitionMutated: _definitionMutated));

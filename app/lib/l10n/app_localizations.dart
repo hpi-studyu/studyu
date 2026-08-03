@@ -5087,24 +5087,6 @@ abstract class AppLocalizations {
   /// **'Serving description, weight, conversions, and nutrition update the reusable item and selected historical entry. You can also update matching entries in the current study day when available. Selected entry keeps its serving count.'**
   String get food_definition_edit_helper;
 
-  /// No description provided for @food_definition_updated_without_current_day.
-  ///
-  /// In en, this message translates to:
-  /// **'Reusable item updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. Entries in the current study day were not updated.'**
-  String food_definition_updated_without_current_day(int historicalCount);
-
-  /// No description provided for @food_definition_updated_no_today.
-  ///
-  /// In en, this message translates to:
-  /// **'Reusable item updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. No matching entries were found in the current study day.'**
-  String food_definition_updated_no_today(int historicalCount);
-
-  /// No description provided for @food_definition_updated_today.
-  ///
-  /// In en, this message translates to:
-  /// **'Reusable item updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}} and {todayCount, plural, =1 {1 matching entry in the current study day} other {{todayCount} matching entries in the current study day}}.'**
-  String food_definition_updated_today(int historicalCount, int todayCount);
-
   /// No description provided for @nutrition_statistics_empty.
   ///
   /// In en, this message translates to:
@@ -5188,6 +5170,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open the Open Food Facts terms of use.'**
   String get open_food_facts_attribution_launch_error;
+
+  /// No description provided for @food_definition_updated_current_day_opt_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable item updated. Matching entries in the current study day were not updated.'**
+  String get food_definition_updated_current_day_opt_out;
+
+  /// No description provided for @food_definition_updated_current_day_opt_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable item updated. Matching entries in the current study day were also updated.'**
+  String get food_definition_updated_current_day_opt_in;
 }
 
 class _AppLocalizationsDelegate
