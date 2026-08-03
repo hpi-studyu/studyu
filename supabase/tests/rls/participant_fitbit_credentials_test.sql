@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(9);
+SELECT plan(12);
 
 SELECT tests.create_supabase_user('fitbit_owner', 'fitbit_owner@test.local');
 SELECT tests.create_supabase_user('fitbit_other', 'fitbit_other@test.local');
@@ -106,7 +106,38 @@ SELECT lives_ok(
   'other user update is filtered by RLS'
 );
 
+SELECT throws_ok(
+  $$
+    INSERT INTO public.participant_fitbit_credentials (user_id, study_id, fitbit_credentials)
+    VALUES (
+      tests.get_supabase_uid('fitbit_owner'),
+      (SELECT id FROM public.study WHERE title = 'Study: participant fitbit credentials'),
+      '{"userID":"other","fitbitAccessToken":"should-not-insert","fitbitRefreshToken":"refresh-other"}'
+    )
+  $$,
+  'new row violates row-level security policy for table "participant_fitbit_credentials"',
+  'other user cannot insert a row for owner user_id'
+);
+
+SELECT lives_ok(
+  $$
+    DELETE FROM public.participant_fitbit_credentials
+    WHERE user_id = tests.get_supabase_uid('fitbit_owner')
+  $$,
+  'other user delete is filtered by RLS'
+);
+
 SELECT tests.authenticate_as('fitbit_owner');
+
+SELECT is(
+  (
+    SELECT count(*)
+    FROM public.participant_fitbit_credentials
+    WHERE user_id = tests.get_supabase_uid('fitbit_owner')
+  ),
+  1::bigint,
+  'owner row remains after other user attempted delete'
+);
 
 SELECT is(
   (

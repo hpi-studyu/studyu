@@ -11,9 +11,21 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Cache {
   static bool isSynchronizing = false;
   static const _scopedCachePrefix = '${cacheSubjectKey}_';
+  static Future<bool> Function(String) _containsKey = SecureStorage.containsKey;
+  static Future<String?> Function(String) _readValue = SecureStorage.read;
+  static Future<void> Function(String, String) _writeValue =
+      SecureStorage.write;
+  static Future<void> Function(String) _deleteValue = SecureStorage.delete;
+  static Future<Map<String, String>> Function() _readAllValues =
+      SecureStorage.readAll;
+  static String? Function() _currentUserIdGetter = _defaultCurrentUserId;
+  static Future<String?> Function() _activeSubjectIdGetter = getActiveSubjectId;
 
   static String _scopedCacheKey(String userId, String subjectId) =>
       '$_scopedCachePrefix${userId}_$subjectId';
+
+  static String? _defaultCurrentUserId() =>
+      Supabase.instance.client.auth.currentUser?.id;
 
   static Future<String?> _preferredCacheKey({
     StudySubject? subject,
@@ -24,10 +36,55 @@ class Cache {
       return _scopedCacheKey(targetSubject.userId, targetSubject.id);
     }
 
-    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
-    final activeSubjectId = await getActiveSubjectId();
+    final currentUserId = _currentUserIdGetter();
+    final activeSubjectId = await _activeSubjectIdGetter();
     if (currentUserId == null || activeSubjectId == null) return null;
     return _scopedCacheKey(currentUserId, activeSubjectId);
+  }
+
+  static ({String userId, String subjectId})? _expectedCacheIdentity({
+    StudySubject? subject,
+    StudySubject? backupSubject,
+    String? currentUserId,
+    String? activeSubjectId,
+  }) {
+    final targetSubject = subject ?? backupSubject;
+    if (targetSubject != null) {
+      return (userId: targetSubject.userId, subjectId: targetSubject.id);
+    }
+    if (currentUserId != null && activeSubjectId != null) {
+      return (userId: currentUserId, subjectId: activeSubjectId);
+    }
+    return null;
+  }
+
+  static ({String? userId, String? subjectId}) _extractCachedIdentity(
+    Map<String, dynamic> cachedSubject,
+  ) => (
+    userId: cachedSubject['user_id'] as String?,
+    subjectId: cachedSubject['id'] as String?,
+  );
+
+  static void _validateCachedSubjectIdentity(
+    Map<String, dynamic> cachedSubject, {
+    StudySubject? backupSubject,
+  }) {
+    final identity = _extractCachedIdentity(cachedSubject);
+    final currentUserId = _currentUserIdGetter();
+
+    if (backupSubject != null) {
+      if (identity.userId != backupSubject.userId ||
+          identity.subjectId != backupSubject.id) {
+        throw Exception('Cached subject does not match remote subject');
+      }
+      return;
+    }
+
+    if (currentUserId != null &&
+        identity.userId != null &&
+        identity.userId != currentUserId) {
+      throw Exception('Cached subject belongs to a different user');
+    }
   }
 
   static Future<String?> _readCachedSubjectString({
@@ -38,13 +95,50 @@ class Cache {
       subject: subject,
       backupSubject: backupSubject,
     );
-    if (scopedKey != null && await SecureStorage.containsKey(scopedKey)) {
-      return await SecureStorage.read(scopedKey);
+    if (scopedKey != null && await _containsKey(scopedKey)) {
+      return await _readValue(scopedKey);
     }
-    if (await SecureStorage.containsKey(cacheSubjectKey)) {
-      return await SecureStorage.read(cacheSubjectKey);
+
+    if (!await _containsKey(cacheSubjectKey)) {
+      return null;
     }
-    return null;
+
+    final legacyCache = await _readValue(cacheSubjectKey);
+    if (legacyCache == null) return null;
+
+    try {
+      final cachedSubject = jsonDecode(legacyCache) as Map<String, dynamic>;
+      final expectedIdentity = _expectedCacheIdentity(
+        subject: subject,
+        backupSubject: backupSubject,
+        currentUserId: _currentUserIdGetter(),
+        activeSubjectId: await _activeSubjectIdGetter(),
+      );
+
+      if (expectedIdentity != null) {
+        final actualIdentity = _extractCachedIdentity(cachedSubject);
+        final matchesExpected =
+            actualIdentity.userId == expectedIdentity.userId &&
+            actualIdentity.subjectId == expectedIdentity.subjectId;
+        if (!matchesExpected) {
+          await _deleteValue(cacheSubjectKey);
+          return null;
+        }
+
+        final migratedKey = _scopedCacheKey(
+          expectedIdentity.userId,
+          expectedIdentity.subjectId,
+        );
+        await _writeValue(migratedKey, legacyCache);
+        await _deleteValue(cacheSubjectKey);
+      }
+
+      return legacyCache;
+    } catch (e) {
+      StudyULogger.warning("Failed to parse legacy cached subject: $e");
+      await _deleteValue(cacheSubjectKey);
+      return null;
+    }
   }
 
   static Future<StudySubject> _decodeCachedSubject(
@@ -52,28 +146,13 @@ class Cache {
     StudySubject? backupSubject,
   }) async {
     final cachedSubject = jsonDecode(cachedSubjectStr) as Map<String, dynamic>;
-    final cachedUserId = cachedSubject['user_id'] as String?;
-    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
-
-    if (currentUserId != null &&
-        cachedUserId != null &&
-        cachedUserId != currentUserId) {
-      throw Exception('Cached subject belongs to a different user');
-    }
+    _validateCachedSubjectIdentity(cachedSubject, backupSubject: backupSubject);
 
     try {
       return StudySubject.fromJson(cachedSubject);
     } catch (e) {
       StudyULogger.warning("Failed to parse cached subject: $cachedSubjectStr");
       if (backupSubject != null) {
-        if (backupSubject.id != cachedSubject['id']) {
-          throw Exception("Cached subject ID does not match remote subject ID");
-        }
-        if (backupSubject.userId != cachedSubject['user_id']) {
-          throw Exception(
-            "Cached subject user does not match remote subject user",
-          );
-        }
         final cachedProgress = (cachedSubject['progress'] as List?)
             ?.map((e) => SubjectProgress.fromJson(e as Map<String, dynamic>))
             .toList();
@@ -88,9 +167,9 @@ class Cache {
     // debugPrint("Store subject in cache");
     if (subject == null) return;
     final scopedKey = _scopedCacheKey(subject.userId, subject.id);
-    await SecureStorage.write(scopedKey, jsonEncode(subject.toFullJson()));
-    if (await SecureStorage.containsKey(cacheSubjectKey)) {
-      await SecureStorage.delete(cacheSubjectKey);
+    await _writeValue(scopedKey, jsonEncode(subject.toFullJson()));
+    if (await _containsKey(cacheSubjectKey)) {
+      await _deleteValue(cacheSubjectKey);
     }
     assert(subject == (await loadSubject()));
   }
@@ -116,8 +195,8 @@ class Cache {
 
   static Future<StudyUAnalytics?> loadAnalytics() async {
     try {
-      if (await SecureStorage.containsKey(StudyUAnalytics.keyStudyUAnalytics)) {
-        final analyticsData = await SecureStorage.read(
+      if (await _containsKey(StudyUAnalytics.keyStudyUAnalytics)) {
+        final analyticsData = await _readValue(
           StudyUAnalytics.keyStudyUAnalytics,
         );
         if (analyticsData != null) {
@@ -138,10 +217,10 @@ class Cache {
   }
 
   static Future<void> clearAllSubjectCaches() async {
-    final storedValues = await SecureStorage.readAll();
+    final storedValues = await _readAllValues();
     for (final key in storedValues.keys) {
       if (key == cacheSubjectKey || key.startsWith(_scopedCachePrefix)) {
-        await SecureStorage.delete(key);
+        await _deleteValue(key);
       }
     }
   }
@@ -252,10 +331,8 @@ class Cache {
 
     try {
       // Check selected subject ID
-      if (await SecureStorage.containsKey('selected_study_object_id')) {
-        final selectedSubjectId = await SecureStorage.read(
-          'selected_study_object_id',
-        );
+      if (await _containsKey('selected_study_object_id')) {
+        final selectedSubjectId = await _readValue('selected_study_object_id');
         debugInfo.writeln('Selected Subject ID: $selectedSubjectId');
       } else {
         debugInfo.writeln('Selected Subject ID: NOT FOUND');
@@ -305,5 +382,85 @@ class Cache {
     }
 
     return debugInfo.toString();
+  }
+
+  @visibleForTesting
+  static Future<bool> Function(String) get debugContainsKeyForTesting =>
+      _containsKey;
+
+  @visibleForTesting
+  static set debugContainsKeyForTesting(Future<bool> Function(String) value) {
+    _containsKey = value;
+  }
+
+  @visibleForTesting
+  static Future<String?> Function(String) get debugReadValueForTesting =>
+      _readValue;
+
+  @visibleForTesting
+  static set debugReadValueForTesting(Future<String?> Function(String) value) {
+    _readValue = value;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(String, String) get debugWriteValueForTesting =>
+      _writeValue;
+
+  @visibleForTesting
+  static set debugWriteValueForTesting(
+    Future<void> Function(String, String) value,
+  ) {
+    _writeValue = value;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(String) get debugDeleteValueForTesting =>
+      _deleteValue;
+
+  @visibleForTesting
+  static set debugDeleteValueForTesting(Future<void> Function(String) value) {
+    _deleteValue = value;
+  }
+
+  @visibleForTesting
+  static Future<Map<String, String>> Function()
+  get debugReadAllValuesForTesting => _readAllValues;
+
+  @visibleForTesting
+  static set debugReadAllValuesForTesting(
+    Future<Map<String, String>> Function() value,
+  ) {
+    _readAllValues = value;
+  }
+
+  @visibleForTesting
+  static String? Function() get debugCurrentUserIdGetterForTesting =>
+      _currentUserIdGetter;
+
+  @visibleForTesting
+  static set debugCurrentUserIdGetterForTesting(String? Function() value) {
+    _currentUserIdGetter = value;
+  }
+
+  @visibleForTesting
+  static Future<String?> Function() get debugActiveSubjectIdGetterForTesting =>
+      _activeSubjectIdGetter;
+
+  @visibleForTesting
+  static set debugActiveSubjectIdGetterForTesting(
+    Future<String?> Function() value,
+  ) {
+    _activeSubjectIdGetter = value;
+  }
+
+  @visibleForTesting
+  static void debugResetTestingOverrides() {
+    _containsKey = SecureStorage.containsKey;
+    _readValue = SecureStorage.read;
+    _writeValue = SecureStorage.write;
+    _deleteValue = SecureStorage.delete;
+    _readAllValues = SecureStorage.readAll;
+    _currentUserIdGetter = _defaultCurrentUserId;
+    _activeSubjectIdGetter = getActiveSubjectId;
   }
 }

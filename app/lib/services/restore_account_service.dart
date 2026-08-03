@@ -43,7 +43,8 @@ class RestoreAccountService {
       recoverAccount;
   static Future<void> Function(String, String) _credentialStorer =
       storeFakeUserEmailAndPassword;
-  static Future<bool> Function() _participantSignInExecutor = signInParticipant;
+  static Future<bool> Function(String, String) _participantSignInExecutor =
+      _signInRecoveredParticipant;
   static Future<bool> Function(String) _subjectValidator = validateSubject;
   static Future<void> Function(String) _activeSubjectStorer =
       storeActiveSubjectId;
@@ -137,19 +138,19 @@ class RestoreAccountService {
   }
 
   @visibleForTesting
-  static Future<bool> Function() get debugParticipantSignInExecutorForTesting =>
-      _participantSignInExecutor;
+  static Future<bool> Function(String, String)
+  get debugParticipantSignInExecutorForTesting => _participantSignInExecutor;
 
   @visibleForTesting
   static set debugParticipantSignInExecutorForTesting(
-    Future<bool> Function() executor,
+    Future<bool> Function(String, String) executor,
   ) {
     _participantSignInExecutor = executor;
   }
 
   @visibleForTesting
   static void debugResetParticipantSignInExecutorForTesting() {
-    _participantSignInExecutor = signInParticipant;
+    _participantSignInExecutor = _signInRecoveredParticipant;
   }
 
   @visibleForTesting
@@ -331,6 +332,20 @@ class RestoreAccountService {
   static String? _currentUserId() =>
       Supabase.instance.client.auth.currentUser?.id;
 
+  static Future<bool> _signInRecoveredParticipant(
+    String email,
+    String password,
+  ) async {
+    try {
+      final authResponse = await Supabase.instance.client.auth
+          .signInWithPassword(email: email, password: password);
+      return authResponse.session != null;
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      return false;
+    }
+  }
+
   static Future<void> _cleanupParticipantStateForRecovery() async {
     clearCache();
     await _activeSubjectClearer();
@@ -433,15 +448,24 @@ class RestoreAccountService {
         return result;
       }
 
-      await _participantStateCleanup();
+      final recoveredEmail = result.email;
+      final recoveredPassword = result.password;
+      if (recoveredEmail == null || recoveredPassword == null) {
+        StudyULogger.warning('Recovery result missing credentials');
+        return RecoveryResult(success: false, error: 'recovery_failed');
+      }
 
-      await _credentialStorer(result.email!, result.password!);
-
-      final signInResult = await _participantSignInExecutor();
+      final signInResult = await _participantSignInExecutor(
+        recoveredEmail,
+        recoveredPassword,
+      );
       if (!signInResult) {
         StudyULogger.warning('Sign in failed after recovery');
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
+
+      await _participantStateCleanup();
+      await _credentialStorer(recoveredEmail, recoveredPassword);
 
       if (result.subjectId != null) {
         final isValid = await _subjectValidator(result.subjectId!);

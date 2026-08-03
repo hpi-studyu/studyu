@@ -11,6 +11,31 @@ class FitbitHandler {
   static const String _fitbitCredentialsPrefix = 'fitbit_credentials_';
   static const String _participantFitbitTable =
       'participant_fitbit_credentials';
+  static String? Function() _currentUserIdGetter = _defaultCurrentUserId;
+  static Future<String?> Function(String) _readLocalValue = SecureStorage.read;
+  static Future<void> Function(String, String) _writeLocalValue =
+      SecureStorage.write;
+  static Future<void> Function(String) _deleteLocalValue = SecureStorage.delete;
+  static Future<bool> Function(String) _containsLocalKey =
+      SecureStorage.containsKey;
+  static Future<Map<String, String>> Function() _readAllLocalValues =
+      SecureStorage.readAll;
+  static Future<fitbitter.FitbitCredentials?> Function({
+    required String userId,
+    required String studyKey,
+  })
+  _serverCredentialsLoader = _loadCredentialsFromServer;
+  static Future<void> Function({
+    required String userId,
+    required String studyKey,
+    required Map<String, dynamic> credentialsJson,
+  })
+  _serverCredentialsUpserter = _upsertCredentialsOnServer;
+  static Future<void> Function({
+    required String userId,
+    required String studyKey,
+  })
+  _serverCredentialsDeleter = _deleteCredentialsFromServer;
 
   static String _legacyLocalKey(String studyKey) =>
       '$_fitbitCredentialsPrefix$studyKey';
@@ -18,7 +43,7 @@ class FitbitHandler {
   static String _scopedLocalKey(String userId, String studyKey) =>
       '$_fitbitCredentialsPrefix${userId}_$studyKey';
 
-  static String? _currentUserId() =>
+  static String? _defaultCurrentUserId() =>
       Supabase.instance.client.auth.currentUser?.id;
 
   @visibleForTesting
@@ -47,105 +72,119 @@ class FitbitHandler {
   }
 
   static Future<void> deleteFitbitCredentials(String studyKey) async {
-    final userId = _currentUserId();
-    try {
-      if (userId != null) {
-        await Supabase.instance.client
-            .from(_participantFitbitTable)
-            .delete()
-            .eq('user_id', userId)
-            .eq('study_id', studyKey);
+    final userId = _currentUserIdGetter();
+    var serverDeleteFailed = false;
+    if (userId != null) {
+      try {
+        await _serverCredentialsDeleter(userId: userId, studyKey: studyKey);
+      } catch (e) {
+        serverDeleteFailed = true;
+        StudyULogger.error(
+          'Failed to delete participant Fitbit credentials from server: $e',
+        );
       }
-    } catch (e) {
-      StudyULogger.error('Failed to delete participant Fitbit credentials: $e');
     }
     await _deleteLocalCredentials(studyKey, userId: userId);
+    if (serverDeleteFailed) {
+      throw Exception('Failed to delete participant Fitbit credentials');
+    }
   }
 
   static Future<void> _storeCredentials(
     fitbitter.FitbitCredentials? credentials,
     String studyKey,
   ) async {
-    final userId = _currentUserId();
+    final userId = _currentUserIdGetter();
 
-    try {
-      if (credentials == null) {
-        if (userId != null) {
-          await Supabase.instance.client
-              .from(_participantFitbitTable)
-              .delete()
-              .eq('user_id', userId)
-              .eq('study_id', studyKey);
-        }
-        await _deleteLocalCredentials(studyKey, userId: userId);
-      } else {
-        final credentialsJson = _credentialsToJson(credentials);
-        if (userId != null) {
-          await Supabase.instance.client.from(_participantFitbitTable).upsert({
-            'user_id': userId,
-            'study_id': studyKey,
-            'fitbit_credentials': credentialsJson,
-          });
-          await SecureStorage.write(
-            _scopedLocalKey(userId, studyKey),
-            jsonEncode(credentialsJson),
-          );
-          if (await SecureStorage.containsKey(_legacyLocalKey(studyKey))) {
-            await SecureStorage.delete(_legacyLocalKey(studyKey));
-          }
-        } else {
-          await SecureStorage.write(
-            _legacyLocalKey(studyKey),
-            jsonEncode(credentialsJson),
+    if (credentials == null) {
+      if (userId != null) {
+        try {
+          await _serverCredentialsDeleter(userId: userId, studyKey: studyKey);
+        } catch (e) {
+          StudyULogger.error(
+            'Failed to delete participant Fitbit credentials from server: $e',
           );
         }
       }
-    } catch (e) {
-      StudyULogger.error('Failed to store Fitbit credentials: $e');
+      await _deleteLocalCredentials(studyKey, userId: userId);
+      return;
     }
+
+    final credentialsJson = _credentialsToJson(credentials);
+    if (userId != null) {
+      await _writeLocalValue(
+        _scopedLocalKey(userId, studyKey),
+        jsonEncode(credentialsJson),
+      );
+      if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
+        await _deleteLocalValue(_legacyLocalKey(studyKey));
+      }
+      try {
+        await _serverCredentialsUpserter(
+          userId: userId,
+          studyKey: studyKey,
+          credentialsJson: credentialsJson,
+        );
+      } catch (e) {
+        StudyULogger.error(
+          'Failed to store participant Fitbit credentials on server: $e',
+        );
+      }
+      return;
+    }
+
+    await _writeLocalValue(
+      _legacyLocalKey(studyKey),
+      jsonEncode(credentialsJson),
+    );
   }
 
   static Future<fitbitter.FitbitCredentials?> _loadCredentials(
     String studyKey,
   ) async {
-    final userId = _currentUserId();
+    final userId = _currentUserIdGetter();
 
-    try {
-      if (userId != null) {
-        final serverCredentials = await _loadCredentialsFromServer(
+    if (userId != null) {
+      try {
+        final serverCredentials = await _serverCredentialsLoader(
           userId: userId,
           studyKey: studyKey,
         );
         if (serverCredentials != null) {
-          await SecureStorage.write(
+          await _writeLocalValue(
             _scopedLocalKey(userId, studyKey),
             jsonEncode(_credentialsToJson(serverCredentials)),
           );
-          if (await SecureStorage.containsKey(_legacyLocalKey(studyKey))) {
-            await SecureStorage.delete(_legacyLocalKey(studyKey));
+          if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
+            await _deleteLocalValue(_legacyLocalKey(studyKey));
           }
           return serverCredentials;
         }
-
-        final scopedString = await SecureStorage.read(
-          _scopedLocalKey(userId, studyKey),
+      } catch (e) {
+        StudyULogger.error(
+          'Failed to load participant Fitbit credentials from server: $e',
         );
-        if (scopedString != null) {
-          final jsonData = jsonDecode(scopedString) as Map<String, dynamic>;
-          return _credentialsFromJson(jsonData);
-        }
       }
 
-      final legacyString = await SecureStorage.read(_legacyLocalKey(studyKey));
-      if (legacyString != null) {
-        if (shouldDiscardLegacyCredentialsForAuthenticatedUser(userId)) {
-          await SecureStorage.delete(_legacyLocalKey(studyKey));
-          StudyULogger.warning(
-            'Discarded legacy Fitbit credentials for $studyKey after authenticated load because ownership cannot be verified.',
-          );
-          return null;
-        }
+      final scopedString = await _readLocalValue(
+        _scopedLocalKey(userId, studyKey),
+      );
+      if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
+        await _deleteLocalValue(_legacyLocalKey(studyKey));
+        StudyULogger.warning(
+          'Discarded legacy Fitbit credentials for $studyKey after authenticated load because ownership cannot be verified.',
+        );
+      }
+      if (scopedString != null) {
+        final jsonData = jsonDecode(scopedString) as Map<String, dynamic>;
+        return _credentialsFromJson(jsonData);
+      }
+      return null;
+    }
 
+    try {
+      final legacyString = await _readLocalValue(_legacyLocalKey(studyKey));
+      if (legacyString != null) {
         final jsonData = jsonDecode(legacyString) as Map<String, dynamic>;
         return _credentialsFromJson(jsonData);
       }
@@ -174,28 +213,51 @@ class FitbitHandler {
     return _credentialsFromJson(jsonData);
   }
 
+  static Future<void> _upsertCredentialsOnServer({
+    required String userId,
+    required String studyKey,
+    required Map<String, dynamic> credentialsJson,
+  }) async {
+    await Supabase.instance.client.from(_participantFitbitTable).upsert({
+      'user_id': userId,
+      'study_id': studyKey,
+      'fitbit_credentials': credentialsJson,
+    });
+  }
+
+  static Future<void> _deleteCredentialsFromServer({
+    required String userId,
+    required String studyKey,
+  }) async {
+    await Supabase.instance.client
+        .from(_participantFitbitTable)
+        .delete()
+        .eq('user_id', userId)
+        .eq('study_id', studyKey);
+  }
+
   static Future<void> _deleteLocalCredentials(
     String studyKey, {
     String? userId,
   }) async {
     final keysToDelete = <String>{_legacyLocalKey(studyKey)};
-    final effectiveUserId = userId ?? _currentUserId();
+    final effectiveUserId = userId ?? _currentUserIdGetter();
     if (effectiveUserId != null) {
       keysToDelete.add(_scopedLocalKey(effectiveUserId, studyKey));
     }
 
     for (final key in keysToDelete) {
-      if (await SecureStorage.containsKey(key)) {
-        await SecureStorage.delete(key);
+      if (await _containsLocalKey(key)) {
+        await _deleteLocalValue(key);
       }
     }
   }
 
   static Future<void> clearLocalFallbackCredentials() async {
-    final storedValues = await SecureStorage.readAll();
+    final storedValues = await _readAllLocalValues();
     for (final key in storedValues.keys) {
       if (key.startsWith(_fitbitCredentialsPrefix)) {
-        await SecureStorage.delete(key);
+        await _deleteLocalValue(key);
       }
     }
   }
@@ -575,5 +637,146 @@ class FitbitHandler {
       subject,
       question,
     );
+  }
+
+  @visibleForTesting
+  static Future<void> debugStoreCredentialsForTesting(
+    fitbitter.FitbitCredentials? credentials,
+    String studyKey,
+  ) => _storeCredentials(credentials, studyKey);
+
+  @visibleForTesting
+  static Future<fitbitter.FitbitCredentials?> debugLoadCredentialsForTesting(
+    String studyKey,
+  ) => _loadCredentials(studyKey);
+
+  @visibleForTesting
+  static String? Function() get debugCurrentUserIdGetterForTesting =>
+      _currentUserIdGetter;
+
+  @visibleForTesting
+  static set debugCurrentUserIdGetterForTesting(String? Function() value) {
+    _currentUserIdGetter = value;
+  }
+
+  @visibleForTesting
+  static Future<String?> Function(String) get debugReadLocalValueForTesting =>
+      _readLocalValue;
+
+  @visibleForTesting
+  static set debugReadLocalValueForTesting(
+    Future<String?> Function(String) value,
+  ) {
+    _readLocalValue = value;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(String, String)
+  get debugWriteLocalValueForTesting => _writeLocalValue;
+
+  @visibleForTesting
+  static set debugWriteLocalValueForTesting(
+    Future<void> Function(String, String) value,
+  ) {
+    _writeLocalValue = value;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(String) get debugDeleteLocalValueForTesting =>
+      _deleteLocalValue;
+
+  @visibleForTesting
+  static set debugDeleteLocalValueForTesting(
+    Future<void> Function(String) value,
+  ) {
+    _deleteLocalValue = value;
+  }
+
+  @visibleForTesting
+  static Future<bool> Function(String) get debugContainsLocalKeyForTesting =>
+      _containsLocalKey;
+
+  @visibleForTesting
+  static set debugContainsLocalKeyForTesting(
+    Future<bool> Function(String) value,
+  ) {
+    _containsLocalKey = value;
+  }
+
+  @visibleForTesting
+  static Future<Map<String, String>> Function()
+  get debugReadAllLocalValuesForTesting => _readAllLocalValues;
+
+  @visibleForTesting
+  static set debugReadAllLocalValuesForTesting(
+    Future<Map<String, String>> Function() value,
+  ) {
+    _readAllLocalValues = value;
+  }
+
+  @visibleForTesting
+  static Future<fitbitter.FitbitCredentials?> Function({
+    required String userId,
+    required String studyKey,
+  })
+  get debugServerCredentialsLoaderForTesting => _serverCredentialsLoader;
+
+  @visibleForTesting
+  static set debugServerCredentialsLoaderForTesting(
+    Future<fitbitter.FitbitCredentials?> Function({
+      required String userId,
+      required String studyKey,
+    })
+    value,
+  ) {
+    _serverCredentialsLoader = value;
+  }
+
+  @visibleForTesting
+  static Future<void> Function({
+    required String userId,
+    required String studyKey,
+    required Map<String, dynamic> credentialsJson,
+  })
+  get debugServerCredentialsUpserterForTesting => _serverCredentialsUpserter;
+
+  @visibleForTesting
+  static set debugServerCredentialsUpserterForTesting(
+    Future<void> Function({
+      required String userId,
+      required String studyKey,
+      required Map<String, dynamic> credentialsJson,
+    })
+    value,
+  ) {
+    _serverCredentialsUpserter = value;
+  }
+
+  @visibleForTesting
+  static Future<void> Function({
+    required String userId,
+    required String studyKey,
+  })
+  get debugServerCredentialsDeleterForTesting => _serverCredentialsDeleter;
+
+  @visibleForTesting
+  static set debugServerCredentialsDeleterForTesting(
+    Future<void> Function({required String userId, required String studyKey})
+    value,
+  ) {
+    _serverCredentialsDeleter = value;
+  }
+
+  @visibleForTesting
+  static void debugResetTestingOverrides() {
+    _currentUserIdGetter = _defaultCurrentUserId;
+    _readLocalValue = SecureStorage.read;
+    _writeLocalValue = SecureStorage.write;
+    _deleteLocalValue = SecureStorage.delete;
+    _containsLocalKey = SecureStorage.containsKey;
+    _readAllLocalValues = SecureStorage.readAll;
+    _serverCredentialsLoader = _loadCredentialsFromServer;
+    _serverCredentialsUpserter = _upsertCredentialsOnServer;
+    _serverCredentialsDeleter = _deleteCredentialsFromServer;
   }
 }

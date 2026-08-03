@@ -12,6 +12,7 @@ void main() {
       AppLanguage.debugResetLocalLanguageClearerForTesting();
       AppLanguage.debugResetCurrentUserLoaderForTesting();
       AppLanguage.debugResetLanguageSaverForTesting();
+      AppLanguage.debugResetUserSaverForTesting();
     });
 
     test(
@@ -64,5 +65,36 @@ void main() {
       expect(localLanguage, 'de');
       expect(savedLanguages, ['de']);
     });
+
+    test(
+      'changing language preserves pinned studies and study filtering',
+      () async {
+        final savedUsers = <StudyUUser>[];
+        final existingUser = StudyUUser(
+          id: 'user-1',
+          email: 'user@test.local',
+          preferences: Preferences(
+            language: 'en',
+            pinnedStudies: {'study-a'},
+            studyFiltering: {'status': 'active'},
+          ),
+        );
+
+        AppLanguage.debugHasAuthenticatedUserForTesting = () => false;
+        AppLanguage.debugCurrentUserLoaderForTesting = () async => existingUser;
+        AppLanguage.debugUserSaverForTesting = (user) async {
+          savedUsers.add(user);
+        };
+
+        await AppLanguage.debugLanguageSaverForTesting('de');
+
+        expect(savedUsers, hasLength(1));
+        expect(savedUsers.single.preferences.language, 'de');
+        expect(savedUsers.single.preferences.pinnedStudies, {'study-a'});
+        expect(savedUsers.single.preferences.studyFiltering, {
+          'status': 'active',
+        });
+      },
+    );
   });
 }

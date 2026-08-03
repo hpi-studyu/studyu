@@ -15,6 +15,7 @@ class AppLanguage extends ChangeNotifier {
   static Future<StudyUUser?> Function() _currentUserLoader =
       _loadCurrentUserFromServer;
   static Future<void> Function(String) _languageSaver = _saveLanguageToServer;
+  static Future<void> Function(StudyUUser) _userSaver = _persistUserToServer;
 
   AppLanguage(this.supportedLocales) : super() {
     fetchLocale();
@@ -86,9 +87,13 @@ class AppLanguage extends ChangeNotifier {
   }
 
   static Future<void> _saveLanguageToServer(String languageCode) async {
-    final user = await _loadCurrentUserFromServer();
+    final user = await _currentUserLoader();
     if (user == null) return;
     user.preferences.language = languageCode;
+    await _userSaver(user);
+  }
+
+  static Future<void> _persistUserToServer(StudyUUser user) async {
     await user.save(onlyUpdate: true);
   }
 
@@ -198,5 +203,19 @@ class AppLanguage extends ChangeNotifier {
   @visibleForTesting
   static void debugResetLanguageSaverForTesting() {
     _languageSaver = _saveLanguageToServer;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(StudyUUser) get debugUserSaverForTesting =>
+      _userSaver;
+
+  @visibleForTesting
+  static set debugUserSaverForTesting(Future<void> Function(StudyUUser) saver) {
+    _userSaver = saver;
+  }
+
+  @visibleForTesting
+  static void debugResetUserSaverForTesting() {
+    _userSaver = _persistUserToServer;
   }
 }
