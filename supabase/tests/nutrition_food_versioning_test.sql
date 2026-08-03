@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(90);
+SELECT plan(94);
 
 SELECT
     tests.create_supabase_user('nutrition_owner', 'nutrition_owner@studyu.health');
@@ -414,7 +414,7 @@ INSERT INTO nutrition_results VALUES (
         ),
         FALSE,
         '{"taskId":"historical-composite-task","periodId":"period-composite","interventionId":"intervention-composite","completedAt":"2026-07-15T13:00:00Z","studyDaySnapshot":4}'::jsonb,
-        5,
+        NULL,
         NULL,
         'historical-composite-entry'
     )
@@ -434,8 +434,35 @@ SELECT is(
         SELECT (response ->> 'todayUpdateCount')::integer FROM nutrition_results
         WHERE label = 'composite-historical'
     ),
-    2,
-    'composite mutation propagates all matching composite occurrences today'
+    0,
+    'null propagation skips current-day composite occurrences'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer
+        FROM public.nutrition_food_definition
+        WHERE
+            id = '20000000-0000-0000-0000-000000000002'
+            AND subject_id = '10000000-0000-0000-0000-000000000001'
+            AND library_visible = FALSE
+    ),
+    1,
+    'historical composite mutation creates missing component definition atomically'
+);
+SELECT is(
+    (
+        SELECT
+            response
+            #>> '{definition,snapshot,componentSnapshots,0,foodVersionId}'
+        FROM nutrition_results
+        WHERE label = 'composite-historical'
+    ),
+    (
+        SELECT current_version_id::text
+        FROM public.nutrition_food_definition
+        WHERE id = '20000000-0000-0000-0000-000000000002'
+    ),
+    'historical composite snapshot uses canonical component version identity'
 );
 SELECT is(
     (
@@ -508,10 +535,10 @@ SELECT is(
         WHERE
             task_id = 'current-composite-task'
             AND food ->> 'foodId' = '20000000-0000-0000-0000-000000000020'
-            AND food ->> 'name' = 'Composite new'
+            AND food ->> 'name' = 'Composite old'
     ),
     2,
-    'all current-day composite occurrences receive the new name'
+    'null propagation leaves all current-day composite names unchanged'
 );
 SELECT is(
     (
@@ -525,8 +552,8 @@ SELECT is(
             AND food #>> '{componentFoods,0,foodId}'
             = '20000000-0000-0000-0000-000000000002'
     ),
-    2,
-    'all current-day composite occurrences receive the new composition'
+    0,
+    'null propagation leaves current-day composite composition unchanged'
 );
 SELECT is(
     (
@@ -540,8 +567,8 @@ SELECT is(
             AND food #>> '{componentSnapshots,0,foodId}'
             = '20000000-0000-0000-0000-000000000002'
     ),
-    2,
-    'all current-day composites receive corresponding component snapshots'
+    0,
+    'null propagation leaves current-day component snapshots unchanged'
 );
 SELECT is(
     (
@@ -703,10 +730,10 @@ SELECT throws_ok(
     ((SELECT response FROM nutrition_results WHERE label = 'historical') #>> '{definition,currentVersionId}')::uuid,
     (SELECT response #> '{definition,snapshot}' FROM nutrition_results WHERE label = 'historical'),
     false,
-    '{"taskId":"current-task-a","periodId":"period-b","interventionId":"intervention-a","completedAt":"2026-07-16T08:00:00Z","studyDaySnapshot":5}'::jsonb,
+    '{"taskId":"historical-task","periodId":"period-a","interventionId":"intervention-a","completedAt":"2026-07-15T12:00:00Z","studyDaySnapshot":4}'::jsonb,
     6,
     NULL,
-    'current-entry-a'
+    'historical-entry'
   )$$,
     '22023',
     'historical nutrition recall is no longer editable',
@@ -800,7 +827,7 @@ SELECT throws_ok(
 );
 SELECT is(
     (SELECT count(*)::integer FROM public.nutrition_food_version),
-    4,
+    5,
     'malformed snapshot mutations roll back without adding versions'
 );
 
@@ -908,8 +935,47 @@ SELECT throws_ok(
 );
 SELECT is(
     (SELECT count(*)::integer FROM public.nutrition_food_version),
-    4,
+    5,
     'post-version target failures roll back the entire mutation'
+);
+
+SELECT throws_ok(
+    $$SELECT public.apply_nutrition_food_mutation(
+    '10000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000022',
+    '20000000-0000-0000-0000-000000000020',
+    ((SELECT response FROM nutrition_results WHERE label = 'composite-historical') #>> '{definition,currentVersionId}')::uuid,
+    jsonb_set(
+      jsonb_set(
+        jsonb_set(
+          (SELECT response #> '{definition,snapshot}' FROM nutrition_results WHERE label = 'composite-historical'),
+          '{componentFoods,0,foodId}',
+          '"20000000-0000-0000-0000-000000000022"'::jsonb
+        ),
+        '{componentSnapshots,0,foodId}',
+        '"20000000-0000-0000-0000-000000000022"'::jsonb
+      ),
+      '{componentSnapshots,0,foodVersionId}',
+      '"30000000-0000-0000-0000-000000000022"'::jsonb
+    ),
+    false,
+    '{"taskId":"missing-composite","periodId":"period-composite","interventionId":"intervention-composite","completedAt":"2026-07-15T13:00:00Z","studyDaySnapshot":4}'::jsonb,
+    NULL,
+    NULL,
+    'historical-composite-entry'
+  )$$,
+    'P0002',
+    'historical nutrition recall target is missing or ambiguous',
+    'failed historical composite mutation rolls back component setup'
+);
+SELECT is(
+    (
+        SELECT count(*)::integer
+        FROM public.nutrition_food_definition
+        WHERE id = '20000000-0000-0000-0000-000000000022'
+    ),
+    0,
+    'failed historical composite mutation leaves no invisible component definition'
 );
 
 SELECT throws_ok(

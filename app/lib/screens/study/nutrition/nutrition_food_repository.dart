@@ -137,11 +137,8 @@ class NutritionFoodRepository {
     required Map<String, dynamic> target,
     int? currentStudyDay,
     String? mutationId,
-  }) async {
-    await ensureDefinitions(
-      subjectId: subjectId,
-      foods: _validatedComponents(snapshot),
-    );
+  }) {
+    _validatedComponents(snapshot).toList();
     return _mutate(
       subjectId: subjectId,
       foodId: snapshot.foodId,

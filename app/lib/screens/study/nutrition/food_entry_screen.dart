@@ -25,6 +25,7 @@ class FoodEntryScreen extends StatefulWidget {
   final double? confidenceScore;
   final bool showSearchAction;
   final String? mealLabel;
+  final bool historicalMode;
   final NutritionRecallPersistenceTarget? historicalTarget;
   final bool editReusableDefinition;
   final bool hasCurrentStudyDayMatches;
@@ -39,6 +40,7 @@ class FoodEntryScreen extends StatefulWidget {
     this.confidenceScore,
     this.showSearchAction = true,
     this.mealLabel,
+    this.historicalMode = false,
     this.historicalTarget,
     this.editReusableDefinition = false,
     this.hasCurrentStudyDayMatches = false,
@@ -56,6 +58,7 @@ class FoodEntryScreen extends StatefulWidget {
     double? confidenceScore,
     bool showSearchAction = true,
     String? mealLabel,
+    bool historicalMode = false,
     NutritionRecallPersistenceTarget? historicalTarget,
     bool editReusableDefinition = false,
     bool hasCurrentStudyDayMatches = false,
@@ -70,6 +73,7 @@ class FoodEntryScreen extends StatefulWidget {
       confidenceScore: confidenceScore,
       showSearchAction: showSearchAction,
       mealLabel: mealLabel,
+      historicalMode: historicalMode,
       historicalTarget: historicalTarget,
       editReusableDefinition: editReusableDefinition,
       hasCurrentStudyDayMatches: hasCurrentStudyDayMatches,
@@ -112,6 +116,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       PortionEstimationMethod.householdMeasure;
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
+  bool _saveToMyItems = true;
   bool _propagateToCurrentStudyDay = false;
   late final String _initialSnapshot;
   bool _allowPop = false;
@@ -296,7 +301,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
           entryId: existingFood.id,
         );
         if (mounted) {
-          final message = result.todayUpdateCount == 0
+          final message = !_propagateToCurrentStudyDay
+              ? l10n.food_definition_updated_without_current_day(
+                  result.selectedHistoricalUpdateCount,
+                )
+              : result.todayUpdateCount == 0
               ? l10n.food_definition_updated_no_today(
                   result.selectedHistoricalUpdateCount,
                 )
@@ -323,7 +332,8 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       }
     }
 
-    if (widget.existingFood == null) {
+    if (widget.existingFood == null &&
+        (!widget.historicalMode || _saveToMyItems)) {
       if (!mounted) return;
       final userId = appState.activeSubject?.id ?? 'anonymous';
       try {
@@ -548,7 +558,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               : l10n.add_food_manually,
         ),
         actions: [
-          if (widget.showSearchAction)
+          if (widget.showSearchAction && !widget.historicalMode)
             IconButton(
               onPressed: () async {
                 final result = await Navigator.push(
@@ -627,6 +637,16 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               ),
               const SizedBox(height: 12),
             ],
+
+            if (widget.existingFood == null && widget.historicalMode)
+              CheckboxListTile(
+                value: _saveToMyItems,
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.save_to_my_items),
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (value) =>
+                    setState(() => _saveToMyItems = value ?? false),
+              ),
 
             if (widget.editReusableDefinition) ...[
               Text(

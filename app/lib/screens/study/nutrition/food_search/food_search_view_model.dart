@@ -24,14 +24,17 @@ final class FoodSearchViewModel extends ChangeNotifier {
   FoodSearchViewModel({
     OpenFoodFactsSearch? openFoodFactsSearch,
     UsdaFoodSearch? usdaFoodSearch,
+    bool? usdaConfigured,
   }) : _openFoodFactsSearch = openFoodFactsSearch,
-       _usdaFoodSearch = usdaFoodSearch;
+       _usdaFoodSearch = usdaFoodSearch,
+       _usdaConfigured = usdaConfigured;
 
   static const _debounceDuration = Duration(milliseconds: 400);
   static const _pageSize = 20;
 
   final OpenFoodFactsSearch? _openFoodFactsSearch;
   final UsdaFoodSearch? _usdaFoodSearch;
+  final bool? _usdaConfigured;
 
   Timer? _debounceTimer;
   final List<UnifiedFoodResult> _results = [];
@@ -61,6 +64,10 @@ final class FoodSearchViewModel extends ChangeNotifier {
   bool get hasSearched => _hasSearched;
   bool get hasError => _results.isEmpty && (_offFailed || _usdaFailed);
   String get activeQuery => _activeQuery;
+
+  bool get _hasUsdaProvider =>
+      _usdaFoodSearch != null ||
+      (_usdaConfigured ?? UsdaApiService.isConfigured);
 
   void search(String value) {
     _debounceTimer?.cancel();
@@ -146,10 +153,16 @@ final class FoodSearchViewModel extends ChangeNotifier {
     _results.clear();
     _notifyListeners();
 
-    await Future.wait([
+    final searches = <Future<void>>[
       _searchOpenFoodFacts(query, page: 1, generation: generation),
-      _searchUsda(query, page: 1, generation: generation),
-    ]);
+    ];
+    if (_hasUsdaProvider) {
+      searches.add(_searchUsda(query, page: 1, generation: generation));
+    } else {
+      _usdaSearched = true;
+      _usdaHasMore = false;
+    }
+    await Future.wait(searches);
 
     if (!_isCurrent(generation)) return;
     _isInitialLoading = false;
@@ -241,8 +254,8 @@ final class FoodSearchViewModel extends ChangeNotifier {
       _results.addAll(searchResult.foods.map(_unifiedUsdaResult));
       _usdaSearched = true;
       _usdaFailed = false;
-      _usdaPage = page + 1;
-      _usdaHasMore = searchResult.foods.length >= _pageSize;
+      _usdaPage = searchResult.currentPage + 1;
+      _usdaHasMore = searchResult.currentPage < searchResult.totalPages;
     } catch (error) {
       if (!_isCurrent(generation)) return;
       debugPrint('USDA error: $error');

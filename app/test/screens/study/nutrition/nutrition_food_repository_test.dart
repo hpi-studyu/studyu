@@ -48,87 +48,80 @@ void main() {
 
     expect(params['p_historical_entry_id'], 'selected-entry');
     expect(params['p_food_id'], 'food-definition');
+    expect(params['p_propagate_study_day'], 5);
     expect(result.progress, hasLength(3));
     expect(result.selectedHistoricalUpdateCount, 1);
     expect(result.todayUpdateCount, 3);
   });
 
-  test(
-    'composite mutation creates missing components without versioning existing ones',
-    () async {
-      final postedFoodIds = <String>[];
-      late Map<String, dynamic> mealParams;
-      var getCount = 0;
-      final existing = _food(
+  test('historical mutation forwards null propagation', () async {
+    late Map<String, dynamic> params;
+    final repository = NutritionFoodRepository(
+      client: _client((request) async {
+        params = jsonDecode(request.body) as Map<String, dynamic>;
+        return _jsonResponse(_mutationResponse(), request);
+      }),
+    );
+
+    await repository.mutateHistoricalDefinition(
+      subjectId: 'subject',
+      snapshot: _food(),
+      expectedVersionId: 'version-1',
+      entryId: 'selected-entry',
+      target: const {'taskId': 'task'},
+    );
+
+    expect(params['p_propagate_study_day'], isNull);
+  });
+
+  test('historical composite setup uses the mutation transaction', () async {
+    final requests = <http.BaseRequest>[];
+    late Map<String, dynamic> params;
+    final meal = _meal([
+      _food(
         id: 'existing-component',
         foodId: 'existing-definition',
         versionId: 'existing-version',
-      );
-      final missing = _food(
+      ),
+      _food(
         id: 'missing-component',
         foodId: 'missing-definition',
         versionId: 'missing-version',
-      );
-      final meal = _meal([existing, missing]);
-      final repository = NutritionFoodRepository(
-        client: _client((request) async {
-          if (request.method == 'GET') {
-            getCount++;
-            return _jsonResponse(
-              getCount == 1
-                  ? [
-                      {
-                        'id': existing.foodId,
-                        'current_version_id': existing.foodVersionId,
-                      },
-                    ]
-                  : [
-                      {
-                        'id': existing.foodVersionId,
-                        'food_id': existing.foodId,
-                      },
-                    ],
-              request,
-            );
-          }
-          final params = jsonDecode(request.body) as Map<String, dynamic>;
-          final foodId = params['p_food_id'] as String;
-          postedFoodIds.add(foodId);
-          if (foodId == meal.foodId) mealParams = params;
-          final responseFood = foodId == missing.foodId ? missing : meal;
-          return _jsonResponse(
-            _mutationResponse(
-              food: responseFood,
-              kind: foodId == meal.foodId ? 'meal' : 'food',
-            ),
-            request,
-          );
-        }),
-      );
+      ),
+    ]);
+    final repository = NutritionFoodRepository(
+      client: _client((request) async {
+        requests.add(request);
+        params = jsonDecode(request.body) as Map<String, dynamic>;
+        return _jsonResponse(
+          _mutationResponse(food: meal, kind: 'meal'),
+          request,
+        );
+      }),
+    );
 
-      await repository.mutateHistoricalDefinition(
-        subjectId: 'subject',
-        snapshot: meal,
-        expectedVersionId: meal.foodVersionId,
-        entryId: 'selected-meal',
-        target: const {'taskId': 'task'},
-        currentStudyDay: 5,
-      );
+    await repository.mutateHistoricalDefinition(
+      subjectId: 'subject',
+      snapshot: meal,
+      expectedVersionId: meal.foodVersionId,
+      entryId: 'selected-meal',
+      target: const {'taskId': 'task'},
+    );
 
-      expect(postedFoodIds, ['missing-definition', 'meal-definition']);
-      expect(
-        (mealParams['p_snapshot']
-            as Map<String, dynamic>)['componentSnapshots'],
-        hasLength(2),
-      );
-      expect(
-        ((mealParams['p_snapshot'] as Map<String, dynamic>)['componentFoods']
-                as List<dynamic>)
-            .map((component) => (component as Map<String, dynamic>)['foodId']),
-        ['existing-definition', 'missing-definition'],
-      );
-    },
-  );
+    expect(requests, hasLength(1));
+    expect(params['p_food_id'], 'meal-definition');
+    expect(params['p_propagate_study_day'], isNull);
+    expect(
+      (params['p_snapshot'] as Map<String, dynamic>)['componentSnapshots'],
+      hasLength(2),
+    );
+    expect(
+      ((params['p_snapshot'] as Map<String, dynamic>)['componentFoods']
+              as List<dynamic>)
+          .map((component) => (component as Map<String, dynamic>)['foodId']),
+      ['existing-definition', 'missing-definition'],
+    );
+  });
 
   test('creates missing entry definitions through the mutation RPC', () async {
     final requests = <http.BaseRequest>[];

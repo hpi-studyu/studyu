@@ -9,6 +9,7 @@ import 'package:studyu_app/screens/study/nutrition/food_search/food_search_view_
 import 'package:studyu_app/screens/study/nutrition/food_search_bar.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
+import 'package:studyu_app/screens/study/nutrition/open_food_facts_attribution.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart' as studyu;
 import 'package:studyu_core/core.dart';
@@ -388,6 +389,11 @@ class _FoodLibraryState extends State<FoodLibrary> {
           ),
         ),
       );
+      if (external.results.any(
+        (result) => result.source == studyu.FoodSource.openfoodfacts,
+      )) {
+        children.add(const OpenFoodFactsAttribution());
+      }
       if (external.hasError) {
         children.add(
           _FoodLibraryInlineError(

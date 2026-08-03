@@ -2829,7 +2829,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get food_definition_edit_helper =>
-      'Serving description, weight, conversions, and nutrition update the reusable food in your library and matching entries logged today. This historical entry keeps its serving count.';
+      'Serving description, weight, conversions, and nutrition update the reusable item and selected historical entry. You can also update matching entries in the current study day when available. Selected entry keeps its serving count.';
+
+  @override
+  String food_definition_updated_without_current_day(int historicalCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      historicalCount,
+      locale: localeName,
+      other: '$historicalCount selected entries',
+      one: 'the selected entry',
+    );
+    return 'Reusable item updated for $_temp0. Entries in the current study day were not updated.';
+  }
 
   @override
   String food_definition_updated_no_today(int historicalCount) {
@@ -2839,7 +2850,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$historicalCount selected entries',
       one: 'the selected entry',
     );
-    return 'Reusable food updated for $_temp0. No matching entries today.';
+    return 'Reusable item updated for $_temp0. No matching entries were found in the current study day.';
   }
 
   @override
@@ -2853,10 +2864,10 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp1 = intl.Intl.pluralLogic(
       todayCount,
       locale: localeName,
-      other: '$todayCount matching entries today',
-      one: '1 matching entry today',
+      other: '$todayCount matching entries in the current study day',
+      one: '1 matching entry in the current study day',
     );
-    return 'Reusable food updated for $_temp0 and $_temp1.';
+    return 'Reusable item updated for $_temp0 and $_temp1.';
   }
 
   @override
@@ -2901,4 +2912,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String grams_per_serving(Object grams) {
     return '$grams g per serving';
   }
+
+  @override
+  String get open_food_facts_attribution => '(c) Open Food Facts contributors';
+
+  @override
+  String get open_food_facts_attribution_launch_error =>
+      'Could not open the Open Food Facts terms of use.';
 }

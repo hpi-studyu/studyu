@@ -809,6 +809,11 @@ class _FoodSearchListView extends StatelessWidget {
                 ),
               ),
             );
+            if (combinedResults.any(
+              (result) => result.source == studyu.FoodSource.openfoodfacts,
+            )) {
+              children.add(const OpenFoodFactsAttribution());
+            }
           }
           if (errorMessage != null) {
             children.add(

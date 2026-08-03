@@ -3,6 +3,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/usda_models.dart';
+import 'package:studyu_app/screens/study/nutrition/open_food_facts_attribution.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
 
@@ -43,19 +44,6 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     }
 
     return true;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Configure OpenFoodFacts User-Agent
-    OpenFoodAPIConfiguration.userAgent = UserAgent(
-      name: 'StudyU',
-      version: '1.0',
-      system: 'Flutter',
-      url: 'https://studyu.health',
-    );
-    OpenFoodAPIConfiguration.globalLanguages = [OpenFoodFactsLanguage.ENGLISH];
   }
 
   @override
@@ -156,21 +144,22 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         return;
       }
 
-      // Not found in OpenFoodFacts, try USDA
+      // Not found in OpenFoodFacts, try USDA when configured.
+      if (UsdaApiService.isConfigured) {
+        try {
+          final usdaResult = await UsdaApiService.searchByBarcode(code);
 
-      try {
-        final usdaResult = await UsdaApiService.searchByBarcode(code);
+          if (!mounted) return;
 
-        if (!mounted) return;
+          if (usdaResult.foods.isNotEmpty) {
+            final usdaFood = usdaResult.foods.first;
 
-        if (usdaResult.foods.isNotEmpty) {
-          final usdaFood = usdaResult.foods.first;
-
-          Navigator.pop(context, _convertUsdaToFoodEntry(usdaFood));
-          return;
+            Navigator.pop(context, _convertUsdaToFoodEntry(usdaFood));
+            return;
+          }
+        } catch (usdaError) {
+          // Continue to show "not found" dialog
         }
-      } catch (usdaError) {
-        // Continue to show "not found" dialog
       }
 
       // Not found in either database
@@ -424,6 +413,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             tooltip: l10n.barcode_scanner_switch_camera,
           ),
         ],
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: OpenFoodFactsAttribution(),
       ),
       body: Stack(
         children: [

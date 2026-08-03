@@ -671,6 +671,16 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
               l10n: l10n,
             ),
 
+            if (widget.onCurrentDayPropagationChanged != null) ...[
+              Text(
+                l10n.food_definition_edit_helper,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+
             if (widget.showCurrentDayPropagationOption)
               CheckboxListTile(
                 value: _updateCurrentDayEntries,

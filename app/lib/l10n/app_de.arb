@@ -1136,8 +1136,16 @@
   },
   "historical_edit_expired": "Dieser Studientag kann nicht mehr bearbeitet werden.",
   "edit_food_definition": "Wiederverwendbares Lebensmittel bearbeiten",
-  "food_definition_edit_helper": "Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Lebensmittel in Ihrer Bibliothek und passende heutige Einträge. Die Portionsanzahl dieses historischen Eintrags bleibt erhalten.",
-  "food_definition_updated_no_today": "Das wiederverwendbare Lebensmittel wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} aktualisiert. Heute gibt es keine passenden Einträge.",
+  "food_definition_edit_helper": "Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Element und den ausgewählten historischen Eintrag. Falls passende Einträge im aktuellen Studientag vorhanden sind, können Sie diese bei Bedarf ebenfalls aktualisieren. Die Portionsanzahl des ausgewählten Eintrags bleibt erhalten.",
+  "food_definition_updated_without_current_day": "Das wiederverwendbare Element wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} aktualisiert. Einträge im aktuellen Studientag wurden nicht aktualisiert.",
+  "@food_definition_updated_without_current_day": {
+    "placeholders": {
+      "historicalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "food_definition_updated_no_today": "Das wiederverwendbare Element wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} aktualisiert. Im aktuellen Studientag wurden keine passenden Einträge gefunden.",
   "@food_definition_updated_no_today": {
     "placeholders": {
       "historicalCount": {
@@ -1145,7 +1153,7 @@
       }
     }
   },
-  "food_definition_updated_today": "Das wiederverwendbare Lebensmittel wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} und {todayCount, plural, =1 {1 passenden heutigen Eintrag} other {{todayCount} passende heutige Einträge}} aktualisiert.",
+  "food_definition_updated_today": "Das wiederverwendbare Element wurde für {historicalCount, plural, =1 {den ausgewählten Eintrag} other {{historicalCount} ausgewählte Einträge}} und {todayCount, plural, =1 {1 passenden Eintrag im aktuellen Studientag} other {{todayCount} passende Einträge im aktuellen Studientag}} aktualisiert.",
   "@food_definition_updated_today": {
     "placeholders": {
       "historicalCount": {
@@ -1168,5 +1176,7 @@
   "update": "Aktualisieren",
   "current_meal_only_banner": "Änderungen gelten nur für diese Mahlzeit. Für dauerhafte Änderungen verwenden Sie die Lebensmittelbibliothek.",
   "grams_per_serving": "{grams} g pro Portion",
-  "details": "Details"
+  "details": "Details",
+  "open_food_facts_attribution": "(c) Mitwirkende von Open Food Facts",
+  "open_food_facts_attribution_launch_error": "Die Nutzungsbedingungen von Open Food Facts konnten nicht geöffnet werden."
 }

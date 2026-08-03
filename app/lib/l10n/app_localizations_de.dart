@@ -2861,7 +2861,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get food_definition_edit_helper =>
-      'Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Lebensmittel in Ihrer Bibliothek und passende heutige Einträge. Die Portionsanzahl dieses historischen Eintrags bleibt erhalten.';
+      'Portionsbeschreibung, Gewicht, Umrechnungen und Nährwerte aktualisieren das wiederverwendbare Element und den ausgewählten historischen Eintrag. Falls passende Einträge im aktuellen Studientag vorhanden sind, können Sie diese bei Bedarf ebenfalls aktualisieren. Die Portionsanzahl des ausgewählten Eintrags bleibt erhalten.';
+
+  @override
+  String food_definition_updated_without_current_day(int historicalCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      historicalCount,
+      locale: localeName,
+      other: '$historicalCount ausgewählte Einträge',
+      one: 'den ausgewählten Eintrag',
+    );
+    return 'Das wiederverwendbare Element wurde für $_temp0 aktualisiert. Einträge im aktuellen Studientag wurden nicht aktualisiert.';
+  }
 
   @override
   String food_definition_updated_no_today(int historicalCount) {
@@ -2871,7 +2882,7 @@ class AppLocalizationsDe extends AppLocalizations {
       other: '$historicalCount ausgewählte Einträge',
       one: 'den ausgewählten Eintrag',
     );
-    return 'Das wiederverwendbare Lebensmittel wurde für $_temp0 aktualisiert. Heute gibt es keine passenden Einträge.';
+    return 'Das wiederverwendbare Element wurde für $_temp0 aktualisiert. Im aktuellen Studientag wurden keine passenden Einträge gefunden.';
   }
 
   @override
@@ -2885,10 +2896,10 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp1 = intl.Intl.pluralLogic(
       todayCount,
       locale: localeName,
-      other: '$todayCount passende heutige Einträge',
-      one: '1 passenden heutigen Eintrag',
+      other: '$todayCount passende Einträge im aktuellen Studientag',
+      one: '1 passenden Eintrag im aktuellen Studientag',
     );
-    return 'Das wiederverwendbare Lebensmittel wurde für $_temp0 und $_temp1 aktualisiert.';
+    return 'Das wiederverwendbare Element wurde für $_temp0 und $_temp1 aktualisiert.';
   }
 
   @override
@@ -2933,4 +2944,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String grams_per_serving(Object grams) {
     return '$grams g pro Portion';
   }
+
+  @override
+  String get open_food_facts_attribution =>
+      '(c) Mitwirkende von Open Food Facts';
+
+  @override
+  String get open_food_facts_attribution_launch_error =>
+      'Die Nutzungsbedingungen von Open Food Facts konnten nicht geöffnet werden.';
 }

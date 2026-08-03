@@ -1352,8 +1352,16 @@
   },
   "historical_edit_expired": "This study day is no longer editable.",
   "edit_food_definition": "Edit reusable food",
-  "food_definition_edit_helper": "Serving description, weight, conversions, and nutrition update the reusable food in your library and matching entries logged today. This historical entry keeps its serving count.",
-  "food_definition_updated_no_today": "Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. No matching entries today.",
+  "food_definition_edit_helper": "Serving description, weight, conversions, and nutrition update the reusable item and selected historical entry. You can also update matching entries in the current study day when available. Selected entry keeps its serving count.",
+  "food_definition_updated_without_current_day": "Reusable item updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. Entries in the current study day were not updated.",
+  "@food_definition_updated_without_current_day": {
+    "placeholders": {
+      "historicalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "food_definition_updated_no_today": "Reusable item updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}}. No matching entries were found in the current study day.",
   "@food_definition_updated_no_today": {
     "placeholders": {
       "historicalCount": {
@@ -1361,7 +1369,7 @@
       }
     }
   },
-  "food_definition_updated_today": "Reusable food updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}} and {todayCount, plural, =1 {1 matching entry today} other {{todayCount} matching entries today}}.",
+  "food_definition_updated_today": "Reusable item updated for {historicalCount, plural, =1 {the selected entry} other {{historicalCount} selected entries}} and {todayCount, plural, =1 {1 matching entry in the current study day} other {{todayCount} matching entries in the current study day}}.",
   "@food_definition_updated_today": {
     "placeholders": {
       "historicalCount": {
@@ -1383,5 +1391,7 @@
   "update_current_day_entries": "Also update matching entries in current study day",
   "update": "Update",
   "current_meal_only_banner": "Changes apply only to this meal. For permanent changes, use Food Library.",
-  "grams_per_serving": "{grams} g per serving"
+  "grams_per_serving": "{grams} g per serving",
+  "open_food_facts_attribution": "(c) Open Food Facts contributors",
+  "open_food_facts_attribution_launch_error": "Could not open the Open Food Facts terms of use."
 }

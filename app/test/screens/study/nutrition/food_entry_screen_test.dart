@@ -4,12 +4,19 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_core/core.dart';
+
+import 'fake_nutrition_food_repository.dart';
 
 Widget foodEntryApp({
   FoodEntry? existingFood,
   bool showSearchAction = true,
+  bool historicalMode = false,
   bool isExternalLibraryCopy = false,
+  String? mealLabel,
+  TemplateViewModel? templateViewModel,
   ValueChanged<FoodEntry?>? onResult,
 }) => ChangeNotifierProvider.value(
   value: AppState(),
@@ -26,7 +33,10 @@ Widget foodEntryApp({
                 FoodEntryScreen.route(
                   existingFood: existingFood,
                   showSearchAction: showSearchAction,
+                  historicalMode: historicalMode,
                   isExternalLibraryCopy: isExternalLibraryCopy,
+                  mealLabel: mealLabel,
+                  templateViewModel: templateViewModel,
                 ),
               );
               onResult?.call(result);
@@ -43,14 +53,20 @@ Future<void> openFoodEntry(
   WidgetTester tester, {
   FoodEntry? existingFood,
   bool showSearchAction = true,
+  bool historicalMode = false,
   bool isExternalLibraryCopy = false,
+  String? mealLabel,
+  TemplateViewModel? templateViewModel,
   ValueChanged<FoodEntry?>? onResult,
 }) async {
   await tester.pumpWidget(
     foodEntryApp(
       existingFood: existingFood,
       showSearchAction: showSearchAction,
+      historicalMode: historicalMode,
       isExternalLibraryCopy: isExternalLibraryCopy,
+      mealLabel: mealLabel,
+      templateViewModel: templateViewModel,
       onResult: onResult,
     ),
   );
@@ -130,6 +146,28 @@ Finder decoratorWithLabel(String label) => find.byWidgetPredicate(
       widget.decoration.labelText?.contains(label) == true,
 );
 
+class _TrackingTemplateRepository extends FakeNutritionFoodRepository {
+  int saveCalls = 0;
+
+  @override
+  Future<SavedFoodTemplate> saveTemplate({
+    required String subjectId,
+    required String name,
+    required FoodEntry food,
+    List<String>? tags,
+    String? expectedVersionId,
+  }) {
+    saveCalls++;
+    return super.saveTemplate(
+      subjectId: subjectId,
+      name: name,
+      food: food,
+      tags: tags,
+      expectedVersionId: expectedVersionId,
+    );
+  }
+}
+
 void main() {
   testWidgets('shows database search outside the search flow', (tester) async {
     await openFoodEntry(tester);
@@ -144,6 +182,109 @@ void main() {
 
     expect(find.byTooltip('Search Food Database'), findsNothing);
   });
+
+  testWidgets(
+    'historical search saves reusable food by default and returns selection',
+    (tester) async {
+      final repository = _TrackingTemplateRepository();
+      FoodSearchSelection? result;
+      await tester.pumpWidget(
+        ChangeNotifierProvider.value(
+          value: AppState(),
+          child: MaterialApp(
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            locale: const Locale('en'),
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: FilledButton(
+                  onPressed: () async {
+                    result = await FoodSearchScreen.show(
+                      context,
+                      mealLabel: 'Dinner',
+                      historicalMode: true,
+                      repository: repository,
+                    );
+                  },
+                  child: const Text('Open search'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open search'));
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Create food'), findsOneWidget);
+      expect(find.text('Create meal'), findsNothing);
+
+      await tester.tap(find.byTooltip('Create food'));
+      await tester.pumpAndSettle();
+      final saveToMyItems = find.widgetWithText(
+        CheckboxListTile,
+        'Save to My items for future use',
+      );
+      expect(tester.widget<CheckboxListTile>(saveToMyItems).value, isTrue);
+      expect(find.byTooltip('Search Food Database'), findsNothing);
+
+      await tester.enterText(inputWithLabel('Food Name'), 'Historical soup');
+      await tester.tap(
+        find.widgetWithText(FilledButton, 'Save and add to Dinner'),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Add 1 item to Dinner'));
+      await tester.pumpAndSettle();
+
+      expect(repository.saveCalls, 1);
+      expect(result?.foods.single.name, 'Historical soup');
+      expect(result?.foods.single.templateId, isNotNull);
+    },
+  );
+
+  testWidgets(
+    'historical manual food opt-out returns occurrence without reusable save',
+    (tester) async {
+      final repository = _TrackingTemplateRepository();
+      final templateViewModel = TemplateViewModel(
+        userId: 'subject',
+        repository: repository,
+      );
+      FoodEntry? result;
+
+      await openFoodEntry(
+        tester,
+        historicalMode: true,
+        mealLabel: 'Dinner',
+        templateViewModel: templateViewModel,
+        onResult: (value) => result = value,
+      );
+
+      await tester.tap(find.text('Save to My items for future use'));
+      await tester.pump();
+      expect(
+        tester
+            .widget<CheckboxListTile>(
+              find.widgetWithText(
+                CheckboxListTile,
+                'Save to My items for future use',
+              ),
+            )
+            .value,
+        isFalse,
+      );
+
+      await tester.enterText(inputWithLabel('Food Name'), 'One-off soup');
+      await tester.tap(
+        find.widgetWithText(FilledButton, 'Save and add to Dinner'),
+      );
+      await tester.pumpAndSettle();
+
+      expect(repository.saveCalls, 0);
+      expect(result?.name, 'One-off soup');
+      expect(result?.templateId, isNull);
+    },
+  );
 
   testWidgets('external copy mode exposes review and save semantics', (
     tester,

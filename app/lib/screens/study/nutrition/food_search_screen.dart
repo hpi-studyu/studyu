@@ -19,6 +19,7 @@ import 'package:studyu_app/screens/study/nutrition/food_search_history.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
+import 'package:studyu_app/screens/study/nutrition/open_food_facts_attribution.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -91,11 +92,13 @@ class FoodSearchScreen extends StatelessWidget {
 
   static MaterialPageRoute<studyu.FoodEntry> route({
     bool allowMeals = true,
+    bool historicalMode = false,
     NutritionFoodRepository? repository,
     TemplateViewModel? templateViewModel,
   }) => MaterialPageRoute(
     builder: (_) => FoodSearchScreen(
       allowMeals: allowMeals,
+      historicalMode: historicalMode,
       repository: repository,
       templateViewModel: templateViewModel,
     ),
@@ -221,14 +224,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       openFoodFactsSearch: widget.openFoodFactsSearch,
       usdaFoodSearch: widget.usdaFoodSearch,
     )..addListener(_onSearchStateChanged);
-    OpenFoodAPIConfiguration.userAgent = UserAgent(
-      name: 'StudyU',
-      version: '1.0',
-      system: 'Flutter',
-      url: 'https://studyu.health',
-    );
-    OpenFoodAPIConfiguration.globalLanguages = [OpenFoodFactsLanguage.ENGLISH];
-
     _scrollController.addListener(_onScroll);
   }
 
@@ -789,6 +784,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       FoodEntryScreen.route(
         showSearchAction: false,
         mealLabel: widget.mealLabel,
+        historicalMode: widget.historicalMode,
         templateViewModel: context.read<TemplateViewModel>(),
         onSavedToSelection: onSavedToSelection,
       ),
@@ -911,7 +907,13 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
               : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
         ),
         actions: [
-          if (!widget.historicalMode)
+          if (widget.historicalMode)
+            IconButton(
+              tooltip: l10n.add_food_action,
+              onPressed: _addManually,
+              icon: const Icon(Icons.add),
+            )
+          else
             PopupMenuButton<_FoodSearchAction>(
               tooltip: l10n.create,
               onSelected: (action) {

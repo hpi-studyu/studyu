@@ -228,31 +228,18 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   Future<bool> _hasCurrentStudyDayMatches(String foodId) async {
     final subject = Provider.of<AppState>(context, listen: false).activeSubject;
-    final target = widget.historicalTarget;
-    if (subject == null || target == null) return false;
+    if (subject == null || widget.historicalTarget == null) return false;
     final currentStudyDay = nutritionStudyDayFor(subject, DateTime.now());
 
-    bool containsFood(FoodEntry food) {
-      if (food.foodId == foodId) return true;
-      return food.componentSnapshots?.any(containsFood) ?? false;
-    }
-
-    bool recallContains(DailyRecall recall) =>
-        recall.meals.any((meal) => meal.foods.any(containsFood));
+    bool recallContains(DailyRecall recall) => recall.meals.any(
+      (meal) => meal.foods.any((food) => food.foodId == foodId),
+    );
 
     for (final progress in subject.progress) {
-      if (progress.taskId != target.taskId ||
-          progress.resultType != 'DailyRecall' ||
-          progress.result.periodId != target.periodId) {
-        continue;
-      }
       final result = progress.result.result;
-      if (result is DailyRecall &&
-          (result.studyDaySnapshot == currentStudyDay ||
-              result.studyDaySnapshot == null &&
-                  progress.completedAt != null &&
-                  nutritionStudyDayFor(subject, progress.completedAt!) ==
-                      currentStudyDay) &&
+      if (progress.resultType == 'DailyRecall' &&
+          result is DailyRecall &&
+          result.studyDaySnapshot == currentStudyDay &&
           recallContains(result)) {
         return true;
       }
@@ -263,8 +250,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
     return pending.any(
       (draft) =>
-          draft.taskId == target.taskId &&
-          draft.periodId == target.periodId &&
           draft.studyDaySnapshot == currentStudyDay &&
           recallContains(draft.recall),
     );
@@ -490,7 +475,11 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         _meal.foods[index] = updated;
       });
       _compositeMutationIds.remove(existingMeal.id);
-      final message = result.todayUpdateCount == 0
+      final message = !_propagateToCurrentStudyDay
+          ? l10n.food_definition_updated_without_current_day(
+              result.selectedHistoricalUpdateCount,
+            )
+          : result.todayUpdateCount == 0
           ? l10n.food_definition_updated_no_today(
               result.selectedHistoricalUpdateCount,
             )

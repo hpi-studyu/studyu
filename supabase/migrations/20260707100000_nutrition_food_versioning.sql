@@ -596,7 +596,12 @@ DECLARE
   v_current_study_day integer;
   v_version_id uuid := gen_random_uuid();
   v_version_number integer;
-  v_snapshot jsonb;
+  v_snapshot jsonb := p_snapshot;
+  v_component jsonb;
+  v_component_snapshot jsonb;
+  v_component_food_id uuid;
+  v_component_version_id uuid;
+  v_component_definition public.nutrition_food_definition%ROWTYPE;
   v_target public.subject_progress%ROWTYPE;
   v_target_count integer;
   v_progress jsonb := '[]'::jsonb;
@@ -633,12 +638,17 @@ BEGIN
       NOT public.nutrition_food_snapshot_is_valid(p_snapshot) THEN
     RAISE EXCEPTION 'invalid nutrition mutation payload' USING ERRCODE = '22023';
   END IF;
-  IF (p_historical_target IS NULL) <> (p_propagate_study_day IS NULL) OR
-      (p_historical_target IS NULL AND p_historical_entry_id IS NOT NULL) OR
+  IF (p_historical_target IS NULL AND (
+        p_historical_entry_id IS NOT NULL OR
+        p_propagate_study_day IS NOT NULL
+      )) OR
       (p_historical_target IS NOT NULL AND (
         p_deleted OR
         NULLIF(p_historical_entry_id, '') IS NULL OR
-        p_propagate_study_day IS DISTINCT FROM v_current_study_day OR
+        (
+          p_propagate_study_day IS NOT NULL AND
+          p_propagate_study_day IS DISTINCT FROM v_current_study_day
+        ) OR
         (p_historical_target->>'studyDaySnapshot')::integer IS DISTINCT FROM
             v_current_study_day - 1
       )) THEN
@@ -685,8 +695,96 @@ BEGIN
     );
   END IF;
 
+  IF p_historical_target IS NOT NULL AND
+      jsonb_typeof(v_snapshot->'componentSnapshots') = 'array' THEN
+    FOR v_component IN
+      SELECT DISTINCT ON (component->>'foodId') component
+      FROM jsonb_array_elements(v_snapshot->'componentSnapshots')
+        WITH ORDINALITY AS components(component, ordinality)
+      ORDER BY component->>'foodId', ordinality DESC
+    LOOP
+      BEGIN
+        v_component_food_id := (v_component->>'foodId')::uuid;
+        v_component_version_id := (v_component->>'foodVersionId')::uuid;
+      EXCEPTION WHEN invalid_text_representation THEN
+        RAISE EXCEPTION 'invalid nutrition mutation payload'
+          USING ERRCODE = '22023';
+      END;
+
+      PERFORM pg_advisory_xact_lock(
+        hashtextextended(v_component_food_id::text, 1)
+      );
+      SELECT * INTO v_component_definition
+      FROM public.nutrition_food_definition
+      WHERE id = v_component_food_id
+      FOR UPDATE;
+
+      IF FOUND THEN
+        IF v_component_definition.subject_id <> p_subject_id THEN
+          RAISE EXCEPTION 'nutrition component definition is not owned by subject'
+            USING ERRCODE = '42501';
+        END IF;
+        SELECT version.id INTO v_component_version_id
+        FROM public.nutrition_food_version AS version
+        WHERE version.id = v_component_version_id
+          AND version.food_id = v_component_food_id;
+        IF NOT FOUND THEN
+          v_component_version_id := v_component_definition.current_version_id;
+        END IF;
+      ELSE
+        v_component_version_id := gen_random_uuid();
+        v_component_snapshot := jsonb_set(
+          v_component,
+          '{foodVersionId}',
+          to_jsonb(v_component_version_id::text),
+          true
+        );
+        INSERT INTO public.nutrition_food_definition (
+          id, subject_id, kind, current_version_id, library_visible
+        ) VALUES (
+          v_component_food_id,
+          p_subject_id,
+          CASE WHEN v_component->>'entryType' = 'meal' THEN 'meal' ELSE 'food' END,
+          v_component_version_id,
+          false
+        );
+        INSERT INTO public.nutrition_food_version (
+          id, food_id, version_number, snapshot, mutation_id
+        ) VALUES (
+          v_component_version_id,
+          v_component_food_id,
+          1,
+          v_component_snapshot,
+          p_mutation_id
+        );
+      END IF;
+
+      v_snapshot := jsonb_set(
+        v_snapshot,
+        '{componentSnapshots}',
+        (
+          SELECT jsonb_agg(
+            CASE WHEN component->>'foodId' = v_component_food_id::text
+              THEN jsonb_set(
+                component,
+                '{foodVersionId}',
+                to_jsonb(v_component_version_id::text),
+                true
+              )
+              ELSE component
+            END
+            ORDER BY ordinality
+          )
+          FROM jsonb_array_elements(v_snapshot->'componentSnapshots')
+            WITH ORDINALITY AS components(component, ordinality)
+        ),
+        true
+      );
+    END LOOP;
+  END IF;
+
   v_snapshot := jsonb_set(
-    p_snapshot,
+    v_snapshot,
     '{foodVersionId}',
     to_jsonb(v_version_id::text),
     true
