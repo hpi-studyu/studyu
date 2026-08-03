@@ -302,7 +302,8 @@ class _FoodLibraryState extends State<FoodLibrary> {
       }
       if (templates.isEmpty && !showExternal) {
         children.add(
-          _FoodLibraryInlineMessage(
+          FoodLibraryEmptyState(
+            icon: _templateFilterIcon(viewModel.currentFilter),
             message: query.isEmpty
                 ? l10n.no_templates_saved
                 : l10n.no_matching_templates,
@@ -329,7 +330,12 @@ class _FoodLibraryState extends State<FoodLibrary> {
         );
       }
     } else if (templates.isEmpty) {
-      children.add(_FoodLibraryEmptyState(message: l10n.no_matching_templates));
+      children.add(
+        FoodLibraryEmptyState(
+          icon: _templateFilterIcon(viewModel.currentFilter),
+          message: l10n.no_matching_templates,
+        ),
+      );
     } else {
       children.addAll(
         templates.map(
@@ -915,26 +921,40 @@ class _FoodLibraryToolbar extends StatelessWidget {
   }
 }
 
-class _FoodLibraryEmptyState extends StatelessWidget {
+IconData _templateFilterIcon(TemplateFilter filter) => switch (filter) {
+  TemplateFilter.all => Icons.bookmark_border,
+  TemplateFilter.foods => Icons.restaurant_outlined,
+  TemplateFilter.meals => Icons.restaurant_menu_outlined,
+};
+
+class FoodLibraryEmptyState extends StatelessWidget {
+  final IconData icon;
   final String message;
 
-  const _FoodLibraryEmptyState({required this.message});
+  const FoodLibraryEmptyState({required this.icon, required this.message});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.bookmark_border,
-            size: 64,
-            color: theme.colorScheme.onSurfaceVariant,
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 56, color: theme.colorScheme.onSurfaceVariant),
+              const SizedBox(height: 16),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleMedium,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(message, style: theme.textTheme.titleMedium),
-        ],
+        ),
       ),
     );
   }

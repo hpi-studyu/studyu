@@ -669,7 +669,12 @@ class _FoodSearchListView extends StatelessWidget {
       children.add(const SizedBox(height: 4));
       final recentItems = recentItems0();
       if (recentItems.isEmpty) {
-        children.add(_EmptySectionMessage(message: l10n.no_recent_items));
+        children.add(
+          FoodLibraryEmptyState(
+            icon: Icons.history_outlined,
+            message: l10n.no_recent_items,
+          ),
+        );
       } else {
         if (showServingHint) children.add(_ServingHint(l10n: l10n));
         children.addAll(
