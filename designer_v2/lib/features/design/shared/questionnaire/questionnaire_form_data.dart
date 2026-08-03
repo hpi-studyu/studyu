@@ -38,7 +38,11 @@ class QuestionnaireFormData implements IFormData {
   }
 
   List<EligibilityCriterion> toEligibilityCriteria() {
-    return questionsData?.map((q) => q.toEligibilityCriterion()).toList() ?? [];
+    return questionsData
+            ?.map((q) => q.toEligibilityCriterion())
+            .nonNulls
+            .toList() ??
+        [];
   }
 
   @override

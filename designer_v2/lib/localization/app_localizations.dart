@@ -2007,6 +2007,66 @@ abstract class AppLocalizations {
   /// **'does not contain'**
   String get form_array_question_visibility_logic_does_not_contain;
 
+  /// No description provided for @form_array_question_visibility_logic_shorter_than.
+  ///
+  /// In en, this message translates to:
+  /// **'shorter than'**
+  String get form_array_question_visibility_logic_shorter_than;
+
+  /// No description provided for @form_array_question_visibility_logic_shorter_than_or_equal_to.
+  ///
+  /// In en, this message translates to:
+  /// **'shorter than or equal to'**
+  String get form_array_question_visibility_logic_shorter_than_or_equal_to;
+
+  /// No description provided for @form_array_question_visibility_logic_longer_than.
+  ///
+  /// In en, this message translates to:
+  /// **'longer than'**
+  String get form_array_question_visibility_logic_longer_than;
+
+  /// No description provided for @form_array_question_visibility_logic_longer_than_or_equal_to.
+  ///
+  /// In en, this message translates to:
+  /// **'longer than or equal to'**
+  String get form_array_question_visibility_logic_longer_than_or_equal_to;
+
+  /// No description provided for @form_array_question_visibility_logic_same_length_as.
+  ///
+  /// In en, this message translates to:
+  /// **'same length as'**
+  String get form_array_question_visibility_logic_same_length_as;
+
+  /// No description provided for @form_array_question_visibility_logic_different_length_as.
+  ///
+  /// In en, this message translates to:
+  /// **'different length as'**
+  String get form_array_question_visibility_logic_different_length_as;
+
+  /// No description provided for @form_array_question_visibility_logic_length_greater_than.
+  ///
+  /// In en, this message translates to:
+  /// **'length >'**
+  String get form_array_question_visibility_logic_length_greater_than;
+
+  /// No description provided for @form_array_question_visibility_logic_length_less_than.
+  ///
+  /// In en, this message translates to:
+  /// **'length <'**
+  String get form_array_question_visibility_logic_length_less_than;
+
+  /// No description provided for @form_array_question_visibility_logic_length_greater_than_or_equal.
+  ///
+  /// In en, this message translates to:
+  /// **'length >='**
+  String get form_array_question_visibility_logic_length_greater_than_or_equal;
+
+  /// No description provided for @form_array_question_visibility_logic_length_less_than_or_equal.
+  ///
+  /// In en, this message translates to:
+  /// **'length <='**
+  String get form_array_question_visibility_logic_length_less_than_or_equal;
+
   /// No description provided for @form_array_question_visibility_logic_not.
   ///
   /// In en, this message translates to:
