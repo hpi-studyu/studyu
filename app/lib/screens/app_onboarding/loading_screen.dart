@@ -481,14 +481,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
       onStudy: (study) => preview.study = study,
     );
     final sessionFuture = _iFrameHelper.requestPreviewSession();
-    final studyFuture = preview.containsQuery('data')
-        ? Future<Study?>.value()
-        : _iFrameHelper.requestPreviewStudy();
+    final studyFuture = _iFrameHelper.requestPreviewStudy();
     final session = await sessionFuture;
-    final previewStudy = await studyFuture;
+    await studyFuture;
     final isAuthorized =
-        session != null &&
-        await preview.handleAuthorization(session, previewStudy: previewStudy);
+        session != null && await preview.handleAuthorization(session);
     if (!isAuthorized) {
       _iFrameHelper.postPreviewStatus(
         status: 'error',

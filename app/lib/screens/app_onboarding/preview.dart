@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/app_router.dart';
@@ -47,24 +45,23 @@ class Preview {
 
   Future<bool> handleAuthorization(
     String session, {
-    Study? previewStudy,
+    Future<void> Function(String)? recoverSession,
   }) async {
     if (!containsQuery('studyid') || session.isEmpty) return false;
 
     try {
-      await Supabase.instance.client.auth.recoverSession(session);
+      await (recoverSession ?? Supabase.instance.client.auth.recoverSession)(
+        session,
+      );
     } catch (_) {
       return false;
     }
 
-    if (previewStudy != null) {
-      study = previewStudy;
-    } else if (containsQuery('data')) {
-      final data =
-          jsonDecode(queryParameters!['data']!) as Map<String, dynamic>;
-      study = Study.fromJson(data);
-    } else {
-      study = await SupabaseQuery.getById<Study>(queryParameters!['studyid']!);
+    if (study == null) {
+      final savedStudy = await SupabaseQuery.getById<Study>(
+        queryParameters!['studyid']!,
+      );
+      study ??= savedStudy;
     }
     // todo are results visible for published studies inside preview?
     if (study == null) return false;
