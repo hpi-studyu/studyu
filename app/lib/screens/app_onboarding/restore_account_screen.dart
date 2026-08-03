@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class RestoreAccountScreen extends StatefulWidget {
   const RestoreAccountScreen({super.key});
@@ -111,6 +113,8 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
         return;
       }
 
+      if (!mounted) return;
+      await context.read<AppLanguage>().syncWithAuthenticatedUser();
       if (!mounted) return;
 
       if (result.subjectId != null) {

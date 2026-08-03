@@ -4,7 +4,19 @@ import 'package:studyu_core/core.dart';
 
 void main() {
   group('RestoreAccountService', () {
-    tearDown(RestoreAccountService.clearCache);
+    tearDown(() {
+      RestoreAccountService.clearCache();
+      RestoreAccountService.debugResetCurrentUserIdGetterForTesting();
+      RestoreAccountService.debugResetRecoveryIdGetterForTesting();
+      RestoreAccountService.debugResetRecoveryIdRotatorForTesting();
+      RestoreAccountService.debugResetRecoverAccountExecutorForTesting();
+      RestoreAccountService.debugResetCredentialStorerForTesting();
+      RestoreAccountService.debugResetParticipantSignInExecutorForTesting();
+      RestoreAccountService.debugResetSubjectValidatorForTesting();
+      RestoreAccountService.debugResetActiveSubjectStorerForTesting();
+      RestoreAccountService.debugResetActiveSubjectClearerForTesting();
+      RestoreAccountService.debugResetParticipantStateCleanupForTesting();
+    });
 
     test('decodeRecoveryPhrase accepts German recovery phrases', () {
       final recoveryId = BigInt.parse(
@@ -94,6 +106,127 @@ void main() {
 
         expect(firstPhrase, isNot(secondPhrase));
         expect(secondPhrase, encode(BigInt.two));
+      },
+    );
+
+    test(
+      'performRecovery cleans previous participant state before switching',
+      () async {
+        var cleanupCalls = 0;
+        String? storedEmail;
+        String? storedPassword;
+        String? storedSubjectId;
+
+        RestoreAccountService.debugParticipantStateCleanupForTesting =
+            () async {
+              cleanupCalls++;
+            };
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async => RecoveryResult(
+              success: true,
+              email: 'recovered@test.local',
+              password: 'password-1',
+              subjectId: 'subject-1',
+            );
+        RestoreAccountService.debugCredentialStorerForTesting =
+            (email, password) async {
+              storedEmail = email;
+              storedPassword = password;
+            };
+        RestoreAccountService.debugParticipantSignInExecutorForTesting =
+            () async => true;
+        RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
+            true;
+        RestoreAccountService.debugActiveSubjectStorerForTesting =
+            (subjectId) async {
+              storedSubjectId = subjectId;
+            };
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isTrue);
+        expect(cleanupCalls, 1);
+        expect(storedEmail, 'recovered@test.local');
+        expect(storedPassword, 'password-1');
+        expect(storedSubjectId, 'subject-1');
+      },
+    );
+
+    test(
+      'performRecovery does not clear participant state on failed recovery',
+      () async {
+        var cleanupCalls = 0;
+
+        RestoreAccountService.debugParticipantStateCleanupForTesting =
+            () async {
+              cleanupCalls++;
+            };
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async =>
+                RecoveryResult(success: false, error: 'recovery_failed');
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isFalse);
+        expect(cleanupCalls, 0);
+      },
+    );
+
+    test(
+      'performRecovery clears active subject when recovered subject is invalid',
+      () async {
+        var clearedSubject = 0;
+
+        RestoreAccountService.debugParticipantStateCleanupForTesting =
+            () async {};
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async => RecoveryResult(
+              success: true,
+              email: 'recovered@test.local',
+              password: 'password-1',
+              subjectId: 'subject-1',
+            );
+        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {};
+        RestoreAccountService.debugParticipantSignInExecutorForTesting =
+            () async => true;
+        RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
+            false;
+        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
+          clearedSubject++;
+        };
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isTrue);
+        expect(result.subjectId, isNull);
+        expect(clearedSubject, 1);
+      },
+    );
+
+    test(
+      'performRecovery clears active subject when recovery has no subject',
+      () async {
+        var clearedSubject = 0;
+
+        RestoreAccountService.debugParticipantStateCleanupForTesting =
+            () async {};
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async => RecoveryResult(
+              success: true,
+              email: 'recovered@test.local',
+              password: 'password-1',
+            );
+        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {};
+        RestoreAccountService.debugParticipantSignInExecutorForTesting =
+            () async => true;
+        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
+          clearedSubject++;
+        };
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isTrue);
+        expect(clearedSubject, 1);
       },
     );
   });

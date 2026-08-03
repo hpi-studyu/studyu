@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
+import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -36,6 +39,18 @@ class RestoreAccountService {
   static Future<String?> Function() _recoveryIdGetter = _fetchRecoveryId;
   static Future<String?> Function() _recoveryIdRotator = _rotateRecoveryId;
   static String? Function() _currentUserIdGetter = _currentUserId;
+  static Future<RecoveryResult> Function(BigInt) _recoverAccountExecutor =
+      recoverAccount;
+  static Future<void> Function(String, String) _credentialStorer =
+      storeFakeUserEmailAndPassword;
+  static Future<bool> Function() _participantSignInExecutor = signInParticipant;
+  static Future<bool> Function(String) _subjectValidator = validateSubject;
+  static Future<void> Function(String) _activeSubjectStorer =
+      storeActiveSubjectId;
+  static Future<void> Function() _activeSubjectClearer =
+      deleteActiveStudyReference;
+  static Future<void> Function() _participantStateCleanup =
+      _cleanupParticipantStateForRecovery;
 
   static void clearCache() {
     _cachedPhrase = null;
@@ -87,6 +102,118 @@ class RestoreAccountService {
   @visibleForTesting
   static void debugResetCurrentUserIdGetterForTesting() {
     _currentUserIdGetter = _currentUserId;
+  }
+
+  @visibleForTesting
+  static Future<RecoveryResult> Function(BigInt)
+  get debugRecoverAccountExecutorForTesting => _recoverAccountExecutor;
+
+  @visibleForTesting
+  static set debugRecoverAccountExecutorForTesting(
+    Future<RecoveryResult> Function(BigInt) executor,
+  ) {
+    _recoverAccountExecutor = executor;
+  }
+
+  @visibleForTesting
+  static void debugResetRecoverAccountExecutorForTesting() {
+    _recoverAccountExecutor = recoverAccount;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(String, String)
+  get debugCredentialStorerForTesting => _credentialStorer;
+
+  @visibleForTesting
+  static set debugCredentialStorerForTesting(
+    Future<void> Function(String, String) storer,
+  ) {
+    _credentialStorer = storer;
+  }
+
+  @visibleForTesting
+  static void debugResetCredentialStorerForTesting() {
+    _credentialStorer = storeFakeUserEmailAndPassword;
+  }
+
+  @visibleForTesting
+  static Future<bool> Function() get debugParticipantSignInExecutorForTesting =>
+      _participantSignInExecutor;
+
+  @visibleForTesting
+  static set debugParticipantSignInExecutorForTesting(
+    Future<bool> Function() executor,
+  ) {
+    _participantSignInExecutor = executor;
+  }
+
+  @visibleForTesting
+  static void debugResetParticipantSignInExecutorForTesting() {
+    _participantSignInExecutor = signInParticipant;
+  }
+
+  @visibleForTesting
+  static Future<bool> Function(String) get debugSubjectValidatorForTesting =>
+      _subjectValidator;
+
+  @visibleForTesting
+  static set debugSubjectValidatorForTesting(
+    Future<bool> Function(String) validator,
+  ) {
+    _subjectValidator = validator;
+  }
+
+  @visibleForTesting
+  static void debugResetSubjectValidatorForTesting() {
+    _subjectValidator = validateSubject;
+  }
+
+  @visibleForTesting
+  static Future<void> Function(String) get debugActiveSubjectStorerForTesting =>
+      _activeSubjectStorer;
+
+  @visibleForTesting
+  static set debugActiveSubjectStorerForTesting(
+    Future<void> Function(String) storer,
+  ) {
+    _activeSubjectStorer = storer;
+  }
+
+  @visibleForTesting
+  static void debugResetActiveSubjectStorerForTesting() {
+    _activeSubjectStorer = storeActiveSubjectId;
+  }
+
+  @visibleForTesting
+  static Future<void> Function() get debugActiveSubjectClearerForTesting =>
+      _activeSubjectClearer;
+
+  @visibleForTesting
+  static set debugActiveSubjectClearerForTesting(
+    Future<void> Function() clearer,
+  ) {
+    _activeSubjectClearer = clearer;
+  }
+
+  @visibleForTesting
+  static void debugResetActiveSubjectClearerForTesting() {
+    _activeSubjectClearer = deleteActiveStudyReference;
+  }
+
+  @visibleForTesting
+  static Future<void> Function() get debugParticipantStateCleanupForTesting =>
+      _participantStateCleanup;
+
+  @visibleForTesting
+  static set debugParticipantStateCleanupForTesting(
+    Future<void> Function() cleanup,
+  ) {
+    _participantStateCleanup = cleanup;
+  }
+
+  @visibleForTesting
+  static void debugResetParticipantStateCleanupForTesting() {
+    _participantStateCleanup = _cleanupParticipantStateForRecovery;
   }
 
   static Future<List<String>?> getRecoveryPhrase() async {
@@ -204,6 +331,14 @@ class RestoreAccountService {
   static String? _currentUserId() =>
       Supabase.instance.client.auth.currentUser?.id;
 
+  static Future<void> _cleanupParticipantStateForRecovery() async {
+    clearCache();
+    await _activeSubjectClearer();
+    await Cache.clearAllSubjectCaches();
+    await PendingDeepLinkService.clearStorage();
+    await FitbitHandler.clearLocalFallbackCredentials();
+  }
+
   static BigInt decodeRecoveryPhrase(List<String> words) {
     // Validate word count first
     if (words.length != RecoveryConstants.totalWordCount) {
@@ -291,29 +426,28 @@ class RestoreAccountService {
   }
 
   static Future<RecoveryResult> performRecovery(BigInt recoveryId) async {
-    // Invalidate any cached recovery secret from a prior session before
-    // establishing the recovered identity, so it cannot leak to the new
-    // account via the static cache on a shared device.
-    clearCache();
     try {
-      final result = await recoverAccount(recoveryId);
+      final result = await _recoverAccountExecutor(recoveryId);
 
       if (!result.success) {
         return result;
       }
 
-      await storeFakeUserEmailAndPassword(result.email!, result.password!);
+      await _participantStateCleanup();
 
-      final signInResult = await signInParticipant();
+      await _credentialStorer(result.email!, result.password!);
+
+      final signInResult = await _participantSignInExecutor();
       if (!signInResult) {
         StudyULogger.warning('Sign in failed after recovery');
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
       if (result.subjectId != null) {
-        final isValid = await validateSubject(result.subjectId!);
+        final isValid = await _subjectValidator(result.subjectId!);
 
         if (!isValid) {
+          await _activeSubjectClearer();
           return RecoveryResult(
             success: true,
             email: result.email,
@@ -321,7 +455,9 @@ class RestoreAccountService {
           );
         }
 
-        await storeActiveSubjectId(result.subjectId!);
+        await _activeSubjectStorer(result.subjectId!);
+      } else {
+        await _activeSubjectClearer();
       }
 
       return result;

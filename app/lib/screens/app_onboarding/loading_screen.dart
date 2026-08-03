@@ -79,6 +79,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!hasStoredCredentials) return false;
     try {
       await signInParticipant();
+      if (!mounted) return false;
+      await context.read<AppLanguage>().syncWithAuthenticatedUser();
       return false;
     } on AuthApiException catch (error, stackTrace) {
       StudyULogger.warning(
@@ -429,6 +431,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     if (!mounted) return;
     if (subject != null) {
+      await context.read<AppLanguage>().syncWithAuthenticatedUser();
+      if (!mounted) return;
       subject = await Cache.synchronize(subject);
       if (!mounted) return;
       if (!isStudyAvailableForTesting(subject.study)) {
@@ -451,6 +455,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     if (await _restoreParticipantSession()) return;
     if (isUserLoggedIn() && !state.isPreview) {
+      if (!mounted) return;
+      await context.read<AppLanguage>().syncWithAuthenticatedUser();
       if (!mounted) return;
       context.goNamed(RouteNames.welcome);
       return;

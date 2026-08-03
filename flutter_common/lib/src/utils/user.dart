@@ -91,6 +91,13 @@ Future<void> deleteLocalData() async {
   await SecureStorage.delete(userPasswordKey);
   await SecureStorage.delete(selectedSubjectIdKey);
   await SecureStorage.delete(cacheSubjectKey);
+
+  final storedValues = await SecureStorage.readAll();
+  for (final key in storedValues.keys) {
+    if (key.startsWith('${cacheSubjectKey}_')) {
+      await SecureStorage.delete(key);
+    }
+  }
 }
 
 void previewSubjectIdKey() {

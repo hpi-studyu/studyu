@@ -6,51 +6,105 @@ import 'package:flutter/foundation.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Cache {
   static bool isSynchronizing = false;
+  static const _scopedCachePrefix = '${cacheSubjectKey}_';
+
+  static String _scopedCacheKey(String userId, String subjectId) =>
+      '$_scopedCachePrefix${userId}_$subjectId';
+
+  static Future<String?> _preferredCacheKey({
+    StudySubject? subject,
+    StudySubject? backupSubject,
+  }) async {
+    final targetSubject = subject ?? backupSubject;
+    if (targetSubject != null) {
+      return _scopedCacheKey(targetSubject.userId, targetSubject.id);
+    }
+
+    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+    final activeSubjectId = await getActiveSubjectId();
+    if (currentUserId == null || activeSubjectId == null) return null;
+    return _scopedCacheKey(currentUserId, activeSubjectId);
+  }
+
+  static Future<String?> _readCachedSubjectString({
+    StudySubject? subject,
+    StudySubject? backupSubject,
+  }) async {
+    final scopedKey = await _preferredCacheKey(
+      subject: subject,
+      backupSubject: backupSubject,
+    );
+    if (scopedKey != null && await SecureStorage.containsKey(scopedKey)) {
+      return await SecureStorage.read(scopedKey);
+    }
+    if (await SecureStorage.containsKey(cacheSubjectKey)) {
+      return await SecureStorage.read(cacheSubjectKey);
+    }
+    return null;
+  }
+
+  static Future<StudySubject> _decodeCachedSubject(
+    String cachedSubjectStr, {
+    StudySubject? backupSubject,
+  }) async {
+    final cachedSubject = jsonDecode(cachedSubjectStr) as Map<String, dynamic>;
+    final cachedUserId = cachedSubject['user_id'] as String?;
+    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+
+    if (currentUserId != null &&
+        cachedUserId != null &&
+        cachedUserId != currentUserId) {
+      throw Exception('Cached subject belongs to a different user');
+    }
+
+    try {
+      return StudySubject.fromJson(cachedSubject);
+    } catch (e) {
+      StudyULogger.warning("Failed to parse cached subject: $cachedSubjectStr");
+      if (backupSubject != null) {
+        if (backupSubject.id != cachedSubject['id']) {
+          throw Exception("Cached subject ID does not match remote subject ID");
+        }
+        if (backupSubject.userId != cachedSubject['user_id']) {
+          throw Exception(
+            "Cached subject user does not match remote subject user",
+          );
+        }
+        final cachedProgress = (cachedSubject['progress'] as List?)
+            ?.map((e) => SubjectProgress.fromJson(e as Map<String, dynamic>))
+            .toList();
+        backupSubject.progress = cachedProgress ?? backupSubject.progress;
+        return backupSubject;
+      }
+      throw Exception("No backup subject provided");
+    }
+  }
 
   static Future<void> storeSubject(StudySubject? subject) async {
     // debugPrint("Store subject in cache");
     if (subject == null) return;
-    SecureStorage.write(cacheSubjectKey, jsonEncode(subject.toFullJson()));
+    final scopedKey = _scopedCacheKey(subject.userId, subject.id);
+    await SecureStorage.write(scopedKey, jsonEncode(subject.toFullJson()));
+    if (await SecureStorage.containsKey(cacheSubjectKey)) {
+      await SecureStorage.delete(cacheSubjectKey);
+    }
     assert(subject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject({StudySubject? backupSubject}) async {
     // debugPrint("Load subject from cache");
-    if (await SecureStorage.containsKey(cacheSubjectKey)) {
-      final cachedSubjectStr = await SecureStorage.read(cacheSubjectKey);
-      final cachedSubject =
-          jsonDecode(cachedSubjectStr!) as Map<String, dynamic>;
-      try {
-        return StudySubject.fromJson(cachedSubject);
-      } catch (e) {
-        StudyULogger.warning(
-          "Failed to parse cached subject: $cachedSubjectStr",
-        );
-        if (backupSubject != null) {
-          // Only take progress from cached subject and rest from backup,
-          // as the cached subject might be outdated or corrupted
-
-          // compare IDs to make sure we are not mixing up subjects
-          // If IDs do not match we should not use the cached subject
-          if (backupSubject.id != cachedSubject['id']) {
-            throw Exception(
-              "Cached subject ID does not match remote subject ID",
-            );
-          }
-          final cachedProgress = (cachedSubject['progress'] as List?)
-              ?.map((e) => SubjectProgress.fromJson(e as Map<String, dynamic>))
-              .toList();
-          backupSubject.progress = cachedProgress ?? backupSubject.progress;
-          return backupSubject;
-        }
-        throw Exception("No backup subject provided");
-      }
-    } else {
+    final cachedSubjectStr = await _readCachedSubjectString(
+      backupSubject: backupSubject,
+    );
+    if (cachedSubjectStr == null) {
       throw Exception("No cached subject found");
     }
+
+    return _decodeCachedSubject(cachedSubjectStr, backupSubject: backupSubject);
   }
 
   static Future<void> storeAnalytics(StudyUAnalytics analytics) async {
@@ -80,7 +134,16 @@ class Cache {
 
   static Future<void> delete() async {
     StudyULogger.warning("Delete cache");
-    SecureStorage.delete(cacheSubjectKey);
+    await clearAllSubjectCaches();
+  }
+
+  static Future<void> clearAllSubjectCaches() async {
+    final storedValues = await SecureStorage.readAll();
+    for (final key in storedValues.keys) {
+      if (key == cacheSubjectKey || key.startsWith(_scopedCachePrefix)) {
+        await SecureStorage.delete(key);
+      }
+    }
   }
 
   static Future<void> uploadBlobFiles() async {
@@ -98,10 +161,16 @@ class Cache {
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
     if (isSynchronizing) return remoteSubject;
     // No local subject found
-    if (!(await SecureStorage.containsKey(cacheSubjectKey))) {
+    final cachedSubjectStr = await _readCachedSubjectString(
+      backupSubject: remoteSubject,
+    );
+    if (cachedSubjectStr == null) {
       return remoteSubject;
     }
-    final localSubject = await loadSubject(backupSubject: remoteSubject);
+    final localSubject = await _decodeCachedSubject(
+      cachedSubjectStr,
+      backupSubject: remoteSubject,
+    );
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
     // remote subject belongs to a different study
@@ -201,7 +270,14 @@ class Cache {
       }
 
       // Check cached subject
-      if (await SecureStorage.containsKey('cache_subject')) {
+      final storedValues = await SecureStorage.readAll();
+      final cacheKeys = storedValues.keys
+          .where(
+            (key) =>
+                key == cacheSubjectKey || key.startsWith(_scopedCachePrefix),
+          )
+          .toList();
+      if (cacheKeys.isNotEmpty) {
         debugInfo.writeln('Cache Subject: EXISTS (data present)');
         try {
           final cachedSubject = await loadSubject();

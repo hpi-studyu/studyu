@@ -84,6 +84,12 @@ class SecureStorage {
     });
   }
 
+  static Future<Map<String, String>> readAll() async {
+    return await storageLock.synchronized(() async {
+      return await storage.readAll();
+    });
+  }
+
   /// Migrates all non-null key-value pairs from SharedPreferences to FlutterSecureStorage.
   ///
   /// This function retrieves all keys from SharedPreferences, reads the corresponding values,
