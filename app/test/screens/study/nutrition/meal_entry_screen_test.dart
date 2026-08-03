@@ -2105,7 +2105,7 @@ void main() {
     await tester.tap(find.text('Saved Pear Template'));
     await tester.pumpAndSettle();
     expect(repository.loadCalls, 2);
-    Navigator.of(tester.element(find.byType(FoodQuantitySheet))).pop();
+    await tester.tap(find.byKey(const ValueKey('food-quantity-back')));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
