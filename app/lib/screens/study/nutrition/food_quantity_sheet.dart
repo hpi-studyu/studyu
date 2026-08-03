@@ -23,6 +23,8 @@ class FoodQuantitySheet extends StatefulWidget {
   final bool caloriesKnown;
   final bool gramsKnown;
   final bool? baselineGramsKnown;
+  final ValueChanged<FoodEntry>? onConfirmed;
+  final VoidCallback? onClose;
 
   const FoodQuantitySheet({
     required this.food,
@@ -33,6 +35,8 @@ class FoodQuantitySheet extends StatefulWidget {
     this.caloriesKnown = true,
     this.gramsKnown = true,
     this.baselineGramsKnown,
+    this.onConfirmed,
+    this.onClose,
     super.key,
   });
 
@@ -187,6 +191,18 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
     _updateAmount(_amountController.text);
   }
 
+  void _changeServingWeight(double delta) {
+    final current = _parseNumber(_servingWeightController.text);
+    if (current == null || !current.isFinite) return;
+    final next = current + delta;
+    if (!next.isFinite || next <= 0) return;
+    _servingWeightController.text = _formatNumber(next);
+    _servingWeightController.selection = TextSelection.collapsed(
+      offset: _servingWeightController.text.length,
+    );
+    _updateAmount(_servingWeightController.text);
+  }
+
   String _servingDescription(AppLocalizations l10n, FoodEntry food) {
     final portionReference = widget.food.portionReference?.trim();
     if (!widget.gramsKnown && !_servingWeightOverridden) {
@@ -214,20 +230,6 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
 
   bool get _isLibraryBaseline => _baselineFood.templateId?.isNotEmpty == true;
 
-  String _baselineDescription(AppLocalizations l10n) {
-    if (!_baselineGramsKnown ||
-        !_baselineFood.servingSizeGrams.isFinite ||
-        _baselineFood.servingSizeGrams <= 0) {
-      return _isLibraryBaseline
-          ? l10n.food_quantity_library_serving_unknown
-          : l10n.food_quantity_default_serving_unknown;
-    }
-    final weight = _formatNumber(_baselineFood.servingSizeGrams);
-    return _isLibraryBaseline
-        ? l10n.food_quantity_library_serving(weight)
-        : l10n.food_quantity_default_serving(weight);
-  }
-
   String _resetLabel(AppLocalizations l10n) {
     final weight = _formatNumber(_baselineFood.servingSizeGrams);
     return _isLibraryBaseline
@@ -252,9 +254,12 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final embedded = widget.onConfirmed != null;
     final food = _scaledFood ?? widget.food;
     final amount = food.amount;
-    final servings = amount / widget.food.amount;
+    final servingWeight = _parseNumber(_servingWeightController.text);
+    final servingWeightKnown =
+        servingWeight != null && servingWeight.isFinite && servingWeight > 0;
     final unavailable = widget.food.nutrition.unavailableNutrients;
     final caloriesKnown =
         widget.caloriesKnown && !unavailable.contains('energyKcal');
@@ -262,18 +267,35 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
         !caloriesKnown ||
         const {'protein', 'carbs', 'fat'}.any(unavailable.contains);
     final brand = widget.food.brandName?.trim();
+    final portionReference = widget.food.portionReference?.trim();
+    final servingSubtitle = _canEditServingWeight
+        ? portionReference
+        : _servingDescription(l10n, food);
     final imageUrl = _foodImageUrl();
     final subtitle = [
       if (brand != null && brand.isNotEmpty) brand,
-      _servingDescription(l10n, food),
+      if (servingSubtitle != null && servingSubtitle.isNotEmpty)
+        servingSubtitle,
     ].join(' · ');
+    final totalGrams = food.servingSizeGrams * amount;
+    final currentGramsKnown =
+        (widget.gramsKnown || (_canEditServingWeight && servingWeightKnown)) &&
+        totalGrams.isFinite &&
+        totalGrams > 0;
+    final nutritionHeading = l10n.food_quantity_nutrition_for_amount(
+      currentGramsKnown ? _formatNumber(totalGrams) : _formatNumber(amount),
+      currentGramsKnown ? 'g' : _amountUnit(l10n, amount),
+    );
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
         24,
         12,
         24,
-        24 + MediaQuery.viewInsetsOf(context).bottom,
+        24 +
+            (widget.onConfirmed == null
+                ? MediaQuery.viewInsetsOf(context).bottom
+                : 0),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -284,6 +306,26 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (embedded) ...[
+                    Row(
+                      children: [
+                        IconButton(
+                          key: const ValueKey('food-quantity-back'),
+                          onPressed: widget.onClose,
+                          tooltip: l10n.back,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            l10n.food_quantity_edit_amount,
+                            style: theme.textTheme.titleLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -317,41 +359,41 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                               widget.food.name,
                               style: theme.textTheme.headlineSmall,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              subtitle,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
+                            if (subtitle.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                subtitle,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        tooltip: l10n.close,
-                        icon: const Icon(Icons.close),
-                      ),
+                      if (!embedded)
+                        IconButton(
+                          onPressed:
+                              widget.onClose ?? () => Navigator.pop(context),
+                          tooltip: l10n.close,
+                          icon: const Icon(Icons.close),
+                        ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text(
-                            l10n.food_quantity_amount,
-                            style: theme.textTheme.titleMedium,
-                          ),
+                        child: Text(
+                          l10n.food_quantity_amount,
+                          style: theme.textTheme.titleMedium,
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         flex: 2,
                         child: Container(
-                          constraints: const BoxConstraints(minHeight: 56),
+                          constraints: const BoxConstraints(minHeight: 48),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(16),
@@ -386,7 +428,7 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                                     enabledBorder: InputBorder.none,
                                     focusedBorder: InputBorder.none,
                                     contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 16,
+                                      vertical: 12,
                                     ),
                                     suffixText: _amountUnit(l10n, amount),
                                   ),
@@ -407,46 +449,90 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                     ],
                   ),
                   if (_canEditServingWeight) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      _baselineDescription(l10n),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _servingWeightController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                      ],
-                      decoration: InputDecoration(
-                        labelText: l10n.food_quantity_weight_for_meal,
-                        suffixText: 'g',
-                        helperText: l10n.food_quantity_override_helper,
-                      ),
-                      onChanged: _updateAmount,
-                    ),
-                    if (_servingWeightOverridden && _scaledFood != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        _scaledFood!.amount > 1
-                            ? l10n.food_quantity_effective_weight(
-                                _formatNumber(_scaledFood!.servingSizeGrams),
-                                _formatNumber(
-                                  _scaledFood!.servingSizeGrams *
-                                      _scaledFood!.amount,
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            l10n.food_quantity_weight_per_serving,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            constraints: const BoxConstraints(minHeight: 48),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed:
+                                      servingWeightKnown && servingWeight > 1
+                                      ? () => _changeServingWeight(-1)
+                                      : null,
+                                  tooltip: l10n.food_quantity_decrease_weight,
+                                  icon: const Icon(Icons.remove),
                                 ),
-                              )
-                            : l10n.food_quantity_effective_weight_per_serving(
-                                _formatNumber(_scaledFood!.servingSizeGrams),
-                              ),
+                                Expanded(
+                                  child: Semantics(
+                                    label:
+                                        l10n.food_quantity_weight_per_serving,
+                                    child: TextField(
+                                      key: const ValueKey(
+                                        'food-quantity-weight-field',
+                                      ),
+                                      controller: _servingWeightController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp('[0-9.,]'),
+                                        ),
+                                      ],
+                                      textAlign: TextAlign.center,
+                                      style: theme.textTheme.titleMedium,
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        suffixText: 'g',
+                                      ),
+                                      onChanged: _updateAmount,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: servingWeightKnown
+                                      ? () => _changeServingWeight(1)
+                                      : null,
+                                  tooltip: l10n.food_quantity_increase_weight,
+                                  icon: const Icon(Icons.add),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_scaledFood != null &&
+                        amount > 1 &&
+                        servingWeightKnown) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.food_quantity_total_weight(
+                          _formatNumber(_scaledFood!.servingSizeGrams * amount),
+                        ),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -471,87 +557,96 @@ class _FoodQuantitySheetState extends State<FoodQuantitySheet> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 24),
-                  Text(
-                    l10n.food_quantity_selection_total,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    caloriesKnown
-                        ? l10n.kcal_value(
-                            food.nutrition.energyKcal.toStringAsFixed(0),
-                          )
-                        : '— kcal',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (caloriesKnown &&
-                      servings > 1 &&
-                      widget.food.nutrition.energyKcal != 0) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      l10n.food_quantity_per_serving(
-                        l10n.kcal_value(
-                          widget.food.nutrition.energyKcal.toStringAsFixed(0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                nutritionHeading,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              caloriesKnown
+                                  ? l10n.kcal_value(
+                                      food.nutrition.energyKcal.toStringAsFixed(
+                                        0,
+                                      ),
+                                    )
+                                  : '— kcal',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ],
                         ),
-                      ),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                        const SizedBox(height: 8),
+                        _NutrientGrid(
+                          nutrients: [
+                            (
+                              l10n.food_quantity_protein,
+                              unavailable.contains('protein')
+                                  ? '—'
+                                  : '${food.nutrition.protein.toStringAsFixed(1)} g',
+                            ),
+                            (
+                              l10n.food_quantity_carbs,
+                              unavailable.contains('carbs')
+                                  ? '—'
+                                  : '${food.nutrition.carbs.toStringAsFixed(1)} g',
+                            ),
+                            (
+                              l10n.food_quantity_fat,
+                              unavailable.contains('fat')
+                                  ? '—'
+                                  : '${food.nutrition.fat.toStringAsFixed(1)} g',
+                            ),
+                          ],
+                        ),
+                        if (nutritionUnavailable) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            l10n.food_quantity_nutrition_unavailable,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
-                  if (nutritionUnavailable) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.food_quantity_nutrition_unavailable,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 24),
-                  _NutrientGrid(
-                    nutrients: [
-                      (
-                        l10n.food_quantity_protein,
-                        unavailable.contains('protein')
-                            ? '—'
-                            : '${food.nutrition.protein.toStringAsFixed(1)} g',
-                      ),
-                      (
-                        l10n.food_quantity_carbs,
-                        unavailable.contains('carbs')
-                            ? '—'
-                            : '${food.nutrition.carbs.toStringAsFixed(1)} g',
-                      ),
-                      (
-                        l10n.food_quantity_fat,
-                        unavailable.contains('fat')
-                            ? '—'
-                            : '${food.nutrition.fat.toStringAsFixed(1)} g',
-                      ),
-                    ],
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           SizedBox(
             height: 48,
             child: FilledButton(
               onPressed: _scaledFood == null
                   ? null
-                  : () => Navigator.pop(context, _scaledFood),
+                  : () {
+                      final result = _scaledFood!;
+                      if (widget.onConfirmed case final callback?) {
+                        callback(result);
+                      } else {
+                        Navigator.pop(context, result);
+                      }
+                    },
               child: Text(switch (widget.action) {
                 FoodQuantityAction.addToSelection =>
-                  widget.mealLabel == null
-                      ? l10n.add_food
-                      : l10n.food_quantity_add_to_meal(widget.mealLabel!),
+                  l10n.food_quantity_add_to_selection,
                 FoodQuantityAction.addMealToSelection =>
                   widget.mealLabel == null
                       ? l10n.add_food
@@ -602,12 +697,16 @@ class _NutrientGrid extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final largeText = MediaQuery.textScalerOf(context).scale(1) > 1.3;
-      final columns = constraints.maxWidth < 360 || largeText ? 2 : 3;
-      const spacing = 16.0;
+      final columns = largeText
+          ? 1
+          : constraints.maxWidth < 260
+          ? 2
+          : 3;
+      const spacing = 12.0;
       final width = (constraints.maxWidth - spacing * (columns - 1)) / columns;
       return Wrap(
         spacing: spacing,
-        runSpacing: 16,
+        runSpacing: 8,
         children: [
           for (final nutrient in nutrients)
             SizedBox(
@@ -629,11 +728,17 @@ class _NutrientValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     label: '$label: $value',
+    excludeSemantics: true,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: Theme.of(context).textTheme.labelMedium),
-        Text(value, style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        Text(value, style: Theme.of(context).textTheme.bodyMedium),
       ],
     ),
   );

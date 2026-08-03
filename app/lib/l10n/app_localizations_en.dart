@@ -2061,19 +2061,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_selection_selected_items => 'Selected items';
 
   @override
-  String food_selection_selected_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count items selected',
-      one: '1 item selected',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String food_selection_view_more(int count) {
-    return 'View $count more';
+    return 'View all $count items';
   }
 
   @override
@@ -2223,9 +2212,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_quantity_weight => 'Weight';
 
   @override
-  String get food_quantity_weight_for_meal => 'Weight for this meal';
-
-  @override
   String get food_quantity_custom_weight => 'Custom';
 
   @override
@@ -2249,16 +2235,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get food_quantity_override_helper =>
       'Changes only this meal selection. My Library and the source item remain unchanged.';
-
-  @override
-  String food_quantity_effective_weight_per_serving(String weight) {
-    return '$weight g per serving';
-  }
-
-  @override
-  String food_quantity_effective_weight(String perServing, String total) {
-    return '$perServing g per serving · $total g total';
-  }
 
   @override
   String food_quantity_use_library_weight(String weight) {
@@ -2311,21 +2287,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get food_quantity_add_to_selection => 'Add to selection';
+  String get food_quantity_add_to_selection => 'Add item';
 
   @override
   String get food_quantity_add_meal_to_selection => 'Add meal to selection';
 
   @override
-  String get food_quantity_update_selection => 'Update selection';
-
-  @override
-  String food_quantity_per_serving(String calories) {
-    return '$calories per serving';
-  }
-
-  @override
-  String get food_quantity_selection_total => 'Selection total';
+  String get food_quantity_update_selection => 'Save changes';
 
   @override
   String get food_quantity_nutrition_unavailable =>
@@ -2888,4 +2856,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get food_definition_updated_current_day_opt_in =>
       'Reusable item updated. Matching entries in the current study day were also updated.';
+
+  @override
+  String get food_quantity_weight_per_serving => 'Weight per serving';
+
+  @override
+  String food_quantity_total_weight(String weight) {
+    return 'Total weight: $weight g';
+  }
+
+  @override
+  String get food_quantity_decrease_weight => 'Decrease weight per serving';
+
+  @override
+  String get food_quantity_increase_weight => 'Increase weight per serving';
+
+  @override
+  String get food_selection_collapse => 'Collapse selected items';
+
+  @override
+  String get food_quantity_edit_amount => 'Edit amount';
+
+  @override
+  String food_quantity_nutrition_for_amount(Object amount, Object unit) {
+    return 'Nutrition for $amount $unit';
+  }
+
+  @override
+  String food_selection_items_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
 }

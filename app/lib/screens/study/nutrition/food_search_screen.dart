@@ -197,6 +197,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   final FocusNode _searchFocusNode = FocusNode();
   final GlobalKey _trayAnchorKey = GlobalKey();
   final GlobalKey _trayHeaderAnchorKey = GlobalKey();
+  final GlobalKey<_SelectionPeekTrayState> _selectionTrayKey =
+      GlobalKey<_SelectionPeekTrayState>();
   final Map<String, GlobalKey> _rowAnchorKeys = {};
   final Map<String, GlobalKey> _quantityAnchorKeys = {};
   late final AnimationController _transferController;
@@ -210,6 +212,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   bool _showServingHint = true;
   bool _isConfirming = false;
   bool _allowPop = false;
+  bool _selectionSurfaceActive = false;
 
   @override
   void initState() {
@@ -229,6 +232,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
 
   void _onSelectionChanged() {
     if (mounted) setState(() {});
+  }
+
+  void _onSelectionSurfaceActivityChanged(bool active) {
+    if (mounted && active != _selectionSurfaceActive) {
+      setState(() => _selectionSurfaceActive = active);
+    }
   }
 
   void _onSearchStateChanged() {
@@ -504,7 +513,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       selected?.baseFood ?? food,
       key: key,
       action: selected == null
-          ? FoodQuantityAction.addToMeal
+          ? FoodQuantityAction.addToSelection
           : FoodQuantityAction.updateSelection,
     );
   }
@@ -533,7 +542,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       selected?.baseFood ?? foodEntry,
       key: key,
       action: selected == null
-          ? FoodQuantityAction.addToMeal
+          ? FoodQuantityAction.addToSelection
           : FoodQuantityAction.updateSelection,
       caloriesKnown: _caloriesKnownForResult(result),
       gramsKnown: result.servingSizeGrams != null,
@@ -572,7 +581,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
       selected?.baseFood ?? foodEntry,
       key: key,
       action: selected == null
-          ? FoodQuantityAction.addToMeal
+          ? FoodQuantityAction.addToSelection
           : FoodQuantityAction.updateSelection,
     );
   }
@@ -594,58 +603,68 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     if (_showServingHint) {
       setState(() => _showServingHint = false);
     }
-    final selected = key == null ? null : _selectionStore?.itemFor(key);
+    final store = _selectionStore;
+    if (store != null) {
+      _selectionTrayKey.currentState?.showDetails(
+        food: foodEntry,
+        key: key,
+        action: action,
+        caloriesKnown: caloriesKnown,
+        gramsKnown: gramsKnown,
+      );
+      if (mounted) setState(() {});
+      return;
+    }
     final result = await FoodQuantitySheet.show(
       context,
       food: foodEntry,
-      baselineFood: selected?.baselineFood,
       mealLabel: widget.mealLabel,
       action: action,
-      initialAmount: selected == null
-          ? null
-          : selected.baseFood.amount * selected.quantity,
-      caloriesKnown: selected?.caloriesKnown ?? caloriesKnown,
-      gramsKnown: selected?.gramsKnown ?? gramsKnown,
-      baselineGramsKnown: selected?.baselineGramsKnown,
+      caloriesKnown: caloriesKnown,
+      gramsKnown: gramsKnown,
     );
     if (result == null || !mounted) return;
+    _completeSingleSelection(result);
+  }
+
+  void _onEmbeddedDetailsConfirmed(
+    studyu.FoodEntry result,
+    String? key,
+    FoodQuantityAction action,
+    studyu.FoodEntry sourceFood,
+    bool caloriesKnown,
+    bool gramsKnown,
+  ) {
+    final store = _selectionStore;
+    if (store == null) return;
+    final selected = key == null ? null : store.itemFor(key);
     if (action == FoodQuantityAction.updateSelection && key != null) {
       final weightChanged =
           selected != null &&
           (result.servingSizeGrams - selected.baseFood.servingSizeGrams).abs() >
               0.000001;
-      _selectionStore!.replaceBase(
+      store.replaceBase(
         key,
         result,
-        caloriesKnown:
-            _selectionStore.itemFor(key)?.caloriesKnown ?? caloriesKnown,
+        caloriesKnown: selected?.caloriesKnown ?? caloriesKnown,
         gramsKnown:
             selected?.gramsKnown == true ||
             selected?.baselineGramsKnown == true ||
             weightChanged,
       );
-    } else if (action == FoodQuantityAction.addToMeal) {
+    } else {
+      final weightChanged =
+          (result.servingSizeGrams - sourceFood.servingSizeGrams).abs() >
+          0.000001;
       _addToSelection(
         result,
         key: key ?? canonicalFoodSelectionKey(result),
+        sourceFood: sourceFood,
         caloriesKnown: caloriesKnown,
-        gramsKnown: gramsKnown,
+        gramsKnown: gramsKnown || weightChanged,
+        baselineGramsKnown: gramsKnown,
       );
-    } else {
-      _completeSingleSelection(result);
     }
-  }
-
-  Future<void> _showReviewSheet(FoodSelectionStore store) async {
-    _removeTransfer();
-    final confirmed = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (_) =>
-          _SelectionReviewSheet(store: store, mealLabel: widget.mealLabel!),
-    );
-    if (confirmed == true && mounted) _confirmSelection(store);
   }
 
   void _confirmSelection(FoodSelectionStore store) {
@@ -690,8 +709,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   void _addToSelection(
     studyu.FoodEntry food, {
     required String key,
+    studyu.FoodEntry? sourceFood,
     bool caloriesKnown = true,
     bool gramsKnown = true,
+    bool? baselineGramsKnown,
     Offset? source,
     String? imageUrl,
   }) {
@@ -705,8 +726,10 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
     _selectionStore.addOrIncrement(
       key,
       food,
+      sourceFood: sourceFood,
       caloriesKnown: caloriesKnown,
       gramsKnown: gramsKnown,
+      baselineGramsKnown: baselineGramsKnown,
     );
 
     try {
@@ -836,7 +859,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         selected?.baseFood ?? result,
         key: key,
         action: selected == null
-            ? FoodQuantityAction.addToMeal
+            ? FoodQuantityAction.addToSelection
             : FoodQuantityAction.updateSelection,
       );
     }
@@ -952,73 +975,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
             ),
         ],
       ),
-      body: Column(
-        children: [
-          // Search Bar
-          FoodSearchBar(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            hintText: l10n.search_food_hint,
-            onChanged: (val) => _onSearchChanged(val, templateViewModel),
-            onScanBarcode: _scanBarcode,
-            barcodeTooltip: l10n.scan_barcode,
-          ),
-          Semantics(
-            liveRegion: true,
-            label: searchStatus,
-            child: const SizedBox.shrink(),
-          ),
-
-          // Content
-          Expanded(
-            child: _FoodSearchListView(
-              scrollController: _scrollController,
-              l10n: l10n,
-              theme: theme,
-              templateViewModel: templateViewModel,
-              searchController: _searchController,
-              isInitialLoading: search.isInitialLoading,
-              isLoadingMore: search.isLoadingMore,
-              hasSearched: search.hasSearched,
-              offSearched: search.offSearched,
-              usdaSearched: search.usdaSearched,
-              offHasMore: search.offHasMore,
-              usdaHasMore: search.usdaHasMore,
-              errorMessage: errorMessage,
-              combinedResults: results,
-              history: widget.history,
-              selectedSection: _selectedSection,
-              selectedFilter: _selectedFilter,
-              onSectionChanged: (section) {
-                _removeTransfer();
-                setState(() {
-                  _selectedSection = section;
-                });
-              },
-              onFilterChanged: (filter) {
-                _removeTransfer();
-                setState(() {
-                  _selectedFilter = filter;
-                });
-              },
-              onSelectHistory: _selectHistoryItem,
-              onAddHistory: _addHistoryItem,
-              onSelectFoodTemplate: _selectFoodTemplate,
-              onAddFoodTemplate: _addFoodTemplate,
-              onSelectResult: _selectResult,
-              onAddResult: _addResult,
-              onRetry: () => _retrySearch(templateViewModel),
-              allowMeals: widget.allowMeals,
-              showServingHint: _showServingHint && widget.mealLabel != null,
-              selectionStore: _selectionStore,
-              selectionKeyForResult: (result) =>
-                  canonicalFoodSelectionKey(_foodEntryForResult(result)),
-              onDecrementSelection: _decrementSelection,
-            ),
-          ),
-          if (showSearchFallback)
-            _SearchFallback(query: query, onAddManually: _addManually),
-          AnimatedSwitcher(
+      body: LayoutBuilder(
+        builder: (context, bodyConstraints) {
+          final selectionSurface = AnimatedSwitcher(
             duration: selectionAnimationDuration(context),
             transitionBuilder: (child, animation) => FadeTransition(
               opacity: animation,
@@ -1035,33 +994,125 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
               ),
             ),
             child: switch (_selectionStore) {
-              final store when store != null && !store.isEmpty =>
-                _SelectionPeekTray(
-                  key: const ValueKey('selection-tray'),
+              final store? => Visibility(
+                key: const ValueKey('selection-tray'),
+                visible: !store.isEmpty || _selectionSurfaceActive,
+                maintainState: true,
+                child: _SelectionPeekTray(
+                  key: _selectionTrayKey,
                   anchorKey: _trayAnchorKey,
                   headerAnchorKey: _trayHeaderAnchorKey,
                   rowAnchorFor: _rowAnchorFor,
                   quantityAnchorFor: _quantityAnchorFor,
                   store: store,
                   mealLabel: widget.mealLabel!,
+                  maxHeight: bodyConstraints.maxHeight,
                   isConfirming: _isConfirming,
-                  onReview: () => _showReviewSheet(store),
                   onConfirm: () => _confirmSelection(store),
                   onSelect: _selectTrayItem,
                   onIncrement: _incrementTraySelection,
                   onDecrement: _decrementSelection,
+                  onDetailsConfirmed: _onEmbeddedDetailsConfirmed,
+                  onActivityChanged: _onSelectionSurfaceActivityChanged,
                 ),
+              ),
               _ => const SizedBox.shrink(key: ValueKey('empty-selection-tray')),
             },
-          ),
-        ],
+          );
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  // Search Bar
+                  FoodSearchBar(
+                    controller: _searchController,
+                    focusNode: _searchFocusNode,
+                    hintText: l10n.search_food_hint,
+                    onChanged: (val) =>
+                        _onSearchChanged(val, templateViewModel),
+                    onScanBarcode: _scanBarcode,
+                    barcodeTooltip: l10n.scan_barcode,
+                  ),
+                  Semantics(
+                    liveRegion: true,
+                    label: searchStatus,
+                    child: const SizedBox.shrink(),
+                  ),
+
+                  // Content
+                  Expanded(
+                    child: _FoodSearchListView(
+                      scrollController: _scrollController,
+                      l10n: l10n,
+                      theme: theme,
+                      templateViewModel: templateViewModel,
+                      searchController: _searchController,
+                      isInitialLoading: search.isInitialLoading,
+                      isLoadingMore: search.isLoadingMore,
+                      hasSearched: search.hasSearched,
+                      offSearched: search.offSearched,
+                      usdaSearched: search.usdaSearched,
+                      offHasMore: search.offHasMore,
+                      usdaHasMore: search.usdaHasMore,
+                      errorMessage: errorMessage,
+                      combinedResults: results,
+                      history: widget.history,
+                      selectedSection: _selectedSection,
+                      selectedFilter: _selectedFilter,
+                      onSectionChanged: (section) {
+                        _removeTransfer();
+                        setState(() {
+                          _selectedSection = section;
+                        });
+                      },
+                      onFilterChanged: (filter) {
+                        _removeTransfer();
+                        setState(() {
+                          _selectedFilter = filter;
+                        });
+                      },
+                      onSelectHistory: _selectHistoryItem,
+                      onAddHistory: _addHistoryItem,
+                      onSelectFoodTemplate: _selectFoodTemplate,
+                      onAddFoodTemplate: _addFoodTemplate,
+                      onSelectResult: _selectResult,
+                      onAddResult: _addResult,
+                      onRetry: () => _retrySearch(templateViewModel),
+                      allowMeals: widget.allowMeals,
+                      showServingHint:
+                          _showServingHint && widget.mealLabel != null,
+                      selectionStore: _selectionStore,
+                      selectionKeyForResult: (result) =>
+                          canonicalFoodSelectionKey(
+                            _foodEntryForResult(result),
+                          ),
+                      onDecrementSelection: _decrementSelection,
+                    ),
+                  ),
+                  if (showSearchFallback)
+                    _SearchFallback(query: query, onAddManually: _addManually),
+                  if (!_selectionSurfaceActive) selectionSurface,
+                ],
+              ),
+              if (_selectionSurfaceActive)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: selectionSurface,
+                ),
+            ],
+          );
+        },
       ),
     );
 
     return PopScope(
       canPop: _allowPop,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _confirmDiscard();
+        if (didPop) return;
+        if (_selectionTrayKey.currentState?.handleSystemBack() == true) return;
+        _confirmDiscard();
       },
       child: scaffold,
     );

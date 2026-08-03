@@ -179,6 +179,9 @@ void main() {
     expect(first.foodCode, food.gtinUpc);
     expect(first.externalId, food.fdcId.toString());
     expect(first.source, studyu.FoodSource.usda);
+    expect(first.amount, 1);
+    expect(first.unit, 'serving');
+    expect(first.servingSizeGrams, 150);
     expect(first.originalValues, food.toJson());
   });
 }

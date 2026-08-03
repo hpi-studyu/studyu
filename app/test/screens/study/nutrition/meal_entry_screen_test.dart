@@ -1890,12 +1890,7 @@ void main() {
       ),
       '2',
     );
-    await tester.tap(
-      find.descendant(
-        of: find.byType(FoodQuantitySheet),
-        matching: find.byType(FilledButton),
-      ),
-    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Add item'));
     await tester.pumpAndSettle();
     await tester.tap(
       find.descendant(

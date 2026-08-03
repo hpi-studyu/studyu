@@ -59,18 +59,34 @@ final class FoodSelectionStore extends ChangeNotifier {
   void addOrIncrement(
     String key,
     studyu.FoodEntry food, {
+    studyu.FoodEntry? sourceFood,
     bool caloriesKnown = true,
     bool gramsKnown = true,
+    bool? baselineGramsKnown,
   }) {
     final existing = _items[key];
     if (existing == null) {
+      var quantity = 1;
+      var baseFood = food;
+      final sourceAmount = sourceFood?.amount;
+      if (sourceAmount != null && sourceAmount.isFinite && sourceAmount > 0) {
+        final servings = food.amount / sourceAmount;
+        final roundedServings = servings.round();
+        if (servings.isFinite &&
+            roundedServings > 0 &&
+            (servings - roundedServings).abs() < 0.000001) {
+          quantity = roundedServings;
+          baseFood = rescaleFoodAmount(food, food.amount / roundedServings);
+        }
+      }
       _items[key] = FoodSelectionItem(
         key: key,
-        baselineFood: cloneFoodEntry(food),
-        baseFood: cloneFoodEntry(food),
+        baselineFood: cloneFoodEntry(sourceFood ?? baseFood),
+        baseFood: cloneFoodEntry(baseFood),
+        quantity: quantity,
         caloriesKnown: caloriesKnown,
         gramsKnown: gramsKnown,
-        baselineGramsKnown: gramsKnown,
+        baselineGramsKnown: baselineGramsKnown ?? gramsKnown,
       );
     } else {
       existing.quantity++;
