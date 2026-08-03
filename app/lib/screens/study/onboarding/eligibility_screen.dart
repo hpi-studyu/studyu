@@ -59,9 +59,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
 
     final criteria = widget.study!.eligibilityCriteria;
-    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
-      (element) => element.isViolated(qs),
-    );
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull((
+      element,
+    ) {
+      return element.isViolated(qs);
+    });
     if (failingResult == null) return true;
     // QuestionnaireWidget reports null after the continuation predicate stops.
     _ignoreNextNullResponse = true;
@@ -89,21 +91,19 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final isEligible = criteria.every((criterion) {
+      final firstFailed = criteria.firstWhereOrNull((criterion) {
         // freetext quickfix start
         /*if (_isFreeTextCriterion(criterion)) {
           print('Criterion is free text, automatically satisfying it.');
-          return true;
+          return false;
         }*/
         // freetext quickfix end
-        return criterion.isSatisfied(qs);
+        return !criterion.isSatisfied(qs);
       });
+      final isEligible = firstFailed == null;
       if (isEligible) {
         activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
-        final firstFailed = criteria.firstWhere(
-          (criterion) => criterion.isViolated(qs),
-        );
         activeResult = EligibilityResult(
           qs,
           eligible: isEligible,
@@ -133,6 +133,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
+    key: const ValueKey('eligibility_pass_banner'),
     leading: const Icon(
       MdiIcons.checkboxMarkedCircle,
       color: Colors.green,
@@ -148,6 +149,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   );
 
   Widget _constructFailBanner() => MaterialBanner(
+    key: const ValueKey('eligibility_fail_banner'),
     leading: const Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,6 +172,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     ),
     actions: [
       TextButton(
+        key: const ValueKey('eligibility_back'),
         onPressed: _finish,
         child: Text(AppLocalizations.of(context)!.eligible_back),
       ),
@@ -185,6 +188,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      key: const ValueKey('eligibility_screen'),
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
@@ -214,6 +218,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         ],
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('eligibility_continue'),
         onNext: activeResult?.eligible ?? false ? _finish : null,
         progress: const OnboardingProgress(stage: 0, progress: 0.5),
       ),

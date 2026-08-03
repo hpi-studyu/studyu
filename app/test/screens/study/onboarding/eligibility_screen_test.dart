@@ -66,4 +66,57 @@ void main() {
     expect(find.text('Criterion not fulfilled'), findsOneWidget);
     expect(find.text('Complete task'), findsNothing);
   });
+
+  testWidgets('unevaluable eligibility criterion fails final evaluation', (
+    tester,
+  ) async {
+    final question = BooleanQuestion.withId()
+      ..id = 'q1'
+      ..prompt = 'Are you ready?';
+    final criterion = EligibilityCriterion.withId()
+      ..reason = 'Missing answer should fail eligibility.'
+      ..condition = (BooleanExpression()..target = 'missing-question');
+    final study = Study.withId('user')
+      ..title = 'Eligibility Study'
+      ..questionnaire.questions = [question]
+      ..eligibilityCriteria = [criterion];
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => EligibilityScreen(study: study),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp.router(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        routerConfig: router,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('yes'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('eligibility_fail_banner')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('eligibility_pass_banner')), findsNothing);
+
+    final nextButton = tester.widget<TextButton>(
+      find.byKey(const ValueKey('eligibility_continue')),
+    );
+    expect(nextButton.onPressed, isNull);
+  });
 }
