@@ -15,15 +15,18 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            // Define a list of workflows that need to finish successfully if run before merging  
+            // Define the workflows that need to finish successfully before merging.
             workflows_to_check = [
               "all_packages.yml",
+              "dart_file_lines.yml",
               "linter.yml",
               "mega-linter.yml",
               "e2e_tests.yml",
               "supabase-test.yml",
             ];
-            console.log("Initializing with workflows to check: " + workflows_to_check);
+            console.log(
+              "Initializing with workflows to check: " + workflows_to_check
+            );
             const { owner, repo } = context.repo;
             let branch_name;
             if (context.payload.pull_request !== undefined) {
@@ -35,7 +38,7 @@ jobs:
             }
             console.log("Branch name: " + branch_name);
             const maxRetries = 15; // Maximum number of retries
-            
+
             async function fetchLatestWorkflowRun(workflowId) {
               console.log("Fetching workflow runs for: " + workflowId);
               try {
@@ -49,10 +52,17 @@ jobs:
                 return response.data.workflow_runs[0];
               } catch (error) {
                 if (error.status === 404) {
-                  console.warn("Workflow not found: " + workflowId + ". It will be ignored.");
+                  console.warn(
+                    "Workflow not found: " + workflowId + ". It will be ignored."
+                  );
                   return;
                 }
-                core.setFailed("Error fetching workflow runs for: " + workflowId + ". Error: " + error.message);
+                core.setFailed(
+                  "Error fetching workflow runs for: " +
+                  workflowId +
+                  ". Error: " +
+                  error.message
+                );
                 process.exit();
               }
             }
@@ -60,7 +70,7 @@ jobs:
             async function sleep(ms) {
               return new Promise((resolve) => setTimeout(resolve, ms));
             }
-            
+
             console.log("Sleeping 10s to give other runs a chance to start");
             await sleep(10000);
             for (const workflowId of workflows_to_check) {
@@ -72,15 +82,31 @@ jobs:
                 continue;
               }
               do {
-                console.log("Checking workflow run: " + workflowRun.name + " with status: " + workflowRun.status + " and conclusion: " + workflowRun.conclusion);
+                console.log(
+                  "Checking workflow run: " +
+                  workflowRun.name +
+                  " with status: " +
+                  workflowRun.status +
+                  " and conclusion: " +
+                  workflowRun.conclusion
+                );
                 if (retryCount >= maxRetries) {
                   core.setFailed(
                     "Maximum retries reached with check runs still in progress."
                   );
                   break;
                 }
-                if (workflowRun.conclusion === "success" || workflowRun.conclusion === "skipped" || workflowRun.conclusion === "cancelled") {
-                  console.log("Workflow run completed successfully: " + workflowRun.name + " with conclusion: " + workflowRun.conclusion);
+                if (
+                  workflowRun.conclusion === "success" ||
+                  workflowRun.conclusion === "skipped" ||
+                  workflowRun.conclusion === "cancelled"
+                ) {
+                  console.log(
+                    "Workflow run completed successfully: " +
+                    workflowRun.name +
+                    " with conclusion: " +
+                    workflowRun.conclusion
+                  );
                   break;
                 }
                 if (workflowRun.conclusion === "failure") {
@@ -95,9 +121,12 @@ jobs:
                   const failedCheckNames = checkRuns.data.check_runs
                       .filter((checkRun) => checkRun.conclusion === "failure")
                       .map((checkRun) => checkRun.name);
-                  core.setFailed("The workflow run '" +
-                    workflowRun.name + "' has failed. Please fix the failed checks: '" +
-                    failedCheckNames.join(", ") + "'. Check suite URL: " +
+                  core.setFailed(
+                    "The workflow run '" +
+                    workflowRun.name +
+                    "' has failed. Please fix the failed checks: '" +
+                    failedCheckNames.join(", ") +
+                    "'. Check suite URL: " +
                     urlOfFailedCheckSuite
                   );
                   break;
@@ -110,15 +139,16 @@ jobs:
             }
             console.log("All given workflow runs completed.");
 
-            // Do not check the check runs for now, since fetchCheckRuns also 
+            // Do not check the check runs for now, since fetchCheckRuns also
             // includes the workflows we checked above for the latest commit.
-            // Todo: find another way to check for checks that are not part 
-            // of this repository e.g. GitGuardian
+            // Todo: find another way to check for checks that are not part
+            // of this repository e.g. GitGuardian.
 
-            /* 
-              const commit_sha = context.payload.pull_request.head.sha; // Get the SHA of the head commit of the PR
+            /*
+              const commit_sha = context.payload.pull_request.head.sha;
+              // Get the SHA of the head commit of the PR
               console.log("commit_sha " + commit_sha);
-              // exclude the current workflow from the list of workflows to check
+              // Exclude the current workflow from the workflows checked above.
               const excludedCheckRunName = 'check_commit_status'
               // console.log("context sha: " + context.sha);
               // console.log("github sha: " + github.sha);
@@ -129,7 +159,9 @@ jobs:
                   ref: commit_sha,
                   per_page: 100,
                 });
-                console.log("Found " + response.data.check_runs.length + " check runs.");
+                console.log(
+                  "Found " + response.data.check_runs.length + " check runs."
+                );
                 return response.data.check_runs;
               }
               console.log("Checking check runs...");
@@ -139,16 +171,26 @@ jobs:
                 let retryCount = 0;
                 do {
                   inProgressFound = false;
-                  console.log("Checking check run: " + checkRun.name + " with status: " + checkRun.status + " and conclusion: " + checkRun.conclusion);
+                  console.log(
+                    "Checking check run: " +
+                    checkRun.name +
+                    " with status: " +
+                    checkRun.status +
+                    " and conclusion: " +
+                    checkRun.conclusion
+                  );
                   if (checkRun.name === excludedCheckRunName) {
-                    console.log("Skipping excluded check run: " + checkRun.name);
+                    console.log(
+                      "Skipping excluded check run: " + checkRun.name
+                    );
                     break;
                   }
                   if (checkRun.status === "in_progress") {
                     console.log("Check run in progress: " + checkRun.name);
                     if (retryCount >= maxRetries) {
                       core.setFailed(
-                        "Maximum retries reached with check runs still in progress."
+                        "Maximum retries reached with check runs still in " +
+                        "progress."
                       );
                       break;
                     }
@@ -159,8 +201,11 @@ jobs:
                     inProgressFound = true;
                   }
                   if (checkRun.conclusion === "failure") {
-                    core.setFailed("The check run '" +
-                      checkRun.name + "' has failed. Please fix the failed checks. Check run URL: " +
+                    core.setFailed(
+                      "The check run '" +
+                      checkRun.name +
+                      "' has failed. Please fix the failed checks. " +
+                      "Check run URL: " +
                       checkRun.html_url
                     );
                   }
