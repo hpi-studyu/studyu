@@ -84,8 +84,17 @@ class Preview {
 
       for (final subject in subjects) {
         try {
+          await FitbitHandler.deleteRemoteFitbitCredentials(subject.studyId);
           await subject.delete();
-          await FitbitHandler.deleteFitbitCredentials(subject.studyId);
+          try {
+            await FitbitHandler.clearLocalFallbackCredentialsForStudy(
+              subject.studyId,
+            );
+          } on FitbitCredentialDeletionException catch (e) {
+            print(
+              '[PreviewApp]: Failed deleting local Fitbit credentials for subject ${subject.id}: $e',
+            );
+          }
         } catch (e) {
           print(
             '[PreviewApp]: Failed deleting subject ${subject.id} for user $userId: $e',

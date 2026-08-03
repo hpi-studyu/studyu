@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/services/restore_account_service.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
+import 'package:studyu_app/services/participant_study_exit_service.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudySwitchDialogs {
   // Returns true if the user decides to continue with deeplink handling.
@@ -174,11 +172,28 @@ class StudySwitchDialogs {
       return false;
     }
 
-    await currentSubject.softDelete();
-    await deleteActiveStudyReference();
-    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
-    if (context.mounted) {
-      await cancelNotifications(context);
+    final result = await ParticipantStudyExitService.exitStudy(
+      subject: currentSubject,
+      mode: StudyExitMode.softDelete,
+      notificationCleanup: () async {
+        if (!context.mounted) return;
+        await cancelNotifications(context);
+      },
+    );
+
+    if (!result.success) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result.isOfflineFailure
+                  ? loc.no_internet_connection
+                  : loc.error_occurred_with_message(result.errorMessage ?? ''),
+            ),
+          ),
+        );
+      }
+      return false;
     }
     return true;
   }
@@ -214,12 +229,28 @@ class StudySwitchDialogs {
       return false;
     }
 
-    await currentSubject.delete();
-    RestoreAccountService.clearCache();
-    await deleteLocalData();
-    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
-    if (context.mounted) {
-      await cancelNotifications(context);
+    final result = await ParticipantStudyExitService.exitStudy(
+      subject: currentSubject,
+      mode: StudyExitMode.hardDelete,
+      notificationCleanup: () async {
+        if (!context.mounted) return;
+        await cancelNotifications(context);
+      },
+    );
+
+    if (!result.success) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result.isOfflineFailure
+                  ? loc.no_internet_connection
+                  : loc.error_occurred_with_message(result.errorMessage ?? ''),
+            ),
+          ),
+        );
+      }
+      return false;
     }
     return true;
   }

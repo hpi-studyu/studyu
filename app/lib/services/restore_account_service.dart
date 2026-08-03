@@ -348,7 +348,6 @@ class RestoreAccountService {
 
   static Future<void> _cleanupParticipantStateForRecovery() async {
     clearCache();
-    await _activeSubjectClearer();
     await Cache.clearAllSubjectCaches();
     await PendingDeepLinkService.clearStorage();
     await FitbitHandler.clearLocalFallbackCredentials();
@@ -464,14 +463,22 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
-      await _participantStateCleanup();
       await _credentialStorer(recoveredEmail, recoveredPassword);
+      await _activeSubjectClearer();
+
+      try {
+        await _participantStateCleanup();
+      } catch (e, stackTrace) {
+        StudyULogger.warning(
+          'Error cleaning up participant state after recovery sign in: $e\n$stackTrace',
+        );
+        return RecoveryResult(success: false, error: 'recovery_cleanup_failed');
+      }
 
       if (result.subjectId != null) {
         final isValid = await _subjectValidator(result.subjectId!);
 
         if (!isValid) {
-          await _activeSubjectClearer();
           return RecoveryResult(
             success: true,
             email: result.email,
@@ -480,8 +487,6 @@ class RestoreAccountService {
         }
 
         await _activeSubjectStorer(result.subjectId!);
-      } else {
-        await _activeSubjectClearer();
       }
 
       return result;

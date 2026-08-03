@@ -141,6 +141,9 @@ void main() {
               events.add('sign_in:$email:$password');
               return true;
             };
+        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
+          events.add('clear_subject');
+        };
         RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
             true;
         RestoreAccountService.debugActiveSubjectStorerForTesting =
@@ -158,8 +161,9 @@ void main() {
         expect(storedSubjectId, 'subject-1');
         expect(events, [
           'sign_in:recovered@test.local:password-1',
-          'cleanup',
           'store_credentials',
+          'clear_subject',
+          'cleanup',
           'store_subject',
         ]);
       },
@@ -202,11 +206,11 @@ void main() {
         RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {};
         RestoreAccountService.debugParticipantSignInExecutorForTesting =
             (_, _) async => true;
-        RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
-            false;
         RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
           clearedSubject++;
         };
+        RestoreAccountService.debugSubjectValidatorForTesting = (_) async =>
+            false;
 
         final result = await RestoreAccountService.performRecovery(BigInt.one);
 
@@ -271,6 +275,39 @@ void main() {
         expect(result.success, isFalse);
         expect(cleanupCalls, 0);
         expect(credentialStoreCalls, 0);
+      },
+    );
+
+    test(
+      'performRecovery returns cleanup failure after successful sign in',
+      () async {
+        var credentialStoreCalls = 0;
+        var activeSubjectClearCalls = 0;
+
+        RestoreAccountService.debugRecoverAccountExecutorForTesting =
+            (_) async => RecoveryResult(
+              success: true,
+              email: 'recovered@test.local',
+              password: 'password-1',
+              subjectId: 'subject-1',
+            );
+        RestoreAccountService.debugParticipantSignInExecutorForTesting =
+            (_, _) async => true;
+        RestoreAccountService.debugCredentialStorerForTesting = (_, _) async {
+          credentialStoreCalls++;
+        };
+        RestoreAccountService.debugActiveSubjectClearerForTesting = () async {
+          activeSubjectClearCalls++;
+        };
+        RestoreAccountService.debugParticipantStateCleanupForTesting =
+            () async => throw Exception('cleanup failed');
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isFalse);
+        expect(result.error, 'recovery_cleanup_failed');
+        expect(credentialStoreCalls, 1);
+        expect(activeSubjectClearCalls, 1);
       },
     );
   });

@@ -102,6 +102,41 @@ void main() {
         throwsException,
       );
     });
+
+    test(
+      'storeSubject works before active subject id is stored during kickoff',
+      () async {
+        Cache.debugActiveSubjectIdGetterForTesting = () =>
+            Future<String?>.value();
+        final subject = _subject('subject-1', 'user-1');
+
+        await Cache.storeSubject(subject);
+
+        expect(storage.containsKey('cache_subject_user-1_subject-1'), isTrue);
+      },
+    );
+
+    test('successful legacy migration deletes legacy key', () async {
+      final subject = _subject('subject-1', 'user-1');
+      storage[cacheSubjectKey] = jsonEncode(_cachedSubjectJson(subject));
+
+      await Cache.loadSubject(backupSubject: subject);
+
+      expect(storage.containsKey(cacheSubjectKey), isFalse);
+      expect(storage.containsKey('cache_subject_user-1_subject-1'), isTrue);
+    });
+
+    test('failed scoped write preserves legacy key', () {
+      final subject = _subject('subject-1', 'user-1');
+      storage[cacheSubjectKey] = jsonEncode(_cachedSubjectJson(subject));
+      Cache.debugWriteValueForTesting = (key, value) {
+        throw Exception('write failed');
+      };
+
+      expect(() => Cache.loadSubject(backupSubject: subject), throwsException);
+      expect(storage.containsKey(cacheSubjectKey), isTrue);
+      expect(storage.containsKey('cache_subject_user-1_subject-1'), isFalse);
+    });
   });
 }
 

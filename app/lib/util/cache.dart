@@ -106,39 +106,42 @@ class Cache {
     final legacyCache = await _readValue(cacheSubjectKey);
     if (legacyCache == null) return null;
 
+    late final Map<String, dynamic> cachedSubject;
     try {
-      final cachedSubject = jsonDecode(legacyCache) as Map<String, dynamic>;
-      final expectedIdentity = _expectedCacheIdentity(
-        subject: subject,
-        backupSubject: backupSubject,
-        currentUserId: _currentUserIdGetter(),
-        activeSubjectId: await _activeSubjectIdGetter(),
-      );
-
-      if (expectedIdentity != null) {
-        final actualIdentity = _extractCachedIdentity(cachedSubject);
-        final matchesExpected =
-            actualIdentity.userId == expectedIdentity.userId &&
-            actualIdentity.subjectId == expectedIdentity.subjectId;
-        if (!matchesExpected) {
-          await _deleteValue(cacheSubjectKey);
-          return null;
-        }
-
-        final migratedKey = _scopedCacheKey(
-          expectedIdentity.userId,
-          expectedIdentity.subjectId,
-        );
-        await _writeValue(migratedKey, legacyCache);
-        await _deleteValue(cacheSubjectKey);
-      }
-
-      return legacyCache;
+      cachedSubject = jsonDecode(legacyCache) as Map<String, dynamic>;
     } catch (e) {
-      StudyULogger.warning("Failed to parse legacy cached subject: $e");
+      StudyULogger.warning('Failed to parse legacy cached subject JSON: $e');
       await _deleteValue(cacheSubjectKey);
       return null;
     }
+
+    final expectedIdentity = _expectedCacheIdentity(
+      subject: subject,
+      backupSubject: backupSubject,
+      currentUserId: _currentUserIdGetter(),
+      activeSubjectId: await _activeSubjectIdGetter(),
+    );
+
+    if (expectedIdentity == null) {
+      return legacyCache;
+    }
+
+    final actualIdentity = _extractCachedIdentity(cachedSubject);
+    final matchesExpected =
+        actualIdentity.userId == expectedIdentity.userId &&
+        actualIdentity.subjectId == expectedIdentity.subjectId;
+    if (!matchesExpected) {
+      await _deleteValue(cacheSubjectKey);
+      return null;
+    }
+
+    final migratedKey = _scopedCacheKey(
+      expectedIdentity.userId,
+      expectedIdentity.subjectId,
+    );
+    await _writeValue(migratedKey, legacyCache);
+    await _deleteValue(cacheSubjectKey);
+    return legacyCache;
   }
 
   static Future<StudySubject> _decodeCachedSubject(
@@ -171,7 +174,7 @@ class Cache {
     if (await _containsKey(cacheSubjectKey)) {
       await _deleteValue(cacheSubjectKey);
     }
-    assert(subject == (await loadSubject()));
+    assert(subject == (await loadSubject(backupSubject: subject)));
   }
 
   static Future<StudySubject> loadSubject({StudySubject? backupSubject}) async {

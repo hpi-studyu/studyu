@@ -7,6 +7,34 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+class FitbitCredentialStorageException implements Exception {
+  final bool localOperationFailed;
+  final bool serverOperationFailed;
+
+  const FitbitCredentialStorageException({
+    required this.localOperationFailed,
+    required this.serverOperationFailed,
+  });
+
+  @override
+  String toString() =>
+      'FitbitCredentialStorageException(localOperationFailed: $localOperationFailed, serverOperationFailed: $serverOperationFailed)';
+}
+
+class FitbitCredentialDeletionException implements Exception {
+  final bool remoteDeletionFailed;
+  final bool localDeletionFailed;
+
+  const FitbitCredentialDeletionException({
+    required this.remoteDeletionFailed,
+    required this.localDeletionFailed,
+  });
+
+  @override
+  String toString() =>
+      'FitbitCredentialDeletionException(remoteDeletionFailed: $remoteDeletionFailed, localDeletionFailed: $localDeletionFailed)';
+}
+
 class FitbitHandler {
   static const String _fitbitCredentialsPrefix = 'fitbit_credentials_';
   static const String _participantFitbitTable =
@@ -72,21 +100,60 @@ class FitbitHandler {
   }
 
   static Future<void> deleteFitbitCredentials(String studyKey) async {
+    var remoteDeletionFailed = false;
+    var localDeletionFailed = false;
+    try {
+      await deleteRemoteFitbitCredentials(studyKey);
+    } on FitbitCredentialDeletionException catch (e) {
+      remoteDeletionFailed = e.remoteDeletionFailed;
+      localDeletionFailed = e.localDeletionFailed;
+    }
+
+    try {
+      await clearLocalFallbackCredentialsForStudy(studyKey);
+    } on FitbitCredentialDeletionException catch (e) {
+      remoteDeletionFailed = remoteDeletionFailed || e.remoteDeletionFailed;
+      localDeletionFailed = localDeletionFailed || e.localDeletionFailed;
+    }
+
+    if (remoteDeletionFailed || localDeletionFailed) {
+      throw FitbitCredentialDeletionException(
+        remoteDeletionFailed: remoteDeletionFailed,
+        localDeletionFailed: localDeletionFailed,
+      );
+    }
+  }
+
+  static Future<void> deleteRemoteFitbitCredentials(String studyKey) async {
     final userId = _currentUserIdGetter();
-    var serverDeleteFailed = false;
     if (userId != null) {
       try {
         await _serverCredentialsDeleter(userId: userId, studyKey: studyKey);
       } catch (e) {
-        serverDeleteFailed = true;
         StudyULogger.error(
           'Failed to delete participant Fitbit credentials from server: $e',
         );
+        throw const FitbitCredentialDeletionException(
+          remoteDeletionFailed: true,
+          localDeletionFailed: false,
+        );
       }
     }
-    await _deleteLocalCredentials(studyKey, userId: userId);
-    if (serverDeleteFailed) {
-      throw Exception('Failed to delete participant Fitbit credentials');
+  }
+
+  static Future<void> clearLocalFallbackCredentialsForStudy(
+    String studyKey,
+  ) async {
+    try {
+      await _deleteLocalCredentials(studyKey, userId: _currentUserIdGetter());
+    } catch (e) {
+      StudyULogger.error(
+        'Failed to delete participant Fitbit credentials locally: $e',
+      );
+      throw const FitbitCredentialDeletionException(
+        remoteDeletionFailed: false,
+        localDeletionFailed: true,
+      );
     }
   }
 
@@ -112,13 +179,31 @@ class FitbitHandler {
 
     final credentialsJson = _credentialsToJson(credentials);
     if (userId != null) {
-      await _writeLocalValue(
-        _scopedLocalKey(userId, studyKey),
-        jsonEncode(credentialsJson),
-      );
-      if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
-        await _deleteLocalValue(_legacyLocalKey(studyKey));
+      var localOperationFailed = false;
+      var serverOperationFailed = false;
+
+      try {
+        await _writeLocalValue(
+          _scopedLocalKey(userId, studyKey),
+          jsonEncode(credentialsJson),
+        );
+      } catch (e) {
+        localOperationFailed = true;
+        StudyULogger.error(
+          'Failed to store participant Fitbit credentials locally: $e',
+        );
       }
+
+      try {
+        if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
+          await _deleteLocalValue(_legacyLocalKey(studyKey));
+        }
+      } catch (e) {
+        StudyULogger.warning(
+          'Failed to delete legacy Fitbit credentials locally: $e',
+        );
+      }
+
       try {
         await _serverCredentialsUpserter(
           userId: userId,
@@ -126,8 +211,16 @@ class FitbitHandler {
           credentialsJson: credentialsJson,
         );
       } catch (e) {
+        serverOperationFailed = true;
         StudyULogger.error(
           'Failed to store participant Fitbit credentials on server: $e',
+        );
+      }
+
+      if (localOperationFailed && serverOperationFailed) {
+        throw const FitbitCredentialStorageException(
+          localOperationFailed: true,
+          serverOperationFailed: true,
         );
       }
       return;
@@ -151,12 +244,24 @@ class FitbitHandler {
           studyKey: studyKey,
         );
         if (serverCredentials != null) {
-          await _writeLocalValue(
-            _scopedLocalKey(userId, studyKey),
-            jsonEncode(_credentialsToJson(serverCredentials)),
-          );
-          if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
-            await _deleteLocalValue(_legacyLocalKey(studyKey));
+          try {
+            await _writeLocalValue(
+              _scopedLocalKey(userId, studyKey),
+              jsonEncode(_credentialsToJson(serverCredentials)),
+            );
+          } catch (e) {
+            StudyULogger.warning(
+              'Failed to cache participant Fitbit credentials locally: $e',
+            );
+          }
+          try {
+            if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
+              await _deleteLocalValue(_legacyLocalKey(studyKey));
+            }
+          } catch (e) {
+            StudyULogger.warning(
+              'Failed to delete legacy Fitbit credentials locally: $e',
+            );
           }
           return serverCredentials;
         }
@@ -166,13 +271,24 @@ class FitbitHandler {
         );
       }
 
-      final scopedString = await _readLocalValue(
-        _scopedLocalKey(userId, studyKey),
-      );
-      if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
-        await _deleteLocalValue(_legacyLocalKey(studyKey));
+      String? scopedString;
+      try {
+        scopedString = await _readLocalValue(_scopedLocalKey(userId, studyKey));
+      } catch (e) {
+        StudyULogger.error(
+          'Failed to load participant Fitbit credentials locally: $e',
+        );
+      }
+      try {
+        if (await _containsLocalKey(_legacyLocalKey(studyKey))) {
+          await _deleteLocalValue(_legacyLocalKey(studyKey));
+          StudyULogger.warning(
+            'Discarded legacy Fitbit credentials for $studyKey after authenticated load because ownership cannot be verified.',
+          );
+        }
+      } catch (e) {
         StudyULogger.warning(
-          'Discarded legacy Fitbit credentials for $studyKey after authenticated load because ownership cannot be verified.',
+          'Failed to delete legacy Fitbit credentials locally: $e',
         );
       }
       if (scopedString != null) {

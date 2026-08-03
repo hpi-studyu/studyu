@@ -60,6 +60,20 @@ void main() {
       );
     });
 
+    test('server credentials are returned when local caching throws', () async {
+      FitbitHandler.debugServerCredentialsLoaderForTesting =
+          ({required userId, required studyKey}) async => serverCredentials;
+      FitbitHandler.debugWriteLocalValueForTesting = (key, value) {
+        throw Exception('local cache failed');
+      };
+
+      final loaded = await FitbitHandler.debugLoadCredentialsForTesting(
+        'study-1',
+      );
+
+      expect(loaded?.userID, 'server-user');
+    });
+
     test(
       'server returns no row so scoped local credentials are used',
       () async {
@@ -116,6 +130,61 @@ void main() {
       },
     );
 
+    test('server upsert still occurs when local writing throws', () async {
+      var upsertCalls = 0;
+      FitbitHandler.debugWriteLocalValueForTesting = (key, value) {
+        throw Exception('local failed');
+      };
+      FitbitHandler.debugServerCredentialsUpserterForTesting =
+          ({
+            required userId,
+            required studyKey,
+            required credentialsJson,
+          }) async {
+            upsertCalls++;
+          };
+
+      await FitbitHandler.debugStoreCredentialsForTesting(
+        scopedCredentials,
+        'study-1',
+      );
+
+      expect(upsertCalls, 1);
+    });
+
+    test(
+      'both storage failures are surfaced without exposing tokens',
+      () async {
+        FitbitHandler.debugWriteLocalValueForTesting = (key, value) {
+          throw Exception('local failed');
+        };
+        FitbitHandler.debugServerCredentialsUpserterForTesting =
+            ({
+              required userId,
+              required studyKey,
+              required credentialsJson,
+            }) async => throw Exception('server failed');
+
+        try {
+          await FitbitHandler.debugStoreCredentialsForTesting(
+            scopedCredentials,
+            'study-1',
+          );
+          fail('Expected storage failure');
+        } catch (e) {
+          expect(e, isA<FitbitCredentialStorageException>());
+          expect(
+            e.toString(),
+            isNot(contains(scopedCredentials.fitbitAccessToken)),
+          );
+          expect(
+            e.toString(),
+            isNot(contains(scopedCredentials.fitbitRefreshToken)),
+          );
+        }
+      },
+    );
+
     test(
       'authenticated users never consume legacy unscoped credentials',
       () async {
@@ -160,6 +229,21 @@ void main() {
 
       expect(storage, isEmpty);
     });
+
+    test(
+      'clear local fallback for study can fail after remote deletion',
+      () async {
+        storage['fitbit_credentials_user-1_study-1'] = 'one';
+        FitbitHandler.debugDeleteLocalValueForTesting = (key) {
+          throw Exception('local delete failed');
+        };
+
+        await expectLater(
+          () => FitbitHandler.clearLocalFallbackCredentialsForStudy('study-1'),
+          throwsA(isA<FitbitCredentialDeletionException>()),
+        );
+      },
+    );
   });
 }
 

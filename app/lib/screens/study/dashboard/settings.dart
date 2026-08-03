@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -7,15 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/services/restore_account_service.dart';
+import 'package:studyu_app/services/participant_study_exit_service.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase/supabase.dart' show PostgrestException;
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -371,30 +367,34 @@ class OptOutAlertDialog extends StatelessWidget {
             ),
             onPressed: acknowledged
                 ? () async {
-                    try {
-                      await subject!.softDelete();
-                    } on SocketException catch (_) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.no_internet_connection,
-                            ),
+                    final result = await ParticipantStudyExitService.exitStudy(
+                      subject: subject!,
+                      mode: StudyExitMode.softDelete,
+                      notificationCleanup: () async {
+                        if (!context.mounted) return;
+                        await cancelNotifications(context);
+                      },
+                    );
+                    if (!context.mounted) return;
+                    if (!result.success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            result.isOfflineFailure
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.no_internet_connection
+                                : AppLocalizations.of(
+                                    context,
+                                  )!.error_occurred_with_message(
+                                    result.errorMessage ?? '',
+                                  ),
                           ),
-                        );
-                      }
+                        ),
+                      );
                       return;
                     }
-                    await deleteActiveStudyReference();
-                    await FitbitHandler.deleteFitbitCredentials(
-                      subject!.studyId,
-                    );
-                    if (context.mounted) await cancelNotifications(context);
-                    if (context.mounted) {
-                      context.go('/${RouteNames.studySelection}');
-                    }
+                    context.go('/${RouteNames.studySelection}');
                   }
                 : null,
           ),
@@ -455,50 +455,34 @@ class DeleteAlertDialog extends StatelessWidget {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: acknowledged
                 ? () async {
-                    try {
-                      await subject!.delete();
-                    } on SocketException catch (_) {
-                      // Device is offline — preserve local data so nothing is lost
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.no_internet_connection,
-                            ),
-                          ),
-                        );
-                      }
-                      return;
-                    } on PostgrestException catch (e) {
-                      if (e.code != 'PGRST116') {
-                        // Unexpected DB error — don't clear local data
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.error_occurred_with_message(e.message),
-                              ),
-                            ),
-                          );
-                        }
-                        return;
-                      }
-                      // PGRST116: subject already deleted from DB — proceed with local cleanup
-                    }
-                    // Reached when delete succeeded or subject was already gone from DB
-                    RestoreAccountService.clearCache();
-                    await deleteLocalData();
-                    await FitbitHandler.deleteFitbitCredentials(
-                      subject!.studyId,
+                    final result = await ParticipantStudyExitService.exitStudy(
+                      subject: subject!,
+                      mode: StudyExitMode.hardDelete,
+                      notificationCleanup: () async {
+                        if (!context.mounted) return;
+                        await cancelNotifications(context);
+                      },
                     );
-                    if (context.mounted) await cancelNotifications(context);
-                    if (context.mounted) {
-                      context.go('/${RouteNames.welcome}');
+                    if (!context.mounted) return;
+                    if (!result.success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            result.isOfflineFailure
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.no_internet_connection
+                                : AppLocalizations.of(
+                                    context,
+                                  )!.error_occurred_with_message(
+                                    result.errorMessage ?? '',
+                                  ),
+                          ),
+                        ),
+                      );
+                      return;
                     }
+                    context.go('/${RouteNames.welcome}');
                   }
                 : null,
           ),
