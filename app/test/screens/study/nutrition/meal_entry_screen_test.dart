@@ -1400,7 +1400,7 @@ void main() {
       ),
       '2',
     );
-    await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add item'));
     await tester.pumpAndSettle();
     await tester.tap(
       find.descendant(

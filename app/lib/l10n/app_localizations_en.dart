@@ -2223,9 +2223,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get food_quantity_weight => 'Weight';
 
   @override
-  String get food_quantity_weight_for_meal => 'Weight for this meal';
-
-  @override
   String get food_quantity_custom_weight => 'Custom';
 
   @override
@@ -2249,16 +2246,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get food_quantity_override_helper =>
       'Changes only this meal selection. My Library and the source item remain unchanged.';
-
-  @override
-  String food_quantity_effective_weight_per_serving(String weight) {
-    return '$weight g per serving';
-  }
-
-  @override
-  String food_quantity_effective_weight(String perServing, String total) {
-    return '$perServing g per serving · $total g total';
-  }
 
   @override
   String food_quantity_use_library_weight(String weight) {
@@ -2311,13 +2298,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get food_quantity_add_to_selection => 'Add to selection';
+  String get food_quantity_add_to_selection => 'Add item';
 
   @override
   String get food_quantity_add_meal_to_selection => 'Add meal to selection';
 
   @override
-  String get food_quantity_update_selection => 'Update selection';
+  String get food_quantity_update_selection => 'Update item';
 
   @override
   String food_quantity_per_serving(String calories) {
@@ -2325,7 +2312,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get food_quantity_selection_total => 'Selection total';
+  String get food_quantity_selection_total => 'Nutrition for this amount';
 
   @override
   String get food_quantity_nutrition_unavailable =>
@@ -2901,4 +2888,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String grams_per_serving(Object grams) {
     return '$grams g per serving';
   }
+
+  @override
+  String get food_quantity_weight_per_serving => 'Weight per serving';
+
+  @override
+  String food_quantity_total_weight(String weight) {
+    return 'Total weight: $weight g';
+  }
+
+  @override
+  String get food_quantity_decrease_weight => 'Decrease weight per serving';
+
+  @override
+  String get food_quantity_increase_weight => 'Increase weight per serving';
 }

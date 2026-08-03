@@ -4097,12 +4097,6 @@ abstract class AppLocalizations {
   /// **'Weight'**
   String get food_quantity_weight;
 
-  /// No description provided for @food_quantity_weight_for_meal.
-  ///
-  /// In en, this message translates to:
-  /// **'Weight for this meal'**
-  String get food_quantity_weight_for_meal;
-
   /// No description provided for @food_quantity_custom_weight.
   ///
   /// In en, this message translates to:
@@ -4138,18 +4132,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Changes only this meal selection. My Library and the source item remain unchanged.'**
   String get food_quantity_override_helper;
-
-  /// No description provided for @food_quantity_effective_weight_per_serving.
-  ///
-  /// In en, this message translates to:
-  /// **'{weight} g per serving'**
-  String food_quantity_effective_weight_per_serving(String weight);
-
-  /// No description provided for @food_quantity_effective_weight.
-  ///
-  /// In en, this message translates to:
-  /// **'{perServing} g per serving · {total} g total'**
-  String food_quantity_effective_weight(String perServing, String total);
 
   /// No description provided for @food_quantity_use_library_weight.
   ///
@@ -4220,7 +4202,7 @@ abstract class AppLocalizations {
   /// No description provided for @food_quantity_add_to_selection.
   ///
   /// In en, this message translates to:
-  /// **'Add to selection'**
+  /// **'Add item'**
   String get food_quantity_add_to_selection;
 
   /// No description provided for @food_quantity_add_meal_to_selection.
@@ -4232,7 +4214,7 @@ abstract class AppLocalizations {
   /// No description provided for @food_quantity_update_selection.
   ///
   /// In en, this message translates to:
-  /// **'Update selection'**
+  /// **'Update item'**
   String get food_quantity_update_selection;
 
   /// No description provided for @food_quantity_per_serving.
@@ -4244,7 +4226,7 @@ abstract class AppLocalizations {
   /// No description provided for @food_quantity_selection_total.
   ///
   /// In en, this message translates to:
-  /// **'Selection total'**
+  /// **'Nutrition for this amount'**
   String get food_quantity_selection_total;
 
   /// No description provided for @food_quantity_nutrition_unavailable.
@@ -5170,6 +5152,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{grams} g per serving'**
   String grams_per_serving(Object grams);
+
+  /// No description provided for @food_quantity_weight_per_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight per serving'**
+  String get food_quantity_weight_per_serving;
+
+  /// No description provided for @food_quantity_total_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Total weight: {weight} g'**
+  String food_quantity_total_weight(String weight);
+
+  /// No description provided for @food_quantity_decrease_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease weight per serving'**
+  String get food_quantity_decrease_weight;
+
+  /// No description provided for @food_quantity_increase_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase weight per serving'**
+  String get food_quantity_increase_weight;
 }
 
 class _AppLocalizationsDelegate

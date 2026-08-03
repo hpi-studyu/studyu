@@ -23,13 +23,19 @@ void main() {
     await tester.tap(find.text('External Apple'));
     await tester.pumpAndSettle();
 
+    expect(find.widgetWithText(FilledButton, 'Add item'), findsOneWidget);
     expect(
-      find.widgetWithText(FilledButton, 'Add to selection'),
-      findsOneWidget,
+      tester
+          .widget<FoodQuantitySheet>(find.byType(FoodQuantitySheet))
+          .food
+          .portionReference,
+      '1 medium apple',
     );
+    expect(find.textContaining('1 medium apple'), findsOneWidget);
+    expect(find.text('serving'), findsOneWidget);
     expect(find.text('0 items selected'), findsNothing);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add item'));
     await tester.pumpAndSettle();
 
     expect(find.byType(FoodQuantitySheet), findsNothing);
@@ -47,10 +53,7 @@ void main() {
 
     await tester.tap(find.text('External Apple'));
     await tester.pumpAndSettle();
-    expect(
-      find.widgetWithText(FilledButton, 'Add to selection'),
-      findsOneWidget,
-    );
+    expect(find.widgetWithText(FilledButton, 'Add item'), findsOneWidget);
 
     await tester.tap(
       find.descendant(
@@ -65,10 +68,7 @@ void main() {
 
     await tester.tap(find.text('External Apple'));
     await tester.pumpAndSettle();
-    expect(
-      find.widgetWithText(FilledButton, 'Add to selection'),
-      findsOneWidget,
-    );
+    expect(find.widgetWithText(FilledButton, 'Add item'), findsOneWidget);
   });
 
   testWidgets('selected item details and surface expansion stay in one route', (
@@ -87,10 +87,9 @@ void main() {
 
     await tester.tap(find.text('External Apple').last);
     await tester.pumpAndSettle();
-    expect(
-      find.widgetWithText(FilledButton, 'Update selection'),
-      findsOneWidget,
-    );
+    expect(find.widgetWithText(FilledButton, 'Update item'), findsOneWidget);
+    expect(find.textContaining('1 medium apple'), findsOneWidget);
+    expect(find.textContaining('150 g per serving'), findsNothing);
 
     await tester.tap(
       find.descendant(
@@ -116,7 +115,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(_amountField(), '2');
     await tester.pump();
-    await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add item'));
     await tester.pumpAndSettle();
 
     expect(find.textContaining('2 servings'), findsOneWidget);
@@ -153,7 +152,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(
-      find.widgetWithText(FilledButton, 'Add to selection').hitTestable(),
+      find.widgetWithText(FilledButton, 'Add item').hitTestable(),
       findsOneWidget,
     );
   });
@@ -169,7 +168,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(_weightField(), '120');
     await tester.pump();
-    await tester.tap(find.widgetWithText(FilledButton, 'Update selection'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Update item'));
     await tester.pumpAndSettle();
 
     expect(find.text('120 g'), findsOneWidget);
@@ -185,7 +184,7 @@ void main() {
     final reset = find.text('Use default weight (150 g)');
     await tester.ensureVisible(reset);
     await tester.tap(reset);
-    await tester.tap(find.widgetWithText(FilledButton, 'Update selection'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Update item'));
     await tester.pumpAndSettle();
 
     expect(find.text('150 g'), findsOneWidget);
@@ -262,11 +261,8 @@ void main() {
     await tester.tap(find.text('Library Pear'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.widgetWithText(FilledButton, 'Add to selection'),
-      findsOneWidget,
-    );
-    await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+    expect(find.widgetWithText(FilledButton, 'Add item'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Add item'));
     await tester.pumpAndSettle();
 
     expect(find.byType(FoodQuantitySheet), findsNothing);
@@ -282,11 +278,8 @@ Finder _amountField() => find
     )
     .first;
 
-Finder _weightField() => find.byWidgetPredicate(
-  (widget) =>
-      widget is TextField &&
-      widget.decoration?.labelText == 'Weight for this meal',
-);
+Finder _weightField() =>
+    find.byKey(const ValueKey('food-quantity-weight-field'));
 
 void _setSurfaceSize(WidgetTester tester) {
   tester.view.physicalSize = const Size(360, 640);
@@ -300,7 +293,7 @@ void _setSurfaceSize(WidgetTester tester) {
 Future<void> _addExternalApple(WidgetTester tester) async {
   await tester.tap(find.text('External Apple'));
   await tester.pumpAndSettle();
-  await tester.tap(find.widgetWithText(FilledButton, 'Add to selection'));
+  await tester.tap(find.widgetWithText(FilledButton, 'Add item'));
   await tester.pumpAndSettle();
 }
 
@@ -376,6 +369,7 @@ UsdaFoodItem _externalFood() => UsdaFoodItem(
   gtinUpc: '012345678901',
   servingSize: 150,
   servingSizeUnit: 'g',
+  householdServingFullText: '1 medium apple',
   foodNutrients: [UsdaFoodNutrient(nutrientId: 1008, value: 52)],
 );
 

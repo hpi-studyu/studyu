@@ -396,9 +396,6 @@ studyu.FoodEntry convertUsdaToFoodEntry(UsdaFoodItem food) {
       servingSize.isFinite &&
       servingSize > 0;
   final servingSizeGrams = hasGramServing ? servingSize : 100.0;
-  final servingSizeUnit = hasGramServing
-      ? food.servingSizeUnit!.trim()
-      : 'serving';
   final scale = servingSizeGrams / 100.0;
 
   return studyu.FoodEntry.withId(
@@ -407,7 +404,7 @@ studyu.FoodEntry convertUsdaToFoodEntry(UsdaFoodItem food) {
     brandName: food.brandOwner ?? food.brandName,
     description: food.ingredients,
     amount: 1,
-    unit: servingSizeUnit,
+    unit: 'serving',
     servingSizeGrams: servingSizeGrams,
     portionReference: food.householdServingFullText,
     portionEstimationMethod: studyu.PortionEstimationMethod.standardUnit,

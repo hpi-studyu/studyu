@@ -104,20 +104,21 @@ void main() {
     expect(result!.nutrition.micros['vitaminC'], 16.8);
   });
 
-  testWidgets('shows the current selection total', (tester) async {
+  testWidgets('shows nutrition for the current item amount', (tester) async {
     await pumpSheet(
       tester,
       action: FoodQuantityAction.updateSelection,
       initialAmount: 2,
     );
 
+    expect(find.text('Nutrition for this amount'), findsOneWidget);
     expect(find.text('190 kcal'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.byTooltip('Increase Apple'));
     await tester.pump();
 
     expect(find.text('285 kcal'), findsOneWidget);
-    expect(find.text('Update selection'), findsOneWidget);
+    expect(find.text('Update item'), findsOneWidget);
   });
 
   testWidgets(
@@ -134,15 +135,40 @@ void main() {
         onResult: (value) => result = value,
       );
 
-      expect(find.text('Library serving: 182 g'), findsOneWidget);
-      expect(find.text('Weight for this meal'), findsOneWidget);
+      expect(find.text('Library serving: 182 g'), findsNothing);
+      expect(find.text('Weight per serving'), findsOneWidget);
+      expect(find.textContaining('182 g per serving'), findsNothing);
+      expect(find.text('Total weight: 364 g'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Decrease weight per serving'));
+      await tester.pump();
+      expect(find.text('Total weight: 362 g'), findsOneWidget);
+      await tester.tap(find.byTooltip('Increase weight per serving'));
+      await tester.pump();
+      expect(find.text('Total weight: 364 g'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField).last, '1');
+      await tester.pump();
+      expect(
+        tester
+            .widget<IconButton>(
+              find.ancestor(
+                of: find.byTooltip('Decrease weight per serving'),
+                matching: find.byType(IconButton),
+              ),
+            )
+            .onPressed,
+        isNull,
+      );
+
       await tester.enterText(find.byType(TextField).last, '100');
       await tester.pump();
 
-      expect(find.text('100 g per serving · 200 g total'), findsOneWidget);
+      expect(find.text('Total weight: 200 g'), findsOneWidget);
       expect(find.text('Use library weight (182 g)'), findsOneWidget);
       expect(find.text('104 kcal'), findsOneWidget);
-      await tester.tap(find.text('Update selection'));
+      expect(find.text('52 kcal per serving'), findsOneWidget);
+      await tester.tap(find.text('Update item'));
       await tester.pumpAndSettle();
 
       expect(baseline.servingSizeGrams, 182);
@@ -152,6 +178,36 @@ void main() {
       expect(result!.nutrition.energyKcal, closeTo(104.4, 0.1));
     },
   );
+
+  testWidgets('guards invalid weights and accepts decimal grams', (
+    tester,
+  ) async {
+    FoodEntry? result;
+    await pumpSheet(
+      tester,
+      action: FoodQuantityAction.updateSelection,
+      initialAmount: 2,
+      onResult: (value) => result = value,
+    );
+
+    final updateButton = find.widgetWithText(FilledButton, 'Update item');
+    await tester.enterText(find.byType(TextField).last, '0');
+    await tester.pump();
+    expect(tester.widget<FilledButton>(updateButton).onPressed, isNull);
+
+    await tester.enterText(find.byType(TextField).last, '');
+    await tester.pump();
+    expect(tester.widget<FilledButton>(updateButton).onPressed, isNull);
+
+    await tester.enterText(find.byType(TextField).last, '100.5');
+    await tester.pump();
+    expect(find.text('Total weight: 201 g'), findsOneWidget);
+    expect(tester.widget<FilledButton>(updateButton).onPressed, isNotNull);
+
+    await tester.tap(updateButton);
+    await tester.pumpAndSettle();
+    expect(result!.servingSizeGrams, 100.5);
+  });
 
   testWidgets('reset restores baseline nutrition and keeps quantity', (
     tester,
@@ -170,14 +226,14 @@ void main() {
       onResult: (value) => result = value,
     );
 
-    expect(find.text('Default serving: 182 g'), findsOneWidget);
-    expect(find.text('100 g per serving · 200 g total'), findsOneWidget);
+    expect(find.text('Default serving: 182 g'), findsNothing);
+    expect(find.text('Total weight: 200 g'), findsOneWidget);
     await tester.tap(find.text('Use default weight (182 g)'));
     await tester.pump();
 
-    expect(find.text('100 g per serving · 200 g total'), findsNothing);
+    expect(find.text('Total weight: 364 g'), findsOneWidget);
     expect(find.text('190 kcal'), findsOneWidget);
-    await tester.tap(find.text('Update selection'));
+    await tester.tap(find.text('Update item'));
     await tester.pumpAndSettle();
 
     expect(result!.amount, 2);
@@ -204,15 +260,44 @@ void main() {
     );
 
     final updateButton = tester.widget<FilledButton>(
-      find.widgetWithText(FilledButton, 'Update selection'),
+      find.widgetWithText(FilledButton, 'Update item'),
     );
     expect(updateButton.onPressed, isNotNull);
-    await tester.tap(find.text('Update selection'));
+    await tester.tap(find.text('Update item'));
     await tester.pumpAndSettle();
 
     expect(result!.amount, 2);
     expect(result!.nutrition.energyKcal, 190);
     expect(source.amount, 1);
+  });
+
+  testWidgets('keeps household units at the amount input end', (tester) async {
+    await pumpSheet(tester, food: apple()..unit = 'cup');
+
+    expect(find.text('cup'), findsOneWidget);
+  });
+
+  testWidgets('keeps unknown nutrition values descriptive', (tester) async {
+    final food = apple()
+      ..nutrition.unavailableNutrients = {
+        'energyKcal',
+        'protein',
+        'carbs',
+        'fat',
+      };
+    await pumpSheet(
+      tester,
+      food: food,
+      action: FoodQuantityAction.updateSelection,
+      initialAmount: 2,
+      gramsKnown: false,
+      baselineGramsKnown: false,
+    );
+
+    expect(find.text('Nutrition for this amount'), findsOneWidget);
+    expect(find.text('— kcal'), findsOneWidget);
+    expect(find.text('—'), findsNWidgets(3));
+    expect(find.text('Nutrition information unavailable'), findsOneWidget);
   });
 
   testWidgets('invalid direct amounts disable adding', (tester) async {

@@ -242,7 +242,7 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
                                   : theme.textTheme.titleSmall,
                             ),
                           ),
-                          Flexible(
+                          Expanded(
                             child: Text(
                               totals,
                               textAlign: TextAlign.end,
@@ -356,13 +356,16 @@ class _SelectionPeekTrayState extends State<_SelectionPeekTray> {
     final previewLimit = mediaQuery.viewInsets.bottom > 0
         ? 0
         : (mediaQuery.textScaler.scale(1) > 1.3 ? 1 : 2);
-    return _SelectionPreviewRows(
-      items: widget.store.recentItems.take(previewLimit).toList(),
-      rowAnchorFor: widget.rowAnchorFor,
-      quantityAnchorFor: widget.quantityAnchorFor,
-      onSelect: widget.onSelect,
-      onIncrement: widget.onIncrement,
-      onDecrement: widget.onDecrement,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: _SelectionPreviewRows(
+        items: widget.store.recentItems.take(previewLimit).toList(),
+        rowAnchorFor: widget.rowAnchorFor,
+        quantityAnchorFor: widget.quantityAnchorFor,
+        onSelect: widget.onSelect,
+        onIncrement: widget.onIncrement,
+        onDecrement: widget.onDecrement,
+      ),
     );
   }
 }

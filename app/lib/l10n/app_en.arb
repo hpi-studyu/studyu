@@ -966,7 +966,6 @@
   },
   "food_quantity_amount": "Amount",
   "food_quantity_weight": "Weight",
-  "food_quantity_weight_for_meal": "Weight for this meal",
   "food_quantity_custom_weight": "Custom",
   "food_quantity_library_serving": "Library serving: {weight} g",
   "@food_quantity_library_serving": {
@@ -987,25 +986,6 @@
   "food_quantity_library_serving_unknown": "Library serving: weight unavailable",
   "food_quantity_default_serving_unknown": "Default serving: weight unavailable",
   "food_quantity_override_helper": "Changes only this meal selection. My Library and the source item remain unchanged.",
-  "food_quantity_effective_weight_per_serving": "{weight} g per serving",
-  "@food_quantity_effective_weight_per_serving": {
-    "placeholders": {
-      "weight": {
-        "type": "String"
-      }
-    }
-  },
-  "food_quantity_effective_weight": "{perServing} g per serving · {total} g total",
-  "@food_quantity_effective_weight": {
-    "placeholders": {
-      "perServing": {
-        "type": "String"
-      },
-      "total": {
-        "type": "String"
-      }
-    }
-  },
   "food_quantity_use_library_weight": "Use library weight ({weight} g)",
   "@food_quantity_use_library_weight": {
     "placeholders": {
@@ -1048,9 +1028,9 @@
   "food_quantity_carbs": "Carbs",
   "food_quantity_fat": "Fat",
   "food_quantity_add_to_meal": "Add to {meal}",
-  "food_quantity_add_to_selection": "Add to selection",
+  "food_quantity_add_to_selection": "Add item",
   "food_quantity_add_meal_to_selection": "Add meal to selection",
-  "food_quantity_update_selection": "Update selection",
+  "food_quantity_update_selection": "Update item",
   "food_quantity_per_serving": "{calories} per serving",
   "@food_quantity_per_serving": {
     "placeholders": {
@@ -1059,7 +1039,7 @@
       }
     }
   },
-  "food_quantity_selection_total": "Selection total",
+  "food_quantity_selection_total": "Nutrition for this amount",
   "food_quantity_nutrition_unavailable": "Nutrition information unavailable",
   "save_to_my_items": "Save to My items for future use",
   "save_and_add_to_meal": "Save and add to {meal}",
@@ -1383,5 +1363,16 @@
   "update_current_day_entries": "Also update matching entries in current study day",
   "update": "Update",
   "current_meal_only_banner": "Changes apply only to this meal. For permanent changes, use Food Library.",
-  "grams_per_serving": "{grams} g per serving"
+  "grams_per_serving": "{grams} g per serving",
+  "food_quantity_weight_per_serving": "Weight per serving",
+  "food_quantity_total_weight": "Total weight: {weight} g",
+  "@food_quantity_total_weight": {
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      }
+    }
+  },
+  "food_quantity_decrease_weight": "Decrease weight per serving",
+  "food_quantity_increase_weight": "Increase weight per serving"
 }

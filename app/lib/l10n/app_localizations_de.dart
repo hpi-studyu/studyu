@@ -2243,9 +2243,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get food_quantity_weight => 'Gewicht';
 
   @override
-  String get food_quantity_weight_for_meal => 'Gewicht für diese Mahlzeit';
-
-  @override
   String get food_quantity_custom_weight => 'Angepasst';
 
   @override
@@ -2269,16 +2266,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get food_quantity_override_helper =>
       'Ändert nur die aktuelle Mahlzeitenauswahl. „Meine Elemente“ und das Quellelement bleiben unverändert.';
-
-  @override
-  String food_quantity_effective_weight_per_serving(String weight) {
-    return '$weight g pro Portion';
-  }
-
-  @override
-  String food_quantity_effective_weight(String perServing, String total) {
-    return '$perServing g pro Portion · $total g gesamt';
-  }
 
   @override
   String food_quantity_use_library_weight(String weight) {
@@ -2331,14 +2318,14 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get food_quantity_add_to_selection => 'Zur Auswahl hinzufügen';
+  String get food_quantity_add_to_selection => 'Lebensmittel hinzufügen';
 
   @override
   String get food_quantity_add_meal_to_selection =>
       'Mahlzeit zur Auswahl hinzufügen';
 
   @override
-  String get food_quantity_update_selection => 'Auswahl aktualisieren';
+  String get food_quantity_update_selection => 'Lebensmittel aktualisieren';
 
   @override
   String food_quantity_per_serving(String calories) {
@@ -2346,7 +2333,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get food_quantity_selection_total => 'Auswahl gesamt';
+  String get food_quantity_selection_total => 'Nährwerte für diese Menge';
 
   @override
   String get food_quantity_nutrition_unavailable =>
@@ -2933,4 +2920,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String grams_per_serving(Object grams) {
     return '$grams g pro Portion';
   }
+
+  @override
+  String get food_quantity_weight_per_serving => 'Gewicht pro Portion';
+
+  @override
+  String food_quantity_total_weight(String weight) {
+    return 'Gesamtgewicht: $weight g';
+  }
+
+  @override
+  String get food_quantity_decrease_weight => 'Gewicht pro Portion verringern';
+
+  @override
+  String get food_quantity_increase_weight => 'Gewicht pro Portion erhöhen';
 }
