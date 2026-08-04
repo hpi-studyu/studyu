@@ -1665,6 +1665,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meal_details => 'Meal details';
 
   @override
+  String get edit_meal_title => 'Edit meal';
+
+  @override
   String get apply => 'Apply';
 
   @override
@@ -2308,10 +2311,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get edit_food_title => 'Edit Food';
+  String get edit_food_title => 'Edit food';
 
   @override
-  String get add_food_manually => 'Add food manually';
+  String get add_food_manually => 'Create food';
 
   @override
   String get basic_information => 'Basic Information';

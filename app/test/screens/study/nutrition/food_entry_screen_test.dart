@@ -335,7 +335,7 @@ void main() {
 
     expect(find.text('Review food'), findsNothing);
     expect(find.text('Save to My library'), findsNothing);
-    expect(find.text('Edit Food'), findsOneWidget);
+    expect(find.text('Edit food'), findsOneWidget);
   });
 
   testWidgets('discarding external copy returns no result', (tester) async {

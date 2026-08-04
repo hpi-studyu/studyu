@@ -657,6 +657,7 @@
   "meal_information": "Meal Information",
   "meal_type_label": "Meal Type",
   "meal_details": "Meal details",
+  "edit_meal_title": "Edit meal",
   "apply": "Apply",
   "custom_meal_label": "Custom Meal Label",
   "time": "Time",
@@ -1040,8 +1041,8 @@
       }
     }
   },
-  "edit_food_title": "Edit Food",
-  "add_food_manually": "Add food manually",
+  "edit_food_title": "Edit food",
+  "add_food_manually": "Create food",
   "basic_information": "Basic Information",
   "macronutrients": "Macronutrients",
   "detailed_nutrients": "Detailed Nutrients",

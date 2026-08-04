@@ -1818,6 +1818,7 @@ void main() {
     final recipeResult = navigator.push<FoodEntry>(MealCreatorScreen.route());
     await tester.pumpAndSettle();
 
+    expect(find.text('Create meal'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 

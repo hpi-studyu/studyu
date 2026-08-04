@@ -617,7 +617,9 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
 
     final scaffold = Scaffold(
       appBar: AppBar(
-        title: const Text('Meal Creator'),
+        title: Text(
+          widget.existingMeal == null ? l10n.create_meal : l10n.edit_meal_title,
+        ),
         actions: [
           if (_foods.isNotEmpty)
             IconButton(
@@ -740,7 +742,6 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
                 return _FoodCard(
                   food: food,
                   composition: composition,
-                  index: index,
                   theme: theme,
                   onRemove: () => _removeFood(index),
                   onUpdateAmount: (amount, unit) =>
@@ -811,14 +812,23 @@ class _MealInfoCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.restaurant_menu,
-                  size: 20,
-                  color: theme.colorScheme.primary,
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withValues(
+                      alpha: 0.5,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.restaurant_menu_outlined,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Meal details',
+                  l10n.meal_details,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -1185,7 +1195,6 @@ class _EmptyFoodsState extends StatelessWidget {
 class _FoodCard extends StatelessWidget {
   final FoodEntry food;
   final FoodComposition composition;
-  final int index;
   final ThemeData theme;
   final VoidCallback onRemove;
   final Function(double amount, String unit) onUpdateAmount;
@@ -1193,7 +1202,6 @@ class _FoodCard extends StatelessWidget {
   const _FoodCard({
     required this.food,
     required this.composition,
-    required this.index,
     required this.theme,
     required this.onRemove,
     required this.onUpdateAmount,
@@ -1201,15 +1209,30 @@ class _FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final icon = food.entryType == FoodEntryType.meal
+        ? Icons.restaurant_menu_outlined
+        : Icons.restaurant_outlined;
+    final imageUrl = foodImageUrl(food);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
       child: ListTile(
-        leading: CircleAvatar(
-          child: Text(
-            '${index + 1}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+        leading: SizedBox(
+          width: 40,
+          height: 40,
+          child: imageUrl == null
+              ? fallbackFoodIcon(theme, icon)
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    excludeFromSemantics: true,
+                    errorBuilder: (context, error, stackTrace) =>
+                        fallbackFoodIcon(theme, icon),
+                  ),
+                ),
         ),
         title: Text(
           food.name,
