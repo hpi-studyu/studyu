@@ -229,6 +229,72 @@ void main() {
         expect(loaded, isNull);
       },
     );
+
+    test(
+      'recovery cleanup removes legacy and other-user Fitbit fallback while preserving recovered user',
+      () async {
+        storage['fitbit_credentials_study-1'] = jsonEncode({
+          'userID': 'legacy-user',
+          'fitbitAccessToken': 'legacy-access',
+          'fitbitRefreshToken': 'legacy-refresh',
+        });
+        storage['fitbit_credentials_user-a_study-1'] = jsonEncode({
+          'userID': 'participant-a',
+          'fitbitAccessToken': 'access-a',
+          'fitbitRefreshToken': 'refresh-a',
+        });
+        storage['fitbit_credentials_user-b_study-1'] = jsonEncode({
+          'userID': 'participant-b',
+          'fitbitAccessToken': 'access-b',
+          'fitbitRefreshToken': 'refresh-b',
+        });
+
+        await ParticipantFitbitCredentialsService.clearLocalFallbackCredentialsForRecovery(
+          'user-b',
+        );
+
+        expect(storage.containsKey('fitbit_credentials_study-1'), isFalse);
+        expect(
+          storage.containsKey('fitbit_credentials_user-a_study-1'),
+          isFalse,
+        );
+        expect(
+          storage.containsKey('fitbit_credentials_user-b_study-1'),
+          isTrue,
+        );
+      },
+    );
+
+    test(
+      'recovered participant keeps own scoped Fitbit fallback after recovery cleanup',
+      () async {
+        storage['fitbit_credentials_user-1_study-1'] = jsonEncode({
+          'userID': scopedCredentials.userID,
+          'fitbitAccessToken': scopedCredentials.fitbitAccessToken,
+          'fitbitRefreshToken': scopedCredentials.fitbitRefreshToken,
+        });
+        storage['fitbit_credentials_user-2_study-1'] = jsonEncode({
+          'userID': 'participant-b',
+          'fitbitAccessToken': 'access-b',
+          'fitbitRefreshToken': 'refresh-b',
+        });
+
+        await ParticipantFitbitCredentialsService.clearLocalFallbackCredentialsForRecovery(
+          'user-1',
+        );
+
+        final loaded =
+            await ParticipantFitbitCredentialsService.debugLoadCredentialsForTesting(
+              'study-1',
+            );
+
+        expect(loaded?.userID, 'local-user');
+        expect(
+          storage.containsKey('fitbit_credentials_user-2_study-1'),
+          isFalse,
+        );
+      },
+    );
   });
 }
 

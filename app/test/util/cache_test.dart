@@ -137,6 +137,56 @@ void main() {
       expect(storage.containsKey(cacheSubjectKey), isTrue);
       expect(storage.containsKey('cache_subject_user-1_subject-1'), isFalse);
     });
+
+    test(
+      'clearRecoverySubjectCaches removes legacy and other-user caches but preserves recovered cache',
+      () async {
+        final recoveredSubject = _subject('subject-1', 'user-1');
+        recoveredSubject.progress = [_progress('subject-1', 1)];
+        final otherSubject = _subject('subject-2', 'user-2');
+        storage[cacheSubjectKey] = jsonEncode(_cachedSubjectJson(otherSubject));
+        storage['cache_subject_user-1_subject-1'] = jsonEncode(
+          _cachedSubjectJson(recoveredSubject),
+        );
+        storage['cache_subject_user-2_subject-2'] = jsonEncode(
+          _cachedSubjectJson(otherSubject),
+        );
+
+        await Cache.clearRecoverySubjectCaches(
+          recoveredUserId: 'user-1',
+          recoveredSubjectId: 'subject-1',
+        );
+
+        expect(storage.containsKey(cacheSubjectKey), isFalse);
+        expect(storage.containsKey('cache_subject_user-2_subject-2'), isFalse);
+        expect(storage.containsKey('cache_subject_user-1_subject-1'), isTrue);
+
+        final loaded = await Cache.loadSubject(backupSubject: recoveredSubject);
+        expect(loaded.progress, hasLength(1));
+      },
+    );
+
+    test(
+      'clearRecoverySubjectCaches preserves no cache when recovered subject is missing',
+      () async {
+        storage[cacheSubjectKey] = jsonEncode(
+          _cachedSubjectJson(_subject('subject-legacy', 'user-legacy')),
+        );
+        storage['cache_subject_user-1_subject-1'] = jsonEncode(
+          _cachedSubjectJson(_subject('subject-1', 'user-1')),
+        );
+        storage['cache_subject_user-2_subject-2'] = jsonEncode(
+          _cachedSubjectJson(_subject('subject-2', 'user-2')),
+        );
+
+        await Cache.clearRecoverySubjectCaches(
+          recoveredUserId: 'user-1',
+          recoveredSubjectId: null,
+        );
+
+        expect(storage, isEmpty);
+      },
+    );
   });
 }
 

@@ -228,6 +228,24 @@ class Cache {
     }
   }
 
+  static Future<void> clearRecoverySubjectCaches({
+    required String? recoveredUserId,
+    required String? recoveredSubjectId,
+  }) async {
+    final storedValues = await _readAllValues();
+    final preservedKey = recoveredUserId != null && recoveredSubjectId != null
+        ? _scopedCacheKey(recoveredUserId, recoveredSubjectId)
+        : null;
+
+    for (final key in storedValues.keys) {
+      final isSubjectCacheKey =
+          key == cacheSubjectKey || key.startsWith(_scopedCachePrefix);
+      if (!isSubjectCacheKey) continue;
+      if (preservedKey != null && key == preservedKey) continue;
+      await _deleteValue(key);
+    }
+  }
+
   static Future<void> uploadBlobFiles() async {
     final blobStorageHandler = BlobStorageHandler();
     final futureBlobFiles = await TemporaryStorageHandler.getFutureBlobFiles();

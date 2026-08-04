@@ -47,7 +47,7 @@ class RestoreAccountService {
   static Future<bool> Function(String) _subjectValidator = validateSubject;
   static Future<void> Function(String) _activeSubjectStorer =
       storeActiveSubjectId;
-  static Future<void> Function() _participantStateCleanup =
+  static Future<void> Function(String?, String?) _participantStateCleanup =
       _cleanupParticipantStateForRecovery;
 
   static void clearCache() {
@@ -167,12 +167,12 @@ class RestoreAccountService {
   }
 
   @visibleForTesting
-  static Future<void> Function() get debugParticipantStateCleanupForTesting =>
-      _participantStateCleanup;
+  static Future<void> Function(String?, String?)
+  get debugParticipantStateCleanupForTesting => _participantStateCleanup;
 
   @visibleForTesting
   static set debugParticipantStateCleanupForTesting(
-    Future<void> Function() cleanup,
+    Future<void> Function(String?, String?) cleanup,
   ) {
     _participantStateCleanup = cleanup;
   }
@@ -296,11 +296,19 @@ class RestoreAccountService {
     }
   }
 
-  static Future<void> _cleanupParticipantStateForRecovery() async {
+  static Future<void> _cleanupParticipantStateForRecovery(
+    String? recoveredUserId,
+    String? recoveredSubjectId,
+  ) async {
     clearCache();
-    await Cache.clearAllSubjectCaches();
+    await Cache.clearRecoverySubjectCaches(
+      recoveredUserId: recoveredUserId,
+      recoveredSubjectId: recoveredSubjectId,
+    );
     await PendingDeepLinkService.clearStorage();
-    await ParticipantFitbitCredentialsService.clearLocalFallbackCredentials();
+    await ParticipantFitbitCredentialsService.clearLocalFallbackCredentialsForRecovery(
+      recoveredUserId,
+    );
   }
 
   static BigInt decodeRecoveryPhrase(List<String> words) {
@@ -393,6 +401,17 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
+      final RecoveryTransitionSnapshot transitionSnapshot;
+      try {
+        transitionSnapshot =
+            await RecoveryLocalTransitionService.captureSnapshot();
+      } on RecoveryLocalTransitionException {
+        return RecoveryResult(
+          success: false,
+          error: 'recovery_local_persistence_failed',
+        );
+      }
+
       final signInResult = await _participantSignInExecutor(
         recoveredEmail,
         recoveredPassword,
@@ -402,8 +421,12 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
+      final recoveredUserId = _currentUserIdGetter();
+      final recoveredSubjectId = result.subjectId;
+
       try {
         await RecoveryLocalTransitionService.prepareForRecoveredAccount(
+          snapshot: transitionSnapshot,
           email: recoveredEmail,
           password: recoveredPassword,
         );
@@ -414,8 +437,17 @@ class RestoreAccountService {
         );
       }
 
+      final validRecoveredSubjectId =
+          recoveredSubjectId != null &&
+              await _subjectValidator(recoveredSubjectId)
+          ? recoveredSubjectId
+          : null;
+
       try {
-        await _participantStateCleanup();
+        await _participantStateCleanup(
+          recoveredUserId,
+          validRecoveredSubjectId,
+        );
       } catch (e, stackTrace) {
         StudyULogger.warning(
           'Error cleaning up participant state after recovery sign in: $e\n$stackTrace',
@@ -423,11 +455,7 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_cleanup_failed');
       }
 
-      final subjectId = result.subjectId;
-      if (subjectId == null) return result;
-
-      final isValid = await _subjectValidator(subjectId);
-      if (!isValid) {
+      if (validRecoveredSubjectId == null) {
         return RecoveryResult(
           success: true,
           email: result.email,
@@ -435,7 +463,7 @@ class RestoreAccountService {
         );
       }
 
-      await _activeSubjectStorer(subjectId);
+      await _activeSubjectStorer(validRecoveredSubjectId);
       return result;
     } catch (e, stackTrace) {
       StudyULogger.warning('Error in performRecovery: $e\n$stackTrace');

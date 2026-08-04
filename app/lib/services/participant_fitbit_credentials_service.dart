@@ -317,6 +317,21 @@ class ParticipantFitbitCredentialsService {
     }
   }
 
+  static Future<void> clearLocalFallbackCredentialsForRecovery(
+    String? recoveredUserId,
+  ) async {
+    final storedValues = await _readAllLocalValues();
+    final preservedPrefix = recoveredUserId == null
+        ? null
+        : '$_fitbitCredentialsPrefix${recoveredUserId}_';
+
+    for (final key in storedValues.keys) {
+      if (!key.startsWith(_fitbitCredentialsPrefix)) continue;
+      if (preservedPrefix != null && key.startsWith(preservedPrefix)) continue;
+      await _deleteLocalValue(key);
+    }
+  }
+
   static Future<fitbitter.FitbitCredentials?> _loadCredentialsFromServer({
     required String userId,
     required String studyKey,
