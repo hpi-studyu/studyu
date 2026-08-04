@@ -672,6 +672,9 @@ class FoodLibraryItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final typeLabel = _isMeal
+        ? l10n.nutrition_saved_meal_badge
+        : l10n.nutrition_food_badge;
     final icon = _isMeal
         ? Icons.restaurant_menu_outlined
         : Icons.restaurant_outlined;
@@ -694,7 +697,7 @@ class FoodLibraryItemCard extends StatelessWidget {
             Expanded(
               child: Semantics(
                 button: true,
-                label: '${template.name}, ${l10n.details}',
+                label: '$typeLabel, ${template.name}, ${l10n.details}',
                 child: InkWell(
                   onTap: () {
                     if (onTap case final onTap?) {
@@ -737,6 +740,10 @@ class FoodLibraryItemCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  typeLabel,
+                                  style: theme.textTheme.labelSmall,
+                                ),
                                 Text(
                                   template.name,
                                   maxLines: 1,
@@ -893,7 +900,7 @@ class _FoodLibraryToolbar extends StatelessWidget {
   String _label(TemplateFilter filter) => switch (filter) {
     TemplateFilter.all => l10n.filter_all,
     TemplateFilter.foods => l10n.filter_foods,
-    TemplateFilter.meals => l10n.filter_meals,
+    TemplateFilter.meals => l10n.nutrition_saved_meals_filter,
   };
 
   @override

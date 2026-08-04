@@ -3032,11 +3032,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Frage Teilnehmende, wo und mit wem sie gegessen haben.';
 
   @override
-  String get form_field_nutrition_allow_meals => 'Mahlzeiten erlauben';
+  String get form_field_nutrition_allow_meals =>
+      'Gespeicherte Mahlzeiten in Mahlzeitenprotokollen erlauben';
 
   @override
   String get form_field_nutrition_allow_meals_help =>
-      'Erlaube Teilnehmenden, Lebensmittel zu wiederverwendbaren Mahlzeiten zusammenzufassen.';
+      'Teilnehmende können beim Protokollieren gespeicherte Mahlzeiten neben einzelnen Lebensmitteln hinzufügen. Beim Erstellen einer neuen gespeicherten Mahlzeit aus einem Protokoll werden bestehende gespeicherte Mahlzeiten in ihre Lebensmittelzutaten aufgelöst.';
 
   @override
   String get form_field_nutrition_minimum_meals_required =>

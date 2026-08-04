@@ -967,16 +967,16 @@ void main() {
       );
 
       final emptyFoodState = find.ancestor(
-        of: find.text('Tap to add food'),
+        of: find.text('Add food or saved meal'),
         matching: find.byType(InkWell),
       );
       expect(emptyFoodState, findsOneWidget);
       expect(tester.widget<InkWell>(emptyFoodState).onTap, isNotNull);
-      expect(find.text('Food items'), findsOneWidget);
+      expect(find.text('Foods and saved meals'), findsOneWidget);
       expect(find.text('Meal Nutrition'), findsNothing);
       expect(
         find.ancestor(
-          of: find.text('Tap to add food'),
+          of: find.text('Add food or saved meal'),
           matching: find.byType(Card),
         ),
         findsOneWidget,
@@ -1018,7 +1018,7 @@ void main() {
     await openMealEntry(tester, editableMeal());
 
     expect(
-      tester.getTopLeft(find.text('Food items')).dy,
+      tester.getTopLeft(find.text('Foods and saved meals')).dy,
       lessThan(tester.getTopLeft(find.text('Meal label')).dy),
     );
     expect(
@@ -1809,7 +1809,7 @@ void main() {
       customLabel: 'Edited supper',
     );
 
-    final addFoodButton = find.byTooltip('Add items');
+    final addFoodButton = find.byTooltip('Add food or saved meal');
     await tester.ensureVisible(addFoodButton);
     await tester.tap(addFoodButton);
     await tester.pumpAndSettle();
@@ -1872,10 +1872,10 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.byTooltip('Add items'));
+    await tester.ensureVisible(find.byTooltip('Add food or saved meal'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add items'));
+    await tester.tap(find.byTooltip('Add food or saved meal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My library'));
     await tester.pumpAndSettle();
@@ -1977,8 +1977,8 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.byTooltip('Add items'));
-    await tester.tap(find.byTooltip('Add items'));
+    await tester.ensureVisible(find.byTooltip('Add food or saved meal'));
+    await tester.tap(find.byTooltip('Add food or saved meal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My library'));
     await tester.pumpAndSettle();
@@ -2090,15 +2090,15 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.byTooltip('Add items'));
+    await tester.ensureVisible(find.byTooltip('Add food or saved meal'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add items'));
+    await tester.tap(find.byTooltip('Add food or saved meal'));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add items'));
+    await tester.tap(find.byTooltip('Add food or saved meal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('My library'));
     await tester.pumpAndSettle();

@@ -110,6 +110,9 @@ class _HistoryFoodCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final food = item.food;
     final l10n = AppLocalizations.of(context)!;
+    final typeLabel = food.entryType == studyu.FoodEntryType.meal
+        ? l10n.nutrition_saved_meal_badge
+        : l10n.nutrition_food_badge;
     final imageUrl = foodImageUrl(food);
     final selected = selectionStore?.itemFor(canonicalFoodSelectionKey(food));
     final metadata = selected == null
@@ -130,7 +133,7 @@ class _HistoryFoodCard extends StatelessWidget {
             Expanded(
               child: Semantics(
                 button: true,
-                label: '${food.name}, ${l10n.details}',
+                label: '$typeLabel, ${food.name}, ${l10n.details}',
                 child: InkWell(
                   onTap: onTap,
                   borderRadius: BorderRadius.circular(12),
@@ -169,6 +172,10 @@ class _HistoryFoodCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  typeLabel,
+                                  style: theme.textTheme.labelSmall,
+                                ),
                                 Text(
                                   food.name,
                                   maxLines: 1,

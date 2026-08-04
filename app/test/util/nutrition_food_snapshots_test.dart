@@ -233,6 +233,119 @@ void main() {
     },
   );
 
+  test('flattening recursively expands saved meals with serving scaling', () {
+    final leaf = _food(
+      id: 'leaf-entry',
+      foodId: 'leaf',
+      versionId: 'leaf-v1',
+      name: 'Leaf',
+      amount: 1,
+      energy: 50,
+    );
+    final nested =
+        _food(
+            id: 'nested-entry',
+            foodId: 'nested',
+            versionId: 'nested-v1',
+            name: 'Nested',
+            amount: 1,
+            energy: 50,
+          )
+          ..entryType = FoodEntryType.meal
+          ..componentFoods = [
+            _composition('nested-component', 'nested-entry', leaf, 0),
+          ]
+          ..componentSnapshots = [leaf];
+    final meal =
+        _food(
+            id: 'meal-entry',
+            foodId: 'meal',
+            versionId: 'meal-v1',
+            name: 'Meal',
+            amount: 2,
+            energy: 100,
+          )
+          ..entryType = FoodEntryType.meal
+          ..componentFoods = [
+            _composition('meal-component', 'meal-entry', nested, 0),
+          ]
+          ..componentSnapshots = [nested];
+
+    final flattened = flattenNutritionFoodEntries([meal]);
+
+    expect(flattened, hasLength(1));
+    expect(flattened.single.foodId, 'leaf');
+    expect(flattened.single.amount, 2);
+    expect(flattened.single.nutrition.energyKcal, 100);
+
+    final definition = normalizeCompositeNutritionFoodDefinition(meal);
+    expect(definition.componentSnapshots, hasLength(1));
+    expect(
+      definition.componentSnapshots!.every(
+        (food) => food.entryType != FoodEntryType.meal,
+      ),
+      isTrue,
+    );
+  });
+
+  test('reusable occurrence normalization keeps scaled ingredient amounts', () {
+    final food = _food(
+      id: 'food-entry',
+      foodId: 'food',
+      versionId: 'food-v1',
+      name: 'Food',
+      amount: 1,
+      energy: 50,
+    );
+    final occurrence =
+        _food(
+            id: 'meal-entry',
+            foodId: 'meal',
+            versionId: 'meal-v1',
+            name: 'Meal',
+            amount: 2,
+            energy: 100,
+          )
+          ..entryType = FoodEntryType.meal
+          ..templateId = 'template'
+          ..componentFoods = [_composition('component', 'meal-entry', food, 0)]
+          ..componentSnapshots = [food];
+
+    final definition = normalizeCompositeNutritionFoodDefinition(occurrence);
+
+    expect(definition.amount, 1);
+    expect(definition.componentFoods!.single.amount, 1);
+    expect(definition.componentSnapshots!.single.amount, 1);
+    expect(definition.componentSnapshots!.single.nutrition.energyKcal, 50);
+  });
+
+  test('flattening rejects incomplete nested snapshots', () {
+    final meal =
+        _food(
+            id: 'meal-entry',
+            foodId: 'meal',
+            versionId: 'meal-v1',
+            name: 'Meal',
+            amount: 1,
+            energy: 0,
+          )
+          ..entryType = FoodEntryType.meal
+          ..componentFoods = [
+            FoodComposition.withId(
+              parentEntryId: 'meal-entry',
+              foodId: 'missing',
+              amount: 1,
+              unit: 'serving',
+            ),
+          ]
+          ..componentSnapshots = [];
+
+    expect(
+      () => flattenNutritionFoodEntries([meal]),
+      throwsA(isA<StateError>()),
+    );
+  });
+
   test('saved meal component snapshots are replaced but not cascaded', () {
     final oldComponent = _food(
       id: 'component-entry',

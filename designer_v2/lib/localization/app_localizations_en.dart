@@ -2995,11 +2995,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Ask participants where and with whom they ate.';
 
   @override
-  String get form_field_nutrition_allow_meals => 'Allow meals';
+  String get form_field_nutrition_allow_meals =>
+      'Allow saved meals in meal logs';
 
   @override
   String get form_field_nutrition_allow_meals_help =>
-      'Let participants combine food items into reusable meals.';
+      'Participants can add saved meals alongside individual foods while logging. When creating a new saved meal from a log, existing saved meals are expanded into their food ingredients.';
 
   @override
   String get form_field_nutrition_minimum_meals_required =>

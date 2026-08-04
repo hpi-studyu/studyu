@@ -9,6 +9,7 @@ import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/util/nutrition_food_snapshots.dart' as snapshots;
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_app/widgets/unsaved_changes_dialog.dart';
@@ -20,6 +21,7 @@ class MealCreatorScreen extends StatefulWidget {
   final String? initialName;
   final bool showCurrentDayPropagationOption;
   final bool showCurrentMealOnlyNotice;
+  final bool showExpansionNotice;
   final ValueChanged<bool>? onCurrentDayPropagationChanged;
   final TemplateViewModel? templateViewModel;
   final void Function(FoodEntry food, Offset? source)? onSavedToSelection;
@@ -30,6 +32,7 @@ class MealCreatorScreen extends StatefulWidget {
     this.initialName,
     this.showCurrentDayPropagationOption = false,
     this.showCurrentMealOnlyNotice = false,
+    this.showExpansionNotice = false,
     this.onCurrentDayPropagationChanged,
     this.templateViewModel,
     this.onSavedToSelection,
@@ -42,6 +45,7 @@ class MealCreatorScreen extends StatefulWidget {
     String? initialName,
     bool showCurrentDayPropagationOption = false,
     bool showCurrentMealOnlyNotice = false,
+    bool showExpansionNotice = false,
     ValueChanged<bool>? onCurrentDayPropagationChanged,
     TemplateViewModel? templateViewModel,
     void Function(FoodEntry food, Offset? source)? onSavedToSelection,
@@ -52,6 +56,7 @@ class MealCreatorScreen extends StatefulWidget {
       initialName: initialName,
       showCurrentDayPropagationOption: showCurrentDayPropagationOption,
       showCurrentMealOnlyNotice: showCurrentMealOnlyNotice,
+      showExpansionNotice: showExpansionNotice,
       onCurrentDayPropagationChanged: onCurrentDayPropagationChanged,
       templateViewModel: templateViewModel,
       onSavedToSelection: onSavedToSelection,
@@ -79,6 +84,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   late TextEditingController _quickCaloriesController;
   bool _showQuickAdd = false;
   bool _updateCurrentDayEntries = false;
+  bool _invalidComponents = false;
 
   List<FoodComposition> _foods = [];
   final List<FoodEntry> _componentFoods = [];
@@ -116,19 +122,22 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
         _preparationMethodController = TextEditingController();
       }
 
-      final compositions = meal.componentFoods;
-      final snapshots = meal.componentSnapshots;
-      if (compositions == null ||
-          snapshots == null ||
-          compositions.length != snapshots.length) {
-        throw StateError('Saved meals require complete component snapshots');
+      try {
+        final flattened = snapshots.flattenNutritionFoodEntries([meal]);
+        _componentFoods.addAll(flattened);
+        _foods = [
+          for (var index = 0; index < flattened.length; index++)
+            FoodComposition.withId(
+              parentEntryId: '',
+              foodId: flattened[index].foodId,
+              amount: flattened[index].amount,
+              unit: flattened[index].unit,
+              sortOrder: index,
+            ),
+        ];
+      } catch (_) {
+        _invalidComponents = true;
       }
-      _foods = compositions
-          .map((composition) => FoodComposition.fromJson(composition.toJson()))
-          .toList();
-      _componentFoods.addAll(
-        snapshots.map((food) => FoodEntry.fromJson(food.toJson())),
-      );
     } else {
       _nameController = TextEditingController(text: widget.initialName ?? '');
       _descriptionController = TextEditingController();
@@ -136,17 +145,24 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
       _rawWeightController = TextEditingController();
       _cookedWeightController = TextEditingController();
       _preparationMethodController = TextEditingController();
-      _componentFoods.addAll(widget.initialFoods);
-      _foods = [
-        for (var index = 0; index < widget.initialFoods.length; index++)
-          FoodComposition.withId(
-            parentEntryId: '',
-            foodId: widget.initialFoods[index].foodId,
-            amount: widget.initialFoods[index].amount,
-            unit: widget.initialFoods[index].unit,
-            sortOrder: index,
-          ),
-      ];
+      try {
+        final flattened = snapshots.flattenNutritionFoodEntries(
+          widget.initialFoods,
+        );
+        _componentFoods.addAll(flattened);
+        _foods = [
+          for (var index = 0; index < flattened.length; index++)
+            FoodComposition.withId(
+              parentEntryId: '',
+              foodId: flattened[index].foodId,
+              amount: flattened[index].amount,
+              unit: flattened[index].unit,
+              sortOrder: index,
+            ),
+        ];
+      } catch (_) {
+        _invalidComponents = true;
+      }
     }
 
     // Initialize Quick Add controllers
@@ -187,6 +203,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     );
     if (result != null) {
       setState(() {
+        _invalidComponents = false;
         _componentFoods.add(result);
         _foods.add(
           FoodComposition.withId(
@@ -242,6 +259,7 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     );
 
     setState(() {
+      _invalidComponents = false;
       _componentFoods.add(quickFood);
       _foods.add(
         FoodComposition.withId(
@@ -350,6 +368,9 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   }
 
   FoodEntry? _buildMeal() {
+    if (_invalidComponents) {
+      return null;
+    }
     if (!_formKey.currentState!.validate() || _foods.isEmpty) {
       return null;
     }
@@ -463,10 +484,17 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
               TemplateViewModel(
                 userId: appState.activeSubject?.id ?? 'anonymous',
               );
+          final normalized = snapshots
+              .normalizeCompositeNutritionFoodDefinition(meal);
+          final servings = meal.amount;
           meal.templateId = await viewModel.saveFoodAsTemplate(
             name: meal.name,
             food: meal,
           );
+          meal
+            ..componentFoods = normalized.componentFoods
+            ..componentSnapshots = normalized.componentSnapshots
+            ..amount = servings;
         } catch (error, stackTrace) {
           StudyULogger.error(
             'Failed to save meal to My items: $error\n$stackTrace',
@@ -487,9 +515,15 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
             : null;
         _pop(meal, onSavedToSelection);
       }
-    } else if (_foods.isEmpty) {
+    } else if (_invalidComponents || _foods.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one food')),
+        SnackBar(
+          content: Text(
+            _invalidComponents
+                ? AppLocalizations.of(context)!.nutrition_invalid_saved_meal
+                : AppLocalizations.of(context)!.nutrition_add_food_ingredient,
+          ),
+        ),
       );
     }
   }
@@ -557,11 +591,15 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
   Future<void> _saveAsTemplate() async {
     final meal = _buildMeal();
     if (meal == null) {
-      if (_foods.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add at least one food')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _invalidComponents
+                ? AppLocalizations.of(context)!.nutrition_invalid_saved_meal
+                : AppLocalizations.of(context)!.nutrition_add_food_ingredient,
+          ),
+        ),
+      );
       return;
     }
 
@@ -611,18 +649,25 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     final nutrition = _cachedNutrition;
 
     final l10n = AppLocalizations.of(context)!;
-    final canSave = _nameController.text.isNotEmpty && _foods.isNotEmpty;
+    final canSave =
+        !_invalidComponents &&
+        _nameController.text.isNotEmpty &&
+        _foods.isNotEmpty;
     final servingsCount = (double.tryParse(_servingsController.text) ?? 1)
         .toInt();
 
     final scaffold = Scaffold(
       appBar: AppBar(
-        title: const Text('Meal Creator'),
+        title: Text(
+          widget.existingMeal == null
+              ? l10n.nutrition_create_saved_meal
+              : l10n.nutrition_edit_saved_meal,
+        ),
         actions: [
           if (_foods.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.bookmark_add_outlined),
-              tooltip: l10n.save_meal,
+              tooltip: l10n.nutrition_create_saved_meal,
               onPressed: _saveAsTemplate,
             ),
         ],
@@ -704,6 +749,24 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
             ),
 
             const SizedBox(height: 16),
+
+            if (widget.showExpansionNotice)
+              Card(
+                color: theme.colorScheme.secondaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(l10n.nutrition_saved_meals_expanded_notice),
+                ),
+              ),
+
+            if (_invalidComponents)
+              Card(
+                color: theme.colorScheme.errorContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(l10n.nutrition_invalid_saved_meal),
+                ),
+              ),
 
             // ========== FOODS SECTION ==========
             _FoodsSectionHeader(
@@ -978,11 +1041,12 @@ class _FoodsSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Foods ($foodCount)',
+          l10n.nutrition_ingredients_section(foodCount),
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -1007,12 +1071,12 @@ class _FoodsSectionHeader extends StatelessWidget {
                   vertical: 8,
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.search, size: 18),
-                  SizedBox(width: 6),
-                  Text('Add food'),
+                  const Icon(Icons.search, size: 18),
+                  const SizedBox(width: 6),
+                  Text(l10n.nutrition_add_food_ingredient),
                 ],
               ),
             ),

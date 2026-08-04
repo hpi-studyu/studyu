@@ -2925,4 +2925,69 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get nutrition_logged_foods_and_meals =>
+      'Lebensmittel und gespeicherte Mahlzeiten';
+
+  @override
+  String get nutrition_add_food_or_saved_meal =>
+      'Lebensmittel oder gespeicherte Mahlzeit hinzufügen';
+
+  @override
+  String get nutrition_add_food_or_choose_saved_meal =>
+      'Lebensmittel hinzufügen oder gespeicherte Mahlzeit auswählen';
+
+  @override
+  String get nutrition_food_badge => 'Lebensmittel';
+
+  @override
+  String get nutrition_saved_meal_badge => 'Gespeicherte Mahlzeit';
+
+  @override
+  String nutrition_add_foods_or_saved_meals_to_meal(Object meal) {
+    return 'Lebensmittel oder gespeicherte Mahlzeiten zu $meal hinzufügen';
+  }
+
+  @override
+  String get nutrition_search_foods_saved_meals_or_brands =>
+      'Lebensmittel, gespeicherte Mahlzeiten oder Marken suchen';
+
+  @override
+  String get nutrition_create_saved_meal => 'Gespeicherte Mahlzeit erstellen';
+
+  @override
+  String get nutrition_create_saved_meal_from_log =>
+      'Gespeicherte Mahlzeit aus diesem Protokoll erstellen';
+
+  @override
+  String get nutrition_edit_saved_meal => 'Gespeicherte Mahlzeit bearbeiten';
+
+  @override
+  String nutrition_ingredients_section(Object count) {
+    return 'Zutaten ($count)';
+  }
+
+  @override
+  String get nutrition_add_food_ingredient => 'Lebensmittelzutat hinzufügen';
+
+  @override
+  String get nutrition_invalid_saved_meal =>
+      'Diese gespeicherte Mahlzeit enthält unvollständige Zutaten und kann nicht gespeichert werden. Fügen Sie gültige Lebensmittelzutaten hinzu und versuchen Sie es erneut.';
+
+  @override
+  String get nutrition_saved_meals_filter => 'Gespeicherte Mahlzeiten';
+
+  @override
+  String nutrition_add_food_to_meal(Object meal) {
+    return 'Lebensmittel zu $meal hinzufügen';
+  }
+
+  @override
+  String get nutrition_search_foods_or_brands =>
+      'Lebensmittel oder Marken suchen';
+
+  @override
+  String get nutrition_saved_meals_expanded_notice =>
+      'Gespeicherte Mahlzeiten wurden zur Überprüfung in Lebensmittelzutaten aufgelöst. Ihre neue gespeicherte Mahlzeit enthält nur Lebensmittelzutaten.';
 }
