@@ -20,6 +20,7 @@ class ReportHistoryScreen extends StatelessWidget {
         tryFunction: () => StudySubject.getStudyHistory(
           Supabase.instance.client.auth.currentUser!.id,
         ),
+        trackConnectionStatus: true,
         successBuilder:
             (BuildContext context, List<StudySubject>? pastStudies) {
               return pastStudies == null || pastStudies.isEmpty

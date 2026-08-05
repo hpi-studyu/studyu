@@ -155,6 +155,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () => publishedStudies,
+                  trackConnectionStatus: true,
                   successBuilder:
                       (
                         BuildContext context,

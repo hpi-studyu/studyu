@@ -2651,6 +2651,18 @@ abstract class AppLocalizations {
   /// **'No internet connection. Please try again when online.'**
   String get no_internet_connection;
 
+  /// No description provided for @connection_banner_device_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'You are offline. Cached study data is in use and changes will sync when you are online again.'**
+  String get connection_banner_device_offline;
+
+  /// No description provided for @connection_banner_backend_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU service is currently unavailable. Cached study data remains available and changes will sync later.'**
+  String get connection_banner_backend_unavailable;
+
   /// No description provided for @error_occurred_with_message.
   ///
   /// In en, this message translates to:

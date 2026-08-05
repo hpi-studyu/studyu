@@ -1408,6 +1408,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.';
 
   @override
+  String get connection_banner_device_offline =>
+      'Sie sind offline. Zwischengespeicherte Studiendaten werden verwendet und Änderungen werden synchronisiert, sobald wieder eine Verbindung besteht.';
+
+  @override
+  String get connection_banner_backend_unavailable =>
+      'Der StudyU-Dienst ist derzeit nicht verfügbar. Zwischengespeicherte Studiendaten bleiben verfügbar und Änderungen werden später synchronisiert.';
+
+  @override
   String error_occurred_with_message(String message) {
     return 'Ein Fehler ist aufgetreten: $message';
   }
