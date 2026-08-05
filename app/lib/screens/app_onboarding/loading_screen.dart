@@ -44,6 +44,28 @@ String initialRouteForMissingSubjectRoute({
       : '/${RouteNames.onboarding}';
 }
 
+@visibleForTesting
+Future<void> tryRestoreParticipantSession({
+  required bool Function() isLoggedIn,
+  required Future<bool> Function() hasStoredCredentials,
+  required Future<void> Function() signIn,
+  void Function(AppConnectionStatus status)? onConnectionStatusChanged,
+  void Function(Object error)? onError,
+}) async {
+  if (isLoggedIn()) return;
+  if (!await hasStoredCredentials()) return;
+
+  try {
+    await signIn();
+  } catch (error) {
+    final status = connectionStatusFromError(error);
+    if (status != null) {
+      onConnectionStatusChanged?.call(status);
+    }
+    onError?.call(error);
+  }
+}
+
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
@@ -71,12 +93,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
   String? _error;
 
   Future<void> _restoreParticipantSession() async {
-    if (isUserLoggedIn()) return;
-    final hasStoredCredentials =
-        await SecureStorage.containsKey(userEmailKey) &&
-        await SecureStorage.containsKey(userPasswordKey);
-    if (!hasStoredCredentials) return;
-    await signInParticipant();
+    await tryRestoreParticipantSession(
+      isLoggedIn: isUserLoggedIn,
+      hasStoredCredentials: () async =>
+          await SecureStorage.containsKey(userEmailKey) &&
+          await SecureStorage.containsKey(userPasswordKey),
+      signIn: () => signInParticipant(),
+      onConnectionStatusChanged: appConnectionStatusController.setStatus,
+      onError: (error) {
+        debugPrint('Error restoring participant session: $error');
+      },
+    );
   }
 
   void _storePendingDeepLink({String? studyId, String? inviteCode}) {
