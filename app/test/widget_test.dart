@@ -16,6 +16,7 @@ import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 Widget setup(Widget child) {
   return ChangeNotifierProvider(
@@ -104,6 +105,41 @@ void main() {
       '/${RouteNames.welcome}',
     );
   });
+
+  test('startup session restore keeps going on backend failures', () async {
+    AppConnectionStatus? connectionStatus;
+    Object? capturedError;
+
+    await tryRestoreParticipantSession(
+      isLoggedIn: () => false,
+      hasStoredCredentials: () async => true,
+      signIn: () =>
+          Future<void>.error(Exception('ClientException: Failed to fetch')),
+      onConnectionStatusChanged: (status) => connectionStatus = status,
+      onError: (error) => capturedError = error,
+    );
+
+    expect(connectionStatus, AppConnectionStatus.backendUnavailable);
+    expect(capturedError, isNotNull);
+  });
+
+  test(
+    'startup session restore skips sign-in when no stored credentials',
+    () async {
+      var signInCalls = 0;
+
+      await tryRestoreParticipantSession(
+        isLoggedIn: () => false,
+        hasStoredCredentials: () async => false,
+        signIn: () {
+          signInCalls++;
+          return Future<void>.value();
+        },
+      );
+
+      expect(signInCalls, 0);
+    },
+  );
 
   testWidgets('debug button opens onboarding', (tester) async {
     await tester.pumpWidget(setup(const WelcomeScreen()));
