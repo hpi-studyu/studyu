@@ -513,6 +513,8 @@
   "review_restored_answer_to_continue": "Überprüfe die wiederhergestellte Antwort, um fortzufahren.",
   "complete_task": "Aufgabe abschließen",
   "no_internet_connection": "Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.",
+  "connection_banner_device_offline": "Sie sind offline. Zwischengespeicherte Studiendaten werden verwendet und Änderungen werden synchronisiert, sobald wieder eine Verbindung besteht.",
+  "connection_banner_backend_unavailable": "Der StudyU-Dienst ist derzeit nicht verfügbar. Zwischengespeicherte Studiendaten bleiben verfügbar und Änderungen werden später synchronisiert.",
   "error_occurred_with_message": "Ein Fehler ist aufgetreten: {message}",
   "@error_occurred_with_message": {
     "placeholders": {

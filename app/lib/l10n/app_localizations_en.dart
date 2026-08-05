@@ -1394,6 +1394,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'No internet connection. Please try again when online.';
 
   @override
+  String get connection_banner_device_offline =>
+      'You are offline. Cached study data is in use and changes will sync when you are online again.';
+
+  @override
+  String get connection_banner_backend_unavailable =>
+      'StudyU service is currently unavailable. Cached study data remains available and changes will sync later.';
+
+  @override
   String error_occurred_with_message(String message) {
     return 'An error occurred: $message';
   }

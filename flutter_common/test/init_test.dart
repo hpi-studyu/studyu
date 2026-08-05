@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_flutter_common/src/utils/connection_status.dart';
 import 'package:studyu_flutter_common/src/utils/user.dart';
 
 void main() {
@@ -58,6 +59,30 @@ void main() {
 
       expect(success, isTrue);
       expect(signUpCalls, 1);
+    },
+  );
+
+  test(
+    'connectionStatusFromError keeps invalid credentials out of connectivity',
+    () {
+      expect(
+        connectionStatusFromError(
+          Exception('AuthApiException(code: invalid_credentials)'),
+        ),
+        isNull,
+      );
+    },
+  );
+
+  test(
+    'connectionStatusFromError treats connection refused as backend unavailable',
+    () {
+      expect(
+        connectionStatusFromError(
+          Exception('SocketException: Connection refused'),
+        ),
+        AppConnectionStatus.backendUnavailable,
+      );
     },
   );
 }

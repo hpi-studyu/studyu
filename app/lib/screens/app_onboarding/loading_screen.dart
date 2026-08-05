@@ -419,7 +419,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<StudySubject?> _retrieveSubject(String selectedStudyObjectId) async {
     try {
-      return await _fetchRemoteSubject(selectedStudyObjectId);
+      final subject = await _fetchRemoteSubject(selectedStudyObjectId);
+      appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+      return subject;
     } on PostgrestException catch (e) {
       if (e.code == 'PGRST116') {
         // Row does not exist — subject was deleted from the database.
@@ -431,6 +433,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         "Could not retrieve subject, maybe JWT is expired, try logging in: $e",
       );
     } catch (exception) {
+      final status = connectionStatusFromError(exception);
+      if (status != null) {
+        appConnectionStatusController.setStatus(status);
+      }
       StudyULogger.warning(
         "Could not retrieve subject, maybe JWT is expired, try logging in: $exception",
       );
@@ -439,13 +445,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // JWT/network error path — retry with login
     try {
       if (await signInParticipant()) {
-        return await _fetchRemoteSubject(selectedStudyObjectId);
+        final subject = await _fetchRemoteSubject(selectedStudyObjectId);
+        appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+        return subject;
       }
     } on AuthApiException catch (e) {
       // Credentials were rejected — the auth account no longer exists.
       StudyULogger.warning("Invalid credentials during re-login: $e");
       throw const SubjectDeletedException();
     } catch (exception) {
+      final status = connectionStatusFromError(exception);
+      if (status != null) {
+        appConnectionStatusController.setStatus(status);
+      }
       StudyULogger.warning(
         "Could not login and retrieve the study subject: $exception",
       );

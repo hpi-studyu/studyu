@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_flutter_common/src/utils/connection_status.dart';
 import 'package:studyu_flutter_common/src/utils/storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -130,6 +131,7 @@ Future<String> findWorkingSupabaseUrl(
   List<String> supabaseUrls,
   String supabaseAnonKey,
 ) async {
+  AppConnectionStatus detectedStatus = AppConnectionStatus.backendUnavailable;
   for (final url in supabaseUrls) {
     final client = SupabaseClient(url, supabaseAnonKey);
     try {
@@ -145,12 +147,15 @@ Future<String> findWorkingSupabaseUrl(
                 throw TimeoutException('Connection timeout after 5 seconds'),
           );
       debugPrint("✅ Connected to Supabase at $url");
+      appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
       return url;
     } catch (e) {
+      detectedStatus = connectionStatusFromError(e) ?? detectedStatus;
       debugPrint("⚠️ Failed to connect to $url: $e");
     }
   }
 
+  appConnectionStatusController.setStatus(detectedStatus);
   debugPrint(
     "⚠️ No Supabase URL responded. Initializing with ${supabaseUrls.first} for offline use.",
   );
