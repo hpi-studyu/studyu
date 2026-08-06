@@ -6,9 +6,14 @@ void main() {
   test('ensureParticipantSignedIn returns true for existing session', () async {
     var signInCalls = 0;
     var signUpCalls = 0;
+    var validateCalls = 0;
 
     final success = await ensureParticipantSignedIn(
       isSignedIn: () => true,
+      validateSession: () async {
+        validateCalls++;
+        return true;
+      },
       signIn: () async {
         signInCalls++;
         return false;
@@ -20,9 +25,40 @@ void main() {
     );
 
     expect(success, isTrue);
+    expect(validateCalls, 1);
     expect(signInCalls, 0);
     expect(signUpCalls, 0);
   });
+
+  test(
+    'ensureParticipantSignedIn clears invalid current session before restoring credentials',
+    () async {
+      var clearSessionCalls = 0;
+      var signInCalls = 0;
+      var signUpCalls = 0;
+
+      final success = await ensureParticipantSignedIn(
+        isSignedIn: () => true,
+        validateSession: () async => false,
+        clearSession: () async {
+          clearSessionCalls++;
+        },
+        signIn: () async {
+          signInCalls++;
+          return false;
+        },
+        signUp: () async {
+          signUpCalls++;
+          return true;
+        },
+      );
+
+      expect(success, isTrue);
+      expect(clearSessionCalls, 1);
+      expect(signInCalls, 1);
+      expect(signUpCalls, 1);
+    },
+  );
 
   test(
     'ensureParticipantSignedIn reuses stored participant credentials',
@@ -59,6 +95,40 @@ void main() {
 
       expect(success, isTrue);
       expect(signUpCalls, 1);
+    },
+  );
+
+  test(
+    'ensureParticipantSignedIn keeps credentials on connectivity failure',
+    () async {
+      appConnectionStatusController.reset();
+      var signInCalls = 0;
+      var signUpCalls = 0;
+
+      final success = await ensureParticipantSignedIn(
+        isSignedIn: () => true,
+        validateSession: () => Future<bool>.error(
+          Exception(
+            'AuthRetryableFetchException(message: ClientException: Failed to fetch)',
+          ),
+        ),
+        signIn: () async {
+          signInCalls++;
+          return true;
+        },
+        signUp: () async {
+          signUpCalls++;
+          return true;
+        },
+      );
+
+      expect(success, isFalse);
+      expect(signInCalls, 0);
+      expect(signUpCalls, 0);
+      expect(
+        appConnectionStatusController.status,
+        AppConnectionStatus.backendUnavailable,
+      );
     },
   );
 
