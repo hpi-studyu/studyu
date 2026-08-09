@@ -10,7 +10,7 @@ import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-enum AppErrorReason { loading, deletedStudy }
+enum AppErrorReason { loading, deletedStudy, cacheUnavailable }
 
 class AppErrorScreenArguments {
   final String? selectedSubjectId;
@@ -80,7 +80,8 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                 const SizedBox(height: 20),
                 Text(
                   switch (widget.reason) {
-                    AppErrorReason.loading => loc.loading_error_title,
+                    AppErrorReason.loading ||
+                    AppErrorReason.cacheUnavailable => loc.loading_error_title,
                     AppErrorReason.deletedStudy =>
                       loc.deleted_study_error_title,
                   },
@@ -90,7 +91,8 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                 const SizedBox(height: 16),
                 Text(
                   switch (widget.reason) {
-                    AppErrorReason.loading => loc.loading_error_description,
+                    AppErrorReason.loading || AppErrorReason.cacheUnavailable =>
+                      loc.loading_error_description,
                     AppErrorReason.deletedStudy =>
                       loc.deleted_study_error_description,
                   },
@@ -183,15 +185,15 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
     final loc = AppLocalizations.of(context)!;
 
     final emailSubject = switch (widget.reason) {
-      AppErrorReason.loading => loc.support_email_subject_loading_error,
+      AppErrorReason.loading || AppErrorReason.cacheUnavailable =>
+        loc.support_email_subject_loading_error,
       AppErrorReason.deletedStudy => loc.support_email_subject_deleted_study,
     };
 
     // Get the base email body from localization
     String emailBody = switch (widget.reason) {
-      AppErrorReason.loading => loc.support_email_body(
-        widget.selectedSubjectId ?? '',
-      ),
+      AppErrorReason.loading || AppErrorReason.cacheUnavailable =>
+        loc.support_email_body(widget.selectedSubjectId ?? ''),
       AppErrorReason.deletedStudy => loc.deleted_study_support_email_body(
         widget.selectedSubjectId ?? '',
       ),
