@@ -35,6 +35,14 @@ bool isInvalidParticipantSessionError(AuthException error) {
       error.code == 'invalid_jwt';
 }
 
+bool hasDegradedConnectionStatus() {
+  return appConnectionStatusController.status != AppConnectionStatus.healthy;
+}
+
+bool shouldAttemptParticipantAuthRecovery(Object error) {
+  return connectionStatusFromError(error) == null;
+}
+
 Future<bool> isParticipantSessionValid() async {
   if (!isUserLoggedIn()) return false;
   try {
@@ -83,6 +91,10 @@ Future<bool> ensureParticipantSignedIn({
   Future<bool> Function()? signUp,
 }) async {
   final currentStatus = isSignedIn ?? isUserLoggedIn;
+
+  if (hasDegradedConnectionStatus()) {
+    return currentStatus();
+  }
 
   if (currentStatus()) {
     try {

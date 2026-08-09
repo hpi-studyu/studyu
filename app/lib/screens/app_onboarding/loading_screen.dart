@@ -445,6 +445,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<StudySubject?> _retrieveSubject(String selectedStudyObjectId) async {
+    var shouldRetryAuth = true;
+
     try {
       final subject = await _fetchRemoteSubject(selectedStudyObjectId);
       appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
@@ -456,17 +458,36 @@ class _LoadingScreenState extends State<LoadingScreen> {
         StudyULogger.warning("Subject not found in DB (deleted): $e");
         throw const SubjectDeletedException();
       }
+      if (!shouldAttemptParticipantAuthRecovery(e)) {
+        shouldRetryAuth = false;
+        final status = connectionStatusFromError(e);
+        if (status != null) {
+          appConnectionStatusController.setStatus(status);
+        }
+      }
       StudyULogger.warning(
         "Could not retrieve subject, maybe JWT is expired, try logging in: $e",
       );
     } catch (exception) {
       final status = connectionStatusFromError(exception);
       if (status != null) {
+        shouldRetryAuth = false;
         appConnectionStatusController.setStatus(status);
       }
       StudyULogger.warning(
         "Could not retrieve subject, maybe JWT is expired, try logging in: $exception",
       );
+    }
+
+    if (!shouldRetryAuth) {
+      try {
+        final cached = await Cache.loadSubject();
+        StudyULogger.info("Loaded subject from cache: $cached");
+        return cached;
+      } catch (_) {
+        StudyULogger.warning("No subject found in cache");
+        return null;
+      }
     }
 
     // JWT/network error path — retry with login

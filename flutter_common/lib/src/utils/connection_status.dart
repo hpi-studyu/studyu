@@ -3,8 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:studyu_flutter_common/src/utils/connection_status_platform.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum AppConnectionStatus { healthy, deviceOffline, backendUnavailable }
+
+typedef AuthAutoRefreshSync = void Function(AppConnectionStatus status);
 
 class AppConnectionStatusController extends ChangeNotifier {
   AppConnectionStatusController._();
@@ -13,20 +16,54 @@ class AppConnectionStatusController extends ChangeNotifier {
       AppConnectionStatusController._();
 
   AppConnectionStatus _status = AppConnectionStatus.healthy;
+  AuthAutoRefreshSync? _authAutoRefreshSyncOverride;
 
   AppConnectionStatus get status => _status;
 
   void setStatus(AppConnectionStatus status) {
     if (_status == status) return;
     _status = status;
+    _syncAuthAutoRefresh();
     notifyListeners();
+  }
+
+  void syncAuthAutoRefresh() {
+    _syncAuthAutoRefresh();
+  }
+
+  void _syncAuthAutoRefresh() {
+    final sync = _authAutoRefreshSyncOverride ?? _defaultAuthAutoRefreshSync;
+    sync(_status);
+  }
+
+  void _defaultAuthAutoRefreshSync(AppConnectionStatus status) {
+    try {
+      final auth = Supabase.instance.client.auth;
+      if (status == AppConnectionStatus.healthy) {
+        auth.startAutoRefresh();
+      } else {
+        auth.stopAutoRefresh();
+      }
+    } catch (_) {
+      // Supabase may not be initialized yet during early startup.
+    }
   }
 
   @visibleForTesting
   void reset() {
     if (_status == AppConnectionStatus.healthy) return;
     _status = AppConnectionStatus.healthy;
+    _syncAuthAutoRefresh();
     notifyListeners();
+  }
+
+  @visibleForTesting
+  AuthAutoRefreshSync? get debugAuthAutoRefreshSync =>
+      _authAutoRefreshSyncOverride;
+
+  @visibleForTesting
+  set debugAuthAutoRefreshSync(AuthAutoRefreshSync? sync) {
+    _authAutoRefreshSyncOverride = sync;
   }
 }
 
