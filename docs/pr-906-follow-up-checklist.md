@@ -32,7 +32,7 @@ Acceptance:
 
 ### 2. Validate cached participant restart while backend is unavailable
 
-Status: pending
+Status: in progress
 
 Goal:
 - Verify already-enrolled participant with cached subject can restart app while backend is down and still reach usable cached state.
@@ -41,6 +41,9 @@ Acceptance:
 - [ ] Restart with backend unavailable reaches cached participant flow.
 - [ ] No manual storage cleanup needed.
 - [ ] No replacement participant account created during outage.
+
+Progress:
+- Focused startup recovery tests now verify degraded backend path uses cached subject without re-auth retry.
 
 ### 3. Validate cached participant restart while device is offline
 
