@@ -3,6 +3,10 @@ import 'package:studyu_flutter_common/src/utils/connection_status.dart';
 import 'package:studyu_flutter_common/src/utils/user.dart';
 
 void main() {
+  tearDown(() {
+    appConnectionStatusController.reset();
+  });
+
   test('ensureParticipantSignedIn returns true for existing session', () async {
     var signInCalls = 0;
     var signUpCalls = 0;
@@ -101,7 +105,6 @@ void main() {
   test(
     'ensureParticipantSignedIn keeps credentials on connectivity failure',
     () async {
-      appConnectionStatusController.reset();
       var signInCalls = 0;
       var signUpCalls = 0;
 
@@ -131,6 +134,81 @@ void main() {
       );
     },
   );
+
+  test(
+    'ensureParticipantSignedIn trusts existing session while connectivity is degraded',
+    () async {
+      appConnectionStatusController.setStatus(
+        AppConnectionStatus.backendUnavailable,
+      );
+      var validateCalls = 0;
+      var signInCalls = 0;
+      var signUpCalls = 0;
+
+      final success = await ensureParticipantSignedIn(
+        isSignedIn: () => true,
+        validateSession: () async {
+          validateCalls++;
+          return false;
+        },
+        signIn: () async {
+          signInCalls++;
+          return false;
+        },
+        signUp: () async {
+          signUpCalls++;
+          return false;
+        },
+      );
+
+      expect(success, isTrue);
+      expect(validateCalls, 0);
+      expect(signInCalls, 0);
+      expect(signUpCalls, 0);
+    },
+  );
+
+  test(
+    'ensureParticipantSignedIn skips auth recovery without session while connectivity is degraded',
+    () async {
+      appConnectionStatusController.setStatus(
+        AppConnectionStatus.deviceOffline,
+      );
+      var signInCalls = 0;
+      var signUpCalls = 0;
+
+      final success = await ensureParticipantSignedIn(
+        isSignedIn: () => false,
+        signIn: () async {
+          signInCalls++;
+          return true;
+        },
+        signUp: () async {
+          signUpCalls++;
+          return true;
+        },
+      );
+
+      expect(success, isFalse);
+      expect(signInCalls, 0);
+      expect(signUpCalls, 0);
+    },
+  );
+
+  test('shouldAttemptParticipantAuthRecovery skips connectivity errors', () {
+    expect(
+      shouldAttemptParticipantAuthRecovery(
+        Exception('ClientException: Failed to fetch'),
+      ),
+      isFalse,
+    );
+    expect(
+      shouldAttemptParticipantAuthRecovery(
+        Exception('AuthApiException(code: invalid_credentials)'),
+      ),
+      isTrue,
+    );
+  });
 
   test(
     'connectionStatusFromError keeps invalid credentials out of connectivity',

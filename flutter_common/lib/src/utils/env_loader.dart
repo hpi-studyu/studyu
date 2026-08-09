@@ -76,6 +76,8 @@ Future<void> loadEnv() async {
     debug: true,
   );
 
+  appConnectionStatusController.syncAuthAutoRefresh();
+
   env.setEnv(
     workingSupabaseUrl,
     supabaseAnonKey,
