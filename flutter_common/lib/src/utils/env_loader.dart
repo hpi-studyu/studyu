@@ -9,6 +9,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 const envsAssetPath = 'packages/studyu_flutter_common/lib/envs';
 
+typedef SupabaseStartupConfig = ({
+  String url,
+  AppConnectionStatus status,
+  bool suppressPersistedSessionRecovery,
+});
+
 // load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
 String envFilePath() {
   const env = String.fromEnvironment('STUDYU_ENV');
@@ -64,22 +70,25 @@ Future<void> loadEnv() async {
   // await SecureStorage.migrateSharedPreferencesToSecureStorage();
 
   // Test if supabaseUrls has multiple entries and try them in order until one works
-  final workingSupabaseUrl = await findWorkingSupabaseUrl(
+  final startupConfig = await findWorkingSupabaseUrl(
     supabaseUrls,
     supabaseAnonKey!,
   );
+  SupabaseStorage.suppressPersistedSessionRecovery =
+      startupConfig.suppressPersistedSessionRecovery;
 
   await Supabase.initialize(
-    url: workingSupabaseUrl,
+    url: startupConfig.url,
     publishableKey: supabaseAnonKey,
     authOptions: FlutterAuthClientOptions(localStorage: SupabaseStorage()),
     debug: true,
   );
+  SupabaseStorage.suppressPersistedSessionRecovery = false;
 
   appConnectionStatusController.syncAuthAutoRefresh();
 
   env.setEnv(
-    workingSupabaseUrl,
+    startupConfig.url,
     supabaseAnonKey,
     envAppUrl: envAppUrl,
     envDesignerUrl: envDesignerUrl,
@@ -129,7 +138,7 @@ List<String> loadSupabaseUrls() {
   return urls;
 }
 
-Future<String> findWorkingSupabaseUrl(
+Future<SupabaseStartupConfig> findWorkingSupabaseUrl(
   List<String> supabaseUrls,
   String supabaseAnonKey,
 ) async {
@@ -150,7 +159,11 @@ Future<String> findWorkingSupabaseUrl(
           );
       debugPrint("✅ Connected to Supabase at $url");
       appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
-      return url;
+      return (
+        url: url,
+        status: AppConnectionStatus.healthy,
+        suppressPersistedSessionRecovery: false,
+      );
     } catch (e) {
       detectedStatus = connectionStatusFromError(e) ?? detectedStatus;
       debugPrint("⚠️ Failed to connect to $url: $e");
@@ -161,5 +174,9 @@ Future<String> findWorkingSupabaseUrl(
   debugPrint(
     "⚠️ No Supabase URL responded. Initializing with ${supabaseUrls.first} for offline use.",
   );
-  return supabaseUrls.first;
+  return (
+    url: supabaseUrls.first,
+    status: detectedStatus,
+    suppressPersistedSessionRecovery: true,
+  );
 }

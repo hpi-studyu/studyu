@@ -13,6 +13,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
+import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
@@ -121,6 +122,26 @@ void main() {
 
     expect(connectionStatus, AppConnectionStatus.backendUnavailable);
     expect(capturedError, isNotNull);
+  });
+
+  test('maps deleted subject failure to deleted study app error', () {
+    final args = appErrorArgumentsForSubjectLoadFailure(
+      selectedSubjectId: 'subject-1',
+      error: const SubjectDeletedException(),
+    );
+
+    expect(args.selectedSubjectId, 'subject-1');
+    expect(args.reason, AppErrorReason.deletedStudy);
+  });
+
+  test('maps cache failure to cache unavailable app error', () {
+    final args = appErrorArgumentsForSubjectLoadFailure(
+      selectedSubjectId: 'subject-1',
+      error: const SubjectCacheUnavailableException(),
+    );
+
+    expect(args.selectedSubjectId, 'subject-1');
+    expect(args.reason, AppErrorReason.cacheUnavailable);
   });
 
   test(

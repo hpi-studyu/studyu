@@ -32,6 +32,17 @@ class SubjectDeletedException implements Exception {
       'SubjectDeletedException: subject no longer exists in the backend';
 }
 
+class SubjectCacheUnavailableException implements Exception {
+  const SubjectCacheUnavailableException([this.cause]);
+
+  final Object? cause;
+
+  @override
+  String toString() =>
+      'SubjectCacheUnavailableException: cached subject is missing or unusable'
+      '${cause == null ? '' : ' ($cause)'}';
+}
+
 @visibleForTesting
 String initialRouteForMissingSubjectRoute({
   required bool isPreview,
@@ -42,6 +53,21 @@ String initialRouteForMissingSubjectRoute({
   return onBoarded || isDebugMode
       ? '/${RouteNames.welcome}'
       : '/${RouteNames.onboarding}';
+}
+
+@visibleForTesting
+AppErrorScreenArguments appErrorArgumentsForSubjectLoadFailure({
+  required String selectedSubjectId,
+  required Object error,
+}) {
+  return AppErrorScreenArguments(
+    selectedSubjectId: selectedSubjectId,
+    reason: switch (error) {
+      SubjectDeletedException() => AppErrorReason.deletedStudy,
+      SubjectCacheUnavailableException() => AppErrorReason.cacheUnavailable,
+      _ => AppErrorReason.loading,
+    },
+  );
 }
 
 @visibleForTesting
@@ -378,16 +404,29 @@ class _LoadingScreenState extends State<LoadingScreen> {
     StudySubject? subject;
     try {
       subject = await _retrieveSubject(selectedSubjectId);
-    } on SubjectDeletedException {
+    } on SubjectDeletedException catch (error) {
       StudyULogger.warning(
         "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
       );
       if (!mounted) return;
       context.go(
         '/${RouteNames.appErrorScreen}',
-        extra: AppErrorScreenArguments(
+        extra: appErrorArgumentsForSubjectLoadFailure(
           selectedSubjectId: selectedSubjectId,
-          reason: AppErrorReason.deletedStudy,
+          error: error,
+        ),
+      );
+      return;
+    } on SubjectCacheUnavailableException catch (error) {
+      StudyULogger.warning(
+        "Subject $selectedSubjectId could not be restored from cache. Showing recovery screen.",
+      );
+      if (!mounted) return;
+      context.go(
+        '/${RouteNames.appErrorScreen}',
+        extra: appErrorArgumentsForSubjectLoadFailure(
+          selectedSubjectId: selectedSubjectId,
+          error: error,
         ),
       );
       return;
@@ -484,9 +523,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         final cached = await Cache.loadSubject();
         StudyULogger.info("Loaded subject from cache: $cached");
         return cached;
-      } catch (_) {
-        StudyULogger.warning("No subject found in cache");
-        return null;
+      } catch (error) {
+        StudyULogger.warning("No usable subject found in cache: $error");
+        throw SubjectCacheUnavailableException(error);
       }
     }
 
@@ -515,8 +554,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         final cached = await Cache.loadSubject();
         StudyULogger.info("Loaded subject from cache: $cached");
         return cached;
-      } catch (e) {
-        StudyULogger.warning("No subject found in cache");
+      } catch (error) {
+        StudyULogger.warning("No usable subject found in cache: $error");
+        throw SubjectCacheUnavailableException(error);
       }
     }
     return null;
