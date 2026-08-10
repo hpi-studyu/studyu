@@ -137,11 +137,23 @@ void main() {
   test('maps cache failure to cache unavailable app error', () {
     final args = appErrorArgumentsForSubjectLoadFailure(
       selectedSubjectId: 'subject-1',
-      error: const SubjectCacheUnavailableException(),
+      error: const SubjectCacheUnavailableException('No cached subject found'),
     );
 
     expect(args.selectedSubjectId, 'subject-1');
-    expect(args.reason, AppErrorReason.cacheUnavailable);
+    expect(args.reason, AppErrorReason.cacheUnavailableMissing);
+  });
+
+  test('maps corrupt cache failure to cache corrupt app error', () {
+    final args = appErrorArgumentsForSubjectLoadFailure(
+      selectedSubjectId: 'subject-1',
+      error: const SubjectCacheUnavailableException(
+        'No backup subject provided',
+      ),
+    );
+
+    expect(args.selectedSubjectId, 'subject-1');
+    expect(args.reason, AppErrorReason.cacheUnavailableCorrupt);
   });
 
   test(

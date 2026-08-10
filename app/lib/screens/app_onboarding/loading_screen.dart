@@ -64,10 +64,20 @@ AppErrorScreenArguments appErrorArgumentsForSubjectLoadFailure({
     selectedSubjectId: selectedSubjectId,
     reason: switch (error) {
       SubjectDeletedException() => AppErrorReason.deletedStudy,
-      SubjectCacheUnavailableException() => AppErrorReason.cacheUnavailable,
+      SubjectCacheUnavailableException(:final cause) =>
+        appErrorReasonForCacheUnavailable(cause),
       _ => AppErrorReason.loading,
     },
   );
+}
+
+@visibleForTesting
+AppErrorReason appErrorReasonForCacheUnavailable(Object? cause) {
+  final message = cause?.toString().toLowerCase() ?? '';
+  if (message.contains('no cached subject found')) {
+    return AppErrorReason.cacheUnavailableMissing;
+  }
+  return AppErrorReason.cacheUnavailableCorrupt;
 }
 
 @visibleForTesting
