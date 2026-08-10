@@ -1287,6 +1287,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'This study is no longer available from the server. Your data remains on this device for now. Please contact your study supervisor or support before deleting anything. Only use \'Delete all data\' if they tell you to reset the app.';
 
   @override
+  String get cache_missing_error_title => 'Cached study data not found';
+
+  @override
+  String get cache_missing_error_description =>
+      'StudyU could not find cached study data on this device while the service is unavailable. Please reconnect and try again later, or contact your study supervisor or support before deleting any data.';
+
+  @override
+  String get cache_corrupt_error_title => 'Cached study data could not be read';
+
+  @override
+  String get cache_corrupt_error_description =>
+      'StudyU found local study data, but it could not be restored safely while the service is unavailable. Please contact your study supervisor or support before deleting any data.';
+
+  @override
   String get dashboard_showcase_progress_title => 'Study progress';
 
   @override
@@ -1341,8 +1355,26 @@ class AppLocalizationsEn extends AppLocalizations {
       'StudyU Support Request - Study Unavailable';
 
   @override
+  String get support_email_subject_cache_missing =>
+      'StudyU Support Request - Cached Study Data Missing';
+
+  @override
+  String get support_email_subject_cache_corrupt =>
+      'StudyU Support Request - Cached Study Data Corrupt';
+
+  @override
   String deleted_study_support_email_body(String subjectId) {
     return 'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: $subjectId\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.';
+  }
+
+  @override
+  String cache_missing_support_email_body(String subjectId) {
+    return 'Hello,\n\nThe StudyU app could not find cached study data on my device while the service was unavailable. My subject ID is: $subjectId\n\nPlease let me know how I should recover access safely.\n\nThank you.';
+  }
+
+  @override
+  String cache_corrupt_support_email_body(String subjectId) {
+    return 'Hello,\n\nThe StudyU app found cached study data on my device, but it could not restore it safely while the service was unavailable. My subject ID is: $subjectId\n\nPlease let me know how I should recover access safely.\n\nThank you.';
   }
 
   @override
