@@ -888,6 +888,7 @@ class _EssentialFieldsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -1110,6 +1111,7 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
     final theme = Theme.of(context);
 
     return Card(
+      elevation: 0,
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
@@ -1308,6 +1310,7 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
     final theme = Theme.of(context);
 
     return Card(
+      elevation: 0,
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [

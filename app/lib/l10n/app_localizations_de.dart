@@ -1682,6 +1682,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get meal_details => 'Mahlzeitendetails';
 
   @override
+  String get edit_meal_title => 'Mahlzeit bearbeiten';
+
+  @override
   String get apply => 'Übernehmen';
 
   @override
@@ -2329,10 +2332,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get edit_food_title => 'Edit Food';
+  String get edit_food_title => 'Lebensmittel bearbeiten';
 
   @override
-  String get add_food_manually => 'Add food manually';
+  String get add_food_manually => 'Lebensmittel erstellen';
 
   @override
   String get basic_information => 'Basic Information';
@@ -2455,7 +2458,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get create => 'Erstellen';
 
   @override
-  String get create_meal => 'Create meal';
+  String get create_meal => 'Mahlzeit erstellen';
 
   @override
   String get create_meal_subtitle => 'Combine multiple foods';
