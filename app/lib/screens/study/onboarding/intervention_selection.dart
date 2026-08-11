@@ -92,11 +92,13 @@ class _InterventionSelectionScreenState
 
   Future<void> onFinished() async {
     final appState = context.read<AppState>();
-    appState.activeSubject = StudySubject.fromStudy(
-      appState.selectedStudy!,
-      Supabase.instance.client.auth.currentUser!.id,
-      selectedInterventionIds,
-      appState.inviteCode,
+    appState.updateActiveSubject(
+      StudySubject.fromStudy(
+        appState.selectedStudy!,
+        Supabase.instance.client.auth.currentUser!.id,
+        selectedInterventionIds,
+        appState.inviteCode,
+      ),
     );
     context.push('/${RouteNames.journey}');
   }

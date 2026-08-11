@@ -175,10 +175,14 @@ Future<void> deleteActiveStudyReference() async {
   await SecureStorage.delete(selectedSubjectIdKey);
 }
 
-Future<void> deleteLocalData() async {
-  await clearParticipantCredentials();
+Future<void> clearDeletedSubjectLocalState() async {
   await SecureStorage.delete(selectedSubjectIdKey);
   await SecureStorage.delete(cacheSubjectKey);
+}
+
+Future<void> deleteLocalData() async {
+  await clearParticipantCredentials();
+  await clearDeletedSubjectLocalState();
 }
 
 void previewSubjectIdKey() {

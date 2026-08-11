@@ -39,6 +39,70 @@ void main() {
   );
 
   test(
+    'restoreCachedValueForStartup returns cached value and skips sign-in while device is offline',
+    () async {
+      var signInCalls = 0;
+      var fetchCalls = 0;
+
+      final result = await restoreCachedValueForStartup<String>(
+        fetchRemote: () {
+          fetchCalls++;
+          return Future<String?>.error(
+            Exception('SocketException: Network is unreachable'),
+          );
+        },
+        loadCached: () => Future.value('cached-subject'),
+        signIn: () {
+          signInCalls++;
+          return Future.value(true);
+        },
+        isDeletedRemoteError: (_) => false,
+      );
+
+      expect(result, 'cached-subject');
+      expect(fetchCalls, 1);
+      expect(signInCalls, 0);
+      expect(
+        appConnectionStatusController.status,
+        AppConnectionStatus.deviceOffline,
+      );
+    },
+  );
+
+  test(
+    'restoreCachedValueForStartup uses cache immediately once backend is already marked unavailable',
+    () async {
+      var signInCalls = 0;
+      var fetchCalls = 0;
+
+      appConnectionStatusController.setStatus(
+        AppConnectionStatus.backendUnavailable,
+      );
+
+      final result = await restoreCachedValueForStartup<String>(
+        fetchRemote: () {
+          fetchCalls++;
+          return Future.value('remote-subject');
+        },
+        loadCached: () => Future.value('cached-subject'),
+        signIn: () {
+          signInCalls++;
+          return Future.value(true);
+        },
+        isDeletedRemoteError: (_) => false,
+      );
+
+      expect(result, 'cached-subject');
+      expect(fetchCalls, 0);
+      expect(signInCalls, 0);
+      expect(
+        appConnectionStatusController.status,
+        AppConnectionStatus.backendUnavailable,
+      );
+    },
+  );
+
+  test(
     'restoreCachedValueForStartup throws cache unavailable when backend is down and cache is missing',
     () async {
       await expectLater(

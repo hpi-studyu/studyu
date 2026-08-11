@@ -38,4 +38,25 @@ void main() {
 
     expect(calls, [AppConnectionStatus.backendUnavailable]);
   });
+
+  test('connectionStatusFromError maps explicit offline transport errors', () {
+    expect(
+      connectionStatusFromError(
+        Exception('SocketException: Network is unreachable'),
+      ),
+      AppConnectionStatus.deviceOffline,
+    );
+  });
+
+  test(
+    'connectionStatusFromError keeps generic fetch failures as backend unavailable',
+    () {
+      expect(
+        connectionStatusFromError(
+          Exception('ClientException: Failed to fetch'),
+        ),
+        AppConnectionStatus.backendUnavailable,
+      );
+    },
+  );
 }

@@ -71,9 +71,13 @@ dev_dependencies:
   # flutter_launcher_icons: ^0.14.4
   # Deprecated? icons_launcher may be an alternative.
   flutter_lints: ^6.0.0
+  flutter_secure_storage: ^10.3.1
+  flutter_secure_storage_platform_interface: ^2.0.1
   flutter_test:
     sdk: flutter
   lint: ^2.8.0
+  path_provider_platform_interface: ^2.1.2
+  plugin_platform_interface: ^2.1.8
 
 flutter:
   generate: true

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -174,7 +176,10 @@ class StudySwitchDialogs {
     }
 
     await currentSubject.softDelete();
-    await deleteActiveStudyReference();
+    await clearDeletedSubjectLocalState();
+    if (context.mounted) {
+      context.read<AppState>().clearActiveStudyState();
+    }
     await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
     if (context.mounted) {
       await cancelNotifications(context);
@@ -215,6 +220,9 @@ class StudySwitchDialogs {
 
     await currentSubject.delete();
     await deleteLocalData();
+    if (context.mounted) {
+      context.read<AppState>().clearActiveStudyState();
+    }
     await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
     if (context.mounted) {
       await cancelNotifications(context);

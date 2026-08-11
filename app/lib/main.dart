@@ -72,21 +72,23 @@ Future<void> main() async {
   usePathUrlStrategy();
   AppConfig? appConfig;
   String initialRoute = '/${RouteNames.loading}';
-  try {
-    appConfig = await AppConfig.getAppConfig();
-  } on PostgrestException catch (e) {
-    debugPrint('Postgres exception: $e');
-    if (e.code == 'PGRST301') {
-      // Unauthorized - likely due to wrong supabase environment variables
-      initialRoute = '/${RouteNames.appErrorScreen}';
+  if (appConnectionStatusController.status == AppConnectionStatus.healthy) {
+    try {
+      appConfig = await AppConfig.getAppConfig();
+    } on PostgrestException catch (e) {
+      debugPrint('Postgres exception: $e');
+      if (e.code == 'PGRST301') {
+        // Unauthorized - likely due to wrong supabase environment variables
+        initialRoute = '/${RouteNames.appErrorScreen}';
+      }
+    } catch (error) {
+      // device could be offline
+      final status = connectionStatusFromError(error);
+      if (status != null) {
+        appConnectionStatusController.setStatus(status);
+      }
+      debugPrint('Error fetching app config: $error');
     }
-  } catch (error) {
-    // device could be offline
-    final status = connectionStatusFromError(error);
-    if (status != null) {
-      appConnectionStatusController.setStatus(status);
-    }
-    debugPrint('Error fetching app config: $error');
   }
 
   if (appConfig != null && await isAppOutdated(appConfig)) {
@@ -106,6 +108,10 @@ Future<void> main() async {
         final currentLocation =
             router.routerDelegate.currentConfiguration.uri.path;
         if (currentLocation == '/${RouteNames.appOutdated}') return;
+        if (appConnectionStatusController.status !=
+            AppConnectionStatus.healthy) {
+          return;
+        }
 
         final appConfig = await AppConfig.getAppConfig();
         if (await isAppOutdated(appConfig)) {

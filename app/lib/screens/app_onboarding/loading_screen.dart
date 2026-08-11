@@ -87,6 +87,16 @@ Future<T?> restoreCachedValueForStartup<T>({
   required Future<bool> Function() signIn,
   required bool Function(Object error) isDeletedRemoteError,
 }) async {
+  if (appConnectionStatusController.status != AppConnectionStatus.healthy) {
+    try {
+      final cached = await loadCached();
+      StudyULogger.info("Loaded startup value from cache: $cached");
+      return cached;
+    } catch (error) {
+      StudyULogger.warning("No usable startup value found in cache: $error");
+    }
+  }
+
   var shouldRetryAuth = true;
 
   try {
@@ -157,6 +167,7 @@ Future<void> tryRestoreParticipantSession({
   void Function(AppConnectionStatus status)? onConnectionStatusChanged,
   void Function(Object error)? onError,
 }) async {
+  if (hasDegradedConnectionStatus()) return;
   if (isLoggedIn()) return;
   if (!await hasStoredCredentials()) return;
 
@@ -446,8 +457,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return false;
     }
 
-    state.activeSubject = null;
-    state.selectedStudy = null;
+    state.clearActiveStudyState();
     return true;
   }
 
@@ -484,6 +494,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       subject = await _retrieveSubject(selectedSubjectId);
     } on SubjectDeletedException catch (error) {
+      await clearDeletedSubjectLocalState();
+      state.clearActiveStudyState();
       StudyULogger.warning(
         "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
       );
@@ -518,7 +530,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         context.go('/${RouteNames.studyUnavailable}');
         return;
       }
-      state.activeSubject = subject;
+      state.updateActiveSubject(subject);
       state.init(context);
       context.go('/${RouteNames.dashboard}');
     } else {
@@ -531,6 +543,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> noSubjectFound(AppState state) async {
     StudyULogger.info("No subject found");
     await cancelNotifications(context);
+    state.clearActiveStudyState();
 
     await _restoreParticipantSession();
     if (isUserLoggedIn() && !state.isPreview) {
@@ -637,9 +650,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return true;
       }
 
-      state.activeSubject = await preview.getStudySubject(
-        state,
-        createSubject: true,
+      state.updateActiveSubject(
+        await preview.getStudySubject(state, createSubject: true),
       );
 
       // CONSENT
@@ -706,7 +718,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (isUserLoggedIn()) {
         final subject = await preview.getStudySubject(state);
         if (subject != null) {
-          state.activeSubject = subject;
+          state.updateActiveSubject(subject);
           if (!mounted) return true;
           _iFrameHelper.postPreviewStatus(status: 'loaded');
           context.go('/${RouteNames.dashboard}');
@@ -757,9 +769,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // Prefer the already-fetched study from state over the one from
         // handleAuthorization so the designer's latest edits are used.
         if (state.selectedStudy != null) preview.study = state.selectedStudy;
-        state.activeSubject = await preview.getStudySubject(
-          state,
-          createSubject: true,
+        state.updateActiveSubject(
+          await preview.getStudySubject(state, createSubject: true),
         );
         return state.activeSubject != null;
       }

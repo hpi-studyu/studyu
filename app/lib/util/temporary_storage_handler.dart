@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:studyu_core/core.dart';
@@ -22,6 +23,7 @@ class TemporaryStorageHandler {
   }
 
   static Future<Directory?> _getMultimodalTempDirectory() async {
+    if (kIsWeb) return null;
     try {
       final tempAppData = await getTemporaryDirectory();
       final multimodalTempDirectory = Directory(
@@ -40,6 +42,11 @@ class TemporaryStorageHandler {
   }
 
   static Future<Directory> _getMultimodalUploadDirectory() async {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'Multimodal upload directory is not supported on web.',
+      );
+    }
     final appData = await getApplicationDocumentsDirectory();
     final multimodalUploadDirectory = Directory(
       "${appData.path}/multimodal-upload",
@@ -52,6 +59,7 @@ class TemporaryStorageHandler {
     String stagingFilePath,
     String blobId,
   ) async {
+    if (kIsWeb) return;
     final stagingFile = File(stagingFilePath);
     final uploadDirectory = await _getMultimodalUploadDirectory();
     final uploadFile = File(path.join(uploadDirectory.path, [blobId].join()));
@@ -59,6 +67,7 @@ class TemporaryStorageHandler {
   }
 
   static Future<List<FutureBlobFile>> getFutureBlobFiles() async {
+    if (kIsWeb) return [];
     final uploadDirectory = await _getMultimodalUploadDirectory();
     final files = await uploadDirectory.list().toList();
     final futureBlobFiles = files.map((file) {
@@ -69,6 +78,7 @@ class TemporaryStorageHandler {
   }
 
   Future<FutureBlobFile?> getStagingAudio() async {
+    if (kIsWeb) return null;
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
 
     if (temporaryMultimodalDirectory == null) {
@@ -93,6 +103,7 @@ class TemporaryStorageHandler {
   }
 
   Future<FutureBlobFile?> getStagingImage() async {
+    if (kIsWeb) return null;
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
 
     if (temporaryMultimodalDirectory == null) {
@@ -117,6 +128,7 @@ class TemporaryStorageHandler {
   }
 
   static Future<void> deleteAllStagingFiles() async {
+    if (kIsWeb) return;
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
 
     if (temporaryMultimodalDirectory == null) {
