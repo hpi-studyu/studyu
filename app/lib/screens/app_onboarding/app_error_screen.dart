@@ -313,9 +313,9 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       await cancelNotifications(context);
 
       if (widget.reason == AppErrorReason.deletedStudy) {
-        StudyULogger.info("Clearing active study reference");
-        await deleteActiveStudyReference();
-        StudyULogger.info("Active study reference cleared");
+        StudyULogger.info("Clearing deleted subject local state");
+        await clearDeletedSubjectLocalState();
+        StudyULogger.info("Deleted subject local state cleared");
       } else {
         StudyULogger.info("Deleting all secure storage data");
         await SecureStorage.deleteAll();

@@ -10,6 +10,44 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 class Cache {
   static bool isSynchronizing = false;
 
+  @visibleForTesting
+  static Future<void> Function()? debugUploadBlobFilesOverride;
+
+  static bool isCompatibleCachedSubject({
+    required StudySubject localSubject,
+    required StudySubject remoteSubject,
+  }) {
+    return localSubject.id == remoteSubject.id &&
+        localSubject.studyId == remoteSubject.studyId &&
+        localSubject.userId == remoteSubject.userId;
+  }
+
+  static SubjectProgressSyncPlan buildProgressSyncPlan({
+    required StudySubject localSubject,
+    required StudySubject remoteSubject,
+  }) {
+    final remoteKeys = remoteSubject.progress
+        .map((progress) => _progressSyncKey(progress))
+        .toSet();
+    final mergedProgress = [...remoteSubject.progress];
+    final newProgress = <SubjectProgress>[];
+
+    for (final progress in localSubject.progress) {
+      final key = _progressSyncKey(progress);
+      if (remoteKeys.add(key)) {
+        newProgress.add(progress);
+        mergedProgress.add(progress);
+      }
+    }
+
+    return SubjectProgressSyncPlan(
+      newProgress: newProgress,
+      mergedProgress: mergedProgress,
+      saveProgress: (progress) => progress.save(),
+      saveSubject: (subject) => subject.save(onlyUpdate: true),
+    );
+  }
+
   static Future<void> storeSubject(StudySubject? subject) async {
     // debugPrint("Store subject in cache");
     if (subject == null) return;
@@ -86,13 +124,18 @@ class Cache {
   static Future<void> uploadBlobFiles() async {
     final blobStorageHandler = BlobStorageHandler();
     final futureBlobFiles = await TemporaryStorageHandler.getFutureBlobFiles();
-    for (final futureBlobFile in futureBlobFiles) {
-      await blobStorageHandler.uploadObservation(
-        futureBlobFile.futureBlobId,
-        File(futureBlobFile.localFilePath),
-      );
-      await File(futureBlobFile.localFilePath).delete();
-    }
+    await uploadPendingBlobFiles(
+      futureBlobFiles: futureBlobFiles,
+      uploadObservation: (futureBlobFile) async {
+        await blobStorageHandler.uploadObservation(
+          futureBlobFile.futureBlobId,
+          File(futureBlobFile.localFilePath),
+        );
+      },
+      deleteUploadedFile: (futureBlobFile) async {
+        await File(futureBlobFile.localFilePath).delete();
+      },
+    );
   }
 
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
@@ -102,6 +145,15 @@ class Cache {
       return remoteSubject;
     }
     final localSubject = await loadSubject(backupSubject: remoteSubject);
+    if (!isCompatibleCachedSubject(
+      localSubject: localSubject,
+      remoteSubject: remoteSubject,
+    )) {
+      StudyULogger.warning(
+        'Skip cache synchronization because cached subject does not match remote subject',
+      );
+      return remoteSubject;
+    }
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
     // remote subject belongs to a different study
@@ -114,61 +166,17 @@ class Cache {
     isSynchronizing = true;
 
     try {
-      await uploadBlobFiles();
-
-      // only minimal update
-      // Check if progress has changed
-      if (localSubject.progress.length != remoteSubject.progress.length) {
+      await (debugUploadBlobFilesOverride ?? uploadBlobFiles)();
+      final syncPlan = buildProgressSyncPlan(
+        localSubject: localSubject,
+        remoteSubject: remoteSubject,
+      );
+      if (syncPlan.hasChanges) {
         StudyULogger.info("Cache synchronization: Merging progress");
-        /*if (remoteSubject.progress.isNotEmpty) {
-        // sort remote progress list from oldest to newest
-        remoteSubject.progress.sort((a, b) =>
-            a.completedAt.compareTo(b.completedAt));
-        // merge all local progress older than the latest remote progress to remote subject and upload
-        newProgress = localSubject.progress.where((element) =>
-            element.completedAt.isAfter(remoteSubject.progress.last.completedAt)
-        ).toList();
-      } else {
-        newProgress = localSubject.progress;
-      }*/
-        // save new progress
-        final List<SubjectProgress> newProgress = [
-          ...localSubject.progress,
-          ...remoteSubject.progress,
-        ];
-        newProgress.removeWhere(
-          (element) =>
-              localSubject.progress.contains(element) &&
-              remoteSubject.progress.contains(element),
+        await applyProgressSyncPlan(
+          remoteSubject: remoteSubject,
+          syncPlan: syncPlan,
         );
-        for (final p in newProgress) {
-          await p.save();
-        }
-
-        // merge local and remote progress and remove duplicates
-        final List<SubjectProgress> finalProgress = [
-          ...localSubject.progress,
-          ...remoteSubject.progress,
-        ];
-        final duplicates = <DateTime?>{};
-        finalProgress.retainWhere(
-          (element) => duplicates.add(element.completedAt),
-        );
-        // replace remote progress with our merge
-        remoteSubject.progress = finalProgress;
-        await remoteSubject.save(onlyUpdate: true);
-      } else {
-        // Unable to determine what has changed
-        // We can either drop local or overwrite remote
-        // ... for now do nothing
-        if (!kDebugMode && localSubject.startedAt == remoteSubject.startedAt) {
-          StudyULogger.fatal(
-            "Cache synchronization found local changes that cannot be merged",
-          );
-          StudyULogger.error(
-            "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}",
-          );
-        }
       }
       appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
     } catch (exception) {
@@ -182,15 +190,42 @@ class Cache {
     return remoteSubject;
   }
 
+  static String _progressSyncKey(SubjectProgress progress) =>
+      jsonEncode(progress.toJson());
+
+  static Future<void> uploadPendingBlobFiles({
+    required List<FutureBlobFile> futureBlobFiles,
+    required Future<void> Function(FutureBlobFile futureBlobFile)
+    uploadObservation,
+    required Future<void> Function(FutureBlobFile futureBlobFile)
+    deleteUploadedFile,
+  }) async {
+    for (final futureBlobFile in futureBlobFiles) {
+      await uploadObservation(futureBlobFile);
+      await deleteUploadedFile(futureBlobFile);
+    }
+  }
+
+  static Future<void> applyProgressSyncPlan({
+    required StudySubject remoteSubject,
+    required SubjectProgressSyncPlan syncPlan,
+  }) async {
+    for (final progress in syncPlan.newProgress) {
+      await syncPlan.saveProgress(progress);
+    }
+    remoteSubject.progress = syncPlan.mergedProgress;
+    await syncPlan.saveSubject(remoteSubject);
+  }
+
   static Future<String> getCachedUserData() async {
     final debugInfo = StringBuffer();
     debugInfo.writeln('=== Cached User Data Debug Info ===');
 
     try {
       // Check selected subject ID
-      if (await SecureStorage.containsKey('selected_study_object_id')) {
+      if (await SecureStorage.containsKey(selectedSubjectIdKey)) {
         final selectedSubjectId = await SecureStorage.read(
-          'selected_study_object_id',
+          selectedSubjectIdKey,
         );
         debugInfo.writeln('Selected Subject ID: $selectedSubjectId');
       } else {
@@ -198,8 +233,8 @@ class Cache {
       }
 
       // Check user email
-      if (await SecureStorage.containsKey('user_email')) {
-        final userEmail = await SecureStorage.read('user_email');
+      if (await SecureStorage.containsKey(userEmailKey)) {
+        final userEmail = await SecureStorage.read(userEmailKey);
         debugInfo.writeln('User Email: $userEmail');
       } else {
         debugInfo.writeln('User Email: NOT FOUND');
@@ -224,7 +259,7 @@ class Cache {
       }
 
       // Check user password (without revealing the actual password)
-      if (await SecureStorage.containsKey('user_password')) {
+      if (await SecureStorage.containsKey(userPasswordKey)) {
         debugInfo.writeln('User Password: EXISTS (hidden for security)');
       } else {
         debugInfo.writeln('User Password: NOT FOUND');
@@ -235,4 +270,20 @@ class Cache {
 
     return debugInfo.toString();
   }
+}
+
+class SubjectProgressSyncPlan {
+  final List<SubjectProgress> newProgress;
+  final List<SubjectProgress> mergedProgress;
+  final Future<SubjectProgress> Function(SubjectProgress progress) saveProgress;
+  final Future<StudySubject> Function(StudySubject subject) saveSubject;
+
+  const SubjectProgressSyncPlan({
+    required this.newProgress,
+    required this.mergedProgress,
+    required this.saveProgress,
+    required this.saveSubject,
+  });
+
+  bool get hasChanges => newProgress.isNotEmpty;
 }

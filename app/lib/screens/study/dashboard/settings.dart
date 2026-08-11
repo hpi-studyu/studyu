@@ -218,7 +218,10 @@ class OptOutAlertDialog extends StatelessWidget {
               }
               rethrow;
             }
-            await deleteActiveStudyReference();
+            await clearDeletedSubjectLocalState();
+            if (context.mounted) {
+              context.read<AppState>().clearActiveStudyState();
+            }
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
@@ -282,6 +285,9 @@ class DeleteAlertDialog extends StatelessWidget {
           }
           // Reached when delete succeeded or subject was already gone from DB
           await deleteLocalData();
+          if (context.mounted) {
+            context.read<AppState>().clearActiveStudyState();
+          }
           await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
           if (context.mounted) await cancelNotifications(context);
           if (context.mounted) {

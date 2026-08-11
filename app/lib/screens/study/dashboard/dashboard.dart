@@ -14,6 +14,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/study_unavailable_screen.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/theme.dart' as app_theme;
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
@@ -61,18 +62,16 @@ class _DashboardScreenState extends State<DashboardScreen>
       (kDebugMode || context.read<AppState>().isPreview) &&
       !subject!.completedStudy;
 
-  SnackBar _buildStatusSnackBar(String message) {
-    final theme = Theme.of(context);
-    return SnackBar(
-      backgroundColor: theme.colorScheme.primary,
-      content: Text(
-        message,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.onPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
+  Future<void> _moveToNextDayLocally() async {
+    subject!.progress = subject!.progress
+        .map((progress) => progress.setStartDateBackBy(days: 1))
+        .toList();
+    subject!.startedAt = subject!.startedAt!.subtract(const Duration(days: 1));
+    await Cache.storeSubject(subject);
+    if (!mounted) return;
+    setState(() {
+      scheduleToday = subject!.scheduleFor(DateTime.now());
+    });
   }
 
   @override
@@ -403,6 +402,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.fast_forward_rounded),
                 onPressed: () async {
+                  if (context.read<AppState>().connectionStatus !=
+                      AppConnectionStatus.healthy) {
+                    await _moveToNextDayLocally();
+                    return;
+                  }
                   try {
                     await subject!.setStartDateBackBy(days: 1);
                     setState(() {
@@ -412,18 +416,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                     final status = connectionStatusFromError(error);
                     if (status == null) rethrow;
                     appConnectionStatusController.setStatus(status);
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      _buildStatusSnackBar(
-                        status == AppConnectionStatus.deviceOffline
-                            ? AppLocalizations.of(
-                                context,
-                              )!.no_internet_connection
-                            : AppLocalizations.of(
-                                context,
-                              )!.connection_banner_backend_unavailable,
-                      ),
-                    );
+                    if (status != AppConnectionStatus.healthy) {
+                      await _moveToNextDayLocally();
+                    }
                   }
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
