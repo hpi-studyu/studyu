@@ -1,3 +1,4 @@
+import 'package:studyu_app/util/nutrition_food_snapshots.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -31,16 +32,19 @@ class NutritionFoodRepository {
     List<String>? tags,
     String? expectedVersionId,
   }) async {
+    final persisted = food.entryType == FoodEntryType.meal
+        ? normalizeCompositeNutritionFoodDefinition(food)
+        : FoodEntry.fromJson(food.toJson());
     await ensureDefinitions(
       subjectId: subjectId,
-      foods: _validatedComponents(food),
+      foods: _validatedComponents(persisted),
     );
-    final definitionId = food.foodId;
-    final snapshot = Map<String, dynamic>.from(food.toJson())
+    final definitionId = persisted.foodId;
+    final snapshot = Map<String, dynamic>.from(persisted.toJson())
       ..['foodId'] = definitionId
       ..['name'] = name
       ..['originalValues'] = {
-        ...food.originalValues,
+        ...persisted.originalValues,
         '_libraryTags': tags ?? const <String>[],
       };
     final response = await _mutate(
@@ -59,8 +63,14 @@ class NutritionFoodRepository {
     required String subjectId,
     required Iterable<FoodEntry> foods,
   }) async {
-    final byId = {for (final food in foods) food.foodId: food};
-    if (byId.isEmpty) return;
+    final sourceById = {for (final food in foods) food.foodId: food};
+    if (sourceById.isEmpty) return;
+    final byId = {
+      for (final food in sourceById.values)
+        food.foodId: food.entryType == FoodEntryType.meal
+            ? normalizeCompositeNutritionFoodDefinition(food)
+            : food,
+    };
     final existing = await _supabase
         .from('nutrition_food_definition')
         .select('id,current_version_id')
@@ -88,7 +98,8 @@ class NutritionFoodRepository {
         (food) => currentVersions.containsKey(food.foodId),
       )) {
         if (!validLinkages.contains('${food.foodId}:${food.foodVersionId}')) {
-          food.foodVersionId = currentVersions[food.foodId]!;
+          sourceById[food.foodId]!.foodVersionId =
+              currentVersions[food.foodId]!;
         }
       }
     }
@@ -102,7 +113,8 @@ class NutritionFoodRepository {
         snapshot: food.toJson(),
         libraryVisible: false,
       );
-      food.foodVersionId = result.definition.currentVersionId;
+      sourceById[food.foodId]!.foodVersionId =
+          result.definition.currentVersionId;
     }
   }
 
@@ -138,12 +150,15 @@ class NutritionFoodRepository {
     int? currentStudyDay,
     String? mutationId,
   }) {
-    _validatedComponents(snapshot).toList();
+    final persisted = snapshot.entryType == FoodEntryType.meal
+        ? normalizeCompositeNutritionFoodDefinition(snapshot)
+        : snapshot;
+    _validatedComponents(persisted).toList();
     return _mutate(
       subjectId: subjectId,
-      foodId: snapshot.foodId,
+      foodId: persisted.foodId,
       expectedVersionId: expectedVersionId,
-      snapshot: snapshot.toJson(),
+      snapshot: persisted.toJson(),
       historicalTarget: target,
       historicalEntryId: entryId,
       propagateStudyDay: currentStudyDay,
@@ -165,6 +180,9 @@ class NutritionFoodRepository {
     for (var index = 0; index < compositions.length; index++) {
       if (compositions[index].foodId != snapshots[index].foodId) {
         throw StateError('Saved meal components must match in order');
+      }
+      if (snapshots[index].entryType == FoodEntryType.meal) {
+        throw StateError('Saved meal ingredients must be leaf foods');
       }
     }
     return snapshots;

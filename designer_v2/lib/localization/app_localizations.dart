@@ -5056,13 +5056,13 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_nutrition_allow_meals.
   ///
   /// In en, this message translates to:
-  /// **'Allow meals'**
+  /// **'Allow saved meals in meal logs'**
   String get form_field_nutrition_allow_meals;
 
   /// No description provided for @form_field_nutrition_allow_meals_help.
   ///
   /// In en, this message translates to:
-  /// **'Let participants combine food items into reusable meals.'**
+  /// **'Participants can add saved meals alongside individual foods while logging. When creating a new saved meal from a log, existing saved meals are expanded into their food ingredients.'**
   String get form_field_nutrition_allow_meals_help;
 
   /// No description provided for @form_field_nutrition_minimum_meals_required.

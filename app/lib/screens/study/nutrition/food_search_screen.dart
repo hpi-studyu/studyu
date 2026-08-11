@@ -532,6 +532,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
 
   void _selectResult(UnifiedFoodResult result) {
     final foodEntry = _foodEntryForResult(result);
+    if (!_isAllowedFood(foodEntry)) return;
     if (widget.mealLabel == null) {
       _navigateToEdit(foodEntry);
       return;
@@ -551,6 +552,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
 
   void _addResult(UnifiedFoodResult result, Offset? source) {
     final food = _foodEntryForResult(result);
+    if (!_isAllowedFood(food)) return;
     _addToSelection(
       food,
       key: canonicalFoodSelectionKey(food),
@@ -669,6 +671,12 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
 
   void _confirmSelection(FoodSelectionStore store) {
     if (_isConfirming || store.isEmpty) return;
+    if (!widget.allowMeals &&
+        store.items.any(
+          (item) => item.baseFood.entryType == studyu.FoodEntryType.meal,
+        )) {
+      return;
+    }
     _removeTransfer();
     setState(() => _isConfirming = true);
     _pop(FoodSearchSelection(store.materialize()));
@@ -767,6 +775,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
   }
 
   void _completeSingleSelection(studyu.FoodEntry foodEntry) {
+    if (!_isAllowedFood(foodEntry)) return;
     _pop(
       widget.mealLabel != null
           ? FoodSearchSelection.single(foodEntry)
@@ -927,7 +936,13 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
         title: Text(
           widget.mealLabel == null
               ? l10n.add_food_title
-              : l10n.add_items_to_meal(widget.mealLabel!.toLowerCase()),
+              : widget.allowMeals
+              ? l10n.nutrition_add_foods_or_saved_meals_to_meal(
+                  widget.mealLabel!.toLowerCase(),
+                )
+              : l10n.nutrition_add_food_to_meal(
+                  widget.mealLabel!.toLowerCase(),
+                ),
         ),
         actions: [
           if (widget.historicalMode)
@@ -959,17 +974,18 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                     ],
                   ),
                 ),
-                PopupMenuItem(
-                  value: _FoodSearchAction.meal,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.restaurant_menu_outlined),
-                      const SizedBox(width: 12),
-                      Text(l10n.add_meal_action),
-                    ],
+                if (widget.allowMeals)
+                  PopupMenuItem(
+                    value: _FoodSearchAction.meal,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.restaurant_menu_outlined),
+                        const SizedBox(width: 12),
+                        Text(l10n.nutrition_create_saved_meal),
+                      ],
+                    ),
                   ),
-                ),
               ],
               icon: const Icon(Icons.add),
             ),
@@ -1027,7 +1043,9 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent>
                   FoodSearchBar(
                     controller: _searchController,
                     focusNode: _searchFocusNode,
-                    hintText: l10n.search_food_hint,
+                    hintText: widget.allowMeals
+                        ? l10n.nutrition_search_foods_saved_meals_or_brands
+                        : l10n.nutrition_search_foods_or_brands,
                     onChanged: (val) =>
                         _onSearchChanged(val, templateViewModel),
                     onScanBarcode: _scanBarcode,

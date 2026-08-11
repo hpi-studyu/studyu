@@ -1145,5 +1145,22 @@
   "food_selection_collapse": "Ausgewählte Lebensmittel einklappen",
   "food_quantity_edit_amount": "Menge bearbeiten",
   "food_quantity_nutrition_for_amount": "Nährwerte für {amount} {unit}",
-  "food_selection_items_count": "{count, plural, =1 {1 Lebensmittel} other {{count} Lebensmittel}}"
+  "food_selection_items_count": "{count, plural, =1 {1 Lebensmittel} other {{count} Lebensmittel}}",
+  "nutrition_logged_foods_and_meals": "Lebensmittel und gespeicherte Mahlzeiten",
+  "nutrition_add_food_or_saved_meal": "Lebensmittel oder gespeicherte Mahlzeit hinzufügen",
+  "nutrition_add_food_or_choose_saved_meal": "Lebensmittel hinzufügen oder gespeicherte Mahlzeit auswählen",
+  "nutrition_food_badge": "Lebensmittel",
+  "nutrition_saved_meal_badge": "Gespeicherte Mahlzeit",
+  "nutrition_add_foods_or_saved_meals_to_meal": "Lebensmittel oder gespeicherte Mahlzeiten zu {meal} hinzufügen",
+  "nutrition_search_foods_saved_meals_or_brands": "Lebensmittel, gespeicherte Mahlzeiten oder Marken suchen",
+  "nutrition_create_saved_meal": "Gespeicherte Mahlzeit erstellen",
+  "nutrition_create_saved_meal_from_log": "Gespeicherte Mahlzeit aus diesem Protokoll erstellen",
+  "nutrition_edit_saved_meal": "Gespeicherte Mahlzeit bearbeiten",
+  "nutrition_ingredients_section": "Zutaten ({count})",
+  "nutrition_add_food_ingredient": "Lebensmittelzutat hinzufügen",
+  "nutrition_invalid_saved_meal": "Diese gespeicherte Mahlzeit enthält unvollständige Zutaten und kann nicht gespeichert werden. Fügen Sie gültige Lebensmittelzutaten hinzu und versuchen Sie es erneut.",
+  "nutrition_saved_meals_filter": "Gespeicherte Mahlzeiten",
+  "nutrition_add_food_to_meal": "Lebensmittel zu {meal} hinzufügen",
+  "nutrition_search_foods_or_brands": "Lebensmittel oder Marken suchen",
+  "nutrition_saved_meals_expanded_notice": "Gespeicherte Mahlzeiten wurden zur Überprüfung in Lebensmittelzutaten aufgelöst. Ihre neue gespeicherte Mahlzeit enthält nur Lebensmittelzutaten."
 }

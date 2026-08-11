@@ -5200,6 +5200,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1 {1 item} other {{count} items}}'**
   String food_selection_items_count(num count);
+
+  /// No description provided for @nutrition_logged_foods_and_meals.
+  ///
+  /// In en, this message translates to:
+  /// **'Foods and saved meals'**
+  String get nutrition_logged_foods_and_meals;
+
+  /// No description provided for @nutrition_add_food_or_saved_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food or saved meal'**
+  String get nutrition_add_food_or_saved_meal;
+
+  /// No description provided for @nutrition_add_food_or_choose_saved_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a food or choose a saved meal'**
+  String get nutrition_add_food_or_choose_saved_meal;
+
+  /// No description provided for @nutrition_food_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get nutrition_food_badge;
+
+  /// No description provided for @nutrition_saved_meal_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved meal'**
+  String get nutrition_saved_meal_badge;
+
+  /// No description provided for @nutrition_add_foods_or_saved_meals_to_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add foods or saved meals to {meal}'**
+  String nutrition_add_foods_or_saved_meals_to_meal(Object meal);
+
+  /// No description provided for @nutrition_search_foods_saved_meals_or_brands.
+  ///
+  /// In en, this message translates to:
+  /// **'Search foods, saved meals, or brands'**
+  String get nutrition_search_foods_saved_meals_or_brands;
+
+  /// No description provided for @nutrition_create_saved_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Create saved meal'**
+  String get nutrition_create_saved_meal;
+
+  /// No description provided for @nutrition_create_saved_meal_from_log.
+  ///
+  /// In en, this message translates to:
+  /// **'Create saved meal from this log'**
+  String get nutrition_create_saved_meal_from_log;
+
+  /// No description provided for @nutrition_edit_saved_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit saved meal'**
+  String get nutrition_edit_saved_meal;
+
+  /// No description provided for @nutrition_ingredients_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients ({count})'**
+  String nutrition_ingredients_section(Object count);
+
+  /// No description provided for @nutrition_add_food_ingredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food ingredient'**
+  String get nutrition_add_food_ingredient;
+
+  /// No description provided for @nutrition_invalid_saved_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'This saved meal contains incomplete ingredients and cannot be saved. Add valid food ingredients and try again.'**
+  String get nutrition_invalid_saved_meal;
+
+  /// No description provided for @nutrition_saved_meals_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved meals'**
+  String get nutrition_saved_meals_filter;
+
+  /// No description provided for @nutrition_add_food_to_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food to {meal}'**
+  String nutrition_add_food_to_meal(Object meal);
+
+  /// No description provided for @nutrition_search_foods_or_brands.
+  ///
+  /// In en, this message translates to:
+  /// **'Search foods or brands'**
+  String get nutrition_search_foods_or_brands;
+
+  /// No description provided for @nutrition_saved_meals_expanded_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved meals were expanded into food ingredients for review. Your new saved meal will contain food ingredients only.'**
+  String get nutrition_saved_meals_expanded_notice;
 }
 
 class _AppLocalizationsDelegate

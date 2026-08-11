@@ -2895,4 +2895,66 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get nutrition_logged_foods_and_meals => 'Foods and saved meals';
+
+  @override
+  String get nutrition_add_food_or_saved_meal => 'Add food or saved meal';
+
+  @override
+  String get nutrition_add_food_or_choose_saved_meal =>
+      'Add a food or choose a saved meal';
+
+  @override
+  String get nutrition_food_badge => 'Food';
+
+  @override
+  String get nutrition_saved_meal_badge => 'Saved meal';
+
+  @override
+  String nutrition_add_foods_or_saved_meals_to_meal(Object meal) {
+    return 'Add foods or saved meals to $meal';
+  }
+
+  @override
+  String get nutrition_search_foods_saved_meals_or_brands =>
+      'Search foods, saved meals, or brands';
+
+  @override
+  String get nutrition_create_saved_meal => 'Create saved meal';
+
+  @override
+  String get nutrition_create_saved_meal_from_log =>
+      'Create saved meal from this log';
+
+  @override
+  String get nutrition_edit_saved_meal => 'Edit saved meal';
+
+  @override
+  String nutrition_ingredients_section(Object count) {
+    return 'Ingredients ($count)';
+  }
+
+  @override
+  String get nutrition_add_food_ingredient => 'Add food ingredient';
+
+  @override
+  String get nutrition_invalid_saved_meal =>
+      'This saved meal contains incomplete ingredients and cannot be saved. Add valid food ingredients and try again.';
+
+  @override
+  String get nutrition_saved_meals_filter => 'Saved meals';
+
+  @override
+  String nutrition_add_food_to_meal(Object meal) {
+    return 'Add food to $meal';
+  }
+
+  @override
+  String get nutrition_search_foods_or_brands => 'Search foods or brands';
+
+  @override
+  String get nutrition_saved_meals_expanded_notice =>
+      'Saved meals were expanded into food ingredients for review. Your new saved meal will contain food ingredients only.';
 }

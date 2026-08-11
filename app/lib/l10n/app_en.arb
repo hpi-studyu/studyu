@@ -1347,5 +1347,22 @@
   "food_selection_collapse": "Collapse selected items",
   "food_quantity_edit_amount": "Edit amount",
   "food_quantity_nutrition_for_amount": "Nutrition for {amount} {unit}",
-  "food_selection_items_count": "{count, plural, =1 {1 item} other {{count} items}}"
+  "food_selection_items_count": "{count, plural, =1 {1 item} other {{count} items}}",
+  "nutrition_logged_foods_and_meals": "Foods and saved meals",
+  "nutrition_add_food_or_saved_meal": "Add food or saved meal",
+  "nutrition_add_food_or_choose_saved_meal": "Add a food or choose a saved meal",
+  "nutrition_food_badge": "Food",
+  "nutrition_saved_meal_badge": "Saved meal",
+  "nutrition_add_foods_or_saved_meals_to_meal": "Add foods or saved meals to {meal}",
+  "nutrition_search_foods_saved_meals_or_brands": "Search foods, saved meals, or brands",
+  "nutrition_create_saved_meal": "Create saved meal",
+  "nutrition_create_saved_meal_from_log": "Create saved meal from this log",
+  "nutrition_edit_saved_meal": "Edit saved meal",
+  "nutrition_ingredients_section": "Ingredients ({count})",
+  "nutrition_add_food_ingredient": "Add food ingredient",
+  "nutrition_invalid_saved_meal": "This saved meal contains incomplete ingredients and cannot be saved. Add valid food ingredients and try again.",
+  "nutrition_saved_meals_filter": "Saved meals",
+  "nutrition_add_food_to_meal": "Add food to {meal}",
+  "nutrition_search_foods_or_brands": "Search foods or brands",
+  "nutrition_saved_meals_expanded_notice": "Saved meals were expanded into food ingredients for review. Your new saved meal will contain food ingredients only."
 }
