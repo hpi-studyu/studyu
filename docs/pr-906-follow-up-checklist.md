@@ -1,6 +1,6 @@
 # PR 906 Follow-up Checklist
 
-Last updated: 2026-08-10
+Last updated: 2026-08-11
 
 Purpose: keep remaining work for PR #906 in one place, ordered from smallest to largest.
 
@@ -99,22 +99,23 @@ Progress:
 
 ### 6. Safe reconnect synchronization
 
-Status: in progress
+Status: done
 
 Goal:
 - Confirm reconnect sync uploads locally completed work to same participant + study without duplication or loss.
 
 Acceptance:
-- [ ] Sync resumes automatically after reconnect.
-- [ ] No duplicate task completions.
-- [ ] No lost progress.
-- [ ] No wrong-account / wrong-backend upload.
+- [x] Sync resumes automatically after reconnect.
+- [x] No duplicate task completions.
+- [x] No lost progress.
+- [x] No wrong-account / wrong-backend upload.
 
 Progress:
 - Sync planning now merges by full serialized progress entry instead of list length or timestamp alone, preventing same-length local/remote divergence from dropping data and preventing distinct tasks at the same timestamp from being collapsed.
 - Focused sync tests now cover no-loss merge, no duplicate resubmission, and same-timestamp multi-task preservation.
 - Cache sync now refuses to merge when cached subject identity does not match remote `id` / `studyId` / `userId`, preventing stale cache from syncing into wrong participant or study after backend/account changes.
 - `AppState` now retries subject synchronization automatically while connectivity is degraded and an active subject exists, then clears degraded state once remote fetch + sync succeeds.
+- Pending multimodal uploads are now filtered by `studyId` + `userId` before reconnect upload, so one participant/backend cannot flush another participant's queued media after a switch or removal flow.
 
 ### 7. Partial sync retry behavior
 
@@ -133,34 +134,33 @@ Progress:
 
 ### 8. Removal / deleted-participant stale-data policy
 
-Status: pending, product decision needed
+Status: done
 
 Goal:
 - Define what happens to local cached study data after participant removal or deleted remote subject.
 
-Questions:
-- [ ] Retain local cache?
-- [ ] Delete local cache?
-- [ ] Offer recovery/export/support path?
-
 Progress:
+- Policy: retain cached study data only for outage/degraded-connectivity states; purge study-local cache when participant is removed or subject is deleted.
 - Deleted-subject recovery path now clears cached subject payload and active subject reference before routing to recovery UI, so stale local state is not reused automatically after backend-side removal.
+- New study-local cleanup path purges cached subject data, selected subject reference, scoped pending uploads, and study-scoped Fitbit credentials while keeping unrelated app preferences.
 
 ### 9. Deleted participant cannot regain deleted study data
 
-Status: in progress
+Status: done
 
 Goal:
 - After removal, stale local/remote state must not restore access to deleted subject.
 
 Acceptance:
-- [ ] Removed participant cannot re-enter deleted study through stale state.
-- [ ] Behavior matches policy from item 8.
+- [x] Removed participant cannot re-enter deleted study through stale state.
+- [x] Behavior matches policy from item 8.
 
 Progress:
 - Deleted-subject startup detection now clears local cached subject state and active subject reference before recovery routing.
 - Deleted-study recovery reset path now clears only deleted-subject local state instead of doing a broad storage wipe.
+- Deleted-study recovery reset now also clears in-memory `AppState` before post-reset cleanup/navigation, so stale subject state cannot linger inside the running app session.
 - Cache synchronization now refuses mismatched cached subject identity, so stale cached progress cannot be merged into a different remote participant/study during later reconnect.
+- Subject deletion / study-switch removal flows now also drop pending multimodal uploads scoped to the removed subject, preventing stale offline media from being uploaded into a later replacement participant/backend.
 
 ## Notes
 
