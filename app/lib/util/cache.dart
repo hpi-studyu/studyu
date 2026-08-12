@@ -11,7 +11,8 @@ class Cache {
   static bool isSynchronizing = false;
 
   @visibleForTesting
-  static Future<void> Function()? debugUploadBlobFilesOverride;
+  static Future<void> Function(String studyId, String userId)?
+  debugUploadBlobFilesOverride;
 
   static bool isCompatibleCachedSubject({
     required StudySubject localSubject,
@@ -121,9 +122,12 @@ class Cache {
     SecureStorage.delete(cacheSubjectKey);
   }
 
-  static Future<void> uploadBlobFiles() async {
+  static Future<void> uploadBlobFiles(String studyId, String userId) async {
     final blobStorageHandler = BlobStorageHandler();
-    final futureBlobFiles = await TemporaryStorageHandler.getFutureBlobFiles();
+    final futureBlobFiles = await TemporaryStorageHandler.getFutureBlobFiles(
+      studyId: studyId,
+      userId: userId,
+    );
     await uploadPendingBlobFiles(
       futureBlobFiles: futureBlobFiles,
       uploadObservation: (futureBlobFile) async {
@@ -136,6 +140,22 @@ class Cache {
         await File(futureBlobFile.localFilePath).delete();
       },
     );
+  }
+
+  static Future<void> deletePendingBlobFilesForSubject(
+    StudySubject? subject,
+  ) async {
+    if (subject == null) return;
+    try {
+      await TemporaryStorageHandler.deleteFutureBlobFiles(
+        studyId: subject.studyId,
+        userId: subject.userId,
+      );
+    } catch (error) {
+      StudyULogger.warning(
+        'Could not delete pending blob files for subject ${subject.id}: $error',
+      );
+    }
   }
 
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
@@ -166,7 +186,10 @@ class Cache {
     isSynchronizing = true;
 
     try {
-      await (debugUploadBlobFilesOverride ?? uploadBlobFiles)();
+      await (debugUploadBlobFilesOverride ?? uploadBlobFiles)(
+        remoteSubject.studyId,
+        remoteSubject.userId,
+      );
       final syncPlan = buildProgressSyncPlan(
         localSubject: localSubject,
         remoteSubject: remoteSubject,

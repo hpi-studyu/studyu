@@ -18,6 +18,7 @@ import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/services/deferred_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -494,7 +495,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       subject = await _retrieveSubject(selectedSubjectId);
     } on SubjectDeletedException catch (error) {
-      await clearDeletedSubjectLocalState();
+      await clearStudyLocalData(fallbackSubject: state.activeSubject);
       state.clearActiveStudyState();
       StudyULogger.warning(
         "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",

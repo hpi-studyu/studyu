@@ -210,4 +210,78 @@ void main() {
       );
     },
   );
+
+  test(
+    'future blob file helpers filter and delete only matching subject scope',
+    () async {
+      final primaryHandler = TemporaryStorageHandler(_studyId, _userId);
+      final otherHandler = TemporaryStorageHandler('study-b', 'user-b');
+
+      final primaryImage = await primaryHandler.getStagingImage();
+      final otherImage = await otherHandler.getStagingImage();
+      expect(primaryImage, isNotNull);
+      expect(otherImage, isNotNull);
+
+      await File(primaryImage!.localFilePath).create(recursive: true);
+      await File(primaryImage.localFilePath).writeAsString('primary');
+      await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
+        primaryImage.localFilePath,
+        primaryImage.futureBlobId,
+      );
+
+      await File(otherImage!.localFilePath).create(recursive: true);
+      await File(otherImage.localFilePath).writeAsString('other');
+      await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
+        otherImage.localFilePath,
+        otherImage.futureBlobId,
+      );
+
+      final scopedFiles = await TemporaryStorageHandler.getFutureBlobFiles(
+        studyId: _studyId,
+        userId: _userId,
+      );
+
+      expect(scopedFiles.map((file) => file.futureBlobId), [
+        primaryImage.futureBlobId,
+      ]);
+
+      await TemporaryStorageHandler.deleteFutureBlobFiles(
+        studyId: _studyId,
+        userId: _userId,
+      );
+
+      final remainingFiles = await TemporaryStorageHandler.getFutureBlobFiles();
+      expect(remainingFiles.map((file) => file.futureBlobId), [
+        otherImage.futureBlobId,
+      ]);
+    },
+  );
+
+  test(
+    'cache synchronization uploads only pending files for remote subject',
+    () async {
+      final remoteSubject = _buildSubject(
+        checkmarkTask: CheckmarkTask.withId(),
+        questionnaireTask: QuestionnaireTask.withId(),
+      );
+      final localSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+        ..inviteCode = 'cached-invite';
+      await Cache.storeSubject(localSubject);
+
+      String? uploadedStudyId;
+      String? uploadedUserId;
+      Cache.debugUploadBlobFilesOverride = (studyId, userId) async {
+        uploadedStudyId = studyId;
+        uploadedUserId = userId;
+      };
+
+      final synchronized = await Cache.synchronize(remoteSubject);
+
+      expect(synchronized, same(remoteSubject));
+      expect(uploadedStudyId, remoteSubject.studyId);
+      expect(uploadedUserId, remoteSubject.userId);
+
+      Cache.debugUploadBlobFilesOverride = null;
+    },
+  );
 }

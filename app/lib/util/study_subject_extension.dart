@@ -48,7 +48,7 @@ extension StudySubjectExtension on StudySubject {
       }
       // Upload multimodal files
       if (!offline) {
-        await Cache.uploadBlobFiles();
+        await Cache.uploadBlobFiles(studyId, userId);
       }
     }
 

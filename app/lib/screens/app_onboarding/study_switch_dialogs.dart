@@ -3,10 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudySwitchDialogs {
   // Returns true if the user decides to continue with deeplink handling.
@@ -176,11 +175,10 @@ class StudySwitchDialogs {
     }
 
     await currentSubject.softDelete();
-    await clearDeletedSubjectLocalState();
+    await clearStudyLocalData(fallbackSubject: currentSubject);
     if (context.mounted) {
       context.read<AppState>().clearActiveStudyState();
     }
-    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
     if (context.mounted) {
       await cancelNotifications(context);
     }
@@ -219,11 +217,13 @@ class StudySwitchDialogs {
     }
 
     await currentSubject.delete();
-    await deleteLocalData();
+    await clearStudyLocalData(
+      fallbackSubject: currentSubject,
+      clearStoredParticipantCredentials: true,
+    );
     if (context.mounted) {
       context.read<AppState>().clearActiveStudyState();
     }
-    await FitbitHandler.deleteFitbitCredentials(currentSubject.studyId);
     if (context.mounted) {
       await cancelNotifications(context);
     }

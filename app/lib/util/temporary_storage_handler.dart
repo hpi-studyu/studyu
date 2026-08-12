@@ -10,6 +10,9 @@ class TemporaryStorageHandler {
   static const String _stagingBaseNamePrefix = 'staging_';
   static const String _audioFileType = ".m4a";
   static const String _imageFileType = ".jpg";
+  static final RegExp _futureBlobIdPattern = RegExp(
+    r'^user-id_(.+)_study-id_(.+)_(\d+)(\.[^.]+)$',
+  );
 
   final String _userId;
   final String _studyId;
@@ -66,15 +69,62 @@ class TemporaryStorageHandler {
     await stagingFile.rename(uploadFile.path);
   }
 
-  static Future<List<FutureBlobFile>> getFutureBlobFiles() async {
+  static bool _matchesScope(
+    FutureBlobFileScope? scope, {
+    String? studyId,
+    String? userId,
+  }) {
+    if (scope == null) {
+      return studyId == null && userId == null;
+    }
+    return (studyId == null || scope.studyId == studyId) &&
+        (userId == null || scope.userId == userId);
+  }
+
+  static FutureBlobFileScope? parseFutureBlobFileScope(String futureBlobId) {
+    final match = _futureBlobIdPattern.firstMatch(futureBlobId);
+    if (match == null) {
+      return null;
+    }
+    return FutureBlobFileScope(
+      userId: match.group(1)!,
+      studyId: match.group(2)!,
+    );
+  }
+
+  static Future<List<FutureBlobFile>> getFutureBlobFiles({
+    String? studyId,
+    String? userId,
+  }) async {
     if (kIsWeb) return [];
     final uploadDirectory = await _getMultimodalUploadDirectory();
     final files = await uploadDirectory.list().toList();
-    final futureBlobFiles = files.map((file) {
-      final fileName = path.basename(file.path);
-      return FutureBlobFile(file.path, fileName);
-    }).toList();
+    final futureBlobFiles = files
+        .map((file) {
+          final fileName = path.basename(file.path);
+          return FutureBlobFile(file.path, fileName);
+        })
+        .where(
+          (file) => _matchesScope(
+            parseFutureBlobFileScope(file.futureBlobId),
+            studyId: studyId,
+            userId: userId,
+          ),
+        )
+        .toList();
     return futureBlobFiles;
+  }
+
+  static Future<void> deleteFutureBlobFiles({
+    String? studyId,
+    String? userId,
+  }) async {
+    for (final file in await getFutureBlobFiles(
+      studyId: studyId,
+      userId: userId,
+    )) {
+      await File(file.localFilePath).delete();
+    }
   }
 
   Future<FutureBlobFile?> getStagingAudio() async {
@@ -148,4 +198,11 @@ class TemporaryStorageHandler {
       await file.delete();
     }
   }
+}
+
+class FutureBlobFileScope {
+  final String userId;
+  final String studyId;
+
+  const FutureBlobFileScope({required this.userId, required this.studyId});
 }
