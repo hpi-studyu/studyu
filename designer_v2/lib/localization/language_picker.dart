@@ -27,6 +27,8 @@ class LanguagePicker extends ConsumerStatefulWidget {
 }
 
 class _LanguagePickerState extends ConsumerState<LanguagePicker> {
+  static const IconData _languageIcon = Icons.translate;
+
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(localeStateProvider.notifier);
@@ -50,7 +52,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
               //isExpanded: false,
               //isDense: true,
               items: _buildLanguageOptionsField(context),
-              icon: Icon(Icons.language, color: widget.iconColor),
+              icon: Icon(_languageIcon, color: widget.iconColor),
               onChanged: (locale) => controller.setLocale(locale.value!),
             ),
           ),
@@ -60,7 +62,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
           tooltip: tr.language_select_tooltip,
           offset: widget.offset ?? Offset.zero,
           position: PopupMenuPosition.over,
-          icon: Icon(Icons.language, color: widget.iconColor),
+          icon: Icon(_languageIcon, color: widget.iconColor),
           itemBuilder: (BuildContext context) {
             return _buildLanguageOptionsIcon(context);
           },
