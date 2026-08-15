@@ -15,6 +15,7 @@ class SyncIndicator<T> extends StatefulWidget {
     required this.state,
     required this.isDirty,
     this.lastSynced,
+    this.transitionDuration = 220,
     this.animationDuration = 1500,
     this.iconSize = 15.0,
     super.key,
@@ -23,6 +24,7 @@ class SyncIndicator<T> extends StatefulWidget {
   final AsyncValue<T> state;
   final DateTime? lastSynced;
   final bool isDirty;
+  final int transitionDuration;
   final int animationDuration;
   final double iconSize;
 
@@ -68,13 +70,43 @@ class _SyncIndicatorState extends State<SyncIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return widget.state.when(
+    final indicator = widget.state.when(
       data: (data) => MouseEventsRegion(builder: buildIndicator),
       error: (error, stackTrace) => Tooltip(
         message: tr.sync_failed,
-        child: Icon(Icons.sync_problem_outlined, size: widget.iconSize),
+        child: Icon(
+          key: const ValueKey('sync_indicator_error'),
+          Icons.sync_problem_outlined,
+          size: widget.iconSize,
+        ),
       ),
       loading: () => MouseEventsRegion(builder: buildIndicator),
+    );
+
+    return SizedBox.square(
+      dimension: widget.iconSize + 3,
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: widget.transitionDuration),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.92, end: 1.0).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        layoutBuilder: (currentChild, previousChildren) => Stack(
+          alignment: Alignment.center,
+          children: [
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        ),
+        child: indicator,
+      ),
     );
   }
 
@@ -84,6 +116,9 @@ class _SyncIndicatorState extends State<SyncIndicator>
     double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
     actualOpacity += isHovered ? 0.2 : 0.0;
     final iconColor = theme.iconTheme.color!.withValues(alpha: actualOpacity);
+    final savedIconColor = Colors.green.withValues(
+      alpha: isHovered ? 0.85 : 0.7,
+    );
 
     Widget dataWidget;
 
@@ -92,18 +127,20 @@ class _SyncIndicatorState extends State<SyncIndicator>
         message:
             "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
         child: Icon(
+          key: const ValueKey('sync_indicator_saved'),
           Icons.check_circle_rounded,
           size: widget.iconSize,
-          color: iconColor,
+          color: savedIconColor,
         ),
       );
     } else if (!widget.isDirty && widget.lastSynced == null) {
       dataWidget = Tooltip(
         message: tr.sync_initial,
         child: Icon(
+          key: const ValueKey('sync_indicator_initial'),
           Icons.check_circle_rounded,
           size: widget.iconSize,
-          color: iconColor,
+          color: savedIconColor,
         ),
       );
     } else {
@@ -111,6 +148,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
       dataWidget = Tooltip(
         message: tr.sync_dirty,
         child: Icon(
+          key: const ValueKey('sync_indicator_dirty'),
           Icons.sync_disabled_rounded,
           size: widget.iconSize,
           color: iconColor,
@@ -123,6 +161,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
       child: RotationTransition(
         turns: _animation,
         child: Icon(
+          key: const ValueKey('sync_indicator_refreshing'),
           Icons.sync_rounded,
           size: widget.iconSize + 1,
           color: iconColor,

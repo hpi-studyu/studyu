@@ -62,6 +62,7 @@ class ReactiveIconPicker
     double? galleryIconSize = 28.0,
     bool readOnly = false,
     ReactiveFormFieldCallback<IconOption>? onSelect,
+    VoidCallback? onClear,
     super.formControl,
     super.formControlName,
     super.showErrors,
@@ -85,6 +86,11 @@ class ReactiveIconPicker
                field.didChange(iconOption);
                onSelect?.call(field.control);
              },
+             onClear: () {
+               if (isDisabled) return;
+               field.didChange(null);
+               onClear?.call();
+             },
            );
          },
        );
@@ -97,6 +103,7 @@ class IconPicker extends StatelessWidget {
     this.selectedIconSize,
     this.galleryIconSize = 28.0,
     this.onSelect,
+    this.onClear,
     this.isDisabled = false,
     this.focusNode,
     super.key,
@@ -105,6 +112,7 @@ class IconPicker extends StatelessWidget {
   final List<IconOption> iconOptions;
   final IconOption? selectedOption;
   final VoidCallbackOn<IconOption>? onSelect;
+  final VoidCallback? onClear;
 
   final double? galleryIconSize;
   final double? selectedIconSize;
@@ -121,6 +129,7 @@ class IconPicker extends StatelessWidget {
       selectedIconSize: selectedIconSize,
       galleryIconSize: galleryIconSize,
       onSelect: onSelect,
+      onClear: onClear,
       isDisabled: isDisabled,
       focusNode: focusNode,
     );
@@ -134,6 +143,7 @@ class IconPickerField extends StatelessWidget {
     this.selectedIconSize,
     this.galleryIconSize,
     this.onSelect,
+    this.onClear,
     this.isDisabled = false,
     this.focusNode,
     super.key,
@@ -145,6 +155,7 @@ class IconPickerField extends StatelessWidget {
   final double? selectedIconSize;
   final double? galleryIconSize;
   final VoidCallbackOn<IconOption>? onSelect;
+  final VoidCallback? onClear;
 
   final FocusNode? focusNode;
 
@@ -171,12 +182,46 @@ class IconPickerField extends StatelessWidget {
             selectedOption!.name,
             iconPack: iconOptions,
           )!.icon;
-      return IconButton(
-        tooltip: tr.iconpicker_nonempty_prompt,
-        splashRadius: actualSelectedIconSize,
-        onPressed: isDisabled ? null : openIconPicker,
-        focusNode: focusNode,
-        icon: Icon(selectedIcon, size: actualSelectedIconSize),
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          IconButton(
+            tooltip: tr.iconpicker_nonempty_prompt,
+            splashRadius: actualSelectedIconSize,
+            onPressed: isDisabled ? null : openIconPicker,
+            focusNode: focusNode,
+            icon: Icon(selectedIcon, size: actualSelectedIconSize),
+          ),
+          Positioned(
+            top: 2,
+            right: 2,
+            child: MouseEventsRegion(
+              onTap: isDisabled ? null : onClear,
+              builder: (context, states) {
+                final isHovered = states.contains(WidgetState.hovered);
+                final theme = Theme.of(context);
+
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: theme.colorScheme.outlineVariant),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 10.0,
+                      color: isHovered
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       );
     }
 
