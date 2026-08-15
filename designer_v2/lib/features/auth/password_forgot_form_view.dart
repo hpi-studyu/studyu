@@ -27,7 +27,8 @@ class PasswordForgotForm extends FormConsumerRefWidget {
         const SizedBox(height: 24.0),
         ReactiveFormConsumer(
           builder: (context, form, child) {
-            return Center(
+            return SizedBox(
+              width: double.infinity,
               child: PrimaryButton(
                 icon: null,
                 text: tr.action_button_password_reset,
@@ -48,11 +49,9 @@ class PasswordForgotForm extends FormConsumerRefWidget {
         const SizedBox(height: 24.0),
         const Divider(height: 1),
         const SizedBox(height: 12.0),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
+        Row(
           children: [
-            Text(tr.link_login_description2),
-            const SizedBox(width: 4.0),
+            Expanded(child: Text(tr.link_login_description2)),
             Hyperlink(
               text: tr.link_login,
               onClick: () =>
