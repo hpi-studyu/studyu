@@ -167,6 +167,7 @@ class IconPickerField extends StatelessWidget {
         galleryIconSize ?? Theme.of(context).iconTheme.size ?? 24.0;
     final actualSelectedIconSize =
         selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
+    final selectedIconDisplaySize = actualSelectedIconSize * 1.15;
 
     Future<void> openIconPicker() => showIconPickerDialog(
       context,
@@ -182,39 +183,63 @@ class IconPickerField extends StatelessWidget {
             selectedOption!.name,
             iconPack: iconOptions,
           )!.icon;
+      final theme = Theme.of(context);
+
       return Stack(
         clipBehavior: Clip.none,
         children: [
-          IconButton(
-            tooltip: tr.iconpicker_nonempty_prompt,
-            splashRadius: actualSelectedIconSize,
-            onPressed: isDisabled ? null : openIconPicker,
-            focusNode: focusNode,
-            icon: Icon(selectedIcon, size: actualSelectedIconSize),
+          Tooltip(
+            message: tr.iconpicker_nonempty_prompt,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12.0),
+                onTap: isDisabled ? null : openIconPicker,
+                focusNode: focusNode,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                    width: selectedIconDisplaySize + 20.0,
+                    height: selectedIconDisplaySize + 20.0,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      selectedIcon,
+                      size: selectedIconDisplaySize,
+                      color: theme.iconTheme.color,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
           Positioned(
-            top: 2,
-            right: 2,
+            top: 0,
+            right: 0,
             child: MouseEventsRegion(
               onTap: isDisabled ? null : onClear,
+              behavior: HitTestBehavior.opaque,
               builder: (context, states) {
                 final isHovered = states.contains(WidgetState.hovered);
-                final theme = Theme.of(context);
 
-                return DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: theme.colorScheme.outlineVariant),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Icon(
-                      Icons.close_rounded,
-                      size: 10.0,
-                      color: isHovered
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.onSurfaceVariant,
+                return SizedBox.square(
+                  dimension: 18.0,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: theme.colorScheme.outlineVariant,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Icon(
+                        Icons.close_rounded,
+                        size: 10.0,
+                        color: isHovered
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 );
