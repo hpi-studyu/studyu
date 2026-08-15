@@ -44,6 +44,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
               children: <Widget>[
                 TextParagraph(
                   text: tr.form_study_design_enrollment_description,
+                  textAlign: TextAlign.justify,
                 ),
                 const SizedBox(height: 24.0),
                 FormTableLayout(
@@ -81,6 +82,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                       ? TextParagraph(
                                           text: option.description,
                                           selectable: false,
+                                          textAlign: TextAlign.justify,
                                           style: ThemeConfig.bodyTextMuted(
                                             theme,
                                           ),
@@ -126,6 +128,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       },
                       sectionDescription:
                           tr.form_array_screener_questions_description,
+                      sectionDescriptionTextAlign: TextAlign.justify,
                       onNewItemLabel: tr.form_array_screener_questions_new,
                       rowTitle: (viewModel) =>
                           viewModel.formData?.questionText ?? '',
@@ -226,6 +229,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       },
                       sectionDescription:
                           tr.form_array_consent_items_description,
+                      sectionDescriptionTextAlign: TextAlign.justify,
                       onNewItemLabel: tr.form_array_consent_items_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',
                       leadingWidget: Row(

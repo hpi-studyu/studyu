@@ -21,6 +21,7 @@ class FormListView<T> extends StatelessWidget {
     this.leadingWidget,
     this.sectionTitle,
     this.sectionDescription,
+    this.sectionDescriptionTextAlign,
     this.emptyIcon,
     this.emptyTitle,
     this.emptyDescription,
@@ -40,6 +41,7 @@ class FormListView<T> extends StatelessWidget {
   final String onNewItemLabel;
   final String? sectionTitle;
   final String? sectionDescription;
+  final TextAlign? sectionDescriptionTextAlign;
   final IconData? emptyIcon;
   final String? emptyTitle;
   final String? emptyDescription;
@@ -68,7 +70,11 @@ class FormListView<T> extends StatelessWidget {
         if (sectionDescription != null && !(hasEmptyWidget && items.isEmpty))
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text(sectionDescription!, style: theme.textTheme.bodyMedium),
+            child: Text(
+              sectionDescription!,
+              style: theme.textTheme.bodyMedium,
+              textAlign: sectionDescriptionTextAlign,
+            ),
           ),
         if (items.isEmpty && hasEmptyWidget)
           EmptyBody(
