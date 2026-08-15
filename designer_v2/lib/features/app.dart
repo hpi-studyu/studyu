@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -82,6 +83,7 @@ class _AppContentState extends ConsumerState<AppContent> {
               supportedLocales: AppLocalizations.supportedLocales,
               localizationsDelegates: const [
                 ...AppLocalizations.localizationsDelegates,
+                ...PhoneFieldLocalization.delegates,
                 // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
                 // FormBuilderLocalizations.delegate,
               ],
