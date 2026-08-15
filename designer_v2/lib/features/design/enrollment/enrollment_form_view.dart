@@ -66,6 +66,9 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                 (option) => RadioListTile<Participation>(
                                   value: option.value,
                                   enabled: !formViewModel.isReadonly,
+                                  contentPadding: EdgeInsets.zero,
+                                  horizontalTitleGap: 12.0,
+                                  visualDensity: VisualDensity.compact,
                                   // disables in readonly mode
                                   title: Column(
                                     crossAxisAlignment:
@@ -79,12 +82,17 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                     ],
                                   ),
                                   subtitle: (option.description) != null
-                                      ? TextParagraph(
-                                          text: option.description,
-                                          selectable: false,
-                                          textAlign: TextAlign.justify,
-                                          style: ThemeConfig.bodyTextMuted(
-                                            theme,
+                                      ? SizedBox(
+                                          width: double.infinity,
+                                          child: Text(
+                                            option.description!,
+                                            textAlign: TextAlign.justify,
+                                            style: theme.textTheme.bodyMedium
+                                                ?.merge(
+                                                  ThemeConfig.bodyTextMuted(
+                                                    theme,
+                                                  ),
+                                                ),
                                           ),
                                         )
                                       : null,
@@ -129,6 +137,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       sectionDescription:
                           tr.form_array_screener_questions_description,
                       sectionDescriptionTextAlign: TextAlign.justify,
+                      buttonTopPadding: 8.0,
                       onNewItemLabel: tr.form_array_screener_questions_new,
                       rowTitle: (viewModel) =>
                           viewModel.formData?.questionText ?? '',
@@ -230,6 +239,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       sectionDescription:
                           tr.form_array_consent_items_description,
                       sectionDescriptionTextAlign: TextAlign.justify,
+                      buttonTopPadding: 8.0,
                       onNewItemLabel: tr.form_array_consent_items_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',
                       leadingWidget: Row(

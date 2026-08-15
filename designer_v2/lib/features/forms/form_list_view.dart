@@ -26,6 +26,7 @@ class FormListView<T> extends StatelessWidget {
     this.emptyTitle,
     this.emptyDescription,
     this.itemsPadding = const EdgeInsets.symmetric(vertical: 8.0),
+    this.buttonTopPadding = 16.0,
     this.hideLeadingTrailingWhenEmpty = false,
     this.reorderable = false,
     this.onReorder,
@@ -49,6 +50,7 @@ class FormListView<T> extends StatelessWidget {
   final WidgetBuilderAt<T>? rowSuffix;
   final Widget? leadingWidget;
   final EdgeInsets itemsPadding;
+  final double buttonTopPadding;
   final bool hideLeadingTrailingWhenEmpty;
   final bool reorderable;
   final void Function(int oldIndex, int newIndex)? onReorder;
@@ -186,7 +188,7 @@ class FormListView<T> extends StatelessWidget {
           ),
         if (!hideLeadingTrailingWhenEmpty || items.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: EdgeInsets.only(top: buttonTopPadding),
             child: _newItemButton(),
           ),
       ],
