@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
@@ -124,6 +123,17 @@ class ThemeProvider extends InheritedWidget {
   final ColorScheme? darkDynamic;
 
   final pageTransitionsTheme = PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      // Only populates the map if running on Web
+      if (kIsWeb)
+        for (final platform in TargetPlatform.values)
+          platform: const WebTransitionBuilder(),
+    },
+  );
+
+  /*
+  // Keep this in case we want to add custom animations for other platforms in the future
+  final pageTransitionsTheme = PageTransitionsTheme(
     builders: kIsWeb
         ? <TargetPlatform, PageTransitionsBuilder>{
             // Animation when running on Web
@@ -131,13 +141,13 @@ class ThemeProvider extends InheritedWidget {
               platform: const WebTransitionBuilder(),
           }
         : const <TargetPlatform, PageTransitionsBuilder>{
-            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.android: NoAnimationPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),
             TargetPlatform.macOS: NoAnimationPageTransitionsBuilder(),
             TargetPlatform.windows: NoAnimationPageTransitionsBuilder(),
           },
-  );
+  );*/
 
   Color custom(CustomColor custom) {
     if (custom.blend) {

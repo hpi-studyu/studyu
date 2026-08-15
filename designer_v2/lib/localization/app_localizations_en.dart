@@ -277,6 +277,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_code_clipboard => 'Code copied to clipboard';
 
   @override
+  String get notification_invite_code_copied => 'Invite code copied';
+
+  @override
+  String get notification_invite_link_copied => 'Invite link copied';
+
+  @override
   String get action_button_new_study => 'New study';
 
   @override
@@ -1090,6 +1096,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get form_array_question_visibility_logic_does_not_contain =>
       'does not contain';
+
+  @override
+  String get form_array_question_visibility_logic_shorter_than =>
+      'shorter than';
+
+  @override
+  String get form_array_question_visibility_logic_shorter_than_or_equal_to =>
+      'shorter than or equal to';
+
+  @override
+  String get form_array_question_visibility_logic_longer_than => 'longer than';
+
+  @override
+  String get form_array_question_visibility_logic_longer_than_or_equal_to =>
+      'longer than or equal to';
+
+  @override
+  String get form_array_question_visibility_logic_same_length_as =>
+      'same length as';
+
+  @override
+  String get form_array_question_visibility_logic_different_length_as =>
+      'different length as';
+
+  @override
+  String get form_array_question_visibility_logic_length_greater_than =>
+      'length >';
+
+  @override
+  String get form_array_question_visibility_logic_length_less_than =>
+      'length <';
+
+  @override
+  String
+  get form_array_question_visibility_logic_length_greater_than_or_equal =>
+      'length >=';
+
+  @override
+  String get form_array_question_visibility_logic_length_less_than_or_equal =>
+      'length <=';
 
   @override
   String get form_array_question_visibility_logic_not => 'NOT';
@@ -2065,11 +2111,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_section_title => 'Invite codes';
 
   @override
-  String get code_public_disabled => 'Invite codes disabled';
+  String get code_public_disabled => 'Public Recruitment';
 
   @override
   String get code_public_disabled_description =>
-      'The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.';
+      'Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app\'s public study list. Note that invite codes are not available here, as they are exclusively used for private studies.';
 
   @override
   String get code_list_empty_title => 'You haven\'t invited anyone yet';
@@ -2228,6 +2274,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A survey is completed, if all of its tasks have been completed for that day';
 
   @override
+  String get banner_text_study_recruit_draft =>
+      'Because this study has not been launched yet, the links on this page will not work yet.';
+
+  @override
   String get banner_text_study_analyze_draft =>
       'Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.';
 
@@ -2375,6 +2425,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_delete => 'Delete';
 
   @override
+  String get action_delete_invite_code => 'Delete invite code';
+
+  @override
   String get action_remove => 'Remove';
 
   @override
@@ -2382,6 +2435,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_clipboard => 'Copy to clipboard';
+
+  @override
+  String get action_copy_invite_code => 'Copy invite code';
+
+  @override
+  String get action_copy_invite_link => 'Copy invite link';
+
+  @override
+  String get action_qr_code_show => 'View QR code';
+
+  @override
+  String get action_qr_code_download => 'Download QR code';
+
+  @override
+  String get action_share => 'Share invite link';
+
+  @override
+  String get action_copy_link => 'Copy link';
 
   @override
   String get action_reportPrimary => 'Set as primary report';

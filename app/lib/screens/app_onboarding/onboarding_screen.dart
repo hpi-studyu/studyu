@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -41,17 +44,29 @@ class OnboardingScreen extends StatelessWidget {
         ),
       ],
       showBackButton: true,
-      back: Text(l10n.back, key: const ValueKey('onboarding_back')),
-      next: Text(l10n.next, key: const ValueKey('onboarding_next')),
+      back: Text(l10n.back),
+      next: Text(l10n.next),
       done: Text(
         key: const ValueKey('onboarding_done'),
-        l10n.get_started,
+        l10n.done,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       onDone: () async {
         await SecureStorage.write('onboarded', 'true');
         if (!context.mounted) return;
-        Navigator.pushReplacementNamed(context, Routes.loading);
+
+        // If onboarding was shown again (from FAQ)
+        final state = context.read<AppState>();
+        if (state.activeSubject != null) {
+          context.goNamed(RouteNames.dashboard);
+          // Check for pending deep link
+        } else if (state.pendingDeepLinkStudyId != null ||
+            state.pendingDeepLinkInviteCode != null) {
+          // If pending deep link, go directly to terms to skip welcome screen
+          context.pushNamed(RouteNames.terms);
+        } else {
+          context.goNamed(RouteNames.welcome);
+        }
       },
     );
   }

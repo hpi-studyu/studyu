@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 
@@ -108,7 +107,14 @@ class _NotificationDispatcherState
           _buildSnackbar(notification as SnackbarIntent, messengerState),
         );
       case NotificationType.alert:
-        final navigatorState = _getNavigatorState()!;
+        final navigatorState = _getNavigatorState();
+        if (navigatorState == null) {
+          throw Exception(
+            "NotificationDispatcher could not obtain reference to NavigatorState "
+            "for alert notification. Make sure the widget is placed below a Navigator "
+            "in the widget tree, or provide a reference via the navigatorKey global key.",
+          );
+        }
         showDialog(
           context: navigatorState.context,
           builder: (BuildContext context) =>
@@ -197,12 +203,8 @@ class _NotificationDispatcherState
         widget.snackbarInnerPadding,
       ),
       behavior: widget.snackbarBehavior,
-      action: SnackBarAction(
-        label: "X".hardcoded,
-        onPressed: () {
-          messengerState.hideCurrentSnackBar();
-        },
-      ),
+      showCloseIcon: true,
+      closeIconColor: theme.colorScheme.onPrimary,
     );
   }
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -29,6 +30,10 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
+    if (Supabase.instance.client.auth.currentUser == null) {
+      context.push('/${RouteNames.terms}');
+      return;
+    }
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy!,
@@ -36,7 +41,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         appState.preselectedInterventionIds!,
         appState.inviteCode,
       );
-      Navigator.pushNamed(context, Routes.journey);
+      context.push('/${RouteNames.journey}');
     } else if (study!.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
       appState.activeSubject = StudySubject.fromStudy(
@@ -45,17 +50,17 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         study!.interventions.map((i) => i.id).toList(),
         appState.inviteCode,
       );
-      Navigator.pushNamed(context, Routes.journey);
+      context.push('/${RouteNames.journey}');
     } else {
-      Navigator.pushNamed(context, Routes.interventionSelection);
+      context.push('/${RouteNames.interventionSelection}');
     }
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppState>().selectedStudy;
-    final result = await Navigator.push<EligibilityResult>(
-      context,
-      EligibilityScreen.routeFor(study: study),
+    final result = await context.push<EligibilityResult>(
+      '/${RouteNames.eligibilityCheck}',
+      extra: study,
     );
     if (result == null) return;
 
@@ -63,14 +68,13 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (result.eligible) {
       navigateToJourney(context);
     } else {
-      Navigator.pop(context);
+      context.pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: const ValueKey('study_overview_screen'),
       appBar: AppBar(
         leading: const Icon(MdiIcons.textLong),
         title: Text(AppLocalizations.of(context)!.study_overview_title),
@@ -88,7 +92,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        nextButtonKey: const ValueKey('study_overview_next'),
         onNext: context.watch<AppState>().selectedStudy!.hasEligibilityCheck
             ? () => navigateToEligibilityCheck(context)
             : () => navigateToJourney(context),
@@ -109,10 +112,8 @@ class StudyDetailsView extends StatelessWidget {
     final theme = Theme.of(context);
     final studyLength = study!.studyLength;
     return Column(
-      key: const ValueKey('study_details'),
       children: [
         ListTile(
-          key: const ValueKey('study_duration_tile'),
           title: Text(
             AppLocalizations.of(context)!.intervention_phase_duration,
           ),
@@ -126,7 +127,6 @@ class StudyDetailsView extends StatelessWidget {
           ),
         ),
         ListTile(
-          key: const ValueKey('study_length_tile'),
           title: Text(AppLocalizations.of(context)!.study_length),
           subtitle: Text('$studyLength ${AppLocalizations.of(context)!.days}'),
           leading: Icon(
@@ -137,7 +137,6 @@ class StudyDetailsView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ContactWidget(
-          key: const ValueKey('study_publisher_contact'),
           contact: study!.contact,
           title: AppLocalizations.of(context)!.study_publisher,
           color: theme.colorScheme.secondary,

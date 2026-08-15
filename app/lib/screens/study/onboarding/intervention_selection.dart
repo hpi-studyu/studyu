@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
@@ -59,12 +60,10 @@ class _InterventionSelectionScreenState
     }
 
     return ListView.builder(
-      key: const ValueKey('intervention_selection_list'),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: interventions.length,
       itemBuilder: (context, index) => Card(
-        key: ValueKey('intervention_card_${interventions[index].id}'),
         child: InterventionCard(
           interventions[index],
           showCheckbox: true,
@@ -99,14 +98,13 @@ class _InterventionSelectionScreenState
       selectedInterventionIds,
       appState.inviteCode,
     );
-    Navigator.pushNamed(context, Routes.journey);
+    context.push('/${RouteNames.journey}');
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      key: const ValueKey('intervention_selection_screen'),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
         leading: const Icon(MdiIcons.formatListChecks),
@@ -127,7 +125,6 @@ class _InterventionSelectionScreenState
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        nextButtonKey: const ValueKey('intervention_selection_continue'),
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
         progress: OnboardingProgress(
           stage: 1,

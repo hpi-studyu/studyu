@@ -141,8 +141,9 @@ class SupabaseQuery {
       StudyULogger.debug(
         'Not extracted records: ${notExtracted.map((e) => e.json).join(', ')}',
       );
-      StudyUDiagnostics.captureException(
-        ExtractionFailedException(extracted, notExtracted),
+      StudyULogger.error(
+        'Extraction failed for some records',
+        error: ExtractionFailedException(extracted, notExtracted),
       );
       // Only throw if we are supposed to throw for non-extracted records.
       // Otherwise, we just log the error and return the extracted records.
@@ -162,7 +163,11 @@ class SupabaseQuery {
   }
 
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
-    StudyUDiagnostics.captureException(error, stackTrace: stacktrace);
+    StudyULogger.error(
+      'Caught Supabase Error: $error',
+      error: error,
+      stackTrace: stacktrace,
+    );
     if (error is PostgrestException) {
       StudyULogger.fatal(
         'Caught Postgrest Error: $error\nStacktrace: $stacktrace',

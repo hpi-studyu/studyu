@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -45,7 +46,7 @@ class DebugScreen {
   static Future<void> testNotification(BuildContext context) async {
     final studyNotifications = context.read<AppState>().studyNotifications;
     if (studyNotifications == null) {
-      Navigator.of(context).pop();
+      context.pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -87,8 +88,8 @@ class DebugScreen {
       await _deleteAppDir();
       await SecureStorage.deleteAll();
       if (context.mounted) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        context.pop();
+        context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('App reset successfully! Please restart the app.'),
@@ -100,7 +101,7 @@ class DebugScreen {
     } catch (e) {
       StudyULogger.error(e);
       if (context.mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Error while resetting the app. Please try again.'),
@@ -156,6 +157,8 @@ class __DebugDialogState extends State<_DebugDialog> {
           _buildPendingNotificationsPluginInfo(),
           const SizedBox(height: 16),
           _buildScheduledNotificationsInfo(),
+          const SizedBox(height: 16),
+          _buildReferrerDebugInfo(),
         ],
       ),
       scrollable: true,
@@ -262,6 +265,25 @@ class __DebugDialogState extends State<_DebugDialog> {
     );
   }
 
+  Widget _buildReferrerDebugInfo() {
+    return FutureBuilder<String?>(
+      future: SecureStorage.read('debug_install_referrer'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Last Install Referrer (Debug):",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SelectableText(snapshot.data ?? 'None'),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildPreviewModeSwitch() {
     return SwitchListTile(
       title: const Text('Preview Mode'),
@@ -271,11 +293,13 @@ class __DebugDialogState extends State<_DebugDialog> {
         context.read<AppState>().updatePreviewMode(value);
 
         // Close the debug dialog and navigate back to dashboard
-        Navigator.of(context).pop(); // Close debug dialog
+        context.pop(); // Close debug dialog
 
         // If we're in settings, also close the settings screen to get back to dashboard
         // This will ensure we get back to the main dashboard which uses showNextDay
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        while (context.canPop()) {
+          context.pop();
+        }
         print('Preview mode is now ${value ? 'active' : 'inactive'}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -332,7 +356,7 @@ class __DebugDialogState extends State<_DebugDialog> {
         content: const Text('This will delete all data and reset the app.'),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.pop(),
             child: const Text('Cancel'),
           ),
           TextButton(

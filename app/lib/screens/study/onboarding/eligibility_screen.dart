@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -34,6 +35,7 @@ class EligibilityScreen extends StatefulWidget {
 class _EligibilityScreenState extends State<EligibilityScreen> {
   EligibilityResult? activeResult;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _ignoreNextNullResponse = false;
 
   @override
   void initState() {
@@ -57,10 +59,14 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
 
     final criteria = widget.study!.eligibilityCriteria;
-    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
-      (element) => element.isViolated(qs),
-    );
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull((
+      element,
+    ) {
+      return element.isViolated(qs);
+    });
     if (failingResult == null) return true;
+    // QuestionnaireWidget reports null after the continuation predicate stops.
+    _ignoreNextNullResponse = true;
     // freetext quickfix start
     // failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
     // freetext quickfix end
@@ -76,26 +82,28 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   void _evaluateResponse(QuestionnaireState? qs) {
     if (qs == null) {
+      if (_ignoreNextNullResponse) {
+        _ignoreNextNullResponse = false;
+        return;
+      }
       _invalidateResponse();
       return;
     }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final isEligible = criteria.every((criterion) {
+      final firstFailed = criteria.firstWhereOrNull((criterion) {
         // freetext quickfix start
         /*if (_isFreeTextCriterion(criterion)) {
           print('Criterion is free text, automatically satisfying it.');
-          return true;
+          return false;
         }*/
         // freetext quickfix end
-        return criterion.isSatisfied(qs);
+        return !criterion.isSatisfied(qs);
       });
+      final isEligible = firstFailed == null;
       if (isEligible) {
         activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
-        final firstFailed = criteria.firstWhere(
-          (criterion) => criterion.isViolated(qs),
-        );
         activeResult = EligibilityResult(
           qs,
           eligible: isEligible,
@@ -121,7 +129,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }*/
 
   void _finish() {
-    Navigator.pop(context, activeResult);
+    context.pop(activeResult);
   }
 
   Widget _constructPassBanner() => MaterialBanner(
@@ -202,6 +210,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               title: widget.study!.title,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
+              hideCta: activeResult?.eligible == false,
+              autoComplete: true,
             ),
           ),
           if (activeResult != null) _constructResultBanner(),

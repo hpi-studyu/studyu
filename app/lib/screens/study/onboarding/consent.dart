@@ -3,11 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -165,7 +166,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     itemCount: consentList.length,
                     itemBuilder: (context, index) {
                       return ConsentCard(
-                        key: ValueKey('consent_card_$index'),
                         consent: consentList[index],
                         isChecked: boxLogic[index],
                         index: index,
@@ -182,18 +182,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        backButtonKey: const ValueKey('consent_decline'),
-        nextButtonKey: const ValueKey('consent_accept'),
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
-        onBack: () => Navigator.popUntil(
-          context,
-          ModalRoute.withName(Routes.studySelection),
-        ),
+        onBack: () => context.go('/${RouteNames.studySelection}'),
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode
-            ? () => Navigator.pop(context, true)
+            ? () => context.pop(true)
             : null,
         progress: const OnboardingProgress(stage: 2, progress: 2.5),
       ),
@@ -247,7 +242,7 @@ class ConsentCard extends StatelessWidget {
                   Expanded(child: Text(consent!.title!)),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                   ),
                 ],
               ),

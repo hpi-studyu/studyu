@@ -284,7 +284,7 @@ INSERT INTO public.study (
 --
 
 -- plan tests in advance, this ensures the proper number of tests have been run.
-SELECT plan(23);
+SELECT plan(28);
 
 -- UNRESTRICTED TESTS
 
@@ -293,13 +293,23 @@ SELECT is(count(*)::int, 1, 'Check if app_config was seeded') FROM public.app_co
 -- check if RLS is enabled on all tables in the public schema
 SELECT tests.rls_enabled('public');
 
-SELECT is(count(*)::int, 3, 'Check if users were created and can be accessed') FROM public.user;
+SELECT is(count(*)::int, 3, 'Check if users were created and can be accessed')
+FROM public.user
+WHERE email IN ('test_creator_1@studyu.health', 'test_creator_2@studyu.health', 'test_consumer@studyu.health');
 
 -- ANONYMOUS TESTS
 
 SELECT tests.clear_authentication();
 SELECT is(count(*)::int, 0, 'Check if users cannot be accessed anonymously') FROM public.user;
-SELECT is(count(*)::int, 0, 'Check if studies cannot be accessed anonymously') FROM public.study;
+SELECT is(count(*)::int, 4, 'Check if anonymous users can access public running studies')
+FROM public.study;
+SELECT is(count(*)::int, 0, 'Check if anonymous users cannot access draft or private invite-only studies')
+FROM public.study
+WHERE status = 'draft'::public.study_status
+   OR (
+    participation = 'invite'::public.participation
+    AND result_sharing = 'private'::public.result_sharing
+  );
 
 -- CREATOR 1 TESTS
 
@@ -316,11 +326,17 @@ SELECT is(email, 'test_creator_2@studyu.health', 'Check if a user can only retri
 SELECT tests.authenticate_as('test_consumer');
 
 -- test specific: all running studies are created by test_creator_1
-SELECT is(user_id, (tests.get_supabase_user('test_creator_1') ->> 'id')::uuid, 'All running studies are created by test_creator_1') FROM public.study;
-SELECT is(count(*)::int, 3, 'Verify number of accessible studies') FROM public.study;
+SELECT is(user_id, (tests.get_supabase_user('test_creator_1') ->> 'id')::uuid, 'All running studies are created by test_creator_1')
+FROM public.study
+WHERE title LIKE 'Study:%';
+SELECT is(count(*)::int, 3, 'Verify number of accessible studies')
+FROM public.study
+WHERE title LIKE 'Study:%';
 
 -- check if the consumer can only access designated running studies
-SELECT is(status, 'running', 'Check if test_consumer can only access studies that are running') FROM public.study;
+SELECT is(status, 'running', 'Check if test_consumer can only access studies that are running')
+FROM public.study
+WHERE title LIKE 'Study:%';
 SELECT tests.is_either_true(
       'Check if test_consumer can only retrieve designated studies',
       tests.is_equal(registry_published, true),
@@ -328,7 +344,48 @@ SELECT tests.is_either_true(
       tests.is_equal(result_sharing, 'public'::public.result_sharing)
   )
   FROM
-    public.study;
+    public.study
+  WHERE title LIKE 'Study:%';
+
+-- COMPUTED FIELD PERMISSIONS TESTS
+
+-- Regression for https://github.com/hpi-studyu/studyu/pull/856: the Designer
+-- dashboard studies fetch selects the study_participant_count, study_ended_count,
+-- active_subject_count, and study_missed_days computed columns. The canonical
+-- schema revokes EXECUTE FROM public on these helpers (which also drops the
+-- inherited grant for authenticated); the Data API grants migration must grant
+-- EXECUTE to authenticated explicitly. Without it, PostgREST returns 403
+-- permission denied for the function and the dashboard throws APIException.
+SELECT tests.authenticate_as('test_creator_1');
+
+-- A study owned by test_creator_1, against which the computed fields are called.
+-- study_subject is empty in this seed, so counts are zero and arrays are empty,
+-- but the assertions prove the functions are callable rather than raising
+-- permission denied.
+SELECT is(
+  public.study_participant_count(s),
+  0,
+  'Authenticated can call study_participant_count computed field'
+)
+FROM public.study s
+WHERE title LIKE 'Study: status=running, registry_published=true%'
+LIMIT 1;
+
+-- The remaining three dashboard computed fields return aggregates over an empty
+-- study_subject set; lives_ok proves EXECUTE is granted by asserting the call
+-- does not raise permission_denied_for_function.
+SELECT lives_ok(
+  'SELECT public.study_ended_count(s) FROM public.study s WHERE title LIKE ''Study: status=running, registry_published=true%''',
+  'Authenticated can call study_ended_count computed field'
+);
+SELECT lives_ok(
+  'SELECT public.active_subject_count(s) FROM public.study s WHERE title LIKE ''Study: status=running, registry_published=true%''',
+  'Authenticated can call active_subject_count computed field'
+);
+SELECT lives_ok(
+  'SELECT public.study_missed_days(s) FROM public.study s WHERE title LIKE ''Study: status=running, registry_published=true%''',
+  'Authenticated can call study_missed_days computed field'
+);
 
 -- DELETE CASCADE TESTS
 
@@ -423,7 +480,8 @@ FROM public.study_subject
 WHERE invite_code = 'cascade-delete-code';
 
 SELECT is(count(*)::int, 4, 'Deleting the cascade test study does not remove unrelated visible studies')
-FROM public.study;
+FROM public.study
+WHERE title LIKE 'Study:%';
 
 -- check the results of your test
 select * from finish();

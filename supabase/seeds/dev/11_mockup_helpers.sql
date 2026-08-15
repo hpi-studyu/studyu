@@ -1,9 +1,3 @@
-BEGIN;
-
--- We want to store all of this in the mockup schema to keep it
--- separate from any application data
-CREATE SCHEMA IF NOT EXISTS mockup;
-
 -- anon and authenticated should have access to mockup schema
 GRANT USAGE ON SCHEMA mockup TO anon, authenticated;
 -- Don't allow public to execute any functions in the mockup schema
@@ -29,6 +23,12 @@ AS $$
   user_id uuid;
   encrypted_pw text;
 BEGIN
+  SELECT id INTO user_id FROM auth.users WHERE auth.users.email = create_user.email LIMIT 1;
+
+  IF user_id IS NOT NULL THEN
+    RETURN user_id;
+  END IF;
+
   user_id := gen_random_uuid();
   encrypted_pw := extensions.crypt(password, extensions.gen_salt('bf', 12));
 
@@ -62,10 +62,8 @@ AS $$
      BEGIN
          SELECT json_build_object('id', id, 'email', email, 'phone', phone, 'raw_user_meta_data', raw_user_meta_data) into supabase_user FROM auth.users WHERE email = email_needle LIMIT 1;
          if supabase_user is null OR supabase_user -> 'id' IS NULL then
-             RAISE EXCEPTION 'User with email % not found', identifier;
+             RAISE EXCEPTION 'User with email % not found', email_needle;
          end if;
          RETURN supabase_user;
      END;
  $$ LANGUAGE plpgsql;
-
-COMMIT;

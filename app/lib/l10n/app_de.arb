@@ -1,16 +1,12 @@
 {
   "@@locale": "de",
-
   "loading": "Laden",
   "loading_error_title": "Ladefehler",
   "loading_error_description": "Die Studiendaten konnten nicht abgerufen werden. Wenn Sie aktuell an einer Studie teilnehmen, wenden Sie sich bitte zuerst an Ihre Studienleitung. Kontaktieren Sie den Support nur, wenn Sie nicht an einer Studie teilnehmen oder Ihre Studienleitung Sie dazu auffordert. Löschen Sie Ihre Daten nur, wenn Sie von der Studienleitung oder dem Support dazu aufgefordert werden. Das Löschen entfernt alle Ihre Studiendaten und Sie müssen der Studie erneut beitreten.",
-  "deleted_study_error_title": "Studie nicht verfügbar",
-  "deleted_study_error_description": "Diese Studie ist auf dem Server nicht mehr verfügbar. Ihre Daten bleiben vorerst auf diesem Gerät. Bitte kontaktieren Sie Ihre Studienleitung oder den Support, bevor Sie etwas löschen. Nutzen Sie 'Alle Daten löschen' nur, wenn Sie zum Zurücksetzen der App aufgefordert werden.",
   "try_again": "Erneut versuchen",
   "delete_all_data": "Alle Daten löschen",
   "delete_all_data_description": "Möchten Sie wirklich alle Daten löschen? Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.",
   "reset_app": "App zurücksetzen",
-
   "what_is_studyu": "Was ist StudyU?",
   "description_part1": "Stellen Sie sich vor, Sie lesen den Satz: \"Studien konnten zeigen, dass Essen nach 18 Uhr die Schlafqualität verschlechtert.\"",
   "description_part2": "Sie denken jetzt möglicherweise: Okay... gut zu wissen, aber trifft das wirklich auf jeden, also auch auf MICH zu?",
@@ -21,20 +17,18 @@
   "description_part7": "Nachdem Sie sich für eine Studie entschieden haben, werden wir sichergehen, dass Ihr Gesundheitsstatus eine Teilnahme erlaubt. Danach können Sie sich als Teilnehmer einschreiben und den Studienplan an Ihren Alltag anpassen. Anschließend werden Sie regelmäßig (meistens 1x pro Tag) eine von zwei möglichen Aufgaben (bspw. essen nach 18 Uhr) absolvieren und Ihre Beobachtungen (bspw. Müdigkeit) eintragen. Ihre Ergebnisse können Sie kostenlos freischalten sobald Sie die minimale Studiendauer (meist nur wenige Wochen) erreicht haben.",
   "description_part8": "Aber bitte beachten Sie Folgendes: Ergebnisse sind umso aussagekräftiger, je länger Sie aktiv an der Studie teilnehmen. Um systematische Fehler zu vermeiden, ist eine weitere Teilnahme nach Freischaltung der Ergebnisse ausgeschlossen. Daher werden wir Ihnen mit einem Fortschrittsbalken anzeigen, wie viele weitere Aufgaben mindestens noch absolviert werden müssen und wie sehr sie die Aussagekraft der Ergebnisse mit ein paar weiteren Wochen verbessern können.",
   "description_part9": "Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!",
-
   "get_started": "Los geht's",
-
+  "show_onboarding_again": "Onboarding erneut ansehen",
   "onboarding_page0_title": "Willkommen bei StudyU",
-  "onboarding_page0_subtitle": "Ihre Reise zu besserer Gesundheit beginnt hier. Wir zeigen Ihnen, wie es funktioniert. Tippen Sie auf 'Weiter', um fortzufahren.",
-  "onboarding_page1_title": "Was funktioniert für SIE?",
-  "onboarding_page1_subtitle": "Eine N-of-1-Studie ist eine wissenschaftliche Studie, in der Sie die einzige Testperson sind. Starten Sie jetzt und finden Sie Lösungen, die genau auf Ihren Körper zugeschnitten sind.",
-  "onboarding_page2_title": "Wissenschaft einfach gemacht",
-  "onboarding_page2_subtitle": "Vergleichen Sie zwei Optionen (z. B. 'Kaffee' vs. 'Tee') mit Experten-Plänen. Wir leiten Sie Schritt für Schritt. Ganz ohne Vorwissen.",
-  "onboarding_page3_title": "Ihre persönlichen Ergebnisse",
-  "onboarding_page3_subtitle": "Allgemeine Statistiken passen nicht immer. Verfolgen Sie Ihren Fortschritt täglich und erhalten Sie Ergebnisse, die zeigen, was Ihrem Körper wirklich hilft.",
-  "onboarding_page4_title": "Übernehmen Sie die Kontrolle",
-  "onboarding_page4_subtitle": "Bereit für Antworten? Wählen Sie eine Studie und starten Sie Ihre Reise zu besserer Gesundheit.",
-
+  "onboarding_page0_subtitle": "Forschende können ermitteln, was im Durchschnitt wirkt. Sie können nicht feststellen, ob eine Gewohnheit oder Behandlung bei Ihnen wirkt. Mit StudyU testen Sie diese Frage selbst.",
+  "onboarding_page1_title": "Ihre persönliche Studie",
+  "onboarding_page1_subtitle": "Bei einer N-of-1-Studie sind Sie die einzige teilnehmende Person. Sie durchlaufen verschiedene Phasen, zum Beispiel frühes und spätes Essen, und erfassen Ergebnisse wie Ihre Schlafqualität.",
+  "onboarding_page2_title": "Ein Plan von Fachleuten",
+  "onboarding_page2_subtitle": "Wählen Sie eine Studie, die zu Ihrer Frage passt. StudyU stellt einen von Fachleuten entwickelten Studienplan bereit, prüft, ob Sie sicher teilnehmen können, und hilft Ihnen, den Plan in Ihren Alltag einzubauen.",
+  "onboarding_page3_title": "Regelmäßige Aufgaben",
+  "onboarding_page3_subtitle": "Befolgen Sie die zugewiesene Option und dokumentieren Sie Ihre Beobachtungen, meist einmal täglich. Der Fortschrittsbalken zeigt, wie viele Aufgaben bis zur Auswertung fehlen.",
+  "onboarding_page4_title": "Aussagekräftige Ergebnisse",
+  "onboarding_page4_subtitle": "Nach einigen Wochen können Sie vergleichen, welche Option bei Ihnen besser funktioniert hat. Mit jeder zusätzlichen Aufgabe erhöhen Sie die Aussagekraft. Wenn Sie die Ergebnisse freischalten, beendet StudyU die Studie, damit die Auswertung unverfälscht bleibt.",
   "test": "test10",
   "study_selection": "Studienauswahl",
   "study_selection_description": "Bitte wählen Sie eine Studie aus.",
@@ -54,22 +48,18 @@
   "please_select_interventions_description": "Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen. Die Interventionen erfolgen in der Reihenfolge, in der Sie sie auswählen. Wenn Sie A vor B wählen, wird A zuerst durchgeführt.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
-
   "task_already_completed": "Die Aufgabe wurde heute bereits erledigt",
   "task_cannot_be_completed": "Die Aufgabe kann nicht bearbeitet werden",
   "task_outside_period": "Die Aufgabe kann nicht außerhalb der Interventionsphase bearbeitet werden",
   "study_notification_body": "Eine neue Aufgabe benötigt Ihre Aufmerksamkeit",
-
   "intervention_phase_duration": "Länge der Interventionphasen",
   "days": "Tage",
   "study_length": "Studienlänge",
   "study_publisher": "Studienherausgeber",
-
   "tasks_daily": "Aufgaben:",
   "baseline_description": "Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.",
   "baseline": "Baseline",
   "days_left": "Tage übrig",
-
   "today_tasks": "Aufgaben heute",
   "intervention_current": "Aktuelle Maßnahme",
   "study_current": "Aktuelle Studie:",
@@ -78,7 +68,6 @@
   "soft_delete_desc": "Sie werden Ihren Fortschritt in der Studie ",
   "soft_delete_desc_2": " unwiederbringlich verlieren. Bereits abgeschlossene Studien werden nicht gelöscht.\nIhre anonymisierten Daten bis zu diesem Zeitpunkt können weiterhin für Forschungszwecke verwendet werden.",
   "hard_delete_desc": "Sie werden alle Daten von Ihrem Gerät und unseren Servern löschen. Sie können Ihre Daten nicht wiederherstellen. Ihre anonymisierten Daten werden nicht mehr für Forschungszwecke zur Verfügung stehen.",
-
   "summary": "Übersicht",
   "consent": "Einverständnis",
   "error": "Fehler!",
@@ -87,42 +76,24 @@
   "back_pain": "Rückenschmerzen",
   "video_task": "Videoaufgabe",
   "finished": "Fertig",
-
   "your_journey": "Deine Reise",
   "journey_results_available": "Ergebnisse verfügbar",
-
   "how_would_you_rate_your_pain_today": "Wie würden Sie heute Ihren Schmerz bewerten? (0 = kein Schmerz, 10 = extreme Schmerzen)",
   "thank_you_for_your_input": "Danke für Ihre Eingaben",
   "please_give_consent": "Bitte geben Sie Ihr Einverständnis ab, um an der Studie teilzunehmen. Sie müssen alle Boxen anklicken und lesen.",
   "please_give_consent_why": "Warum?",
   "please_give_consent_reason": "Aus Gründen der Sicherheit und des Datenschutzes müssen Studien das Einverständnis der Teilnehmer einholen. Aus diesem Grund müssen Sie für jede Studie erneut Ihr Einverständnis abgeben.",
   "user_did_not_give_consent": "Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.",
-
   "setting_up_study": "Studie wird vorbereitet...",
   "good_to_go": "Es kann losgehen!",
-
   "dashboard": "Dashboard",
-  "dashboard_showcase_progress_title": "Studienfortschritt",
-  "dashboard_showcase_progress_description": "Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.",
-  "dashboard_showcase_current_intervention_title": "Aktuelle Intervention",
-  "dashboard_showcase_current_intervention_description": "Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.",
-  "dashboard_showcase_today_tasks_title": "Heutige Aufgaben",
-  "dashboard_showcase_today_tasks_description": "Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.",
-  "dashboard_showcase_contact_title": "Kontakt",
-  "dashboard_showcase_contact_description": "Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.",
-  "dashboard_showcase_report_title": "Bericht",
-  "dashboard_showcase_report_description": "Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.",
-  "dashboard_showcase_menu_title": "Weitere Optionen",
-  "dashboard_showcase_menu_description": "Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.",
-  "dashboard_showcase_finish": "Fertig",
+  "study_not_available_for_testing_yet": "Diese Studie ist noch nicht zum Testen verfügbar.",
   "home": "Home",
   "profile": "Profil",
   "help": "Hilfe",
   "about": "Über StudyU",
   "contact": "Kontakt",
   "contact_support": "Support kontaktieren",
-  "support_email_subject_loading_error": "StudyU Support-Anfrage - Ladefehler",
-  "support_email_subject_deleted_study": "StudyU Support-Anfrage - Studie nicht verfügbar",
   "support_email_body": "Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: {subjectId}\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.",
   "@support_email_body": {
     "description": "Text für Support-E-Mail, enthält die Subject-ID",
@@ -132,20 +103,8 @@
       }
     }
   },
-  "deleted_study_support_email_body": "Hallo,\n\ndie StudyU App zeigt an, dass meine Studie auf dem Server nicht mehr verfügbar ist. Meine Subject-ID ist: {subjectId}\n\nBitte teilen Sie mir mit, ob ich meine lokalen Daten behalten oder die App zurücksetzen soll.\n\nVielen Dank.",
-  "@deleted_study_support_email_body": {
-    "description": "Text für Support-E-Mail bei gelöschter Studie, enthält die Subject-ID",
-    "placeholders": {
-      "subjectId": {
-        "type": "String"
-      }
-    }
-  },
   "settings": "Einstellungen",
-  "show_dashboard_showcase_again": "Dashboard-Tour erneut anzeigen",
-
   "survey": "Umfrage",
-
   "complete": "Absenden",
   "cancel": "Abbrechen",
   "accept": "Akzeptieren",
@@ -159,12 +118,9 @@
   "confirm": "Auswahl bestätigen",
   "faq": "FAQ",
   "faq_full": "Häufig gestellte Fragen",
-
   "start_study": "Studie starten",
   "next_day": "Nächster Tag",
-
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
-
   "take_a_photo": "Foto aufnehmen",
   "start_recording": "Starte eine Aufnahme",
   "stop_recording": "Stoppe die Aufnahme",
@@ -181,16 +137,13 @@
   "storing_photo": "Foto wird gespeichert",
   "storing_audio": "Audio wird gespeichert",
   "upload_error": "Die Datei konnte nicht hochgeladen werden",
-
   "language": "Sprache",
   "en": "Englisch",
   "de": "Deutsch",
   "allow_analytics": "Analysefunktionen erlauben",
   "allow_analytics_desc": "Die App sammelt Analysedaten ausschließlich zu Verbesserungszwecken und niemals zur Nutzerverfolgung. Details können in den Datenschutzbestimmungen nachgelesen werden.",
-
   "video_test": "Das ist ein Videotest",
   "survey_test": "Das ist ein Umfragetest",
-
   "current_report": "Aktueller Bericht",
   "report_history": "Reportverlauf",
   "no_reports_found": "Keine Berichte gefunden",
@@ -198,34 +151,28 @@
   "not_enough_data": "Nicht genügend Daten",
   "barely_enough_data": "Kaum genügend Daten",
   "enough_data": "Genügend Daten",
-
   "terms": "Bedingungen",
   "terms_read": "Nutzungsbedingungen lesen",
   "terms_content": "Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.",
   "terms_agree": "Ich habe die Nutzungsbedingungen gelesen und bin damit einverstanden",
-
   "privacy": "Datenschutz",
   "privacy_read": "Datenschutzbestimmung lesen",
   "privacy_content": "Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.",
   "privacy_agree": "Ich habe die Datenschutzbestimmung gelesen und bin damit einverstanden",
   "imprint_read": "Impressum lesen",
-
   "invite_code_button": "Einladungscode verwenden",
   "private_study_invite_code": "Privater Studien Einladungscode",
   "invite_code": "Einladungscode",
   "invalid_invite_code": "Dies ist kein valider Einladungscode",
-
   "save_pdf": "Als PDF speichern",
   "was_saved_to": "Die Datei wurde gespeichert unter ",
   "save_not_supported": "Fehler",
   "save_not_supported_description": "Dateidownload ist in der Web-Version zur Zeit nicht unterstützt.",
-
   "eligible_no": "Diese Studie ist für Sie leider nicht auswählbar",
   "eligible_yes": "Sie sind berechtigt, diese Studie auszuwählen",
   "eligible_mistake": "Falls Sie einen Fehler gemacht haben, können Sie Ihre Antworten ändern",
   "eligible_back": "Zurück zur Studienauswahl",
   "eligible_choice_multi_selection": "Alle zutreffenden Antworten auswählen",
-
   "report_overview": "Ergebnisübersicht",
   "report_primary_result": "Hauptresultat",
   "report_disclaimer": "Die Ergebnisse sind nur korrekt, wenn Sie alle Informationen wahrheitsgemäß angegeben haben",
@@ -233,16 +180,12 @@
   "performance_overview": "Übersicht der erfüllten Aufgaben",
   "performance_overview_interventions": "Maßnahmen",
   "performance_overview_observations": "Messungen",
-
   "report_outcome_inconclusive": "Die Ergebnisse sind unschlüssig. Es gibt anscheinend keinen statistisch signifikanten Unterschied zwischen den Interventionen.",
   "report_outcome_neither": "Beide Interventionen scheinen einen negativen Effekt auf das Ereignis zu haben.",
   "report_outcome_one": "Die Intervention {intervention} scheint das Ergebnis zu verbessen.",
-
   "report_axis_phase": "Phase",
-
   "study_not_started": "Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!",
   "completed_study": "Sie haben Ihre letzte Studie abgeschlossen. Schauen Sie vergangene Ergebnisse an oder starten Sie eine neue Studie.",
-
   "app_support": "App Support",
   "app_support_text": "Bei Problemen oder Fragen zur App kontaktieren",
   "study_support": "Studien Support",
@@ -254,7 +197,6 @@
   "email": "Email",
   "phone": "Telefon",
   "additionalInfo": "Zusätzliche Informationen",
-
   "free_text_min_length_error": "Bitte geben Sie mindestens {min} Zeichen ein",
   "@free_text_min_length_error": {
     "placeholders": {
@@ -274,10 +216,8 @@
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
   "free_text_numeric_error": "Bitte geben Sie nur numerische Zeichen ein",
   "free_text_custom_error": "Bitte geben Sie einen Wert im erforderlichen Format ein",
-  "free_text_hint": "Geben Sie Ihre Antwort ein",
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
   "update_now": "Jetzt aktualisieren",
-
   "text_summary_section_prefix_higher": "Dein ",
   "text_summary_section_was_higher": " war höher während der Intervention: ",
   "text_summary_section_was_lower": " war niedriger während der Intervention: ",
@@ -332,8 +272,7 @@
   "maximum": "Maximum",
   "support_email_sent": "Support-E-Mail geöffnet",
   "support_email_sent_description": "Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.",
-	"no_contact_email": "Keine Kontakt-E-Mail-Adresse angegeben. Bitte wenden Sie sich an Ihre Studienleitung.",
-
+  "no_contact_email": "Keine Kontakt-E-Mail-Adresse angegeben. Bitte wenden Sie sich an Ihre Studienleitung.",
   "sync_fitbit_data": "Fitbit-Daten synchronisieren",
   "fitbit_data_synced": "Fitbit-Daten wurden erfolgreich synchronisiert",
   "fitbit_data_not_synced": "Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.",
@@ -480,13 +419,6 @@
   "painTypeTightness": "Engegefühl",
   "painTypeSoreness": "Wund",
   "painTypeStiffness": "Steifheit",
-
-  "preview_failed_to_initialize": "Die Vorschau konnte nicht initialisiert werden.",
-
-  "preview_overlay_reset_hint": "Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",
-  "preview_overlay_study_not_ready": "Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",
-  "preview_overlay_route_open_failed": "Die Vorschau-Route konnte gerade nicht geöffnet werden.",
-
   "preview_mode": "Vorschau-Modus",
   "preview_mode_active": "Vorschau-Modus aktiv",
   "preview_mode_active_state": "Der Vorschau-Modus ist jetzt aktiv.",
@@ -494,11 +426,92 @@
   "preview_mode_description": "Sie befinden sich derzeit im Vorschau-Modus. Dies ermöglicht Ihnen:\n\n• Schneller Vorlauf durch Studientage mit der \"Nächster Tag\" Schaltfläche\n• Mehrfaches Abschließen von Aufgaben ohne Einschränkungen\n• Erleben des vollständigen Studienablaufs ohne Beeinflussung echter Daten\n\nWichtig: Ergebnisse und Daten aus dem Vorschau-Modus werden nicht gespeichert oder mit tatsächlichen Teilnehmerergebnissen aus laufenden Studien vermischt.",
   "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
   "ok": "OK",
-  "submit" : "Absenden",
-  "continue_label" : "Weiter",
-  "restored_answer_needs_review": "Bitte die wiederhergestellte Antwort überprüfen.",
-  "mark_answer_reviewed": "Als überprüft markieren",
-
+  "submit": "Absenden",
+  "go_back": "Zurück",
+  "deep_link_error_title": "Fehler",
+  "deep_link_study_not_found": "Studie mit ID {studyId} nicht gefunden oder nicht verfügbar",
+  "@deep_link_study_not_found": {
+    "placeholders": {
+      "studyId": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_study_invite_only": "Diese Studie erfordert einen Einladungscode zur Teilnahme",
+  "deep_link_invite_invalid": "Ungültiger oder abgelaufener Einladungscode: {code}",
+  "@deep_link_invite_invalid": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_error_invalid_invite": "Ungültiger Einladungscode",
+  "deep_link_switch_warning_title": "Sie nehmen bereits an einer Studie teil",
+  "deep_link_switch_warning_description": "Sie sind aktuell eingeschrieben in:\n{currentStudy}\n\nDer Deep Link verweist auf:\n{targetStudy}\n\nSie können zur aktuellen Studie zurückkehren (empfohlen) oder fortfahren, diese zu verlassen und zu wechseln.",
+  "@deep_link_switch_warning_description": {
+    "placeholders": {
+      "currentStudy": {
+        "type": "String"
+      },
+      "targetStudy": {
+        "type": "String"
+      }
+    }
+  },
+  "deep_link_switch_primary_return": "Zur aktuellen Studie zurückkehren",
+  "deep_link_switch_secondary_continue": "Aktuelle Studie verlassen und wechseln",
+  "deep_link_switch_data_choice_title": "Wie möchten Sie die aktuelle Studie verlassen?",
+  "deep_link_switch_data_choice_description": "Wählen Sie, was vor dem Wechsel mit Ihren aktuellen Studiendaten passieren soll.",
+  "deep_link_switch_soft_delete_button": "Soft-Delete und wechseln",
+  "deep_link_switch_hard_delete_button": "Hard-Delete und wechseln",
+  "deep_link_switch_confirm_soft_title": "Soft-Delete bestätigen",
+  "deep_link_switch_confirm_soft_button": "Soft-Delete bestätigen",
+  "deep_link_switch_confirm_hard_title": "Hard-Delete bestätigen",
+  "deep_link_switch_confirm_hard_description": "Dadurch werden alle Ihre Daten dauerhaft und unwiderruflich gelöscht.",
+  "deep_link_switch_confirm_hard_button": "Hard-Delete bestätigen",
+  "open_link_on_mobile": "Bitte öffnen Sie diesen Link auf Ihrem mobilen Gerät.",
+  "you_have_been_invited": "Sie wurden zu einer Studie eingeladen!",
+  "download_app_join": "StudyU App herunterladen & Beitreten",
+  "deleted_study_error_title": "Studie nicht verfügbar",
+  "deleted_study_error_description": "Diese Studie ist auf dem Server nicht mehr verfügbar. Ihre Daten bleiben vorerst auf diesem Gerät. Bitte kontaktieren Sie Ihre Studienleitung oder den Support, bevor Sie etwas löschen. Nutzen Sie 'Alle Daten löschen' nur, wenn Sie zum Zurücksetzen der App aufgefordert werden.",
+  "dashboard_showcase_progress_title": "Studienfortschritt",
+  "dashboard_showcase_progress_description": "Hier sehen Sie, welche Studienteile Sie bereits abgeschlossen haben und welche noch folgen.",
+  "dashboard_showcase_current_intervention_title": "Aktuelle Intervention",
+  "dashboard_showcase_current_intervention_description": "Hier sehen Sie Ihre aktuelle Intervention und wie viele Tage in dieser Phase noch verbleiben.",
+  "dashboard_showcase_today_tasks_title": "Heutige Aufgaben",
+  "dashboard_showcase_today_tasks_description": "Hier finden Sie die Aufgaben, die Sie heute für die Studie erledigen sollen.",
+  "dashboard_showcase_contact_title": "Kontakt",
+  "dashboard_showcase_contact_description": "Nutzen Sie diese Option, wenn Sie Hilfe vom Studienteam benötigen.",
+  "dashboard_showcase_report_title": "Bericht",
+  "dashboard_showcase_report_description": "Öffnen Sie Ihren aktuellen Bericht, sobald Ergebnisse verfügbar sind.",
+  "dashboard_showcase_menu_title": "Weitere Optionen",
+  "dashboard_showcase_menu_description": "Hier finden Sie Einstellungen, FAQs, den Berichtsverlauf und mehr.",
+  "dashboard_showcase_finish": "Fertig",
+  "support_email_subject_loading_error": "StudyU Support-Anfrage - Ladefehler",
+  "support_email_subject_deleted_study": "StudyU Support-Anfrage - Studie nicht verfügbar",
+  "deleted_study_support_email_body": "Hallo,\n\ndie StudyU App zeigt an, dass meine Studie auf dem Server nicht mehr verfügbar ist. Meine Subject-ID ist: {subjectId}\n\nBitte teilen Sie mir mit, ob ich meine lokalen Daten behalten oder die App zurücksetzen soll.\n\nVielen Dank.",
+  "@deleted_study_support_email_body": {
+    "description": "Text für Support-E-Mail bei gelöschter Studie, enthält die Subject-ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
+  "show_dashboard_showcase_again": "Dashboard-Tour erneut anzeigen",
+  "free_text_hint": "Geben Sie Ihre Antwort ein",
+  "preview_failed_to_initialize": "Die Vorschau konnte nicht initialisiert werden.",
+  "preview_overlay_reset_hint": "Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",
+  "preview_overlay_study_not_ready": "Die Vorschau konnte für diese Studie noch nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",
+  "preview_overlay_route_open_failed": "Die Vorschau-Route konnte gerade nicht geöffnet werden.",
+  "continue_label": "Weiter",
+  "restored_answer_needs_review": "Wiederhergestellte Antwort muss überprüft werden",
+  "restored_answer_review_description": "Die Aufgabe kann erst nach der Überprüfung abgeschlossen werden.",
+  "mark_answer_reviewed": "Ich habe diese Antwort überprüft",
+  "answer_reviewed": "Antwort überprüft",
+  "review_restored_answer_to_continue": "Überprüfe die wiederhergestellte Antwort, um fortzufahren.",
+  "complete_task": "Aufgabe abschließen",
   "no_internet_connection": "Keine Internetverbindung. Bitte versuche es erneut, wenn du online bist.",
   "error_occurred_with_message": "Ein Fehler ist aufgetreten: {message}",
   "@error_occurred_with_message": {

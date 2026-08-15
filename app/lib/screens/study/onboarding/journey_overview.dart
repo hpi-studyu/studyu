@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
@@ -24,13 +25,13 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     bool? consentGiven;
     if (subject!.study.hasConsentCheck) {
-      consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+      consentGiven = await context.push<bool>('/${RouteNames.consent}');
     } else {
       consentGiven = true;
     }
     if (!context.mounted) return;
     if (consentGiven != null && consentGiven) {
-      Navigator.pushNamed(context, Routes.kickoff);
+      context.push('/${RouteNames.kickoff}');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -52,7 +53,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: const ValueKey('journey_overview_screen'),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
         leading: const Icon(MdiIcons.mapMarkerPath),
@@ -71,7 +71,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        nextButtonKey: const ValueKey('journey_overview_next'),
         onNext: () => getConsentAndNavigateToDashboard(context),
         progress: const OnboardingProgress(stage: 2, progress: 0.5),
       ),
@@ -90,14 +89,12 @@ class Timeline extends StatelessWidget {
     final interventionsInOrder = subject!.getInterventionsInOrder();
     final now = DateTime.now();
     return Column(
-      key: const ValueKey('journey_timeline'),
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ...interventionsInOrder.asMap().entries.map((entry) {
           final index = entry.key;
           final intervention = entry.value;
           return InterventionTile(
-            key: ValueKey('journey_intervention_tile_$index'),
             title: intervention.name,
             iconName: intervention.icon,
             color: intervention.isBaseline()
@@ -110,7 +107,6 @@ class Timeline extends StatelessWidget {
           );
         }),
         InterventionTile(
-          key: const ValueKey('journey_results_tile'),
           title: AppLocalizations.of(context)!.journey_results_available,
           iconName: 'flagCheckered',
           color: Colors.green,

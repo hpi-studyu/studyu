@@ -31,10 +31,14 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _hasInteracted = false;
   bool _donePressed = false;
+  String? _submittedValue;
+
   @override
   void initState() {
     super.initState();
     final initialValue = widget.initialAnswer?.response;
+    _submittedValue = initialValue;
+    _donePressed = initialValue != null;
     if (initialValue != null) {
       _textFieldController.text = initialValue;
       widget.onDraftChanged?.call(widget.question.id, initialValue);
@@ -99,7 +103,10 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
     FocusScope.of(context).unfocus();
     widget.onDone?.call(widget.question.constructAnswer(value));
-    setState(() => _donePressed = true);
+    setState(() {
+      _submittedValue = value;
+      _donePressed = true;
+    });
   }
 
   TextInputType _getKeyboardType() {
@@ -141,8 +148,9 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           onChanged: (value) {
             widget.onDraftChanged?.call(widget.question.id, value);
             _handleInteraction();
-            if (_donePressed) {
-              setState(() => _donePressed = false);
+            final donePressed = value == _submittedValue;
+            if (_donePressed != donePressed) {
+              setState(() => _donePressed = donePressed);
             }
           },
           onFieldSubmitted: (_) {
@@ -173,7 +181,7 @@ class FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
         ),
         const SizedBox(height: 12),
-        if (widget.isLastQuestion && !_donePressed)
+        if ((widget.isLastQuestion || _submittedValue != null) && !_donePressed)
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(

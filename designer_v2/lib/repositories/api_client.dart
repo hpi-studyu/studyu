@@ -250,8 +250,9 @@ class StudyUApiClient extends SupabaseClientDependant
 
   @override
   Future<StudyInvite> fetchStudyInvite(String code) async {
+    final cleanCode = code.trim().toLowerCase();
     await _testDelay();
-    final request = getByColumn<StudyInvite>('code', code);
+    final request = getByColumn<StudyInvite>('code', cleanCode);
     return _awaitGuarded(
       request,
       onError: {
@@ -263,11 +264,12 @@ class StudyUApiClient extends SupabaseClientDependant
 
   @override
   Future<Study> fetchStudyFromInvite(String code) async {
+    final cleanCode = code.trim().toLowerCase();
     await _testDelay();
     try {
       final request = await executeRpc(
         'get_study_record_from_invite',
-        params: {'invite_code': code},
+        params: {'invite_code': cleanCode},
       );
       return deserializeObject<Study>(request);
     } catch (e) {

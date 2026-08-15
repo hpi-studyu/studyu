@@ -9,6 +9,8 @@ import "package:universal_html/html.dart" as html;
 typedef PreviewNavigationHandler = Future<void> Function(String? route);
 
 class IFrameHelper {
+  // The listener must outlive LoadingScreen so loaded preview routes keep
+  // receiving live study updates from the Designer.
   static StreamSubscription<html.MessageEvent>? _messageSubscription;
 
   String? _designerOrigin() {

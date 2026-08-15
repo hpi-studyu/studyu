@@ -83,28 +83,26 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
             ),
             FormTableRow(
               control: widget.formViewModel.interventionDescriptionControl,
-              labelBuilder: (context) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              labelBuilder: (context) => Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 3.0,
+                runSpacing: 8.0,
                 children: [
                   FormLabel(
                     labelText: tr.form_field_intervention_description,
                     helpText: tr.form_field_intervention_description_tooltip,
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    margin: const EdgeInsets.only(left: 3.0),
-                    child: Opacity(
-                      opacity: ThemeConfig.kMuteFadeFactor,
-                      child: Tooltip(
-                        message: "Use html to style your content",
-                        child: Hyperlink(
-                          text: "styleable",
-                          onClick: () => setState(() {
-                            isStylingInformationDismissed =
-                                !isStylingInformationDismissed;
-                          }),
-                          visitedColor: null,
-                        ),
+                  Opacity(
+                    opacity: ThemeConfig.kMuteFadeFactor,
+                    child: Tooltip(
+                      message: "Use html to style your content",
+                      child: Hyperlink(
+                        text: "styleable",
+                        onClick: () => setState(() {
+                          isStylingInformationDismissed =
+                              !isStylingInformationDismissed;
+                        }),
+                        visitedColor: null,
                       ),
                     ),
                   ),

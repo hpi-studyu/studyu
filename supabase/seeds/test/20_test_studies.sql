@@ -1,29 +1,8 @@
 BEGIN;
 
-INSERT INTO public.app_config (id, app_min_version, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
-VALUES (
-    'prod',
-    '2.6.0',
-    '{ "de": "example.com", "en": "example.com" }',
-    '{ "de": "example.com", "en": "example.com" }',
-    '{ "de": "example.com", "en": "example.com" }',
-    '{ "de": "example.com", "en": "example.com" }',
-    '{ "de": "example.com", "en": "example.com" }',
-    '{ "email": "email@example.com", "phone": "1235678", "website": "example.com", "organization": "example" }',
-    '{ "dsn": "example", "enabled": false, "samplingRate": 0 }'
-);
-
--- Seed data
-
-DO $$
-DECLARE
-    email text := 'user1@studyu.health';
-    password text := 'user1pass';
-    user_id UUID;
-BEGIN
-    user_id := mockup.create_user(email, password);
-
+-- Deterministic baseline study shared by database tests.
     INSERT INTO public.study (
+      id,
       contact,
       title,
       description,
@@ -45,6 +24,7 @@ BEGIN
       result_sharing,
       collaborator_emails
     ) VALUES(
+      '22222222-2222-4222-8222-222222222222',
       '{"email":"example@example.com","phone":"0123456789","website":"https://studyu.health","researchers":"StudyU Researcher","organization":"StudyU","institutionalReviewBoard":"This study has not been submitted to the IRB Board. It is for illustration purposes of StudyU only.","institutionalReviewBoardNumber":"N/A"}',
       'Public demo study of user1',
       'This is a Demo Study. This study helps you find out which treatment is more effective for you.',
@@ -58,13 +38,20 @@ BEGIN
       '2021-04-13 18:19:49.000',
       '2023-05-11 12:46:06.018',
       -- user_id
-      user_id,
+      '11111111-1111-4111-8111-111111111111',
       -- participation ('open', 'invite')
       'open',
       -- result_sharing ('public', 'organization', 'private')
       'public',
       '{}'
-    );
-END $$;
+    )
+    ON CONFLICT (id) DO UPDATE SET
+      user_id = EXCLUDED.user_id,
+      title = EXCLUDED.title,
+      description = EXCLUDED.description,
+      status = EXCLUDED.status,
+      registry_published = EXCLUDED.registry_published,
+      participation = EXCLUDED.participation,
+      result_sharing = EXCLUDED.result_sharing;
 
 COMMIT;
