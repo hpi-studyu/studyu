@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
@@ -529,6 +530,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             future: ref.read(userRepositoryProvider).fetchUser(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                final viewportHeight = MediaQuery.sizeOf(context).height;
+                final contentPadding =
+                    TwoColumnLayout.defaultContentPadding.vertical * 2;
+                const headerHeight = 36.0;
+                const spacingBelowHeader = 24.0;
+                final activeFilterSpacing =
+                    state.activeFilter != null &&
+                        state.activeFilter!.children.isNotEmpty
+                    ? 64.0
+                    : 0.0;
+                final emptyStateMinHeight =
+                    viewportHeight -
+                    contentPadding -
+                    headerHeight -
+                    spacingBelowHeader -
+                    activeFilterSpacing;
+
                 return AsyncValueWidget<List<Study>>(
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
@@ -547,25 +565,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     emptyWidget:
                         (widget.filter == null ||
                             widget.filter == StudiesFilter.owned)
-                        ? (state.query.isNotEmpty)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
+                        ? ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: emptyStateMinHeight,
+                            ),
+                            child: state.query.isNotEmpty
+                                ? EmptyBody(
                                     icon: Icons.content_paste_search_rounded,
                                     title: tr.studies_not_found,
                                     description: tr.modify_query,
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
+                                  )
+                                : EmptyBody(
                                     icon: Icons.content_paste_search_rounded,
                                     title: tr.studies_empty,
                                     description: tr.studies_empty_description,
                                     // "...or create a new draft copy from an already published study!",
                                     /* button: PrimaryButton(text: "From template",); */
                                   ),
-                                )
+                          )
                         : const SizedBox.shrink(),
                   ),
                 );
