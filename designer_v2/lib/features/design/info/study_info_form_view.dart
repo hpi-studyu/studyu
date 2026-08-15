@@ -21,6 +21,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
   const StudyDesignInfoFormView(super.studyId, {super.key});
 
+  static const _singleLineFieldHeight = 56.0;
   static const _studyTitleMaxLength = 100;
   static const _studyDescriptionMaxLength = 500;
   static const _contactFieldMaxLength = 100;
@@ -51,6 +52,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     label: tr.form_field_study_title,
                     labelHelpText: tr.form_field_study_title_tooltip,
                     input: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // TODO: responsive layout (input field gets too small)
                         Expanded(
@@ -62,20 +64,27 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                                 formViewModel.titleControl.validationMessages,
                           ),
                         ),
-                        ReactiveFormConsumer(
-                          builder: (context, form, child) {
-                            return (formViewModel.iconControl.value != null)
-                                ? const SizedBox(width: 4.0)
-                                : const SizedBox(width: 8.0);
+                        const SizedBox(width: 12.0),
+                        ReactiveValueListenableBuilder<IconOption>(
+                          formControl: formViewModel.iconControl,
+                          builder: (context, control, child) {
+                            return SizedBox(
+                              height: StudyDesignInfoFormView
+                                  ._singleLineFieldHeight,
+                              child: Align(
+                                child: IntrinsicWidth(
+                                  child: ReactiveIconPicker(
+                                    formControl: formViewModel.iconControl,
+                                    iconOptions: IconPack.material,
+                                    selectedIconSize: 24.0,
+                                    validationMessages: formViewModel
+                                        .iconControl
+                                        .validationMessages,
+                                  ),
+                                ),
+                              ),
+                            );
                           },
-                        ),
-                        IntrinsicWidth(
-                          child: ReactiveIconPicker(
-                            formControl: formViewModel.iconControl,
-                            iconOptions: IconPack.material,
-                            validationMessages:
-                                formViewModel.iconControl.validationMessages,
-                          ),
                         ),
                       ],
                     ),
