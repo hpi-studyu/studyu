@@ -282,6 +282,22 @@ class _SurveyQuestionFormViewState
                     ),
                 ],
               ),
+              if (!formViewModel.isReadonly)
+                Opacity(
+                  opacity: ThemeConfig.kMuteFadeFactor,
+                  child: Hyperlink(
+                    text: tr.action_remove,
+                    onClick: () {
+                      formViewModel.questionInfoTextControl.value = '';
+                      setState(() {
+                        isQuestionHelpTextFieldVisible = false;
+                      });
+                    },
+                    visitedColor: null,
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
             ],
           ),
           input: ReactiveTextField(
