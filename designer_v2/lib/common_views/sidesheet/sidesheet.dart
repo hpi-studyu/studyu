@@ -251,9 +251,6 @@ Future<T?> showModalSideSheet<T extends Object?>({
   Widget Function(Widget)? wrapRoute,
 }) {
   assert(!barrierDismissible || barrierLabel != null);
-  debugPrint(
-    '[showModalSideSheet] open title="$title" barrierDismissible=$barrierDismissible useRootNavigator=$useRootNavigator',
-  );
   return showGeneralDialog(
     barrierDismissible: barrierDismissible,
     barrierColor:
@@ -264,7 +261,6 @@ Future<T?> showModalSideSheet<T extends Object?>({
     routeSettings: routeSettings,
     context: context,
     pageBuilder: (BuildContext context, _, _) {
-      debugPrint('[showModalSideSheet] pageBuilder title="$title"');
       final sidesheet = Sidesheet(
         body: body,
         tabs: tabs,

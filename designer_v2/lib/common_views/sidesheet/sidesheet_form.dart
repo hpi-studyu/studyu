@@ -66,9 +66,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     super.didChangeDependencies();
     _route?.unregisterPopEntry(this);
     _route = ModalRoute.of(context);
-    debugPrint(
-      '[PopEntry] registering route=${_route.runtimeType} isCurrent=${_route?.isCurrent} canPop=${Navigator.of(context, rootNavigator: true).canPop()}',
-    );
     _route?.registerPopEntry(this);
   }
 
@@ -85,9 +82,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
 
   @override
   void onPopInvokedWithResult(bool didPop, Object? result) {
-    debugPrint(
-      '[PopEntry] onPopInvokedWithResult didPop=$didPop result=$result canPopNotifier=${_canPopNotifier.value} isDirty=${widget.formViewModel.isDirty}',
-    );
     if (didPop) {
       return;
     }
@@ -101,30 +95,17 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
 
   Future<void> _handleDismiss({required bool completePop}) async {
     if (_isDismissing) {
-      debugPrint(
-        '[PopEntry] _handleDismiss skipped completePop=$completePop reason=already_dismissing',
-      );
       return;
     }
     _isDismissing = true;
-    debugPrint(
-      '[PopEntry] _handleDismiss start completePop=$completePop isDirty=${widget.formViewModel.isDirty} mounted=$mounted rootCanPop=${Navigator.of(context, rootNavigator: true).canPop()} localCanPop=${Navigator.of(context).canPop()}',
-    );
 
     try {
       if (!widget.formViewModel.isDirty) {
         await widget.formViewModel.cancel();
-        debugPrint(
-          '[PopEntry] _handleDismiss after cancel clean mounted=$mounted completePop=$completePop',
-        );
         if (mounted) {
           _canPopNotifier.value = true;
           if (completePop) {
             _scheduleManualPop(label: 'clean');
-          } else {
-            debugPrint(
-              '[PopEntry] clean dismiss unlocked for original pop attempt',
-            );
           }
         }
         return;
@@ -134,9 +115,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
         context: context,
         barrierColor: ThemeConfig.modalBarrierColor(Theme.of(context)),
         builder: (context) => const UnsavedChangesDialog(),
-      );
-      debugPrint(
-        '[PopEntry] unsaved dialog result=$shouldDiscard mounted=$mounted completePop=$completePop',
       );
 
       if (!mounted) {
@@ -148,21 +126,13 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
         if (!mounted) {
           return;
         }
-        final rootNavigator = Navigator.of(context, rootNavigator: true);
         final localNavigator = Navigator.of(context);
-        debugPrint(
-          '[PopEntry] _handleDismiss after cancel dirty mounted=$mounted completePop=$completePop rootCanPop=${rootNavigator.canPop()} localCanPop=${localNavigator.canPop()}',
-        );
         if (!localNavigator.canPop()) {
           return;
         }
         _canPopNotifier.value = true;
         if (completePop) {
           _scheduleManualPop(label: 'dirty');
-        } else {
-          debugPrint(
-            '[PopEntry] dirty dismiss unlocked for original pop attempt',
-          );
         }
       }
     } finally {
@@ -176,9 +146,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
         return;
       }
       final navigator = Navigator.of(context, rootNavigator: true);
-      debugPrint(
-        '[PopEntry] $label dismiss scheduled pop canPop=${navigator.canPop()}',
-      );
       if (navigator.canPop()) {
         navigator.pop();
       }

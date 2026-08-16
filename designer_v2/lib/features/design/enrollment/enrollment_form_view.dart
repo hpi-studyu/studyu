@@ -304,7 +304,6 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     WidgetRef ref,
     StudyUQuestionnaire questionnaire,
   ) {
-    debugPrint('[Enrollment] open screener sidesheet routeArgs=$routeArgs');
     final formViewModel = ref.watch(
       screenerQuestionFormViewModelProvider(routeArgs),
     );
@@ -346,7 +345,6 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    debugPrint('[Enrollment] open consent sidesheet routeArgs=$routeArgs');
     final formViewModel = ref.watch(
       consentItemFormViewModelProvider(routeArgs),
     );
