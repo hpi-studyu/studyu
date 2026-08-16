@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 
 class FormListView<T> extends StatelessWidget {
-  static const int kRowTitleMaxLines = 3;
+  static const int kRowTitleMaxLines = 2;
 
   const FormListView({
     required this.control,
@@ -56,6 +56,10 @@ class FormListView<T> extends StatelessWidget {
   final bool hideLeadingTrailingWhenEmpty;
   final bool reorderable;
   final void Function(int oldIndex, int newIndex)? onReorder;
+
+  String _normalizedRowTitle(T item) {
+    return rowTitle(item).replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +135,7 @@ class FormListView<T> extends StatelessWidget {
                         if (rowPrefix != null) rowPrefix!(context, item, index),
                         Expanded(
                           child: Text(
-                            rowTitle(item),
+                            _normalizedRowTitle(item),
                             style: theme.textTheme.bodyMedium,
                             maxLines: kRowTitleMaxLines,
                             overflow: TextOverflow.ellipsis,
@@ -174,7 +178,7 @@ class FormListView<T> extends StatelessWidget {
                         if (rowPrefix != null) rowPrefix!(context, item, index),
                         Expanded(
                           child: Text(
-                            rowTitle(item),
+                            _normalizedRowTitle(item),
                             style: theme.textTheme.bodyMedium,
                             maxLines: kRowTitleMaxLines,
                             overflow: TextOverflow.ellipsis,

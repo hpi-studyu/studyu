@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -253,16 +252,6 @@ class _SurveyQuestionFormViewState
                     formViewModel.questionTextControl.validationMessages,
                 minLines: _questionFieldVisibleLines,
                 maxLines: _questionFieldVisibleLines,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(
-                    QuestionFormViewModel.questionTextMaxLength,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              _buildCharacterCounter(
-                formViewModel.questionTextControl,
-                QuestionFormViewModel.questionTextMaxLength,
               ),
             ],
           ),
@@ -333,37 +322,14 @@ class _SurveyQuestionFormViewState
                     formViewModel.questionInfoTextControl.validationMessages,
                 minLines: _questionHelpFieldVisibleLines,
                 maxLines: _questionHelpFieldVisibleLines,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(
-                    QuestionFormViewModel.questionInfoTextMaxLength,
-                  ),
-                ],
                 decoration: InputDecoration(
                   hintText: tr.form_field_question_help_text_hint,
                 ),
-              ),
-              const SizedBox(height: 8.0),
-              _buildCharacterCounter(
-                formViewModel.questionInfoTextControl,
-                QuestionFormViewModel.questionInfoTextMaxLength,
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildCharacterCounter(FormControl<String> control, int maxLength) {
-    return ReactiveValueListenableBuilder<String>(
-      formControl: control,
-      builder: (context, reactiveControl, child) {
-        final currentLength = reactiveControl.value?.length ?? 0;
-        return Align(
-          alignment: Alignment.centerRight,
-          child: Text('$currentLength/$maxLength'),
-        );
-      },
     );
   }
 }
