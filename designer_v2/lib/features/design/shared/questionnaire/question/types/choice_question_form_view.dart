@@ -90,15 +90,9 @@ List<Widget> buildChoiceOptionRow(
 ) {
   final theme = Theme.of(context);
   final isReadonly = formControl.disabled;
-  final fieldKey = ValueKey(
-    'question-option-${formControl.runtimeType}-${formControl.value}-$isReadonly',
-  );
 
   Widget buildOptionField(Widget child) {
-    return IgnorePointer(
-      ignoring: isReadonly,
-      child: KeyedSubtree(key: fieldKey, child: child),
-    );
+    return IgnorePointer(ignoring: isReadonly, child: child);
   }
 
   return [
