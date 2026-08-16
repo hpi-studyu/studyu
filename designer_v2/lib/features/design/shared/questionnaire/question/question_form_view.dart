@@ -93,39 +93,41 @@ class _SurveyQuestionFormViewState
   @override
   Widget build(BuildContext context) {
     return PointerInterceptor(
-      child: SelectionArea(
-        child: Column(
-          children: [
-            _buildQuestionText(context),
-            if (isQuestionHelpTextFieldVisible)
-              Column(
-                children: [
-                  const SizedBox(height: 16.0),
-                  _buildQuestionHelpText(context),
-                ],
-              )
-            else
-              const SizedBox.shrink(),
-            if (widget.isHtmlStyleable)
-              HtmlStylingBanner(
-                isDismissed: isStylingInformationDismissed,
-                onDismissed: onDismissedCallback,
-              ),
-            const SizedBox(height: 24.0),
-            ReactiveFormConsumer(
-              builder: (context, formGroup, child) {
-                return Column(
-                  children: [
-                    _buildResponseTypeHeader(context),
-                    const SizedBox(height: 16.0),
-                    questionTypeBodyBuilder(context),
-                  ],
-                );
-              },
+      child: Column(
+        children: [
+          _buildQuestionText(context),
+          if (isQuestionHelpTextFieldVisible)
+            Column(
+              children: [
+                const SizedBox(height: 16.0),
+                _buildQuestionHelpText(context),
+              ],
+            )
+          else
+            const SizedBox.shrink(),
+          if (widget.isHtmlStyleable)
+            HtmlStylingBanner(
+              isDismissed: isStylingInformationDismissed,
+              onDismissed: onDismissedCallback,
             ),
-          ],
-        ),
+          const SizedBox(height: 24.0),
+          _buildResponseTypeSection(context),
+        ],
       ),
+    );
+  }
+
+  Widget _buildResponseTypeSection(BuildContext context) {
+    return Column(
+      children: [
+        _buildResponseTypeHeader(context),
+        const SizedBox(height: 16.0),
+        ReactiveValueListenableBuilder<SurveyQuestionType>(
+          formControl: formViewModel.questionTypeControl,
+          builder: (context, control, child) =>
+              questionTypeBodyBuilder(context),
+        ),
+      ],
     );
   }
 
@@ -353,9 +355,10 @@ class _SurveyQuestionFormViewState
   }
 
   Widget _buildCharacterCounter(FormControl<String> control, int maxLength) {
-    return ReactiveFormConsumer(
-      builder: (context, form, child) {
-        final currentLength = control.value?.length ?? 0;
+    return ReactiveValueListenableBuilder<String>(
+      formControl: control,
+      builder: (context, reactiveControl, child) {
+        final currentLength = reactiveControl.value?.length ?? 0;
         return Align(
           alignment: Alignment.centerRight,
           child: Text('$currentLength/$maxLength'),

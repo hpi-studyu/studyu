@@ -10,12 +10,16 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ChoiceQuestionFormView extends ConsumerWidget {
+  static const double _multipleChoiceSwitchScale = 0.66;
+
   const ChoiceQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         FormTableLayout(
@@ -23,8 +27,33 @@ class ChoiceQuestionFormView extends ConsumerWidget {
             FormTableRow(
               label: tr.form_field_response_choice_multiple,
               labelHelpText: tr.form_field_response_choice_multiple_tooltip,
-              input: ReactiveSwitch(
-                formControl: formViewModel.isMultipleChoiceControl,
+              input: Align(
+                alignment: Alignment.centerLeft,
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Transform.translate(
+                    offset: const Offset(-8.0, 0),
+                    child: Transform.scale(
+                      scale: _multipleChoiceSwitchScale,
+                      alignment: Alignment.centerLeft,
+                      child: Theme(
+                        data: theme.copyWith(
+                          switchTheme: theme.switchTheme.copyWith(
+                            overlayColor: const WidgetStatePropertyAll(
+                              Colors.transparent,
+                            ),
+                            splashRadius: 0,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                        child: ReactiveSwitch(
+                          formControl: formViewModel.isMultipleChoiceControl,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
