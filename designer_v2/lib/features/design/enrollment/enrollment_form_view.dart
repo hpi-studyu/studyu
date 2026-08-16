@@ -68,6 +68,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                   enabled: !formViewModel.isReadonly,
                                   contentPadding: EdgeInsets.zero,
                                   horizontalTitleGap: 12.0,
+                                  titleAlignment: ListTileTitleAlignment.top,
                                   visualDensity: VisualDensity.compact,
                                   // disables in readonly mode
                                   title: Column(
@@ -137,7 +138,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       sectionDescription:
                           tr.form_array_screener_questions_description,
                       sectionDescriptionTextAlign: TextAlign.justify,
-                      buttonTopPadding: 8.0,
+                      buttonTopPadding: 4.0,
                       onNewItemLabel: tr.form_array_screener_questions_new,
                       rowTitle: (viewModel) =>
                           viewModel.formData?.questionText ?? '',
@@ -239,7 +240,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       sectionDescription:
                           tr.form_array_consent_items_description,
                       sectionDescriptionTextAlign: TextAlign.justify,
-                      buttonTopPadding: 8.0,
+                      buttonTopPadding: 4.0,
                       onNewItemLabel: tr.form_array_consent_items_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',
                       leadingWidget: Row(
