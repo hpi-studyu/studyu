@@ -36,18 +36,39 @@ class _FormSidesheetPopEntry<T extends FormViewModel> extends StatefulWidget {
       _FormSidesheetPopEntryState<T>();
 }
 
+class _FormSidesheetDismissScope extends InheritedWidget {
+  const _FormSidesheetDismissScope({
+    required this.dismiss,
+    required super.child,
+  });
+
+  final Future<void> Function() dismiss;
+
+  static _FormSidesheetDismissScope? maybeOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_FormSidesheetDismissScope>();
+  }
+
+  @override
+  bool updateShouldNotify(_FormSidesheetDismissScope oldWidget) =>
+      dismiss != oldWidget.dismiss;
+}
+
 class _FormSidesheetPopEntryState<T extends FormViewModel>
     extends State<_FormSidesheetPopEntry<T>>
     implements PopEntry {
   ModalRoute<dynamic>? _route;
   final ValueNotifier<bool> _canPopNotifier = ValueNotifier(false);
+  bool _isDismissing = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _route?.unregisterPopEntry(this);
     _route = ModalRoute.of(context);
-    debugPrint('[PopEntry] registering with route: ${_route.runtimeType}');
+    debugPrint(
+      '[PopEntry] registering route=${_route.runtimeType} isCurrent=${_route?.isCurrent} canPop=${Navigator.of(context, rootNavigator: true).canPop()}',
+    );
     _route?.registerPopEntry(this);
   }
 
@@ -65,12 +86,12 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
   @override
   void onPopInvokedWithResult(bool didPop, Object? result) {
     debugPrint(
-      '[PopEntry] onPopInvokedWithResult didPop=$didPop canPop=${_canPopNotifier.value}',
+      '[PopEntry] onPopInvokedWithResult didPop=$didPop result=$result canPopNotifier=${_canPopNotifier.value} isDirty=${widget.formViewModel.isDirty}',
     );
     if (didPop) {
       return;
     }
-    _handleDismiss();
+    _handleDismiss(completePop: true);
   }
 
   @override
@@ -78,50 +99,99 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     // Deprecated
   }
 
-  Future<void> _handleDismiss() async {
-    debugPrint(
-      '[PopEntry] _handleDismiss isDirty=${widget.formViewModel.isDirty}',
-    );
-
-    if (!widget.formViewModel.isDirty) {
-      await widget.formViewModel.cancel();
-      if (mounted) {
-        _canPopNotifier.value = true;
-
-        // CHANGE HERE: Wait for the frame to finish so Navigator is unlocked
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            Navigator.of(context, rootNavigator: true).pop();
-          }
-        });
-      }
+  Future<void> _handleDismiss({required bool completePop}) async {
+    if (_isDismissing) {
+      debugPrint(
+        '[PopEntry] _handleDismiss skipped completePop=$completePop reason=already_dismissing',
+      );
       return;
     }
-
-    // Dirty state logic
-    final shouldDiscard = await showDialog<bool>(
-      context: context,
-      barrierColor: ThemeConfig.modalBarrierColor(Theme.of(context)),
-      builder: (context) => const UnsavedChangesDialog(),
+    _isDismissing = true;
+    debugPrint(
+      '[PopEntry] _handleDismiss start completePop=$completePop isDirty=${widget.formViewModel.isDirty} mounted=$mounted rootCanPop=${Navigator.of(context, rootNavigator: true).canPop()} localCanPop=${Navigator.of(context).canPop()}',
     );
 
-    if (shouldDiscard == true && mounted) {
-      await widget.formViewModel.cancel();
-      if (mounted && Navigator.of(context).canPop()) {
-        _canPopNotifier.value = true;
-
-        // CHANGE HERE: Wait for the frame to finish
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            Navigator.of(context, rootNavigator: true).pop();
+    try {
+      if (!widget.formViewModel.isDirty) {
+        await widget.formViewModel.cancel();
+        debugPrint(
+          '[PopEntry] _handleDismiss after cancel clean mounted=$mounted completePop=$completePop',
+        );
+        if (mounted) {
+          _canPopNotifier.value = true;
+          if (completePop) {
+            _scheduleManualPop(label: 'clean');
+          } else {
+            debugPrint(
+              '[PopEntry] clean dismiss unlocked for original pop attempt',
+            );
           }
-        });
+        }
+        return;
       }
+
+      final shouldDiscard = await showDialog<bool>(
+        context: context,
+        barrierColor: ThemeConfig.modalBarrierColor(Theme.of(context)),
+        builder: (context) => const UnsavedChangesDialog(),
+      );
+      debugPrint(
+        '[PopEntry] unsaved dialog result=$shouldDiscard mounted=$mounted completePop=$completePop',
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      if (shouldDiscard == true) {
+        await widget.formViewModel.cancel();
+        if (!mounted) {
+          return;
+        }
+        final rootNavigator = Navigator.of(context, rootNavigator: true);
+        final localNavigator = Navigator.of(context);
+        debugPrint(
+          '[PopEntry] _handleDismiss after cancel dirty mounted=$mounted completePop=$completePop rootCanPop=${rootNavigator.canPop()} localCanPop=${localNavigator.canPop()}',
+        );
+        if (!localNavigator.canPop()) {
+          return;
+        }
+        _canPopNotifier.value = true;
+        if (completePop) {
+          _scheduleManualPop(label: 'dirty');
+        } else {
+          debugPrint(
+            '[PopEntry] dirty dismiss unlocked for original pop attempt',
+          );
+        }
+      }
+    } finally {
+      _isDismissing = false;
     }
   }
 
+  void _scheduleManualPop({required String label}) {
+    Future<void>.delayed(Duration.zero, () {
+      if (!mounted) {
+        return;
+      }
+      final navigator = Navigator.of(context, rootNavigator: true);
+      debugPrint(
+        '[PopEntry] $label dismiss scheduled pop canPop=${navigator.canPop()}',
+      );
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    });
+  }
+
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    return _FormSidesheetDismissScope(
+      dismiss: () => _handleDismiss(completePop: true),
+      child: widget.child,
+    );
+  }
 }
 
 Future<Object?> showFormSideSheet<T extends FormViewModel>({
@@ -162,7 +232,18 @@ Future<Object?> showFormSideSheet<T extends FormViewModel>({
     tabs: boundTabs,
     actionButtons:
         actionButtons ??
-        buildFormButtons(formViewModel, formViewModel.formMode),
+        buildFormButtons(
+          formViewModel,
+          formViewModel.formMode,
+          onDismiss: (context) async {
+            final dismissScope = _FormSidesheetDismissScope.maybeOf(context);
+            if (dismissScope != null) {
+              await dismissScope.dismiss();
+              return;
+            }
+            await Navigator.maybePop(context);
+          },
+        ),
     wrapContent: wrapInForm,
     width: width,
     withCloseButton: withCloseButton,
