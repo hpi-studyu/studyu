@@ -89,6 +89,7 @@ List<Widget> buildChoiceOptionRow(
   AbstractControl formControl,
 ) {
   final theme = Theme.of(context);
+  final isReadonly = formControl.disabled;
   return [
     Center(
       child: Icon(
@@ -101,6 +102,7 @@ List<Widget> buildChoiceOptionRow(
       ReactiveTextField<Choice>(
         formControl: formControl,
         valueAccessor: ChoiceValueAccessor(formControl),
+        readOnly: isReadonly,
         decoration: InputDecoration(
           hintText: tr.form_array_response_options_choice_hint,
         ),
@@ -108,6 +110,7 @@ List<Widget> buildChoiceOptionRow(
     else
       ReactiveTextField<String>(
         formControl: formControl as FormControl<String>,
+        readOnly: isReadonly,
         decoration: InputDecoration(
           hintText: tr.form_array_response_options_choice_hint,
         ),
