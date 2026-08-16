@@ -90,6 +90,17 @@ List<Widget> buildChoiceOptionRow(
 ) {
   final theme = Theme.of(context);
   final isReadonly = formControl.disabled;
+  final fieldKey = ValueKey(
+    'question-option-${formControl.runtimeType}-${formControl.value}-$isReadonly',
+  );
+
+  Widget buildOptionField(Widget child) {
+    return IgnorePointer(
+      ignoring: isReadonly,
+      child: KeyedSubtree(key: fieldKey, child: child),
+    );
+  }
+
   return [
     Center(
       child: Icon(
@@ -99,20 +110,26 @@ List<Widget> buildChoiceOptionRow(
       ),
     ),
     if (formControl is FormControl<Choice>)
-      ReactiveTextField<Choice>(
-        formControl: formControl,
-        valueAccessor: ChoiceValueAccessor(formControl),
-        readOnly: isReadonly,
-        decoration: InputDecoration(
-          hintText: tr.form_array_response_options_choice_hint,
+      buildOptionField(
+        ReactiveTextField<Choice>(
+          formControl: formControl,
+          valueAccessor: ChoiceValueAccessor(formControl),
+          readOnly: isReadonly,
+          decoration: InputDecoration(
+            hintText: tr.form_array_response_options_choice_hint,
+            enabled: !isReadonly,
+          ),
         ),
       )
     else
-      ReactiveTextField<String>(
-        formControl: formControl as FormControl<String>,
-        readOnly: isReadonly,
-        decoration: InputDecoration(
-          hintText: tr.form_array_response_options_choice_hint,
+      buildOptionField(
+        ReactiveTextField<String>(
+          formControl: formControl as FormControl<String>,
+          readOnly: isReadonly,
+          decoration: InputDecoration(
+            hintText: tr.form_array_response_options_choice_hint,
+            enabled: !isReadonly,
+          ),
         ),
       ),
   ];

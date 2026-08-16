@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class BoolQuestionFormView extends ConsumerWidget {
   const BoolQuestionFormView({required this.formViewModel, super.key});
@@ -16,8 +16,8 @@ class BoolQuestionFormView extends ConsumerWidget {
       children: [
         Opacity(
           opacity: 0.5,
-          child: StandardTable<AbstractControl>(
-            items: formViewModel.answerOptionsControls,
+          child: StandardTable<String>(
+            items: BoolQuestionFormData.kResponseOptions.keys.toList(),
             columns: [
               StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)
@@ -28,9 +28,9 @@ class BoolQuestionFormView extends ConsumerWidget {
               ),
             ],
             onSelectItem: (_) => {}, // no-op
-            buildCellsAt: (context, control, _, _) =>
-                buildChoiceOptionRow(context, control),
-            trailingActionsAt: (control, _) => [],
+            buildCellsAt: (context, option, _, _) =>
+                _buildBoolOptionRow(context, option),
+            trailingActionsAt: (option, _) => [],
             cellSpacing: 0.0,
             rowSpacing: 8.0,
             minRowHeight: null,
@@ -42,5 +42,28 @@ class BoolQuestionFormView extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  List<Widget> _buildBoolOptionRow(BuildContext context, String option) {
+    final theme = Theme.of(context);
+    return [
+      Center(
+        child: Icon(
+          Icons.radio_button_off_outlined,
+          color: theme.dividerTheme.color ?? theme.dividerColor,
+          size: 12.0,
+        ),
+      ),
+      IgnorePointer(
+        child: TextFormField(
+          initialValue: option,
+          enabled: false,
+          readOnly: true,
+          decoration: InputDecoration(
+            hintText: tr.form_array_response_options_choice_hint,
+          ),
+        ),
+      ),
+    ];
   }
 }
