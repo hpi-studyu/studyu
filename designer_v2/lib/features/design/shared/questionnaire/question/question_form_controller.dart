@@ -28,6 +28,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         IListActionProvider<FormControl<dynamic>>,
         IConditionalQuestionProperties {
   static const defaultQuestionType = SurveyQuestionType.choice;
+  static const int questionTextMaxLength = 200;
+  static const int questionInfoTextMaxLength = 500;
 
   QuestionFormViewModel({
     super.formData,
@@ -599,8 +601,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
-    StudyFormValidationSet.draft: [questionTextRequired],
-    StudyFormValidationSet.publish: [questionTextRequired],
+    StudyFormValidationSet.draft: [
+      questionTextRequired,
+      questionInfoTextMaxLengthValidation,
+    ],
+    StudyFormValidationSet.publish: [
+      questionTextRequired,
+      questionInfoTextMaxLengthValidation,
+    ],
   };
 
   late final Map<SurveyQuestionType, FormValidationConfigSet>
@@ -689,12 +697,28 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   FormControlValidation get questionTextRequired => FormControlValidation(
     control: questionTextControl,
-    validators: [Validators.required, Validators.minLength(1)],
+    validators: [
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(questionTextMaxLength),
+    ],
     validationMessages: {
       ValidationMessage.required: (error) => tr.form_field_question_required,
       ValidationMessage.minLength: (error) => tr.form_field_question_required,
+      ValidationMessage.maxLength: (error) =>
+          tr.free_text_validation_max_length(questionTextMaxLength),
     },
   );
+
+  FormControlValidation get questionInfoTextMaxLengthValidation =>
+      FormControlValidation(
+        control: questionInfoTextControl,
+        validators: [Validators.maxLength(questionInfoTextMaxLength)],
+        validationMessages: {
+          ValidationMessage.maxLength: (error) =>
+              tr.free_text_validation_max_length(questionInfoTextMaxLength),
+        },
+      );
 
   FormControlValidation get numValidChoiceOptions => FormControlValidation(
     control: choiceResponseOptionsArray,

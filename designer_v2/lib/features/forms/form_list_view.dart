@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 
 class FormListView<T> extends StatelessWidget {
+  static const int kRowTitleMaxLines = 3;
+
   const FormListView({
     required this.control,
     required this.items,
@@ -131,6 +133,8 @@ class FormListView<T> extends StatelessWidget {
                           child: Text(
                             rowTitle(item),
                             style: theme.textTheme.bodyMedium,
+                            maxLines: kRowTitleMaxLines,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (rowSuffix != null) rowSuffix!(context, item, index),
@@ -172,6 +176,8 @@ class FormListView<T> extends StatelessWidget {
                           child: Text(
                             rowTitle(item),
                             style: theme.textTheme.bodyMedium,
+                            maxLines: kRowTitleMaxLines,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (rowSuffix != null) rowSuffix!(context, item, index),

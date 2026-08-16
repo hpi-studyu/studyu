@@ -141,7 +141,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       buttonTopPadding: 4.0,
                       onNewItemLabel: tr.form_array_screener_questions_new,
                       rowTitle: (viewModel) =>
-                          viewModel.formData?.questionText ?? '',
+                          (viewModel.formData?.questionText ?? '')
+                              .compactWhitespace(),
                       leadingWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -242,7 +243,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       sectionDescriptionTextAlign: TextAlign.justify,
                       buttonTopPadding: 4.0,
                       onNewItemLabel: tr.form_array_consent_items_new,
-                      rowTitle: (viewModel) => viewModel.formData?.title ?? '',
+                      rowTitle: (viewModel) =>
+                          (viewModel.formData?.title ?? '').compactWhitespace(),
                       leadingWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

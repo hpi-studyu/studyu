@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -43,6 +44,8 @@ class SurveyQuestionFormView extends ConsumerStatefulWidget {
 class _SurveyQuestionFormViewState
     extends ConsumerState<SurveyQuestionFormView> {
   QuestionFormViewModel get formViewModel => widget.formViewModel;
+  static const int _questionFieldVisibleLines = 5;
+  static const int _questionHelpFieldVisibleLines = 5;
 
   late bool isQuestionHelpTextFieldVisible =
       formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
@@ -175,9 +178,13 @@ class _SurveyQuestionFormViewState
           ],
         ),
         const SizedBox(height: 16.0),
-        TextParagraph(
-          text: tr.form_field_question_response_options_description,
-          style: ThemeConfig.bodyTextMuted(theme),
+        SizedBox(
+          width: double.infinity,
+          child: TextParagraph(
+            text: tr.form_field_question_response_options_description,
+            style: ThemeConfig.bodyTextMuted(theme),
+            textAlign: TextAlign.justify,
+          ),
         ),
       ],
     );
@@ -234,13 +241,28 @@ class _SurveyQuestionFormViewState
                 const SizedBox.shrink(),
             ],
           ),
-          input: ReactiveTextField(
-            formControl: formViewModel.questionTextControl,
-            decoration: InputDecoration(hintText: tr.form_field_question),
-            validationMessages:
-                formViewModel.questionTextControl.validationMessages,
-            minLines: 3,
-            maxLines: 3,
+          input: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ReactiveTextField(
+                formControl: formViewModel.questionTextControl,
+                decoration: InputDecoration(hintText: tr.form_field_question),
+                validationMessages:
+                    formViewModel.questionTextControl.validationMessages,
+                minLines: _questionFieldVisibleLines,
+                maxLines: _questionFieldVisibleLines,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(
+                    QuestionFormViewModel.questionTextMaxLength,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              _buildCharacterCounter(
+                formViewModel.questionTextControl,
+                QuestionFormViewModel.questionTextMaxLength,
+              ),
+            ],
           ),
         ),
       ],
@@ -300,19 +322,45 @@ class _SurveyQuestionFormViewState
                 const SizedBox.shrink(),
             ],
           ),
-          input: ReactiveTextField(
-            formControl: formViewModel.questionInfoTextControl,
-            validationMessages:
-                formViewModel.questionInfoTextControl.validationMessages,
-            minLines: 3,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: tr.form_field_question_help_text_hint,
-              //helperText: "", // reserve space
-            ),
+          input: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ReactiveTextField(
+                formControl: formViewModel.questionInfoTextControl,
+                validationMessages:
+                    formViewModel.questionInfoTextControl.validationMessages,
+                minLines: _questionHelpFieldVisibleLines,
+                maxLines: _questionHelpFieldVisibleLines,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(
+                    QuestionFormViewModel.questionInfoTextMaxLength,
+                  ),
+                ],
+                decoration: InputDecoration(
+                  hintText: tr.form_field_question_help_text_hint,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              _buildCharacterCounter(
+                formViewModel.questionInfoTextControl,
+                QuestionFormViewModel.questionInfoTextMaxLength,
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCharacterCounter(FormControl<String> control, int maxLength) {
+    return ReactiveFormConsumer(
+      builder: (context, form, child) {
+        final currentLength = control.value?.length ?? 0;
+        return Align(
+          alignment: Alignment.centerRight,
+          child: Text('$currentLength/$maxLength'),
+        );
+      },
     );
   }
 }
