@@ -29,9 +29,21 @@ class ConsentItemFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-    StudyFormValidationSet.draft: [titleRequired, descriptionRequired],
-    StudyFormValidationSet.publish: [titleRequired, descriptionRequired],
-    StudyFormValidationSet.test: [titleRequired, descriptionRequired],
+    StudyFormValidationSet.draft: [
+      titleRequired,
+      descriptionRequired,
+      iconRequired,
+    ],
+    StudyFormValidationSet.publish: [
+      titleRequired,
+      descriptionRequired,
+      iconRequired,
+    ],
+    StudyFormValidationSet.test: [
+      titleRequired,
+      descriptionRequired,
+      iconRequired,
+    ],
   };
 
   FormControlValidation get titleRequired => FormControlValidation(
@@ -48,6 +60,14 @@ class ConsentItemFormViewModel
     validationMessages: {
       ValidationMessage.required: (error) =>
           tr.form_field_consent_text_required,
+    },
+  );
+  FormControlValidation get iconRequired => FormControlValidation(
+    control: iconControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) =>
+          tr.form_field_consent_icon_required,
     },
   );
 

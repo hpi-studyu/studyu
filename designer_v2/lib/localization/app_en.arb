@@ -543,6 +543,7 @@
   "form_field_consent_text_tooltip": "Enter the terms the participant must read & accept when enrolling in the study.\nThe terms are shown when clicking on the corresponding card in the app's consent screen.",
   "form_field_consent_text_hint": "Enter the full terms to be read & accepted",
   "form_field_consent_text_required": "The text for your participant consent must not be empty",
+  "form_field_consent_icon_required": "You must select an icon for your participant consent",
   "@__________________STUDYPAGE_DESIGN_INTERVENTIONS_________________": {},
   "form_study_design_interventions_description": "Define the different phases of interventions to be studied, as well as the their sequence and frequency. In N-of-1 trials, a single participant will go through the intervention phases once or multiple times in a pre-specified order (so called multi-crossover trial). Each intervention consists of one or more tasks which are administered during the corresponding phase.\n\nNote: If you specify more than two interventions, participants are free to choose any two interventions to compare when they begin the study.",
   "link_n_of_1_learn_more": "Learn more about N-of-1 trials",

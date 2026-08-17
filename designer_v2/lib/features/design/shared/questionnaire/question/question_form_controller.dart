@@ -28,6 +28,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         IListActionProvider<FormControl<dynamic>>,
         IConditionalQuestionProperties {
   static const defaultQuestionType = SurveyQuestionType.choice;
+  static const Set<SurveyQuestionType> _hiddenQuestionTypes = {
+    SurveyQuestionType.fitbit,
+  };
 
   QuestionFormViewModel({
     super.formData,
@@ -150,6 +153,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
       QuestionFormData.questionTypeFormDataFactories.keys
+          .where(
+            (questionType) =>
+                !_hiddenQuestionTypes.contains(questionType) ||
+                questionType == questionTypeControl.value,
+          )
           .map(
             (questionType) =>
                 FormControlOption(questionType, questionType.string),

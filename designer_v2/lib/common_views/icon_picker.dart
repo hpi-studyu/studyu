@@ -73,18 +73,37 @@ class ReactiveIconPicker
            // Unsupported: showErrors, validationMessages
            final isDisabled = readOnly || field.control.disabled;
 
-           return IconPicker(
-             iconOptions: iconOptions,
-             isDisabled: isDisabled,
-             focusNode: focusNode,
-             selectedOption: field.value,
-             galleryIconSize: galleryIconSize,
-             selectedIconSize: selectedIconSize,
-             onSelect: (iconOption) {
-               if (isDisabled) return;
-               field.didChange(iconOption);
-               onSelect?.call(field.control);
-             },
+           return Listener(
+             onPointerDown: (_) => field.control.markAsTouched(),
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               mainAxisSize: MainAxisSize.min,
+               children: [
+                 IconPicker(
+                   iconOptions: iconOptions,
+                   isDisabled: isDisabled,
+                   focusNode: focusNode,
+                   selectedOption: field.value,
+                   galleryIconSize: galleryIconSize,
+                   selectedIconSize: selectedIconSize,
+                   onSelect: (iconOption) {
+                     if (isDisabled) return;
+                     field.didChange(iconOption);
+                     onSelect?.call(field.control);
+                   },
+                 ),
+                 if (field.errorText != null) ...[
+                   const SizedBox(height: 8.0),
+                   Text(
+                     field.errorText!,
+                     style: Theme.of(field.context).textTheme.bodySmall
+                         ?.copyWith(
+                           color: Theme.of(field.context).colorScheme.error,
+                         ),
+                   ),
+                 ],
+               ],
+             ),
            );
          },
        );
