@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
@@ -5,6 +6,20 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
 class EnrollmentFormData implements IStudyFormData {
   static const kDefaultEnrollmentType = Participation.invite;
+  static const _deepEquality = DeepCollectionEquality();
+
+  static List<Map<String, dynamic>> _eligibilityCriteriaComparableData(
+    List<EligibilityCriterion> criteria,
+  ) {
+    return criteria
+        .map(
+          (criterion) => {
+            'reason': criterion.reason,
+            'condition': criterion.condition.toJson(),
+          },
+        )
+        .toList();
+  }
 
   EnrollmentFormData({
     required this.enrollmentType,
@@ -43,10 +58,10 @@ class EnrollmentFormData implements IStudyFormData {
     // Only update eligibility criteria if they have changed
     final newEligibilityCriteria = questionnaireFormData
         .toEligibilityCriteria();
-    if (study.eligibilityCriteria.length != newEligibilityCriteria.length ||
-        !study.eligibilityCriteria.every(
-          (c) => newEligibilityCriteria.contains(c),
-        )) {
+    if (!_deepEquality.equals(
+      _eligibilityCriteriaComparableData(study.eligibilityCriteria),
+      _eligibilityCriteriaComparableData(newEligibilityCriteria),
+    )) {
       study.eligibilityCriteria = newEligibilityCriteria;
     }
     return study;

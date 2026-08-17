@@ -14,6 +14,22 @@ typedef SurveyQuestionFormDataFactory =
     );
 
 abstract class QuestionFormData implements IFormData {
+  static Object? normalizeResponseOptionKey(dynamic responseOption) {
+    if (responseOption is Choice) {
+      return responseOption.id;
+    }
+    return responseOption;
+  }
+
+  static bool isSupportedEligibilityValue(dynamic value) {
+    return switch (value) {
+      null => false,
+      String() || num() || bool() || DateTime() => true,
+      List<dynamic>() => value.every(isSupportedEligibilityValue),
+      _ => false,
+    };
+  }
+
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
   questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
@@ -135,16 +151,24 @@ abstract class QuestionFormData implements IFormData {
     // app (as of now), so we need to generate conditions for the qualifying
     // response options here
     for (final responseOption in responseOptions) {
-      final isQualifying = responseOptionsValidity[responseOption] ?? true;
+      final isQualifying =
+          responseOptionsValidity[normalizeResponseOptionKey(responseOption)] ??
+          true;
       if (isQualifying) {
         final answer = constructAnswerFor(responseOption);
         final selectedValue = answer.response;
+        if (!isSupportedEligibilityValue(selectedValue)) {
+          continue;
+        }
         if (selectedValue is List) {
           expression.choices.addAll(selectedValue);
         } else {
           expression.choices.add(selectedValue);
         }
       }
+    }
+    if (expression.choices.isEmpty) {
+      return null;
     }
     criterion.condition = expression;
     return criterion;
@@ -173,7 +197,8 @@ abstract class QuestionFormData implements IFormData {
             responseOptionValidity ||
             (criterion.condition.evaluate(questionnaireState) ?? false);
       }
-      result[responseOption] = responseOptionValidity;
+      result[normalizeResponseOptionKey(responseOption)] =
+          responseOptionValidity;
     }
 
     responseOptionsValidity = result;
