@@ -36,6 +36,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
             children: <Widget>[
               TextParagraph(
                 text: tr.form_study_design_interventions_description,
+                textAlign: TextAlign.justify,
               ),
               const SizedBox(height: 8.0),
               Hyperlink(

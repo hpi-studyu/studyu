@@ -240,7 +240,10 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextParagraph(text: tr.study_schedule_banner_description),
+        TextParagraph(
+          text: tr.study_schedule_banner_description,
+          textAlign: TextAlign.justify,
+        ),
         const SizedBox(height: 16.0),
         _buildSequenceTypeInfo(
           theme,
@@ -289,7 +292,9 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
             shape: BoxShape.circle,
           ),
         ),
-        Expanded(child: TextParagraph(text: description)),
+        Expanded(
+          child: TextParagraph(text: description, textAlign: TextAlign.justify),
+        ),
       ],
     );
   }

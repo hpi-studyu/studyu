@@ -4,6 +4,7 @@ class TextParagraph extends StatelessWidget {
   TextParagraph({
     this.text,
     this.style,
+    this.textAlign,
     this.selectable = true,
     this.span,
     super.key,
@@ -15,6 +16,7 @@ class TextParagraph extends StatelessWidget {
 
   final String? text;
   final TextStyle? style;
+  final TextAlign? textAlign;
   final bool selectable;
   final List<TextSpan>? span;
 
@@ -25,13 +27,20 @@ class TextParagraph extends StatelessWidget {
 
     if (!selectable) {
       if (span != null) {
-        return RichText(text: TextSpan(children: span));
+        return RichText(
+          text: TextSpan(children: span),
+          textAlign: textAlign ?? TextAlign.start,
+        );
       }
-      return Text(text!, style: textStyle);
+      return Text(text!, style: textStyle, textAlign: textAlign);
     }
     if (span != null) {
-      return SelectableText.rich(TextSpan(children: span), style: textStyle);
+      return SelectableText.rich(
+        TextSpan(children: span),
+        style: textStyle,
+        textAlign: textAlign ?? TextAlign.start,
+      );
     }
-    return SelectableText(text!, style: textStyle);
+    return SelectableText(text!, style: textStyle, textAlign: textAlign);
   }
 }
