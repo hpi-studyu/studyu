@@ -52,8 +52,10 @@ class Cache {
   static Future<void> storeSubject(StudySubject? subject) async {
     // debugPrint("Store subject in cache");
     if (subject == null) return;
-    SecureStorage.write(cacheSubjectKey, jsonEncode(subject.toFullJson()));
-    assert(subject == (await loadSubject()));
+    await SecureStorage.write(
+      cacheSubjectKey,
+      jsonEncode(subject.toFullJson()),
+    );
   }
 
   static Future<StudySubject> loadSubject({StudySubject? backupSubject}) async {

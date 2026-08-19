@@ -43,6 +43,9 @@ class AppState with ChangeNotifier {
   @visibleForTesting
   Future<bool> Function()? debugRestoreParticipantSessionForSync;
 
+  @visibleForTesting
+  bool Function()? debugHasParticipantSessionForSync;
+
   bool get hasPendingDeepLink =>
       pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
 
@@ -92,6 +95,7 @@ class AppState with ChangeNotifier {
       if (selectedStudy == null || selectedStudy?.id == subject.study.id) {
         selectedStudy = subject.study;
       }
+      _syncActiveSubjectCache();
       await Cache.storeSubject(subject);
       scheduleActiveSubjectSyncRetryIfNeeded();
       notifyListeners();
@@ -189,6 +193,22 @@ class AppState with ChangeNotifier {
     }
     _activeSubjectSyncInFlight = true;
     try {
+      final hasParticipantSession =
+          (debugHasParticipantSessionForSync ?? isUserLoggedIn)();
+      if (!hasParticipantSession) {
+        final bool didRestoreSession;
+        try {
+          didRestoreSession =
+              await (debugRestoreParticipantSessionForSync ??
+                  _restoreParticipantSessionForSync)();
+        } on AuthApiException catch (error) {
+          if (error.code == 'invalid_credentials') return;
+          rethrow;
+        }
+        if (!didRestoreSession || activeSubject?.id != currentSubject.id) {
+          return;
+        }
+      }
       await _synchronizeCachedSubject(currentSubject);
     } catch (error) {
       final status = connectionStatusFromError(error);

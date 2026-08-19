@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
@@ -9,6 +10,7 @@ import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 const _studyId = 'study-id';
 const _userId = 'user-id';
@@ -42,6 +44,23 @@ StudySubject _buildSubject({
     study.interventions.map((intervention) => intervention.id).toList(),
     null,
   )..startedAt = DateTime.now().subtract(const Duration(days: 1));
+}
+
+class _DelayedWriteSecureStoragePlatform
+    extends TestFlutterSecureStoragePlatform {
+  _DelayedWriteSecureStoragePlatform(super.data);
+
+  final writeGate = Completer<void>();
+
+  @override
+  Future<void> write({
+    required String key,
+    required String value,
+    required Map<String, String> options,
+  }) async {
+    await writeGate.future;
+    await super.write(key: key, value: value, options: options);
+  }
 }
 
 class _FakePathProviderPlatform extends Fake
@@ -99,6 +118,60 @@ void main() {
       await documentsDirectory.parent.delete(recursive: true);
     }
   });
+
+  test(
+    'storeSubject waits for durable progress persistence before completing',
+    () async {
+      final completionPeriod = CompletionPeriod(
+        id: _checkmarkPeriodId,
+        unlockTime: StudyUTimeOfDay(hour: 8),
+        lockTime: StudyUTimeOfDay(hour: 20),
+      );
+      final checkmarkTask = CheckmarkTask.withId()
+        ..title = 'Rate your day'
+        ..schedule.completionPeriods = [completionPeriod];
+      final questionnaireTask = QuestionnaireTask.withId()
+        ..title = 'Upload task';
+      final subject = _buildSubject(
+        checkmarkTask: checkmarkTask,
+        questionnaireTask: questionnaireTask,
+      );
+      await subject.addResult<bool>(
+        taskId: checkmarkTask.id,
+        periodId: completionPeriod.id,
+        result: true,
+        offline: true,
+      );
+      final delayedStorage = _DelayedWriteSecureStoragePlatform(
+        secureStorageData,
+      );
+      FlutterSecureStoragePlatform.instance = delayedStorage;
+      var storeCompleted = false;
+
+      final storeFuture = Cache.storeSubject(subject).whenComplete(() {
+        storeCompleted = true;
+      });
+      await Future<void>.delayed(Duration.zero);
+
+      expect(storeCompleted, isFalse);
+      expect(secureStorageData, isNot(contains(cacheSubjectKey)));
+
+      delayedStorage.writeGate.complete();
+      await storeFuture;
+
+      final restored = await Cache.loadSubject();
+      expect(storeCompleted, isTrue);
+      expect(restored.progress, hasLength(1));
+      expect(
+        restored.completedTaskInstanceForDay(
+          checkmarkTask.id,
+          completionPeriod,
+          DateTime.now(),
+        ),
+        isTrue,
+      );
+    },
+  );
 
   test(
     'offline checkmark completion persists subject progress across cache reload',

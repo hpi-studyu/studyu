@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
@@ -37,14 +38,44 @@ StudySubject _buildSubject() {
   )..startedAt = DateTime.utc(2026, 8, 10);
 }
 
-SubjectProgress _progress(String subjectId) {
+SubjectProgress _progress(String subjectId, {DateTime? completedAt}) {
   return SubjectProgress(
     subjectId: subjectId,
     interventionId: _interventionId,
     taskId: _taskId,
     resultType: 'bool',
     result: Result<bool>.app(type: 'bool', periodId: _periodId, result: true),
-  )..completedAt = DateTime.utc(2026, 8, 10, 8);
+  )..completedAt = completedAt ?? DateTime.utc(2026, 8, 10, 8);
+}
+
+class _SaveEmittingStudySubject extends StudySubject {
+  _SaveEmittingStudySubject(StudySubject subject)
+    : super(subject.id, subject.studyId, subject.userId, [
+        ...subject.selectedInterventionIds,
+      ]) {
+    study = subject.study;
+    progress = [...subject.progress];
+    startedAt = subject.startedAt;
+    inviteCode = subject.inviteCode;
+    isDeleted = subject.isDeleted;
+  }
+
+  final _saveController = StreamController<StudySubject>();
+
+  @override
+  Stream<StudySubject> get onSave => _saveController.stream;
+
+  void emitSave(StudySubject subject) => _saveController.add(subject);
+
+  Future<void> close() => _saveController.close();
+
+  @override
+  bool operator ==(Object other) =>
+      other is StudySubject &&
+      jsonEncode(toFullJson()) == jsonEncode(other.toFullJson());
+
+  @override
+  int get hashCode => jsonEncode(toFullJson()).hashCode;
 }
 
 void main() {
@@ -89,6 +120,43 @@ void main() {
     expect(appState.studyNotifications, isNull);
   });
 
+  test('cache subscription follows replacement subject saves', () async {
+    final appState = AppState();
+    final firstSubject = _SaveEmittingStudySubject(_buildSubject());
+    final secondSubject = _SaveEmittingStudySubject(
+      StudySubject.fromJson(firstSubject.toFullJson())
+        ..progress = [_progress(firstSubject.id)],
+    );
+    final thirdSubject = _SaveEmittingStudySubject(
+      StudySubject.fromJson(secondSubject.toFullJson())
+        ..progress = [
+          ...secondSubject.progress,
+          _progress(
+            secondSubject.id,
+            completedAt: DateTime.utc(2026, 8, 10, 9),
+          ),
+        ],
+    );
+
+    appState.updateActiveSubject(firstSubject);
+    firstSubject.emitSave(secondSubject);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(appState.activeSubject, same(secondSubject));
+    expect((await Cache.loadSubject()).progress, hasLength(1));
+
+    secondSubject.emitSave(thirdSubject);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(appState.activeSubject, same(thirdSubject));
+    expect((await Cache.loadSubject()).progress, hasLength(2));
+
+    appState.dispose();
+    await firstSubject.close();
+    await secondSubject.close();
+    await thirdSubject.close();
+  });
+
   test(
     'retryCachedSubjectSynchronization updates active subject from recovered remote subject',
     () async {
@@ -103,6 +171,9 @@ void main() {
         ..activeSubject = staleSubject
         ..selectedStudy = staleSubject.study
         ..setConnectionStatus(AppConnectionStatus.backendUnavailable)
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
         ..debugFetchRemoteSubjectForSync = (_) async => remoteSubject;
 
       await appState.retryCachedSubjectSynchronization();
@@ -127,6 +198,9 @@ void main() {
         ..activeSubject = cachedSubject
         ..selectedStudy = cachedSubject.study
         ..setConnectionStatus(AppConnectionStatus.backendUnavailable)
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
         ..debugFetchRemoteSubjectForSync = (_) async {
           fetchCalls++;
           if (fetchCalls == 1) {
@@ -149,6 +223,50 @@ void main() {
   );
 
   test(
+    'sessionless recovery authenticates before the first protected fetch',
+    () async {
+      final appState = AppState();
+      final cachedSubject = _buildSubject();
+      final remoteSubject = StudySubject.fromJson(cachedSubject.toFullJson())
+        ..progress = [_progress(cachedSubject.id)];
+      final events = <String>[];
+      var authenticated = false;
+      var anonymousProtectedFetches = 0;
+
+      appState
+        ..activeSubject = cachedSubject
+        ..selectedStudy = cachedSubject.study
+        ..setConnectionStatus(AppConnectionStatus.backendUnavailable)
+        ..debugHasParticipantSessionForSync = () {
+          return false;
+        }
+        ..debugRestoreParticipantSessionForSync = () async {
+          events.add('authenticate');
+          authenticated = true;
+          return true;
+        }
+        ..debugFetchRemoteSubjectForSync = (_) async {
+          events.add('fetch');
+          if (!authenticated) {
+            anonymousProtectedFetches++;
+            throw const PostgrestException(
+              message: 'permission denied for table study_subject',
+              code: '42501',
+            );
+          }
+          return remoteSubject;
+        };
+
+      await appState.retryCachedSubjectSynchronization();
+
+      expect(events, ['authenticate', 'fetch']);
+      expect(anonymousProtectedFetches, 0);
+      expect(appState.activeSubject?.progress, hasLength(1));
+      expect(appConnectionStatusController.status, AppConnectionStatus.healthy);
+    },
+  );
+
+  test(
     'retryCachedSubjectSynchronization ignores rejected restore credentials',
     () async {
       final appState = AppState();
@@ -160,6 +278,9 @@ void main() {
         ..activeSubject = subject
         ..selectedStudy = subject.study
         ..setConnectionStatus(AppConnectionStatus.backendUnavailable)
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
         ..debugFetchRemoteSubjectForSync = (_) {
           fetchCalls++;
           throw Exception('AuthApiException(code: invalid_jwt)');
@@ -200,6 +321,9 @@ void main() {
         ..activeSubject = subject
         ..selectedStudy = subject.study
         ..debugActiveSubjectSyncRetryDelay = const Duration(milliseconds: 1)
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
         ..debugFetchRemoteSubjectForSync = (_) async {
           fetchCalls++;
           if (!completer.isCompleted) {
