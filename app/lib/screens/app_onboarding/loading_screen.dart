@@ -161,26 +161,32 @@ Future<T?> restoreCachedValueForStartup<T>({
 }
 
 @visibleForTesting
-Future<void> tryRestoreParticipantSession({
+Future<AuthApiException?> tryRestoreParticipantSession({
   required bool Function() isLoggedIn,
   required Future<bool> Function() hasStoredCredentials,
   required Future<void> Function() signIn,
   void Function(AppConnectionStatus status)? onConnectionStatusChanged,
   void Function(Object error)? onError,
 }) async {
-  if (hasDegradedConnectionStatus()) return;
-  if (isLoggedIn()) return;
-  if (!await hasStoredCredentials()) return;
+  if (hasDegradedConnectionStatus()) return null;
+  if (isLoggedIn()) return null;
+  if (!await hasStoredCredentials()) return null;
 
   try {
     await signIn();
   } catch (error) {
+    if (error is AuthApiException && error.code == 'invalid_credentials') {
+      await clearParticipantCredentials();
+      onError?.call(error);
+      return error;
+    }
     final status = connectionStatusFromError(error);
     if (status != null) {
       onConnectionStatusChanged?.call(status);
     }
     onError?.call(error);
   }
+  return null;
 }
 
 class LoadingScreen extends StatefulWidget {
@@ -208,9 +214,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   bool _previewNavigationInProgress = false;
   String? _pendingPreviewRoute;
   String? _error;
+  AuthApiException? _rejectedParticipantCredentialsError;
 
   Future<void> _restoreParticipantSession() async {
-    await tryRestoreParticipantSession(
+    _rejectedParticipantCredentialsError ??= await tryRestoreParticipantSession(
       isLoggedIn: isUserLoggedIn,
       hasStoredCredentials: () async =>
           await SecureStorage.containsKey(userEmailKey) &&
@@ -580,7 +587,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return restoreCachedValueForStartup<StudySubject>(
       fetchRemote: () => _fetchRemoteSubject(selectedStudyObjectId),
       loadCached: Cache.loadSubject,
-      signIn: signInParticipant,
+      signIn: () {
+        final rejectedCredentialsError = _rejectedParticipantCredentialsError;
+        if (rejectedCredentialsError != null) {
+          throw rejectedCredentialsError;
+        }
+        return signInParticipant();
+      },
       isDeletedRemoteError: (error) =>
           error is PostgrestException && error.code == 'PGRST116',
     );
