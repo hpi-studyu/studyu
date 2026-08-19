@@ -85,21 +85,34 @@ class StudyRecruitController extends _$StudyRecruitController
     final offset = pageIndex * state.inviteCodePageSize;
 
     try {
-      final results = await Future.wait([
-        state.inviteCodeRepository.fetchPage(
-          offset: offset,
-          limit: state.inviteCodePageSize,
-          query: query,
-          sortBy: state.inviteCodeSortColumn,
-          ascending: state.inviteCodeSortAscending,
-        ),
-        state.inviteCodeRepository.count(query: query),
-      ]);
+      final inviteCount = await state.inviteCodeRepository.count(query: query);
 
       if (token != _fetchToken) return;
 
-      final invites = results[0] as List<StudyInvite>;
-      final inviteCount = results[1] as int;
+      if (inviteCount == 0) {
+        state = state.copyWith(
+          invites: const AsyncValue.data(<StudyInvite>[]),
+          inviteCodePageIndex: 0,
+          inviteCodeCount: 0,
+          hasNextInviteCodePage: false,
+          isSearchPending: false,
+          paginationStatus: InviteCodePaginationStatus.idle,
+          clearPendingInviteCodePageIndex: true,
+          clearPaginationError: true,
+        );
+        return;
+      }
+
+      final invites = await state.inviteCodeRepository.fetchPage(
+        offset: offset,
+        limit: state.inviteCodePageSize,
+        query: query,
+        sortBy: state.inviteCodeSortColumn,
+        ascending: state.inviteCodeSortAscending,
+      );
+
+      if (token != _fetchToken) return;
+
       final clampedPageIndex = clampInviteCodePageIndex(
         requestedPageIndex: pageIndex,
         totalCount: inviteCount,
