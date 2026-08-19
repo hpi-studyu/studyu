@@ -209,21 +209,21 @@ class StudyRecruitScreen extends StudyPageWidget {
         final shouldStackCount = screenWidth <= _headerCountStackBreakpoint;
 
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _newInviteCodeButton(context, ref),
             const SizedBox(width: _headerControlSpacing),
-            shouldStackCount
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      titleLabel,
-                      const SizedBox(height: _titleSubtitleSpacing),
-                      countLabel,
-                    ],
-                  )
-                : titleLabel,
+            if (shouldStackCount)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  titleLabel,
+                  const SizedBox(height: _titleSubtitleSpacing),
+                  countLabel,
+                ],
+              )
+            else
+              titleLabel,
             const Spacer(),
             if (!shouldStackCount) ...[
               countLabel,
