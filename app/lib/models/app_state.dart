@@ -6,6 +6,7 @@ import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _activeSubjectSyncRetryDelay = Duration(seconds: 5);
 const _activeSubjectSyncSelectedColumns = [
@@ -198,9 +199,15 @@ class AppState with ChangeNotifier {
       if (!shouldAttemptParticipantAuthRecovery(error)) {
         return;
       }
-      final didRestoreSession =
-          await (debugRestoreParticipantSessionForSync ??
-              _restoreParticipantSessionForSync)();
+      final bool didRestoreSession;
+      try {
+        didRestoreSession =
+            await (debugRestoreParticipantSessionForSync ??
+                _restoreParticipantSessionForSync)();
+      } on AuthApiException catch (error) {
+        if (error.code == 'invalid_credentials') return;
+        rethrow;
+      }
       if (!didRestoreSession || activeSubject?.id != currentSubject.id) {
         return;
       }

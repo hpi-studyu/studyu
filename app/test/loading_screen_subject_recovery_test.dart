@@ -1,8 +1,13 @@
+import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
+import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase/supabase.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   tearDown(() {
     appConnectionStatusController.reset();
   });
@@ -119,6 +124,59 @@ void main() {
       );
     },
   );
+
+  test('rejected startup credentials reach deleted-subject recovery', () async {
+    final originalStoragePlatform = FlutterSecureStoragePlatform.instance;
+    final storageData = <String, String>{};
+    FlutterSecureStoragePlatform.instance = TestFlutterSecureStoragePlatform(
+      storageData,
+    );
+    var authenticationCalls = 0;
+    var loadCacheCalls = 0;
+
+    try {
+      await storeFakeUserEmailAndPassword(
+        'participant@example.com',
+        'password',
+      );
+
+      final rejectedCredentialsError = await tryRestoreParticipantSession(
+        isLoggedIn: () => false,
+        hasStoredCredentials: () async => true,
+        signIn: () {
+          authenticationCalls++;
+          return Future<void>.error(
+            const AuthApiException(
+              'Invalid login credentials',
+              code: 'invalid_credentials',
+            ),
+          );
+        },
+      );
+
+      expect(await SecureStorage.read(userEmailKey), isNull);
+      expect(await SecureStorage.read(userPasswordKey), isNull);
+
+      await expectLater(
+        () => restoreCachedValueForStartup<String>(
+          fetchRemote: () => Future<String?>.error(Exception('expired JWT')),
+          loadCached: () {
+            loadCacheCalls++;
+            return Future.value('cached-subject');
+          },
+          signIn: () => Future<bool>.error(rejectedCredentialsError!),
+          isDeletedRemoteError: (_) => false,
+        ),
+        throwsA(isA<SubjectDeletedException>()),
+      );
+
+      expect(authenticationCalls, 1);
+      expect(loadCacheCalls, 0);
+    } finally {
+      await clearParticipantCredentials();
+      FlutterSecureStoragePlatform.instance = originalStoragePlatform;
+    }
+  });
 
   test(
     'restoreCachedValueForStartup maps deleted remote subject without using cache',

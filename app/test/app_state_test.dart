@@ -7,6 +7,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _studyId = 'study-id';
 const _userId = 'user-id';
@@ -144,6 +145,46 @@ void main() {
       expect(restoreCalls, 1);
       expect(appState.activeSubject?.progress, hasLength(1));
       expect(appConnectionStatusController.status, AppConnectionStatus.healthy);
+    },
+  );
+
+  test(
+    'retryCachedSubjectSynchronization ignores rejected restore credentials',
+    () async {
+      final appState = AppState();
+      final subject = _buildSubject();
+      var fetchCalls = 0;
+      var restoreCalls = 0;
+
+      appState
+        ..activeSubject = subject
+        ..selectedStudy = subject.study
+        ..setConnectionStatus(AppConnectionStatus.backendUnavailable)
+        ..debugFetchRemoteSubjectForSync = (_) {
+          fetchCalls++;
+          throw Exception('AuthApiException(code: invalid_jwt)');
+        }
+        ..debugRestoreParticipantSessionForSync = () {
+          restoreCalls++;
+          return Future<bool>.error(
+            const AuthApiException(
+              'Invalid login credentials',
+              code: 'invalid_credentials',
+            ),
+          );
+        };
+
+      await expectLater(
+        appState.retryCachedSubjectSynchronization(),
+        completes,
+      );
+
+      expect(fetchCalls, 1);
+      expect(restoreCalls, 1);
+      expect(
+        appConnectionStatusController.status,
+        AppConnectionStatus.backendUnavailable,
+      );
     },
   );
 
