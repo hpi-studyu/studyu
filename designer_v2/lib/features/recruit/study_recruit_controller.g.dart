@@ -61,7 +61,7 @@ final class StudyRecruitControllerProvider
 }
 
 String _$studyRecruitControllerHash() =>
-    r'1d31acef45098115587541a66e9c68f3a7140534';
+    r'fad1dbb043c25a4d19879c309173f1410e36fa1a';
 
 final class StudyRecruitControllerFamily extends $Family
     with
