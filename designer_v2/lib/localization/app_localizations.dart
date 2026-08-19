@@ -5187,6 +5187,12 @@ abstract class AppLocalizations {
   /// **'Search invite codes'**
   String get code_list_search_hint;
 
+  /// No description provided for @code_list_search_hint_compact.
+  ///
+  /// In en, this message translates to:
+  /// **'Search codes'**
+  String get code_list_search_hint_compact;
+
   /// No description provided for @code_list_active_count.
   ///
   /// In en, this message translates to:

@@ -1139,6 +1139,7 @@
   "code_list_no_results_title": "No matching invite codes",
   "code_list_no_results_description": "Try changing your search to see more invite codes.",
   "code_list_search_hint": "Search invite codes",
+  "code_list_search_hint_compact": "Search codes",
   "code_list_active_count": "{count} active invite codes",
   "@code_list_active_count": {
     "placeholders": {

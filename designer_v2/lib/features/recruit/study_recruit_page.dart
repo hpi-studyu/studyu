@@ -32,11 +32,23 @@ class StudyRecruitScreen extends StudyPageWidget {
   const StudyRecruitScreen(super.studyId, {super.key});
 
   static const _searchFieldWidth = 250.0;
+  static const _searchFieldCompactWidth = 220.0;
+  static const _searchFieldUltraCompactWidth = 190.0;
   static const _contentMaxWidth = 750.0;
   static const _sectionSpacing = 24.0;
   static const _headerControlSpacing = 16.0;
+  static const _headerControlCompactSpacing = 12.0;
   static const _headerCountStackBreakpoint = 680.0;
+  static const _headerDetailsBelowButtonBreakpoint = 607.0;
+  static const _headerCompactSearchBreakpoint = 505.0;
+  static const _headerUltraCompactBreakpoint = 458.0;
+  static const _headerVerticalLayoutBreakpoint = 460.0;
   static const _titleSubtitleSpacing = 4.0;
+  static const _newCodeButtonCompactMinSize = Size(156.0, 44.0);
+  static const _newCodeButtonCompactPadding = EdgeInsets.symmetric(
+    horizontal: 2.0,
+    vertical: 6.0,
+  );
   static const _footerTopSpacing = 24.0;
   static const _feedbackBottomSpacing = 24.0;
   static const _feedbackHorizontalPadding = 24.0;
@@ -207,32 +219,107 @@ class StudyRecruitScreen extends StudyPageWidget {
       builder: (context, constraints) {
         final screenWidth = MediaQuery.sizeOf(context).width;
         final shouldStackCount = screenWidth <= _headerCountStackBreakpoint;
+        final shouldMoveDetailsBelowButton =
+            screenWidth <= _headerDetailsBelowButtonBreakpoint;
+        final useCompactSearch = screenWidth <= _headerCompactSearchBreakpoint;
+        final useUltraCompactHeader =
+            screenWidth <= _headerUltraCompactBreakpoint;
+        final useVerticalHeaderLayout =
+            screenWidth <= _headerVerticalLayoutBreakpoint;
+        final horizontalSpacing = useCompactSearch
+            ? _headerControlCompactSpacing
+            : _headerControlSpacing;
+        final titleAndCount = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            titleLabel,
+            SizedBox(height: shouldStackCount ? _titleSubtitleSpacing : 0),
+            countLabel,
+          ],
+        );
+        final titleAndCountInline = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            titleLabel,
+            SizedBox(width: horizontalSpacing),
+            countLabel,
+          ],
+        );
+
+        if (useVerticalHeaderLayout) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: _newInviteCodeButton(
+                  context,
+                  ref,
+                  compact: useUltraCompactHeader,
+                ),
+              ),
+              SizedBox(height: horizontalSpacing),
+              SizedBox(
+                width: double.infinity,
+                child: Search(
+                  hintText: useCompactSearch
+                      ? tr.code_list_search_hint_compact
+                      : tr.code_list_search_hint,
+                  initialText: state.inviteCodeSearchQuery,
+                  onQueryChanged: ref
+                      .read(studyRecruitControllerProvider(studyId).notifier)
+                      .setInviteCodeSearchQuery,
+                ),
+              ),
+              SizedBox(height: horizontalSpacing),
+              titleAndCountInline,
+            ],
+          );
+        }
 
         return Row(
+          crossAxisAlignment: shouldStackCount
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
-            _newInviteCodeButton(context, ref),
-            const SizedBox(width: _headerControlSpacing),
-            if (shouldStackCount)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  titleLabel,
-                  const SizedBox(height: _titleSubtitleSpacing),
-                  countLabel,
-                ],
-              )
-            else
-              titleLabel,
+            shouldMoveDetailsBelowButton
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _newInviteCodeButton(
+                        context,
+                        ref,
+                        compact: useUltraCompactHeader,
+                      ),
+                      SizedBox(height: horizontalSpacing),
+                      titleAndCount,
+                    ],
+                  )
+                : _newInviteCodeButton(
+                    context,
+                    ref,
+                    compact: useUltraCompactHeader,
+                  ),
+            SizedBox(width: horizontalSpacing),
+            if (!shouldMoveDetailsBelowButton)
+              shouldStackCount ? titleAndCount : titleLabel,
             const Spacer(),
-            if (!shouldStackCount) ...[
+            if (!shouldStackCount && !shouldMoveDetailsBelowButton) ...[
               countLabel,
-              const SizedBox(width: _headerControlSpacing),
+              SizedBox(width: horizontalSpacing),
             ],
             SizedBox(
-              width: _searchFieldWidth,
+              width: useUltraCompactHeader
+                  ? _searchFieldUltraCompactWidth
+                  : useCompactSearch
+                  ? 208.0
+                  : _searchFieldWidth,
               child: Search(
-                hintText: tr.code_list_search_hint,
+                hintText: useCompactSearch
+                    ? tr.code_list_search_hint_compact
+                    : tr.code_list_search_hint,
                 initialText: state.inviteCodeSearchQuery,
                 onQueryChanged: ref
                     .read(studyRecruitControllerProvider(studyId).notifier)
@@ -245,12 +332,20 @@ class StudyRecruitScreen extends StudyPageWidget {
     );
   }
 
-  Widget _newInviteCodeButton(BuildContext context, WidgetRef ref) {
+  Widget _newInviteCodeButton(
+    BuildContext context,
+    WidgetRef ref, {
+    bool compact = false,
+  }) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
     final isStudyClosed = state.studyWithMetadata?.model.isClosed == true;
 
     return PrimaryButton(
       text: tr.action_button_code_new,
+      minimumSize: compact ? _newCodeButtonCompactMinSize : null,
+      innerPadding: compact
+          ? _newCodeButtonCompactPadding
+          : const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
       onPressed: isStudyClosed
           ? null
           : () => _showNewInviteCodeForm(context, ref),
