@@ -35,6 +35,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   static const _contentMaxWidth = 750.0;
   static const _sectionSpacing = 24.0;
   static const _headerControlSpacing = 16.0;
+  static const _headerCountStackBreakpoint = 680.0;
   static const _titleSubtitleSpacing = 4.0;
   static const _footerTopSpacing = 24.0;
   static const _feedbackBottomSpacing = 24.0;
@@ -192,37 +193,55 @@ class StudyRecruitScreen extends StudyPageWidget {
 
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final theme = Theme.of(context);
+    final countLabel = Text(
+      tr.code_list_total_count(state.inviteCodeCount),
+      style: theme.textTheme.bodyLarge,
+    );
+    final titleLabel = SelectableText(
+      tr.code_list_section_title,
+      style: theme.textTheme.headlineSmall,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = MediaQuery.sizeOf(context).width;
+        final shouldStackCount = screenWidth <= _headerCountStackBreakpoint;
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SelectableText(
-              tr.code_list_section_title,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: _titleSubtitleSpacing),
-            Text(
-              tr.code_list_total_count(state.inviteCodeCount),
-              style: Theme.of(context).textTheme.bodyLarge,
+            _newInviteCodeButton(context, ref),
+            const SizedBox(width: _headerControlSpacing),
+            shouldStackCount
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      titleLabel,
+                      const SizedBox(height: _titleSubtitleSpacing),
+                      countLabel,
+                    ],
+                  )
+                : titleLabel,
+            const Spacer(),
+            if (!shouldStackCount) ...[
+              countLabel,
+              const SizedBox(width: _headerControlSpacing),
+            ],
+            SizedBox(
+              width: _searchFieldWidth,
+              child: Search(
+                hintText: tr.code_list_search_hint,
+                initialText: state.inviteCodeSearchQuery,
+                onQueryChanged: ref
+                    .read(studyRecruitControllerProvider(studyId).notifier)
+                    .setInviteCodeSearchQuery,
+              ),
             ),
           ],
-        ),
-        const Spacer(),
-        SizedBox(
-          width: _searchFieldWidth,
-          child: Search(
-            hintText: tr.code_list_search_hint,
-            initialText: state.inviteCodeSearchQuery,
-            onQueryChanged: ref
-                .read(studyRecruitControllerProvider(studyId).notifier)
-                .setInviteCodeSearchQuery,
-          ),
-        ),
-        const SizedBox(width: _headerControlSpacing),
-        _newInviteCodeButton(context, ref),
-      ],
+        );
+      },
     );
   }
 
