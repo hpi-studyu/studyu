@@ -133,7 +133,6 @@ class StudyRecruitScreen extends StudyPageWidget {
               icon: Icons.link_off_rounded,
               title: tr.code_list_empty_title,
               description: tr.code_list_empty_description,
-              button: _newInviteCodeButton(context, ref),
             ),
           );
         }

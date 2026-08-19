@@ -1148,7 +1148,7 @@
       }
     }
   },
-  "code_list_total_count": "{count} invites",
+  "code_list_total_count": "{count, plural, =1{1 invite} other{{count} invites}}",
   "@code_list_total_count": {
     "placeholders": {
       "count": {

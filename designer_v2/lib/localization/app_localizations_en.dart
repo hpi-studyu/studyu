@@ -3025,7 +3025,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String code_list_total_count(int count) {
-    return '$count invites';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count invites',
+      one: '1 invite',
+    );
+    return '$_temp0';
   }
 
   @override

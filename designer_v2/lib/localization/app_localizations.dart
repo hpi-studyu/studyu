@@ -5202,7 +5202,7 @@ abstract class AppLocalizations {
   /// No description provided for @code_list_total_count.
   ///
   /// In en, this message translates to:
-  /// **'{count} invites'**
+  /// **'{count, plural, =1{1 invite} other{{count} invites}}'**
   String code_list_total_count(int count);
 
   /// No description provided for @code_list_page_size.
