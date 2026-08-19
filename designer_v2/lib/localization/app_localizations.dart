@@ -3660,7 +3660,7 @@ abstract class AppLocalizations {
   /// No description provided for @code_list_section_title.
   ///
   /// In en, this message translates to:
-  /// **'Invite codes'**
+  /// **'Invite Codes'**
   String get code_list_section_title;
 
   /// No description provided for @code_public_disabled.
@@ -5196,7 +5196,7 @@ abstract class AppLocalizations {
   /// No description provided for @code_list_total_count.
   ///
   /// In en, this message translates to:
-  /// **'{count} total'**
+  /// **'{count} invites'**
   String code_list_total_count(int count);
 
   /// No description provided for @code_list_page_size.

@@ -2116,7 +2116,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Select intervention...';
 
   @override
-  String get code_list_section_title => 'Invite codes';
+  String get code_list_section_title => 'Invite Codes';
 
   @override
   String get code_public_disabled => 'Public Recruitment';
@@ -3022,7 +3022,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String code_list_total_count(int count) {
-    return '$count total';
+    return '$count invites';
   }
 
   @override

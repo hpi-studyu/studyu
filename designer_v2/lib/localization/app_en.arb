@@ -812,7 +812,7 @@
   "form_field_preconfigured_schedule_intervention_b": "Intervention B",
   "form_field_preconfigured_schedule_intervention_default": "Default",
   "form_field_preconfigured_schedule_intervention_hint": "Select intervention...",
-  "code_list_section_title": "Invite codes",
+  "code_list_section_title": "Invite Codes",
   "code_public_disabled": "Public Recruitment",
   "code_public_disabled_description": "Participants can easily join this study by using the links below, scanning the QR code, or by finding it in the app's public study list. Note that invite codes are not available here, as they are exclusively used for private studies.",
   "code_list_empty_title": "You haven't invited anyone yet",
@@ -1147,7 +1147,7 @@
       }
     }
   },
-  "code_list_total_count": "{count} total",
+  "code_list_total_count": "{count} invites",
   "@code_list_total_count": {
     "placeholders": {
       "count": {
