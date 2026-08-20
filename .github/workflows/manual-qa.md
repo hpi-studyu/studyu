@@ -30,6 +30,8 @@ engine:
     COPILOT_PROVIDER_BASE_URL: https://openrouter.ai/api/v1
     COPILOT_PROVIDER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
     COPILOT_MODEL: ${{ vars.OPENROUTER_MODEL }}
+    COPILOT_PROVIDER_TYPE: openai
+    COPILOT_PROVIDER_WIRE_API: completions
 max-turns: 40
 safe-outputs:
   add-comment:
