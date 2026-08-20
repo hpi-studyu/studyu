@@ -9,6 +9,9 @@ on:
     branches: [dev]
   issue_comment:
     types: [edited]
+  # Comment edits execute workflow from default branch, not PR branch.
+  # Admin role prevents non-admin users from spending AI credits by regenerating.
+  roles: [admin]
 permissions:
   contents: read
   issues: read
@@ -53,6 +56,7 @@ Determine the trigger and the pull request:
   - The comment belongs to a pull request (not a plain issue).
   - The comment body contains the marker `<!-- manual-qa-bot -->`.
   - The comment body contains a checked regenerate box: a line starting with `- [x]` that mentions "Regenerate".
+  - The editing actor is a repository administrator. This is enforced before this prompt runs; do not treat any other actor as authorized.
 
   If any condition fails, end quietly and produce no comment.
 
@@ -82,7 +86,7 @@ Request exactly one add-comment whose body is:
 
 ```
 ---
-- [ ] ♻️ **Regenerate**: check this box and save the comment to regenerate the checklist from the latest diff.
+- [ ] ♻️ **Regenerate**: repository owners/admins may check this box and save the comment to regenerate the checklist from the latest diff.
 ```
 
 Do not add any other commentary before or after the checklist.
