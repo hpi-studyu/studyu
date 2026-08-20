@@ -64,6 +64,7 @@ on:
 # roles: # Roles processed as role check in pre-activation job
 # - admin # Roles processed as role check in pre-activation job
 # - maintainer # Roles processed as role check in pre-activation job
+# - write # Roles processed as role check in pre-activation job
 
 permissions: {}
 
@@ -372,7 +373,10 @@ jobs:
     permissions:
       contents: read
       copilot-requests: write
-      issues: read
+      # issues: write required for delete-then-repost: bot must hard-delete prior
+      # <!-- manual-qa-bot --> PR comments via github MCP delete_issue_comment before
+      # posting the new checklist. add_comment safe-output still works with write.
+      issues: write
       pull-requests: read
     env:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
@@ -1569,7 +1573,7 @@ jobs:
         id: check_membership
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          GH_AW_REQUIRED_ROLES: "admin,maintainer"
+          GH_AW_REQUIRED_ROLES: "admin,maintainer,write"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
