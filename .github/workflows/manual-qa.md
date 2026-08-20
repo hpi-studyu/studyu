@@ -20,6 +20,10 @@ tools:
   bash:
     - "gh pr diff"
     - "gh pr view"
+models:
+  default-ai-credits-pricing:
+    input: 3
+    output: 15
 engine:
   id: copilot
   env:
