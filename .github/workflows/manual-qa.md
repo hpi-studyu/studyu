@@ -24,11 +24,11 @@ on:
   roles: [admin, maintainer, write]
 permissions:
   contents: read
-  # 'issues: write' is required so the bot can hard-delete its own prior `<!-- manual-qa-bot -->`
-  # PR comments on draft→ready_for_review and PR-opened events (delete-then-repost).
-  # Without it, github MCP `delete_issue_comment` returns 403. Read-only is sufficient for
-  # the safe-output add-comment handler (which posts via the workflow token, not MCP).
-  issues: write
+  # gh-aw strict mode forbids bare 'issues: write' on the workflow — all write ops
+  # must go through safe-outputs. The safe-output add-comment handler uses the
+  # workflow token to post; hide-older-comments minimizes (collapses) prior
+  # <!-- manual-qa-bot --> matches in place. No top-level issues: write needed.
+  issues: read
   pull-requests: read
   copilot-requests: write
 tools:
@@ -63,11 +63,7 @@ You are the StudyU manual-QA bot. You generate one manual testing checklist for 
 
 ## Run guard — decide this before any analysis
 
-Determine the trigger and the pull request, and enforce delete-then-repost for the bot's own comments:
-
-- Whenever this run will produce a fresh `<!-- manual-qa-bot -->` checklist (i.e. the run is **not** ending quietly), first scan the PR's comments via the `issues` MCP toolset (`list_issue_comments`) for any existing comment whose body contains the marker `<!-- manual-qa-bot -->`. For every match, call `delete_issue_comment` to hard-delete it before posting the new checklist. Do this for both `pull_request` triggers (opened, ready_for_review) and the regenerate-via-comment-edit path.
-- The safe-output `hide-older-comments: true` setting is a safety net (it minimizes prior matches) — it is **not** a substitute for explicit deletion. Hard-delete via MCP so PRs show only one current checklist with no stale history.
-- If `delete_issue_comment` fails (e.g. transient 5xx), continue: the new `add_comment` call will still post and `hide-older-comments` will minimize the stale one. Log the failure as a one-line internal note; do not retry indefinitely.
+Determine the trigger and the pull request. Prior `<!-- manual-qa-bot -->` comments on the same PR are automatically minimized (collapsed as outdated) by the safe-outputs handler when the new checklist posts — this is the supported equivalent of "delete + repost" in gh-aw's safe-output model and runs regardless of what the agent does. The agent does **not** need to delete prior comments via MCP.
 
 Determine the trigger and the pull request:
 
