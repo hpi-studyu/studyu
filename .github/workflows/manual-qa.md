@@ -49,7 +49,7 @@ engine:
     COPILOT_MODEL: ${{ vars.OPENROUTER_MODEL }}
     COPILOT_PROVIDER_TYPE: openai
     COPILOT_PROVIDER_WIRE_API: completions
-max-turns: 40
+max-turns: 25
 safe-outputs:
   add-comment:
     max: 1
@@ -83,14 +83,41 @@ Then, for the PR itself:
 
 "End quietly" means: stop with a one-line internal explanation, and do not request any add-comment output.
 
+## Writing discipline (STE)
+
+Apply ASD-STE100 Simplified Technical English to all prose in the comment: the Summary, Setup items, test item titles, Steps, and Expected lines. Use short sentences with one main action each. Name the actor in active voice. Replace jargon with everyday English when accuracy permits. Preserve code, commands, identifiers, file paths, and the marker unchanged.
+
+Concrete rules:
+
+- Cut filler: "in order to" → "to", "the question as to whether" → "whether", "due to the fact that" → "because".
+- Cut hedging when the result is observable: "should", "may", "might (cause)", "potentially" → state the expected result directly.
+- One action per step. Split compound steps: "Open the file and check the value" → two steps.
+- Use the same term for the same thing. Do not switch between "checklist", "report", "check list" within one comment.
+- No metaphors, similes, or stock phrases. No "navigate to", "dive into", "leverage", "robust", "seamless".
+- State expected results as observable behavior, not as test intent. "The comment shows one checklist" beats "The comment should display the checklist as expected".
+
+Do not apply STE to: code spans, file paths, identifiers, the marker, the regenerate checkbox line, or the closing footer. Do not flatten intentional technical precision (a test name like `minimizeComment` must stay exact).
+
 ## Task
 
-Follow the project skill `.agents/skills/manual-testing/SKILL.md` in CI / headless mode:
+Follow the project skill `.agents/skills/manual-testing/SKILL.md`. Read its `Step 3b — Bounded-change short form` first; if the change is bounded (workflow-only, docs-only, generated-only, internal-only), use the short form instead of the full P1/P2/P3 template. When in doubt, use the full template.
+
+In CI / headless mode:
 
 - No files, no clipboard — your final add-comment body IS the deliverable.
 - The change diff comes from `gh pr diff <number>`. The PR base is `dev` and the head is the feature branch; that is the exact scope to analyze. Get PR metadata with `gh pr view <number>`.
-- Work through every step of the skill: Jira lookup (best effort — skip gracefully when no Jira tool exists), Flutter-lens analysis, automated-test mapping, and the full checklist structure with priorities.
+- Work through every step of the skill: Jira lookup (best effort — skip gracefully when no Jira tool exists), Flutter-lens analysis, automated-test mapping, and the checklist structure.
 - The skill's scope gate (Step 3) works differently here: you cannot ask the user. If the change's intent is unclear, state that in the Summary, list the exact questions QA must answer before testing, and still produce the best checklist derivable from the diff.
+- Do NOT generate items about exercising the local `manual-testing` skill, validating the compiled lock file as the runtime artifact, or confirming no Flutter behavior is expected. These are dev tasks visible in the diff, not QA behavior tests. Skip them.
+- Do NOT include items that just restate Setup (secret config, branch state, test PR preparation) as test items. The Setup section holds them. Do not duplicate them in P1.
+
+Bounded-change detection (apply the short form when ALL are true):
+
+- The diff touches only one of: `.github/workflows/`, `.github/aw/`, docs (`*.md` outside skills), generated lock files, dev tooling, dependencies, or pure refactors.
+- No source path under `app/`, `designer_v2/`, `core/`, or `flutter_common/` is changed.
+- The PR description frames the change as internal-only, OR the diff has zero user-reachable behavior.
+
+Short-form hard limits: max 4 P1 items, no P2, no P3, no Functional/UI/UX sub-buckets, no Regression watch section (risks named in Summary instead), no Automated coverage table (flat list of run commands instead).
 
 ## Comment format
 

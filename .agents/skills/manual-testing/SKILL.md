@@ -54,6 +54,51 @@ Frame the question with evidence, not vagueness: state what you see (packages to
 
 Proceed once answered. If the answer is "internal only, nothing user-visible", skip the full checklist and output the short form: no manual QA needed, plus the automated checks to run and why nothing visible changed.
 
+## Step 3b — Bounded-change short form (new)
+
+Some changes are tightly bounded — a single workflow file, a docs-only update, a CI config tweak, an internal refactor with no user surface, or any change where the diff shows no behavior reachable by a user. The full P1/P2/P3 checklist template over-generates for these and creates noise.
+
+Detect a bounded change when ALL of these hold:
+
+- The diff touches only one of: workflows, docs, generated files, dev tooling, internal configs, dependencies.
+- No code in `app/`, `designer_v2/`, `core/`, `flutter_common/` source paths is reachable from the diff.
+- The PR description or Jira ticket explicitly frames the change as internal-only.
+
+When the change is bounded, output the **short form** instead of the full template:
+
+```markdown
+# Manual QA: <change title> (<PR # or branch>)
+
+## Summary
+1-2 sentences: what the change does, why it is bounded, and the one or two real risks (e.g. workflow gating, secret config, role enforcement). End with "<N> items, all manual-only" or "no manual QA needed".
+
+## Setup (not test items)
+- <secret, variable, branch, or config QA needs before testing — never a behavior test>
+
+## P1 — Must test
+- [ ] **<one short item per real risk, no Functional/UI/UX sub-buckets>**
+  - Steps: <numbered, one action per step>
+  - Expected: <observable result>
+
+## Automated checks
+- `<e.g. cd <pkg> && fvm flutter test>` — <what this verifies>
+- `<next command>` — <next thing this verifies>
+
+## Out of scope
+- <area> — <reason>
+
+> This is a short-form scope. Reach for the full template only when the change has user-visible behavior.
+```
+
+Hard limits for the short form:
+
+- P1: maximum 4 items. If you have more, the change is not bounded — fall back to the full template.
+- No P2, no P3.
+- No Prerequisites checklist (only Setup).
+- No Automated coverage table (replace with a flat list of run commands).
+- No Regression watch section (the Summary names the risks instead).
+- No Functional/UI/UX sub-buckets inside P1.
+
 ## Step 4 — Analyze the diff with the Flutter lens
 
 Bucket every changed file, then reason about blast radius:
@@ -104,17 +149,20 @@ Also list changed non-test files with zero test coverage, so the team can decide
 
 ## Step 6 — Write the checklist
 
-The deliverable is a Markdown checklist file. Every test item must be an interactive `- [ ]` checkbox so QA can tick items off as they go — including prerequisites and automated-coverage run checks. Keep the structure below:
+The deliverable is a Markdown checklist file. Test items use `- [ ]` checkboxes so QA can tick them off as they go. Setup and run-command lists use plain `-` bullets — they are prose or commands, not tickable items. Keep the structure below:
 
 ```markdown
 # Manual QA: <change title> (<PR # or branch>)
 
 ## Summary
-2-3 sentences: which apps are affected, the biggest test risk, and whether the surface is broad or tightly bounded. Name the context you used: PR description, Jira <key> (fetched / not accessible / not found), user input from Step 3. End with the item count, e.g. "12 items: 5 auto-covered, 7 manual-only".
+2-3 sentences: which apps are affected, the biggest test risk, and whether the surface is broad or tightly bounded. Name the context you used: PR description, Jira <key> (fetched / not accessible / not found), user input from Step 3. End with the item count excluding Setup, e.g. "12 test items: 5 auto-covered, 7 manual-only".
 
-## Prerequisites
+## Setup (not test items)
 - Env and run commands (e.g. `.env.dev`, `rtk fvm exec melos dev:app`).
 - Accounts/roles needed, study state needed (e.g. "a published study with at least one participant").
+- Secrets, variables, or repo config QA must have before testing.
+- Note: Setup items are prerequisites QA reads once and arranges, not behavior tests. Do not count them in the item total.
+- Note: Render Setup as plain `-` bullets, not `- [ ]` checkboxes. Setup is not a tick list — it is prose QA scans before testing.
 
 ## P1 — Must test
 ### Functional
@@ -172,6 +220,18 @@ Changed code with no tests:
 - Item shape is fixed: bold title, then nested "Steps:" as a numbered list with one action per step, "Expected:" on its own line, and a final "Coverage:" line. Checklists get pasted into Jira, Slack, and GitHub, and inline run-on steps render badly there — the nested shape is what survives the paste.
 - Keep items concrete. "Test the new question type" is not an item; an item is "create a date question in the designer, publish the study, answer the question in the app, check the saved value" — split into numbered steps.
 - If everything is bounded and low-risk, say so plainly and keep the report short. A confident Out-of-scope section is worth more than an exhaustive checklist.
+
+### Writing discipline (apply to all prose in the checklist)
+
+Follow the global `orwell-writing` skill. Apply ASD-STE100 Simplified Technical English to the Summary, Setup items, test titles, Steps, and Expected lines:
+
+- One main action per sentence. One action per Step.
+- Active voice. Name the actor when the actor matters.
+- Replace jargon with everyday English when accuracy permits.
+- Cut filler: "in order to" → "to", "should/may/might" → state the observable result.
+- Same term for the same thing throughout one report.
+- No stock metaphors, no "leverage", "seamless", "robust", "navigate to".
+- Preserve code spans, file paths, identifiers, and the marker unchanged.
 
 ## Step 7 — Deliver: file + clipboard
 
