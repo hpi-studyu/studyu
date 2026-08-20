@@ -7,21 +7,6 @@ on:
   pull_request:
     types: [opened, ready_for_review]
     branches: [dev]
-  issue_comment:
-    types: [edited]
-  # Comment edits execute workflow from default branch, not PR branch.
-  # Admin and maintainer roles prevent unauthorized users from spending AI credits by regenerating.
-  # Note: 'roles' only restricts issue_comment; pull_request events still require the default GITHUB_TOKEN
-  # permissions on the workflow (contents/issues/pull-requests read). Only users mapped to admin,
-  # maintainer, or write by gh-aw's check_membership.cjs can trigger regeneration; everyone else
-  # (read/triage-only, outsiders, bots) is rejected before this prompt runs.
-  # 'admin' and 'maintainer' cover repo owners/maintainers; 'write' covers regular contributors
-  # with triage-or-higher push access. Users with read-only/triage-only access are excluded.
-  # gh-aw's check_membership.cjs maps these to GitHub author_association values:
-  #   admin     -> OWNER, ADMIN
-  #   maintainer-> MAINTAIN
-  #   write     -> MEMBER, COLLABORATOR
-  roles: [admin, maintainer, write]
 permissions:
   contents: read
   # gh-aw strict mode forbids bare 'issues: write' on the workflow — all write ops
@@ -65,16 +50,9 @@ You are the StudyU manual-QA bot. You generate one manual testing checklist for 
 
 Determine the trigger and the pull request. Prior `<!-- manual-qa-bot -->` comments on the same PR are automatically minimized (collapsed as outdated) by the safe-outputs handler when the new checklist posts — this is the supported equivalent of "delete + repost" in gh-aw's safe-output model and runs regardless of what the agent does. The agent does **not** need to delete prior comments via MCP.
 
-Determine the trigger and the pull request:
+Determine the pull request:
 
-- If triggered by a pull request event, the PR is the triggering pull request.
-- If triggered by a comment edit, fetch the comment's discussion and stop unless ALL of these hold:
-  - The comment belongs to a pull request (not a plain issue).
-  - The comment body contains the marker `<!-- manual-qa-bot -->`.
-  - The comment body contains a checked regenerate box: a line starting with `- [x]` that mentions "Regenerate".
-  - The editing actor maps to one of the whitelisted roles (admin, maintainer, or write per the workflow's `on.roles` list). This is enforced before this prompt runs by gh-aw's `check_membership.cjs` against GitHub's `author_association`; do not treat any other actor as authorized. Users with only read/triage permission, no repo access, or bot identities are rejected before this prompt runs.
-
-  If any condition fails, end quietly and produce no comment.
+- The PR is the triggering pull request.
 
 Then, for the PR itself:
 
@@ -96,7 +74,7 @@ Concrete rules:
 - No metaphors, similes, or stock phrases. No "navigate to", "dive into", "leverage", "robust", "seamless".
 - State expected results as observable behavior, not as test intent. "The comment shows one checklist" beats "The comment should display the checklist as expected".
 
-Do not apply STE to: code spans, file paths, identifiers, the marker, the regenerate checkbox line, or the closing footer. Do not flatten intentional technical precision (a test name like `minimizeComment` must stay exact).
+Do not apply STE to: code spans, file paths, identifiers, the marker, or the closing footer. Do not flatten intentional technical precision (a test name like `minimizeComment` must stay exact).
 
 ## Task
 
@@ -125,11 +103,4 @@ Request exactly one add-comment whose body is:
 
 1. First line: the marker `<!-- manual-qa-bot -->`
 2. A blank line, then the full checklist following the skill's report template (Summary, Prerequisites, P1/P2/P3 with nested Steps/Expected/Coverage items, Automated coverage, Regression watch, Out of scope).
-3. At the very end:
-
-```
----
-- [ ] ♻️ **Regenerate**: users with admin, maintainer, or write access may check this box and save the comment to regenerate the checklist from the latest diff.
-```
-
 Do not add any other commentary before or after the checklist.

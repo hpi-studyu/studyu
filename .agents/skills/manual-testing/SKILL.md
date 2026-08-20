@@ -99,6 +99,28 @@ Hard limits for the short form:
 - No Regression watch section (the Summary names the risks instead).
 - No Functional/UI/UX sub-buckets inside P1.
 
+## Step 3c — Merge-gated handling (new)
+
+Some changes cannot be tested on the branch under review. Detect these and produce a **merge-gated short form** instead of a normal checklist:
+
+- The diff IS the workflow that posts this QA (e.g. `.github/workflows/manual-qa*`), and the workflow is not yet merged to the default branch — every end-to-end check ("post a checklist", "edit triggers regen") requires the workflow to exist first.
+- The diff adds or modifies a CI tool, hook, linter, generator, or script that the test steps rely on (`scripts/pre-commit-check`, `melos` command, `fvm` setup, build-runner config, code generator with `*.g.dart` consumers).
+- The diff changes infrastructure QA cannot reach from the source branch (deployment scripts, Supabase migrations applied only post-merge, feature flags toggled at deploy time).
+- The diff updates or replaces a dependency, lockfile, or build configuration whose effects only show after `melos bootstrap` runs against the merged state.
+
+When ANY of these hold:
+
+1. Open with a `## Summary` that names the merge-gated scope explicitly: "The change cannot be exercised on this branch — it adds the workflow itself. End-to-end checks become possible after merge to `dev`."
+2. Keep the `## Setup` section listing the prerequisites QA will need AFTER merge (secrets, accounts, test data).
+3. Replace the normal `P1` body with a single `## Pending until merge` section that names each blocked test surface in one line each, e.g. "- [ ] **Post one checklist on a non-draft PR** — gated: requires the workflow to merge to `dev` first."
+4. Add a `## After merge` P1 with the actual runnable checks. These are the only items QA can tick off without source-branch access.
+5. State in `## Out of scope` which items remain blocked and why.
+6. Do NOT write Steps that pretend to be runnable when the underlying mechanism is not yet live. "Open a test PR and observe" is honest only when the workflow is merged.
+
+7. When listing the "After merge" checks, only include actions that the workflow actually supports. Do not reference comment-edit triggers, regenerate checkboxes, or any feature that the workflow does not provide.
+
+Hard rule: never produce a Steps list that requires an artifact (workflow file, generated code, dependency, env flag) that does not exist on the source branch. Either mark it merge-gated or omit it.
+
 ## Step 4 — Analyze the diff with the Flutter lens
 
 Bucket every changed file, then reason about blast radius:
@@ -247,4 +269,4 @@ Follow the global `orwell-writing` skill. Apply ASD-STE100 Simplified Technical 
 
 ### CI / headless mode
 
-When running unattended (CI bot, no interactive user), skip the file and the clipboard entirely: end the run with the full Markdown checklist as your final answer so the surrounding workflow can post it, and include the marker and regenerate checkbox defined by that workflow.
+When running unattended (CI bot, no interactive user), skip the file and the clipboard entirely: end the run with the full Markdown checklist as your final answer so the surrounding workflow can post it, and include the marker defined by that workflow.
