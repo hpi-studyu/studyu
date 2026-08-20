@@ -20,6 +20,12 @@ tools:
   bash:
     - "gh pr diff"
     - "gh pr view"
+engine:
+  id: copilot
+  env:
+    COPILOT_PROVIDER_BASE_URL: https://openrouter.ai/api/v1
+    COPILOT_PROVIDER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    COPILOT_MODEL: ${{ vars.OPENROUTER_MODEL }}
 max-turns: 40
 safe-outputs:
   add-comment:
