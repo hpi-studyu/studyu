@@ -11,10 +11,24 @@ on:
     types: [edited]
   # Comment edits execute workflow from default branch, not PR branch.
   # Admin and maintainer roles prevent unauthorized users from spending AI credits by regenerating.
-  roles: [admin, maintainer]
+  # Note: 'roles' only restricts issue_comment; pull_request events still require the default GITHUB_TOKEN
+  # permissions on the workflow (contents/issues/pull-requests read). Only users mapped to admin,
+  # maintainer, or write by gh-aw's check_membership.cjs can trigger regeneration; everyone else
+  # (read/triage-only, outsiders, bots) is rejected before this prompt runs.
+  # 'admin' and 'maintainer' cover repo owners/maintainers; 'write' covers regular contributors
+  # with triage-or-higher push access. Users with read-only/triage-only access are excluded.
+  # gh-aw's check_membership.cjs maps these to GitHub author_association values:
+  #   admin     -> OWNER, ADMIN
+  #   maintainer-> MAINTAIN
+  #   write     -> MEMBER, COLLABORATOR
+  roles: [admin, maintainer, write]
 permissions:
   contents: read
-  issues: read
+  # 'issues: write' is required so the bot can hard-delete its own prior `<!-- manual-qa-bot -->`
+  # PR comments on draft→ready_for_review and PR-opened events (delete-then-repost).
+  # Without it, github MCP `delete_issue_comment` returns 403. Read-only is sufficient for
+  # the safe-output add-comment handler (which posts via the workflow token, not MCP).
+  issues: write
   pull-requests: read
   copilot-requests: write
 tools:
@@ -49,6 +63,12 @@ You are the StudyU manual-QA bot. You generate one manual testing checklist for 
 
 ## Run guard — decide this before any analysis
 
+Determine the trigger and the pull request, and enforce delete-then-repost for the bot's own comments:
+
+- Whenever this run will produce a fresh `<!-- manual-qa-bot -->` checklist (i.e. the run is **not** ending quietly), first scan the PR's comments via the `issues` MCP toolset (`list_issue_comments`) for any existing comment whose body contains the marker `<!-- manual-qa-bot -->`. For every match, call `delete_issue_comment` to hard-delete it before posting the new checklist. Do this for both `pull_request` triggers (opened, ready_for_review) and the regenerate-via-comment-edit path.
+- The safe-output `hide-older-comments: true` setting is a safety net (it minimizes prior matches) — it is **not** a substitute for explicit deletion. Hard-delete via MCP so PRs show only one current checklist with no stale history.
+- If `delete_issue_comment` fails (e.g. transient 5xx), continue: the new `add_comment` call will still post and `hide-older-comments` will minimize the stale one. Log the failure as a one-line internal note; do not retry indefinitely.
+
 Determine the trigger and the pull request:
 
 - If triggered by a pull request event, the PR is the triggering pull request.
@@ -56,7 +76,7 @@ Determine the trigger and the pull request:
   - The comment belongs to a pull request (not a plain issue).
   - The comment body contains the marker `<!-- manual-qa-bot -->`.
   - The comment body contains a checked regenerate box: a line starting with `- [x]` that mentions "Regenerate".
-  - The editing actor is a repository admin or maintainer. This is enforced before this prompt runs; do not treat any other actor as authorized.
+  - The editing actor maps to one of the whitelisted roles (admin, maintainer, or write per the workflow's `on.roles` list). This is enforced before this prompt runs by gh-aw's `check_membership.cjs` against GitHub's `author_association`; do not treat any other actor as authorized. Users with only read/triage permission, no repo access, or bot identities are rejected before this prompt runs.
 
   If any condition fails, end quietly and produce no comment.
 
@@ -86,7 +106,7 @@ Request exactly one add-comment whose body is:
 
 ```
 ---
-- [ ] ♻️ **Regenerate**: repository admins/maintainers may check this box and save the comment to regenerate the checklist from the latest diff.
+- [ ] ♻️ **Regenerate**: users with admin, maintainer, or write access may check this box and save the comment to regenerate the checklist from the latest diff.
 ```
 
 Do not add any other commentary before or after the checklist.
