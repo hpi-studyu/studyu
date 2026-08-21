@@ -124,32 +124,16 @@ Derive:
 
 ## Step 5: Create the PR
 
-Push the branch:
+When composing the body, use an available PR template. Fill applicable sections from Step 4 and follow removal instructions.
+
+If no template exists, write a concise body covering the problem, changes, and verification.
 
 ```bash
 git push -u origin HEAD
-```
-
-Create the PR with GitHub CLI:
-
-```bash
 gh pr create \
   --title "<type>[scope]: <imperative description>" \
   --base <target-branch> \
-  --body "$(cat <<'EOF'
-## Problem
-<what was broken or missing>
-
-## Changes
-- <change 1>
-- <change 2>
-
-## Testing
-- [ ] <manual test step 1>
-- [ ] <manual test step 2>
-- [ ] No regressions in <related area>
-EOF
-)"
+  --body "<completed-body>"
 ```
 
 PR title rules:
@@ -159,8 +143,6 @@ PR title rules:
 - Imperative mood.
 - No trailing period.
 
-If `gh` is not authenticated, stop and tell the user to run:
+If `gh` is not authenticated, stop and ask the user to run `gh auth login`.
 
-```bash
-gh auth login
-```
+After creating the PR, remind the author to complete any author-attestation checkboxes before requesting review. Leave them unchecked unless the author confirms completion.
