@@ -7,12 +7,6 @@
 ## Testing Steps
 <!-- Provide step-by-step instructions so reviewers can verify this change locally -->
 
-### PR Checklist
-- [ ] I tested the changes and affected user flows.
-- [ ] I reviewed the full diff and checked for unintended changes.
-- [ ] Screenshot or video attached, or this item removed for non-visual changes
-- [ ] Description links related issues, or this item removed when no issue exists
-
 ## Database changes
 <!-- Remove this section when the PR contains no database changes. Explain the overall reason for the database changes, then list each new migration file below. -->
 
@@ -25,3 +19,9 @@
 | Migration file | What it changes | Why it is needed |
 | --- | --- | --- |
 | `path/to/migration.sql` | ... | ... |
+
+## PR Checklist
+- [ ] I tested the changes and affected user flows.
+- [ ] I reviewed the full diff and checked for unintended changes.
+- [ ] Screenshot or video attached, or this item removed for non-visual changes
+- [ ] Description links related issues, or this item removed when no issue exists
