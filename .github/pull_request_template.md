@@ -4,9 +4,6 @@
 ## Visuals
 <!-- Attach a screenshot for static UI changes or a screen recording for interactive UI changes. Remove this section when the PR has no visual impact. -->
 
-## Testing Steps
-<!-- Provide step-by-step instructions so reviewers can verify this change locally -->
-
 ## Database changes
 <!-- Remove this section when the PR contains no database changes. Explain the overall reason for the database changes, then list each new migration file below. -->
 
@@ -19,6 +16,9 @@
 | Migration file | What it changes | Why it is needed |
 | --- | --- | --- |
 | `path/to/migration.sql` | ... | ... |
+
+## Testing Steps
+<!-- Provide step-by-step instructions so reviewers can verify this change locally -->
 
 ## PR Checklist
 - [ ] I tested the changes and affected user flows.
