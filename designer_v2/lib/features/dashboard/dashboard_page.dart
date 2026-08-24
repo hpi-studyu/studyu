@@ -532,7 +532,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               if (snapshot.hasData) {
                 final viewportHeight = MediaQuery.sizeOf(context).height;
                 final contentPadding =
-                    TwoColumnLayout.defaultContentPadding.vertical * 2;
+                    TwoColumnLayout.defaultContentPadding.vertical;
                 const headerHeight = 36.0;
                 const spacingBelowHeader = 24.0;
                 final activeFilterSpacing =
