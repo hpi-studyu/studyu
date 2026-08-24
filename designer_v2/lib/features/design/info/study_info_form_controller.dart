@@ -1,4 +1,3 @@
-import 'package:phone_form_field/phone_form_field.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
@@ -52,9 +51,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   @override
   void setControlsFrom(StudyInfoFormData data) {
     titleControl.value = data.title;
-    iconControl.value = data.iconName.isEmpty
-        ? null
-        : IconOption(data.iconName);
+    iconControl.value = IconPack.resolveIconByName(data.iconName);
     descriptionControl.value = data.description;
     organizationControl.value = data.contactInfoFormData.organization;
     reviewBoardControl.value =
@@ -94,13 +91,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-    // TODO phoneFormat
-    StudyFormValidationSet.draft: [
-      titleRequired,
-      emailFormat,
-      websiteFormat,
-      phoneFormat,
-    ],
+    StudyFormValidationSet.draft: [titleRequired, emailFormat, websiteFormat],
     StudyFormValidationSet.publish: [
       titleRequired,
       descriptionRequired,
@@ -113,7 +104,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       phoneRequired,
       emailFormat,
       websiteFormat,
-      phoneFormat,
     ],
     StudyFormValidationSet.test: [titleRequired],
   };
@@ -187,11 +177,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           tr.form_field_contact_phone_required,
     },
   );
-  FormControlValidation get phoneFormat => FormControlValidation(
-    control: phoneControl,
-    validators: [Validators.delegate(_validatePhone)],
-    validationMessages: {'phone': (error) => tr.form_invalid_prompt},
-  );
   FormControlValidation get emailFormat => FormControlValidation(
     control: emailControl,
     validators: [Validators.email],
@@ -202,22 +187,4 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     validators: [Validators.pattern(Patterns.url)],
     validationMessages: {'pattern': (error) => tr.form_field_website_pattern},
   );
-
-  Map<String, dynamic>? _validatePhone(AbstractControl<dynamic> control) {
-    final value = (control.value as String?)?.trim() ?? '';
-    if (value.isEmpty) {
-      return null;
-    }
-
-    try {
-      final phoneNumber = PhoneNumber.parse(value);
-      if (phoneNumber.isValid()) {
-        return null;
-      }
-    } catch (_) {
-      return {'phone': true};
-    }
-
-    return {'phone': true};
-  }
 }

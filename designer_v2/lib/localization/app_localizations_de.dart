@@ -2534,6 +2534,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get iconpicker_dialog_title => 'Icon auswählen';
 
   @override
+  String get iconpicker_remove_action => 'Icon entfernen';
+
+  @override
   String get dialog_unsaved_changes_title =>
       'Ungespeicherte Änderungen verwerfen?';
 

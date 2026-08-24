@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 
 abstract class ISyncIndicatorViewModel {
   AsyncValue get syncState;
@@ -116,28 +115,17 @@ class _SyncIndicatorState extends State<SyncIndicator>
     double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
     actualOpacity += isHovered ? 0.2 : 0.0;
     final iconColor = theme.iconTheme.color!.withValues(alpha: actualOpacity);
-    final savedIconColor = Colors.green.withValues(
-      alpha: isHovered ? 0.85 : 0.7,
+    final savedIconColor = theme.iconTheme.color!.withValues(
+      alpha: isHovered ? 0.7 : 0.45,
     );
 
     Widget dataWidget;
 
-    if (!widget.isDirty && widget.lastSynced != null) {
+    if (!widget.isDirty) {
       dataWidget = Tooltip(
-        message:
-            "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
+        message: tr.sync_done,
         child: Icon(
           key: const ValueKey('sync_indicator_saved'),
-          Icons.check_circle_rounded,
-          size: widget.iconSize,
-          color: savedIconColor,
-        ),
-      );
-    } else if (!widget.isDirty && widget.lastSynced == null) {
-      dataWidget = Tooltip(
-        message: tr.sync_initial,
-        child: Icon(
-          key: const ValueKey('sync_indicator_initial'),
           Icons.check_circle_rounded,
           size: widget.iconSize,
           color: savedIconColor,

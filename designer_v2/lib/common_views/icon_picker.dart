@@ -35,7 +35,12 @@ class IconPack {
     if (name == null || name.isEmpty) {
       return null;
     }
-    return iconPack.firstWhere((element) => element.name == name);
+    for (final iconOption in iconPack) {
+      if (iconOption.name == name) {
+        return iconOption;
+      }
+    }
+    return null;
   }
 }
 
@@ -137,6 +142,8 @@ class IconPicker extends StatelessWidget {
 }
 
 class IconPickerField extends StatelessWidget {
+  static const _triggerHeight = 40.0;
+
   const IconPickerField({
     required this.iconOptions,
     this.selectedOption,
@@ -168,27 +175,43 @@ class IconPickerField extends StatelessWidget {
     final actualSelectedIconSize =
         selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
     final selectedIconDisplaySize = actualSelectedIconSize * 1.15;
+    final hasSelection = selectedOption != null && !selectedOption!.isEmpty;
+    final selectedIcon =
+        selectedOption?.icon ??
+        IconPack.resolveIconByName(
+          selectedOption?.name,
+          iconPack: iconOptions,
+        )?.icon;
 
-    Future<void> openIconPicker() => showIconPickerDialog(
-      context,
-      iconOptions: iconOptions,
-      galleryIconSize: actualGalleryIconSize,
-      onSelect: onSelect,
-    );
+    Future<void> openIconPicker() async {
+      final result = await showIconPickerDialog(
+        context,
+        iconOptions: iconOptions,
+        galleryIconSize: actualGalleryIconSize,
+        selectedOption: selectedOption,
+      );
+      if (result == null) {
+        return;
+      }
+      switch (result.action) {
+        case _IconPickerDialogAction.select:
+          if (result.selectedOption != null && onSelect != null) {
+            onSelect!(result.selectedOption!);
+          }
+        case _IconPickerDialogAction.remove:
+          onClear?.call();
+        case _IconPickerDialogAction.cancel:
+          break;
+      }
+    }
 
-    if (selectedOption != null && !selectedOption!.isEmpty) {
-      final selectedIcon =
-          selectedOption?.icon ??
-          IconPack.resolveIconByName(
-            selectedOption!.name,
-            iconPack: iconOptions,
-          )!.icon;
+    if (hasSelection && selectedIcon != null) {
       final theme = Theme.of(context);
 
-      return Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Tooltip(
+      return SizedBox(
+        height: _triggerHeight,
+        child: Center(
+          child: Tooltip(
             message: tr.iconpicker_nonempty_prompt,
             child: Material(
               color: Colors.transparent,
@@ -212,48 +235,23 @@ class IconPickerField extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: MouseEventsRegion(
-              onTap: isDisabled ? null : onClear,
-              behavior: HitTestBehavior.opaque,
-              builder: (context, states) {
-                final isHovered = states.contains(WidgetState.hovered);
-
-                return SizedBox.square(
-                  dimension: 18.0,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: theme.colorScheme.outlineVariant,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Icon(
-                        Icons.close_rounded,
-                        size: 10.0,
-                        color: isHovered
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
       );
     }
 
-    return TextButton(
-      onPressed: isDisabled ? null : openIconPicker,
-      focusNode: focusNode,
-      child: Text(tr.iconpicker_empty_prompt),
+    return SizedBox(
+      height: _triggerHeight,
+      child: Center(
+        child: TextButton(
+          onPressed: isDisabled ? null : openIconPicker,
+          focusNode: focusNode,
+          child: Text(
+            hasSelection
+                ? tr.iconpicker_nonempty_prompt
+                : tr.iconpicker_empty_prompt,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -284,7 +282,8 @@ class IconPickerGallery extends StatelessWidget {
             child: Icon(iconOption.icon, size: iconSize),
           );
         },
-        onTap: () => Navigator.pop(context, iconOption),
+        onTap: () =>
+            Navigator.pop(context, _IconPickerDialogResult.select(iconOption)),
       );
       iconWidgets.add(iconWidget);
     }
@@ -300,20 +299,21 @@ class IconPickerGallery extends StatelessWidget {
   }
 }
 
-Future<void> showIconPickerDialog(
+Future<_IconPickerDialogResult?> showIconPickerDialog(
   BuildContext context, {
   required List<IconOption> iconOptions,
   double? galleryIconSize,
-  VoidCallbackOn<IconOption>? onSelect,
+  IconOption? selectedOption,
   double minWidth = 300,
   double minHeight = 300,
 }) async {
-  final IconOption? iconPicked = await showDialog(
+  final result = await showDialog<_IconPickerDialogResult>(
     context: context,
     builder: (BuildContext context) {
       final theme = Theme.of(context);
       final dialogWidth = MediaQuery.of(context).size.width * 0.4;
       final dialogHeight = MediaQuery.of(context).size.height * 0.4;
+      final hasSelection = selectedOption != null && !selectedOption.isEmpty;
 
       return StandardDialog(
         body: SizedBox(
@@ -324,6 +324,21 @@ Future<void> showIconPickerDialog(
             iconSize: galleryIconSize ?? 48.0,
           ),
         ),
+        actionButtons: [
+          if (hasSelection)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, const _IconPickerDialogResult.remove());
+              },
+              child: Text(tr.iconpicker_remove_action),
+            ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, const _IconPickerDialogResult.cancel());
+            },
+            child: Text(tr.dialog_cancel),
+          ),
+        ],
         title: SelectableText(
           tr.iconpicker_dialog_title,
           style: theme.textTheme.headlineSmall?.copyWith(
@@ -334,8 +349,21 @@ Future<void> showIconPickerDialog(
       );
     },
   );
+  return result;
+}
 
-  if (iconPicked != null && onSelect != null) {
-    onSelect(iconPicked);
-  }
+enum _IconPickerDialogAction { select, remove, cancel }
+
+class _IconPickerDialogResult {
+  const _IconPickerDialogResult.select(this.selectedOption)
+    : action = _IconPickerDialogAction.select;
+  const _IconPickerDialogResult.remove()
+    : action = _IconPickerDialogAction.remove,
+      selectedOption = null;
+  const _IconPickerDialogResult.cancel()
+    : action = _IconPickerDialogAction.cancel,
+      selectedOption = null;
+
+  final _IconPickerDialogAction action;
+  final IconOption? selectedOption;
 }

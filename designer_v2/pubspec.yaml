@@ -21,7 +21,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
-  flutter_country_selector: ^1.0.19
   flutter_driver:
     sdk: flutter
   flutter_localizations:
@@ -35,8 +34,6 @@ dependencies:
   material_color_utilities: ^0.13.0 # integration_test
   package_info_plus: ^10.2.0
   pointer_interceptor: ^0.10.1+2
-  phone_form_field: ^10.0.18
-  phone_numbers_parser: ^9.0.3
   pretty_qr_code: ^3.6.0
   reactive_color_picker: ^2.2.2
   reactive_forms: ^18.2.2

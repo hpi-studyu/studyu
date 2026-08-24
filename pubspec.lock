@@ -289,14 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.14.1"
-  circle_flags:
-    dependency: transitive
-    description:
-      name: circle_flags
-      sha256: "22268452bb0c0146251c01969e9b85dd36c76e13bd13f543bd0af8b7b334c181"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.1"
   cli_config:
     dependency: transitive
     description:
@@ -457,14 +449,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
-  diacritic:
-    dependency: transitive
-    description:
-      name: diacritic
-      sha256: "12981945ec38931748836cd76f2b38773118d0baef3c68404bdfde9566147876"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.6"
   diff_match_patch:
     dependency: transitive
     description:
@@ -607,14 +591,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  flutter_country_selector:
-    dependency: transitive
-    description:
-      name: flutter_country_selector
-      sha256: "92d7ae9092ba492bfb0ffe5cd6b38c941261b56e81941d73a0a963fdf5fcf8f6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.19"
   flutter_dotenv:
     dependency: transitive
     description:
@@ -1477,22 +1453,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
-  phone_form_field:
-    dependency: transitive
-    description:
-      name: phone_form_field
-      sha256: d2ef37cf5b1d93797d9e05cea2a133f5a87419f0bbe3e24df1ffe4351f31b0de
-      url: "https://pub.dev"
-    source: hosted
-    version: "10.0.18"
-  phone_numbers_parser:
-    dependency: transitive
-    description:
-      name: phone_numbers_parser
-      sha256: f0d669e9bb3def72b479ee034a42ddc2eecb5d39af9e598459d6f1c489bb19c7
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.0.25"
   platform:
     dependency: transitive
     description:
