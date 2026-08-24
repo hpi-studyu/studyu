@@ -7,7 +7,6 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
@@ -114,7 +113,16 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   @override
   void initControls() {
     regenerateCode(); // initialize randomly
+    syncCodeControlEnabledState();
     prevFormValue = {...form.value};
+  }
+
+  void syncCodeControlEnabledState() {
+    if (formMode == FormMode.edit) {
+      codeControl.markAsDisabled();
+      return;
+    }
+    codeControl.markAsEnabled();
   }
 
   // - Validation
@@ -164,8 +172,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   StudyInvite buildFormData() {
+    final code = formMode == FormMode.edit && formData != null
+        ? formData!.code
+        : codeControl.value!.trim().toLowerCase();
     return StudyInvite(
-      codeControl.value!.trim().toLowerCase(),
+      code,
       study.id,
       preselectedInterventionIds: preconfiguredSchedule,
     );
@@ -179,52 +190,24 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
       interventionAControl.value = data.preselectedInterventionIds![0];
       interventionBControl.value = data.preselectedInterventionIds![1];
     }
+    syncCodeControlEnabledState();
   }
 
   @override
   Future<StudyInvite> save({bool updateState = true}) {
-    final previousInvite = formData;
     final nextInvite = buildFormData();
-
-    final saveOperation =
-        formMode == FormMode.edit &&
-            previousInvite != null &&
-            _normalizeCode(previousInvite.code) != nextInvite.code
-        ? _replaceExistingInvite(previousInvite, nextInvite)
-        : inviteCodeRepository.save(nextInvite, runOptimistically: false);
-
-    return saveOperation.then((wrapped) {
-      if (updateState) {
-        formData = wrapped!.model;
-        finalizeInitializationBaseline();
-      }
-      return wrapped!.model;
-    });
-  }
-
-  Future<WrappedModel<StudyInvite>?> _replaceExistingInvite(
-    StudyInvite previousInvite,
-    StudyInvite nextInvite,
-  ) async {
-    final savedInvite = await inviteCodeRepository.save(
+    final saveOperation = inviteCodeRepository.save(
       nextInvite,
       runOptimistically: false,
     );
 
-    try {
-      await inviteCodeRepository.delete(
-        previousInvite.code,
-        runOptimistically: false,
-      );
-      return savedInvite;
-    } catch (_) {
-      try {
-        await inviteCodeRepository.delete(
-          nextInvite.code,
-          runOptimistically: false,
-        );
-      } catch (_) {}
-      rethrow;
-    }
+    return saveOperation.then((wrapped) {
+      if (updateState) {
+        formData = wrapped!.model;
+        syncCodeControlEnabledState();
+        finalizeInitializationBaseline();
+      }
+      return wrapped!.model;
+    });
   }
 }

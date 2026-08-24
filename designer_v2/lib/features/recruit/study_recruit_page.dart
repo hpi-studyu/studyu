@@ -56,6 +56,8 @@ class StudyRecruitScreen extends StudyPageWidget {
   static const _paginationSpacing = 8.0;
   static const _paginationGroupSpacing = 16.0;
   static const _paginationButtonSize = 40.0;
+  static const _paginationStackBreakpoint = 420.0;
+  static const _paginationMobileRowSpacing = 12.0;
   static const _footerDropdownWidth = 72.0;
   static const _footerDropdownHeight = 40.0;
   static const _footerDropdownBorderRadius = 50.0;
@@ -282,25 +284,26 @@ class StudyRecruitScreen extends StudyPageWidget {
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.center,
           children: [
-            shouldMoveDetailsBelowButton
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _newInviteCodeButton(
-                        context,
-                        ref,
-                        compact: useUltraCompactHeader,
-                      ),
-                      SizedBox(height: horizontalSpacing),
-                      titleAndCount,
-                    ],
-                  )
-                : _newInviteCodeButton(
+            if (shouldMoveDetailsBelowButton)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _newInviteCodeButton(
                     context,
                     ref,
                     compact: useUltraCompactHeader,
                   ),
+                  SizedBox(height: horizontalSpacing),
+                  titleAndCount,
+                ],
+              )
+            else
+              _newInviteCodeButton(
+                context,
+                ref,
+                compact: useUltraCompactHeader,
+              ),
             SizedBox(width: horizontalSpacing),
             if (!shouldMoveDetailsBelowButton)
               shouldStackCount ? titleAndCount : titleLabel,
@@ -313,7 +316,7 @@ class StudyRecruitScreen extends StudyPageWidget {
               width: useUltraCompactHeader
                   ? _searchFieldUltraCompactWidth
                   : useCompactSearch
-                  ? 208.0
+                  ? _searchFieldCompactWidth
                   : _searchFieldWidth,
               child: Search(
                 hintText: useCompactSearch
@@ -374,16 +377,23 @@ class StudyRecruitScreen extends StudyPageWidget {
   ) {
     return [
       DismissButton(
+        text: formViewModel.formMode == FormMode.edit
+            ? tr.dialog_close
+            : tr.dialog_cancel,
         onPressed: () => formViewModel.cancel().then((_) {
           if (context.mounted) Navigator.maybePop(context);
         }),
       ),
       ReactiveFormConsumer(
         builder: (context, form, child) {
+          final showSaveButton =
+              formViewModel.formMode != FormMode.edit || form.dirty;
+          if (!showSaveButton) {
+            return const SizedBox.shrink();
+          }
+
           return PrimaryButton(
-            text: formViewModel.formMode == FormMode.edit
-                ? tr.action_button_code_save
-                : tr.dialog_save,
+            text: tr.dialog_save,
             icon: null,
             enabled: formViewModel.isValid,
             onPressedFuture: formViewModel.isValid
@@ -420,7 +430,8 @@ class StudyRecruitScreen extends StudyPageWidget {
   ) {
     final theme = Theme.of(context);
     final isPaginationDisabled = state.isPageTransitionLoading;
-    return Row(
+    final pageSizeControl = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(tr.code_list_rows_per_page, style: theme.textTheme.bodyLarge),
         const SizedBox(width: _paginationSpacing),
@@ -493,7 +504,12 @@ class StudyRecruitScreen extends StudyPageWidget {
             ),
           ),
         ),
-        const Spacer(),
+      ],
+    );
+
+    final paginationActions = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
         Text(
           _inviteCodePaginationSummary(state),
           style: theme.textTheme.bodyLarge,
@@ -526,6 +542,25 @@ class StudyRecruitScreen extends StudyPageWidget {
           ),
         ),
       ],
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth <= _paginationStackBreakpoint) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              pageSizeControl,
+              const SizedBox(height: _paginationMobileRowSpacing),
+              Align(alignment: Alignment.centerRight, child: paginationActions),
+            ],
+          );
+        }
+
+        return Row(
+          children: [pageSizeControl, const Spacer(), paginationActions],
+        );
+      },
     );
   }
 
@@ -633,6 +668,7 @@ class StudyRecruitScreen extends StudyPageWidget {
       final formViewModel = _freshInviteCodeFormViewModel(ref);
       formViewModel.formData = invite;
       formViewModel.formMode = FormMode.edit;
+      formViewModel.syncCodeControlEnabledState();
       showFormSideSheet<InviteCodeFormViewModel>(
         context: context,
         formViewModel: formViewModel,

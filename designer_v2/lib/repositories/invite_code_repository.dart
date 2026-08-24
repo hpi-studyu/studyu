@@ -22,7 +22,7 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 part 'invite_code_repository.g.dart';
 
-const int defaultInviteCodePageSize = 50;
+const int defaultInviteCodePageSize = 15;
 const _copyInviteLinkActionValue = 'copy_link';
 const _showQrCodeActionValue = 'qr_code';
 const _rowMenuItemHorizontalPadding = 8.0;
@@ -65,7 +65,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Study get study => studyRepository.get(studyId)!.model;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final Ref ref;
+  final Ref? ref;
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -167,12 +167,12 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
           ),
           onExecute: () async {
             await delete(getKey(model), runOptimistically: false);
-            ref
+            ref!
                 .read(routerProvider)
                 .dispatch(RoutingIntents.studyRecruit(model.studyId));
             await Future.delayed(
               const Duration(milliseconds: 200),
-              () => ref
+              () => ref!
                   .read(notificationServiceProvider)
                   .show(Notifications.inviteCodeDeleted),
             );
@@ -186,8 +186,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   }
 
   Future<void> _copy(String value, SnackbarIntent notification) async {
-    await ref.read(clipboardServiceProvider).copy(value);
-    ref.read(notificationServiceProvider).show(notification);
+    await ref!.read(clipboardServiceProvider).copy(value);
+    ref!.read(notificationServiceProvider).show(notification);
   }
 
   void _showSharePopup(BuildContext context, String deepLink, String filename) {

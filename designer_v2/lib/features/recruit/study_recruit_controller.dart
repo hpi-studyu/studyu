@@ -36,12 +36,14 @@ class StudyRecruitController extends _$StudyRecruitController
     ref.onDispose(() {
       print("StudyRecruitController.dispose");
       _searchDebounce?.cancel();
+      _refreshTimer?.cancel();
     });
     Future.microtask(() => loadInviteCodePage(0));
     return state;
   }
 
   Timer? _searchDebounce;
+  Timer? _refreshTimer;
   int _fetchToken = 0;
 
   Future<void> loadInviteCodePage(
@@ -159,6 +161,7 @@ class StudyRecruitController extends _$StudyRecruitController
 
   Future<void> setInviteCodeSearchQuery(String query) async {
     if (query == state.inviteCodeSearchQuery) return;
+    _fetchToken++;
     state = state.copyWith(inviteCodeSearchQuery: query, isSearchPending: true);
     _searchDebounce?.cancel();
     _searchDebounce = Timer(_searchDebounceDuration, () {
@@ -227,11 +230,7 @@ class StudyRecruitController extends _$StudyRecruitController
       state = state.copyWith(inviteCodeCount: state.inviteCodeCount + 1);
     }
 
-    Future.delayed(const Duration(milliseconds: 300), () {
-      unawaited(
-        loadInviteCodePage(state.inviteCodePageIndex, showLoading: false),
-      );
-    });
+    _schedulePageRefresh();
   }
 
   Intervention? getIntervention(String interventionId) {
@@ -239,7 +238,7 @@ class StudyRecruitController extends _$StudyRecruitController
   }
 
   int getParticipantCountForInvite(StudyInvite invite) {
-    return state.studyValueRequired.getParticipantCountForInvite(invite);
+    return invite.participantCount;
   }
 
   // - IModelActionProvider
@@ -282,10 +281,18 @@ class StudyRecruitController extends _$StudyRecruitController
       confirmation: action.confirmation,
       onExecute: () async {
         await action.onExecute();
-        await Future<void>.delayed(const Duration(milliseconds: 300));
-        await loadInviteCodePage(state.inviteCodePageIndex, showLoading: false);
+        _schedulePageRefresh();
       },
       onExecuteWithContext: action.onExecuteWithContext,
     );
+  }
+
+  void _schedulePageRefresh() {
+    _refreshTimer?.cancel();
+    _refreshTimer = Timer(const Duration(milliseconds: 300), () {
+      unawaited(
+        loadInviteCodePage(state.inviteCodePageIndex, showLoading: false),
+      );
+    });
   }
 }
