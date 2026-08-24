@@ -26,7 +26,7 @@ Each entry: what, where, M3 baseline, and the migration target.
 - **Target**: `theme.colorScheme.*`; `Colors.white` → `colorScheme.surface` where role-appropriate.
 
 ### 3. Raw `TextStyle(fontSize: …)` at call sites
-- **What**: ~59 `fontSize:` literals outside theme; auth views and `AuthScaffold` rebuild styles
+- **What**: ~67 `fontSize:` literals outside theme; auth views and `AuthScaffold` rebuild styles
   with `TextStyle(fontSize: theme.textTheme.bodySmall!.fontSize)` instead of reusing the style.
 - **Where**: auth views, `auth_scaffold.dart:259`.
 - **M3**: type scale via roles.
