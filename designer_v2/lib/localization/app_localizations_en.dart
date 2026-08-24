@@ -2506,6 +2506,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconpicker_dialog_title => 'Pick an icon';
 
   @override
+  String get iconpicker_search_hint => 'Search icons';
+
+  @override
+  String get iconpicker_no_results => 'No icons found';
+
+  @override
   String get iconpicker_remove_action => 'Remove icon';
 
   @override

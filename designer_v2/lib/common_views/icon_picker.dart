@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -41,6 +42,23 @@ class IconPack {
       }
     }
     return null;
+  }
+
+  static List<IconOption> filterByQuery(
+    List<IconOption> iconOptions,
+    String query,
+  ) {
+    final normalizedQuery = query.trim().toLowerCase();
+    if (normalizedQuery.isEmpty) {
+      return iconOptions;
+    }
+
+    return iconOptions
+        .where(
+          (iconOption) =>
+              iconOption.name.toLowerCase().contains(normalizedQuery),
+        )
+        .toList(growable: false);
   }
 }
 
@@ -270,6 +288,15 @@ class IconPickerGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (iconOptions.isEmpty) {
+      return Center(
+        child: Text(
+          tr.iconpicker_no_results,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
+    }
+
     final List<Widget> iconWidgets = [];
     for (final iconOption in iconOptions) {
       final iconWidget = MouseEventsRegion(
@@ -279,7 +306,10 @@ class IconPickerGallery extends StatelessWidget {
             color: isHovered
                 ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                 : null,
-            child: Icon(iconOption.icon, size: iconSize),
+            child: Tooltip(
+              message: iconOption.name,
+              child: Icon(iconOption.icon, size: iconSize),
+            ),
           );
         },
         onTap: () =>
@@ -310,46 +340,100 @@ Future<_IconPickerDialogResult?> showIconPickerDialog(
   final result = await showDialog<_IconPickerDialogResult>(
     context: context,
     builder: (BuildContext context) {
-      final theme = Theme.of(context);
-      final dialogWidth = MediaQuery.of(context).size.width * 0.4;
-      final dialogHeight = MediaQuery.of(context).size.height * 0.4;
-      final hasSelection = selectedOption != null && !selectedOption.isEmpty;
-
-      return StandardDialog(
-        body: SizedBox(
-          width: max(dialogWidth, minWidth),
-          height: max(dialogHeight, minHeight),
-          child: IconPickerGallery(
-            iconOptions: iconOptions,
-            iconSize: galleryIconSize ?? 48.0,
-          ),
-        ),
-        actionButtons: [
-          if (hasSelection)
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, const _IconPickerDialogResult.remove());
-              },
-              child: Text(tr.iconpicker_remove_action),
-            ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, const _IconPickerDialogResult.cancel());
-            },
-            child: Text(tr.dialog_cancel),
-          ),
-        ],
-        title: SelectableText(
-          tr.iconpicker_dialog_title,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.normal,
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
-        ),
+      return _IconPickerDialog(
+        iconOptions: iconOptions,
+        galleryIconSize: galleryIconSize ?? 48.0,
+        selectedOption: selectedOption,
+        minWidth: minWidth,
+        minHeight: minHeight,
       );
     },
   );
   return result;
+}
+
+class _IconPickerDialog extends StatefulWidget {
+  const _IconPickerDialog({
+    required this.iconOptions,
+    required this.galleryIconSize,
+    required this.minWidth,
+    required this.minHeight,
+    this.selectedOption,
+  });
+
+  final List<IconOption> iconOptions;
+  final double galleryIconSize;
+  final IconOption? selectedOption;
+  final double minWidth;
+  final double minHeight;
+
+  @override
+  State<_IconPickerDialog> createState() => _IconPickerDialogState();
+}
+
+class _IconPickerDialogState extends State<_IconPickerDialog> {
+  String query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dialogWidth = MediaQuery.of(context).size.width * 0.4;
+    final dialogHeight = MediaQuery.of(context).size.height * 0.4;
+    final hasSelection =
+        widget.selectedOption != null && !widget.selectedOption!.isEmpty;
+    final filteredIconOptions = IconPack.filterByQuery(
+      widget.iconOptions,
+      query,
+    );
+
+    return StandardDialog(
+      body: SizedBox(
+        width: max(dialogWidth, widget.minWidth),
+        height: max(dialogHeight, widget.minHeight),
+        child: Column(
+          children: [
+            Search(
+              hintText: tr.iconpicker_search_hint,
+              onQueryChanged: (value) {
+                setState(() {
+                  query = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16.0),
+            Expanded(
+              child: IconPickerGallery(
+                iconOptions: filteredIconOptions,
+                iconSize: widget.galleryIconSize,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actionButtons: [
+        if (hasSelection)
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, const _IconPickerDialogResult.remove());
+            },
+            child: Text(tr.iconpicker_remove_action),
+          ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, const _IconPickerDialogResult.cancel());
+          },
+          child: Text(tr.dialog_cancel),
+        ),
+      ],
+      title: SelectableText(
+        tr.iconpicker_dialog_title,
+        style: theme.textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.normal,
+          color: theme.colorScheme.onPrimaryContainer,
+        ),
+      ),
+    );
+  }
 }
 
 enum _IconPickerDialogAction { select, remove, cancel }

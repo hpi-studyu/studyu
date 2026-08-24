@@ -957,6 +957,8 @@
   "iconpicker_nonempty_prompt": "Change icon",
   "iconpicker_empty_prompt": "Pick an icon",
   "iconpicker_dialog_title": "Pick an icon",
+  "iconpicker_search_hint": "Search icons",
+  "iconpicker_no_results": "No icons found",
   "iconpicker_remove_action": "Remove icon",
   "dialog_unsaved_changes_title": "Discard unsaved changes?",
   "dialog_unsaved_changes_description": "If you leave now, your recent changes will be permanently lost.",

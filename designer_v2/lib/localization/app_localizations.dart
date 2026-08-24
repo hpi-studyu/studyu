@@ -4275,6 +4275,18 @@ abstract class AppLocalizations {
   /// **'Pick an icon'**
   String get iconpicker_dialog_title;
 
+  /// No description provided for @iconpicker_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search icons'**
+  String get iconpicker_search_hint;
+
+  /// No description provided for @iconpicker_no_results.
+  ///
+  /// In en, this message translates to:
+  /// **'No icons found'**
+  String get iconpicker_no_results;
+
   /// No description provided for @iconpicker_remove_action.
   ///
   /// In en, this message translates to:

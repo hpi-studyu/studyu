@@ -2534,6 +2534,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get iconpicker_dialog_title => 'Icon auswählen';
 
   @override
+  String get iconpicker_search_hint => 'Icons suchen';
+
+  @override
+  String get iconpicker_no_results => 'Keine Icons gefunden';
+
+  @override
   String get iconpicker_remove_action => 'Icon entfernen';
 
   @override
