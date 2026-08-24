@@ -14,7 +14,7 @@ StudyInvite _$StudyInviteFromJson(Map<String, dynamic> json) => StudyInvite(
           ?.map((e) => e as String)
           .toList(),
   participantCount:
-      (json[StudyInvite.participantCountJsonKey] as num?)?.toInt() ?? 0,
+      (json['study_invite_participant_count'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$StudyInviteToJson(StudyInvite instance) =>
