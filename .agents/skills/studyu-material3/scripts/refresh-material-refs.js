@@ -92,14 +92,28 @@ function pageHeader(slug, md) {
 }
 
 function build() {
+  const missing = [];
+  const material = new Map();
+  for (const slugs of Object.values(CATEGORIES)) {
+    for (const slug of uniq(slugs)) {
+      const fname = slug.endsWith('.md') ? slug : slug + '.md';
+      const raw = read(path.join(scrapeDir, fname));
+      if (!raw) missing.push(slug);
+      else material.set(slug, raw);
+    }
+  }
+  if (missing.length) {
+    throw new Error(
+      `refusing to overwrite generated references: ${missing.length} required scraped page(s) missing from ${scrapeDir}: ${missing.join(', ')}`,
+    );
+  }
+
   fs.mkdirSync(outDir, { recursive: true });
   let total = 0;
   for (const [rel, slugs] of Object.entries(CATEGORIES)) {
     const parts = [];
     for (const slug of uniq(slugs)) {
-      const fname = slug.endsWith('.md') ? slug : slug + '.md';
-      const raw = read(path.join(scrapeDir, fname));
-      if (!raw) { console.error('  missing page: ' + slug); continue; }
+      const raw = material.get(slug);
       const body = stripScrapeNoise(raw);
       // Promote each page's H1 to H2 and drop its metadata line so it nests under the category title.
       const cleaned = body.replace(/^# (.+)$/m, '## $1').replace(/^slug: .*$/m, '').trim();

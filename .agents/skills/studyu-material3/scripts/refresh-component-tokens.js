@@ -126,6 +126,10 @@ function extract(src) {
     catch (e) { fail++; console.error('  fail ' + name + ': ' + e.message); }
   });
 
+  if (fail) {
+    throw new Error(`refusing to overwrite component tokens after ${fail} fetch failure(s)`);
+  }
+
   const L = [];
   L.push('# Component token geometry');
   L.push('');
