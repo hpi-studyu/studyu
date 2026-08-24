@@ -14,7 +14,7 @@
  * grouped markdown reference mirroring references/components/*.md.
  *
  * Usage:  node scripts/refresh-component-tokens.js [outFile]
- *         default outFile = ../references/component-tokens.md relative to this script
+ *         default outFile = ../references/material/component-tokens.md relative to this script
  */
 'use strict';
 const fs = require('fs');
