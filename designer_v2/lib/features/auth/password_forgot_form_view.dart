@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
+import 'package:studyu_designer_v2/features/auth/auth_inline_prompt_action.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -49,15 +49,11 @@ class PasswordForgotForm extends FormConsumerRefWidget {
         const SizedBox(height: 24.0),
         const Divider(height: 1),
         const SizedBox(height: 12.0),
-        Row(
-          children: [
-            Expanded(child: Text(tr.link_login_description2)),
-            Hyperlink(
-              text: tr.link_login,
-              onClick: () =>
-                  ref.read(routerProvider).dispatch(RoutingIntents.login),
-            ),
-          ],
+        AuthInlinePromptAction(
+          promptText: tr.link_login_description2,
+          actionText: tr.link_login,
+          onPressed: () =>
+              ref.read(routerProvider).dispatch(RoutingIntents.login),
         ),
       ],
     );

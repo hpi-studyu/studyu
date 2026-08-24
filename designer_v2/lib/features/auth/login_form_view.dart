@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
+import 'package:studyu_designer_v2/features/auth/auth_inline_prompt_action.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -76,16 +77,12 @@ class LoginForm extends FormConsumerRefWidget {
         const SizedBox(height: 24.0),
         const Divider(height: 1),
         const SizedBox(height: 12.0),
-        Row(
-          children: [
-            Expanded(child: Text(tr.link_signup_description)),
-            Hyperlink(
-              key: const ValueKey('signup_link'),
-              text: tr.link_signup,
-              onClick: () =>
-                  ref.read(routerProvider).dispatch(RoutingIntents.signup),
-            ),
-          ],
+        AuthInlinePromptAction(
+          key: const ValueKey('signup_link'),
+          promptText: tr.link_signup_description,
+          actionText: tr.link_signup,
+          onPressed: () =>
+              ref.read(routerProvider).dispatch(RoutingIntents.signup),
         ),
       ],
     );
