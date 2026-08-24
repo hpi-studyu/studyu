@@ -47,17 +47,8 @@ content groups, information hierarchy, form relationships (if a form), responsiv
 
 ### Step 4 — Compare against StudyU precedent
 
-Priority order (highest wins):
-
-1. **Explicit task/design requirement** — the ticket or the user says so.
-2. **Intentional existing StudyU pattern** — in `references/studyu/existing-patterns.md`, or visible
-   in the codebase used consistently across equivalent screens. Reuse it as-is.
-3. **Material 3 guidance** — from the generated references (never from memory).
-4. **Flutter implementation conventions** — from `references/flutter/`.
-5. **New design decision** — make it explicit, never present it as a Material requirement.
-
-If you invent anything not in StudyU or M3, say so: *"From M3: … · My design decision (not in
-M3): …"* — the split is mandatory for any value or pattern M3 does not specify.
+Apply the decision hierarchy below (§ Decision hierarchy). For a value or pattern absent from
+StudyU and M3, follow the explicit-label rule in `references/flutter/limitations.md`.
 
 ### Step 5 — Implement in Flutter
 
@@ -85,8 +76,7 @@ task/design requirement
         > new design decision (labelled as such)
 ```
 
-A Material 3 rule never overrides an intentional StudyU pattern, and a StudyU pattern never
-overrides an explicit design requirement. Document which level you chose.
+Document which level you chose.
 
 ## StudyU context you should already know
 

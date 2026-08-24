@@ -26,8 +26,8 @@ Two apps, two theming philosophies, one shared codebase.
 ## 2. Concrete current inconsistencies / risks
 
 Quantified (designer_v2 + app, excluding theme files):
-- **261** `const SizedBox(width|height: <n>)` literals — no spacing token layer, no 8dp-grid discipline.
-- **220** raw `Colors.*` references outside theme files.
+- **~398** `const SizedBox(width|height: <n>)` literals (~261 in `designer_v2`, 137 in `app`) — no spacing token layer, no 8dp-grid discipline.
+- **~230** raw `Colors.*` references outside theme files.
 - **67** raw `fontSize:` literals outside theme (many repeat the theme's own 14/15/18/22 values — text styles re-invented at call sites).
 - **26** `Color(0x…)` literals outside theme.
 - **23** `BorderRadius.circular(...)` outside theme.
@@ -169,9 +169,9 @@ Recommended, low-risk, additive rules:
    - Flag `ElevatedButton` where a `FilledButton` is semantically the primary action (informational).
    - Flag `BottomNavigationBar` (legacy; suggest `NavigationBar`).
 2. **`.jscpd` duplication threshold** is already `0` — the `Hyperlink` vs fitbit inline-links and repeated ToS wrap composition are jscpd-visible.
-3. These are **warning-level and additive** — they must not break `pre-commit-check` until StudyU chooses to adopt the migration. Deliverable: a `studyu_lints` package or `custom_lint` rules committed alongside the skill, gated as informational first.
+3. These are **warning-level and additive** — they must not break `pre-commit-check` until StudyU chooses to adopt the migration. Deliverable: a future `studyu_lints` package or `custom_lint` rules, gated as informational first.
 
-**Scope note:** the lint rules are proposed and implemented in minimal form (one or two demonstrative rules + doc), not force-applied across the repo. The brief asks for opportunities; the skill's job is to make them visible, not to migrate StudyU unilaterally.
+**Scope note:** this change documents proposed lint rules only; none are implemented or force-applied across the repo. The brief asks for opportunities; the skill's job is to make them visible, not to migrate StudyU unilaterally.
 
 ## 11. Files to add or modify
 

@@ -1,8 +1,8 @@
 # StudyU UI-drift lints — proposal + wiring
 
 Handwritten. Static-analysis rules that objectively catch the UI drift catalogued in
-`deviations.md`. Implemented as a `custom_lint` plugin (warning-level, additive — never breaks
-`pre-commit-check` until StudyU chooses to adopt).
+`deviations.md`. Proposed as a `custom_lint` plugin (warning-level, additive — it must not break
+`pre-commit-check` until StudyU chooses to adopt it).
 
 ## Current state
 

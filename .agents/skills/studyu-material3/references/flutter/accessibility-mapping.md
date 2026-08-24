@@ -17,8 +17,8 @@ autofill, and Material APIs. M3 accessibility principles live in
 - Password visibility toggle is `InkWell`+`Icon` with `FocusNode(skipTraversal: true)`
   (`auth_form_fields.dart`) — not reachable by keyboard, unlabeled. Replace with a labeled
   `IconButton`.
-- `FormTableLayout` renders forms in a `Table` — screen readers announce data rows. Prefer a
-  Column of labeled fields.
+- `FormTableLayout` renders forms in a `Table`; use the migration guidance in
+  `../studyu/deviations.md` #11 when touching one.
 
 ## Focus & keyboard
 

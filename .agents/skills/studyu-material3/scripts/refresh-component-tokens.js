@@ -42,7 +42,7 @@ const FAMILIES = [
     'IconButton', 'XSmallIconButton', 'SmallIconButton', 'MediumIconButton', 'LargeIconButton', 'XLargeIconButton',
     'FilledIconButton', 'FilledTonalIconButton', 'OutlinedIconButton', 'OutlinedSegmentedButton',
   ]],
-  ['FABs', 'components/fabs.md', [
+  ['FABs', 'components/buttons.md', [
     'FabBaseline', 'FabSmall', 'FabMedium', 'FabLarge', 'FabPrimaryContainer', 'FabSecondaryContainer',
     'ExtendedFabPrimary', 'ExtendedFabSmall', 'ExtendedFabMedium', 'ExtendedFabLarge', 'FabMenuBaseline',
   ]],

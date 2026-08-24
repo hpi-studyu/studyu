@@ -84,6 +84,6 @@ This structure is consistent — preserve it. The **wording inside it is inconsi
 
 ## What is NOT a reusable pattern (do not extend)
 
-- `FormTableLayout` for non-tabular forms — a11y cost (Table semantics). See deviations.
+- `FormTableLayout` for non-tabular forms — known a11y deviation; see `deviations.md` #11.
 - The participant `app`'s raw-color theme — do not copy it into new `app` screens; prefer extending
   a seed-based scheme, but do not silently import `designer_v2` tokens.

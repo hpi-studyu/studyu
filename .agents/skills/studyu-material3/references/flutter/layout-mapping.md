@@ -45,10 +45,8 @@ preserve it unless the task says otherwise.
 
 ## Form composition
 
-StudyU wraps fields in `FormTableLayout` (a `Table`). M3 has no table-based form concept. For
-a11y, prefer a `Column` of labeled fields; see `accessibility-mapping.md`. When `FormTableLayout`
-is already in use, do not silently leave it — note the deviation and migrate toward a labeled
-Column if the task touches the form.
+StudyU wraps fields in `FormTableLayout` (a `Table`). This is a known a11y deviation; apply the
+migration guidance in `../studyu/deviations.md` #11 if the task touches the form.
 
 ## Wrapping & overflow
 
