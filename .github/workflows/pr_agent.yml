@@ -1,0 +1,44 @@
+name: PR Agent
+
+# Repository-aware PR review bot (https://docs.pr-agent.ai).
+# Configuration lives in .pr_agent.toml on the default branch (dev); StudyU
+# conventions from AGENTS.md/CLAUDE.md are injected into every run via
+# config.repo_context_files.
+#
+# Uses pull_request_target so PRs from forks can be reviewed. This is safe
+# here because PR-Agent works against the GitHub API and we intentionally do
+# NOT add actions/checkout (see the security note in the PR-Agent docs), so
+# no PR code ever executes in this workflow.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review, review_requested]
+  issue_comment:
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: write
+
+jobs:
+  pr_agent_job:
+    if: >-
+      ${{ github.event.sender.type != 'Bot' &&
+          (github.event_name == 'pull_request_target' || github.event.issue.pull_request) }}
+    runs-on: ubuntu-latest
+    name: Run PR Agent on pull requests and respond to comments
+    steps:
+      - name: PR Agent action step
+        id: pragent
+        uses: the-pr-agent/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Model is served through OpenRouter; both the key and the model
+          # name are repository secrets (e.g. "openrouter/anthropic/claude-sonnet-4").
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          config.model: ${{ secrets.OPENROUTER_MODEL }}
+          config.fallback_models: '["${{ secrets.OPENROUTER_MODEL }}"]'
+          github_action_config.pr_actions: '["opened", "reopened", "synchronize", "ready_for_review", "review_requested"]'
+          # Tool controls (auto_describe etc. are set in .pr_agent.toml)
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "true"
