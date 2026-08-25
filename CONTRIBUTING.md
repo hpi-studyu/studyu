@@ -123,22 +123,12 @@ Examples from this repo:
 
 ## Pull Requests
 
-For any new features or bug fixes, create a new branch and open a pull request.
-Every pull request should include the following:
+For any new feature or bug fix, create a branch and open a pull request. Follow the
+pull request template and these conventions:
 
-1. **Clear title** using Conventional Commits format (e.g.,
-   `fix(designer): resolve drag-and-drop issue`)
-2. **Description** explaining the change, motivation, and any related issues
-3. **Screenshot or video** demonstrating the changes — this is **required** for
-   all PRs. Use a screen recording for interactive changes and a screenshot for
-   static ones.
-4. **Testing steps** so reviewers can verify the change locally
-
-### PR Checklist
-
-- [ ] `fvm exec melos qualitycheck` passes
-- [ ] Screenshot or video of the changes attached
-- [ ] Description links related issues
+- Branch: `<type>/studyu-<ticket-number>-<short-description>`
+- PR title: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`
+- PR description: include a direct link to the matching Jira ticket.
 
 ## Code Reviews — Conventional Comments
 
