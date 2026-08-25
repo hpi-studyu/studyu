@@ -23,18 +23,18 @@ git rev-parse --abbrev-ref HEAD
 Branch names must match:
 
 ```text
-<type>/<short-description>
+<type>/studyu-<ticket-number>-<short-description>
 ```
 
 Allowed types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `ci`, `build`.
 
-Examples: `fix/delete-study-fk`, `feat/date-question`, `refactor/fitbit-tab`.
+Examples: `fix/studyu-42-designer-picker`, `feat/studyu-128-date-question`.
 
 If the current branch does not match, stop and propose:
 
 ```text
 Branch name "<current>" doesn't follow conventions.
-Suggested: <type>/<kebab-description>
+Suggested: <type>/studyu-<ticket-number>-<kebab-description>
 Rename with: git branch -m <new-name>
 ```
 
@@ -118,27 +118,29 @@ git log <target-branch>..HEAD --format="%s%n%b"
 
 Derive:
 
+- Jira ticket: key from the branch and its direct URL. Ask the author for the URL if needed.
 - Problem: what was broken or missing, using commits and diff context.
 - Changes: grouped bullet list by area.
 - Testing: checklist of verification steps, including commands already run.
 
 ## Step 5: Create the PR
 
-When composing the body, use an available PR template. Fill applicable sections from Step 4 and follow removal instructions.
+When composing the body, use an available PR template. Fill applicable sections from Step 4, include a direct link to the matching Jira ticket, and follow removal instructions.
 
-If no template exists, write a concise body covering the problem, changes, and verification.
+If no template exists, write a concise body covering the Jira ticket, problem, changes, and verification.
 
 ```bash
 git push -u origin HEAD
 gh pr create \
-  --title "<type>[scope]: <imperative description>" \
+  --title "STUDYU-<ticket-number>: <type>[scope]: <imperative description>" \
   --base <target-branch> \
   --body "<completed-body>"
 ```
 
 PR title rules:
 
-- Format: `<type>[optional scope]: <description>`.
+- Format: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`.
+- The ticket must match the branch and Jira link.
 - Maximum 72 characters.
 - Imperative mood.
 - No trailing period.
