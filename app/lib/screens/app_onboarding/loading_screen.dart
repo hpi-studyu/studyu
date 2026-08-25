@@ -399,6 +399,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
 
+    await context.read<AppLanguage>().synchronizeWithServer();
+    if (!mounted) return;
+
     final selectedSubjectId = await getActiveSubjectId();
     if (!mounted) return;
 

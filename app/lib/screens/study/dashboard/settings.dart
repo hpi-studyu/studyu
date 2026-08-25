@@ -102,11 +102,11 @@ class _SettingsState extends State<Settings> {
                         ),
                         underline: const SizedBox(),
                         items: _buildDropdownItems(context),
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() {
                             _selectedValue = value;
                           });
-                          context.read<AppLanguage>().changeLanguage(value);
+                          await context.read<AppLanguage>().changeLanguage(value);
                         },
                       ),
                     ],

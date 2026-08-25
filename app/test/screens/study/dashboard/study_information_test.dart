@@ -301,4 +301,7 @@ class _TestAppLanguage extends ChangeNotifier implements AppLanguage {
 
   @override
   Future<void> fetchLocale() async {}
+
+  @override
+  Future<void> synchronizeWithServer() async {}
 }
