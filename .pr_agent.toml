@@ -1,22 +1,17 @@
 # StudyU PR-Agent configuration.
-# Loaded from the repository's default branch; merged over the built-in defaults.
 # See https://docs.pr-agent.ai/usage-guide/configuration_options/
 
 [config]
-# Repository instruction files injected into /review, /describe and /improve
-# prompts, read from the default branch so a PR cannot alter its own review
-# guidance. AGENTS.md is the single source of truth for StudyU conventions.
-repo_context_files = ["AGENTS.md", "CLAUDE.md"]
+# AGENTS.md contains the repository conventions used by PR-Agent.
+repo_context_files = ["AGENTS.md"]
 repo_context_max_lines = 500
 
 [github_action_config]
-# Automatic runs on PR open/reopen/ready_for_review.
 auto_review = true
 auto_describe = true
-auto_improve = false  # noisy; authors can invoke /improve manually
+auto_improve = false
 
 [ignore]
-# Generated, vendored and lock files are not worth reviewing.
 glob = [
     "*.g.dart",
     "*.freezed.dart",
@@ -33,52 +28,8 @@ glob = [
 ]
 
 [pr_reviewer]
-extra_instructions = """
-You are reviewing a PR for StudyU, an open-source platform for digital
-interventional studies (N-of-1 trials). The repository is a Melos-managed
-Dart/Flutter monorepo with four workspace packages:
-
-- app/: participant-facing Flutter app
-- designer_v2/: study designer Flutter app (features under lib/features/)
-- core/: shared domain models and utilities; committed *.g.dart serialization
-  is generated with build_runner
-- flutter_common/: shared Flutter utilities, env handling, common UI
-- supabase/ + database/: Postgres/Supabase backend (RLS policies, functions)
-
-When giving feedback, check specifically for:
-- Conformance with AGENTS.md: Effective Dart + package:lint/strict.yaml style,
-  snake_case files, UpperCamelCase classes, lowerCamelCase members.
-- Model changes in core/ that require `melos generate` (build_runner) - flag
-  when annotated models changed but the committed generated code did not.
-- Conventional Commits alignment of the PR title and scope against the
-  allowed types (feat, fix, chore, docs, refactor, test, style) and scopes
-  (app, designer, core, flutter_common, db).
-- PR size: if the non-generated diff exceeds roughly 500 lines, recommend
-  splitting into independently mergeable PRs (see .agents/skills/pull-request
-  conventions).
-- Locale/translation correctness: user-facing strings should go through the
-  app localizations, not hardcoded strings.
-- Supabase/RLS or migration changes under supabase/ and database/: verify
-  row-level-security implications and backward compatibility for studies
-  already in progress (participants mid-study must not break).
-- Fitbit/health integration, notification scheduling, and offline-first data
-  sync are fragile areas; scrutinize error handling and retries there.
-- Secrets: no credentials, keys, or env values may be committed; env
-  templates belong in flutter_common/lib/envs/.
-Format findings using Conventional Comments labels (praise, nitpick,
-suggestion, issue, todo, question, thought, chore, note).
-"""
-
 require_tests_review = true
 require_score_review = true
 require_security_review = true
 require_can_be_split_review = true
 require_estimate_effort_to_review = true
-
-[pr_code_suggestions]
-extra_instructions = """
-Suggestions must follow Effective Dart and the repo's strict lint config.
-Suggest idiomatic Flutter/Dart code consistent with the surrounding package.
-Never suggest edits to generated files (*.g.dart, *.freezed.dart, gen_l10n);
-instead point at the source model or arb file.
-"""

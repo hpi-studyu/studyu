@@ -1,9 +1,7 @@
 name: PR Agent
 
 # Repository-aware PR review bot (https://docs.pr-agent.ai).
-# Configuration lives in .pr_agent.toml on the default branch (dev); StudyU
-# conventions from AGENTS.md/CLAUDE.md are injected into every run via
-# config.repo_context_files.
+# Configuration and repository conventions are read from the default branch.
 #
 # Uses pull_request_target so PRs from forks can be reviewed. This is safe
 # here because PR-Agent works against the GitHub API and we intentionally do
