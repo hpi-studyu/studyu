@@ -72,12 +72,7 @@ You must use the Conventional Commits format for all commits. Never generate a g
 
 ### 3. Pull Request Automation
 
-When using the GitHub CLI (`gh`) to open a Pull Request:
-
-1. Parse `.github/pull_request_template.md` to use as the base schema for the PR body.
-2. Complete the `Description` and `Testing Steps` sections with high-density, accurate summaries derived from the git diff.
-3. Keep the checklist interactive (`- [ ]`) but check off the formatting and analyzer items if you successfully ran them in Step 1.
-4. Output a reminder to the user in the chat interface stating that they must manually attach the required screenshot or video before merging.
+When opening a pull request, use the `pull-request` skill.
 
 ### 4. Git Worktrees
 

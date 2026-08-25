@@ -1,8 +1,28 @@
+<!--
+PR conventions:
+- Branch: `<type>/studyu-<ticket-number>-<short-description>`
+- PR title: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`
+- Description: include a direct link to the matching Jira ticket.
+-->
+
 ## Description
-<!-- Explain the change, motivation, and link related issues (e.g., Fixes #123) -->
+<!-- Explain the change and motivation. -->
 
 ## Visuals
 <!-- Attach a screenshot for static UI changes or a screen recording for interactive UI changes. Remove this section when the PR has no visual impact. -->
+
+## Database changes
+<!-- Remove this section when the PR contains no database changes. Explain the overall reason for the database changes, then list each new migration file below. -->
+
+### Why are these database changes needed?
+
+<!-- Explain the overall reason this PR needs database changes. -->
+
+### Migration details
+
+| Migration file | What it changes | Why it is needed |
+| --- | --- | --- |
+| `path/to/migration.sql` | ... | ... |
 
 ## Testing Steps
 <!-- Provide step-by-step instructions so reviewers can verify this change locally -->
@@ -12,3 +32,7 @@
 - [ ] No new hardcoded user-facing strings were introduced; new UI copy is localized
 - [ ] Screenshot or video of the changes attached
 - [ ] Description links related issues
+## PR Checklist
+- [ ] I tested the changes and affected user flows.
+- [ ] I reviewed the full diff and checked for unintended changes.
+- [ ] Screenshot or video attached, or this item removed for non-visual changes
