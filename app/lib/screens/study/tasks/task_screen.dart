@@ -76,48 +76,78 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-Future<void> handleTaskCompletion(
+Future<bool> handleTaskCompletion(
   BuildContext context,
-  Function(StudySubject?) completionCallback,
-) async {
+  Future<void> Function(StudySubject?) completionCallback, {
+  required VoidCallback onCacheRetrySucceeded,
+}) async {
   final state = context.read<AppState>();
   final activeSubject = state.activeSubject;
-  try {
-    if (state.trackParticipantProgress) {
-      await completionCallback(activeSubject);
-      state.setConnectionStatus(AppConnectionStatus.healthy);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context)!.preview_mode_results_not_saved,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  } catch (exception) {
-    final status = connectionStatusFromError(exception);
-    if (status != null) {
-      state.setConnectionStatus(status);
-    }
-    debugPrint("Could not save results: $exception");
+  final wasConnectionDegraded =
+      state.connectionStatus != AppConnectionStatus.healthy;
+  var cacheWriteSucceeded = false;
+  var cacheRetryInFlight = false;
+
+  Future<bool> storeInCache() async {
     try {
       await Cache.storeSubject(activeSubject);
+      state.markActiveSubjectSynchronizationPending();
+      cacheWriteSucceeded = true;
       debugPrint("Store subject in cache");
+      return true;
     } catch (cacheError) {
       debugPrint("Could not cache results: $cacheError");
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.could_not_save_results),
           duration: const Duration(seconds: 10),
           action: SnackBarAction(
             label: 'Retry',
-            onPressed: () => handleTaskCompletion(context, completionCallback),
+            onPressed: () async {
+              if (cacheRetryInFlight || cacheWriteSucceeded) return;
+              cacheRetryInFlight = true;
+              try {
+                if (await storeInCache() && context.mounted) {
+                  onCacheRetrySucceeded();
+                }
+              } finally {
+                cacheRetryInFlight = false;
+              }
+            },
           ),
         ),
       );
+      return false;
     }
   }
+
+  if (!state.trackParticipantProgress) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          AppLocalizations.of(context)!.preview_mode_results_not_saved,
+        ),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+    return true;
+  }
+
+  try {
+    await completionCallback(activeSubject);
+  } catch (exception) {
+    final status = connectionStatusFromError(exception);
+    if (status != null) {
+      state.setConnectionStatus(status);
+    }
+    debugPrint("Could not save results: $exception");
+    return storeInCache();
+  }
+
+  if (wasConnectionDegraded) {
+    return storeInCache();
+  }
+  state.setConnectionStatus(AppConnectionStatus.healthy);
+  return true;
 }

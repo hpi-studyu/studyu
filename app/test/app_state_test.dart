@@ -85,6 +85,7 @@ void main() {
   late Map<String, String> storageData;
 
   setUp(() {
+    Cache.debugResetSubjectWrites();
     originalPlatform = FlutterSecureStoragePlatform.instance;
     storageData = {};
     FlutterSecureStoragePlatform.instance = TestFlutterSecureStoragePlatform(
@@ -96,6 +97,8 @@ void main() {
     FlutterSecureStoragePlatform.instance = originalPlatform;
     appConnectionStatusController.reset();
     Cache.debugUploadBlobFilesOverride = null;
+    Cache.debugSaveProgressOverride = null;
+    Cache.debugSaveSubjectOverride = null;
   });
 
   test('clearActiveStudyState removes stale active-study state', () {
@@ -181,6 +184,104 @@ void main() {
       expect(appState.activeSubject?.progress, hasLength(1));
       expect(appState.activeSubject?.progress.single.taskId, _taskId);
       expect(appConnectionStatusController.status, AppConnectionStatus.healthy);
+    },
+  );
+
+  test(
+    'in-flight local completion is retained and reconciled on retry',
+    () async {
+      final appState = AppState();
+      final currentSubject = _buildSubject();
+      final remoteSubject = StudySubject.fromJson(currentSubject.toFullJson())
+        ..progress = [
+          _progress(
+            currentSubject.id,
+            completedAt: DateTime.utc(2026, 8, 10, 7),
+          ),
+        ];
+      await Cache.storeSubject(currentSubject);
+      Cache.debugUploadBlobFilesOverride = (_, _) async {};
+      Cache.debugSaveProgressOverride = (progress) async => progress;
+      Cache.debugSaveSubjectOverride = (subject) async => subject;
+      final snapshotLoaded = Completer<void>();
+      final releaseSynchronization = Completer<void>();
+      Cache.debugAfterSubjectSnapshotLoaded = () async {
+        snapshotLoaded.complete();
+        await releaseSynchronization.future;
+      };
+
+      appState
+        ..activeSubject = currentSubject
+        ..selectedStudy = currentSubject.study
+        ..debugActiveSubjectSyncRetryDelay = const Duration(hours: 1)
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
+        ..debugFetchRemoteSubjectForSync = (_) async => remoteSubject;
+
+      final firstSynchronization = appState.retryCachedSubjectSynchronization();
+      await snapshotLoaded.future;
+      currentSubject.progress.add(
+        _progress(currentSubject.id, completedAt: DateTime.utc(2026, 8, 10, 9)),
+      );
+      releaseSynchronization.complete();
+      await firstSynchronization;
+
+      expect(appState.activeSubject, same(currentSubject));
+      expect(appState.activeSubject?.progress, hasLength(1));
+
+      await Cache.storeSubject(currentSubject);
+      Cache.debugAfterSubjectSnapshotLoaded = null;
+      await appState.retryCachedSubjectSynchronization();
+
+      expect(appState.activeSubject?.progress, hasLength(2));
+      expect(
+        appState.activeSubject?.progress.map(
+          (progress) => progress.completedAt,
+        ),
+        containsAll([
+          DateTime.utc(2026, 8, 10, 7),
+          DateTime.utc(2026, 8, 10, 9),
+        ]),
+      );
+
+      appState.dispose();
+    },
+  );
+
+  test(
+    'failed cached synchronization preserves active progress and degraded status',
+    () async {
+      final appState = AppState();
+      final cachedSubject = _buildSubject();
+      cachedSubject.progress = [_progress(cachedSubject.id)];
+      final remoteSubject = StudySubject.fromJson(cachedSubject.toFullJson())
+        ..progress = [];
+      await Cache.storeSubject(cachedSubject);
+      Cache.debugUploadBlobFilesOverride = (_, _) =>
+          Future<void>.error(Exception('failed to fetch'));
+
+      appState
+        ..activeSubject = cachedSubject
+        ..selectedStudy = cachedSubject.study
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
+        ..debugFetchRemoteSubjectForSync = (_) async {
+          return remoteSubject;
+        }
+        ..setConnectionStatus(AppConnectionStatus.backendUnavailable);
+
+      await appState.retryCachedSubjectSynchronization();
+
+      expect(appState.activeSubject, same(cachedSubject));
+      expect(appState.activeSubject?.progress, hasLength(1));
+      expect(
+        appConnectionStatusController.status,
+        AppConnectionStatus.backendUnavailable,
+      );
+
+      appState.dispose();
     },
   );
 
@@ -308,6 +409,61 @@ void main() {
       );
     },
   );
+
+  test('marked synchronization retries while status remains healthy', () async {
+    final appState = AppState();
+    final cachedSubject = _buildSubject()..inviteCode = 'cached';
+    cachedSubject.progress = [_progress(cachedSubject.id)];
+    final remoteSubject = StudySubject.fromJson(cachedSubject.toFullJson())
+      ..inviteCode = 'remote'
+      ..progress = [];
+    await Cache.storeSubject(cachedSubject);
+    Cache.debugUploadBlobFilesOverride = (_, _) =>
+        Future<void>.error(Exception('unclassified synchronization failure'));
+
+    final startupSynchronization = await Cache.synchronize(remoteSubject);
+
+    expect(startupSynchronization.succeeded, isFalse);
+    expect(appConnectionStatusController.status, AppConnectionStatus.healthy);
+
+    var fetchCalls = 0;
+    var restoreCalls = 0;
+    Cache.debugUploadBlobFilesOverride = (_, _) async {};
+    Cache.debugSaveProgressOverride = (progress) async => progress;
+    Cache.debugSaveSubjectOverride = (subject) async => subject;
+    appState
+      ..updateActiveSubject(startupSynchronization.subject)
+      ..debugActiveSubjectSyncRetryDelay = const Duration(milliseconds: 1)
+      ..debugHasParticipantSessionForSync = () {
+        return true;
+      }
+      ..debugFetchRemoteSubjectForSync = (_) async {
+        fetchCalls++;
+        if (fetchCalls == 1) {
+          throw Exception('AuthApiException(code: invalid_jwt)');
+        }
+        return remoteSubject;
+      }
+      ..debugRestoreParticipantSessionForSync = () async {
+        restoreCalls++;
+        return true;
+      }
+      ..markActiveSubjectSynchronizationPending();
+
+    final deadline = DateTime.now().add(const Duration(seconds: 1));
+    while (appState.activeSubject?.inviteCode != 'remote' &&
+        DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+    }
+
+    expect(fetchCalls, greaterThanOrEqualTo(2));
+    expect(restoreCalls, 1);
+    expect(appState.activeSubject?.inviteCode, 'remote');
+    expect(appState.activeSubject?.progress, hasLength(1));
+    expect(appConnectionStatusController.status, AppConnectionStatus.healthy);
+
+    appState.dispose();
+  });
 
   test(
     'scheduleActiveSubjectSyncRetryIfNeeded retries until healthy',

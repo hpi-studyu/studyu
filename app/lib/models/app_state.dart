@@ -30,6 +30,7 @@ class AppState with ChangeNotifier {
   AppConnectionStatus _connectionStatus = appConnectionStatusController.status;
   Timer? _activeSubjectSyncRetryTimer;
   bool _activeSubjectSyncInFlight = false;
+  bool _activeSubjectSyncPending = false;
   StreamSubscription<StudySubject>? _activeSubjectCacheSubscription;
   StudySubject? _activeSubjectCacheSource;
 
@@ -143,6 +144,7 @@ class AppState with ChangeNotifier {
   }
 
   void clearActiveStudyState() {
+    _activeSubjectSyncPending = false;
     _cancelActiveSubjectSyncRetry();
     _activeSubjectCacheSubscription?.cancel();
     _activeSubjectCacheSubscription = null;
@@ -159,17 +161,19 @@ class AppState with ChangeNotifier {
   void _applyConnectionStatus(AppConnectionStatus status) {
     if (_connectionStatus == status) return;
     _connectionStatus = status;
-    if (status == AppConnectionStatus.healthy) {
-      _cancelActiveSubjectSyncRetry();
-    } else {
-      scheduleActiveSubjectSyncRetryIfNeeded();
-    }
+    scheduleActiveSubjectSyncRetryIfNeeded();
     notifyListeners();
   }
 
+  void markActiveSubjectSynchronizationPending() {
+    _activeSubjectSyncPending = true;
+    scheduleActiveSubjectSyncRetryIfNeeded();
+  }
+
   void scheduleActiveSubjectSyncRetryIfNeeded() {
-    if (_connectionStatus == AppConnectionStatus.healthy ||
-        activeSubject == null) {
+    if (activeSubject == null ||
+        (_connectionStatus == AppConnectionStatus.healthy &&
+            !_activeSubjectSyncPending)) {
       _cancelActiveSubjectSyncRetry();
       return;
     }
@@ -251,13 +255,25 @@ class AppState with ChangeNotifier {
     if (remoteSubject == null || activeSubject?.id != currentSubject.id) {
       return;
     }
-    final synchronizedSubject = await Cache.synchronize(remoteSubject);
-    if (activeSubject?.id != currentSubject.id) return;
-    appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
-    updateActiveSubject(synchronizedSubject);
-    if (appConnectionStatusController.status == AppConnectionStatus.healthy) {
-      _cancelActiveSubjectSyncRetry();
+    final synchronization = await Cache.synchronize(remoteSubject);
+    final latestActiveSubject = activeSubject;
+    if (!synchronization.succeeded ||
+        latestActiveSubject?.id != currentSubject.id) {
+      markActiveSubjectSynchronizationPending();
+      if (synchronization.error != null) throw synchronization.error!;
+      return;
     }
+    if (!Cache.containsAllProgress(
+      subject: synchronization.subject,
+      progressSource: latestActiveSubject!,
+    )) {
+      markActiveSubjectSynchronizationPending();
+      return;
+    }
+    _activeSubjectSyncPending = false;
+    appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+    updateActiveSubject(synchronization.subject);
+    _cancelActiveSubjectSyncRetry();
   }
 
   Future<bool> _restoreParticipantSessionForSync() async {

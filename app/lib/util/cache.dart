@@ -7,12 +7,40 @@ import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
+typedef CacheSynchronizationResult = ({
+  StudySubject subject,
+  bool succeeded,
+  Object? error,
+});
+
+typedef _CachedSubjectSnapshot = ({StudySubject? subject, int revision});
+
 class Cache {
   static bool isSynchronizing = false;
+  static int _subjectRevision = 0;
+  static Future<void>? _subjectWriteInFlight;
 
   @visibleForTesting
   static Future<void> Function(String studyId, String userId)?
   debugUploadBlobFilesOverride;
+
+  @visibleForTesting
+  static Future<SubjectProgress> Function(SubjectProgress progress)?
+  debugSaveProgressOverride;
+
+  @visibleForTesting
+  static Future<StudySubject> Function(StudySubject subject)?
+  debugSaveSubjectOverride;
+
+  @visibleForTesting
+  static Future<void> Function()? debugAfterSubjectSnapshotLoaded;
+
+  @visibleForTesting
+  static void debugResetSubjectWrites() {
+    _subjectRevision = 0;
+    _subjectWriteInFlight = null;
+    debugAfterSubjectSnapshotLoaded = null;
+  }
 
   static bool isCompatibleCachedSubject({
     required StudySubject localSubject,
@@ -44,18 +72,82 @@ class Cache {
     return SubjectProgressSyncPlan(
       newProgress: newProgress,
       mergedProgress: mergedProgress,
-      saveProgress: (progress) => progress.save(),
-      saveSubject: (subject) => subject.save(onlyUpdate: true),
+      saveProgress: debugSaveProgressOverride ?? (progress) => progress.save(),
+      saveSubject:
+          debugSaveSubjectOverride ??
+          (subject) => subject.save(onlyUpdate: true),
+    );
+  }
+
+  static Future<T> _queueSubjectWrite<T>(Future<T> Function() write) async {
+    while (_subjectWriteInFlight != null) {
+      await _subjectWriteInFlight;
+    }
+    final completed = Completer<void>();
+    _subjectWriteInFlight = completed.future;
+    try {
+      return await write();
+    } finally {
+      _subjectWriteInFlight = null;
+      completed.complete();
+    }
+  }
+
+  static Future<void> _writeSubject(StudySubject subject) {
+    return SecureStorage.write(
+      cacheSubjectKey,
+      jsonEncode(subject.toFullJson()),
     );
   }
 
   static Future<void> storeSubject(StudySubject? subject) async {
     // debugPrint("Store subject in cache");
     if (subject == null) return;
-    await SecureStorage.write(
-      cacheSubjectKey,
-      jsonEncode(subject.toFullJson()),
-    );
+    _subjectRevision++;
+    await _queueSubjectWrite(() => _writeSubject(subject));
+  }
+
+  static Future<bool> _storeSubjectIfRevisionUnchanged(
+    StudySubject subject,
+    int expectedRevision,
+  ) {
+    if (_subjectRevision != expectedRevision) return Future.value(false);
+    final reservedRevision = ++_subjectRevision;
+    return _queueSubjectWrite(() async {
+      if (_subjectRevision != reservedRevision) return false;
+      await _writeSubject(subject);
+      return _subjectRevision == reservedRevision;
+    });
+  }
+
+  static Future<_CachedSubjectSnapshot> _loadSubjectSnapshot({
+    StudySubject? backupSubject,
+  }) async {
+    while (true) {
+      while (_subjectWriteInFlight != null) {
+        await _subjectWriteInFlight;
+      }
+      final revision = _subjectRevision;
+      final subject = await SecureStorage.containsKey(cacheSubjectKey)
+          ? await loadSubject(backupSubject: backupSubject)
+          : null;
+      if (revision == _subjectRevision) {
+        return (subject: subject, revision: revision);
+      }
+    }
+  }
+
+  static Future<CacheSynchronizationResult>
+  _successfulSynchronizationIfRevisionUnchanged({
+    required StudySubject subject,
+    required StudySubject backupSubject,
+    required int expectedRevision,
+  }) async {
+    if (_subjectRevision == expectedRevision) {
+      return (subject: subject, succeeded: true, error: null);
+    }
+    final latest = await _loadSubjectSnapshot(backupSubject: backupSubject);
+    return (subject: latest.subject ?? subject, succeeded: false, error: null);
   }
 
   static Future<StudySubject> loadSubject({StudySubject? backupSubject}) async {
@@ -160,13 +252,22 @@ class Cache {
     }
   }
 
-  static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
-    if (isSynchronizing) return remoteSubject;
-    // No local subject found
-    if (!(await SecureStorage.containsKey(cacheSubjectKey))) {
-      return remoteSubject;
+  static Future<CacheSynchronizationResult> synchronize(
+    StudySubject remoteSubject,
+  ) async {
+    final snapshot = await _loadSubjectSnapshot(backupSubject: remoteSubject);
+    await debugAfterSubjectSnapshotLoaded?.call();
+    final localSubject = snapshot.subject;
+    if (localSubject == null) {
+      return _successfulSynchronizationIfRevisionUnchanged(
+        subject: remoteSubject,
+        backupSubject: remoteSubject,
+        expectedRevision: snapshot.revision,
+      );
     }
-    final localSubject = await loadSubject(backupSubject: remoteSubject);
+    if (isSynchronizing) {
+      return (subject: localSubject, succeeded: false, error: null);
+    }
     if (!isCompatibleCachedSubject(
       localSubject: localSubject,
       remoteSubject: remoteSubject,
@@ -174,14 +275,28 @@ class Cache {
       StudyULogger.warning(
         'Skip cache synchronization because cached subject does not match remote subject',
       );
-      return remoteSubject;
+      return _successfulSynchronizationIfRevisionUnchanged(
+        subject: remoteSubject,
+        backupSubject: remoteSubject,
+        expectedRevision: snapshot.revision,
+      );
     }
     // local and remote subject are equal, nothing to synchronize
-    if (localSubject == remoteSubject) return remoteSubject;
+    if (localSubject == remoteSubject) {
+      return _successfulSynchronizationIfRevisionUnchanged(
+        subject: remoteSubject,
+        backupSubject: remoteSubject,
+        expectedRevision: snapshot.revision,
+      );
+    }
     // remote subject belongs to a different study
     if (!kDebugMode &&
         remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) {
-      return remoteSubject;
+      return _successfulSynchronizationIfRevisionUnchanged(
+        subject: remoteSubject,
+        backupSubject: remoteSubject,
+        expectedRevision: snapshot.revision,
+      );
     }
 
     debugPrint("Synchronize subject with cache");
@@ -203,16 +318,42 @@ class Cache {
           syncPlan: syncPlan,
         );
       }
+      final stored = await _storeSubjectIfRevisionUnchanged(
+        remoteSubject,
+        snapshot.revision,
+      );
+      if (!stored) {
+        final latestSubject = await _loadSubjectSnapshot(
+          backupSubject: remoteSubject,
+        );
+        return (
+          subject: latestSubject.subject ?? localSubject,
+          succeeded: false,
+          error: null,
+        );
+      }
       appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+      return (subject: remoteSubject, succeeded: true, error: null);
     } catch (exception) {
       final status = connectionStatusFromError(exception);
       if (status != null) {
         appConnectionStatusController.setStatus(status);
       }
       StudyULogger.warning(exception);
+      return (subject: localSubject, succeeded: false, error: exception);
+    } finally {
+      isSynchronizing = false;
     }
-    isSynchronizing = false;
-    return remoteSubject;
+  }
+
+  static bool containsAllProgress({
+    required StudySubject subject,
+    required StudySubject progressSource,
+  }) {
+    final subjectProgress = subject.progress.map(_progressSyncKey).toSet();
+    return progressSource.progress.every(
+      (progress) => subjectProgress.contains(_progressSyncKey(progress)),
+    );
   }
 
   static String _progressSyncKey(SubjectProgress progress) =>
