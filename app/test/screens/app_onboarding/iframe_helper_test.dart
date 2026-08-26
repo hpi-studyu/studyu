@@ -42,6 +42,15 @@ void main() {
         deriveDesignerOrigin('https://studyu-dev.evil.example.com/', fallback),
         fallback,
       );
+      // Lookalike Firebase project id must not pass the prefix check.
+      expect(
+        deriveDesignerOrigin('https://studyu-devil.web.app/', fallback),
+        fallback,
+      );
+      expect(
+        deriveDesignerOrigin('https://studyu-devil.firebaseapp.com/', fallback),
+        fallback,
+      );
       expect(
         deriveDesignerOrigin('https://studyu-dev.evil.example.com/', null),
         isNull,

@@ -38,7 +38,13 @@ Uri? _tryParseUrl(String? url) {
 bool _isTrustedDesignerHost(Uri referrer, Uri? fallback) {
   final host = referrer.host;
   if (fallback != null && host == fallback.host) return true;
-  return host.startsWith(_previewFirebaseProjectId) &&
+  // Exact project id or '<id>-<site>/<channel>' style subdomain, so a
+  // lookalike project such as 'studyu-devil.web.app' is rejected.
+  final isPreviewProjectHost =
+      host == _previewFirebaseProjectId ||
+      host.startsWith('$_previewFirebaseProjectId-') ||
+      host.startsWith('$_previewFirebaseProjectId.');
+  return isPreviewProjectHost &&
       (host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'));
 }
 
