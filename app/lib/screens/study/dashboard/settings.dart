@@ -106,7 +106,9 @@ class _SettingsState extends State<Settings> {
                           setState(() {
                             _selectedValue = value;
                           });
-                          await context.read<AppLanguage>().changeLanguage(value);
+                          await context.read<AppLanguage>().changeLanguage(
+                            value,
+                          );
                         },
                       ),
                     ],
