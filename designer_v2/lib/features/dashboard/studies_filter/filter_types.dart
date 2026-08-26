@@ -30,7 +30,6 @@ enum StudyProperty {
   participantCount,
   activeSubjectCount,
   endedCount,
-  missedDays,
   resultSharing,
   registryPublished,
   owner, // derived from isOwner

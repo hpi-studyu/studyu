@@ -66,7 +66,7 @@ class DashboardState extends Equatable {
   final Object? loadError;
 
   /// True if the current [activeFilter] contains a condition that cannot be
-  /// expressed in PostgREST (e.g. [StudyProperty.missedDays]). When true the
+  /// expressed in PostgREST. When true the
   /// list is empty and the UI should show a "filter not supported" message
   /// rather than silently dropping rows.
   final bool advancedFilterUnsupported;

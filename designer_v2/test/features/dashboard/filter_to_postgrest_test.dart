@@ -251,21 +251,5 @@ void main() {
       expect(result, contains('T'));
       expect(result, endsWith('Z'));
     });
-
-    test('missedDays throws UnsupportedFilterException', () {
-      final group = FilterGroup(
-        children: [
-          FilterCondition(
-            property: StudyProperty.missedDays,
-            operator: FilterOperator.greaterThan,
-            value: 5,
-          ),
-        ],
-      );
-      expect(
-        () => buildPostgrestFilterExpression(group, _user()),
-        throwsA(isA<UnsupportedFilterException>()),
-      );
-    });
   });
 }

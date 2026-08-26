@@ -560,14 +560,14 @@ void main() {
             excludeIds: anyNamed('excludeIds'),
           ),
         ).thenAnswer(
-          (_) async => throw const UnsupportedFilterException('missedDays'),
+          (_) async => throw const UnsupportedFilterException('unsupported'),
         );
 
         await h.controller.updateFilter(
           FilterGroup(
             children: [
               FilterCondition(
-                property: StudyProperty.missedDays,
+                property: StudyProperty.participantCount,
                 operator: FilterOperator.greaterThan,
                 value: 5,
               ),
