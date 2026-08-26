@@ -10,25 +10,47 @@ void main() {
   });
 
   group('deriveDesignerOrigin', () {
-    test('prefers the embedding parent origin over the compiled fallback', () {
+    const fallback = 'https://designer.dev.studyu.health';
+
+    test('accepts the compiled designer host as referrer origin', () {
+      expect(deriveDesignerOrigin('$fallback/study/abc', fallback), fallback);
+    });
+
+    test('accepts studyu-dev Firebase preview-channel origins', () {
       expect(
         deriveDesignerOrigin(
-          'https://designer--pr909-preview.firebaseapp.com/',
-          'https://designer.dev.studyu.health',
+          'https://studyu-dev-designer-v2--pr-909-abc123.web.app/',
+          fallback,
         ),
-        'https://designer--pr909-preview.firebaseapp.com',
+        'https://studyu-dev-designer-v2--pr-909-abc123.web.app',
+      );
+      expect(
+        deriveDesignerOrigin(
+          'https://studyu-dev-designer-v2--pr-909-abc123.firebaseapp.com/',
+          fallback,
+        ),
+        'https://studyu-dev-designer-v2--pr-909-abc123.firebaseapp.com',
+      );
+    });
+
+    test('rejects untrusted referrer origins and falls back', () {
+      expect(
+        deriveDesignerOrigin('https://evil.example.com/', fallback),
+        fallback,
+      );
+      expect(
+        deriveDesignerOrigin('https://studyu-dev.evil.example.com/', fallback),
+        fallback,
+      );
+      expect(
+        deriveDesignerOrigin('https://studyu-dev.evil.example.com/', null),
+        isNull,
       );
     });
 
     test('falls back to the compiled designer url', () {
-      expect(
-        deriveDesignerOrigin(null, 'https://designer.dev.studyu.health'),
-        'https://designer.dev.studyu.health',
-      );
-      expect(
-        deriveDesignerOrigin('', 'https://designer.dev.studyu.health/'),
-        'https://designer.dev.studyu.health',
-      );
+      expect(deriveDesignerOrigin(null, fallback), fallback);
+      expect(deriveDesignerOrigin('', '$fallback/'), fallback);
       expect(deriveDesignerOrigin('not-a-url', null), isNull);
       expect(deriveDesignerOrigin(null, null), isNull);
     });

@@ -9,20 +9,37 @@ import "package:universal_html/html.dart" as html;
 typedef PreviewNavigationHandler = Future<void> Function(String? route);
 typedef PreviewStudyHandler = void Function(Study study);
 
+/// Firebase project that hosts the Designer preview channels for PR previews
+/// (.github/workflows/firebase-hosting-pull-request.yml).
+const _previewFirebaseProjectId = 'studyu-dev';
+
 /// Derives the Designer origin used as the postMessage target and for
 /// validating incoming messages. The embedding parent's referrer origin wins
-/// because Firebase PR previews host the Designer on a preview-channel origin
-/// that differs from the compiled [fallbackUrl]; the compiled designer URL is
-/// the fallback. Exposed for testing.
+/// only when its host is trusted: the compiled designer host or a
+/// [_previewFirebaseProjectId] Firebase hosting domain, because Firebase PR
+/// previews host the Designer on a preview-channel origin that differs from
+/// the compiled [fallbackUrl]. Untrusted referrers fall back to the compiled
+/// designer URL. Exposed for testing.
 String? deriveDesignerOrigin(String? referrer, String? fallbackUrl) {
-  for (final candidate in [referrer, fallbackUrl]) {
-    if (candidate == null || candidate.isEmpty) continue;
-    final uri = Uri.tryParse(candidate);
-    if (uri != null && uri.hasScheme && uri.host.isNotEmpty) {
-      return uri.origin;
-    }
+  final fallback = _tryParseUrl(fallbackUrl);
+  final parent = _tryParseUrl(referrer);
+  if (parent != null && _isTrustedDesignerHost(parent, fallback)) {
+    return parent.origin;
   }
-  return null;
+  return fallback?.origin;
+}
+
+Uri? _tryParseUrl(String? url) {
+  if (url == null || url.isEmpty) return null;
+  final uri = Uri.tryParse(url);
+  return uri != null && uri.hasScheme && uri.host.isNotEmpty ? uri : null;
+}
+
+bool _isTrustedDesignerHost(Uri referrer, Uri? fallback) {
+  final host = referrer.host;
+  if (fallback != null && host == fallback.host) return true;
+  return host.startsWith(_previewFirebaseProjectId) &&
+      (host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'));
 }
 
 class IFrameHelper {
