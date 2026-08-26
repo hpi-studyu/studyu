@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -54,9 +54,14 @@ jobs:
 
       - name: Configure local StudyU environment
         run: |
-          cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
-          LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' flutter_common/lib/envs/.env.local
-          echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)" >> flutter_common/lib/envs/.env.local
+          cp flutter_common/lib/envs/.env.local.example \
+            flutter_common/lib/envs/.env.local
+          LC_ALL=C sed -i.bak \
+            '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' \
+            flutter_common/lib/envs/.env.local
+          supabase_anon_key="$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)"
+          echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$supabase_anon_key" \
+            >> flutter_common/lib/envs/.env.local
 
       - name: Start Chrome Driver
         run: |

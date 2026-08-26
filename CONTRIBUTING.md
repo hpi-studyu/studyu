@@ -141,21 +141,12 @@ Examples from this repo:
 
 ## Pull Requests
 
-For any new features or bug fixes, create a new branch and open a pull request.
-Every pull request should include the following:
+For any new feature or bug fix, create a branch and open a pull request. Follow the
+pull request template and these conventions:
 
-1. **Clear title** using Conventional Commits format (e.g.,
-   `fix(designer): resolve drag-and-drop issue`)
-2. **Description** explaining the change, motivation, and any related issues or
-   Jira tickets. StudyU Jira tickets use the `STUDYU-123` format. Prefer a full
-   `https://studyu.atlassian.net/browse/STUDYU-123` URL so PR-Agent can fetch
-   the ticket context and compare the implementation with its acceptance criteria.
-3. **Screenshot or video** for UI changes. Use a screen recording for
-   interactive changes and a screenshot for static ones.
-4. **Testing steps** so reviewers can verify the change locally
-
-The current checklist and PR body schema are defined in
-[`.github/pull_request_template.md`](.github/pull_request_template.md).
+- Branch: `<type>/studyu-<ticket-number>-<short-description>`
+- PR title: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`
+- PR description: include a direct link to the matching Jira ticket.
 
 ## Code Reviews — Conventional Comments
 
