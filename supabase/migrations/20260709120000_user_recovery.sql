@@ -216,11 +216,12 @@ BEGIN
 
 EXCEPTION
     WHEN OTHERS THEN
-        -- Log error and return failure
-        RAISE WARNING 'Error in recover_account for recovery_id %: %', p_recovery_id, SQLERRM;
+        -- Log the full error server-side only; never return internal
+        -- database details to callers of this public RPC.
+        RAISE LOG 'Error in recover_account for recovery_id %: %', p_recovery_id, SQLERRM;
         RETURN jsonb_build_object(
             'success', false,
-            'error', 'Recovery failed: ' || SQLERRM
+            'error', 'recovery_failed'
         );
 END;
 $$;
