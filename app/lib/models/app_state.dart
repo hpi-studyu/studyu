@@ -29,7 +29,9 @@ class AppState with ChangeNotifier {
   late final VoidCallback _connectionStatusListener;
   AppConnectionStatus _connectionStatus = appConnectionStatusController.status;
   Timer? _activeSubjectSyncRetryTimer;
-  bool _activeSubjectSyncInFlight = false;
+  Future<void>? _activeSubjectSyncFuture;
+  bool _activeSubjectSyncStopped = false;
+  bool _activeSubjectSyncPending = false;
   StreamSubscription<StudySubject>? _activeSubjectCacheSubscription;
   StudySubject? _activeSubjectCacheSource;
 
@@ -42,6 +44,9 @@ class AppState with ChangeNotifier {
 
   @visibleForTesting
   Future<bool> Function()? debugRestoreParticipantSessionForSync;
+
+  @visibleForTesting
+  bool Function()? debugHasParticipantSessionForSync;
 
   bool get hasPendingDeepLink =>
       pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
@@ -88,10 +93,15 @@ class AppState with ChangeNotifier {
     _activeSubjectCacheSubscription = currentSubject.onSave.listen((
       StudySubject subject,
     ) async {
+      if (_activeSubjectSyncStopped ||
+          !identical(_activeSubjectCacheSource, currentSubject)) {
+        return;
+      }
       activeSubject = subject;
       if (selectedStudy == null || selectedStudy?.id == subject.study.id) {
         selectedStudy = subject.study;
       }
+      _syncActiveSubjectCache();
       await Cache.storeSubject(subject);
       scheduleActiveSubjectSyncRetryIfNeeded();
       notifyListeners();
@@ -103,7 +113,11 @@ class AppState with ChangeNotifier {
     bool notifyListenersNow = true,
     bool updateSelectedStudy = true,
   }) {
+    final hadActiveSubject = activeSubject != null;
     activeSubject = subject;
+    if (!hadActiveSubject && subject != null) {
+      _activeSubjectSyncStopped = false;
+    }
     if (updateSelectedStudy) {
       selectedStudy = subject?.study;
     }
@@ -139,6 +153,8 @@ class AppState with ChangeNotifier {
   }
 
   void clearActiveStudyState() {
+    _activeSubjectSyncStopped = true;
+    _activeSubjectSyncPending = false;
     _cancelActiveSubjectSyncRetry();
     _activeSubjectCacheSubscription?.cancel();
     _activeSubjectCacheSubscription = null;
@@ -155,17 +171,21 @@ class AppState with ChangeNotifier {
   void _applyConnectionStatus(AppConnectionStatus status) {
     if (_connectionStatus == status) return;
     _connectionStatus = status;
-    if (status == AppConnectionStatus.healthy) {
-      _cancelActiveSubjectSyncRetry();
-    } else {
-      scheduleActiveSubjectSyncRetryIfNeeded();
-    }
+    scheduleActiveSubjectSyncRetryIfNeeded();
     notifyListeners();
   }
 
+  void markActiveSubjectSynchronizationPending() {
+    if (_activeSubjectSyncStopped) return;
+    _activeSubjectSyncPending = true;
+    scheduleActiveSubjectSyncRetryIfNeeded();
+  }
+
   void scheduleActiveSubjectSyncRetryIfNeeded() {
-    if (_connectionStatus == AppConnectionStatus.healthy ||
-        activeSubject == null) {
+    if (_activeSubjectSyncStopped ||
+        activeSubject == null ||
+        (_connectionStatus == AppConnectionStatus.healthy &&
+            !_activeSubjectSyncPending)) {
       _cancelActiveSubjectSyncRetry();
       return;
     }
@@ -180,15 +200,44 @@ class AppState with ChangeNotifier {
     _activeSubjectSyncRetryTimer = null;
   }
 
-  Future<void> retryCachedSubjectSynchronization() async {
-    if (_activeSubjectSyncInFlight) return;
+  Future<void> retryCachedSubjectSynchronization() {
+    if (_activeSubjectSyncStopped) return Future.value();
+    final activeSynchronization = _activeSubjectSyncFuture;
+    if (activeSynchronization != null) return activeSynchronization;
+
+    late final Future<void> synchronization;
+    synchronization = _retryCachedSubjectSynchronization().whenComplete(() {
+      if (identical(_activeSubjectSyncFuture, synchronization)) {
+        _activeSubjectSyncFuture = null;
+      }
+    });
+    _activeSubjectSyncFuture = synchronization;
+    return synchronization;
+  }
+
+  Future<void> _retryCachedSubjectSynchronization() async {
     final currentSubject = activeSubject;
     if (currentSubject == null) {
       _cancelActiveSubjectSyncRetry();
       return;
     }
-    _activeSubjectSyncInFlight = true;
     try {
+      final hasParticipantSession =
+          (debugHasParticipantSessionForSync ?? isUserLoggedIn)();
+      if (!hasParticipantSession) {
+        final bool didRestoreSession;
+        try {
+          didRestoreSession =
+              await (debugRestoreParticipantSessionForSync ??
+                  _restoreParticipantSessionForSync)();
+        } on AuthApiException catch (error) {
+          if (error.code == 'invalid_credentials') return;
+          rethrow;
+        }
+        if (!didRestoreSession || activeSubject?.id != currentSubject.id) {
+          return;
+        }
+      }
       await _synchronizeCachedSubject(currentSubject);
     } catch (error) {
       final status = connectionStatusFromError(error);
@@ -219,8 +268,37 @@ class AppState with ChangeNotifier {
           appConnectionStatusController.setStatus(recoveryStatus);
         }
       }
+    }
+  }
+
+  Future<void> stopAndAwaitActiveSubjectSynchronization() async {
+    _activeSubjectSyncStopped = true;
+    _activeSubjectSyncPending = false;
+    _cancelActiveSubjectSyncRetry();
+    try {
+      await _activeSubjectSyncFuture;
+    } catch (error) {
+      StudyULogger.warning(
+        'Active subject synchronization stopped with an error: $error',
+      );
     } finally {
-      _activeSubjectSyncInFlight = false;
+      _activeSubjectSyncPending = false;
+    }
+  }
+
+  Future<void> resumeActiveSubjectSynchronization() async {
+    final currentSubject = activeSubject;
+    if (currentSubject == null) return;
+    _activeSubjectSyncStopped = false;
+    _activeSubjectSyncPending = true;
+    try {
+      await Cache.storeSubject(currentSubject);
+    } catch (error) {
+      StudyULogger.warning(
+        'Could not restore active subject cache after failed deletion: $error',
+      );
+    } finally {
+      scheduleActiveSubjectSyncRetryIfNeeded();
     }
   }
 
@@ -231,13 +309,25 @@ class AppState with ChangeNotifier {
     if (remoteSubject == null || activeSubject?.id != currentSubject.id) {
       return;
     }
-    final synchronizedSubject = await Cache.synchronize(remoteSubject);
-    if (activeSubject?.id != currentSubject.id) return;
-    appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
-    updateActiveSubject(synchronizedSubject);
-    if (appConnectionStatusController.status == AppConnectionStatus.healthy) {
-      _cancelActiveSubjectSyncRetry();
+    final synchronization = await Cache.synchronize(remoteSubject);
+    final latestActiveSubject = activeSubject;
+    if (!synchronization.succeeded ||
+        latestActiveSubject?.id != currentSubject.id) {
+      markActiveSubjectSynchronizationPending();
+      if (synchronization.error != null) throw synchronization.error!;
+      return;
     }
+    if (!Cache.containsAllProgress(
+      subject: synchronization.subject,
+      progressSource: latestActiveSubject!,
+    )) {
+      markActiveSubjectSynchronizationPending();
+      return;
+    }
+    _activeSubjectSyncPending = false;
+    appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+    updateActiveSubject(synchronization.subject);
+    _cancelActiveSubjectSyncRetry();
   }
 
   Future<bool> _restoreParticipantSessionForSync() async {
@@ -254,6 +344,7 @@ class AppState with ChangeNotifier {
 
   @override
   void dispose() {
+    _activeSubjectSyncStopped = true;
     _cancelActiveSubjectSyncRetry();
     _activeSubjectCacheSubscription?.cancel();
     _activeSubjectCacheSource = null;

@@ -200,8 +200,19 @@ class OptOutAlertDialog extends StatelessWidget {
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
           onPressed: () async {
+            final appState = context.read<AppState>();
             try {
-              await subject!.softDelete();
+              await deleteStudySubjectAndClearLocalData(
+                subject: subject!,
+                deleteRemoteSubject: () async {
+                  await subject!.softDelete();
+                },
+                onRemoteDeleted: appState.clearActiveStudyState,
+                stopActiveSynchronization:
+                    appState.stopAndAwaitActiveSubjectSynchronization,
+                resumeActiveSynchronization:
+                    appState.resumeActiveSubjectSynchronization,
+              );
             } catch (error) {
               final status = connectionStatusFromError(error);
               if (status != null) {
@@ -217,10 +228,6 @@ class OptOutAlertDialog extends StatelessWidget {
                 return;
               }
               rethrow;
-            }
-            await clearStudyLocalData(fallbackSubject: subject);
-            if (context.mounted) {
-              context.read<AppState>().clearActiveStudyState();
             }
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
@@ -248,24 +255,37 @@ class DeleteAlertDialog extends StatelessWidget {
         label: Text(AppLocalizations.of(context)!.delete_data),
         style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
         onPressed: () async {
+          final appState = context.read<AppState>();
           try {
-            await subject!.delete();
-          } on PostgrestException catch (e) {
-            if (e.code != 'PGRST116') {
-              // Unexpected DB error — don't clear local data
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  _buildStatusSnackBar(
+            await deleteStudySubjectAndClearLocalData(
+              subject: subject!,
+              clearStoredParticipantCredentials: true,
+              deleteRemoteSubject: () async {
+                try {
+                  await subject!.delete();
+                } on PostgrestException catch (error) {
+                  if (error.code != 'PGRST116') rethrow;
+                }
+              },
+              onRemoteDeleted: appState.clearActiveStudyState,
+              stopActiveSynchronization:
+                  appState.stopAndAwaitActiveSubjectSynchronization,
+              resumeActiveSynchronization:
+                  appState.resumeActiveSubjectSynchronization,
+            );
+          } on PostgrestException catch (error) {
+            // Unexpected DB error — don't clear local data
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                _buildStatusSnackBar(
+                  context,
+                  AppLocalizations.of(
                     context,
-                    AppLocalizations.of(
-                      context,
-                    )!.error_occurred_with_message(e.message),
-                  ),
-                );
-              }
-              return;
+                  )!.error_occurred_with_message(error.message),
+                ),
+              );
             }
-            // PGRST116: subject already deleted from DB — proceed with local cleanup
+            return;
           } catch (error) {
             final status = connectionStatusFromError(error);
             if (status != null) {
@@ -281,14 +301,6 @@ class DeleteAlertDialog extends StatelessWidget {
               return;
             }
             rethrow;
-          }
-          // Reached when delete succeeded or subject was already gone from DB
-          await clearStudyLocalData(
-            fallbackSubject: subject,
-            clearStoredParticipantCredentials: true,
-          );
-          if (context.mounted) {
-            context.read<AppState>().clearActiveStudyState();
           }
           if (context.mounted) await cancelNotifications(context);
           if (context.mounted) {

@@ -26,6 +26,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   DateTime? _lastClickTime;
   bool _isLoading = false;
+  bool _isPendingCacheWrite = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<QuestionnaireWidgetState> questionnaireKey =
       GlobalKey<QuestionnaireWidgetState>();
@@ -34,25 +35,26 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     T response,
     BuildContext context,
   ) async {
-    await handleTaskCompletion(context, (StudySubject? subject) async {
-      try {
+    final completed = await handleTaskCompletion(
+      context,
+      (StudySubject? subject) async {
         await subject!.addResult<T>(
           taskId: widget.task.id,
           periodId: widget.completionPeriod.id,
           result: response,
         );
-      } catch (e) {
-        print('Saving results to cache due to error: $e');
-        await subject!.addResult<T>(
-          taskId: widget.task.id,
-          periodId: widget.completionPeriod.id,
-          result: response,
-          offline: true,
-        );
-        rethrow;
-      }
-    });
+      },
+      onCacheRetrySucceeded: () {
+        if (context.mounted) context.pop(true);
+      },
+    );
     if (!context.mounted) return;
+    if (!completed) {
+      setState(() {
+        _isPendingCacheWrite = true;
+      });
+      return;
+    }
     context.pop(true);
   }
 
@@ -102,7 +104,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         taskId: widget.task.id,
         header: widget.task.header,
         footer: widget.task.footer,
-        isSubmitting: _isLoading,
+        isSubmitting: _isLoading || _isPendingCacheWrite,
         onComplete: _handleCompletion,
       ),
     );

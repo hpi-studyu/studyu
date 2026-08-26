@@ -19,6 +19,7 @@ class CheckmarkTaskWidget extends StatefulWidget {
 class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
   DateTime? _lastClickTime;
   bool _isLoading = false;
+  bool _isPendingCacheWrite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,36 +30,36 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
           const TextStyle(color: Colors.white),
         ),
       ),
-      onPressed: () async {
-        if (isRedundantClick(_lastClickTime)) return;
-        setState(() {
-          _isLoading = true;
-          _lastClickTime = DateTime.now();
-        });
-        await handleTaskCompletion(context, (StudySubject? subject) async {
-          try {
-            await subject!.addResult<bool>(
-              taskId: widget.task!.id,
-              periodId: widget.completionPeriod!.id,
-              result: true,
-            );
-          } catch (e) {
-            print('Saving results to cache due to error: $e');
-            await subject!.addResult<bool>(
-              taskId: widget.task!.id,
-              periodId: widget.completionPeriod!.id,
-              result: true,
-              offline: true,
-            );
-            rethrow;
-          }
-        });
-        setState(() {
-          _isLoading = false;
-        });
-        if (!context.mounted) return;
-        context.pop(true);
-      },
+      onPressed: _isLoading || _isPendingCacheWrite
+          ? null
+          : () async {
+              if (isRedundantClick(_lastClickTime)) return;
+              setState(() {
+                _isLoading = true;
+                _lastClickTime = DateTime.now();
+              });
+              final completed = await handleTaskCompletion(
+                context,
+                (StudySubject? subject) async {
+                  await subject!.addResult<bool>(
+                    taskId: widget.task!.id,
+                    periodId: widget.completionPeriod!.id,
+                    result: true,
+                  );
+                },
+                onCacheRetrySucceeded: () {
+                  if (context.mounted) context.pop(true);
+                },
+              );
+              if (!context.mounted) return;
+              setState(() {
+                _isLoading = false;
+                _isPendingCacheWrite = !completed;
+              });
+              if (completed) {
+                context.pop(true);
+              }
+            },
       icon: _isLoading
           ? const CircularProgressIndicator(color: Colors.white)
           : const Icon(Icons.check),

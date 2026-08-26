@@ -10,7 +10,6 @@ import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum AppErrorReason {
@@ -326,7 +325,9 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
         StudyULogger.info("Deleted subject local state cleared");
       } else {
         StudyULogger.info("Deleting all secure storage data");
-        await SecureStorage.deleteAll();
+        await appState.stopAndAwaitActiveSubjectSynchronization();
+        appState.clearActiveStudyState();
+        await clearAllLocalData();
         StudyULogger.info("Secure storage data deleted");
       }
 

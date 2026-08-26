@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -58,6 +60,29 @@ SubjectProgress _progress({
   )..completedAt = completedAt;
 }
 
+class _FirstWriteBlockedSecureStoragePlatform
+    extends TestFlutterSecureStoragePlatform {
+  _FirstWriteBlockedSecureStoragePlatform(super.data);
+
+  final firstWriteStarted = Completer<void>();
+  final releaseFirstWrite = Completer<void>();
+  int writeCount = 0;
+
+  @override
+  Future<void> write({
+    required String key,
+    required String value,
+    required Map<String, String> options,
+  }) async {
+    writeCount++;
+    if (writeCount == 1) {
+      firstWriteStarted.complete();
+      await releaseFirstWrite.future;
+    }
+    await super.write(key: key, value: value, options: options);
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -65,6 +90,7 @@ void main() {
   late Map<String, String> storageData;
 
   setUp(() {
+    Cache.debugResetSubjectWrites();
     originalPlatform = FlutterSecureStoragePlatform.instance;
     storageData = {};
     FlutterSecureStoragePlatform.instance = TestFlutterSecureStoragePlatform(
@@ -76,6 +102,9 @@ void main() {
     FlutterSecureStoragePlatform.instance = originalPlatform;
     appConnectionStatusController.reset();
     Cache.isSynchronizing = false;
+    Cache.debugUploadBlobFilesOverride = null;
+    Cache.debugSaveProgressOverride = null;
+    Cache.debugSaveSubjectOverride = null;
   });
 
   group('Cache.buildProgressSyncPlan', () {
@@ -312,11 +341,275 @@ void main() {
 
         await Cache.storeSubject(cachedSubject);
 
-        final synchronized = await Cache.synchronize(remoteSubject);
+        final synchronization = await Cache.synchronize(remoteSubject);
 
-        expect(synchronized.progress, hasLength(1));
-        expect(synchronized.progress.single.taskId, _taskAId);
-        expect(synchronized.progress.single.subjectId, remoteSubject.id);
+        expect(synchronization.succeeded, isTrue);
+        expect(synchronization.subject.progress, hasLength(1));
+        expect(synchronization.subject.progress.single.taskId, _taskAId);
+        expect(
+          synchronization.subject.progress.single.subjectId,
+          remoteSubject.id,
+        );
+      },
+    );
+
+    test(
+      'queued cache write invalidates a snapshot taken after the active write',
+      () async {
+        final remoteSubject = _buildSubject()..inviteCode = 'remote';
+        final firstSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..inviteCode = 'first';
+        final queuedSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..inviteCode = 'queued'
+          ..progress = [
+            _progress(
+              subjectId: remoteSubject.id,
+              interventionId: _interventionBId,
+              taskId: _taskBId,
+              periodId: _periodBId,
+              completedAt: DateTime.utc(2026, 8, 11, 8),
+            ),
+          ];
+        final blockedStorage = _FirstWriteBlockedSecureStoragePlatform(
+          storageData,
+        );
+        FlutterSecureStoragePlatform.instance = blockedStorage;
+        final snapshotLoaded = Completer<void>();
+        final releaseSynchronization = Completer<void>();
+        Cache.debugAfterSubjectSnapshotLoaded = () async {
+          snapshotLoaded.complete();
+          await releaseSynchronization.future;
+        };
+        Cache.debugUploadBlobFilesOverride = (_, _) async {};
+        Cache.debugSaveProgressOverride = (progress) async => progress;
+        Cache.debugSaveSubjectOverride = (subject) async => subject;
+
+        final firstWrite = Cache.storeSubject(firstSubject);
+        await blockedStorage.firstWriteStarted.future;
+        final synchronizationFuture = Cache.synchronize(remoteSubject);
+        final queuedWrite = Cache.storeSubject(queuedSubject);
+
+        blockedStorage.releaseFirstWrite.complete();
+        await snapshotLoaded.future;
+        await queuedWrite;
+        releaseSynchronization.complete();
+        final synchronization = await synchronizationFuture;
+        await firstWrite;
+
+        expect(synchronization.succeeded, isFalse);
+        expect(synchronization.subject.inviteCode, 'queued');
+        expect(synchronization.subject.progress, hasLength(1));
+        final restored = await Cache.loadSubject();
+        expect(restored.inviteCode, 'queued');
+        expect(restored.progress, hasLength(1));
+      },
+    );
+
+    test(
+      'concurrent first cache write makes missing-cache synchronization retry',
+      () async {
+        final remoteSubject = _buildSubject();
+        final latestSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..progress = [
+            _progress(
+              subjectId: remoteSubject.id,
+              interventionId: _interventionBId,
+              taskId: _taskBId,
+              periodId: _periodBId,
+              completedAt: DateTime.utc(2026, 8, 11, 8),
+            ),
+          ];
+        final snapshotLoaded = Completer<void>();
+        final releaseSynchronization = Completer<void>();
+        Cache.debugAfterSubjectSnapshotLoaded = () async {
+          snapshotLoaded.complete();
+          await releaseSynchronization.future;
+        };
+
+        final synchronizationFuture = Cache.synchronize(remoteSubject);
+        await snapshotLoaded.future;
+        await Cache.storeSubject(latestSubject);
+        releaseSynchronization.complete();
+        final synchronization = await synchronizationFuture;
+
+        expect(synchronization.succeeded, isFalse);
+        expect(synchronization.subject.progress, hasLength(1));
+        expect(synchronization.subject.progress.single.taskId, _taskBId);
+        expect((await Cache.loadSubject()).progress.single.taskId, _taskBId);
+      },
+    );
+
+    test(
+      'concurrent cache write makes equal-subject synchronization retry',
+      () async {
+        final remoteSubject = _buildSubject();
+        await Cache.storeSubject(
+          StudySubject.fromJson(remoteSubject.toFullJson()),
+        );
+        final latestSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..progress = [
+            _progress(
+              subjectId: remoteSubject.id,
+              interventionId: _interventionBId,
+              taskId: _taskBId,
+              periodId: _periodBId,
+              completedAt: DateTime.utc(2026, 8, 11, 8),
+            ),
+          ];
+        final snapshotLoaded = Completer<void>();
+        final releaseSynchronization = Completer<void>();
+        Cache.debugAfterSubjectSnapshotLoaded = () async {
+          snapshotLoaded.complete();
+          await releaseSynchronization.future;
+        };
+
+        final synchronizationFuture = Cache.synchronize(remoteSubject);
+        await snapshotLoaded.future;
+        await Cache.storeSubject(latestSubject);
+        releaseSynchronization.complete();
+        final synchronization = await synchronizationFuture;
+
+        expect(synchronization.succeeded, isFalse);
+        expect(synchronization.subject.progress, hasLength(1));
+        expect(synchronization.subject.progress.single.taskId, _taskBId);
+        expect((await Cache.loadSubject()).progress.single.taskId, _taskBId);
+      },
+    );
+
+    test(
+      'concurrent cache change is preserved and leaves synchronization pending',
+      () async {
+        final remoteSubject = _buildSubject();
+        final cachedSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..inviteCode = 'cached-before-sync';
+        final latestSubject = StudySubject.fromJson(cachedSubject.toFullJson())
+          ..progress = [
+            _progress(
+              subjectId: cachedSubject.id,
+              interventionId: _interventionBId,
+              taskId: _taskBId,
+              periodId: _periodBId,
+              completedAt: DateTime.utc(2026, 8, 11, 8),
+            ),
+          ];
+        final synchronizationStarted = Completer<void>();
+        final releaseSynchronization = Completer<void>();
+        await Cache.storeSubject(cachedSubject);
+        Cache.debugUploadBlobFilesOverride = (_, _) async {
+          synchronizationStarted.complete();
+          await releaseSynchronization.future;
+        };
+
+        final synchronizationFuture = Cache.synchronize(remoteSubject);
+        await synchronizationStarted.future;
+        await Cache.storeSubject(latestSubject);
+        releaseSynchronization.complete();
+        final synchronization = await synchronizationFuture;
+
+        expect(synchronization.succeeded, isFalse);
+        expect(synchronization.error, isNull);
+        expect(synchronization.subject.progress, hasLength(1));
+        expect(synchronization.subject.progress.single.taskId, _taskBId);
+        final restored = await Cache.loadSubject();
+        expect(restored.progress, hasLength(1));
+        expect(restored.progress.single.taskId, _taskBId);
+      },
+    );
+
+    test(
+      'cache deletion invalidates an in-flight synchronization snapshot',
+      () async {
+        final remoteSubject = _buildSubject()..inviteCode = 'remote';
+        final cachedSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..inviteCode = 'cached';
+        await Cache.storeSubject(cachedSubject);
+        final synchronizationStarted = Completer<void>();
+        final releaseSynchronization = Completer<void>();
+        Cache.debugUploadBlobFilesOverride = (_, _) async {
+          synchronizationStarted.complete();
+          await releaseSynchronization.future;
+        };
+        Cache.debugSaveSubjectOverride = (subject) async => subject;
+
+        final synchronizationFuture = Cache.synchronize(remoteSubject);
+        await synchronizationStarted.future;
+        await Cache.delete();
+        releaseSynchronization.complete();
+        final synchronization = await synchronizationFuture;
+
+        expect(synchronization.succeeded, isFalse);
+        expect(await SecureStorage.containsKey(cacheSubjectKey), isFalse);
+      },
+    );
+
+    test('successful progress merge is persisted to the cache', () async {
+      final remoteSubject = _buildSubject();
+      remoteSubject.progress = [
+        _progress(
+          subjectId: remoteSubject.id,
+          interventionId: _interventionAId,
+          taskId: _taskAId,
+          periodId: _periodAId,
+          completedAt: DateTime.utc(2026, 8, 10, 8),
+        ),
+      ];
+      final cachedSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+        ..progress = [
+          _progress(
+            subjectId: remoteSubject.id,
+            interventionId: _interventionBId,
+            taskId: _taskBId,
+            periodId: _periodBId,
+            completedAt: DateTime.utc(2026, 8, 11, 8),
+          ),
+        ];
+      await Cache.storeSubject(cachedSubject);
+      Cache.debugUploadBlobFilesOverride = (_, _) async {};
+      Cache.debugSaveProgressOverride = (progress) async => progress;
+      Cache.debugSaveSubjectOverride = (subject) async => subject;
+
+      final synchronization = await Cache.synchronize(remoteSubject);
+      final restored = await Cache.loadSubject();
+
+      expect(synchronization.succeeded, isTrue);
+      expect(restored.progress, hasLength(2));
+      expect(
+        restored.progress.map((progress) => progress.taskId),
+        containsAll([_taskAId, _taskBId]),
+      );
+    });
+
+    test(
+      'failed synchronization preserves cached progress and degraded status',
+      () async {
+        final remoteSubject = _buildSubject();
+        final cachedSubject = StudySubject.fromJson(remoteSubject.toFullJson())
+          ..progress = [
+            _progress(
+              subjectId: remoteSubject.id,
+              interventionId: _interventionAId,
+              taskId: _taskAId,
+              periodId: _periodAId,
+              completedAt: DateTime.utc(2026, 8, 10, 8),
+            ),
+          ];
+        await Cache.storeSubject(cachedSubject);
+        appConnectionStatusController.setStatus(
+          AppConnectionStatus.backendUnavailable,
+        );
+        Cache.debugUploadBlobFilesOverride = (_, _) =>
+            Future<void>.error(Exception('failed to fetch'));
+
+        final synchronization = await Cache.synchronize(remoteSubject);
+
+        expect(synchronization.succeeded, isFalse);
+        expect(synchronization.subject.progress, hasLength(1));
+        expect(synchronization.subject.progress.single.taskId, _taskAId);
+        expect(
+          appConnectionStatusController.status,
+          AppConnectionStatus.backendUnavailable,
+        );
+        expect((await Cache.loadSubject()).progress, hasLength(1));
       },
     );
   });
