@@ -186,10 +186,21 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Text(
-            _error!,
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-            textAlign: TextAlign.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              TextButton.icon(
+                onPressed: loadPhrase,
+                icon: const Icon(Icons.refresh),
+                label: Text(AppLocalizations.of(context)!.try_again),
+              ),
+            ],
           ),
         ),
       );

@@ -17,7 +17,29 @@ void main() {
   tearDown(() {
     RestoreAccountService.clearCache();
     RestoreAccountService.debugResetCurrentUserIdGetterForTesting();
+    RestoreAccountService.debugResetRecoveryIdGetterForTesting();
     RestoreAccountService.debugResetRecoveryIdRotatorForTesting();
+  });
+
+  testWidgets('retries after recovery phrase loading fails', (tester) async {
+    final key = GlobalKey<RecoveryPhraseContentState>();
+    var requestCount = 0;
+    RestoreAccountService.debugCurrentUserIdGetterForTesting = () => 'user';
+    RestoreAccountService.debugRecoveryIdGetterForTesting = () async {
+      requestCount++;
+      return requestCount == 1 ? null : '00000000-0000-0000-0000-000000000002';
+    };
+
+    await tester.pumpWidget(_wrap(RecoveryPhraseContent(key: key)));
+    await tester.pumpAndSettle();
+
+    expect(key.currentState!.hasError, isTrue);
+    await tester.tap(find.byIcon(Icons.refresh));
+    await tester.pumpAndSettle();
+
+    expect(requestCount, 2);
+    expect(key.currentState!.hasError, isFalse);
+    expect(key.currentState!.phrase, isNotNull);
   });
 
   testWidgets('hides copy and download feedback when disabled', (tester) async {
