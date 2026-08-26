@@ -5,10 +5,21 @@ import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+enum StudiesTableColumn {
+  pin,
+  title,
+  status,
+  participation,
+  createdAt,
+  enrolled,
+  active,
+  completed,
+  action,
+}
 
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
