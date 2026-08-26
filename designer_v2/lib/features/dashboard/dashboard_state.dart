@@ -101,7 +101,10 @@ class DashboardState extends Equatable {
 
   /// Studies actually rendered: pinned first, then the paginated list.
   /// Wrapped in [AsyncValue] for backwards-compatible UI scaffolding that
-  /// expects a loading/error/data tri-state for the initial fetch.
+  /// expects a loading/data state for the initial fetch. Errors stay in
+  /// [loadError] and are rendered by the studies table's error notices, so
+  /// they keep the unsupported-filter and retry affordances even with an
+  /// empty list.
   AsyncValue<List<Study>> get displayedStudies {
     final pinnedStudies = pinnedStudiesList
         .where(_matchesPagePreset)
@@ -109,13 +112,6 @@ class DashboardState extends Equatable {
         .where(_matchesActiveFilter)
         .toList();
 
-    if (!isLoadingInitial &&
-        !isLoadingMore &&
-        loadError != null &&
-        loadedStudies.isEmpty &&
-        pinnedStudies.isEmpty) {
-      return AsyncValue.error(loadError!, StackTrace.current);
-    }
     if (isLoadingInitial && loadedStudies.isEmpty && pinnedStudies.isEmpty) {
       return const AsyncValue.loading();
     }

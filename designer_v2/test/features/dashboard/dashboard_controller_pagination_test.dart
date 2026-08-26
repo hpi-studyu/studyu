@@ -890,6 +890,25 @@ void main() {
       ]);
     });
 
+    test('displayedStudies stays on the data path when the load failed', () {
+      final user = MockUser();
+      when(user.id).thenReturn('me');
+      when(user.email).thenReturn('me@x.test');
+
+      final state = DashboardState(
+        currentUser: user,
+        searchController: dashboard_search.SearchController(),
+        isLoadingInitial: false,
+        loadError: () => StateError('fetch failed'),
+      );
+
+      // Regression: returning AsyncValue.error here let the default
+      // AsyncValueWidget error builder show a raw exception string and
+      // hid the localized unsupported-filter/retry notices.
+      expect(state.displayedStudies.hasValue, isTrue);
+      expect(state.displayedStudies.requireValue, isEmpty);
+    });
+
     test('setSorting persists sort to user preferences', () async {
       final h = _Harness();
       when(
