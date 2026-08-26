@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -37,6 +38,13 @@ class RestoreAccountService {
   static Future<String?> Function() _recoveryIdRotator = _rotateRecoveryId;
   static String? Function() _currentUserIdGetter = _currentUserId;
   static Future<StudySubject> Function(String) _subjectGetter = _fetchSubject;
+  static Future<RecoveryResult> Function(BigInt) _accountRecoverer =
+      recoverAccount;
+  static Future<void> Function(String, String) _credentialsStorer =
+      storeFakeUserEmailAndPassword;
+  static Future<bool> Function() _participantSignIn = signInParticipant;
+  static Future<void> Function() _activeSubjectStateClearer =
+      _clearActiveSubjectState;
 
   static void clearCache() {
     _cachedPhrase = null;
@@ -104,6 +112,33 @@ class RestoreAccountService {
   @visibleForTesting
   static void debugResetSubjectGetterForTesting() {
     _subjectGetter = _fetchSubject;
+  }
+
+  @visibleForTesting
+  static void debugConfigureRecoveryForTesting({
+    Future<RecoveryResult> Function(BigInt)? recoverAccount,
+    Future<void> Function(String, String)? storeCredentials,
+    Future<bool> Function()? signInParticipant,
+    Future<void> Function()? clearActiveSubjectState,
+  }) {
+    _accountRecoverer = recoverAccount ?? _accountRecoverer;
+    _credentialsStorer = storeCredentials ?? _credentialsStorer;
+    _participantSignIn = signInParticipant ?? _participantSignIn;
+    _activeSubjectStateClearer =
+        clearActiveSubjectState ?? _activeSubjectStateClearer;
+  }
+
+  @visibleForTesting
+  static void debugResetRecoveryForTesting() {
+    _accountRecoverer = RestoreAccountService.recoverAccount;
+    _credentialsStorer = storeFakeUserEmailAndPassword;
+    _participantSignIn = signInParticipant;
+    _activeSubjectStateClearer = _clearActiveSubjectState;
+  }
+
+  static Future<void> _clearActiveSubjectState() async {
+    await deleteActiveStudyReference();
+    await Cache.delete();
   }
 
   static Future<List<String>?> getRecoveryPhrase() async {
@@ -314,19 +349,21 @@ class RestoreAccountService {
     // account via the static cache on a shared device.
     clearCache();
     try {
-      final result = await recoverAccount(recoveryId);
+      final result = await _accountRecoverer(recoveryId);
 
       if (!result.success) {
         return result;
       }
 
-      await storeFakeUserEmailAndPassword(result.email!, result.password!);
+      await _credentialsStorer(result.email!, result.password!);
 
-      final signInResult = await signInParticipant();
+      final signInResult = await _participantSignIn();
       if (!signInResult) {
         StudyULogger.warning('Sign in failed after recovery');
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
+
+      await _activeSubjectStateClearer();
 
       if (result.subjectId != null) {
         final isValid = await validateSubject(result.subjectId!);

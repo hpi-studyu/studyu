@@ -34,36 +34,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future<void> _showInviteDialog() async {
     if (!mounted) return;
     final state = context.read<AppState>();
-    final studyTitle = state.selectedStudy?.title ?? '';
     final l10n = AppLocalizations.of(context)!;
-    final accepted = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.you_have_been_invited),
-        content: Text(studyTitle),
-        actions: [
-          TextButton(
-            onPressed: () => context.pop(false),
-            child: Text(l10n.decline),
-          ),
-          FilledButton(
-            onPressed: () => context.pop(true),
-            child: Text(l10n.accept),
-          ),
-        ],
-      ),
-    );
 
-    if (!mounted) return;
-    if (accepted == true) {
-      await context.push('/${RouteNames.studyOverview}');
+    while (state.hasPendingDeepLink && state.selectedStudy != null) {
       if (!mounted) return;
-      setState(() => _inviteDialogShown = false);
-    } else {
-      await PendingDeepLinkService.clear(state);
-      _inviteDialogShown = false;
+      final accepted = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.you_have_been_invited),
+          content: Text(state.selectedStudy?.title ?? ''),
+          actions: [
+            TextButton(
+              key: const ValueKey('invite_dialog_decline'),
+              onPressed: () => context.pop(false),
+              child: Text(l10n.decline),
+            ),
+            FilledButton(
+              key: const ValueKey('invite_dialog_accept'),
+              onPressed: () => context.pop(true),
+              child: Text(l10n.accept),
+            ),
+          ],
+        ),
+      );
+
+      if (!mounted) return;
+      if (accepted == true) {
+        await context.push('/${RouteNames.studyOverview}');
+      } else {
+        await PendingDeepLinkService.clear(state);
+      }
     }
+
+    _inviteDialogShown = false;
   }
 
   Future<void> _showInviteCodeDialog() => showDialog<void>(

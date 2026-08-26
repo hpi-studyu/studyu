@@ -45,6 +45,10 @@ String initialRouteForMissingSubjectRoute({
       : '/${RouteNames.onboarding}';
 }
 
+@visibleForTesting
+String activeStudyDeepLinkRoute(bool? openSettings) =>
+    '/${openSettings == true ? RouteNames.appSettings : RouteNames.dashboard}';
+
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
@@ -239,7 +243,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     StudySubject currentSubject,
   ) async {
     final l10n = AppLocalizations.of(context)!;
-    await showDialog(
+    final openSettings = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.deep_link_switch_warning_title),
@@ -251,16 +255,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => context.go('/${RouteNames.appSettings}'),
+            onPressed: () => context.pop(true),
             child: Text(l10n.deep_link_switch_open_settings),
           ),
           FilledButton(
-            onPressed: () => context.go('/${RouteNames.dashboard}'),
+            onPressed: () => context.pop(false),
             child: Text(l10n.deep_link_switch_continue_study),
           ),
         ],
       ),
     );
+    if (!mounted) return;
+    context.go(activeStudyDeepLinkRoute(openSettings));
   }
 
   Future<void> _handleDeepLinkResult(
@@ -381,6 +387,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> initStudy() async {
     final state = context.read<AppState>();
     final l10n = AppLocalizations.of(context)!;
+    final appLanguage = context.read<AppLanguage>();
     try {
       final previewHandledNavigation = await _initPreview(state, l10n);
       if (previewHandledNavigation) return;
@@ -399,7 +406,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
 
-    await context.read<AppLanguage>().synchronizeWithServer();
+    await appLanguage.synchronizeWithServer();
     if (!mounted) return;
 
     final selectedSubjectId = await getActiveSubjectId();

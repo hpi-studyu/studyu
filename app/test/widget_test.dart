@@ -58,6 +58,16 @@ Widget setup(Widget child, {AppState? appState}) {
             builder: (_, _) => const WelcomeScreen(),
           ),
           GoRoute(
+            path: '/${RouteNames.studyOverview}',
+            builder: (context, _) => Scaffold(
+              body: TextButton(
+                key: const ValueKey('invited_study_overview_back'),
+                onPressed: context.pop,
+                child: const Text('Back'),
+              ),
+            ),
+          ),
+          GoRoute(
             path: '/${RouteNames.onboarding}',
             builder: (_, _) => const Text(
               'Onboarding',
@@ -102,6 +112,26 @@ void main() {
       find.widgetWithText(OutlinedButton, 'Restore StudyU account'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('invite dialog returns after backing out of study overview', (
+    tester,
+  ) async {
+    final state = AppState()
+      ..setPendingDeepLink(
+        study: Study('study-1', 'owner-1')..title = 'Study',
+        inviteCode: 'invite-1',
+      );
+    await tester.pumpWidget(setup(const WelcomeScreen(), appState: state));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('invite_dialog_accept')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('invited_study_overview_back')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.byKey(const ValueKey('invite_dialog_accept')), findsOneWidget);
   });
 
   testWidgets('restore account opens restore account route', (tester) async {
@@ -184,6 +214,10 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(TermsScreen), findsNothing);
+  });
+
+  test('dismissed active-study warning continues to the dashboard', () {
+    expect(activeStudyDeepLinkRoute(null), '/${RouteNames.dashboard}');
   });
 
   test('restore account route is registered by name', () {

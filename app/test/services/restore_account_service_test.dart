@@ -17,6 +17,26 @@ void main() {
       expect(RestoreAccountService.decodeRecoveryPhrase(words), recoveryId);
     });
 
+    test('recovery clears subject state from the previous account', () async {
+      var subjectStateCleared = false;
+      RestoreAccountService.debugConfigureRecoveryForTesting(
+        recoverAccount: (_) async => RecoveryResult(
+          success: true,
+          email: 'recovered@example.com',
+          password: 'password',
+        ),
+        storeCredentials: (_, _) async {},
+        signInParticipant: () async => true,
+        clearActiveSubjectState: () async => subjectStateCleared = true,
+      );
+      addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+
+      final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+      expect(result.success, isTrue);
+      expect(subjectStateCleared, isTrue);
+    });
+
     test('validateSubject propagates failed subject lookups', () async {
       RestoreAccountService.debugSubjectGetterForTesting = (_) async =>
           throw const PostgrestException(

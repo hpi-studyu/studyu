@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome_entry_hub.dart';
-import 'package:studyu_app/theme.dart';
-
-PreviewThemeData studyuPreviewTheme() => PreviewThemeData(materialLight: theme);
 
 PreviewLocalizationsData studyuEnglishPreviewLocalizations() =>
     const PreviewLocalizationsData(
@@ -24,7 +21,6 @@ PreviewLocalizationsData studyuGermanPreviewLocalizations() =>
   group: 'Onboarding',
   name: 'Welcome hub · English',
   size: Size(390, 844),
-  theme: studyuPreviewTheme,
   localizations: studyuEnglishPreviewLocalizations,
 )
 @Preview(
@@ -32,7 +28,6 @@ PreviewLocalizationsData studyuGermanPreviewLocalizations() =>
   name: 'Welcome hub · compact German',
   size: Size(320, 568),
   textScaleFactor: 1.1,
-  theme: studyuPreviewTheme,
   localizations: studyuGermanPreviewLocalizations,
 )
 Widget welcomeEntryHubPreview() => const WelcomeEntryHub(
