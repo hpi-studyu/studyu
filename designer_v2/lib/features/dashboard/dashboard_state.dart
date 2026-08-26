@@ -102,8 +102,9 @@ class DashboardState extends Equatable {
 
     // 2. Apply Search Query
     if (query.isNotEmpty) {
+      final normalizedQuery = query.toLowerCase();
       return filteredByLogic
-          .where((s) => s.title!.toLowerCase().contains(query))
+          .where((s) => s.title!.toLowerCase().contains(normalizedQuery))
           .toList();
     }
     return filteredByLogic.toList();

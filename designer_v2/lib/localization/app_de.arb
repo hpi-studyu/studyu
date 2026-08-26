@@ -1193,5 +1193,6 @@
   "code_list_page_fetch_error": "Nächste Seite konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
   "code_list_retry": "Erneut versuchen",
   "code_list_previous_page": "Vorherige Seite",
-  "code_list_next_page": "Nächste Seite"
+  "code_list_next_page": "Nächste Seite",
+  "code_list_search_hint_compact": "Codes suchen"
 }

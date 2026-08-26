@@ -22,7 +22,7 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 part 'invite_code_repository.g.dart';
 
-const int defaultInviteCodePageSize = 15;
+const int defaultInviteCodePageSize = 50;
 const _copyInviteLinkActionValue = 'copy_link';
 const _showQrCodeActionValue = 'qr_code';
 const _rowMenuItemHorizontalPadding = 8.0;

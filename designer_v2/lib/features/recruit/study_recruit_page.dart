@@ -306,7 +306,7 @@ class StudyRecruitScreen extends StudyPageWidget {
               ),
             SizedBox(width: horizontalSpacing),
             if (!shouldMoveDetailsBelowButton)
-              shouldStackCount ? titleAndCount : titleLabel,
+              if (shouldStackCount) titleAndCount else titleLabel,
             const Spacer(),
             if (!shouldStackCount && !shouldMoveDetailsBelowButton) ...[
               countLabel,

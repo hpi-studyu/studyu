@@ -3052,7 +3052,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get code_list_search_hint => 'Einladungscodes suchen';
 
   @override
-  String get code_list_search_hint_compact => 'Search codes';
+  String get code_list_search_hint_compact => 'Codes suchen';
 
   @override
   String code_list_active_count(int count) {
