@@ -19,7 +19,6 @@ looking forward to support your research.
 - Create new migrations with `supabase migration new <migration_name>` — commit the generated SQL under `supabase/migrations/`.
 
 - `supabase/migrations/`: canonical schema and production-safe database changes.
-- `supabase/seeds/shared/`: baseline configuration loaded before local development data.
 - `supabase/seeds/dev/`: local development data loaded by normal `supabase db reset`.
 - `supabase/seeds/test/`: deterministic baseline loaded by `scripts/reset-test-db.sh` before database tests.
 - `supabase/tests/_helpers/`: test-only SQL helpers.
