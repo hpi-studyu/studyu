@@ -2909,6 +2909,12 @@ abstract class AppLocalizations {
     String targetStudy,
   );
 
+  /// No description provided for @deep_link_switch_warning_opt_out_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'If you want to leave your current study, open Settings and use \"{optOut}\" first. Then open the invite again.'**
+  String deep_link_switch_warning_opt_out_instruction(String optOut);
+
   /// No description provided for @deep_link_switch_open_settings.
   ///
   /// In en, this message translates to:

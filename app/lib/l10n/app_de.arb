@@ -566,6 +566,14 @@
       }
     }
   },
+  "deep_link_switch_warning_opt_out_instruction": "Wenn Sie Ihre aktuelle Studie verlassen möchten, öffnen Sie die Einstellungen und verwenden Sie zuerst \"{optOut}\". Öffnen Sie dann die Einladung erneut.",
+  "@deep_link_switch_warning_opt_out_instruction": {
+    "placeholders": {
+      "optOut": {
+        "type": "String"
+      }
+    }
+  },
   "deep_link_switch_open_settings": "Open Settings",
   "deep_link_switch_continue_study": "Continue Study",
   "deep_link_switch_primary_return": "Zur aktuellen Studie zurückkehren",

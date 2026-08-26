@@ -585,6 +585,14 @@
       }
     }
   },
+  "deep_link_switch_warning_opt_out_instruction": "If you want to leave your current study, open Settings and use \"{optOut}\" first. Then open the invite again.",
+  "@deep_link_switch_warning_opt_out_instruction": {
+    "placeholders": {
+      "optOut": {
+        "type": "String"
+      }
+    }
+  },
   "deep_link_switch_open_settings": "Open Settings",
   "deep_link_switch_continue_study": "Continue Study",
   "deep_link_switch_primary_return": "Return to current study",

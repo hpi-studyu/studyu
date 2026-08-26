@@ -251,7 +251,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           '${l10n.study_selection_single}\n\n'
           '${l10n.study_selection_single_reason}\n\n'
           '${l10n.deep_link_switch_warning_description(currentSubject.study.title ?? '', targetStudy.title ?? '')}\n\n'
-          'If you want to leave your current study, open Settings and use "${l10n.opt_out}" first. Then open the invite again.',
+          '${l10n.deep_link_switch_warning_opt_out_instruction(l10n.opt_out)}',
         ),
         actions: [
           TextButton(

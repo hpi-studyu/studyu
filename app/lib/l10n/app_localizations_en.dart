@@ -1540,6 +1540,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String deep_link_switch_warning_opt_out_instruction(String optOut) {
+    return 'If you want to leave your current study, open Settings and use \"$optOut\" first. Then open the invite again.';
+  }
+
+  @override
   String get deep_link_switch_open_settings => 'Open Settings';
 
   @override
