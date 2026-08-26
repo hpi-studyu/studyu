@@ -80,9 +80,7 @@ class DashboardController extends _$DashboardController
     final token = ++_fetchToken;
     state = state.copyWith(
       loadedStudies: () => const [],
-      pinnedStudiesList: () => const [],
       totalCount: 0,
-      pageTotalCount: 0,
       isLoadingInitial: true,
       isLoadingMore: false,
       isLoadingPinned: true,
@@ -91,34 +89,43 @@ class DashboardController extends _$DashboardController
       advancedFilterUnsupported: false,
     );
 
-    final pinnedFuture = _fetchPinnedFor(token);
-    final pageFuture = _fetchPage(token, isInitial: true);
-    final pageTotalFuture = _fetchPageTotalCount(token);
-    await Future.wait([pinnedFuture, pageFuture, pageTotalFuture]);
+    final pinnedError = await _fetchPinnedFor(token);
     if (token != _fetchToken) return;
+
+    final pageTotalFuture = _fetchPageTotalCount(token);
+    await _fetchPage(token, isInitial: true);
+    final pageTotalError = await pageTotalFuture;
+    if (token != _fetchToken) return;
+
+    final auxiliaryError = pinnedError ?? pageTotalError;
+    if (state.loadError == null && auxiliaryError != null) {
+      state = state.copyWith(loadError: () => auxiliaryError);
+    }
     state = state.copyWith(isLoadingInitial: false);
   }
 
-  Future<void> _fetchPinnedFor(int token) async {
+  Future<Object?> _fetchPinnedFor(int token) async {
     final pinnedIds = _userRepository.user.preferences.pinnedStudies;
     if (pinnedIds.isEmpty) {
-      if (token != _fetchToken) return;
+      if (token != _fetchToken) return null;
       state = state.copyWith(
         pinnedStudiesList: () => const [],
         isLoadingPinned: false,
       );
-      return;
+      return null;
     }
     try {
       final pinned = await _studyRepository.fetchPinned(pinnedIds.toSet());
-      if (token != _fetchToken) return;
+      if (token != _fetchToken) return null;
       state = state.copyWith(
         pinnedStudiesList: () => pinned,
         isLoadingPinned: false,
       );
+      return null;
     } catch (e) {
-      if (token != _fetchToken) return;
+      if (token != _fetchToken) return null;
       state = state.copyWith(isLoadingPinned: false);
+      return e;
     }
   }
 
@@ -132,7 +139,7 @@ class DashboardController extends _$DashboardController
     int? limit,
   }) async {
     try {
-      final pinnedIds = _userRepository.user.preferences.pinnedStudies;
+      final pinnedIds = state.pinnedStudiesList.map((study) => study.id);
       final offset = isInitial ? 0 : state.loadedStudies.length;
       final fetchLimit = limit ?? DashboardState.pageSize;
 
@@ -197,15 +204,18 @@ class DashboardController extends _$DashboardController
       advancedFilterUnsupported: false,
     );
 
-    final pinnedFuture = _fetchPinnedFor(token);
-    final pageFuture = _fetchPageWithLimit(
-      token,
-      isInitial: true,
-      limit: refreshLimit,
-    );
-    final pageTotalFuture = _fetchPageTotalCount(token);
-    await Future.wait([pinnedFuture, pageFuture, pageTotalFuture]);
+    final pinnedError = await _fetchPinnedFor(token);
     if (token != _fetchToken) return;
+
+    final pageTotalFuture = _fetchPageTotalCount(token);
+    await _fetchPageWithLimit(token, isInitial: true, limit: refreshLimit);
+    final pageTotalError = await pageTotalFuture;
+    if (token != _fetchToken) return;
+
+    final auxiliaryError = pinnedError ?? pageTotalError;
+    if (state.loadError == null && auxiliaryError != null) {
+      state = state.copyWith(loadError: () => auxiliaryError);
+    }
     state = state.copyWith(
       isLoadingInitial: false,
       isLoadingMore: false,
@@ -244,9 +254,9 @@ class DashboardController extends _$DashboardController
     );
   }
 
-  Future<void> _fetchPageTotalCount(int token) async {
+  Future<Object?> _fetchPageTotalCount(int token) async {
     try {
-      final pinnedIds = _userRepository.user.preferences.pinnedStudies;
+      final pinnedIds = state.pinnedStudiesList.map((study) => study.id);
       final page = await _studyRepository.fetchPage(
         offset: 0,
         limit: 1,
@@ -257,11 +267,13 @@ class DashboardController extends _$DashboardController
         excludeIds: pinnedIds.toList(),
       );
 
-      if (token != _fetchToken) return;
+      if (token != _fetchToken) return null;
 
       state = state.copyWith(pageTotalCount: page.totalCount);
-    } catch (_) {
-      if (token != _fetchToken) return;
+      return null;
+    } catch (e) {
+      if (token != _fetchToken) return null;
+      return e;
     }
   }
 

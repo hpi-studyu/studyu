@@ -630,7 +630,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 hasMore: state.hasMore,
                 advancedFilterUnsupported: state.advancedFilterUnsupported,
                 loadError: state.loadError,
-                onRetry: controller.retry,
+                onRetry: state.advancedFilterUnsupported
+                    ? () => controller.updateFilter(FilterGroup())
+                    : controller.retry,
                 onLoadMore: controller.loadMore,
                 onSelect: controller.onSelectStudy,
                 getActions: controller.availableActions,

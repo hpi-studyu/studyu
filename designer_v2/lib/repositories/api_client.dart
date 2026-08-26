@@ -103,7 +103,6 @@ class UserNotFoundException extends APIException {}
 
 abstract class PostgrestErrorCodes {
   static const String isNotSingleItem = 'PGRST116';
-  static const String foreignKeyViolation = '23503';
 }
 
 class StudyUApiClient extends SupabaseClientDependant
@@ -134,6 +133,7 @@ class StudyUApiClient extends SupabaseClientDependant
     'title',
     'description',
     'user_id',
+    'collaborator_emails',
     'participation',
     'result_sharing',
     'status',
@@ -263,6 +263,8 @@ class StudyUApiClient extends SupabaseClientDependant
         studies: deserializeList<Study>(response.data),
         totalCount: response.count,
       );
+    } on UnsupportedFilterException {
+      rethrow;
     } on PostgrestException catch (error) {
       throw _apiException(
         error: SupabaseQueryError(
@@ -362,58 +364,7 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<void> deleteStudy(Study study) async {
     await _testDelay();
-    try {
-      await study.delete();
-    } on PostgrestException catch (error) {
-      if (!_isMissingStudyCascade(error)) {
-        rethrow;
-      }
-
-      // Some environments still have study foreign keys without ON DELETE
-      // CASCADE. Fallback to explicit cleanup only for that legacy case.
-      await _deleteStudyDependents(study.id);
-      await study.delete();
-    }
-  }
-
-  Future<void> _deleteStudyDependents(StudyID studyId) async {
-    final subjectRows = await supabaseClient
-        .from(StudySubject.tableName)
-        .select('id')
-        .eq('study_id', studyId);
-    final subjectIds = subjectRows.map((row) => row['id'] as String).toList();
-
-    if (subjectIds.isNotEmpty) {
-      await supabaseClient
-          .from(SubjectProgress.tableName)
-          .delete()
-          .inFilter('subject_id', subjectIds);
-    }
-
-    await supabaseClient
-        .from(StudySubject.tableName)
-        .delete()
-        .eq('study_id', studyId);
-    await supabaseClient
-        .from(StudyInvite.tableName)
-        .delete()
-        .eq('study_id', studyId);
-    await supabaseClient
-        .from(StudyFitbitCredentials.tableName)
-        .delete()
-        .eq('study_id', studyId);
-    await supabaseClient.from(Repo.tableName).delete().eq('study_id', studyId);
-  }
-
-  bool _isMissingStudyCascade(PostgrestException error) {
-    final details = error.details?.toString() ?? '';
-    final message = error.message;
-    final referencesStudyForeignKey =
-        details.contains('study') ||
-        message.contains('study') ||
-        message.contains('repo');
-    return error.code == PostgrestErrorCodes.foreignKeyViolation &&
-        referencesStudyForeignKey;
+    await study.delete();
   }
 
   @override

@@ -103,19 +103,23 @@ class DashboardState extends Equatable {
   /// Wrapped in [AsyncValue] for backwards-compatible UI scaffolding that
   /// expects a loading/error/data tri-state for the initial fetch.
   AsyncValue<List<Study>> get displayedStudies {
+    final pinnedStudies = pinnedStudiesList
+        .where(_matchesPagePreset)
+        .where(_matchesSearchQuery)
+        .where(_matchesActiveFilter)
+        .toList();
+
     if (!isLoadingInitial &&
         !isLoadingMore &&
         loadError != null &&
         loadedStudies.isEmpty &&
-        pinnedStudiesList.isEmpty) {
+        pinnedStudies.isEmpty) {
       return AsyncValue.error(loadError!, StackTrace.current);
     }
-    if (isLoadingInitial &&
-        loadedStudies.isEmpty &&
-        pinnedStudiesList.isEmpty) {
+    if (isLoadingInitial && loadedStudies.isEmpty && pinnedStudies.isEmpty) {
       return const AsyncValue.loading();
     }
-    return AsyncValue.data([...pinnedStudiesList, ...loadedStudies]);
+    return AsyncValue.data([...pinnedStudies, ...loadedStudies]);
   }
 
   DashboardState copyWith({

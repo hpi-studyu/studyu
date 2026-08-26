@@ -250,7 +250,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 child: ListView(
                   // Important: Remove any padding from the ListView.
                   padding: EdgeInsets.zero,
-                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildLogo(context),
                     ..._buildTopMenuItems(context),

@@ -12,6 +12,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/search.dart'
+    as dashboard_search;
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_navigation.dart';
@@ -55,6 +57,7 @@ class _Harness {
     Set<String> pinnedIds = const {},
     StudiesPage? initialPage,
     List<Study> initialPinned = const [],
+    Object? pinnedError,
     ({String? sortColumn, bool? sortAscending}) activeSort = (
       sortColumn: null,
       sortAscending: null,
@@ -98,7 +101,11 @@ class _Harness {
       ),
     ).thenAnswer((_) async => defaultPage);
 
-    when(studyRepo.fetchPinned(any)).thenAnswer((_) async => initialPinned);
+    if (pinnedError == null) {
+      when(studyRepo.fetchPinned(any)).thenAnswer((_) async => initialPinned);
+    } else {
+      when(studyRepo.fetchPinned(any)).thenThrow(pinnedError);
+    }
 
     container = ProviderContainer(
       overrides: [
@@ -760,6 +767,128 @@ void main() {
         expect(h.state.pinnedStudiesList.map((s) => s.id), ['pinA', 'pinB']);
       },
     );
+
+    test(
+      'pinned fetch failure keeps pinned studies in the page query',
+      () async {
+        final pinnedError = StateError('pinned fetch failed');
+        final h = _Harness(
+          pinnedIds: {'pin'},
+          pinnedError: pinnedError,
+          initialPage: StudiesPage(
+            studies: [_study('pin'), _study('other')],
+            totalCount: 2,
+          ),
+        );
+        await h.settle();
+
+        final captured = verify(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: captureAnyNamed('excludeIds'),
+          ),
+        ).captured.cast<List<String>>();
+
+        expect(captured, everyElement(isEmpty));
+        expect(h.state.loadedStudies.map((study) => study.id), [
+          'pin',
+          'other',
+        ]);
+        expect(h.state.loadError, same(pinnedError));
+      },
+    );
+
+    test(
+      'page count failure preserves its previous value and is retryable',
+      () async {
+        final h = _Harness(
+          initialPage: StudiesPage(
+            studies: [_study('a'), _study('b')],
+            totalCount: 3,
+          ),
+        );
+        await h.settle();
+        expect(h.state.pageTotalCount, 3);
+
+        final countError = StateError('count failed');
+        when(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).thenAnswer((invocation) {
+          if (invocation.namedArguments[#limit] == 1) {
+            return Future<StudiesPage>.error(countError);
+          }
+          return Future.value(
+            StudiesPage(studies: [_study('a'), _study('b')], totalCount: 3),
+          );
+        });
+
+        await h.controller.retry();
+        await h.settle();
+
+        expect(h.state.pageTotalCount, 3);
+        expect(h.state.loadError, same(countError));
+      },
+    );
+
+    test('displayedStudies filters pinned rows like paginated rows', () {
+      final user = MockUser();
+      when(user.id).thenReturn('me');
+      when(user.email).thenReturn('me@x.test');
+
+      final matching = _study('matching', title: 'Target public')
+        ..registryPublished = true
+        ..participantCount = 10;
+      final wrongPreset = _study('wrong-preset', title: 'Target private')
+        ..participantCount = 10;
+      final wrongSearch = _study('wrong-search', title: 'Other public')
+        ..registryPublished = true
+        ..participantCount = 10;
+      final wrongFilter = _study('wrong-filter', title: 'Target public low')
+        ..registryPublished = true
+        ..participantCount = 1;
+      final pageStudy = _study('page');
+
+      final state = DashboardState(
+        currentUser: user,
+        searchController: dashboard_search.SearchController(),
+        studiesFilter: StudiesFilter.public,
+        query: 'target',
+        activeFilter: FilterGroup(
+          children: [
+            FilterCondition(
+              property: StudyProperty.participantCount,
+              operator: FilterOperator.greaterThan,
+              value: 5,
+            ),
+          ],
+        ),
+        pinnedStudiesList: [matching, wrongPreset, wrongSearch, wrongFilter],
+        loadedStudies: [pageStudy],
+        isLoadingInitial: false,
+      );
+
+      expect(state.displayedStudies.requireValue.map((study) => study.id), [
+        'matching',
+        'page',
+      ]);
+    });
 
     test('setSorting persists sort to user preferences', () async {
       final h = _Harness();
