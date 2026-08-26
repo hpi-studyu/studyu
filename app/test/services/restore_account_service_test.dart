@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_core/core.dart';
+import 'package:supabase/supabase.dart';
 
 void main() {
   group('RestoreAccountService', () {
@@ -14,6 +15,40 @@ void main() {
       final words = encode(recoveryId, wordlist: wordlistDe);
 
       expect(RestoreAccountService.decodeRecoveryPhrase(words), recoveryId);
+    });
+
+    test('validateSubject propagates failed subject lookups', () async {
+      RestoreAccountService.debugSubjectGetterForTesting = (_) async =>
+          throw const PostgrestException(
+            message: 'permission denied',
+            code: '42501',
+          );
+      addTearDown(RestoreAccountService.debugResetSubjectGetterForTesting);
+
+      await expectLater(
+        RestoreAccountService.validateSubject('subject-id'),
+        throwsA(
+          isA<PostgrestException>().having(
+            (error) => error.code,
+            'code',
+            '42501',
+          ),
+        ),
+      );
+    });
+
+    test('validateSubject accepts a confirmed missing subject', () async {
+      RestoreAccountService.debugSubjectGetterForTesting = (_) async =>
+          throw const PostgrestException(
+            message: 'JSON object requested, multiple (or no) rows returned',
+            code: 'PGRST116',
+          );
+      addTearDown(RestoreAccountService.debugResetSubjectGetterForTesting);
+
+      expect(
+        await RestoreAccountService.validateSubject('subject-id'),
+        isFalse,
+      );
     });
 
     test('rotateRecoveryPhrase replaces the cached phrase', () async {

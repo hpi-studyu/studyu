@@ -36,6 +36,7 @@ class RestoreAccountService {
   static Future<String?> Function() _recoveryIdGetter = _fetchRecoveryId;
   static Future<String?> Function() _recoveryIdRotator = _rotateRecoveryId;
   static String? Function() _currentUserIdGetter = _currentUserId;
+  static Future<StudySubject> Function(String) _subjectGetter = _fetchSubject;
 
   static void clearCache() {
     _cachedPhrase = null;
@@ -87,6 +88,22 @@ class RestoreAccountService {
   @visibleForTesting
   static void debugResetCurrentUserIdGetterForTesting() {
     _currentUserIdGetter = _currentUserId;
+  }
+
+  @visibleForTesting
+  static Future<StudySubject> Function(String)
+  get debugSubjectGetterForTesting => _subjectGetter;
+
+  @visibleForTesting
+  static set debugSubjectGetterForTesting(
+    Future<StudySubject> Function(String) getter,
+  ) {
+    _subjectGetter = getter;
+  }
+
+  @visibleForTesting
+  static void debugResetSubjectGetterForTesting() {
+    _subjectGetter = _fetchSubject;
   }
 
   static Future<List<String>?> getRecoveryPhrase() async {
@@ -278,15 +295,16 @@ class RestoreAccountService {
     }
   }
 
+  static Future<StudySubject> _fetchSubject(String subjectId) =>
+      SupabaseQuery.getById<StudySubject>(subjectId, selectedColumns: ['*']);
+
   static Future<bool> validateSubject(String subjectId) async {
     try {
-      final subject = await SupabaseQuery.getById<StudySubject>(
-        subjectId,
-        selectedColumns: ['*'],
-      );
+      final subject = await _subjectGetter(subjectId);
       return !subject.isDeleted;
-    } catch (e) {
-      return false;
+    } on PostgrestException catch (e) {
+      if (e.code == 'PGRST116') return false;
+      rethrow;
     }
   }
 
