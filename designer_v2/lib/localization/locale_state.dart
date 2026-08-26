@@ -42,10 +42,7 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
   /// Attempts to set the locale if it's in our list of supported locales.
   /// IF NOT: get the first locale that matches our language code and set that
   /// ELSE: do nothing.
-  Future<void> setLocale(
-    Locale locale, {
-    bool persistToServer = true,
-  }) async {
+  Future<void> setLocale(Locale locale, {bool persistToServer = true}) async {
     final List<Locale> supportedLocales = ref.watch(supportedLocalesProvider);
 
     // Set the locale if it's in our list of supported locales
@@ -103,10 +100,7 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
       }
     }
 
-    await setLocale(
-      ref.read(platformLocaleProvider),
-      persistToServer: false,
-    );
+    await setLocale(ref.read(platformLocaleProvider), persistToServer: false);
     return false;
   }
 
