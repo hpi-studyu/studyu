@@ -8,4 +8,29 @@ void main() {
     expect(() => helper.postPreviewStatus(status: 'loaded'), returnsNormally);
     expect(helper.postRouteFinished, returnsNormally);
   });
+
+  group('deriveDesignerOrigin', () {
+    test('prefers the embedding parent origin over the compiled fallback', () {
+      expect(
+        deriveDesignerOrigin(
+          'https://designer--pr909-preview.firebaseapp.com/',
+          'https://designer.dev.studyu.health',
+        ),
+        'https://designer--pr909-preview.firebaseapp.com',
+      );
+    });
+
+    test('falls back to the compiled designer url', () {
+      expect(
+        deriveDesignerOrigin(null, 'https://designer.dev.studyu.health'),
+        'https://designer.dev.studyu.health',
+      );
+      expect(
+        deriveDesignerOrigin('', 'https://designer.dev.studyu.health/'),
+        'https://designer.dev.studyu.health',
+      );
+      expect(deriveDesignerOrigin('not-a-url', null), isNull);
+      expect(deriveDesignerOrigin(null, null), isNull);
+    });
+  });
 }

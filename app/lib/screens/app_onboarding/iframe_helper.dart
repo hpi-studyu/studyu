@@ -9,6 +9,22 @@ import "package:universal_html/html.dart" as html;
 typedef PreviewNavigationHandler = Future<void> Function(String? route);
 typedef PreviewStudyHandler = void Function(Study study);
 
+/// Derives the Designer origin used as the postMessage target and for
+/// validating incoming messages. The embedding parent's referrer origin wins
+/// because Firebase PR previews host the Designer on a preview-channel origin
+/// that differs from the compiled [fallbackUrl]; the compiled designer URL is
+/// the fallback. Exposed for testing.
+String? deriveDesignerOrigin(String? referrer, String? fallbackUrl) {
+  for (final candidate in [referrer, fallbackUrl]) {
+    if (candidate == null || candidate.isEmpty) continue;
+    final uri = Uri.tryParse(candidate);
+    if (uri != null && uri.hasScheme && uri.host.isNotEmpty) {
+      return uri.origin;
+    }
+  }
+  return null;
+}
+
 class IFrameHelper {
   // The listener must outlive LoadingScreen so loaded preview routes keep
   // receiving live study updates from the Designer.
@@ -16,10 +32,9 @@ class IFrameHelper {
   Completer<Study?>? _previewStudyCompleter;
 
   String? _designerOrigin() {
-    final uri = Uri.tryParse(env.designerUrl ?? '');
-    return uri == null || !uri.hasScheme || uri.host.isEmpty
-        ? null
-        : uri.origin;
+    final referrerObject = html.document.referrer as Object?;
+    final referrer = referrerObject is String ? referrerObject : null;
+    return deriveDesignerOrigin(referrer, env.designerUrl);
   }
 
   html.WindowBase? _parentWindow() {
