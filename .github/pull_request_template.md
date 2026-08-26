@@ -1,5 +1,15 @@
+## Related Ticket
+<!-- Link Jira as https://studyu.atlassian.net/browse/STUDYU-123 or use a standalone STUDYU-123 ID. GitHub issues can use Fixes #123. Remove this section when none exists. -->
+
 ## Description
-<!-- Explain the change, motivation, and link related issues (e.g., Fixes #123) -->
+<!-- Explain the change and motivation. -->
+pr_agent:summary
+
+## PR Type
+pr_agent:type
+
+## Changes Walkthrough
+pr_agent:walkthrough
 
 ## Visuals
 <!-- Attach a screenshot for static UI changes or a screen recording for interactive UI changes. Remove this section when the PR has no visual impact. -->
@@ -8,6 +18,6 @@
 <!-- Provide step-by-step instructions so reviewers can verify this change locally -->
 
 ### PR Checklist
-- [ ] `fvm exec melos qualitycheck` passes
+- [ ] `scripts/pre-commit-check` passes
 - [ ] Screenshot or video attached, or this item removed for non-visual changes
-- [ ] Description links related issues, or this item removed when no issue exists
+- [ ] Jira ticket or GitHub issue linked, or this item removed when none exists

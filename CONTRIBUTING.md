@@ -2,71 +2,95 @@
 
 ## Getting Started
 
-1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. Make sure `flutter` and `dart` are both in your PATH. Run `dart --version` and
-   `flutter --version` to check.
-3. Clone this repository and `cd` into it.
-4. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global
-   activate melos`. Melos is used to manage the Monorepo structure and links all
-   packages.
-5. Run `melos bootstrap` download all other dependencies (usually `flutter pub
-   get` is used). If you use Android Studio or VS Code, the files for your IDE
-   are also set up.
-6. Run `dart pub get` to initialize the StudyU root project. This will apply a
-   consistent lint style to all packages.
+1. Install [FVM](https://fvm.app/documentation/getting-started/installation).
+2. Clone this repository and open its root directory.
+3. Run `fvm install` to install the Flutter SDK version defined in `.fvmrc`.
+4. Run `./setup.sh` to install Melos, dependencies, and workspace links.
+5. Run `fvm exec melos setup` to configure the tracked Git hooks.
 
-If you use Android Studio or VS Code, open the root folder of the project. You
-should have new run-configurations/tasks added for running the Flutter apps or
-executing Melos scripts. Use `melos <script>` to run scripts from the
-[`pubspec.yaml` file](pubspec.yaml). You can find more information about Melos in
-the [Melos documentation](https://melos.invertase.dev/)
+The root [`pubspec.yaml`](pubspec.yaml) is the command catalog. Run its Melos
+scripts as `fvm exec melos <script>`.
 
-## Repository Overview
+## Flutter SDK Setup
 
-We have different Flutter/Dart packages all contained in this monorepo. The
-StudyU platform consists out of the following packages:
+FVM manages the Flutter SDK for this repository. Refer to the [official FVM
+installation guide](https://fvm.app/documentation/getting-started/installation) for
+installation requirements and the [FVM workflow documentation](https://fvm.app/documentation/guides/workflows)
+for general FVM usage.
 
-- [StudyU App](./app): Participate in N-of-1 trials
-- [StudyU Designer v2](./designer_v2): Design and conduct your own N-of-1 trial
+The committed [`.fvmrc`](.fvmrc) pins this repository to Flutter `3.44.6`. The
+project version takes precedence over a global Flutter version. All commands below
+must be run from the repository root.
 
-Dependency packages:
+### Set up the repository
 
-- [Core](./core): shared code for all applications
-- [Flutter Common](./flutter_common): shared code for all Flutter apps (App, Designer)
+After installing FVM, run:
+
+```bash
+fvm install
+fvm flutter --version
+fvm dart --version
+./setup.sh
+fvm exec melos setup
+```
+
+`fvm install` reads `.fvmrc` and creates the ignored `.fvm/flutter_sdk` link to the
+cached project SDK. The root `pubspec.yaml` points Melos to the same SDK through
+`melos.sdkPath`; no manual `MELOS_SDK_PATH` export is required.
+
+Use the project SDK for development commands:
+
+```bash
+fvm flutter test
+fvm dart analyze
+fvm exec melos test
+fvm exec melos dev:app
+fvm exec melos local:designer_v2
+```
+
+Global FVM configuration is optional for Flutter work outside this repository. It
+does not change the StudyU SDK. See FVM’s [global version documentation](https://fvm.app/documentation/guides/global-configuration)
+if you need to configure it.
+
+### Change the project Flutter version
+
+Do not edit `.fvmrc` by hand. From the repository root, use FVM to select the new
+version:
+
+```bash
+fvm use <flutter-version>
+fvm flutter --version
+```
+
+Review the `.fvmrc` change and run the relevant generation, analysis, and test
+checks before sharing it. Keep `.fvm/` ignored and commit `.fvmrc`.
+
+### IDE configuration
+
+Open the repository root, not an individual package. Configure the IDE to use the
+project SDK link at `.fvm/flutter_sdk`.
+
+For VS Code or VSCodium, set `dart.flutterSdkPath` to `.fvm/flutter_sdk`. Refer to
+the [FVM VS Code documentation](https://fvm.app/documentation/guides/vscode) for
+FVM-specific editor integration.
+
+For Android Studio or IntelliJ:
+
+1. Open **Settings/Preferences > Languages & Frameworks > Flutter**.
+2. Set **Flutter SDK path** to `<repository-root>/.fvm/flutter_sdk`.
+3. If required, set the Dart SDK path to
+   `<repository-root>/.fvm/flutter_sdk/bin/cache/dart-sdk`.
+4. Re-select the project SDK path after changing versions with `fvm use` if the IDE
+   has resolved the previous symlink target.
+
+For project-specific diagnostics, run `fvm doctor` from the repository root.
 
 ## Environments
 
-We use .env (environment) files, to specify the environment variables such as
-Supabase instance and other servers. We have multiple configurations stored
-under `flutter_common/lib/envs/`. By default `.env` (see below) is used, which
-is our production environment. We can specify the other files by using e.g.
-`--dart-define=STUDYU_ENV=.env.local`. This can also be added to the run
-configuration in Android Studio or VS Code.
-
-```shell
-flutter build/run android/web/... --dart-define=STUDYU_ENV=.env.dev/.env.prod/.env.local/...
-```
-
-Below is an example for an environment file such as
-`flutter_common/lib/envs/.env`.
-
-```shell
-STUDYU_SUPABASE_URLS=https://project-id.supabase.co,https://backup-database-url.supabase.co
-STUDYU_SUPABASE_PUBLIC_ANON_KEY=your-public-anon-key
-STUDYU_PROJECT_GENERATOR_URL=https://studyu-project-generator-2zro3rzera-ew.a.run.app
-STUDYU_APP_URL="https://app.studyu.health/"
-STUDYU_DESIGNER_URL="https://designer.studyu.health/"
-```
-
-Additionally, we have the following environment files:
-
-- `.env`: Production database used by default
-- `.env.dev`: Development database used by dev branch
-- `.env.local`: Local database for a custom Supabase instance (used by the
-Supabase CLI)
-
-Ideally, we should only use the development database or a local one for all our
-development work.
+Environment files live in `flutter_common/lib/envs/`. Use the `dev:*` Melos
+scripts for the development environment and `local:*` for a local Supabase
+instance. The default `.env` targets production and must not be used for routine
+development. See [`supabase/README.md`](supabase/README.md) for local backend setup.
 
 ## Coding on `core`
 
@@ -74,7 +98,7 @@ Changes to the models in the `core` package requires to perform a re-generation
 of the JSON IO code. The toolchain we use for this consists of [build_runner](https://pub.dev/packages/build_runner)
 and [json_serializable](https://pub.dev/packages/json_serializable).
 
-After you made changes to the models, update the generated IO code by running `melos generate`.
+After changing models, run `fvm exec melos generate`.
 
 Contrary to most recommendations, we commit those generated files (`*.g.dart`) to Git. This
 is needed, because `core` is a dependency of the StudyU App and the StudyU Designer
@@ -82,19 +106,10 @@ and dependencies need to have all files generated, when being imported.
 
 ## Code Style
 
-We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
-guidelines for Dart and Flutter. Run `fvm exec melos qualitycheck` to
-format, analyze, and regenerate code.
-
-### Optional RTK output filtering
-
-This repository includes `.rtk/filters.toml` for [RTK](https://github.com/rtk-ai/rtk), a CLI proxy that compresses noisy command output. RTK is optional; without it, run the documented commands normally.
-
-If RTK is installed, prefix Flutter, Dart, FVM, or Melos commands with `rtk` for shorter output:
-
-```bash
-rtk fvm exec melos qualitycheck
-```
+The shared Dart and Flutter lint rules are defined in [`analysis_options.yaml`](analysis_options.yaml).
+The tracked pre-commit hook runs [`scripts/pre-commit-check`](scripts/pre-commit-check), which
+formats, generates affected output, and analyzes the workspace. Run
+`fvm exec melos qualitycheck` only for a full CI-style workspace check or when explicitly requested.
 
 ## Frontend
 
@@ -109,11 +124,14 @@ We use [Conventional Commits](https://www.conventionalcommits.org) for all
 commit messages. The format is:
 
 ```
-<type>(<scope>): <description>
+<type>[(<scope>)]: <description>
 ```
 
-Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`.
-Scopes match the package name: `app`, `designer`, `core`, `flutter_common`, `db`.
+Allowed types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`,
+`perf`, `ci`, `build`, `revert`.
+
+Allowed scopes: `app`, `designer`, `core`, `flutter_common`, `db`. The scope is
+optional. Write the description in lowercase and do not end it with a period.
 
 Examples from this repo:
 
@@ -128,17 +146,16 @@ Every pull request should include the following:
 
 1. **Clear title** using Conventional Commits format (e.g.,
    `fix(designer): resolve drag-and-drop issue`)
-2. **Description** explaining the change, motivation, and any related issues
-3. **Screenshot or video** demonstrating the changes — this is **required** for
-   all PRs. Use a screen recording for interactive changes and a screenshot for
-   static ones.
+2. **Description** explaining the change, motivation, and any related issues or
+   Jira tickets. StudyU Jira tickets use the `STUDYU-123` format. Prefer a full
+   `https://studyu.atlassian.net/browse/STUDYU-123` URL so PR-Agent can fetch
+   the ticket context and compare the implementation with its acceptance criteria.
+3. **Screenshot or video** for UI changes. Use a screen recording for
+   interactive changes and a screenshot for static ones.
 4. **Testing steps** so reviewers can verify the change locally
 
-### PR Checklist
-
-- [ ] `fvm exec melos qualitycheck` passes
-- [ ] Screenshot or video of the changes attached
-- [ ] Description links related issues
+The current checklist and PR body schema are defined in
+[`.github/pull_request_template.md`](.github/pull_request_template.md).
 
 ## Code Reviews — Conventional Comments
 
@@ -158,7 +175,7 @@ actionable.
 
 | Label | Purpose |
 | --- | --- |
-| **praise:** | Highlight something positive. Leave at least one per review. |
+| **praise:** | Highlight something sincerely positive when warranted. |
 | **nitpick:** | Trivial preference-based request. Non-blocking by nature. |
 | **suggestion:** | Propose an improvement. Be explicit about *what* and *why*. |
 | **issue:** | Highlight a specific problem. Pair with a suggestion when possible. |
@@ -194,32 +211,7 @@ On tables with 10k+ rows this will timeout. Can we add a LIMIT clause?
 praise: Great use of the builder pattern here — very readable.
 ```
 
-## Flutter Version Management
-
-The StudyU monorepo uses the [FVM](https://fvm.app/) tool to manage the Flutter
-SDK version. This allows us to have a consistent Flutter version across all
-packages. The Flutter SDK version is specified in the `.fvmrc` file in the root
-directory. To install the Flutter SDK version, run `fvm install` in the root directory.
-You might also want to integrate FVM within your IDE. For Android Studio you can change the Flutter
-SDK path in the settings for the Flutter plugin. Open the Android Studio settings and navigate to
-Languages & Frameworks -> Flutter -> Flutter SDK path and set the path to the FVM Flutter SDK
-(`<path to the studyu repository>/.fvm/flutter_sdk`). The Dart SDK path should be changed
-respectively to (`<path to the studyu repository>/.fvm/flutter_sdk/bin/cache/dart-sdk`). For VS
-Code, have a look at the [FVM documentation](https://fvm.app/documentation/guides/vscode).
-
-Using FVM with melos requires setting the `MELOS_SDK_PATH` environment variable to the path of the
-FVM Flutter SDK. This can be done by running `export MELOS_SDK_PATH=.fvm/flutter_sdk` in the
-terminal. This is needed to ensure that melos uses the correct Flutter SDK version.
-
 ## Database and Backend
 
-We are using a self-hosted instance of [Supabase](https://supabase.com/) as a
-Backend-as-a-Service provider. Supabase provides different backend services
-such as a database, API, authentication, storage service all based around
-PostgreSQL and other FOSS. Since Supabase is open-source, we are hosting our
-own instance to ensure data privacy and security. For development purposes,
-Supabase can be self-hosted by using the [Supabase CLI](https://supabase.com/docs/guides/cli).
-Have a look into the [/supabase/README.md](./supabase/README.md) file for a
-guide on how to run the Supabase CLI for StudyU.
-
-Create new database migrations with the Supabase CLI (`supabase migration new <name>`) and commit the generated SQL under `supabase/migrations/`. Legacy migration files in `database/migration-legacy/` are documented in [supabase/README.md](./supabase/README.md).
+See [`supabase/README.md`](supabase/README.md) for local setup, migrations,
+seeds, and database tests. `database/migration-legacy/` is historical only.
