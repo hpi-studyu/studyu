@@ -76,7 +76,7 @@ Apply these repository-aware checks when the changed paths or behavior make them
 - Verify that credentials, keys, and environment values are not committed. Environment templates belong in `flutter_common/lib/envs/`.
 - Check that tests cover changed behavior and important edge cases. Do not request tests solely to increase coverage when existing tests already exercise the behavior.
 - When a Jira ticket or GitHub issue is linked, compare the implementation with its requirements and acceptance criteria. Identify unrelated changes and requirements that the PR does not satisfy.
-- Check that the PR title follows `<type>[(<scope>)]: <description>`. Allowed types are `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`, `perf`, `ci`, `build`, and `revert`. Allowed scopes are `app`, `designer`, `core`, `flutter_common`, and `db`. The description must be lowercase and must not end with a period.
+- Check that the PR title follows `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`. Allowed types are `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`, `perf`, `ci`, `build`, and `revert`. Allowed scopes are `app`, `designer`, `core`, `flutter_common`, and `db`. The description must be lowercase and must not end with a period.
 - If a non-generated diff exceeds approximately 500 changed lines or contains independent themes, propose an independently mergeable split.
 - Prioritize behavioral regressions, security, data integrity, compatibility, and missing tests. Avoid comments that only restate the diff or enforce preferences unsupported by repository conventions.
 - Do not comment on generated files when the actionable change belongs in the source model, annotation, ARB file, or generator input.

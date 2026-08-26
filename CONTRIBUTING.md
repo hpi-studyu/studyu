@@ -145,7 +145,7 @@ For any new feature or bug fix, create a branch and open a pull request. Follow 
 pull request template and these conventions:
 
 - Branch: `<type>/studyu-<ticket-number>-<short-description>`
-- PR title: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`
+- PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
 - PR description: include a direct link to the matching Jira ticket.
 
 ## Code Reviews — Conventional Comments
