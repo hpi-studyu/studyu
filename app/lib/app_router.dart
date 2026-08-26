@@ -69,6 +69,27 @@ class RouteNames {
 bool isStudyAvailableForTesting(Study study) =>
     study.interventions.length >= StudySchedule.numberOfInterventions;
 
+String initialRouteFromPlatformRoute(String platformRoute) {
+  final uri = Uri.tryParse(platformRoute);
+  if (uri == null) return '/${RouteNames.loading}';
+
+  final isWebEntryRoute = switch (uri.pathSegments) {
+    [RouteNames.preview] => true,
+    [RouteNames.invite, final code] ||
+    [RouteNames.study, final code] when code.isNotEmpty => true,
+    _ => false,
+  };
+  final isAppLink =
+      uri.scheme == appScheme &&
+      (uri.host == RouteNames.invite || uri.host == RouteNames.study) &&
+      uri.pathSegments.length == 1 &&
+      uri.pathSegments.first.isNotEmpty;
+
+  return isWebEntryRoute || isAppLink
+      ? platformRoute
+      : '/${RouteNames.loading}';
+}
+
 /// Creates and configures the GoRouter instance for the app
 GoRouter createAppRouter({
   required Map<String, String> queryParameters,

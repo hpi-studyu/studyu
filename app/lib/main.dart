@@ -70,9 +70,7 @@ Future<void> main() async {
   AppConfig? appConfig;
   final platformInitialRoute =
       WidgetsBinding.instance.platformDispatcher.defaultRouteName;
-  String initialRoute = platformInitialRoute == '/'
-      ? '/${RouteNames.loading}'
-      : platformInitialRoute;
+  String initialRoute = initialRouteFromPlatformRoute(platformInitialRoute);
   try {
     appConfig = await AppConfig.getAppConfig();
   } on PostgrestException catch (e) {
