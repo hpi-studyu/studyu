@@ -170,15 +170,21 @@ class StudySwitchDialogs {
         ) ??
         false;
 
-    if (!confirmed) {
+    if (!confirmed || !context.mounted) {
       return false;
     }
 
-    await currentSubject.softDelete();
-    await clearStudyLocalData(fallbackSubject: currentSubject);
-    if (context.mounted) {
-      context.read<AppState>().clearActiveStudyState();
-    }
+    final appState = context.read<AppState>();
+    await deleteStudySubjectAndClearLocalData(
+      subject: currentSubject,
+      deleteRemoteSubject: () async {
+        await currentSubject.softDelete();
+      },
+      onRemoteDeleted: appState.clearActiveStudyState,
+      stopActiveSynchronization:
+          appState.stopAndAwaitActiveSubjectSynchronization,
+      resumeActiveSynchronization: appState.resumeActiveSubjectSynchronization,
+    );
     if (context.mounted) {
       await cancelNotifications(context);
     }
@@ -212,18 +218,22 @@ class StudySwitchDialogs {
         ) ??
         false;
 
-    if (!confirmed) {
+    if (!confirmed || !context.mounted) {
       return false;
     }
 
-    await currentSubject.delete();
-    await clearStudyLocalData(
-      fallbackSubject: currentSubject,
+    final appState = context.read<AppState>();
+    await deleteStudySubjectAndClearLocalData(
+      subject: currentSubject,
       clearStoredParticipantCredentials: true,
+      deleteRemoteSubject: () async {
+        await currentSubject.delete();
+      },
+      onRemoteDeleted: appState.clearActiveStudyState,
+      stopActiveSynchronization:
+          appState.stopAndAwaitActiveSubjectSynchronization,
+      resumeActiveSynchronization: appState.resumeActiveSubjectSynchronization,
     );
-    if (context.mounted) {
-      context.read<AppState>().clearActiveStudyState();
-    }
     if (context.mounted) {
       await cancelNotifications(context);
     }

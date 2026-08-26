@@ -532,13 +532,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     if (!mounted) return;
     if (subject != null) {
-      subject = await Cache.synchronize(subject);
+      final synchronization = await Cache.synchronize(subject);
+      subject = synchronization.subject;
       if (!mounted) return;
       if (!isStudyAvailableForTesting(subject.study)) {
         context.go('/${RouteNames.studyUnavailable}');
         return;
       }
       state.updateActiveSubject(subject);
+      if (!synchronization.succeeded) {
+        state.markActiveSubjectSynchronizationPending();
+      }
       state.init(context);
       context.go('/${RouteNames.dashboard}');
     } else {

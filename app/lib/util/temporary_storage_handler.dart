@@ -7,6 +7,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:studyu_core/core.dart';
 
 class TemporaryStorageHandler {
+  @visibleForTesting
+  static Future<void> Function(String stagingFilePath, String blobId)?
+  debugMoveStagingFileToUploadDirectory;
+
   static const String _stagingBaseNamePrefix = 'staging_';
   static const String _audioFileType = ".m4a";
   static const String _imageFileType = ".jpg";
@@ -63,6 +67,11 @@ class TemporaryStorageHandler {
     String blobId,
   ) async {
     if (kIsWeb) return;
+    final moveOverride = debugMoveStagingFileToUploadDirectory;
+    if (moveOverride != null) {
+      await moveOverride(stagingFilePath, blobId);
+      return;
+    }
     final stagingFile = File(stagingFilePath);
     final uploadDirectory = await _getMultimodalUploadDirectory();
     final uploadFile = File(path.join(uploadDirectory.path, [blobId].join()));

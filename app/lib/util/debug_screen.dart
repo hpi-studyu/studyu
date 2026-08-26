@@ -10,6 +10,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -84,9 +85,12 @@ class DebugScreen {
 
   static Future<void> resetApp(BuildContext context) async {
     try {
+      final appState = context.read<AppState>();
+      await appState.stopAndAwaitActiveSubjectSynchronization();
+      appState.clearActiveStudyState();
+      await clearAllLocalData();
       await _deleteCacheDir();
       await _deleteAppDir();
-      await SecureStorage.deleteAll();
       if (context.mounted) {
         context.pop();
         context.pop();
