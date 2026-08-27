@@ -20,6 +20,11 @@ jobs:
         with:
           version: latest
 
+      - name: Diagnose Supabase port
+        run: |
+          sudo lsof -nP -iTCP:54322 -sTCP:LISTEN || true
+          docker ps --format 'table {{.Names}}\t{{.Ports}}'
+
       - name: Start Supabase database
         run: |
           supabase db start
