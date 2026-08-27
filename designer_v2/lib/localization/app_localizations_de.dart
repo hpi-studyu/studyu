@@ -292,7 +292,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_button_new_study => 'Neue Studie';
 
   @override
+  String get action_button_retry => 'Erneut versuchen';
+
+  @override
   String get search => 'Suche';
+
+  @override
+  String get navlink_all_studies => 'Alle Studien';
 
   @override
   String get studies_list_header_title => 'Titel';
@@ -323,11 +329,58 @@ class AppLocalizationsDe extends AppLocalizations {
       'Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen';
 
   @override
+  String studies_count_total(int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total Studien',
+      one: '1 Studie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studies_count_filtered(int visible, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total Studien',
+      one: '1 Studie',
+    );
+    return '$visible von $_temp0';
+  }
+
+  @override
+  String get studies_filter_server_side_unsupported =>
+      'Dieser Filter kann hier gerade nicht verwendet werden. Setze den Filter zurück und versuche es erneut.';
+
+  @override
   String get studies_empty => 'Du hast noch keine Studien erstellt';
 
   @override
   String get studies_empty_description =>
       'Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie';
+
+  @override
+  String get studies_empty_public => 'Keine öffentlichen Studien gefunden';
+
+  @override
+  String get studies_empty_public_description =>
+      'Es gibt keine Studien im öffentlichen Register, die deinen aktuellen Filtern entsprechen.';
+
+  @override
+  String get studies_empty_shared => 'Keine geteilten Studien gefunden';
+
+  @override
+  String get studies_empty_shared_description =>
+      'Es wurden noch keine Studien mit dir geteilt.';
+
+  @override
+  String get studies_end_of_list => 'Das war\'s fürs Erste.';
+
+  @override
+  String get studies_load_failed =>
+      'Studien konnten nicht geladen werden. Bitte versuche es erneut.';
 
   @override
   String get navlink_learn => 'Lernen';
@@ -2990,4 +3043,29 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filtern';
+
+  @override
+  String get dashboard_end_of_list => 'Das war\'s — Ende der Liste.';
+
+  @override
+  String get dashboard_retry => 'Erneut versuchen';
+
+  @override
+  String get dashboard_filter_unsupported =>
+      'Dieser Filter ist mit der serverseitigen Suche nicht kompatibel. Bitte Filter zurücksetzen.';
+
+  @override
+  String get dashboard_reset_filter => 'Filter zurücksetzen';
+
+  @override
+  String get dashboard_load_error => 'Studien konnten nicht geladen werden.';
+
+  @override
+  String get all_studies => 'Alle Studien';
+
+  @override
+  String get studies_filter_add_filter => 'Filter hinzufügen';
+
+  @override
+  String get studies_filter_remove_filter => 'Filter entfernen';
 }

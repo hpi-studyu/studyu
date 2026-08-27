@@ -112,7 +112,8 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   }
 
   int _calculateMatchCount(FilterGroup filter) {
-    final studies = ref.read(dashboardControllerProvider).studies.value ?? [];
+    final state = ref.read(dashboardControllerProvider);
+    final studies = [...state.pinnedStudiesList, ...state.loadedStudies];
     final supabaseUser = Supabase.instance.client.auth.currentUser;
     if (supabaseUser == null) return 0;
     return studies

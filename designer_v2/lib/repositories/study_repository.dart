@@ -8,6 +8,9 @@ import 'package:studyu_designer_v2/common_views/study_title_confirmation_dialog.
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -20,6 +23,7 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'study_repository.g.dart';
 
@@ -28,6 +32,20 @@ abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> deleteParticipants(Study study);
   Future<void> close(Study study);
   // Future<void> deleteProgress(Study study);
+
+  Future<StudiesPage> fetchPage({
+    required int offset,
+    required int limit,
+    required StudiesTableColumn sortBy,
+    required bool ascending,
+    required StudiesFilter preset,
+    required User currentUser,
+    String? searchQuery,
+    FilterGroup? advancedFilter,
+    List<String> excludeIds,
+  });
+
+  Future<List<Study>> fetchPinned(Set<String> pinnedIds);
 }
 
 class StudyRepository extends ModelRepository<Study>
@@ -119,46 +137,77 @@ class StudyRepository extends ModelRepository<Study>
     final duplicate = completeModel.duplicateAsDraft(
       authRepository.currentUser!.id,
     );
-    await save(duplicate);
+    await save(duplicate, runOptimistically: false);
   }
 
   @override
-  Future<void> close(Study study) {
-    final wrappedModel = get(study.id);
-    if (wrappedModel == null) {
+  Future<void> close(Study study) async {
+    if (get(study.id) == null) {
       throw ModelNotFoundException();
     }
-    study.status = StudyStatus.closed;
 
-    final publishOperation = OptimisticUpdate(
-      applyOptimistic: () => {}, // nothing to do here
-      apply: () => save(study, runOptimistically: false),
-      rollback: () {}, // nothing to do here
-      onUpdate: () => emitUpdate(),
-      onError: (e, stackTrace) {
-        emitError(modelStreamControllers[study.id], e, stackTrace);
-      },
+    final closedStudy = study.exactDuplicate()..status = StudyStatus.closed;
+    await save(closedStudy, runOptimistically: false);
+  }
+
+  @override
+  Future<StudiesPage> fetchPage({
+    required int offset,
+    required int limit,
+    required StudiesTableColumn sortBy,
+    required bool ascending,
+    required StudiesFilter preset,
+    required User currentUser,
+    String? searchQuery,
+    FilterGroup? advancedFilter,
+    List<String> excludeIds = const [],
+  }) async {
+    final page = await apiClient.getUserStudiesPage(
+      offset: offset,
+      limit: limit,
+      sortBy: sortBy,
+      ascending: ascending,
+      preset: preset,
+      currentUser: currentUser,
+      searchQuery: searchQuery,
+      advancedFilter: advancedFilter,
+      excludeIds: excludeIds,
     );
+    final wrappedStudies = upsertAllLocally(page.studies);
+    for (final wrappedStudy in wrappedStudies) {
+      wrappedStudy.markAsFetched();
+    }
+    return page;
+  }
 
-    return publishOperation.execute();
+  @override
+  Future<List<Study>> fetchPinned(Set<String> pinnedIds) async {
+    final studies = await apiClient.getPinnedUserStudies(pinnedIds: pinnedIds);
+    final wrappedStudies = upsertAllLocally(studies);
+    for (final wrappedStudy in wrappedStudies) {
+      wrappedStudy.markAsFetched();
+    }
+    return studies;
   }
 
   @override
   List<ModelAction> availableActions(Study model) {
-    Future<void> onDeleteCallback() {
-      return delete(model.id)
-          .then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          )
-          .then(
-            (value) => Future.delayed(
-              const Duration(milliseconds: 200),
-              () => ref
-                  .read(notificationServiceProvider)
-                  .show(Notifications.studyDeleted),
-            ),
-          );
+    Future<void> onDeleteCallback() async {
+      final router = ref.read(routerProvider);
+      bool isDashboard() =>
+          router.routeInformationProvider.value.uri.path ==
+          RoutingIntents.studies.route.path;
+
+      try {
+        await delete(model.id, runOptimistically: false);
+      } catch (_) {
+        if (isDashboard()) rethrow;
+        ref.read(notificationServiceProvider).showMessage(tr.sync_failed);
+        return;
+      }
+
+      if (!isDashboard()) router.dispatch(RoutingIntents.studies);
+      ref.read(notificationServiceProvider).show(Notifications.studyDeleted);
     }
 
     final currentUser = authRepository.currentUser;
@@ -178,24 +227,14 @@ class StudyRepository extends ModelRepository<Study>
         // same as "Copy" but for non-drafts
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
-        onExecute: () async {
-          return await duplicateAndSave(model).then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          );
-        },
+        onExecute: () => duplicateAndSave(model),
         isAvailable:
             model.status != StudyStatus.draft && model.canCopy(currentUser),
       ),
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
-        onExecute: () async {
-          return await duplicateAndSave(model).then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          );
-        },
+        onExecute: () => duplicateAndSave(model),
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),

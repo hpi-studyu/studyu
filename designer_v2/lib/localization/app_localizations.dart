@@ -614,11 +614,23 @@ abstract class AppLocalizations {
   /// **'New study'**
   String get action_button_new_study;
 
+  /// No description provided for @action_button_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get action_button_retry;
+
   /// No description provided for @search.
   ///
   /// In en, this message translates to:
   /// **'Search'**
   String get search;
+
+  /// No description provided for @navlink_all_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Studies'**
+  String get navlink_all_studies;
 
   /// No description provided for @studies_list_header_title.
   ///
@@ -674,6 +686,24 @@ abstract class AppLocalizations {
   /// **'Modify your query'**
   String get modify_query;
 
+  /// No description provided for @studies_count_total.
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, =1{1 study} other{{total} studies}}'**
+  String studies_count_total(int total);
+
+  /// No description provided for @studies_count_filtered.
+  ///
+  /// In en, this message translates to:
+  /// **'{visible} of {total, plural, =1{1 study} other{{total} studies}}'**
+  String studies_count_filtered(int visible, int total);
+
+  /// No description provided for @studies_filter_server_side_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This filter can\'t be used here right now. Clear the filter and try again.'**
+  String get studies_filter_server_side_unsupported;
+
   /// No description provided for @studies_empty.
   ///
   /// In en, this message translates to:
@@ -685,6 +715,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Build your own study from scratch or create a new draft copy from an already published study!'**
   String get studies_empty_description;
+
+  /// No description provided for @studies_empty_public.
+  ///
+  /// In en, this message translates to:
+  /// **'No public studies found'**
+  String get studies_empty_public;
+
+  /// No description provided for @studies_empty_public_description.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no studies in the public registry matching your current filters.'**
+  String get studies_empty_public_description;
+
+  /// No description provided for @studies_empty_shared.
+  ///
+  /// In en, this message translates to:
+  /// **'No shared studies found'**
+  String get studies_empty_shared;
+
+  /// No description provided for @studies_empty_shared_description.
+  ///
+  /// In en, this message translates to:
+  /// **'No studies have been shared with you yet.'**
+  String get studies_empty_shared_description;
+
+  /// No description provided for @studies_end_of_list.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s all for now.'**
+  String get studies_end_of_list;
+
+  /// No description provided for @studies_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load studies. Try again.'**
+  String get studies_load_failed;
 
   /// No description provided for @navlink_learn.
   ///
@@ -5078,6 +5144,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter'**
   String get filter_button_main;
+
+  /// No description provided for @dashboard_end_of_list.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the end.'**
+  String get dashboard_end_of_list;
+
+  /// No description provided for @dashboard_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get dashboard_retry;
+
+  /// No description provided for @dashboard_filter_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This filter is not compatible with server-side search. Please reset the filter.'**
+  String get dashboard_filter_unsupported;
+
+  /// No description provided for @dashboard_reset_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset filter'**
+  String get dashboard_reset_filter;
+
+  /// No description provided for @dashboard_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load studies.'**
+  String get dashboard_load_error;
+
+  /// No description provided for @all_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Studies'**
+  String get all_studies;
+
+  /// No description provided for @studies_filter_add_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Add filter'**
+  String get studies_filter_add_filter;
+
+  /// No description provided for @studies_filter_remove_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove filter'**
+  String get studies_filter_remove_filter;
 }
 
 class _AppLocalizationsDelegate

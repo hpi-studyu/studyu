@@ -95,7 +95,9 @@
   "navlink_logout": "Abmelden",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "Neue Studie",
+  "action_button_retry": "Erneut versuchen",
   "search": "Suche",
+  "navlink_all_studies": "Alle Studien",
   "studies_list_header_title": "Titel",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Teilnahme",
@@ -105,8 +107,34 @@
   "studies_list_header_participants_completed": "Abgeschlossen",
   "studies_not_found": "Es konnten keine Studien gefunden werden",
   "modify_query": "Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen",
+  "studies_count_total": "{total, plural, =1{1 Studie} other{{total} Studien}}",
+  "@studies_count_total": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_count_filtered": "{visible} von {total, plural, =1{1 Studie} other{{total} Studien}}",
+  "@studies_count_filtered": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_filter_server_side_unsupported": "Dieser Filter kann hier gerade nicht verwendet werden. Setze den Filter zurück und versuche es erneut.",
   "studies_empty": "Du hast noch keine Studien erstellt",
   "studies_empty_description": "Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie",
+  "studies_empty_public": "Keine öffentlichen Studien gefunden",
+  "studies_empty_public_description": "Es gibt keine Studien im öffentlichen Register, die deinen aktuellen Filtern entsprechen.",
+  "studies_empty_shared": "Keine geteilten Studien gefunden",
+  "studies_empty_shared_description": "Es wurden noch keine Studien mit dir geteilt.",
+  "studies_end_of_list": "Das war's fürs Erste.",
+  "studies_load_failed": "Studien konnten nicht geladen werden. Bitte versuche es erneut.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Lernen",
   "navlink_study_design": "Entwerfen",
@@ -1108,5 +1136,13 @@
   "filter_section_custom_presets": "Benutzerdefinierte Vorlagen",
   "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
-  "filter_button_main": "Filtern"
+  "filter_button_main": "Filtern",
+  "dashboard_end_of_list": "Das war's — Ende der Liste.",
+  "dashboard_retry": "Erneut versuchen",
+  "dashboard_filter_unsupported": "Dieser Filter ist mit der serverseitigen Suche nicht kompatibel. Bitte Filter zurücksetzen.",
+  "dashboard_reset_filter": "Filter zurücksetzen",
+  "dashboard_load_error": "Studien konnten nicht geladen werden.",
+  "all_studies": "Alle Studien",
+  "studies_filter_add_filter": "Filter hinzufügen",
+  "studies_filter_remove_filter": "Filter entfernen"
 }
