@@ -1,15 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/models/nutrition/enums.dart';
+import 'package:studyu_core/src/models/nutrition/food_composition.dart';
 import 'package:studyu_core/src/models/nutrition/nutrition_profile.dart';
-import 'package:studyu_core/src/models/nutrition/recipe_composition.dart';
-import 'package:studyu_core/src/models/nutrition/recipe_metadata.dart';
+import 'package:studyu_core/src/models/nutrition/preparation_details.dart';
 import 'package:uuid/uuid.dart';
 
 part 'food_entry.g.dart';
 
 @JsonSerializable()
 class FoodEntry {
+  /// UUID for this occurrence in a recall. It is never a definition ID.
   String id;
+
+  /// Stable, subject-scoped definition identity.
+  String foodId;
+
+  /// Immutable definition revision used for this logged snapshot.
+  String foodVersionId;
   FoodEntryType entryType;
   String name;
   String? brandName;
@@ -31,14 +38,19 @@ class FoodEntry {
   DateTime createdAt;
   DateTime? modifiedAt;
   Map<String, dynamic> originalValues;
-  String? parentRecipeId;
+  String? parentEntryId;
 
-  // Recipe-specific fields
-  RecipeMetadata? recipeMetadata;
-  List<RecipeComposition>? recipeIngredients;
+  // Meal-specific fields
+  PreparationDetails? preparationDetails;
+  List<FoodComposition>? componentFoods;
+
+  /// Ordered, immutable component snapshots for a saved meal definition.
+  List<FoodEntry>? componentSnapshots;
 
   FoodEntry({
     required this.id,
+    required this.foodId,
+    required this.foodVersionId,
     required this.entryType,
     required this.name,
     this.brandName,
@@ -60,12 +72,15 @@ class FoodEntry {
     required this.createdAt,
     this.modifiedAt,
     required this.originalValues,
-    this.parentRecipeId,
-    this.recipeMetadata,
-    this.recipeIngredients,
+    this.parentEntryId,
+    this.preparationDetails,
+    this.componentFoods,
+    this.componentSnapshots,
   });
 
   FoodEntry.withId({
+    String? foodId,
+    String? foodVersionId,
     required this.entryType,
     required this.name,
     this.brandName,
@@ -86,14 +101,33 @@ class FoodEntry {
     this.templateId,
     this.modifiedAt,
     required this.originalValues,
-    this.parentRecipeId,
-    this.recipeMetadata,
-    this.recipeIngredients,
+    this.parentEntryId,
+    this.preparationDetails,
+    this.componentFoods,
+    this.componentSnapshots,
   }) : id = const Uuid().v4(),
+       foodId = foodId ?? const Uuid().v4(),
+       foodVersionId = foodVersionId ?? const Uuid().v4(),
        createdAt = DateTime.now();
 
-  factory FoodEntry.fromJson(Map<String, dynamic> json) =>
-      _$FoodEntryFromJson(json);
+  factory FoodEntry.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('foodId') && json.containsKey('foodVersionId')) {
+      return _$FoodEntryFromJson(json);
+    }
+
+    final id = json['id'] as String;
+    return _$FoodEntryFromJson({
+      ...json,
+      if (!json.containsKey('foodId')) 'foodId': _legacyIdentity('food', id),
+      if (!json.containsKey('foodVersionId'))
+        'foodVersionId': _legacyIdentity('version', id),
+    });
+  }
+
+  static String _legacyIdentity(String kind, String entryId) => const Uuid().v5(
+    Namespace.url.value,
+    'studyu:nutrition:legacy:$kind:$entryId',
+  );
 
   Map<String, dynamic> toJson() => _$FoodEntryToJson(this);
 

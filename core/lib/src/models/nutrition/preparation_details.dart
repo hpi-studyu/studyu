@@ -1,16 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'recipe_metadata.g.dart';
+part 'preparation_details.g.dart';
 
 @JsonSerializable()
-class RecipeMetadata {
+class PreparationDetails {
   double rawWeight;
   double cookedWeight;
   double yieldFactor;
   String preparationMethod;
   Map<String, double> retentionFactors;
 
-  RecipeMetadata({
+  PreparationDetails({
     required this.rawWeight,
     required this.cookedWeight,
     required this.yieldFactor,
@@ -18,10 +18,10 @@ class RecipeMetadata {
     required this.retentionFactors,
   });
 
-  factory RecipeMetadata.fromJson(Map<String, dynamic> json) =>
-      _$RecipeMetadataFromJson(json);
+  factory PreparationDetails.fromJson(Map<String, dynamic> json) =>
+      _$PreparationDetailsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$RecipeMetadataToJson(this);
+  Map<String, dynamic> toJson() => _$PreparationDetailsToJson(this);
 
   @override
   String toString() => toJson().toString();

@@ -36,7 +36,9 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
   );
   final FormControl<String> instructionsControl = FormControl(value: '');
   final FormControl<bool> collectMealContextControl = FormControl(value: true);
-  final FormControl<bool> allowRecipesControl = FormControl(value: true);
+  final FormControl<bool> allowMealsControl = FormControl(value: true);
+  final FormControl<bool> requireDailyCompletionConfirmationControl =
+      FormControl(value: false);
   final FormControl<int> minimumMealsRequiredControl = FormControl();
   final FormArray<String> customMealTypesControl = FormArray<String>([]);
 
@@ -61,7 +63,11 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
 
   FormControlValidation get minimumMealsMin => FormControlValidation(
     control: minimumMealsRequiredControl,
-    validators: [Validators.min(1)],
+    validators: [
+      Validators.delegate(
+        (control) => control.value == null ? null : Validators.min(1)(control),
+      ),
+    ],
     validationMessages: {
       ValidationMessage.min: (_) =>
           tr.form_field_nutrition_minimum_meals_min_error,
@@ -74,7 +80,9 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     'title': titleControl,
     'instructions': instructionsControl,
     'collectMealContext': collectMealContextControl,
-    'allowRecipes': allowRecipesControl,
+    'allowMeals': allowMealsControl,
+    'requireDailyCompletionConfirmation':
+        requireDailyCompletionConfirmationControl,
     'minimumMealsRequired': minimumMealsRequiredControl,
     'customMealTypes': customMealTypesControl,
     ...scheduleFormControls,
@@ -87,7 +95,9 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
     titleControl.value = data.title;
     instructionsControl.value = data.instructions ?? '';
     collectMealContextControl.value = data.collectMealContext;
-    allowRecipesControl.value = data.allowRecipes;
+    allowMealsControl.value = data.allowMeals;
+    requireDailyCompletionConfirmationControl.value =
+        data.requireDailyCompletionConfirmation;
     minimumMealsRequiredControl.value = data.minimumMealsRequired;
 
     customMealTypesControl.clear();
@@ -106,7 +116,9 @@ class NutritionFormViewModel extends ManagedFormViewModel<NutritionFormData>
       title: titleControl.value!, // required
       instructions: instructionsControl.value,
       collectMealContext: collectMealContextControl.value ?? true,
-      allowRecipes: allowRecipesControl.value ?? true,
+      allowMeals: allowMealsControl.value ?? true,
+      requireDailyCompletionConfirmation:
+          requireDailyCompletionConfirmationControl.value ?? false,
       minimumMealsRequired: minimumMealsRequiredControl.value,
       customMealTypes: () {
         final types = customMealTypesControl.controls

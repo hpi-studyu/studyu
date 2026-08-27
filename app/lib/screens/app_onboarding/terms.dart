@@ -73,47 +73,54 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: RetryFutureBuilder<AppConfig>(
-                  tryFunction: AppConfig.getAppConfig,
-                  successBuilder:
-                      (BuildContext context, AppConfig? appConfig) =>
-                          legalSection(context, appConfig),
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Title(
+      title: l10n.terms,
+      color: theme.colorScheme.primary,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: RetryFutureBuilder<AppConfig>(
+                    tryFunction: AppConfig.getAppConfig,
+                    successBuilder:
+                        (BuildContext context, AppConfig? appConfig) =>
+                            legalSection(context, appConfig),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        backButtonKey: const ValueKey('terms_back'),
-        onBack: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.go('/${RouteNames.welcome}');
-          }
-        },
-        nextButtonKey: const ValueKey('terms_continue'),
-        onNext: userCanContinue()
-            ? () async {
-                final success = await ensureParticipantSignedIn();
-                if (success) {
-                  if (!context.mounted) return;
-                  final state = context.read<AppState>();
-                  if (state.hasPendingDeepLink) {
-                    await _handlePendingDeepLink(state);
-                  } else {
-                    context.push('/${RouteNames.studySelection}');
+        bottomNavigationBar: BottomOnboardingNavigation(
+          backButtonKey: const ValueKey('terms_back'),
+          onBack: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/${RouteNames.welcome}');
+            }
+          },
+          nextButtonKey: const ValueKey('terms_continue'),
+          onNext: userCanContinue()
+              ? () async {
+                  final success = await ensureParticipantSignedIn();
+                  if (success) {
+                    if (!context.mounted) return;
+                    final state = context.read<AppState>();
+                    if (state.hasPendingDeepLink) {
+                      await _handlePendingDeepLink(state);
+                    } else {
+                      context.push('/${RouteNames.studySelection}');
+                    }
                   }
                 }
-              }
-            : null,
+              : null,
+        ),
       ),
     );
   }

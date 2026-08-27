@@ -187,40 +187,43 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      key: const ValueKey('eligibility_screen'),
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.eligibility_questionnaire_title,
+    final l10n = AppLocalizations.of(context)!;
+    return Title(
+      title: l10n.eligibility_questionnaire_title,
+      color: theme.colorScheme.primary,
+      child: Scaffold(
+        key: const ValueKey('eligibility_screen'),
+        appBar: AppBar(
+          title: Text(l10n.eligibility_questionnaire_title),
+          leading: const Icon(MdiIcons.clipboardList),
         ),
-        leading: const Icon(MdiIcons.clipboardList),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              AppLocalizations.of(context)!.please_answer_eligibility,
-              style: theme.textTheme.titleMedium,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                l10n.please_answer_eligibility,
+                style: theme.textTheme.titleMedium,
+              ),
             ),
-          ),
-          Expanded(
-            child: QuestionnaireWidget(
-              widget.study!.questionnaire.questions,
-              title: widget.study!.title,
-              onComplete: _evaluateResponse,
-              shouldContinue: _checkContinuation,
-              hideCta: activeResult?.eligible == false,
-              autoComplete: true,
+            Expanded(
+              child: QuestionnaireWidget(
+                widget.study!.questionnaire.questions,
+                title: widget.study!.title,
+                onComplete: _evaluateResponse,
+                shouldContinue: _checkContinuation,
+                hideCta: activeResult?.eligible == false,
+                autoComplete: true,
+              ),
             ),
-          ),
-          if (activeResult != null) _constructResultBanner(),
-        ],
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        nextButtonKey: const ValueKey('eligibility_continue'),
-        onNext: activeResult?.eligible ?? false ? _finish : null,
-        progress: const OnboardingProgress(stage: 0, progress: 0.5),
+            if (activeResult != null) _constructResultBanner(),
+          ],
+        ),
+        bottomNavigationBar: BottomOnboardingNavigation(
+          nextButtonKey: const ValueKey('eligibility_continue'),
+          onNext: activeResult?.eligible ?? false ? _finish : null,
+          progress: const OnboardingProgress(stage: 0, progress: 0.5),
+        ),
       ),
     );
   }

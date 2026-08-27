@@ -11,7 +11,8 @@ class AppState with ChangeNotifier {
   String? inviteCode;
   List<String>? preselectedInterventionIds;
   StudyNotifications? studyNotifications;
-  bool isPreview = false;
+  // Temporary for PR #893; remove before merging into #853/dev.
+  bool isPreview = true;
 
   String? pendingDeepLinkStudyId;
   String? pendingDeepLinkInviteCode;

@@ -38,7 +38,6 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
   final PhotoGalleryService _photoService = PhotoGalleryService();
   List<PhotoReference>? _photos;
   bool _isLoading = false;
-  bool _isExpanded = false;
   bool _hasPermission = false;
 
   @override
@@ -98,141 +97,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    // Collapsed state - show summary card
-    if (!_isExpanded) {
-      return _buildCollapsedCard(theme, l10n);
-    }
-
-    // Expanded state - show photo grid
-    return _buildExpandedCard(theme, l10n);
-  }
-
-  Widget _buildCollapsedCard(ThemeData theme, AppLocalizations l10n) {
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: InkWell(
-        onTap: () => setState(() => _isExpanded = true),
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.secondaryContainer.withValues(
-                    alpha: 0.5,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.photo_library_outlined,
-                  size: 20,
-                  color: theme.colorScheme.secondary,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.photoRecallTitle,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _hasPermission
-                          ? l10n.photoRecallSubtitle
-                          : l10n.photoRecallPermissionNeeded,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpandedCard(ThemeData theme, AppLocalizations l10n) {
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with collapse button
-          InkWell(
-            onTap: () => setState(() => _isExpanded = false),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer.withValues(
-                        alpha: 0.5,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.photo_library_outlined,
-                      size: 20,
-                      color: theme.colorScheme.secondary,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.photoRecallTitle,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          l10n.photoRecallTapToEnlarge,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(
-                    Icons.expand_less,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Content area
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: _buildContent(theme, l10n),
-          ),
-        ],
-      ),
-    );
+    return _buildContent(theme, l10n);
   }
 
   Widget _buildContent(ThemeData theme, AppLocalizations l10n) {
@@ -304,36 +169,34 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
   }
 
   Widget _buildEmptyState(ThemeData theme, AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.hide_image_outlined,
-            size: 48,
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.photoRecallNoPhotos,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l10n.photoRecallNoPhotosSubtitle,
-            style: theme.textTheme.bodySmall?.copyWith(
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            Icon(
+              Icons.hide_image_outlined,
+              size: 48,
               color: theme.colorScheme.onSurfaceVariant,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 12),
+            Text(
+              l10n.photoRecallNoPhotos,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.photoRecallNoPhotosSubtitle,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

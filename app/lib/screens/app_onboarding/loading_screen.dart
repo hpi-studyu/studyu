@@ -134,7 +134,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> _runStartupFlow() async {
-    await _restoreParticipantSession();
+    try {
+      await _restoreParticipantSession();
+    } on AuthApiException catch (error) {
+      StudyULogger.warning("Could not restore participant session: $error");
+      final selectedSubjectId = await getActiveSubjectId();
+      if (!mounted) return;
+      context.go(
+        '/${RouteNames.appErrorScreen}',
+        extra: AppErrorScreenArguments(
+          selectedSubjectId: selectedSubjectId,
+          reason: AppErrorReason.deletedStudy,
+        ),
+      );
+      return;
+    }
 
     if (kIsWeb && widget.hasDeepLink) {
       return;

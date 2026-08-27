@@ -3,13 +3,12 @@ import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
-
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 class NutritionFormData extends IFormDataWithSchedule {
-  static String get kDefaultTitle =>
-      'Nutrition Tracking'; // TODO: Add to translation
+  static String get kDefaultTitle => tr.form_field_nutrition_default_title;
 
   NutritionFormData({
     required this.measurementId,
@@ -22,7 +21,8 @@ class NutritionFormData extends IFormDataWithSchedule {
     required super.hasReminder,
     super.reminderTime,
     this.collectMealContext = true,
-    this.allowRecipes = true,
+    this.allowMeals = true,
+    this.requireDailyCompletionConfirmation = false,
     this.minimumMealsRequired,
     this.customMealTypes,
   });
@@ -31,7 +31,8 @@ class NutritionFormData extends IFormDataWithSchedule {
   final String title;
   final String? instructions;
   final bool collectMealContext;
-  final bool allowRecipes;
+  final bool allowMeals;
+  final bool requireDailyCompletionConfirmation;
   final int? minimumMealsRequired;
   final List<String>? customMealTypes;
 
@@ -50,7 +51,9 @@ class NutritionFormData extends IFormDataWithSchedule {
       reminderTime: nutritionTask.schedule.reminderTime,
       instanceId: nutritionTask.schedule.instanceId,
       collectMealContext: nutritionTask.collectMealContext,
-      allowRecipes: nutritionTask.allowRecipes,
+      allowMeals: nutritionTask.allowMeals,
+      requireDailyCompletionConfirmation:
+          nutritionTask.requireDailyCompletionConfirmation,
       minimumMealsRequired: nutritionTask.minimumMealsRequired,
       customMealTypes: nutritionTask.customMealTypes,
     );
@@ -63,7 +66,9 @@ class NutritionFormData extends IFormDataWithSchedule {
     nutritionTask.instructions = instructions;
     nutritionTask.schedule = toSchedule();
     nutritionTask.collectMealContext = collectMealContext;
-    nutritionTask.allowRecipes = allowRecipes;
+    nutritionTask.allowMeals = allowMeals;
+    nutritionTask.requireDailyCompletionConfirmation =
+        requireDailyCompletionConfirmation;
     nutritionTask.minimumMealsRequired = minimumMealsRequired;
     nutritionTask.customMealTypes = customMealTypes;
     return nutritionTask;
@@ -82,7 +87,8 @@ class NutritionFormData extends IFormDataWithSchedule {
       hasReminder: hasReminder,
       reminderTime: reminderTime,
       collectMealContext: collectMealContext,
-      allowRecipes: allowRecipes,
+      allowMeals: allowMeals,
+      requireDailyCompletionConfirmation: requireDailyCompletionConfirmation,
       minimumMealsRequired: minimumMealsRequired,
       customMealTypes: customMealTypes != null
           ? List.from(customMealTypes!)
