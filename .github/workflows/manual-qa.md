@@ -63,18 +63,7 @@ Then, for the PR itself:
 
 ## Writing discipline (STE)
 
-Apply ASD-STE100 Simplified Technical English to all prose in the comment: the Summary, Setup items, test item titles, Steps, and Expected lines. Use short sentences with one main action each. Name the actor in active voice. Replace jargon with everyday English when accuracy permits. Preserve code, commands, identifiers, file paths, and the marker unchanged.
-
-Concrete rules:
-
-- Cut filler: "in order to" → "to", "the question as to whether" → "whether", "due to the fact that" → "because".
-- Cut hedging when the result is observable: "should", "may", "might (cause)", "potentially" → state the expected result directly.
-- One action per step. Split compound steps: "Open the file and check the value" → two steps.
-- Use the same term for the same thing. Do not switch between "checklist", "report", "check list" within one comment.
-- No metaphors, similes, or stock phrases. No "navigate to", "dive into", "leverage", "robust", "seamless".
-- State expected results as observable behavior, not as test intent. "The comment shows one checklist" beats "The comment should display the checklist as expected".
-
-Do not apply STE to: code spans, file paths, identifiers, the marker, or the closing footer. Do not flatten intentional technical precision (a test name like `minimizeComment` must stay exact).
+Apply the repository writing discipline from `AGENTS.md` (Writing Discipline section) and the full rules in `.agents/skills/asd-ste100/SKILL.md` to all prose in the comment: the Summary, Setup items, test item titles, Steps, and Expected lines. Preserve code spans, file paths, identifiers, and the marker exactly. Do not flatten intentional technical precision (a test name like `minimizeComment` must stay exact).
 
 ## Task
 

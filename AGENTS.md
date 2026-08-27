@@ -20,6 +20,13 @@ code, tests, or linked project documentation.
 - Preserve unrelated working-tree changes and comments. Remove only imports, variables, or
   other artifacts made unused by the current change.
 
+## Writing Discipline
+
+- Apply the `.agents/skills/asd-ste100` skill to all StudyU prose you write: issues, PR titles
+  and descriptions, review comments, documentation, and generated reports such as manual QA
+  checklists.
+- Preserve code spans, file paths, identifiers, and markers exactly. Never rewrite them.
+
 ## Repository Map
 
 - `core/` contains shared Dart models and logic used by both frontends.
