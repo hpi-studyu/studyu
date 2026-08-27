@@ -10,6 +10,16 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+FilterGroup mergeStudiesFilters({
+  required FilterGroup? baseFilter,
+  required FilterGroup? activeFilter,
+}) {
+  if (baseFilter != null && activeFilter != null) {
+    return FilterGroup(children: [baseFilter, activeFilter]);
+  }
+  return activeFilter ?? baseFilter ?? FilterGroup();
+}
+
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
 
@@ -88,14 +98,10 @@ class DashboardState extends Equatable {
 
     // 1. Apply Advanced Filter (or fallback to preset logic)
     // If both are null, default to ALL (empty group)
-    final baseFilter = studiesFilter?.toFilterGroup(currentUser);
-    final FilterGroup filterGroup;
-
-    if (baseFilter != null && activeFilter != null) {
-      filterGroup = FilterGroup(children: [baseFilter, activeFilter!]);
-    } else {
-      filterGroup = activeFilter ?? baseFilter ?? FilterGroup();
-    }
+    final filterGroup = mergeStudiesFilters(
+      baseFilter: studiesFilter?.toFilterGroup(currentUser),
+      activeFilter: activeFilter,
+    );
     final filteredByLogic = studiesList.where(
       (s) => FilterEvaluator.evaluate(filterGroup, s, currentUser),
     );
