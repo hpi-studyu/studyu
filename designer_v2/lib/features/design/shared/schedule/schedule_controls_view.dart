@@ -10,12 +10,25 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/time_of_day.dart';
 
 class ScheduleControls extends FormConsumerWidget {
-  const ScheduleControls({required this.formViewModel, super.key});
+  const ScheduleControls({
+    required this.formViewModel,
+    this.isReadonly = false,
+    super.key,
+  });
 
   final WithScheduleControls formViewModel;
+  final bool isReadonly;
 
   @override
   Widget build(BuildContext context, FormGroup form) {
+    if (isReadonly) {
+      formViewModel.hasReminderControl.markAsDisabled(emitEvent: false);
+      formViewModel.isTimeRestrictedControl.markAsDisabled(emitEvent: false);
+    } else {
+      formViewModel.hasReminderControl.markAsEnabled(emitEvent: false);
+      formViewModel.isTimeRestrictedControl.markAsEnabled(emitEvent: false);
+    }
+
     formViewModel.reminderTimePickerControl.valueChanges.listen((event) {
       formViewModel.reminderTimeControl.value = Time.fromTimeOfDay(
         formViewModel.reminderTimePickerControl.value!,

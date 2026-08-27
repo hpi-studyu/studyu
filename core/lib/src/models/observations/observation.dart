@@ -12,6 +12,7 @@ abstract class Observation extends Task {
   factory Observation.fromJson(Map<String, dynamic> data) =>
       switch (data[Task.keyType]) {
         QuestionnaireTask.taskType => QuestionnaireTask.fromJson(data),
+        NutritionTask.taskType => NutritionTask.fromJson(data),
         _ => throw UnknownJsonTypeError(data[Task.keyType]),
       };
 }

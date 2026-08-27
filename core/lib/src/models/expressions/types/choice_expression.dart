@@ -23,8 +23,8 @@ class ChoiceExpression extends ValueExpression<dynamic> {
   bool checkValue(dynamic value) {
     if (value is List) {
       if (value.isEmpty) {
-        // todo workaround until not expression is implemented for V2
-        return true;
+        // No choices selected means the condition is not met
+        return false;
       } else {
         return value.any((element) => choices.contains(element));
       }
