@@ -5,6 +5,9 @@ PR conventions:
 - Description: include a direct link to the matching Jira ticket.
 -->
 
+## Jira ticket
+<!-- Direct link to the matching Jira ticket. Required for every PR. -->
+
 ## Description
 <!-- Explain the change and motivation. -->
 

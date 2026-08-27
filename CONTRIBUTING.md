@@ -18,7 +18,7 @@ installation guide](https://fvm.app/documentation/getting-started/installation) 
 installation requirements and the [FVM workflow documentation](https://fvm.app/documentation/guides/workflows)
 for general FVM usage.
 
-The committed [`.fvmrc`](.fvmrc) pins this repository to Flutter `3.44.6`. The
+The committed [`.fvmrc`](.fvmrc) pins this repository to the configured version. The
 project version takes precedence over a global Flutter version. All commands below
 must be run from the repository root.
 
@@ -48,23 +48,6 @@ fvm exec melos dev:app
 fvm exec melos local:designer_v2
 ```
 
-Global FVM configuration is optional for Flutter work outside this repository. It
-does not change the StudyU SDK. See FVM’s [global version documentation](https://fvm.app/documentation/guides/global-configuration)
-if you need to configure it.
-
-### Change the project Flutter version
-
-Do not edit `.fvmrc` by hand. From the repository root, use FVM to select the new
-version:
-
-```bash
-fvm use <flutter-version>
-fvm flutter --version
-```
-
-Review the `.fvmrc` change and run the relevant generation, analysis, and test
-checks before sharing it. Keep `.fvm/` ignored and commit `.fvmrc`.
-
 ### IDE configuration
 
 Open the repository root, not an individual package. Configure the IDE to use the
@@ -85,24 +68,93 @@ For Android Studio or IntelliJ:
 
 For project-specific diagnostics, run `fvm doctor` from the repository root.
 
+## Repository Overview
+
+The StudyU platform is a Flutter/Dart monorepo with the following packages:
+
+- [StudyU App](./app): Participate in N-of-1 trials.
+- [StudyU Designer v2](./designer_v2): Design and conduct your own N-of-1 trial.
+
+Dependency packages:
+
+- [Core](./core): shared models and logic used by both frontends.
+- [Flutter Common](./flutter_common): shared Flutter functionality, environment loading, and Supabase initialization.
+
+Backend and tooling at the repo root (outside the Flutter workspace):
+
+- [supabase/](./supabase): migrations, seeds, local CLI config, and database tests.
+- [database/migration-legacy/](./database/migration-legacy): historical migrations; no longer the current migration path.
+
+Run `fvm exec melos <script>` from the repository root to operate on the
+workspace. See `pubspec.yaml` for the full script catalog.
+
 ## Environments
 
-Environment files live in `flutter_common/lib/envs/`. Use the `dev:*` Melos
-scripts for the development environment and `local:*` for a local Supabase
-instance. The default `.env` targets production and must not be used for routine
-development. See [`supabase/README.md`](supabase/README.md) for local backend setup.
+Environment files live under `flutter_common/lib/envs/`:
 
-## Coding on `core`
+- `.env` — Production (default; do **not** use for routine development).
+- `.env.dev` — Development.
+- `.env.local` — Local Supabase CLI instance (copy from `.env.local.example`).
 
-Changes to the models in the `core` package requires to perform a re-generation
-of the JSON IO code. The toolchain we use for this consists of [build_runner](https://pub.dev/packages/build_runner)
-and [json_serializable](https://pub.dev/packages/json_serializable).
+Use the `dev:*` Melos scripts for the development environment and `local:*`
+for a local Supabase instance. Only `.env.dev` or `.env.local` should be used
+for routine development.
 
-After changing models, run `fvm exec melos generate`.
+### Override the environment at runtime
 
-Contrary to most recommendations, we commit those generated files (`*.g.dart`) to Git. This
-is needed, because `core` is a dependency of the StudyU App and the StudyU Designer
-and dependencies need to have all files generated, when being imported.
+The loader reads `STUDYU_ENV` at runtime
+(`flutter_common/lib/src/utils/env_loader.dart`) and picks the matching file
+under `flutter_common/lib/envs/`. To override without renaming files, pass
+`STUDYU_ENV` to any Flutter subcommand:
+
+```bash
+flutter run --dart-define=STUDYU_ENV=.env.local
+flutter build web --dart-define=STUDYU_ENV=.env.dev
+flutter test --dart-define=STUDYU_ENV=.env.local
+```
+
+### `.env` template
+
+Each env file is a key=value list. Required keys
+(see `flutter_common/lib/envs/.env` for the canonical version):
+
+```shell
+STUDYU_SUPABASE_URLS=https://db-redirect-prod.studyu.health,https://studyu-01.dhc-lab.hpi.de
+STUDYU_SUPABASE_PUBLIC_ANON_KEY=your-public-anon-key
+STUDYU_APP_URL=https://app.studyu.health
+STUDYU_DESIGNER_URL=https://designer.studyu.health
+```
+
+Optional keys the loader recognizes (set when relevant):
+
+```shell
+STUDYU_PROJECT_GENERATOR_URL=
+STUDYU_ANDROID_PACKAGE_ID=health.studyu.app
+STUDYU_IOS_APP_STORE_ID=1571991198
+STUDYU_DEVELOPER_EMAIL=
+STUDYU_APP_DEEP_LINK_SCHEME=
+```
+
+See [`supabase/README.md`](supabase/README.md) for the `.env.local` workflow
+and local backend setup.
+
+## Codegen
+
+The `core` and `designer_v2` packages use code generation. `core` produces
+JSON IO for shared models via [build_runner](https://pub.dev/packages/build_runner)
+and [json_serializable](https://pub.dev/packages/json_serializable). `designer_v2`
+adds Riverpod, routing, and json_serializable output on top of that.
+
+After changing annotated models, controllers, or routes, run:
+
+```bash
+fvm exec melos generate
+```
+
+Contrary to most recommendations, the generated files (`*.g.dart`) are committed
+to Git. This is required because `core` is imported as a dependency by both
+frontends, and consumers need the generated output present at dependency
+resolution.
 
 ## Code Style
 
@@ -113,25 +165,21 @@ formats, generates affected output, and analyzes the workspace. Run
 
 ## Frontend
 
-We use Flutter's Material Design with a custom light theme defined in `app/lib/theme.dart`.
-Prefer `Theme.of(context).colorScheme` over hardcoded colors. For responsive layouts, use
-`LayoutBuilder` and `MediaQuery`. Localization is handled via `flutter_localizations` with
-ARB files in `app/lib/l10n/`.
+Both frontends follow the [Material Design 3 guidelines](https://m3.material.io/get-started).
+Custom themes live in [`app/lib/theme.dart`](app/lib/theme.dart) (participant app) and
+[`designer_v2/lib/theme.dart`](designer_v2/lib/theme.dart) (researcher designer).
 
 ## Commits
 
-We use [Conventional Commits](https://www.conventionalcommits.org) for all
-commit messages. The format is:
+We use [Conventional Commits](https://www.conventionalcommits.org). The format is:
 
 ```
 <type>[(<scope>)]: <description>
 ```
 
-Allowed types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`,
-`perf`, `ci`, `build`, `revert`.
-
-Allowed scopes: `app`, `designer`, `core`, `flutter_common`, `db`. The scope is
-optional. Write the description in lowercase and do not end it with a period.
+Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`,
+`perf`, `ci`, `build`, `revert`. Use a `scope` that names the touched package
+(`app`, `designer`, `core`, `flutter_common`, `db`).
 
 Examples from this repo:
 
@@ -146,7 +194,15 @@ pull request template and these conventions:
 
 - Branch: `<type>/studyu-<ticket-number>-<short-description>`
 - PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
-- PR description: include a direct link to the matching Jira ticket.
+- PR description must include:
+  - A direct link to the matching Jira ticket.
+  - A **description** of the change and its motivation, with any related
+    issues or context.
+  - **Testing steps** that let a reviewer reproduce and verify the change
+    locally.
+- **Screenshot or video** of any visual change. Use a screen recording for
+  interactive changes and a static screenshot for non-interactive ones.
+  Non-visual PRs may drop the `## Visuals` section of the template.
 
 ## Code Reviews — Conventional Comments
 
