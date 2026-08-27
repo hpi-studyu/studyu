@@ -22,6 +22,21 @@ tools:
   bash:
     - "gh pr diff"
     - "gh pr view"
+mcp-servers:
+  atlassian:
+    container: "ghcr.io/sooperset/mcp-atlassian:v0.23.1"
+    env:
+      JIRA_URL: "https://studyu.atlassian.net"
+      JIRA_USERNAME: ${{ secrets.JIRA_API_EMAIL }}
+      JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+      READ_ONLY_MODE: "true"
+    allowed:
+      - jira_get_issue
+      - jira_search
+network:
+  allowed:
+    - defaults
+    - studyu.atlassian.net
 models:
   default-ai-credits-pricing:
     input: 3
@@ -73,7 +88,7 @@ In CI / headless mode:
 
 - No files, no clipboard — your final add-comment body IS the deliverable.
 - The change diff comes from `gh pr diff <number>`. The PR base is `dev` and the head is the feature branch; that is the exact scope to analyze. Get PR metadata with `gh pr view <number>`.
-- Work through every step of the skill: Jira lookup (best effort — skip gracefully when no Jira tool exists), Flutter-lens analysis, automated-test mapping, and the checklist structure.
+- Work through every step of the skill: Jira lookup via the `atlassian` MCP (`jira_get_issue`, `jira_search`; skip gracefully when the tools are unavailable), Flutter-lens analysis, automated-test mapping, and the checklist structure.
 - The skill's scope gate (Step 3) works differently here: you cannot ask the user. If the change's intent is unclear, state that in the Summary, list the exact questions QA must answer before testing, and still produce the best checklist derivable from the diff.
 - Do NOT generate items about exercising the local `manual-testing` skill, validating the compiled lock file as the runtime artifact, or confirming no Flutter behavior is expected. These are dev tasks visible in the diff, not QA behavior tests. Skip them.
 - Do NOT include items that just restate Setup (secret config, branch state, test PR preparation) as test items. The Setup section holds them. Do not duplicate them in P1.
