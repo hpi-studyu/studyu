@@ -10,16 +10,6 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-FilterGroup mergeStudiesFilters({
-  required FilterGroup? baseFilter,
-  required FilterGroup? activeFilter,
-}) {
-  if (baseFilter != null && activeFilter != null) {
-    return FilterGroup(children: [baseFilter, activeFilter]);
-  }
-  return activeFilter ?? baseFilter ?? FilterGroup();
-}
-
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
 

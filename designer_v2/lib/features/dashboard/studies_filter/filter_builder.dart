@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
-import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_draft_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';

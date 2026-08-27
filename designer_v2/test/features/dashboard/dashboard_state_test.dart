@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 
 void main() {
