@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 
 class FormListView<T> extends StatelessWidget {
+  static const int kRowTitleMaxLines = 2;
+
   const FormListView({
     required this.control,
     required this.items,
@@ -21,10 +23,12 @@ class FormListView<T> extends StatelessWidget {
     this.leadingWidget,
     this.sectionTitle,
     this.sectionDescription,
+    this.sectionDescriptionTextAlign,
     this.emptyIcon,
     this.emptyTitle,
     this.emptyDescription,
     this.itemsPadding = const EdgeInsets.symmetric(vertical: 8.0),
+    this.buttonTopPadding = 16.0,
     this.hideLeadingTrailingWhenEmpty = false,
     this.reorderable = false,
     this.onReorder,
@@ -40,6 +44,7 @@ class FormListView<T> extends StatelessWidget {
   final String onNewItemLabel;
   final String? sectionTitle;
   final String? sectionDescription;
+  final TextAlign? sectionDescriptionTextAlign;
   final IconData? emptyIcon;
   final String? emptyTitle;
   final String? emptyDescription;
@@ -47,9 +52,14 @@ class FormListView<T> extends StatelessWidget {
   final WidgetBuilderAt<T>? rowSuffix;
   final Widget? leadingWidget;
   final EdgeInsets itemsPadding;
+  final double buttonTopPadding;
   final bool hideLeadingTrailingWhenEmpty;
   final bool reorderable;
   final void Function(int oldIndex, int newIndex)? onReorder;
+
+  String _normalizedRowTitle(T item) {
+    return rowTitle(item).replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +78,11 @@ class FormListView<T> extends StatelessWidget {
         if (sectionDescription != null && !(hasEmptyWidget && items.isEmpty))
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text(sectionDescription!, style: theme.textTheme.bodyMedium),
+            child: Text(
+              sectionDescription!,
+              style: theme.textTheme.bodyMedium,
+              textAlign: sectionDescriptionTextAlign,
+            ),
           ),
         if (items.isEmpty && hasEmptyWidget)
           EmptyBody(
@@ -121,8 +135,10 @@ class FormListView<T> extends StatelessWidget {
                         if (rowPrefix != null) rowPrefix!(context, item, index),
                         Expanded(
                           child: Text(
-                            rowTitle(item),
+                            _normalizedRowTitle(item),
                             style: theme.textTheme.bodyMedium,
+                            maxLines: kRowTitleMaxLines,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (rowSuffix != null) rowSuffix!(context, item, index),
@@ -162,8 +178,10 @@ class FormListView<T> extends StatelessWidget {
                         if (rowPrefix != null) rowPrefix!(context, item, index),
                         Expanded(
                           child: Text(
-                            rowTitle(item),
+                            _normalizedRowTitle(item),
                             style: theme.textTheme.bodyMedium,
+                            maxLines: kRowTitleMaxLines,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (rowSuffix != null) rowSuffix!(context, item, index),
@@ -180,7 +198,7 @@ class FormListView<T> extends StatelessWidget {
           ),
         if (!hideLeadingTrailingWhenEmpty || items.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: EdgeInsets.only(top: buttonTopPadding),
             child: _newItemButton(),
           ),
       ],

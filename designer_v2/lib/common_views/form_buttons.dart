@@ -7,10 +7,17 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
+typedef FormDismissHandler = Future<void> Function(BuildContext context);
+
 /// A cancel / dismiss button for use with [FormScaffold] [showFormSideSheet)
 /// Heavily inspired by [CloseButton]
 class DismissButton extends StatelessWidget {
-  const DismissButton({this.text, this.onPressed, super.key});
+  const DismissButton({
+    this.text,
+    this.onPressed,
+    this.onPressedAsync,
+    super.key,
+  });
 
   /// An override callback to perform instead of the default behavior which is
   /// to pop the [Navigator].
@@ -21,6 +28,7 @@ class DismissButton extends StatelessWidget {
   ///
   /// Defaults to null.
   final VoidCallback? onPressed;
+  final FormDismissHandler? onPressedAsync;
 
   final String? text;
 
@@ -40,7 +48,11 @@ class DismissButton extends StatelessWidget {
         text: text ?? tr.dialog_cancel,
         icon: null,
         //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-        onPressed: () {
+        onPressed: () async {
+          if (onPressedAsync != null) {
+            await onPressedAsync!(context);
+            return;
+          }
           if (onPressed != null) {
             onPressed!();
           } else {
@@ -52,7 +64,11 @@ class DismissButton extends StatelessWidget {
   }
 }
 
-List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
+List<Widget> buildFormButtons(
+  FormViewModel formViewModel,
+  FormMode formMode, {
+  FormDismissHandler? onDismiss,
+}) {
   final modifyActionButtons = [
     ReactiveFormConsumer(
       // enable re-rendering based on form validation status
@@ -60,7 +76,9 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         return retainSizeInAppBar(
           DismissButton(
             key: const ValueKey('form_cancel_button'),
-            onPressed: () => Navigator.maybePop(context),
+            onPressedAsync:
+                onDismiss ??
+                (context) => Navigator.maybePop(context).then((_) {}),
           ),
         );
       },
@@ -98,7 +116,9 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
           DismissButton(
             key: const ValueKey('form_close_button'),
             text: tr.dialog_close,
-            onPressed: () => Navigator.maybePop(context),
+            onPressedAsync:
+                onDismiss ??
+                (context) => Navigator.maybePop(context).then((_) {}),
           ),
         );
       },

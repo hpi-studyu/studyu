@@ -1452,6 +1452,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'The text for your participant consent must not be empty';
 
   @override
+  String get form_field_consent_icon_required =>
+      'You must select an icon for your participant consent';
+
+  @override
   String get form_study_design_interventions_description =>
       'Define the different phases of interventions to be studied, as well as the their sequence and frequency. In N-of-1 trials, a single participant will go through the intervention phases once or multiple times in a pre-specified order (so called multi-crossover trial). Each intervention consists of one or more tasks which are administered during the corresponding phase.\n\nNote: If you specify more than two interventions, participants are free to choose any two interventions to compare when they begin the study.';
 

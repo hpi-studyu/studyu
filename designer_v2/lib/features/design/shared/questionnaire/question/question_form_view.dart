@@ -43,6 +43,8 @@ class SurveyQuestionFormView extends ConsumerStatefulWidget {
 class _SurveyQuestionFormViewState
     extends ConsumerState<SurveyQuestionFormView> {
   QuestionFormViewModel get formViewModel => widget.formViewModel;
+  static const int _questionFieldVisibleLines = 5;
+  static const int _questionHelpFieldVisibleLines = 5;
 
   late bool isQuestionHelpTextFieldVisible =
       formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
@@ -90,39 +92,41 @@ class _SurveyQuestionFormViewState
   @override
   Widget build(BuildContext context) {
     return PointerInterceptor(
-      child: SelectionArea(
-        child: Column(
-          children: [
-            _buildQuestionText(context),
-            if (isQuestionHelpTextFieldVisible)
-              Column(
-                children: [
-                  const SizedBox(height: 16.0),
-                  _buildQuestionHelpText(context),
-                ],
-              )
-            else
-              const SizedBox.shrink(),
-            if (widget.isHtmlStyleable)
-              HtmlStylingBanner(
-                isDismissed: isStylingInformationDismissed,
-                onDismissed: onDismissedCallback,
-              ),
-            const SizedBox(height: 24.0),
-            ReactiveFormConsumer(
-              builder: (context, formGroup, child) {
-                return Column(
-                  children: [
-                    _buildResponseTypeHeader(context),
-                    const SizedBox(height: 16.0),
-                    questionTypeBodyBuilder(context),
-                  ],
-                );
-              },
+      child: Column(
+        children: [
+          _buildQuestionText(context),
+          if (isQuestionHelpTextFieldVisible)
+            Column(
+              children: [
+                const SizedBox(height: 16.0),
+                _buildQuestionHelpText(context),
+              ],
+            )
+          else
+            const SizedBox.shrink(),
+          if (widget.isHtmlStyleable)
+            HtmlStylingBanner(
+              isDismissed: isStylingInformationDismissed,
+              onDismissed: onDismissedCallback,
             ),
-          ],
-        ),
+          const SizedBox(height: 24.0),
+          _buildResponseTypeSection(context),
+        ],
       ),
+    );
+  }
+
+  Widget _buildResponseTypeSection(BuildContext context) {
+    return Column(
+      children: [
+        _buildResponseTypeHeader(context),
+        const SizedBox(height: 16.0),
+        ReactiveValueListenableBuilder<SurveyQuestionType>(
+          formControl: formViewModel.questionTypeControl,
+          builder: (context, control, child) =>
+              questionTypeBodyBuilder(context),
+        ),
+      ],
     );
   }
 
@@ -175,9 +179,13 @@ class _SurveyQuestionFormViewState
           ],
         ),
         const SizedBox(height: 16.0),
-        TextParagraph(
-          text: tr.form_field_question_response_options_description,
-          style: ThemeConfig.bodyTextMuted(theme),
+        SizedBox(
+          width: double.infinity,
+          child: TextParagraph(
+            text: tr.form_field_question_response_options_description,
+            style: ThemeConfig.bodyTextMuted(theme),
+            textAlign: TextAlign.justify,
+          ),
         ),
       ],
     );
@@ -234,13 +242,18 @@ class _SurveyQuestionFormViewState
                 const SizedBox.shrink(),
             ],
           ),
-          input: ReactiveTextField(
-            formControl: formViewModel.questionTextControl,
-            decoration: InputDecoration(hintText: tr.form_field_question),
-            validationMessages:
-                formViewModel.questionTextControl.validationMessages,
-            minLines: 3,
-            maxLines: 3,
+          input: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ReactiveTextField(
+                formControl: formViewModel.questionTextControl,
+                decoration: InputDecoration(hintText: tr.form_field_question),
+                validationMessages:
+                    formViewModel.questionTextControl.validationMessages,
+                minLines: _questionFieldVisibleLines,
+                maxLines: _questionFieldVisibleLines,
+              ),
+            ],
           ),
         ),
       ],
@@ -282,18 +295,38 @@ class _SurveyQuestionFormViewState
                     ),
                 ],
               ),
+              if (!formViewModel.isReadonly)
+                Opacity(
+                  opacity: ThemeConfig.kMuteFadeFactor,
+                  child: Hyperlink(
+                    text: tr.action_remove,
+                    onClick: () {
+                      formViewModel.questionInfoTextControl.value = '';
+                      setState(() {
+                        isQuestionHelpTextFieldVisible = false;
+                      });
+                    },
+                    visitedColor: null,
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
             ],
           ),
-          input: ReactiveTextField(
-            formControl: formViewModel.questionInfoTextControl,
-            validationMessages:
-                formViewModel.questionInfoTextControl.validationMessages,
-            minLines: 3,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: tr.form_field_question_help_text_hint,
-              //helperText: "", // reserve space
-            ),
+          input: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ReactiveTextField(
+                formControl: formViewModel.questionInfoTextControl,
+                validationMessages:
+                    formViewModel.questionInfoTextControl.validationMessages,
+                minLines: _questionHelpFieldVisibleLines,
+                maxLines: _questionHelpFieldVisibleLines,
+                decoration: InputDecoration(
+                  hintText: tr.form_field_question_help_text_hint,
+                ),
+              ),
+            ],
           ),
         ),
       ],

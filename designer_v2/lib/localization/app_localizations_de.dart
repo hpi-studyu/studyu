@@ -1464,6 +1464,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Einwilligungserklärung darf nicht leer sein';
 
   @override
+  String get form_field_consent_icon_required =>
+      'Du musst ein Icon für die Einwilligungserklärung auswählen';
+
+  @override
   String get form_study_design_interventions_description =>
       'Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Studienplan wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.';
 
