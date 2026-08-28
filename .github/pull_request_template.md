@@ -1,9 +1,12 @@
 <!--
 PR conventions:
 - Branch: `<type>/studyu-<ticket-number>-<short-description>`
-- PR title: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`
+- PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
 - Description: include a direct link to the matching Jira ticket.
 -->
+
+## Jira ticket
+<!-- Direct link to the matching Jira ticket. Required for every PR. -->
 
 ## Description
 <!-- Explain the change and motivation. -->
