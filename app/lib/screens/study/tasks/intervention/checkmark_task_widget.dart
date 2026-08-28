@@ -8,9 +8,15 @@ import 'package:studyu_core/core.dart';
 
 class CheckmarkTaskWidget extends StatefulWidget {
   final CheckmarkTask? task;
+  final String interventionId;
   final CompletionPeriod? completionPeriod;
 
-  const CheckmarkTaskWidget({this.task, this.completionPeriod, super.key});
+  const CheckmarkTaskWidget({
+    required this.interventionId,
+    this.task,
+    this.completionPeriod,
+    super.key,
+  });
 
   @override
   State<CheckmarkTaskWidget> createState() => _CheckmarkTaskWidgetState();
@@ -43,6 +49,7 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
                 (StudySubject? subject) async {
                   await subject!.addResult<bool>(
                     taskId: widget.task!.id,
+                    interventionId: widget.interventionId,
                     periodId: widget.completionPeriod!.id,
                     result: true,
                   );

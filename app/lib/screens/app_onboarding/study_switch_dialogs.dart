@@ -175,8 +175,10 @@ class StudySwitchDialogs {
     }
 
     final appState = context.read<AppState>();
-    await deleteStudySubjectAndClearLocalData(
+    final deleted = await deleteStudySubjectAndClearLocalData(
       subject: currentSubject,
+      synchronizeActiveSubject:
+          appState.synchronizeActiveSubjectBeforeDestructiveAction,
       deleteRemoteSubject: () async {
         await currentSubject.softDelete();
       },
@@ -185,6 +187,14 @@ class StudySwitchDialogs {
           appState.stopAndAwaitActiveSubjectSynchronization,
       resumeActiveSynchronization: appState.resumeActiveSubjectSynchronization,
     );
+    if (!deleted) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(loc.could_not_save_results)));
+      }
+      return false;
+    }
     if (context.mounted) {
       await cancelNotifications(context);
     }
@@ -223,9 +233,11 @@ class StudySwitchDialogs {
     }
 
     final appState = context.read<AppState>();
-    await deleteStudySubjectAndClearLocalData(
+    final deleted = await deleteStudySubjectAndClearLocalData(
       subject: currentSubject,
       clearStoredParticipantCredentials: true,
+      synchronizeActiveSubject:
+          appState.synchronizeActiveSubjectBeforeDestructiveAction,
       deleteRemoteSubject: () async {
         await currentSubject.delete();
       },
@@ -234,6 +246,14 @@ class StudySwitchDialogs {
           appState.stopAndAwaitActiveSubjectSynchronization,
       resumeActiveSynchronization: appState.resumeActiveSubjectSynchronization,
     );
+    if (!deleted) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(loc.could_not_save_results)));
+      }
+      return false;
+    }
     if (context.mounted) {
       await cancelNotifications(context);
     }

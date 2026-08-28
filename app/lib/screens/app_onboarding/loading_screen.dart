@@ -727,6 +727,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           extra: TaskInstance(
             tasks.first,
             tasks.first.schedule.completionPeriods.first.id,
+            interventionId: state.selectedStudy!.interventions.first.id,
           ),
         );
         _iFrameHelper.postRouteFinished();

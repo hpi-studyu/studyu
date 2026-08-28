@@ -47,8 +47,9 @@ Future<void> clearStudyLocalData({
   );
 }
 
-Future<void> deleteStudySubjectAndClearLocalData({
+Future<bool> deleteStudySubjectAndClearLocalData({
   required StudySubject subject,
+  required Future<bool> Function() synchronizeActiveSubject,
   required Future<void> Function() deleteRemoteSubject,
   required FutureOr<void> Function() onRemoteDeleted,
   required Future<void> Function() stopActiveSynchronization,
@@ -58,7 +59,8 @@ Future<void> deleteStudySubjectAndClearLocalData({
   await stopActiveSynchronization();
   var remoteDeleted = false;
   try {
-    await Cache.runWithSubjectSynchronizationBlocked(() async {
+    final deleted = await Cache.runWithSubjectSynchronizationBlocked(() async {
+      if (!await synchronizeActiveSubject()) return false;
       await deleteRemoteSubject();
       remoteDeleted = true;
       await onRemoteDeleted();
@@ -66,7 +68,10 @@ Future<void> deleteStudySubjectAndClearLocalData({
         fallbackSubject: subject,
         clearStoredParticipantCredentials: clearStoredParticipantCredentials,
       );
+      return true;
     });
+    if (!deleted) await resumeActiveSynchronization();
+    return deleted;
   } catch (_) {
     if (!remoteDeleted) await resumeActiveSynchronization();
     rethrow;
