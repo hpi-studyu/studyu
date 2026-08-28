@@ -134,7 +134,7 @@ class _StudyTitleConfirmationDialogState
                 controller: _studyTitleController,
                 decoration: InputDecoration(labelText: widget.textFieldLabel),
                 validator: (value) {
-                  if (value == null || value != _studyTitle) {
+                  if (value == null || value.trim() != _studyTitle) {
                     return tr.dialog_study_title_mismatch;
                   }
                   return null;
