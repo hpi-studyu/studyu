@@ -24,7 +24,7 @@ tools:
     - "gh pr view"
 mcp-servers:
   atlassian:
-    container: "ghcr.io/sooperset/mcp-atlassian:v0.23.1"
+    container: "ghcr.io/sooperset/mcp-atlassian:0.23.1"
     env:
       JIRA_URL: "https://studyu.atlassian.net"
       JIRA_USERNAME: ${{ secrets.JIRA_API_EMAIL }}
@@ -51,6 +51,7 @@ engine:
     COPILOT_PROVIDER_WIRE_API: completions
 max-turns: 25
 safe-outputs:
+  report-failure-as-issue: false
   add-comment:
     max: 1
     hide-older-comments: true

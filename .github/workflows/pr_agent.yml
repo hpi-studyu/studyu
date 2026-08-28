@@ -31,10 +31,10 @@ jobs:
         uses: the-pr-agent/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Model is served through OpenRouter; both the key and the model
-          # name are repository secrets (e.g. "openrouter/anthropic/claude-sonnet-4").
+          # Model is served through OpenRouter; the key is a secret and the
+          # model name is a repository variable (e.g. "openrouter/anthropic/claude-sonnet-4").
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          config.model: ${{ secrets.OPENROUTER_MODEL }}
-          config.fallback_models: '["${{ secrets.OPENROUTER_MODEL }}"]'
+          config.model: ${{ vars.OPENROUTER_MODEL }}
+          config.fallback_models: '["${{ vars.OPENROUTER_MODEL }}"]'
           jira.jira_api_email: ${{ secrets.JIRA_API_EMAIL }}
           jira.jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
