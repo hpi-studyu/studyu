@@ -36,5 +36,6 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           config.model: ${{ vars.OPENROUTER_MODEL }}
           config.fallback_models: '["${{ vars.OPENROUTER_MODEL }}"]'
+          config.custom_model_max_tokens: "1050000"
           jira.jira_api_email: ${{ secrets.JIRA_API_EMAIL }}
           jira.jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
