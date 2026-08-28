@@ -207,6 +207,13 @@ pull request template and these conventions:
   interactive changes and a static screenshot for non-interactive ones.
   Non-visual PRs may drop the `## Visuals` section of the template.
 
+## Writing Style
+
+Write issues, PR titles and descriptions, review comments, and documentation in
+[ASD-STE100](https://en.wikipedia.org/wiki/Simplified_Technical_English) Simplified
+Technical English: short active-voice sentences, one action per sentence, plain words,
+one term per concept. The `.agents/skills/asd-ste100` skill holds the full rules.
+
 ## Code Reviews — Conventional Comments
 
 We use [Conventional Comments](https://conventionalcomments.org/) for all review
