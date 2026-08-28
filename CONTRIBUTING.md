@@ -92,8 +92,8 @@ workspace. See `pubspec.yaml` for the full script catalog.
 
 Environment files live under `flutter_common/lib/envs/`:
 
-- `.env` — Production (default; do **not** use for routine development).
-- `.env.dev` — Development.
+- `.env` — Production database using main branch (default; do **not** use for routine development).
+- `.env.dev` — Development database using dev branch.
 - `.env.local` — Local Supabase CLI instance (copy from `.env.local.example`).
 
 Use the `dev:*` Melos scripts for the development environment and `local:*`
@@ -105,12 +105,12 @@ for routine development.
 The loader reads `STUDYU_ENV` at runtime
 (`flutter_common/lib/src/utils/env_loader.dart`) and picks the matching file
 under `flutter_common/lib/envs/`. To override without renaming files, pass
-`STUDYU_ENV` to any Flutter subcommand:
+`STUDYU_ENV` to a Flutter subcommand, or add
+`--dart-define=STUDYU_ENV=.env.local` to the run configuration in Android
+Studio or VS Code:
 
 ```bash
-flutter run --dart-define=STUDYU_ENV=.env.local
-flutter build web --dart-define=STUDYU_ENV=.env.dev
-flutter test --dart-define=STUDYU_ENV=.env.local
+flutter [build, run, test] [android, ios, web] --dart-define=STUDYU_ENV=.env.local
 ```
 
 ### `.env` template
@@ -160,8 +160,11 @@ resolution.
 
 The shared Dart and Flutter lint rules are defined in [`analysis_options.yaml`](analysis_options.yaml).
 The tracked pre-commit hook runs [`scripts/pre-commit-check`](scripts/pre-commit-check), which
-formats, generates affected output, and analyzes the workspace. Run
-`fvm exec melos qualitycheck` only for a full CI-style workspace check or when explicitly requested.
+formats, generates affected output, and analyzes the workspace. The Git hooks are configured
+by `fvm exec melos setup`. If you develop manually without the automated pre-commit check
+running your changes, run `fvm exec melos qualitycheck` instead; it formats, analyzes, and
+regenerates code across the workspace. Otherwise run `fvm exec melos qualitycheck` for a full
+CI-style workspace check or when explicitly requested.
 
 ## Frontend
 

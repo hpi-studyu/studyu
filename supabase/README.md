@@ -14,6 +14,14 @@ Interested in running a study in a live and secure setting with StudyU? Head to 
 [Contact page](https://www.studyu.health/contact) of our website and send us a message. We are
 looking forward to support your research.
 
+## Why Supabase?
+
+StudyU uses a self-hosted instance of [Supabase](https://supabase.com/) as its
+Backend-as-a-Service provider. Supabase provides a database, API, authentication,
+and storage service built on PostgreSQL and other open-source software. Because
+Supabase is open-source, StudyU hosts its own instance to keep participant data
+private and secure.
+
 ## Database workflow
 
 - Create new migrations with `supabase migration new <migration_name>` — commit the generated SQL under `supabase/migrations/`.
