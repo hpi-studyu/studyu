@@ -51,7 +51,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   @override
   void setControlsFrom(StudyInfoFormData data) {
     titleControl.value = data.title;
-    iconControl.value = IconOption(data.iconName);
+    iconControl.value = IconPack.resolveIconByName(data.iconName);
     descriptionControl.value = data.description;
     organizationControl.value = data.contactInfoFormData.organization;
     reviewBoardControl.value =
@@ -91,7 +91,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-    // TODO phoneFormat
     StudyFormValidationSet.draft: [titleRequired, emailFormat, websiteFormat],
     StudyFormValidationSet.publish: [
       titleRequired,

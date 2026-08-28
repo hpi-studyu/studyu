@@ -177,9 +177,9 @@ class StudyFormViewModel extends FormViewModel<Study>
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
     // Flush the on-write study copy to the repository and clear it
-    return studyRepository
-        .save(studyDirtyCopy!)
-        .then((study) => studyDirtyCopy = null);
+    return studyRepository.save(studyDirtyCopy!).then((study) {
+      studyDirtyCopy = null;
+    });
   }
 }
 

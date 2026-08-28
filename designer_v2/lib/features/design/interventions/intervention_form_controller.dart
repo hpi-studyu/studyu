@@ -99,7 +99,10 @@ class InterventionFormViewModel
     interventionIdControl.value = data.interventionId;
     interventionTitleControl.value = data.title;
     interventionDescriptionControl.value = data.description ?? '';
-    interventionIconControl.value = IconOption(data.iconName ?? '');
+    final iconName = data.iconName;
+    interventionIconControl.value = iconName == null || iconName.isEmpty
+        ? null
+        : IconOption(iconName);
 
     if (data.tasksData != null) {
       final viewModels = data.tasksData!
