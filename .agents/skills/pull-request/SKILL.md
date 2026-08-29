@@ -132,14 +132,14 @@ If no template exists, write a concise body covering the Jira ticket, problem, c
 ```bash
 git push -u origin HEAD
 gh pr create \
-  --title "STUDYU-<ticket-number>: <type>[scope]: <imperative description>" \
+  --title "[STUDYU-<ticket-number>] <type>[(<scope>)]: <imperative description>" \
   --base <target-branch> \
   --body "<completed-body>"
 ```
 
 PR title rules:
 
-- Format: `STUDYU-<ticket-number>: <type>[optional scope]: <description>`.
+- Format: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`.
 - The ticket must match the branch and Jira link.
 - Maximum 72 characters.
 - Imperative mood.
