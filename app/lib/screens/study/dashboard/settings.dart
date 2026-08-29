@@ -6,9 +6,9 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
-import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart' show PostgrestException;
@@ -218,8 +218,10 @@ class OptOutAlertDialog extends StatelessWidget {
               }
               rethrow;
             }
-            await deleteActiveStudyReference();
-            await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
+            await clearStudyLocalData(fallbackSubject: subject);
+            if (context.mounted) {
+              context.read<AppState>().clearActiveStudyState();
+            }
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
               context.go('/${RouteNames.studySelection}');
@@ -281,8 +283,13 @@ class DeleteAlertDialog extends StatelessWidget {
             rethrow;
           }
           // Reached when delete succeeded or subject was already gone from DB
-          await deleteLocalData();
-          await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
+          await clearStudyLocalData(
+            fallbackSubject: subject,
+            clearStoredParticipantCredentials: true,
+          );
+          if (context.mounted) {
+            context.read<AppState>().clearActiveStudyState();
+          }
           if (context.mounted) await cancelNotifications(context);
           if (context.mounted) {
             context.go('/${RouteNames.welcome}');

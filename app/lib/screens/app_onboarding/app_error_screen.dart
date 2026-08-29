@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -284,6 +287,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
   }
 
   Future<void> _showDeleteDataDialog(BuildContext context) async {
+    final appState = context.read<AppState>();
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -309,21 +313,34 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
     );
 
     if (result == true) {
-      if (!context.mounted) return;
-      await cancelNotifications(context);
+      if (!mounted) return;
 
       if (widget.reason == AppErrorReason.deletedStudy) {
-        StudyULogger.info("Clearing active study reference");
-        await deleteActiveStudyReference();
-        StudyULogger.info("Active study reference cleared");
+        StudyULogger.info("Clearing deleted subject local state");
+        final currentSubject = appState.activeSubject;
+        try {
+          await clearStudyLocalData(fallbackSubject: currentSubject);
+        } finally {
+          appState.clearActiveStudyState();
+        }
+        StudyULogger.info("Deleted subject local state cleared");
       } else {
         StudyULogger.info("Deleting all secure storage data");
         await SecureStorage.deleteAll();
         StudyULogger.info("Secure storage data deleted");
       }
 
-      if (!context.mounted) return;
-      context.goNamed(RouteNames.welcome);
+      if (!mounted) return;
+      try {
+        await cancelNotifications(this.context);
+      } catch (error) {
+        StudyULogger.warning(
+          'Could not cancel notifications during app reset: $error',
+        );
+      }
+
+      if (!mounted) return;
+      this.context.goNamed(RouteNames.welcome);
       return;
     }
 

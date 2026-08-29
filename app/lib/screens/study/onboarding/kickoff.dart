@@ -28,9 +28,10 @@ class _KickoffScreen extends State<KickoffScreen> {
       subject = await subject!.save();
       subject = await _fetchRemoteSubject(subject!.id);
       if (!context.mounted) return;
-      context.read<AppState>().activeSubject = subject;
-      context.read<AppState>().init(context);
-      await Cache.storeSubject(context.read<AppState>().activeSubject);
+      final state = context.read<AppState>();
+      state.updateActiveSubject(subject);
+      state.init(context);
+      await Cache.storeSubject(state.activeSubject);
       await storeActiveSubjectId(subject!.id);
       if (!context.mounted) return;
       setState(() => ready = true);

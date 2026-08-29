@@ -18,6 +18,7 @@ import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/services/deferred_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/study_local_cleanup.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -87,6 +88,16 @@ Future<T?> restoreCachedValueForStartup<T>({
   required Future<bool> Function() signIn,
   required bool Function(Object error) isDeletedRemoteError,
 }) async {
+  if (appConnectionStatusController.status != AppConnectionStatus.healthy) {
+    try {
+      final cached = await loadCached();
+      StudyULogger.info("Loaded startup value from cache: $cached");
+      return cached;
+    } catch (error) {
+      StudyULogger.warning("No usable startup value found in cache: $error");
+    }
+  }
+
   var shouldRetryAuth = true;
 
   try {
@@ -150,25 +161,32 @@ Future<T?> restoreCachedValueForStartup<T>({
 }
 
 @visibleForTesting
-Future<void> tryRestoreParticipantSession({
+Future<AuthApiException?> tryRestoreParticipantSession({
   required bool Function() isLoggedIn,
   required Future<bool> Function() hasStoredCredentials,
   required Future<void> Function() signIn,
   void Function(AppConnectionStatus status)? onConnectionStatusChanged,
   void Function(Object error)? onError,
 }) async {
-  if (isLoggedIn()) return;
-  if (!await hasStoredCredentials()) return;
+  if (hasDegradedConnectionStatus()) return null;
+  if (isLoggedIn()) return null;
+  if (!await hasStoredCredentials()) return null;
 
   try {
     await signIn();
   } catch (error) {
+    if (error is AuthApiException && error.code == 'invalid_credentials') {
+      await clearParticipantCredentials();
+      onError?.call(error);
+      return error;
+    }
     final status = connectionStatusFromError(error);
     if (status != null) {
       onConnectionStatusChanged?.call(status);
     }
     onError?.call(error);
   }
+  return null;
 }
 
 class LoadingScreen extends StatefulWidget {
@@ -196,9 +214,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   bool _previewNavigationInProgress = false;
   String? _pendingPreviewRoute;
   String? _error;
+  AuthApiException? _rejectedParticipantCredentialsError;
 
   Future<void> _restoreParticipantSession() async {
-    await tryRestoreParticipantSession(
+    _rejectedParticipantCredentialsError ??= await tryRestoreParticipantSession(
       isLoggedIn: isUserLoggedIn,
       hasStoredCredentials: () async =>
           await SecureStorage.containsKey(userEmailKey) &&
@@ -446,8 +465,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return false;
     }
 
-    state.activeSubject = null;
-    state.selectedStudy = null;
+    state.clearActiveStudyState();
     return true;
   }
 
@@ -484,6 +502,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       subject = await _retrieveSubject(selectedSubjectId);
     } on SubjectDeletedException catch (error) {
+      await clearStudyLocalData(fallbackSubject: state.activeSubject);
+      state.clearActiveStudyState();
       StudyULogger.warning(
         "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
       );
@@ -518,7 +538,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         context.go('/${RouteNames.studyUnavailable}');
         return;
       }
-      state.activeSubject = subject;
+      state.updateActiveSubject(subject);
       state.init(context);
       context.go('/${RouteNames.dashboard}');
     } else {
@@ -531,6 +551,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> noSubjectFound(AppState state) async {
     StudyULogger.info("No subject found");
     await cancelNotifications(context);
+    state.clearActiveStudyState();
 
     await _restoreParticipantSession();
     if (isUserLoggedIn() && !state.isPreview) {
@@ -566,7 +587,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return restoreCachedValueForStartup<StudySubject>(
       fetchRemote: () => _fetchRemoteSubject(selectedStudyObjectId),
       loadCached: Cache.loadSubject,
-      signIn: signInParticipant,
+      signIn: () {
+        final rejectedCredentialsError = _rejectedParticipantCredentialsError;
+        if (rejectedCredentialsError != null) {
+          throw rejectedCredentialsError;
+        }
+        return signInParticipant();
+      },
       isDeletedRemoteError: (error) =>
           error is PostgrestException && error.code == 'PGRST116',
     );
@@ -637,9 +664,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return true;
       }
 
-      state.activeSubject = await preview.getStudySubject(
-        state,
-        createSubject: true,
+      state.updateActiveSubject(
+        await preview.getStudySubject(state, createSubject: true),
       );
 
       // CONSENT
@@ -706,7 +732,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (isUserLoggedIn()) {
         final subject = await preview.getStudySubject(state);
         if (subject != null) {
-          state.activeSubject = subject;
+          state.updateActiveSubject(subject);
           if (!mounted) return true;
           _iFrameHelper.postPreviewStatus(status: 'loaded');
           context.go('/${RouteNames.dashboard}');
@@ -757,9 +783,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // Prefer the already-fetched study from state over the one from
         // handleAuthorization so the designer's latest edits are used.
         if (state.selectedStudy != null) preview.study = state.selectedStudy;
-        state.activeSubject = await preview.getStudySubject(
-          state,
-          createSubject: true,
+        state.updateActiveSubject(
+          await preview.getStudySubject(state, createSubject: true),
         );
         return state.activeSubject != null;
       }

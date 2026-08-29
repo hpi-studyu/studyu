@@ -63,22 +63,24 @@ Future<bool> isParticipantSessionValid() async {
 Future<bool> signInParticipant() async {
   final hasEmail = await SecureStorage.containsKey(userEmailKey);
   final hasPassword = await SecureStorage.containsKey(userPasswordKey);
-  if (hasEmail && hasPassword) {
-    try {
-      final fakeEmail = await getFakeUserEmail();
-      final fakePassword = await getFakeUserPassword();
-      final authResponse = await Supabase.instance.client.auth
-          .signInWithPassword(email: fakeEmail, password: fakePassword!);
-      return authResponse.session != null;
-    } on AuthApiException catch (error, stacktrace) {
-      if (error.code == 'invalid_credentials') {
-        await clearParticipantCredentials();
-        return false;
-      }
-      SupabaseQuery.catchSupabaseException(error, stacktrace);
-    } catch (error, stacktrace) {
-      SupabaseQuery.catchSupabaseException(error, stacktrace);
+  if (!hasEmail || !hasPassword) return false;
+
+  try {
+    final fakeEmail = await getFakeUserEmail();
+    final fakePassword = await getFakeUserPassword();
+    final authResponse = await Supabase.instance.client.auth.signInWithPassword(
+      email: fakeEmail,
+      password: fakePassword!,
+    );
+    return authResponse.session != null;
+  } on AuthApiException catch (error, stacktrace) {
+    if (error.code == 'invalid_credentials') {
+      await clearParticipantCredentials();
+      rethrow;
     }
+    SupabaseQuery.catchSupabaseException(error, stacktrace);
+  } catch (error, stacktrace) {
+    SupabaseQuery.catchSupabaseException(error, stacktrace);
   }
   return false;
 }
@@ -112,6 +114,8 @@ Future<bool> ensureParticipantSignedIn({
 
   try {
     if (await (signIn ?? signInParticipant)()) return true;
+  } on AuthApiException catch (error) {
+    if (error.code != 'invalid_credentials') rethrow;
   } catch (error) {
     final status = connectionStatusFromError(error);
     if (status != null) {
@@ -135,7 +139,11 @@ Future<bool> ensureParticipantSignedIn({
 
 // Using a fake user email to enable anonymous users, while working with row-level security on postgres
 Future<bool> anonymousSignUp() async {
-  if (await signInParticipant()) return true;
+  try {
+    if (await signInParticipant()) return true;
+  } on AuthApiException catch (error) {
+    if (error.code != 'invalid_credentials') rethrow;
+  }
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
   try {
@@ -175,10 +183,14 @@ Future<void> deleteActiveStudyReference() async {
   await SecureStorage.delete(selectedSubjectIdKey);
 }
 
-Future<void> deleteLocalData() async {
-  await clearParticipantCredentials();
+Future<void> clearDeletedSubjectLocalState() async {
   await SecureStorage.delete(selectedSubjectIdKey);
   await SecureStorage.delete(cacheSubjectKey);
+}
+
+Future<void> deleteLocalData() async {
+  await clearParticipantCredentials();
+  await clearDeletedSubjectLocalState();
 }
 
 void previewSubjectIdKey() {

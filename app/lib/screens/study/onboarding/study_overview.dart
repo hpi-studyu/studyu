@@ -35,20 +35,24 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       return;
     }
     if (appState.preselectedInterventionIds != null) {
-      appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy!,
-        Supabase.instance.client.auth.currentUser!.id,
-        appState.preselectedInterventionIds!,
-        appState.inviteCode,
+      appState.updateActiveSubject(
+        StudySubject.fromStudy(
+          appState.selectedStudy!,
+          Supabase.instance.client.auth.currentUser!.id,
+          appState.preselectedInterventionIds!,
+          appState.inviteCode,
+        ),
       );
       context.push('/${RouteNames.journey}');
     } else if (study!.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
-      appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy!,
-        Supabase.instance.client.auth.currentUser!.id,
-        study!.interventions.map((i) => i.id).toList(),
-        appState.inviteCode,
+      appState.updateActiveSubject(
+        StudySubject.fromStudy(
+          appState.selectedStudy!,
+          Supabase.instance.client.auth.currentUser!.id,
+          study!.interventions.map((i) => i.id).toList(),
+          appState.inviteCode,
+        ),
       );
       context.push('/${RouteNames.journey}');
     } else {
