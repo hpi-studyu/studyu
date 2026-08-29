@@ -6,6 +6,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -19,9 +20,33 @@ class KickoffScreen extends StatefulWidget {
 class _KickoffScreen extends State<KickoffScreen> {
   StudySubject? subject;
   bool ready = false;
+  bool setupFailed = false;
+  bool fitbitAuthorizationFailed = false;
+  bool isSettingUp = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
+    if (isSettingUp) return;
+    setState(() {
+      isSettingUp = true;
+      setupFailed = false;
+    });
     try {
+      final requiresFitbitAuthorization = FitbitHandler.requiredTypesForStudy(
+        subject!.study,
+      ).isNotEmpty;
+      if (requiresFitbitAuthorization) {
+        try {
+          if (!await FitbitHandler.authorizeForOfflineParticipation(
+            subject!.study,
+          )) {
+            throw Exception('Fitbit authorization was not completed');
+          }
+        } catch (_) {
+          fitbitAuthorizationFailed = true;
+          rethrow;
+        }
+      }
+      fitbitAuthorizationFailed = false;
       // Start study at the next day
       final now = DateTime.now();
       subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
@@ -38,6 +63,11 @@ class _KickoffScreen extends State<KickoffScreen> {
       context.go('/${RouteNames.dashboard}');
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
+      if (!mounted) return;
+      setState(() {
+        isSettingUp = false;
+        setupFailed = true;
+      });
     }
   }
 
@@ -61,7 +91,13 @@ class _KickoffScreen extends State<KickoffScreen> {
     _storeUserStudy(context);
   }
 
-  Widget _constructStatusIcon(BuildContext context) => !ready
+  Widget _constructStatusIcon(BuildContext context) => setupFailed
+      ? Icon(
+          Icons.error_outline,
+          color: Theme.of(context).colorScheme.error,
+          size: 64,
+        )
+      : !ready
       ? const SizedBox(
           height: 64,
           width: 64,
@@ -73,7 +109,11 @@ class _KickoffScreen extends State<KickoffScreen> {
           size: 64,
         );
 
-  String _getStatusText(BuildContext context) => !ready
+  String _getStatusText(BuildContext context) => setupFailed
+      ? fitbitAuthorizationFailed
+            ? AppLocalizations.of(context)!.fitbit_data_not_synced
+            : AppLocalizations.of(context)!.setting_up_study
+      : !ready
       ? AppLocalizations.of(context)!.setting_up_study
       : AppLocalizations.of(context)!.good_to_go;
 
@@ -99,10 +139,17 @@ class _KickoffScreen extends State<KickoffScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
-                    /*OutlinedButton(
-                      onPressed: () => _storeUserStudy(context),
-                      child: Text(AppLocalizations.of(context)!.start_study),
-                    ),*/
+                    if (setupFailed)
+                      OutlinedButton(
+                        onPressed: isSettingUp
+                            ? null
+                            : () => _storeUserStudy(context),
+                        child: Text(
+                          fitbitAuthorizationFailed
+                              ? AppLocalizations.of(context)!.sync_fitbit_data
+                              : AppLocalizations.of(context)!.start_study,
+                        ),
+                      ),
                   ],
                 ),
               ),
