@@ -303,6 +303,63 @@ void main() {
   );
 
   test(
+    'successful final synchronization uploads progress before deletion',
+    () async {
+      final subject = _buildSubject();
+      final remoteSubject = StudySubject.fromJson(subject.toFullJson());
+      subject.progress = [
+        SubjectProgress(
+          subjectId: subject.id,
+          interventionId: 'intervention-id',
+          taskId: 'task-id',
+          resultType: 'bool',
+          result: Result<bool>.app(
+            type: 'bool',
+            periodId: 'period-id',
+            result: true,
+          ),
+        )..completedAt = DateTime.utc(2026, 8, 28, 8),
+      ];
+      await Cache.storeSubject(subject);
+      final appState = AppState()..updateActiveSubject(subject);
+      appState
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
+        ..debugFetchRemoteSubjectForSync = (_) async => remoteSubject;
+      Cache.debugUploadBlobFilesOverride = (_, _) async {};
+      var savedProgressCount = 0;
+      Cache.debugSaveProgressOverride = (progress) async {
+        savedProgressCount++;
+        return progress;
+      };
+      Cache.debugSaveSubjectOverride = (savedSubject) async => savedSubject;
+      var remoteDeleted = false;
+
+      final deleted = await deleteStudySubjectAndClearLocalData(
+        subject: subject,
+        synchronizeActiveSubject:
+            appState.synchronizeActiveSubjectBeforeDestructiveAction,
+        deleteRemoteSubject: () async {
+          remoteDeleted = true;
+        },
+        onRemoteDeleted: appState.clearActiveStudyState,
+        stopActiveSynchronization:
+            appState.stopAndAwaitActiveSubjectSynchronization,
+        resumeActiveSynchronization:
+            appState.resumeActiveSubjectSynchronization,
+      );
+
+      expect(deleted, isTrue);
+      expect(savedProgressCount, 1);
+      expect(remoteDeleted, isTrue);
+      expect(appState.activeSubject, isNull);
+      expect(await SecureStorage.containsKey(cacheSubjectKey), isFalse);
+      appState.dispose();
+    },
+  );
+
+  test(
     'subject deletion cancels blocked synchronization before remote progress writes',
     () async {
       final remoteSubject = _buildSubject();

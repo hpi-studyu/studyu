@@ -26,6 +26,7 @@ Future<void> _clearStudyLocalData({
   );
   await Cache.deletePendingBlobFilesForSubject(subject);
   if (subject != null) {
+    await Cache.deleteDeferredFitbitRequestsForSubject(subject.id);
     await FitbitHandler.deleteFitbitCredentials(subject.studyId);
   }
   await deleteActiveStudyReference();

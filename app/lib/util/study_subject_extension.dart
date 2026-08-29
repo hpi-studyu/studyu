@@ -13,6 +13,25 @@ debugSaveResultProgressOverride;
 Future<StudySubject> Function(StudySubject subject)?
 debugSaveResultSubjectOverride;
 
+Future<void> prepareQuestionnaireForLocalPersistence(
+  QuestionnaireState questionnaireState,
+) async {
+  if (kIsWeb) return;
+  for (final answerEntry in questionnaireState.answers.entries.toList()) {
+    final answer = answerEntry.value;
+    if (answer.response is! FutureBlobFile) continue;
+    final futureBlobFile = answer.response as FutureBlobFile;
+    await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
+      futureBlobFile.localFilePath,
+      futureBlobFile.futureBlobId,
+    );
+    questionnaireState.answers[answerEntry.key] = Answer<String>(
+      answer.question,
+      answer.timestamp,
+    )..response = futureBlobFile.futureBlobId;
+  }
+}
+
 @visibleForTesting
 Future<void> saveResultProgress({
   required StudySubject subject,
@@ -69,34 +88,22 @@ extension StudySubjectExtension on StudySubject {
       resultType: resultObject.type,
     );
 
-    Future<void> moveQuestionnaireFiles() async {
-      if (kIsWeb || resultObject.result is! QuestionnaireState) return;
-      final questionnaireState = resultObject.result as QuestionnaireState;
-      for (final answerEntry in questionnaireState.answers.entries.toList()) {
-        final answer = answerEntry.value;
-        if (answer.response is! FutureBlobFile) continue;
-        final futureBlobFile = answer.response as FutureBlobFile;
-        await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
-          futureBlobFile.localFilePath,
-          futureBlobFile.futureBlobId,
+    Future<void> prepareQuestionnaire() async {
+      if (resultObject.result is QuestionnaireState) {
+        await prepareQuestionnaireForLocalPersistence(
+          resultObject.result as QuestionnaireState,
         );
-
-        // Replaces Answer<FutureBlobFile> with Answer<String>
-        questionnaireState.answers[answerEntry.key] = Answer<String>(
-          answer.question,
-          answer.timestamp,
-        )..response = futureBlobFile.futureBlobId;
       }
     }
 
     try {
       if (saveOffline) {
-        await moveQuestionnaireFiles();
+        await prepareQuestionnaire();
         progressEntry.completedAt = DateTime.now().toUtc();
         progress.add(progressEntry);
       } else {
         await Cache.runSubjectRemoteMutation(() async {
-          await moveQuestionnaireFiles();
+          await prepareQuestionnaire();
           if (!kIsWeb) {
             await Cache.uploadBlobFiles(studyId, userId);
           }

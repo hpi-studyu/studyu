@@ -347,9 +347,10 @@ class AppState with ChangeNotifier {
       return false;
     }
     if (!Cache.containsAllProgress(
-      subject: synchronization.subject,
-      progressSource: latestActiveSubject!,
-    )) {
+          subject: synchronization.subject,
+          progressSource: latestActiveSubject!,
+        ) ||
+        await Cache.hasDeferredFitbitRequestsForSubject(currentSubject.id)) {
       markActiveSubjectSynchronizationPending();
       return false;
     }
