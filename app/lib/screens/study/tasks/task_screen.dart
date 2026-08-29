@@ -70,6 +70,7 @@ Future<bool> handleTaskCompletion(
   BuildContext context,
   Future<void> Function(StudySubject?) completionCallback, {
   required VoidCallback onCacheRetrySucceeded,
+  Future<void> Function(StudySubject?)? cacheFallback,
 }) {
   return Cache.runSubjectOperation(() async {
     final state = context.read<AppState>();
@@ -81,7 +82,7 @@ Future<bool> handleTaskCompletion(
 
     Future<bool> storeInCache() async {
       try {
-        await Cache.storeSubject(activeSubject);
+        await (cacheFallback ?? Cache.storeSubject)(activeSubject);
         state.markActiveSubjectSynchronizationPending();
         cacheWriteSucceeded = true;
         debugPrint("Store subject in cache");

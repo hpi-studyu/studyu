@@ -2,11 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/util/deferred_fitbit_sync.dart';
 import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_core/core.dart';
+
+bool hasDeferredFitbitAnswers(
+  QuestionnaireTask task,
+  QuestionnaireState questionnaireState,
+) {
+  return task.questions.questions.whereType<FitbitQuestion>().any((question) {
+    final response = questionnaireState.answers[question.id]?.response;
+    return response is List && response.isEmpty;
+  });
+}
 
 class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
@@ -37,16 +48,35 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     T response,
     BuildContext context,
   ) async {
-    final completed = await handleTaskCompletion(
-      context,
-      (StudySubject? subject) async {
-        await subject!.addResult<T>(
-          taskId: widget.task.id,
+    final deferredFitbit =
+        response is QuestionnaireState &&
+        hasDeferredFitbitAnswers(widget.task, response);
+    final completedAt = DateTime.now().toUtc();
+
+    Future<void> persistResult(StudySubject? subject) async {
+      if (deferredFitbit) {
+        await persistDeferredFitbitQuestionnaireResult(
+          subject: subject!,
+          task: widget.task,
           interventionId: widget.interventionId,
           periodId: widget.completionPeriod.id,
-          result: response,
+          questionnaireState: response as QuestionnaireState,
+          completedAt: completedAt,
         );
-      },
+        return;
+      }
+      await subject!.addResult<T>(
+        interventionId: widget.interventionId,
+        taskId: widget.task.id,
+        periodId: widget.completionPeriod.id,
+        result: response,
+      );
+    }
+
+    final completed = await handleTaskCompletion(
+      context,
+      persistResult,
+      cacheFallback: deferredFitbit ? persistResult : null,
       onCacheRetrySucceeded: () {
         if (context.mounted) context.pop(true);
       },

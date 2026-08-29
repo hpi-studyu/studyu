@@ -8,6 +8,7 @@ import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/string_extensions.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class FitbitQuestionWidget extends QuestionWidget {
   final FitbitQuestion question;
@@ -35,7 +36,16 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
     value = [];
   }
 
+  void _completeDeferred() {
+    value = [];
+    widget.onDone(widget.question.constructAnswer(value));
+  }
+
   Future<void> _syncFitbitData() async {
+    if (hasDegradedConnectionStatus()) {
+      _completeDeferred();
+      return;
+    }
     try {
       setState(() {
         _isLoading = true;
@@ -66,10 +76,21 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
 
       widget.onDone(widget.question.constructAnswer(value));
     } catch (e) {
+      final status = connectionStatusFromError(e);
+      if (status != null) {
+        appConnectionStatusController.setStatus(status);
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+          _completeDeferred();
+        }
+        return;
+      }
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
-      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

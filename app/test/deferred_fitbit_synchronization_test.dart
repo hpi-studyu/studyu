@@ -1,12 +1,17 @@
 import 'package:fitbitter/fitbitter.dart' as fitbitter;
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/onboarding/kickoff.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/deferred_fitbit_sync.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/study_local_cleanup.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/fitbit_question_widget.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -495,6 +500,120 @@ void main() {
       expect(await Cache.loadDeferredFitbitRequests(), hasLength(1));
     },
   );
+
+  testWidgets('degraded Fitbit completion stays local without invoking sync', (
+    tester,
+  ) async {
+    final fixture = _buildFitbitStudy();
+    var syncCalls = 0;
+    FitbitHandler.debugSyncFitbitDataOverride = (_, _, _, _) async {
+      syncCalls++;
+      return [];
+    };
+
+    appConnectionStatusController.setStatus(
+      AppConnectionStatus.backendUnavailable,
+    );
+    Answer? answer;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: FitbitQuestionWidget(
+            question: fixture.question,
+            taskId: fixture.task.id,
+            onDone: (completedAnswer) => answer = completedAnswer,
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    expect(syncCalls, 0);
+    expect(answer, isNotNull);
+    expect(answer!.response, isEmpty);
+  });
+
+  testWidgets(
+    'kickoff keeps Fitbit studies gated after authorization failure',
+    (tester) async {
+      final fixture = _buildFitbitStudy();
+      final appState = AppState()..updateActiveSubject(fixture.subject);
+      addTearDown(appState.dispose);
+      var authorizationCalls = 0;
+      FitbitHandler.debugAuthorizeForOfflineParticipationOverride =
+          (_, _) async {
+            authorizationCalls++;
+            return false;
+          };
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider.value(
+          value: appState,
+          child: const MaterialApp(
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            locale: Locale('en'),
+            home: KickoffScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(authorizationCalls, 1);
+      expect(find.byType(OutlinedButton), findsOneWidget);
+      await tester.tap(find.byType(OutlinedButton));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(authorizationCalls, 2);
+      expect(find.byType(OutlinedButton), findsOneWidget);
+    },
+  );
+
+  testWidgets('healthy Fitbit completion keeps the online sync path', (
+    tester,
+  ) async {
+    final fixture = _buildFitbitStudy();
+    final appState = AppState()..updateActiveSubject(fixture.subject);
+    addTearDown(appState.dispose);
+    var syncCalls = 0;
+    final syncedData = [FitbitStepData(42, DateTime(2026, 8, 3, 14, 29))];
+    FitbitHandler.debugSyncFitbitDataOverride = (_, _, _, _) async {
+      syncCalls++;
+      return syncedData;
+    };
+    appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+    Answer? answer;
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: appState,
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: FitbitQuestionWidget(
+              question: fixture.question,
+              taskId: fixture.task.id,
+              onDone: (completedAnswer) => answer = completedAnswer,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+
+    expect(syncCalls, 1);
+    expect(answer, isNotNull);
+    expect(answer!.response, hasLength(1));
+  });
 
   test('calendar-day iteration includes every date across DST boundaries', () {
     final days = FitbitHandler.daysInWindowForTesting(
