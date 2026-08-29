@@ -10,10 +10,12 @@ import 'package:studyu_core/core.dart';
 
 class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
+  final String interventionId;
   final CompletionPeriod completionPeriod;
 
   const QuestionnaireTaskWidget({
     required this.task,
+    required this.interventionId,
     required this.completionPeriod,
     super.key,
   });
@@ -40,6 +42,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
       (StudySubject? subject) async {
         await subject!.addResult<T>(
           taskId: widget.task.id,
+          interventionId: widget.interventionId,
           periodId: widget.completionPeriod.id,
           result: response,
         );

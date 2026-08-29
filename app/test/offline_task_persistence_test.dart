@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/intervention/checkmark_task_widget.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
@@ -144,6 +145,7 @@ void main() {
     Cache.debugUploadBlobFilesOverride = null;
     Cache.debugSaveProgressOverride = null;
     Cache.debugSaveSubjectOverride = null;
+    TemporaryStorageHandler.debugMoveStagingFileToUploadDirectory = null;
     if (documentsDirectory.parent.existsSync()) {
       await documentsDirectory.parent.delete(recursive: true);
     }
@@ -168,6 +170,7 @@ void main() {
       );
       await subject.addResult<bool>(
         taskId: checkmarkTask.id,
+        interventionId: _interventionId,
         periodId: completionPeriod.id,
         result: true,
         offline: true,
@@ -227,6 +230,7 @@ void main() {
       try {
         await subject.addResult<bool>(
           taskId: checkmarkTask.id,
+          interventionId: _interventionId,
           periodId: _checkmarkPeriodId,
           result: true,
         );
@@ -238,6 +242,40 @@ void main() {
       } finally {
         appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
       }
+    },
+  );
+
+  test(
+    'issued task keeps its intervention when submitted after study end',
+    () async {
+      final completionPeriod = CompletionPeriod(
+        id: _checkmarkPeriodId,
+        unlockTime: StudyUTimeOfDay(hour: 8),
+        lockTime: StudyUTimeOfDay(hour: 20),
+      );
+      final checkmarkTask = CheckmarkTask.withId()
+        ..title = 'Final task'
+        ..schedule.completionPeriods = [completionPeriod];
+      final subject = _buildSubject(
+        checkmarkTask: checkmarkTask,
+        questionnaireTask: QuestionnaireTask.withId(),
+      );
+      final TaskInstance issuedTask = subject
+          .scheduleFor(DateTime.now())
+          .firstWhere((instance) => instance.task.id == checkmarkTask.id);
+      subject.startedAt = DateTime.now().subtract(const Duration(days: 30));
+
+      await subject.addResult<bool>(
+        taskId: issuedTask.task.id,
+        interventionId: issuedTask.interventionId,
+        periodId: issuedTask.completionPeriod.id,
+        result: true,
+        offline: true,
+      );
+
+      expect(subject.getInterventionForDate(DateTime.now()), isNull);
+      expect(subject.progress.single.interventionId, _interventionId);
+      expect(subject.progress.single.result.periodId, _checkmarkPeriodId);
     },
   );
 
@@ -332,6 +370,7 @@ void main() {
           builder: (_, _) => Scaffold(
             body: CheckmarkTaskWidget(
               task: checkmarkTask,
+              interventionId: _interventionId,
               completionPeriod: completionPeriod,
             ),
           ),
@@ -415,6 +454,83 @@ void main() {
     appState.dispose();
   });
 
+  testWidgets(
+    'destructive cleanup waits for an offline completion cache write',
+    (tester) async {
+      final subject = _buildSubject(
+        checkmarkTask: CheckmarkTask.withId(),
+        questionnaireTask: QuestionnaireTask.withId(),
+      );
+      final appState = AppState()..updateActiveSubject(subject);
+      final moveStarted = Completer<void>();
+      final releaseMove = Completer<void>();
+      final questionnaireState = QuestionnaireState();
+      questionnaireState.answers[_questionId] = Answer<FutureBlobFile>(
+        _questionId,
+        DateTime.now(),
+      )..response = FutureBlobFile('/tmp/staging.jpg', 'pending-blob.jpg');
+      TemporaryStorageHandler.debugMoveStagingFileToUploadDirectory =
+          (_, _) async {
+            moveStarted.complete();
+            await releaseMove.future;
+          };
+      appConnectionStatusController.setStatus(
+        AppConnectionStatus.backendUnavailable,
+      );
+      Future<bool>? completion;
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider.value(
+          value: appState,
+          child: MaterialApp(
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            locale: const Locale('en'),
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () {
+                    completion = handleTaskCompletion(
+                      context,
+                      (activeSubject) => activeSubject!.addResult(
+                        taskId: 'task-id',
+                        interventionId: _interventionId,
+                        periodId: _questionnairePeriodId,
+                        result: questionnaireState,
+                        offline: true,
+                      ),
+                      onCacheRetrySucceeded: () {},
+                    );
+                  },
+                  child: const Text('Complete'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Complete'));
+      await moveStarted.future;
+      var destructiveActionStarted = false;
+      final destructiveAction = Cache.runWithSubjectSynchronizationBlocked(
+        () async {
+          destructiveActionStarted = true;
+          return (await Cache.loadSubject()).progress.length == 1;
+        },
+      );
+      await tester.pump();
+
+      expect(destructiveActionStarted, isFalse);
+
+      releaseMove.complete();
+      expect(await completion, isTrue);
+      expect(await destructiveAction, isTrue);
+      expect(destructiveActionStarted, isTrue);
+      appState.dispose();
+    },
+  );
+
   test(
     'offline checkmark completion persists subject progress across cache reload',
     () async {
@@ -444,6 +560,7 @@ void main() {
 
       await subject.addResult<bool>(
         taskId: checkmarkTask.id,
+        interventionId: _interventionId,
         periodId: _checkmarkPeriodId,
         result: true,
         offline: true,
@@ -504,6 +621,7 @@ void main() {
 
       await subject.addResult<QuestionnaireState>(
         taskId: questionnaireTask.id,
+        interventionId: _interventionId,
         periodId: _questionnairePeriodId,
         result: questionnaireState,
         offline: true,

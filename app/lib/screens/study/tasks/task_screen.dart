@@ -24,20 +24,8 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  late TaskInstance taskInstance;
-  StudySubject? subject;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    subject = context.watch<AppState>().activeSubject;
-    taskInstance = TaskInstance.fromInstanceId(
-      widget.taskInstance.id,
-      study: subject!.study,
-    );
-  }
-
   Widget _buildTask() {
+    final taskInstance = widget.taskInstance;
     switch (taskInstance.task) {
       case final CheckmarkTask checkmarkTask:
         return SingleChildScrollView(
@@ -50,6 +38,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 CheckmarkTaskWidget(
                   task: checkmarkTask,
                   key: UniqueKey(),
+                  interventionId: taskInstance.interventionId,
                   completionPeriod: taskInstance.completionPeriod,
                 ),
               ],
@@ -60,6 +49,7 @@ class _TaskScreenState extends State<TaskScreen> {
         return QuestionnaireTaskWidget(
           task: questionnaireTask,
           key: UniqueKey(),
+          interventionId: taskInstance.interventionId,
           completionPeriod: taskInstance.completionPeriod,
         );
       default:
@@ -70,7 +60,7 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(taskInstance.task.title ?? '')),
+      appBar: AppBar(title: Text(widget.taskInstance.task.title ?? '')),
       body: Padding(padding: const EdgeInsets.all(16), child: _buildTask()),
     );
   }
@@ -80,75 +70,78 @@ Future<bool> handleTaskCompletion(
   BuildContext context,
   Future<void> Function(StudySubject?) completionCallback, {
   required VoidCallback onCacheRetrySucceeded,
-}) async {
-  final state = context.read<AppState>();
-  final activeSubject = state.activeSubject;
-  final wasConnectionDegraded =
-      state.connectionStatus != AppConnectionStatus.healthy;
-  var cacheWriteSucceeded = false;
-  var cacheRetryInFlight = false;
+}) {
+  return Cache.runSubjectOperation(() async {
+    final state = context.read<AppState>();
+    final activeSubject = state.activeSubject;
+    final wasConnectionDegraded =
+        state.connectionStatus != AppConnectionStatus.healthy;
+    var cacheWriteSucceeded = false;
+    var cacheRetryInFlight = false;
 
-  Future<bool> storeInCache() async {
-    try {
-      await Cache.storeSubject(activeSubject);
-      state.markActiveSubjectSynchronizationPending();
-      cacheWriteSucceeded = true;
-      debugPrint("Store subject in cache");
-      return true;
-    } catch (cacheError) {
-      debugPrint("Could not cache results: $cacheError");
-      if (!context.mounted) return false;
+    Future<bool> storeInCache() async {
+      try {
+        await Cache.storeSubject(activeSubject);
+        state.markActiveSubjectSynchronizationPending();
+        cacheWriteSucceeded = true;
+        debugPrint("Store subject in cache");
+        return true;
+      } catch (cacheError) {
+        debugPrint("Could not cache results: $cacheError");
+        if (!context.mounted) return false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.could_not_save_results),
+            duration: const Duration(seconds: 10),
+            persist: true,
+            action: SnackBarAction(
+              label: 'Retry',
+              onPressed: () async {
+                if (cacheRetryInFlight || cacheWriteSucceeded) return;
+                cacheRetryInFlight = true;
+                try {
+                  if (await Cache.runSubjectOperation(storeInCache) &&
+                      context.mounted) {
+                    onCacheRetrySucceeded();
+                  }
+                } finally {
+                  cacheRetryInFlight = false;
+                }
+              },
+            ),
+          ),
+        );
+        return false;
+      }
+    }
+
+    if (!state.trackParticipantProgress) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.could_not_save_results),
-          duration: const Duration(seconds: 10),
-          persist: true,
-          action: SnackBarAction(
-            label: 'Retry',
-            onPressed: () async {
-              if (cacheRetryInFlight || cacheWriteSucceeded) return;
-              cacheRetryInFlight = true;
-              try {
-                if (await storeInCache() && context.mounted) {
-                  onCacheRetrySucceeded();
-                }
-              } finally {
-                cacheRetryInFlight = false;
-              }
-            },
+          content: Text(
+            AppLocalizations.of(context)!.preview_mode_results_not_saved,
           ),
+          duration: const Duration(seconds: 3),
         ),
       );
-      return false;
+      return true;
     }
-  }
 
-  if (!state.trackParticipantProgress) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          AppLocalizations.of(context)!.preview_mode_results_not_saved,
-        ),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    try {
+      await completionCallback(activeSubject);
+    } catch (exception) {
+      final status = connectionStatusFromError(exception);
+      if (status != null) {
+        state.setConnectionStatus(status);
+      }
+      debugPrint("Could not save results: $exception");
+      return storeInCache();
+    }
+
+    if (wasConnectionDegraded) {
+      return storeInCache();
+    }
+    state.setConnectionStatus(AppConnectionStatus.healthy);
     return true;
-  }
-
-  try {
-    await completionCallback(activeSubject);
-  } catch (exception) {
-    final status = connectionStatusFromError(exception);
-    if (status != null) {
-      state.setConnectionStatus(status);
-    }
-    debugPrint("Could not save results: $exception");
-    return storeInCache();
-  }
-
-  if (wasConnectionDegraded) {
-    return storeInCache();
-  }
-  state.setConnectionStatus(AppConnectionStatus.healthy);
-  return true;
+  });
 }

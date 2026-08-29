@@ -28,7 +28,8 @@ class Cache {
   static int _synchronizationBlockCount = 0;
   static int _synchronizationGeneration = 0;
   static Completer<void>? _activeSynchronization;
-  static final Set<Completer<void>> _activeSubjectRemoteMutations = {};
+  static final Set<Completer<void>> _activeSubjectOperations = {};
+  static final Object _subjectOperationZoneKey = Object();
 
   @visibleForTesting
   static Future<void> Function(String studyId, String userId)?
@@ -53,7 +54,7 @@ class Cache {
     _synchronizationBlockCount = 0;
     _synchronizationGeneration = 0;
     _activeSynchronization = null;
-    _activeSubjectRemoteMutations.clear();
+    _activeSubjectOperations.clear();
     debugAfterSubjectSnapshotLoaded = null;
   }
 
@@ -128,11 +129,16 @@ class Cache {
 
   static Future<void> storeSubject(StudySubject? subject) async {
     // debugPrint("Store subject in cache");
-    if (subject == null || _synchronizationBlockCount > 0) return;
+    final activeOperation = Zone.current[_subjectOperationZoneKey] == true;
+    if (subject == null ||
+        (_synchronizationBlockCount > 0 && !activeOperation)) {
+      return;
+    }
     final synchronizationGeneration = _synchronizationGeneration;
     await _queueSubjectWrite(() async {
-      if (_synchronizationBlockCount > 0 ||
-          synchronizationGeneration != _synchronizationGeneration) {
+      if (!activeOperation &&
+          (_synchronizationBlockCount > 0 ||
+              synchronizationGeneration != _synchronizationGeneration)) {
         return;
       }
       await _writeSubject(subject);
@@ -142,10 +148,11 @@ class Cache {
 
   static Future<bool> _storeSubjectIfRevisionUnchanged(
     StudySubject subject,
-    int expectedRevision,
-  ) {
+    int expectedRevision, {
+    bool allowWhileBlocked = false,
+  }) {
     return _queueSubjectWrite(() async {
-      if (_synchronizationBlockCount > 0 ||
+      if ((!allowWhileBlocked && _synchronizationBlockCount > 0) ||
           _subjectRevision != expectedRevision) {
         return false;
       }
@@ -163,7 +170,7 @@ class Cache {
     final activeOperations = <Future<void>>[
       if (_activeSynchronization case final synchronization?)
         synchronization.future,
-      ..._activeSubjectRemoteMutations.map((mutation) => mutation.future),
+      ..._activeSubjectOperations.map((operation) => operation.future),
     ];
     try {
       await Future.wait(activeOperations);
@@ -173,27 +180,36 @@ class Cache {
     }
   }
 
-  static Future<T> runSubjectRemoteMutation<T>(
-    Future<T> Function() mutation,
+  static Future<T> runSubjectOperation<T>(
+    Future<T> Function() operation,
   ) async {
     if (_synchronizationBlockCount > 0) {
       throw const _CacheSynchronizationCancelled();
     }
-    final activeMutation = Completer<void>();
-    _activeSubjectRemoteMutations.add(activeMutation);
+    final activeOperation = Completer<void>();
+    _activeSubjectOperations.add(activeOperation);
     try {
       if (_synchronizationBlockCount > 0) {
         throw const _CacheSynchronizationCancelled();
       }
-      return await mutation();
+      return await runZoned(
+        operation,
+        zoneValues: {_subjectOperationZoneKey: true},
+      );
     } finally {
-      _activeSubjectRemoteMutations.remove(activeMutation);
-      activeMutation.complete();
+      _activeSubjectOperations.remove(activeOperation);
+      activeOperation.complete();
     }
   }
 
-  static void _ensureSynchronizationAllowed(int generation) {
-    if (_synchronizationBlockCount > 0 ||
+  static Future<T> runSubjectRemoteMutation<T>(Future<T> Function() mutation) =>
+      runSubjectOperation(mutation);
+
+  static void _ensureSynchronizationAllowed(
+    int generation, {
+    bool allowWhileBlocked = false,
+  }) {
+    if ((!allowWhileBlocked && _synchronizationBlockCount > 0) ||
         generation != _synchronizationGeneration) {
       throw const _CacheSynchronizationCancelled();
     }
@@ -344,9 +360,11 @@ class Cache {
   }
 
   static Future<CacheSynchronizationResult> synchronize(
-    StudySubject remoteSubject,
-  ) async {
-    if (_synchronizationBlockCount > 0 || isSynchronizing) {
+    StudySubject remoteSubject, {
+    bool allowWhileBlocked = false,
+  }) async {
+    if ((!allowWhileBlocked && _synchronizationBlockCount > 0) ||
+        isSynchronizing) {
       final snapshot = await _loadSubjectSnapshot(backupSubject: remoteSubject);
       return (
         subject: snapshot.subject ?? remoteSubject,
@@ -364,7 +382,10 @@ class Cache {
     try {
       final snapshot = await _loadSubjectSnapshot(backupSubject: remoteSubject);
       await debugAfterSubjectSnapshotLoaded?.call();
-      _ensureSynchronizationAllowed(synchronizationGeneration);
+      _ensureSynchronizationAllowed(
+        synchronizationGeneration,
+        allowWhileBlocked: allowWhileBlocked,
+      );
       localSubject = snapshot.subject;
       if (localSubject == null) {
         return await _successfulSynchronizationIfRevisionUnchanged(
@@ -405,15 +426,24 @@ class Cache {
       }
 
       debugPrint("Synchronize subject with cache");
-      _ensureSynchronizationAllowed(synchronizationGeneration);
+      _ensureSynchronizationAllowed(
+        synchronizationGeneration,
+        allowWhileBlocked: allowWhileBlocked,
+      );
       await uploadBlobFiles(
         remoteSubject.studyId,
         remoteSubject.userId,
         beforeRemoteMutation: () {
-          _ensureSynchronizationAllowed(synchronizationGeneration);
+          _ensureSynchronizationAllowed(
+            synchronizationGeneration,
+            allowWhileBlocked: allowWhileBlocked,
+          );
         },
       );
-      _ensureSynchronizationAllowed(synchronizationGeneration);
+      _ensureSynchronizationAllowed(
+        synchronizationGeneration,
+        allowWhileBlocked: allowWhileBlocked,
+      );
       final syncPlan = buildProgressSyncPlan(
         localSubject: localSubject,
         remoteSubject: remoteSubject,
@@ -424,14 +454,21 @@ class Cache {
           remoteSubject: remoteSubject,
           syncPlan: syncPlan,
           beforeRemoteMutation: () {
-            _ensureSynchronizationAllowed(synchronizationGeneration);
+            _ensureSynchronizationAllowed(
+              synchronizationGeneration,
+              allowWhileBlocked: allowWhileBlocked,
+            );
           },
         );
       }
-      _ensureSynchronizationAllowed(synchronizationGeneration);
+      _ensureSynchronizationAllowed(
+        synchronizationGeneration,
+        allowWhileBlocked: allowWhileBlocked,
+      );
       final stored = await _storeSubjectIfRevisionUnchanged(
         remoteSubject,
         snapshot.revision,
+        allowWhileBlocked: allowWhileBlocked,
       );
       if (!stored) {
         final latestSubject = await _loadSubjectSnapshot(

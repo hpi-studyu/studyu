@@ -3,33 +3,37 @@ import 'package:studyu_core/core.dart';
 class TaskInstance {
   final Task task;
   final String id;
+  final String interventionId;
 
-  TaskInstance(this.task, this.id) : assert(task.id != id);
+  TaskInstance(this.task, this.id, {required this.interventionId})
+    : assert(task.id != id);
 
   factory TaskInstance.fromInstanceId(
     String taskInstanceId, {
     StudySubject? subject,
     Study? study,
+    String? interventionId,
     DateTime? date,
   }) {
     date ??= DateTime.now();
-    final Task tempTask;
     if (subject != null) {
-      tempTask = _taskFromSubject(taskInstanceId, subject, date);
-    } else if (study != null) {
-      tempTask = _taskFromStudy(taskInstanceId, study, date);
-    } else {
-      throw "Either subject or study need to be given to create TaskInstance";
+      return subject
+          .scheduleFor(date)
+          .firstWhere((element) => element.id == taskInstanceId);
     }
+    if (study == null || interventionId == null) {
+      throw "Either subject or study with interventionId need to be given to create TaskInstance";
+    }
+    final tempTask = _taskFromStudy(taskInstanceId, study);
     assert(tempTask.id != taskInstanceId);
-    return TaskInstance(tempTask, taskInstanceId);
+    return TaskInstance(
+      tempTask,
+      taskInstanceId,
+      interventionId: interventionId,
+    );
   }
 
-  static Task _taskFromStudy(
-    String taskInstanceId,
-    Study study,
-    DateTime date,
-  ) {
+  static Task _taskFromStudy(String taskInstanceId, Study study) {
     final tasks = <Task>[
       ...study.observations,
       ...study.interventions
@@ -44,17 +48,6 @@ class TaskInstance {
       }
       return false;
     });
-  }
-
-  static Task _taskFromSubject(
-    String taskInstanceId,
-    StudySubject subject,
-    DateTime now,
-  ) {
-    return subject
-        .scheduleFor(now)
-        .firstWhere((element) => element.id == taskInstanceId)
-        .task;
   }
 
   CompletionPeriod get completionPeriod =>

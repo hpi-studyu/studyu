@@ -40,6 +40,7 @@ Future<void> saveResultProgress({
 extension StudySubjectExtension on StudySubject {
   Future<void> addResult<T>({
     required String taskId,
+    required String interventionId,
     required String periodId,
     required T result,
     bool offline = false,
@@ -62,7 +63,7 @@ extension StudySubjectExtension on StudySubject {
     final initialProgressCount = progress.length;
     final progressEntry = SubjectProgress(
       subjectId: id,
-      interventionId: getInterventionForDate(DateTime.now())!.id,
+      interventionId: interventionId,
       taskId: taskId,
       result: resultObject,
       resultType: resultObject.type,

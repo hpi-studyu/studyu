@@ -233,6 +233,76 @@ void main() {
   );
 
   test(
+    'failed final synchronization preserves pending data and skips deletion',
+    () async {
+      final subject = _buildSubject();
+      final remoteSubject = StudySubject.fromJson(subject.toFullJson());
+      subject.progress = [
+        SubjectProgress(
+          subjectId: subject.id,
+          interventionId: 'intervention-id',
+          taskId: 'task-id',
+          resultType: 'bool',
+          result: Result<bool>.app(
+            type: 'bool',
+            periodId: 'period-id',
+            result: true,
+          ),
+        )..completedAt = DateTime.utc(2026, 8, 28, 8),
+      ];
+      await Cache.storeSubject(subject);
+      final pendingUpload = await TemporaryStorageHandler(
+        subject.studyId,
+        subject.userId,
+      ).getStagingImage();
+      await File(pendingUpload!.localFilePath).create(recursive: true);
+      await File(pendingUpload.localFilePath).writeAsString('pending');
+      await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
+        pendingUpload.localFilePath,
+        pendingUpload.futureBlobId,
+      );
+      final appState = AppState()..updateActiveSubject(subject);
+      appState
+        ..debugHasParticipantSessionForSync = () {
+          return true;
+        }
+        ..debugRestoreParticipantSessionForSync = () async {
+          return false;
+        }
+        ..debugFetchRemoteSubjectForSync = (_) async => remoteSubject;
+      Cache.debugUploadBlobFilesOverride = (_, _) =>
+          Future<void>.error(Exception('upload failed'));
+      var remoteDeleted = false;
+
+      final deleted = await deleteStudySubjectAndClearLocalData(
+        subject: subject,
+        synchronizeActiveSubject:
+            appState.synchronizeActiveSubjectBeforeDestructiveAction,
+        deleteRemoteSubject: () async {
+          remoteDeleted = true;
+        },
+        onRemoteDeleted: appState.clearActiveStudyState,
+        stopActiveSynchronization:
+            appState.stopAndAwaitActiveSubjectSynchronization,
+        resumeActiveSynchronization:
+            appState.resumeActiveSubjectSynchronization,
+      );
+
+      expect(deleted, isFalse);
+      expect(remoteDeleted, isFalse);
+      expect(appState.activeSubject, same(subject));
+      expect((await Cache.loadSubject()).progress, hasLength(1));
+      expect(
+        (await TemporaryStorageHandler.getFutureBlobFiles()).map(
+          (file) => file.futureBlobId,
+        ),
+        contains(pendingUpload.futureBlobId),
+      );
+      appState.dispose();
+    },
+  );
+
+  test(
     'subject deletion cancels blocked synchronization before remote progress writes',
     () async {
       final remoteSubject = _buildSubject();
@@ -276,6 +346,7 @@ void main() {
       await synchronizationStarted.future;
       final deletionFuture = deleteStudySubjectAndClearLocalData(
         subject: cachedSubject,
+        synchronizeActiveSubject: () async => true,
         deleteRemoteSubject: () async {
           remoteDeletionStarted = true;
           await releaseRemoteDeletion.future;
@@ -348,6 +419,7 @@ void main() {
 
       final resultMutation = subject.addResult<QuestionnaireState>(
         taskId: 'task-id',
+        interventionId: 'intervention-id',
         periodId: 'period-id',
         result: questionnaireState,
       );
@@ -355,6 +427,7 @@ void main() {
 
       final deletion = deleteStudySubjectAndClearLocalData(
         subject: subject,
+        synchronizeActiveSubject: () async => true,
         deleteRemoteSubject: () async {
           remoteDeletionStarted = true;
           subject.isDeleted = true;
@@ -402,6 +475,7 @@ void main() {
       await restorationStarted.future;
       final deletion = deleteStudySubjectAndClearLocalData(
         subject: subject,
+        synchronizeActiveSubject: () async => true,
         deleteRemoteSubject: () async {
           remoteDeletionStarted = true;
         },
@@ -447,6 +521,7 @@ void main() {
       await expectLater(
         deleteStudySubjectAndClearLocalData(
           subject: subject,
+          synchronizeActiveSubject: () async => true,
           deleteRemoteSubject: () => Future<void>.error(remoteDeletionError),
           onRemoteDeleted: appState.clearActiveStudyState,
           stopActiveSynchronization:
@@ -568,6 +643,7 @@ void main() {
       await expectLater(
         deleteStudySubjectAndClearLocalData(
           subject: subject,
+          synchronizeActiveSubject: () async => true,
           deleteRemoteSubject: () async {
             remoteDeleted = true;
           },

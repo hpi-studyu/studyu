@@ -275,12 +275,24 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     for (final task in activeIntervention.tasks) {
       if (task.title == null) continue;
       for (final completionPeriod in task.schedule.completionPeriods) {
-        taskSchedule.add(TaskInstance(task, completionPeriod.id));
+        taskSchedule.add(
+          TaskInstance(
+            task,
+            completionPeriod.id,
+            interventionId: activeIntervention.id,
+          ),
+        );
       }
     }
     for (final observation in study.observations) {
       for (final completionPeriod in observation.schedule.completionPeriods) {
-        taskSchedule.add(TaskInstance(observation, completionPeriod.id));
+        taskSchedule.add(
+          TaskInstance(
+            observation,
+            completionPeriod.id,
+            interventionId: activeIntervention.id,
+          ),
+        );
       }
     }
     return taskSchedule;

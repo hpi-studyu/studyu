@@ -221,6 +221,22 @@ class AppState with ChangeNotifier {
       _cancelActiveSubjectSyncRetry();
       return;
     }
+    await _attemptCachedSubjectSynchronization(currentSubject);
+  }
+
+  Future<bool> synchronizeActiveSubjectBeforeDestructiveAction() async {
+    final currentSubject = activeSubject;
+    if (currentSubject == null) return false;
+    return _attemptCachedSubjectSynchronization(
+      currentSubject,
+      allowWhileBlocked: true,
+    );
+  }
+
+  Future<bool> _attemptCachedSubjectSynchronization(
+    StudySubject currentSubject, {
+    bool allowWhileBlocked = false,
+  }) async {
     try {
       final hasParticipantSession =
           (debugHasParticipantSessionForSync ?? isUserLoggedIn)();
@@ -231,22 +247,25 @@ class AppState with ChangeNotifier {
               await (debugRestoreParticipantSessionForSync ??
                   _restoreParticipantSessionForSync)();
         } on AuthApiException catch (error) {
-          if (error.code == 'invalid_credentials') return;
+          if (error.code == 'invalid_credentials') return false;
           rethrow;
         }
         if (!didRestoreSession || activeSubject?.id != currentSubject.id) {
-          return;
+          return false;
         }
       }
-      await _synchronizeCachedSubject(currentSubject);
+      return await _synchronizeCachedSubject(
+        currentSubject,
+        allowWhileBlocked: allowWhileBlocked,
+      );
     } catch (error) {
       final status = connectionStatusFromError(error);
       if (status != null) {
         appConnectionStatusController.setStatus(status);
-        return;
+        return false;
       }
       if (!shouldAttemptParticipantAuthRecovery(error)) {
-        return;
+        return false;
       }
       final bool didRestoreSession;
       try {
@@ -254,19 +273,23 @@ class AppState with ChangeNotifier {
             await (debugRestoreParticipantSessionForSync ??
                 _restoreParticipantSessionForSync)();
       } on AuthApiException catch (error) {
-        if (error.code == 'invalid_credentials') return;
+        if (error.code == 'invalid_credentials') return false;
         rethrow;
       }
       if (!didRestoreSession || activeSubject?.id != currentSubject.id) {
-        return;
+        return false;
       }
       try {
-        await _synchronizeCachedSubject(currentSubject);
+        return await _synchronizeCachedSubject(
+          currentSubject,
+          allowWhileBlocked: allowWhileBlocked,
+        );
       } catch (recoveryError) {
         final recoveryStatus = connectionStatusFromError(recoveryError);
         if (recoveryStatus != null) {
           appConnectionStatusController.setStatus(recoveryStatus);
         }
+        return false;
       }
     }
   }
@@ -302,32 +325,39 @@ class AppState with ChangeNotifier {
     }
   }
 
-  Future<void> _synchronizeCachedSubject(StudySubject currentSubject) async {
+  Future<bool> _synchronizeCachedSubject(
+    StudySubject currentSubject, {
+    bool allowWhileBlocked = false,
+  }) async {
     final fetchRemoteSubject =
         debugFetchRemoteSubjectForSync ?? _fetchRemoteSubjectForSync;
     final remoteSubject = await fetchRemoteSubject(currentSubject.id);
     if (remoteSubject == null || activeSubject?.id != currentSubject.id) {
-      return;
+      return false;
     }
-    final synchronization = await Cache.synchronize(remoteSubject);
+    final synchronization = await Cache.synchronize(
+      remoteSubject,
+      allowWhileBlocked: allowWhileBlocked,
+    );
     final latestActiveSubject = activeSubject;
     if (!synchronization.succeeded ||
         latestActiveSubject?.id != currentSubject.id) {
       markActiveSubjectSynchronizationPending();
       if (synchronization.error != null) throw synchronization.error!;
-      return;
+      return false;
     }
     if (!Cache.containsAllProgress(
       subject: synchronization.subject,
       progressSource: latestActiveSubject!,
     )) {
       markActiveSubjectSynchronizationPending();
-      return;
+      return false;
     }
     _activeSubjectSyncPending = false;
     appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
     updateActiveSubject(synchronization.subject);
     _cancelActiveSubjectSyncRetry();
+    return true;
   }
 
   Future<bool> _restoreParticipantSessionForSync() async {

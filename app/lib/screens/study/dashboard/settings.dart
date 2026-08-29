@@ -202,8 +202,10 @@ class OptOutAlertDialog extends StatelessWidget {
           onPressed: () async {
             final appState = context.read<AppState>();
             try {
-              await deleteStudySubjectAndClearLocalData(
+              final deleted = await deleteStudySubjectAndClearLocalData(
                 subject: subject!,
+                synchronizeActiveSubject:
+                    appState.synchronizeActiveSubjectBeforeDestructiveAction,
                 deleteRemoteSubject: () async {
                   await subject!.softDelete();
                 },
@@ -213,6 +215,17 @@ class OptOutAlertDialog extends StatelessWidget {
                 resumeActiveSynchronization:
                     appState.resumeActiveSubjectSynchronization,
               );
+              if (!deleted) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    _buildStatusSnackBar(
+                      context,
+                      AppLocalizations.of(context)!.could_not_save_results,
+                    ),
+                  );
+                }
+                return;
+              }
             } catch (error) {
               final status = connectionStatusFromError(error);
               if (status != null) {
@@ -257,9 +270,11 @@ class DeleteAlertDialog extends StatelessWidget {
         onPressed: () async {
           final appState = context.read<AppState>();
           try {
-            await deleteStudySubjectAndClearLocalData(
+            final deleted = await deleteStudySubjectAndClearLocalData(
               subject: subject!,
               clearStoredParticipantCredentials: true,
+              synchronizeActiveSubject:
+                  appState.synchronizeActiveSubjectBeforeDestructiveAction,
               deleteRemoteSubject: () async {
                 try {
                   await subject!.delete();
@@ -273,6 +288,17 @@ class DeleteAlertDialog extends StatelessWidget {
               resumeActiveSynchronization:
                   appState.resumeActiveSubjectSynchronization,
             );
+            if (!deleted) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  _buildStatusSnackBar(
+                    context,
+                    AppLocalizations.of(context)!.could_not_save_results,
+                  ),
+                );
+              }
+              return;
+            }
           } on PostgrestException catch (error) {
             // Unexpected DB error — don't clear local data
             if (context.mounted) {

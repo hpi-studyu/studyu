@@ -326,8 +326,31 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
       } else {
         StudyULogger.info("Deleting all secure storage data");
         await appState.stopAndAwaitActiveSubjectSynchronization();
-        appState.clearActiveStudyState();
-        await clearAllLocalData();
+        final currentSubject = appState.activeSubject;
+        final cleared = await Cache.runWithSubjectSynchronizationBlocked(
+          () async {
+            if (currentSubject != null &&
+                !await appState
+                    .synchronizeActiveSubjectBeforeDestructiveAction()) {
+              return false;
+            }
+            appState.clearActiveStudyState();
+            await clearAllLocalData();
+            return true;
+          },
+        );
+        if (!cleared) {
+          await appState.resumeActiveSubjectSynchronization();
+          if (!mounted) return;
+          ScaffoldMessenger.of(this.context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(this.context)!.could_not_save_results,
+              ),
+            ),
+          );
+          return;
+        }
         StudyULogger.info("Secure storage data deleted");
       }
 
