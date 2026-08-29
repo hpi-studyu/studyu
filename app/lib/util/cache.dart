@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/models/deferred_fitbit_request.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -21,6 +23,8 @@ class _CacheSynchronizationCancelled implements Exception {
 }
 
 class Cache {
+  static const String deferredFitbitRequestsKey = 'deferred_fitbit_requests';
+
   static bool isSynchronizing = false;
   static int _subjectRevision = 0;
   static final Queue<Future<void> Function()> _subjectOperationQueue = Queue();
@@ -79,6 +83,9 @@ class Cache {
 
     for (final progress in localSubject.progress) {
       final key = _progressSyncKey(progress);
+      if (_isDeferredFitbitPlaceholder(localSubject, progress)) {
+        continue;
+      }
       if (remoteKeys.add(key)) {
         newProgress.add(progress);
         mergedProgress.add(progress);
@@ -304,6 +311,70 @@ class Cache {
     return null;
   }
 
+  static Future<List<DeferredFitbitRequest>>
+  _readDeferredFitbitRequests() async {
+    final encoded = await SecureStorage.read(deferredFitbitRequestsKey);
+    if (encoded == null) return [];
+    return (jsonDecode(encoded) as List)
+        .map(
+          (request) => DeferredFitbitRequest.fromJson(
+            Map<String, dynamic>.from(request as Map),
+          ),
+        )
+        .toList();
+  }
+
+  static Future<void> _writeDeferredFitbitRequests(
+    List<DeferredFitbitRequest> requests,
+  ) async {
+    if (requests.isEmpty) {
+      await SecureStorage.delete(deferredFitbitRequestsKey);
+      return;
+    }
+    await SecureStorage.write(
+      deferredFitbitRequestsKey,
+      jsonEncode(requests.map((request) => request.toJson()).toList()),
+    );
+  }
+
+  static Future<List<DeferredFitbitRequest>> loadDeferredFitbitRequests() {
+    return _queueSubjectWrite(_readDeferredFitbitRequests);
+  }
+
+  static Future<void> storeDeferredFitbitRequest(
+    DeferredFitbitRequest request,
+  ) {
+    return _queueSubjectWrite(() async {
+      final requests = await _readDeferredFitbitRequests();
+      requests.removeWhere((existing) => existing.id == request.id);
+      requests.add(request);
+      await _writeDeferredFitbitRequests(requests);
+    });
+  }
+
+  static Future<void> removeDeferredFitbitRequest(String requestId) {
+    return _queueSubjectWrite(() async {
+      final requests = await _readDeferredFitbitRequests();
+      requests.removeWhere((request) => request.id == requestId);
+      await _writeDeferredFitbitRequests(requests);
+    });
+  }
+
+  static Future<bool> hasDeferredFitbitRequestsForSubject(String subjectId) {
+    return _queueSubjectWrite(() async {
+      final requests = await _readDeferredFitbitRequests();
+      return requests.any((request) => request.subjectId == subjectId);
+    });
+  }
+
+  static Future<void> deleteDeferredFitbitRequestsForSubject(String subjectId) {
+    return _queueSubjectWrite(() async {
+      final requests = await _readDeferredFitbitRequests();
+      requests.removeWhere((request) => request.subjectId == subjectId);
+      await _writeDeferredFitbitRequests(requests);
+    });
+  }
+
   static Future<void> delete() async {
     StudyULogger.warning("Delete cache");
     await _queueSubjectWrite(() async {
@@ -359,6 +430,108 @@ class Cache {
     }
   }
 
+  static bool _sameProgressIdentity(
+    SubjectProgress first,
+    SubjectProgress second,
+  ) {
+    return first.subjectId == second.subjectId &&
+        first.interventionId == second.interventionId &&
+        first.taskId == second.taskId &&
+        first.result.periodId == second.result.periodId &&
+        first.completedAt?.toUtc() == second.completedAt?.toUtc();
+  }
+
+  static bool _progressMatchesDeferredRequest(
+    SubjectProgress progress,
+    DeferredFitbitRequest request,
+  ) {
+    return progress.subjectId == request.subjectId &&
+        progress.interventionId == request.interventionId &&
+        progress.taskId == request.taskId &&
+        progress.result.periodId == request.periodId &&
+        progress.completedAt?.toUtc() == request.completedAt.toUtc();
+  }
+
+  static bool _isDeferredFitbitPlaceholder(
+    StudySubject subject,
+    SubjectProgress progress,
+  ) {
+    if (progress.resultType != 'QuestionnaireState') return false;
+    final tasks = <Task>[
+      ...subject.selectedInterventions.expand(
+        (intervention) => intervention.tasks,
+      ),
+      ...subject.study.observations,
+    ];
+    final task = tasks.where((task) => task.id == progress.taskId).firstOrNull;
+    if (task is! QuestionnaireTask) return false;
+    final state = (progress.result as Result<QuestionnaireState>).result;
+    return task.questions.questions.whereType<FitbitQuestion>().any((question) {
+      final response = state.answers[question.id]?.response;
+      return response is List && response.isEmpty;
+    });
+  }
+
+  static void _replaceDeferredPlaceholder(
+    StudySubject localSubject,
+    DeferredFitbitRequest request,
+    SubjectProgress progress,
+  ) {
+    localSubject.progress.removeWhere(
+      (localProgress) =>
+          _progressMatchesDeferredRequest(localProgress, request),
+    );
+    localSubject.progress.add(progress);
+  }
+
+  static Future<void> _synchronizeDeferredFitbitRequests(
+    StudySubject localSubject,
+    StudySubject remoteSubject, {
+    FutureOr<void> Function()? beforeRemoteMutation,
+  }) async {
+    final requests = (await loadDeferredFitbitRequests())
+        .where((request) => request.subjectId == remoteSubject.id)
+        .toList();
+    for (final request in requests) {
+      final remoteProgress = remoteSubject.progress
+          .where(
+            (progress) => _progressMatchesDeferredRequest(progress, request),
+          )
+          .firstOrNull;
+      if (remoteProgress != null) {
+        _replaceDeferredPlaceholder(localSubject, request, remoteProgress);
+        await removeDeferredFitbitRequest(request.id);
+        continue;
+      }
+      final questionnaireState = await FitbitHandler.resolveDeferredRequest(
+        remoteSubject,
+        request,
+      );
+      final progress = SubjectProgress(
+        subjectId: request.subjectId,
+        interventionId: request.interventionId,
+        taskId: request.taskId,
+        resultType: 'QuestionnaireState',
+        result: Result<QuestionnaireState>.app(
+          type: 'QuestionnaireState',
+          periodId: request.periodId,
+          result: questionnaireState,
+        ),
+      )..completedAt = request.completedAt;
+      await beforeRemoteMutation?.call();
+      final savedProgress =
+          await (debugSaveProgressOverride ?? (progress) => progress.save())(
+            progress,
+          );
+      remoteSubject.progress.add(savedProgress);
+      await beforeRemoteMutation?.call();
+      await (debugSaveSubjectOverride ??
+          (subject) => subject.save(onlyUpdate: true))(remoteSubject);
+      _replaceDeferredPlaceholder(localSubject, request, savedProgress);
+      await removeDeferredFitbitRequest(request.id);
+    }
+  }
+
   static Future<CacheSynchronizationResult> synchronize(
     StudySubject remoteSubject, {
     bool allowWhileBlocked = false,
@@ -387,14 +560,18 @@ class Cache {
         allowWhileBlocked: allowWhileBlocked,
       );
       localSubject = snapshot.subject;
+      final hasDeferredFitbitRequests =
+          await hasDeferredFitbitRequestsForSubject(remoteSubject.id);
       if (localSubject == null) {
-        return await _successfulSynchronizationIfRevisionUnchanged(
-          subject: remoteSubject,
-          backupSubject: remoteSubject,
-          expectedRevision: snapshot.revision,
-        );
-      }
-      if (!isCompatibleCachedSubject(
+        if (!hasDeferredFitbitRequests) {
+          return await _successfulSynchronizationIfRevisionUnchanged(
+            subject: remoteSubject,
+            backupSubject: remoteSubject,
+            expectedRevision: snapshot.revision,
+          );
+        }
+        localSubject = StudySubject.fromJson(remoteSubject.toFullJson());
+      } else if (!isCompatibleCachedSubject(
         localSubject: localSubject,
         remoteSubject: remoteSubject,
       )) {
@@ -407,8 +584,7 @@ class Cache {
           expectedRevision: snapshot.revision,
         );
       }
-      // local and remote subject are equal, nothing to synchronize
-      if (localSubject == remoteSubject) {
+      if (!hasDeferredFitbitRequests && localSubject == remoteSubject) {
         return await _successfulSynchronizationIfRevisionUnchanged(
           subject: remoteSubject,
           backupSubject: remoteSubject,
@@ -440,6 +616,24 @@ class Cache {
           );
         },
       );
+      await _synchronizeDeferredFitbitRequests(
+        localSubject,
+        remoteSubject,
+        beforeRemoteMutation: () {
+          _ensureSynchronizationAllowed(
+            synchronizationGeneration,
+            allowWhileBlocked: allowWhileBlocked,
+          );
+        },
+      );
+      // local and remote subject are equal, nothing to synchronize
+      if (snapshot.subject != null && localSubject == remoteSubject) {
+        return await _successfulSynchronizationIfRevisionUnchanged(
+          subject: remoteSubject,
+          backupSubject: remoteSubject,
+          expectedRevision: snapshot.revision,
+        );
+      }
       _ensureSynchronizationAllowed(
         synchronizationGeneration,
         allowWhileBlocked: allowWhileBlocked,
@@ -513,9 +707,13 @@ class Cache {
     required StudySubject progressSource,
   }) {
     final subjectProgress = subject.progress.map(_progressSyncKey).toSet();
-    return progressSource.progress.every(
-      (progress) => subjectProgress.contains(_progressSyncKey(progress)),
-    );
+    return progressSource.progress.every((progress) {
+      if (subjectProgress.contains(_progressSyncKey(progress))) return true;
+      return _isDeferredFitbitPlaceholder(progressSource, progress) &&
+          subject.progress.any(
+            (remoteProgress) => _sameProgressIdentity(progress, remoteProgress),
+          );
+    });
   }
 
   static String _progressSyncKey(SubjectProgress progress) =>
