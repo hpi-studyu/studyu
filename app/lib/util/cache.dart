@@ -560,14 +560,18 @@ class Cache {
         allowWhileBlocked: allowWhileBlocked,
       );
       localSubject = snapshot.subject;
+      final hasDeferredFitbitRequests =
+          await hasDeferredFitbitRequestsForSubject(remoteSubject.id);
       if (localSubject == null) {
-        return await _successfulSynchronizationIfRevisionUnchanged(
-          subject: remoteSubject,
-          backupSubject: remoteSubject,
-          expectedRevision: snapshot.revision,
-        );
-      }
-      if (!isCompatibleCachedSubject(
+        if (!hasDeferredFitbitRequests) {
+          return await _successfulSynchronizationIfRevisionUnchanged(
+            subject: remoteSubject,
+            backupSubject: remoteSubject,
+            expectedRevision: snapshot.revision,
+          );
+        }
+        localSubject = StudySubject.fromJson(remoteSubject.toFullJson());
+      } else if (!isCompatibleCachedSubject(
         localSubject: localSubject,
         remoteSubject: remoteSubject,
       )) {
@@ -580,8 +584,6 @@ class Cache {
           expectedRevision: snapshot.revision,
         );
       }
-      final hasDeferredFitbitRequests =
-          await hasDeferredFitbitRequestsForSubject(remoteSubject.id);
       if (!hasDeferredFitbitRequests && localSubject == remoteSubject) {
         return await _successfulSynchronizationIfRevisionUnchanged(
           subject: remoteSubject,
@@ -625,7 +627,7 @@ class Cache {
         },
       );
       // local and remote subject are equal, nothing to synchronize
-      if (localSubject == remoteSubject) {
+      if (snapshot.subject != null && localSubject == remoteSubject) {
         return await _successfulSynchronizationIfRevisionUnchanged(
           subject: remoteSubject,
           backupSubject: remoteSubject,

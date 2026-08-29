@@ -38,6 +38,23 @@ class _FailingFitbitCredentialWritePlatform
   }
 }
 
+class _FailingSubjectCacheWritePlatform
+    extends TestFlutterSecureStoragePlatform {
+  _FailingSubjectCacheWritePlatform(super.data);
+
+  @override
+  Future<void> write({
+    required String key,
+    required String value,
+    required Map<String, String> options,
+  }) {
+    if (key == cacheSubjectKey) {
+      return Future<void>.error(Exception('subject cache write failed'));
+    }
+    return super.write(key: key, value: value, options: options);
+  }
+}
+
 ({StudySubject subject, QuestionnaireTask task, FitbitQuestion question})
 _buildFitbitStudy() {
   final question = FitbitQuestion.withId(
@@ -254,6 +271,58 @@ void main() {
       final state = (progress.result as Result<QuestionnaireState>).result;
       expect(state.answers[fixture.question.id]!.response, hasLength(1));
       expect(await Cache.loadDeferredFitbitRequests(), isEmpty);
+    },
+  );
+
+  test(
+    'reconnect resolves a request when its subject cache write failed',
+    () async {
+      final fixture = _buildFitbitStudy();
+      final remoteSubject = StudySubject.fromJson(fixture.subject.toFullJson())
+        ..progress = [];
+      FlutterSecureStoragePlatform.instance = _FailingSubjectCacheWritePlatform(
+        storageData,
+      );
+
+      await expectLater(
+        () => persistDeferredFitbitQuestionnaireResult(
+          subject: fixture.subject,
+          task: fixture.task,
+          interventionId: _interventionId,
+          periodId: _periodId,
+          questionnaireState: _deferredAnswer(
+            fixture.question,
+            DateTime(2026, 8, 3, 14, 30),
+          ),
+        ),
+        throwsException,
+      );
+      expect(await Cache.loadDeferredFitbitRequests(), hasLength(1));
+      expect(await SecureStorage.containsKey(cacheSubjectKey), isFalse);
+
+      FlutterSecureStoragePlatform.instance = TestFlutterSecureStoragePlatform(
+        storageData,
+      );
+      var resolveCalls = 0;
+      FitbitHandler.debugResolveDeferredQuestionOverride = (_, _, _) async {
+        resolveCalls++;
+        return [FitbitStepData(42, DateTime(2026, 8, 3, 14, 29))];
+      };
+      var saveProgressCalls = 0;
+      Cache.debugSaveProgressOverride = (progress) async {
+        saveProgressCalls++;
+        return progress;
+      };
+      Cache.debugSaveSubjectOverride = (subject) async => subject;
+
+      final synchronization = await Cache.synchronize(remoteSubject);
+
+      expect(synchronization.succeeded, isTrue);
+      expect(resolveCalls, 1);
+      expect(saveProgressCalls, 1);
+      expect(remoteSubject.progress, hasLength(1));
+      expect(await Cache.loadDeferredFitbitRequests(), isEmpty);
+      expect((await Cache.loadSubject()).progress, hasLength(1));
     },
   );
 
