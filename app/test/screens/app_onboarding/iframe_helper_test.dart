@@ -39,6 +39,7 @@ void main() {
         'https://designer.dev.studyu.health:444/study/abc',
         'http://studyu-dev-designer--pr909-example.web.app/',
         'https://studyu-dev-designer--pr909-example.web.app:444/',
+        'https://studyu-dev-designer--channel.web.app:0/',
         'https://studyu-dev-designer.attacker.web.app/',
       ];
 

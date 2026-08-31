@@ -38,8 +38,7 @@ Uri? _tryParseUrl(String? url) {
 bool _isTrustedDesignerHost(Uri referrer, Uri? fallback) {
   final host = referrer.host;
   if (fallback != null && referrer.origin == fallback.origin) return true;
-  if (referrer.scheme != 'https' ||
-      (referrer.port != 0 && referrer.port != 443)) {
+  if (referrer.scheme != 'https' || (referrer.hasPort && referrer.port != 443)) {
     return false;
   }
 
