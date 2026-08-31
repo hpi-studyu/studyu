@@ -48,7 +48,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
   // - Equatable
 
   @override
-  List<Object?> get props => [...super.props, hasSession];
+  List<Object?> get props => [...super.props, hasSession, languageCode];
 }
 
 String buildPreviewAppUrl({
