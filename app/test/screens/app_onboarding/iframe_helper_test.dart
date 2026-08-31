@@ -33,6 +33,20 @@ void main() {
       );
     });
 
+    test('rejects Designer origins outside the trusted HTTPS origin', () {
+      const untrustedOrigins = [
+        'http://designer.dev.studyu.health/study/abc',
+        'https://designer.dev.studyu.health:444/study/abc',
+        'http://studyu-dev-designer--pr909-example.web.app/',
+        'https://studyu-dev-designer--pr909-example.web.app:444/',
+        'https://studyu-dev-designer.attacker.web.app/',
+      ];
+
+      for (final referrer in untrustedOrigins) {
+        expect(deriveDesignerOrigin(referrer, fallback), fallback);
+      }
+    });
+
     test('rejects untrusted referrer origins and falls back', () {
       expect(
         deriveDesignerOrigin('https://evil.example.com/', fallback),

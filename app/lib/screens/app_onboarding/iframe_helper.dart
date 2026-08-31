@@ -9,14 +9,14 @@ import "package:universal_html/html.dart" as html;
 typedef PreviewNavigationHandler = Future<void> Function(String? route);
 typedef PreviewStudyHandler = void Function(Study study);
 
-/// Firebase project that hosts the Designer preview channels for PR previews
-/// (.github/workflows/firebase-hosting-pull-request.yml).
-const _previewFirebaseProjectId = 'studyu-dev';
+/// Firebase hosting site that serves the Designer preview channels for PR
+/// previews (.firebaserc and .github/workflows/firebase-hosting-pull-request.yml).
+const _previewFirebaseDesignerSite = 'studyu-dev-designer';
 
 /// Derives the Designer origin used as the postMessage target and for
 /// validating incoming messages. The embedding parent's referrer origin wins
 /// only when its host is trusted: the compiled designer host or a
-/// [_previewFirebaseProjectId] Firebase hosting domain, because Firebase PR
+/// [_previewFirebaseDesignerSite] Firebase hosting domain, because Firebase PR
 /// previews host the Designer on a preview-channel origin that differs from
 /// the compiled [fallbackUrl]. Untrusted referrers fall back to the compiled
 /// designer URL. Exposed for testing.
@@ -37,15 +37,16 @@ Uri? _tryParseUrl(String? url) {
 
 bool _isTrustedDesignerHost(Uri referrer, Uri? fallback) {
   final host = referrer.host;
-  if (fallback != null && host == fallback.host) return true;
-  // Exact project id or '<id>-<site>/<channel>' style subdomain, so a
-  // lookalike project such as 'studyu-devil.web.app' is rejected.
-  final isPreviewProjectHost =
-      host == _previewFirebaseProjectId ||
-      host.startsWith('$_previewFirebaseProjectId-') ||
-      host.startsWith('$_previewFirebaseProjectId.');
-  return isPreviewProjectHost &&
-      (host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'));
+  if (fallback != null && referrer.origin == fallback.origin) return true;
+  if (referrer.scheme != 'https' ||
+      (referrer.port != 0 && referrer.port != 443)) {
+    return false;
+  }
+
+  return RegExp(
+    '^$_previewFirebaseDesignerSite(?:-v2)?(?:--[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)?'
+    r'\.(?:web\.app|firebaseapp\.com)$',
+  ).hasMatch(host);
 }
 
 class IFrameHelper {
