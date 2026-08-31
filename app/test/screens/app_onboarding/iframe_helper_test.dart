@@ -19,17 +19,17 @@ void main() {
     test('accepts studyu-dev Firebase preview-channel origins', () {
       expect(
         deriveDesignerOrigin(
-          'https://studyu-dev-designer-v2--pr-909-abc123.web.app/',
+          'https://studyu-dev-designer--pr-909-abc123.web.app/',
           fallback,
         ),
-        'https://studyu-dev-designer-v2--pr-909-abc123.web.app',
+        'https://studyu-dev-designer--pr-909-abc123.web.app',
       );
       expect(
         deriveDesignerOrigin(
-          'https://studyu-dev-designer-v2--pr-909-abc123.firebaseapp.com/',
+          'https://studyu-dev-designer--pr-909-abc123.firebaseapp.com/',
           fallback,
         ),
-        'https://studyu-dev-designer-v2--pr-909-abc123.firebaseapp.com',
+        'https://studyu-dev-designer--pr-909-abc123.firebaseapp.com',
       );
     });
 
@@ -41,6 +41,7 @@ void main() {
         'https://studyu-dev-designer--pr909-example.web.app:444/',
         'https://studyu-dev-designer--channel.web.app:0/',
         'https://studyu-dev-designer.attacker.web.app/',
+        'https://studyu-dev-designer-v2--pr909-example.web.app/',
       ];
 
       for (final referrer in untrustedOrigins) {

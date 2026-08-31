@@ -38,12 +38,13 @@ Uri? _tryParseUrl(String? url) {
 bool _isTrustedDesignerHost(Uri referrer, Uri? fallback) {
   final host = referrer.host;
   if (fallback != null && referrer.origin == fallback.origin) return true;
-  if (referrer.scheme != 'https' || (referrer.hasPort && referrer.port != 443)) {
+  if (referrer.scheme != 'https' ||
+      (referrer.hasPort && referrer.port != 443)) {
     return false;
   }
 
   return RegExp(
-    '^$_previewFirebaseDesignerSite(?:-v2)?(?:--[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)?'
+    '^$_previewFirebaseDesignerSite(?:--[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)?'
     r'\.(?:web\.app|firebaseapp\.com)$',
   ).hasMatch(host);
 }
