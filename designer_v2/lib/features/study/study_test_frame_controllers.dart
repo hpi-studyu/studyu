@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:ui_web' as ui;
@@ -112,6 +113,7 @@ class WebController extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
   final String serializedSession;
   bool _isListening = false;
+  StreamSubscription<web.MessageEvent>? _messageSubscription;
 
   WebController(super.baseSrc, super.studyId, this.serializedSession) {
     super.frameWidget = Container();
@@ -240,7 +242,7 @@ class WebController extends PlatformController {
   void listen() {
     if (_isListening) return;
     _isListening = true;
-    web.window.onMessage.listen((event) {
+    _messageSubscription = web.window.onMessage.listen((event) {
       final appOrigin = _appOrigin;
       final frameWindow = iFrameElement.contentWindow;
       if (appOrigin == null ||
@@ -323,6 +325,8 @@ class WebController extends PlatformController {
 
   @override
   void dispose() {
+    _messageSubscription?.cancel();
+    _messageSubscription = null;
     // Clean up injected styles when the controller is disposed
     _removePreviewIframeStyles();
   }

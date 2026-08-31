@@ -1,6 +1,9 @@
 @TestOn('browser')
 library;
 
+import 'dart:convert';
+import 'dart:js_interop';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
@@ -91,5 +94,55 @@ void main() {
     controller.navigationEnabled.value = true;
     controller.navigate(route: 'dashboard');
     expect(controller.routeInformation.data, '{"title":"edited"}');
+  });
+
+  test('disposed controller does not respond to session requests', () async {
+    final origin = web.window.location.origin;
+    final iframe = web.HTMLIFrameElement()
+      ..srcdoc =
+          '''
+        <script>
+          window.addEventListener('message', (event) => {
+            if (event.data === 'request-session') {
+              parent.postMessage(
+                JSON.stringify({type: 'previewSessionRequest'}),
+                parent.location.origin,
+              );
+              return;
+            }
+            parent.postMessage(
+              JSON.stringify({type: 'previewResponse'}),
+              parent.location.origin,
+            );
+          });
+        </script>
+      '''
+              .toJS;
+    web.document.body!.appendChild(iframe);
+    addTearDown(() => iframe.remove());
+    await iframe.onLoad.first;
+
+    var receivedResponse = false;
+    final responseSubscription = web.window.onMessage.listen((event) {
+      final data = event.data.dartify();
+      final decoded = data is String ? jsonDecode(data) : null;
+      if (decoded is Map<String, dynamic> &&
+          decoded['type'] == 'previewResponse') {
+        receivedResponse = true;
+      }
+    });
+    addTearDown(responseSubscription.cancel);
+
+    final controller =
+        WebController('$origin/preview?studyid=study', 'study', 'session')
+          ..generateUrl()
+          ..iFrameElement = iframe;
+    controller.listen();
+    controller.dispose();
+
+    iframe.contentWindow!.postMessage('request-session'.toJS, origin.toJS);
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+
+    expect(receivedResponse, isFalse);
   });
 }
