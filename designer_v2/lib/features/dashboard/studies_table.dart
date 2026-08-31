@@ -5,21 +5,10 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-
-enum StudiesTableColumn {
-  pin,
-  title,
-  status,
-  participation,
-  createdAt,
-  enrolled,
-  active,
-  completed,
-  action,
-}
 
 class StudiesTableColumnSize {
   final bool collapsed;

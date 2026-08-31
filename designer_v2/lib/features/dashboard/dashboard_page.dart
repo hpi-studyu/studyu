@@ -29,6 +29,14 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  static const _headerSpacingWide = 20.0;
+  static const _headerSpacingCompact = 12.0;
+  static const _searchFieldMaxWidthWide = 300.0;
+  static const _searchFieldMaxWidthCompact = 220.0;
+  static const _compactFilterButtonBreakpoint = 780.0;
+  static const _compactSearchFieldBreakpoint = 980.0;
+  static const _searchDialogBreakpoint = 900.0;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -206,374 +214,418 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return DashboardScaffold(
       scaffoldKey: _scaffoldKey,
       endDrawer: const Drawer(width: 400, child: FilterBuilder()),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: [
-              SizedBox(
-                height: 36.0, // Fixed height for alignment
-                child: MediaQuery.of(context).size.width < 500
-                    ? IconButton.filled(
-                        key: const ValueKey('new_study_compact_button'),
-                        icon: const Icon(Icons.add),
-                        onPressed: controller.onClickNewStudy,
-                        tooltip: tr.action_button_new_study,
-                      )
-                    : PrimaryButton(
-                        key: const ValueKey('new_study_button'),
-                        text: tr.action_button_new_study,
-                        onPressed: controller.onClickNewStudy,
-                      ),
-              ),
-              const SizedBox(width: 20.0),
-              Expanded(
-                child: Text(
-                  state.visibleListTitle,
-                  style: theme.textTheme.headlineMedium,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              const SizedBox(width: 20.0),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Preset Dropdown
-                      // Unified Filter Button
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          final theme = Theme.of(context);
-                          final isActive =
-                              state.activeFilter != null &&
-                              state.activeFilter!.children.isNotEmpty;
-                          return Badge(
-                            smallSize: 10,
-                            isLabelVisible: isActive,
-                            child: MediaQuery.of(context).size.width < 600
-                                ? IconButton.outlined(
-                                    key: const ValueKey('filter_toggle_button'),
-                                    onPressed: () {
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                    icon: const Icon(Icons.filter_list),
-                                    tooltip: AppLocalizations.of(
-                                      context,
-                                    )!.filter_button_main,
-                                    style: IconButton.styleFrom(
-                                      backgroundColor:
-                                          state.activeFilter != null
-                                          ? theme.colorScheme.primaryContainer
-                                                .withValues(alpha: 0.2)
-                                          : null,
-                                      side: BorderSide(
-                                        color: state.activeFilter != null
-                                            ? theme.colorScheme.primary
-                                            : theme.colorScheme.outlineVariant,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final headerWidth = constraints.maxWidth;
+          final isCompactNewStudyButton =
+              MediaQuery.of(context).size.width < 500;
+          final useCompactFilterButton =
+              headerWidth < _compactFilterButtonBreakpoint;
+          final useSearchDialog = headerWidth < _searchDialogBreakpoint;
+          final searchFieldMaxWidth =
+              headerWidth < _compactSearchFieldBreakpoint
+              ? _searchFieldMaxWidthCompact
+              : _searchFieldMaxWidthWide;
+          final headerSpacing = headerWidth < _compactSearchFieldBreakpoint
+              ? _headerSpacingCompact
+              : _headerSpacingWide;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  SizedBox(
+                    height: 36.0, // Fixed height for alignment
+                    child: isCompactNewStudyButton
+                        ? IconButton.filled(
+                            key: const ValueKey('new_study_compact_button'),
+                            icon: const Icon(Icons.add),
+                            onPressed: controller.onClickNewStudy,
+                            tooltip: tr.action_button_new_study,
+                          )
+                        : PrimaryButton(
+                            key: const ValueKey('new_study_button'),
+                            text: tr.action_button_new_study,
+                            onPressed: controller.onClickNewStudy,
+                          ),
+                  ),
+                  SizedBox(width: headerSpacing),
+                  Expanded(
+                    child: Text(
+                      state.visibleListTitle,
+                      style: theme.textTheme.headlineMedium,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(width: headerSpacing),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Preset Dropdown
+                          // Unified Filter Button
+                          MenuAnchor(
+                            builder: (context, controller, child) {
+                              final theme = Theme.of(context);
+                              final isActive =
+                                  state.activeFilter != null &&
+                                  state.activeFilter!.children.isNotEmpty;
+                              return Badge(
+                                smallSize: 10,
+                                isLabelVisible: isActive,
+                                child: useCompactFilterButton
+                                    ? IconButton.outlined(
+                                        key: const ValueKey(
+                                          'filter_toggle_button',
+                                        ),
+                                        onPressed: () {
+                                          if (controller.isOpen) {
+                                            controller.close();
+                                          } else {
+                                            controller.open();
+                                          }
+                                        },
+                                        icon: const Icon(Icons.filter_list),
+                                        tooltip: AppLocalizations.of(
+                                          context,
+                                        )!.filter_button_main,
+                                        style: IconButton.styleFrom(
+                                          backgroundColor:
+                                              state.activeFilter != null
+                                              ? theme
+                                                    .colorScheme
+                                                    .primaryContainer
+                                                    .withValues(alpha: 0.2)
+                                              : null,
+                                          side: BorderSide(
+                                            color: state.activeFilter != null
+                                                ? theme.colorScheme.primary
+                                                : theme
+                                                      .colorScheme
+                                                      .outlineVariant,
+                                          ),
+                                        ),
+                                      )
+                                    : OutlinedButton.icon(
+                                        key: const ValueKey(
+                                          'filter_toggle_button_labeled',
+                                        ),
+                                        onPressed: () {
+                                          if (controller.isOpen) {
+                                            controller.close();
+                                          } else {
+                                            controller.open();
+                                          }
+                                        },
+                                        icon: const Icon(Icons.filter_list),
+                                        label: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.filter_button_main,
+                                        ),
+                                        style: OutlinedButton.styleFrom(
+                                          backgroundColor:
+                                              state.activeFilter != null
+                                              ? theme
+                                                    .colorScheme
+                                                    .primaryContainer
+                                                    .withValues(alpha: 0.2)
+                                              : null,
+                                          side: BorderSide(
+                                            color: state.activeFilter != null
+                                                ? theme.colorScheme.primary
+                                                : theme
+                                                      .colorScheme
+                                                      .outlineVariant,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : OutlinedButton.icon(
-                                    key: const ValueKey(
-                                      'filter_toggle_button_labeled',
-                                    ),
-                                    onPressed: () {
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                    icon: const Icon(Icons.filter_list),
-                                    label: Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.filter_button_main,
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      backgroundColor:
-                                          state.activeFilter != null
-                                          ? theme.colorScheme.primaryContainer
-                                                .withValues(alpha: 0.2)
+                              );
+                            },
+                            menuChildren: [
+                              MenuItemButton(
+                                child: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.filter_section_default_presets,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              ...DefaultPresets.all.map((preset) {
+                                final isSelected =
+                                    state.selectedSavedFilterId == preset.id;
+                                final theme = Theme.of(context);
+                                return Tooltip(
+                                  message: _getPresetTooltip(preset.id),
+                                  child: MenuItemButton(
+                                    leadingIcon: Icon(
+                                      preset.icon ?? Icons.star_border,
+                                      color: isSelected
+                                          ? theme.colorScheme.primary
                                           : null,
-                                      side: BorderSide(
-                                        color: state.activeFilter != null
-                                            ? theme.colorScheme.primary
-                                            : theme.colorScheme.outlineVariant,
+                                    ),
+                                    trailingIcon: isSelected
+                                        ? Icon(
+                                            Icons.check,
+                                            color: theme.colorScheme.primary,
+                                          )
+                                        : null,
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                            dashboardControllerProvider
+                                                .notifier,
+                                          )
+                                          .updateFilter(
+                                            isSelected
+                                                ? FilterGroup()
+                                                : preset.root,
+                                            presetId: isSelected
+                                                ? null
+                                                : preset.id,
+                                          );
+                                    },
+                                    child: Text(
+                                      _getLocalizedPresetName(preset.id),
+                                      style: isSelected
+                                          ? TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: theme.colorScheme.primary,
+                                            )
+                                          : null,
+                                    ),
+                                  ),
+                                );
+                              }),
+                              const Divider(),
+                              if (state.savedFilters.isNotEmpty) ...[
+                                MenuItemButton(
+                                  child: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.filter_section_custom_presets,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                ...state.savedFilters.map((preset) {
+                                  final isSelected =
+                                      state.selectedSavedFilterId == preset.id;
+                                  final theme = Theme.of(context);
+                                  return MenuItemButton(
+                                    leadingIcon: Icon(
+                                      preset.icon ?? Icons.person_outline,
+                                      color: isSelected
+                                          ? theme.colorScheme.primary
+                                          : null,
+                                    ),
+                                    trailingIcon: isSelected
+                                        ? Icon(
+                                            Icons.check,
+                                            color: theme.colorScheme.primary,
+                                          )
+                                        : null,
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                            dashboardControllerProvider
+                                                .notifier,
+                                          )
+                                          .updateFilter(
+                                            isSelected
+                                                ? FilterGroup()
+                                                : preset.root,
+                                            presetId: isSelected
+                                                ? null
+                                                : preset.id,
+                                          );
+                                    },
+                                    child: Text(
+                                      preset.name,
+                                      style: isSelected
+                                          ? TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: theme.colorScheme.primary,
+                                            )
+                                          : null,
+                                    ),
+                                  );
+                                }),
+                                const Divider(),
+                              ],
+
+                              MenuItemButton(
+                                leadingIcon: const Icon(Icons.tune),
+                                child: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.filter_button_advanced,
+                                ),
+                                onPressed: () {
+                                  _scaffoldKey.currentState!.openEndDrawer();
+                                },
+                              ),
+                              if (state.activeFilter != null &&
+                                  state.activeFilter!.children.isNotEmpty) ...[
+                                const Divider(),
+                                MenuItemButton(
+                                  leadingIcon: Icon(
+                                    Icons.clear,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.filter_button_clear,
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    ref
+                                        .read(
+                                          dashboardControllerProvider.notifier,
+                                        )
+                                        .updateFilter(FilterGroup());
+                                  },
+                                ),
+                              ],
+                            ],
+                          ),
+
+                          SizedBox(width: headerSpacing),
+                          if (useSearchDialog)
+                            IconButton(
+                              key: const ValueKey('search_button'),
+                              icon: const Icon(Icons.search),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    content: SizedBox(
+                                      width: 400,
+                                      child: Search(
+                                        key: const ValueKey('search_field'),
+                                        searchController:
+                                            state.searchController,
+                                        hintText: tr.search,
+                                        onQueryChanged: (query) =>
+                                            controller.filterStudies(query),
                                       ),
                                     ),
                                   ),
-                          );
-                        },
-                        menuChildren: [
-                          MenuItemButton(
-                            child: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.filter_section_default_presets,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          ...DefaultPresets.all.map((preset) {
-                            final isSelected =
-                                state.selectedSavedFilterId == preset.id;
-                            final theme = Theme.of(context);
-                            return Tooltip(
-                              message: _getPresetTooltip(preset.id),
-                              child: MenuItemButton(
-                                leadingIcon: Icon(
-                                  preset.icon ?? Icons.star_border,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : null,
-                                ),
-                                trailingIcon: isSelected
-                                    ? Icon(
-                                        Icons.check,
-                                        color: theme.colorScheme.primary,
-                                      )
-                                    : null,
-                                onPressed: () {
-                                  ref
-                                      .read(
-                                        dashboardControllerProvider.notifier,
-                                      )
-                                      .updateFilter(
-                                        isSelected
-                                            ? FilterGroup()
-                                            : preset.root,
-                                        presetId: isSelected ? null : preset.id,
-                                      );
-                                },
-                                child: Text(
-                                  _getLocalizedPresetName(preset.id),
-                                  style: isSelected
-                                      ? TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.primary,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                            );
-                          }),
-                          const Divider(),
-                          if (state.savedFilters.isNotEmpty) ...[
-                            MenuItemButton(
-                              child: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.filter_section_custom_presets,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            ...state.savedFilters.map((preset) {
-                              final isSelected =
-                                  state.selectedSavedFilterId == preset.id;
-                              final theme = Theme.of(context);
-                              return MenuItemButton(
-                                leadingIcon: Icon(
-                                  preset.icon ?? Icons.person_outline,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : null,
-                                ),
-                                trailingIcon: isSelected
-                                    ? Icon(
-                                        Icons.check,
-                                        color: theme.colorScheme.primary,
-                                      )
-                                    : null,
-                                onPressed: () {
-                                  ref
-                                      .read(
-                                        dashboardControllerProvider.notifier,
-                                      )
-                                      .updateFilter(
-                                        isSelected
-                                            ? FilterGroup()
-                                            : preset.root,
-                                        presetId: isSelected ? null : preset.id,
-                                      );
-                                },
-                                child: Text(
-                                  preset.name,
-                                  style: isSelected
-                                      ? TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.primary,
-                                        )
-                                      : null,
-                                ),
-                              );
-                            }),
-                            const Divider(),
-                          ],
-
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.tune),
-                            child: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.filter_button_advanced,
-                            ),
-                            onPressed: () {
-                              _scaffoldKey.currentState!.openEndDrawer();
-                            },
-                          ),
-                          if (state.activeFilter != null &&
-                              state.activeFilter!.children.isNotEmpty) ...[
-                            const Divider(),
-                            MenuItemButton(
-                              leadingIcon: Icon(
-                                Icons.clear,
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                              child: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.filter_button_clear,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
-                              ),
-                              onPressed: () {
-                                ref
-                                    .read(dashboardControllerProvider.notifier)
-                                    .updateFilter(FilterGroup());
+                                );
                               },
+                            )
+                          else
+                            Flexible(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: searchFieldMaxWidth,
+                                ),
+                                child: Search(
+                                  key: const ValueKey('search_field'),
+                                  searchController: state.searchController,
+                                  hintText: tr.search,
+                                  onQueryChanged: (query) =>
+                                      controller.filterStudies(query),
+                                ),
+                              ),
                             ),
-                          ],
                         ],
                       ),
-
-                      const SizedBox(width: 12),
-                      if (MediaQuery.of(context).size.width < 900)
-                        IconButton(
-                          key: const ValueKey('search_button'),
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                content: SizedBox(
-                                  width: 400,
-                                  child: Search(
-                                    key: const ValueKey('search_field'),
-                                    searchController: state.searchController,
-                                    hintText: tr.search,
-                                    onQueryChanged: (query) =>
-                                        controller.filterStudies(query),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      else
-                        Flexible(
-                          child: Container(
-                            constraints: const BoxConstraints(maxWidth: 300),
-                            child: Search(
-                              key: const ValueKey('search_field'),
-                              searchController: state.searchController,
-                              hintText: tr.search,
-                              onQueryChanged: (query) =>
-                                  controller.filterStudies(query),
-                            ),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
+                ],
+              ),
+              if (state.activeFilter != null &&
+                  state.activeFilter!.children.isNotEmpty) ...[
+                const SizedBox(height: 16.0),
+                Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: state.activeFilter!.children.map((child) {
+                    if (child is FilterCondition) {
+                      return Chip(
+                        label: Text(_getFilterChipLabel(child)),
+                        onDeleted: () {
+                          final newGroup = FilterGroup(
+                            logic: state.activeFilter!.logic,
+                            children: List.from(state.activeFilter!.children)
+                              ..remove(child),
+                          );
+                          controller.updateFilter(newGroup);
+                        },
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }).toList(),
                 ),
+              ],
+              const SizedBox(height: 24.0), // spacing between body elements
+              FutureBuilder<StudyUUser>(
+                future: ref.read(userRepositoryProvider).fetchUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return AsyncValueWidget<List<Study>>(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      value: state.displayedStudies(
+                        snapshot.data!.preferences.pinnedStudies,
+                        state.query,
+                      ),
+                      data: (visibleStudies) => StudiesTable(
+                        studies: visibleStudies,
+                        pinnedStudies: snapshot.data!.preferences.pinnedStudies,
+                        dashboardController: ref.watch(
+                          dashboardControllerProvider.notifier,
+                        ),
+                        onSelect: controller.onSelectStudy,
+                        getActions: controller.availableActions,
+                        emptyWidget:
+                            (widget.filter == null ||
+                                widget.filter == StudiesFilter.owned)
+                            ? (state.query.isNotEmpty)
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 24.0),
+                                      child: EmptyBody(
+                                        icon:
+                                            Icons.content_paste_search_rounded,
+                                        title: tr.studies_not_found,
+                                        description: tr.modify_query,
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 24.0),
+                                      child: EmptyBody(
+                                        icon:
+                                            Icons.content_paste_search_rounded,
+                                        title: tr.studies_empty,
+                                        description:
+                                            tr.studies_empty_description,
+                                        // "...or create a new draft copy from an already published study!",
+                                        /* button: PrimaryButton(text: "From template",); */
+                                      ),
+                                    )
+                            : const SizedBox.shrink(),
+                      ),
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
               ),
             ],
-          ),
-          if (state.activeFilter != null &&
-              state.activeFilter!.children.isNotEmpty) ...[
-            const SizedBox(height: 16.0),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: state.activeFilter!.children.map((child) {
-                if (child is FilterCondition) {
-                  return Chip(
-                    label: Text(_getFilterChipLabel(child)),
-                    onDeleted: () {
-                      final newGroup = FilterGroup(
-                        logic: state.activeFilter!.logic,
-                        children: List.from(state.activeFilter!.children)
-                          ..remove(child),
-                      );
-                      controller.updateFilter(newGroup);
-                    },
-                  );
-                }
-                return const SizedBox.shrink();
-              }).toList(),
-            ),
-          ],
-          const SizedBox(height: 24.0), // spacing between body elements
-          FutureBuilder<StudyUUser>(
-            future: ref.read(userRepositoryProvider).fetchUser(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return AsyncValueWidget<List<Study>>(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  value: state.displayedStudies(
-                    snapshot.data!.preferences.pinnedStudies,
-                    state.query,
-                  ),
-                  data: (visibleStudies) => StudiesTable(
-                    studies: visibleStudies,
-                    pinnedStudies: snapshot.data!.preferences.pinnedStudies,
-                    dashboardController: ref.watch(
-                      dashboardControllerProvider.notifier,
-                    ),
-                    onSelect: controller.onSelectStudy,
-                    getActions: controller.availableActions,
-                    emptyWidget:
-                        (widget.filter == null ||
-                            widget.filter == StudiesFilter.owned)
-                        ? (state.query.isNotEmpty)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_not_found,
-                                    description: tr.modify_query,
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_empty,
-                                    description: tr.studies_empty_description,
-                                    // "...or create a new draft copy from an already published study!",
-                                    /* button: PrimaryButton(text: "From template",); */
-                                  ),
-                                )
-                        : const SizedBox.shrink(),
-                  ),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
-        ],
+          );
+        },
       ),
     );
   }

@@ -243,7 +243,7 @@ extension StudyParticipantCountX on Study {
     }
     int count = 0;
     for (final participant in participants!) {
-      if (participant.inviteCode == invite.code) {
+      if (!participant.isDeleted && participant.inviteCode == invite.code) {
         count += 1;
       }
     }

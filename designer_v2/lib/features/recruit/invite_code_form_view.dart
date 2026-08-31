@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -15,6 +16,7 @@ class InviteCodeFormView extends FormConsumerWidget {
 
   @override
   Widget build(BuildContext context, FormGroup form) {
+    final isEditableCodeField = formViewModel.formMode == FormMode.create;
     return Column(
       children: [
         FormTableLayout(
@@ -26,9 +28,10 @@ class InviteCodeFormView extends FormConsumerWidget {
               control: formViewModel.codeControl,
               input: ReactiveTextField(
                 formControl: formViewModel.codeControl,
+                readOnly: !isEditableCodeField,
                 validationMessages:
                     formViewModel.codeControl.validationMessages,
-                decoration: (formViewModel.codeControl.enabled)
+                decoration: isEditableCodeField
                     ? InputDecoration(
                         helperText: "",
                         suffixIcon: Material(

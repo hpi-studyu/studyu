@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/domain/study_subject.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
@@ -24,9 +25,22 @@ abstract class StudyUApi {
 
   Future<StudyInvite> fetchStudyInvite(String code);
 
+  Future<List<StudyInvite>> fetchStudyInvitesPage(
+    StudyID studyId, {
+    required int offset,
+    required int limit,
+    String? query,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
+    bool ascending = true,
+  });
+
+  Future<int> countStudyInvites(StudyID studyId, {String? query});
+
   Future<Study> fetchStudyFromInvite(String code);
 
   Future<void> deleteStudyInvite(StudyInvite invite);
+
+  Future<void> deleteStudyInvites(StudyID studyId);
 
   Future<List<StudySubject>> deleteParticipants(
     Study study,
@@ -263,6 +277,46 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
+  Future<List<StudyInvite>> fetchStudyInvitesPage(
+    StudyID studyId, {
+    required int offset,
+    required int limit,
+    String? query,
+    InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
+    bool ascending = true,
+  }) async {
+    await _testDelay();
+    final request = _applyInviteCodeQuery(
+      supabaseClient
+          .from(StudyInvite.tableName)
+          .select('*,study_invite_participant_count'),
+      studyId: studyId,
+      query: query,
+    );
+    final response = await _awaitGuarded(
+      _applyInviteCodeSorting(
+        request,
+        sortBy: sortBy,
+        ascending: ascending,
+      ).range(offset, offset + limit - 1),
+    );
+    return deserializeList<StudyInvite>(response);
+  }
+
+  @override
+  Future<int> countStudyInvites(StudyID studyId, {String? query}) async {
+    await _testDelay();
+    final response = await _awaitGuarded(
+      _applyInviteCodeQuery(
+        supabaseClient.from(StudyInvite.tableName).select(),
+        studyId: studyId,
+        query: query,
+      ).count(),
+    );
+    return response.count;
+  }
+
+  @override
   Future<Study> fetchStudyFromInvite(String code) async {
     final cleanCode = code.trim().toLowerCase();
     await _testDelay();
@@ -275,6 +329,43 @@ class StudyUApiClient extends SupabaseClientDependant
     } catch (e) {
       throw StudyInviteNotFoundException();
     }
+  }
+
+  String? _trimmedOrNull(String? value) {
+    final trimmed = value?.trim();
+    return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  PostgrestTransformBuilder<PostgrestList> _applyInviteCodeSorting(
+    PostgrestTransformBuilder<PostgrestList> request, {
+    required InviteCodesSortColumn sortBy,
+    required bool ascending,
+  }) {
+    return switch (sortBy) {
+      InviteCodesSortColumn.code => request.order('code', ascending: ascending),
+      InviteCodesSortColumn.enrolled =>
+        request
+            .order('study_invite_participant_count', ascending: ascending)
+            .order('code', ascending: true),
+    };
+  }
+
+  PostgrestFilterBuilder<PostgrestList> _applyInviteCodeQuery(
+    PostgrestFilterBuilder<PostgrestList> request, {
+    required StudyID studyId,
+    required String? query,
+  }) {
+    PostgrestFilterBuilder<PostgrestList> filtered = request.eq(
+      'study_id',
+      studyId,
+    );
+
+    final trimmedQuery = _trimmedOrNull(query);
+    if (trimmedQuery != null) {
+      filtered = filtered.ilike('code', '%$trimmedQuery%');
+    }
+
+    return filtered;
   }
 
   @override
@@ -290,6 +381,23 @@ class StudyUApiClient extends SupabaseClientDependant
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
     return _awaitGuarded<void>(request);
+  }
+
+  @override
+  Future<void> deleteStudyInvites(StudyID studyId) async {
+    await _testDelay();
+    try {
+      await supabaseClient
+          .from(StudyInvite.tableName)
+          .delete()
+          .eq('study_id', studyId);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+        statusCode: error.code,
+        message: error.message,
+        details: error.details,
+      );
+    }
   }
 
   @override
