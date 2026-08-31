@@ -384,7 +384,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_settings_publish_results_tooltip =>
-      'Andere Forscher und Kliniker können auf die anonymisierten Ergebnisdaten einer Studie zugreifen, \nsie exportieren und analysieren (die Analysieren-Unterseite deiner Studie ist zugänglich). Die Studie \nselbst wird dadurch automatisch auch für andere Forscher und Kliniker im Studienregister veröffentlicht.';
+      'Veröffentliche Studienergebnisse im StudyU-Studienregister. Andere Forschende und Kliniker können die freigegebenen Daten ansehen, exportieren und analysieren. Ernährungsprotokolle sind von der öffentlichen Freigabe ausgeschlossen. Mit den Ergebnissen wird auch das Studiendesign veröffentlicht.';
 
   @override
   String get action_button_study_launch => 'Studie starten';

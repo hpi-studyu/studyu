@@ -791,7 +791,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_settings_publish_results_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Make your anonymized study results & data available in the study registry. \nOther researchers and clinicians will be able to access, export and \nanalyze the results from your study (the Analyze page will be available). \n This will automatically publish your study design to the registry.'**
+  /// **'Publish study results in the StudyU registry. Other researchers and clinicians can view, export, and analyze the shared data. Nutrition recall data is excluded from public sharing. Publishing results also publishes the study design.'**
   String get study_settings_publish_results_tooltip;
 
   /// No description provided for @action_button_study_launch.

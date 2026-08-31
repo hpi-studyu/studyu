@@ -125,7 +125,7 @@
   "study_settings_publish_study_tooltip": "Andere Forscher und Kliniker können deine Studie begutachten, sie testen und als Entwurf duplizieren.\nDie zur laufenden oder abgeschlossenen Studie gehörigen Teilnehmer- und Ergebnisdaten werden nicht \nfür andere freigegeben (die Unterseiten Rekrutieren, Durchführen und Analysieren deiner Studie bleiben \nunzugänglich).",
   "study_settings_publish_study_launch_description": "Ich stimme zu, dass meine Studie im Studienregister veröffentlicht wird, um die Transparenz & Zusammenarbeit aller Forscher und Kliniker auf der StudyU Plattform zu fördern. (Andere Forscher und Kliniker können auf die Studie selbst zugreifen, die zur laufenden oder abgeschlossen Studie gehörigen Teilnehmer- und Ergebnisdaten werden aber nicht freigegeben)",
   "study_settings_publish_results": "Ergebnisse veröffentlichen",
-  "study_settings_publish_results_tooltip": "Andere Forscher und Kliniker können auf die anonymisierten Ergebnisdaten einer Studie zugreifen, \nsie exportieren und analysieren (die Analysieren-Unterseite deiner Studie ist zugänglich). Die Studie \nselbst wird dadurch automatisch auch für andere Forscher und Kliniker im Studienregister veröffentlicht.",
+  "study_settings_publish_results_tooltip": "Veröffentliche Studienergebnisse im StudyU-Studienregister. Andere Forschende und Kliniker können die freigegebenen Daten ansehen, exportieren und analysieren. Ernährungsprotokolle sind von der öffentlichen Freigabe ausgeschlossen. Mit den Ergebnissen wird auch das Studiendesign veröffentlicht.",
   "action_button_study_launch": "Studie starten",
   "action_button_study_close": "Studie schließen",
   "notification_study_deleted": "Die Studie wurde gelöscht",
