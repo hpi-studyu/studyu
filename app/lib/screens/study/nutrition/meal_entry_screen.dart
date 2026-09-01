@@ -147,7 +147,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   bool _definitionMutated = false;
   bool _saveToMyItems = true;
   bool _propagateToCurrentStudyDay = false;
-  final Map<String, String> _compositeMutationIds = {};
 
   bool get _allowMeals => widget.task?.allowMeals ?? true;
 
@@ -444,10 +443,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         : null;
     final repository = widget.foodRepository ?? NutritionFoodRepository();
     final l10n = AppLocalizations.of(context)!;
-    final mutationId = _compositeMutationIds.putIfAbsent(
-      existingMeal.id,
-      () => const Uuid().v4(),
-    );
     try {
       final result = await repository.mutateHistoricalDefinition(
         subjectId: subject.id,
@@ -456,7 +451,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         entryId: existingMeal.id,
         target: historicalTarget.toJson(),
         currentStudyDay: currentStudyDay,
-        mutationId: mutationId,
+        mutationId: const Uuid().v4(),
       );
       final updated = applyNutritionFoodSnapshot(
         existingMeal,
@@ -484,7 +479,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         _definitionMutated = true;
         _meal.foods[index] = updated;
       });
-      _compositeMutationIds.remove(existingMeal.id);
       final message = _propagateToCurrentStudyDay
           ? l10n.food_definition_updated_current_day_opt_in
           : l10n.food_definition_updated_current_day_opt_out;

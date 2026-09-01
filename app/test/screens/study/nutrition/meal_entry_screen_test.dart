@@ -1668,7 +1668,36 @@ void main() {
     );
   });
 
-  testWidgets('historical composite retry reuses its mutation id', (
+  testWidgets('historical food retry uses a new mutation id', (tester) async {
+    final setup = _historicalEditingSetup();
+    final repository = _TrackingNutritionFoodRepository(
+      todayUpdateCount: 0,
+      failuresBeforeSuccess: 1,
+    );
+    await openMealEntry(
+      tester,
+      editableMeal(),
+      historicalTarget: setup.target,
+      foodRepository: repository,
+      appState: setup.appState,
+    );
+
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit reusable food'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    expect(repository.mutationCalls, 2);
+    expect(repository.mutationIds, hasLength(2));
+    expect(repository.mutationIds, everyElement(isNotNull));
+    expect(repository.mutationIds.last, isNot(repository.mutationIds.first));
+  });
+
+  testWidgets('historical composite retry uses a new mutation id', (
     tester,
   ) async {
     final setup = _historicalEditingSetup();
@@ -1695,8 +1724,8 @@ void main() {
 
     expect(repository.mutationCalls, 2);
     expect(repository.mutationIds, hasLength(2));
-    expect(repository.mutationIds.first, isNotNull);
-    expect(repository.mutationIds.last, repository.mutationIds.first);
+    expect(repository.mutationIds, everyElement(isNotNull));
+    expect(repository.mutationIds.last, isNot(repository.mutationIds.first));
   });
 
   testWidgets('historical definition save rechecks device-local eligibility', (
