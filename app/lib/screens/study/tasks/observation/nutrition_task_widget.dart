@@ -392,29 +392,34 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           if (_isHistoricalMode) ...[
             MaterialBanner(
               padding: const EdgeInsets.all(8),
-              leading: const Icon(
+              leading: Icon(
                 Icons.edit_calendar_outlined,
-                color: Colors.orange,
+                color: theme.colorScheme.onSecondaryContainer,
                 size: 24,
               ),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.historical_edit_mode_heading,
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.readOnly
-                        ? l10n.nutrition_read_only
-                        : l10n.historical_edit_mode_description,
-                  ),
-                ],
+              content: DefaultTextStyle.merge(
+                style: TextStyle(color: theme.colorScheme.onSecondaryContainer),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.historical_edit_mode_heading,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.readOnly
+                          ? l10n.nutrition_read_only
+                          : l10n.historical_edit_mode_description,
+                    ),
+                  ],
+                ),
               ),
               actions: const [SizedBox.shrink()],
               elevation: 0,
-              backgroundColor: Colors.yellow[100],
+              backgroundColor: theme.colorScheme.secondaryContainer,
               dividerColor: Colors.transparent,
             ),
             const SizedBox(height: 8),

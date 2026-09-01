@@ -283,7 +283,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Save changes'));
     await tester.pumpAndSettle();
 
-    expect(find.text('120 g'), findsOneWidget);
+    expect(find.textContaining('120 g'), findsWidgets);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.text('Selected items'));
@@ -299,7 +299,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Save changes'));
     await tester.pumpAndSettle();
 
-    expect(find.text('150 g'), findsOneWidget);
+    expect(find.textContaining('150 g'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 

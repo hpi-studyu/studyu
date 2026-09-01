@@ -568,16 +568,15 @@ class FoodLibraryExternalResultCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final brand = result.brand?.trim();
+    final metadata = formatFoodMetadata(
+      l10n,
+      grams: result.servingSizeGrams,
+      servingDescription: l10n.serving_amount(1),
+      calories: result.calories,
+    );
     final details = [
       if (brand != null && brand.isNotEmpty) brand,
-      if (result.servingSizeGrams == null)
-        '— g'
-      else
-        '${formatFoodNumber(result.servingSizeGrams!)} g',
-      if (result.calories == null)
-        '— kcal'
-      else
-        l10n.kcal_value(result.calories!.round().toString()),
+      metadata,
     ].join(' · ');
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
