@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
@@ -14,12 +13,9 @@ import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart
 import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dart';
 import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
-import 'package:studyu_app/services/food_analysis_service.dart';
-import 'package:studyu_app/services/photo_gallery_service.dart';
 import 'package:studyu_app/util/nutrition_food_snapshots.dart';
 import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
-import 'package:studyu_app/widgets/food_item_selection_dialog.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/photo_recall_section.dart';
 import 'package:studyu_app/widgets/photo_viewer_dialog.dart';
@@ -151,8 +147,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   bool get _allowMeals => widget.task?.allowMeals ?? true;
 
   late TextEditingController _skipReasonController;
-
-  final PhotoGalleryService _photoService = PhotoGalleryService();
 
   @override
   void initState() {
@@ -1030,186 +1024,63 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       useSafeArea: true,
       showDragHandle: true,
       builder: (sheetContext) {
-        String? analyzingPhotoId;
-
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            Future<void> analyzePhoto(PhotoReference photo) async {
-              if (!sheetContext.mounted) return;
-              setSheetState(() => analyzingPhotoId = photo.id);
-              await _analyzeAndAddFood(photo);
-              if (sheetContext.mounted) {
-                setSheetState(() => analyzingPhotoId = null);
-              }
-            }
-
-            final l10n = AppLocalizations.of(context)!;
-            return FractionallySizedBox(
-              heightFactor: 0.9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 8, 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.photoRecallTitle,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                l10n.photoRecallSubtitle,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return FractionallySizedBox(
+          heightFactor: 0.9,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 8, 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.photoRecallTitle,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                        ),
-                        IconButton(
-                          tooltip: MaterialLocalizations.of(
-                            context,
-                          ).closeButtonTooltip,
-                          onPressed: () => Navigator.of(sheetContext).pop(),
-                          icon: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 1),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: PhotoRecallSection(
-                        mealTime: _timestamp!,
-                        onPhotoTap: (photo) {
-                          PhotoViewerDialog.show(
-                            context,
-                            photoId: photo.id,
-                            photoDate: photo.createDateTime,
-                            onAnalyze: () => analyzePhoto(photo),
-                          );
-                        },
-                        onAnalyzePhoto: analyzePhoto,
-                        analyzingPhotoId: analyzingPhotoId,
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.photoRecallSubtitle,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    IconButton(
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).closeButtonTooltip,
+                      onPressed: () => Navigator.of(sheetContext).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
               ),
-            );
-          },
+              const Divider(height: 1),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: PhotoRecallSection(
+                    mealTime: _timestamp!,
+                    onPhotoTap: (photo) {
+                      PhotoViewerDialog.show(
+                        context,
+                        photoId: photo.id,
+                        photoDate: photo.createDateTime,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
-  }
-
-  Future<void> _analyzeAndAddFood(PhotoReference photo) async {
-    final l10n = AppLocalizations.of(context)!;
-
-    try {
-      // Get the full image bytes
-      final asset = await _photoService.getAsset(photo.id);
-      if (asset == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
-        }
-        return;
-      }
-
-      // Get the origin file (full resolution)
-      final file = await asset.originFile;
-      if (file == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
-        }
-        return;
-      }
-
-      // Read file bytes
-      final bytes = await file.readAsBytes();
-
-      // Call the analysis service
-      final result = await FoodAnalysisService.analyzeImage(
-        imageBytes: bytes,
-        mealTime: _timestamp,
-        mealType: _mealType,
-      );
-
-      if (!mounted) return;
-
-      if (!result.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.errorMessage ?? l10n.foodAnalysisError),
-          ),
-        );
-        return;
-      }
-
-      if (result.items.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisNoItems)));
-        return;
-      }
-
-      // Handle single item directly
-      if (result.items.length == 1) {
-        final item = result.items.first;
-        final food = await FoodQuantitySheet.show(
-          context,
-          food: item.foodEntry,
-          mealLabel: _mealLabel,
-          action: FoodQuantityAction.addToMeal,
-        );
-        if (food != null && mounted) {
-          setState(() => _meal.foods.add(food));
-        }
-        return;
-      }
-
-      // Handle multiple items with selection dialog
-      final selectedItems = await FoodItemSelectionDialog.show(
-        context,
-        items: result.items,
-        overallConfidence: result.overallConfidence,
-        notes: result.notes,
-      );
-
-      if (selectedItems == null) {
-        // User chose to analyze again - retry
-        await _analyzeAndAddFood(photo);
-        return;
-      }
-
-      // Add each selected food
-      for (final item in selectedItems) {
-        if (!mounted) return;
-        final food = await FoodQuantitySheet.show(
-          context,
-          food: item.foodEntry,
-          mealLabel: _mealLabel,
-          action: FoodQuantityAction.addToMeal,
-        );
-        if (food != null && mounted) {
-          setState(() => _meal.foods.add(food));
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.foodAnalysisError)));
-      }
-    }
   }
 
   @override
