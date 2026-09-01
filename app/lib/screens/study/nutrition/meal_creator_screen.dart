@@ -225,9 +225,9 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
     final calories = double.tryParse(_quickCaloriesController.text) ?? 0;
 
     if (name.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter food name')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.enter_food_name)),
+      );
       return;
     }
 
@@ -816,9 +816,8 @@ class _MealCreatorScreenState extends State<MealCreatorScreen> {
             if (nutrition != null)
               NutritionSummaryCard(
                 nutrition: nutrition,
-                title: 'Nutrition per Serving',
-                subtitle:
-                    '$servingsCount ${servingsCount == 1 ? 'serving' : 'servings'}',
+                title: l10n.nutrition_per_serving,
+                subtitle: l10n.serving_amount(servingsCount),
               ),
 
             // Bottom padding for FAB
@@ -899,15 +898,15 @@ class _MealInfoCard extends StatelessWidget {
             const SizedBox(height: 16),
             TextFormField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Meal Name *',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.edit),
+              decoration: InputDecoration(
+                labelText: l10n.template_name_required,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.edit),
               ),
               textCapitalization: TextCapitalization.words,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a meal name';
+                  return l10n.enter_meal_name;
                 }
                 return null;
               },
@@ -918,10 +917,10 @@ class _MealInfoCard extends StatelessWidget {
                 Expanded(
                   child: TextFormField(
                     controller: servingsController,
-                    decoration: const InputDecoration(
-                      labelText: 'Servings *',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.people_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.nutrition_servings_required,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.people_outline),
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -931,7 +930,9 @@ class _MealInfoCard extends StatelessWidget {
                     ],
                     validator: (value) {
                       final servings = double.tryParse(value ?? '');
-                      if (servings == null || servings <= 0) return 'Required';
+                      if (servings == null || servings <= 0) {
+                        return l10n.required_error;
+                      }
                       return null;
                     },
                   ),
@@ -941,10 +942,10 @@ class _MealInfoCard extends StatelessWidget {
                   flex: 2,
                   child: TextFormField(
                     controller: descriptionController,
-                    decoration: const InputDecoration(
-                      labelText: 'Description',
-                      border: OutlineInputBorder(),
-                      hintText: 'Optional',
+                    decoration: InputDecoration(
+                      labelText: l10n.description,
+                      border: const OutlineInputBorder(),
+                      hintText: l10n.optional,
                     ),
                   ),
                 ),
@@ -970,13 +971,14 @@ class _PreparationDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
         leading: Icon(Icons.science_outlined, color: Colors.grey.shade600),
-        title: const Text('Preparation details'),
-        subtitle: const Text('Raw/cooked weights, preparation method'),
+        title: Text(l10n.nutrition_preparation_details),
+        subtitle: Text(l10n.nutrition_preparation_details_subtitle),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         children: [
           Row(
@@ -984,9 +986,9 @@ class _PreparationDetailsCard extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   controller: rawWeightController,
-                  decoration: const InputDecoration(
-                    labelText: 'Raw Weight (g)',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.nutrition_raw_weight_grams,
+                    border: const OutlineInputBorder(),
                     isDense: true,
                   ),
                   keyboardType: TextInputType.number,
@@ -1001,9 +1003,9 @@ class _PreparationDetailsCard extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   controller: cookedWeightController,
-                  decoration: const InputDecoration(
-                    labelText: 'Cooked Weight (g)',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.nutrition_cooked_weight_grams,
+                    border: const OutlineInputBorder(),
                     isDense: true,
                   ),
                   keyboardType: TextInputType.number,
@@ -1019,10 +1021,10 @@ class _PreparationDetailsCard extends StatelessWidget {
           const SizedBox(height: 12),
           TextFormField(
             controller: preparationMethodController,
-            decoration: const InputDecoration(
-              labelText: 'Preparation details',
-              border: OutlineInputBorder(),
-              hintText: 'e.g., baked, fried, steamed',
+            decoration: InputDecoration(
+              labelText: l10n.nutrition_preparation_method,
+              border: const OutlineInputBorder(),
+              hintText: l10n.nutrition_preparation_method_hint,
               isDense: true,
             ),
           ),
@@ -1064,7 +1066,7 @@ class _FoodsSectionHeader extends StatelessWidget {
             IconButton.outlined(
               onPressed: onToggleQuickAdd,
               icon: Icon(showQuickAdd ? Icons.close : Icons.bolt, size: 18),
-              tooltip: 'Add food manually',
+              tooltip: l10n.nutrition_add_food_manually,
               style: IconButton.styleFrom(
                 minimumSize: const Size(36, 36),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -1117,6 +1119,7 @@ class _QuickAddForm extends StatefulWidget {
 class _QuickAddFormState extends State<_QuickAddForm> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       child: Padding(
@@ -1133,7 +1136,7 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'Add food manually',
+                  l10n.nutrition_add_food_manually,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: widget.theme.colorScheme.tertiary,
@@ -1146,10 +1149,10 @@ class _QuickAddFormState extends State<_QuickAddForm> {
             // Name field - full width
             TextField(
               controller: widget.nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name *',
-                hintText: 'e.g., Olive oil',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.food_name,
+                hintText: l10n.nutrition_food_name_example,
+                border: const OutlineInputBorder(),
                 isDense: true,
               ),
               textCapitalization: TextCapitalization.words,
@@ -1162,9 +1165,9 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                 Expanded(
                   child: TextField(
                     controller: widget.amountController,
-                    decoration: const InputDecoration(
-                      labelText: 'Qty',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.nutrition_quantity_short,
+                      border: const OutlineInputBorder(),
                       isDense: true,
                     ),
                     keyboardType: TextInputType.number,
@@ -1176,9 +1179,9 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                   flex: 2,
                   child: TextField(
                     controller: widget.caloriesController,
-                    decoration: const InputDecoration(
-                      labelText: 'Calories (kcal)',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.nutrition_calories_kcal,
+                      border: const OutlineInputBorder(),
                       isDense: true,
                     ),
                     keyboardType: TextInputType.number,
@@ -1190,7 +1193,7 @@ class _QuickAddFormState extends State<_QuickAddForm> {
                   height: 48,
                   child: FilledButton.tonal(
                     onPressed: widget.onAdd,
-                    child: const Text('Add'),
+                    child: Text(l10n.add),
                   ),
                 ),
               ],
@@ -1217,6 +1220,7 @@ class _EmptyFoodsState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       child: Padding(
@@ -1233,14 +1237,14 @@ class _EmptyFoodsState extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'No foods yet',
+              l10n.nutrition_no_foods_yet,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Search or add food manually to start',
+              l10n.nutrition_search_or_add_food_manually,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant.withValues(
                   alpha: 0.7,
@@ -1271,6 +1275,7 @@ class _FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final icon = food.entryType == FoodEntryType.meal
         ? Icons.restaurant_menu_outlined
         : Icons.restaurant_outlined;
@@ -1281,12 +1286,12 @@ class _FoodCard extends StatelessWidget {
       elevation: 0,
       child: ListTile(
         leading: SizedBox(
-          width: 40,
-          height: 40,
+          width: 44,
+          height: 44,
           child: imageUrl == null
               ? fallbackFoodIcon(theme, icon)
               : ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                   child: Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
@@ -1303,7 +1308,7 @@ class _FoodCard extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          '${composition.amount} ${composition.unit} • ${food.nutrition.energyKcal.toStringAsFixed(0)} kcal',
+          '${composition.amount} ${composition.unit} • ${l10n.kcal_value(food.nutrition.energyKcal.toStringAsFixed(0))}',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -1314,14 +1319,14 @@ class _FoodCard extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit_outlined, size: 18),
               onPressed: () => _showEditDialog(context),
-              tooltip: 'Edit amount',
+              tooltip: l10n.food_quantity_edit_amount,
               visualDensity: VisualDensity.compact,
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline, size: 18),
               onPressed: onRemove,
               color: theme.colorScheme.error,
-              tooltip: 'Remove',
+              tooltip: l10n.remove_from_meal,
               visualDensity: VisualDensity.compact,
             ),
           ],
@@ -1331,6 +1336,7 @@ class _FoodCard extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final amountController = TextEditingController(
       text: composition.amount.toString(),
     );
@@ -1339,24 +1345,24 @@ class _FoodCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit food'),
+        title: Text(l10n.edit_food_title),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: amountController,
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.food_quantity_amount,
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 12),
             TextField(
               controller: unitController,
-              decoration: const InputDecoration(
-                labelText: 'Unit',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.nutrition_unit_label,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -1364,7 +1370,7 @@ class _FoodCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -1373,7 +1379,7 @@ class _FoodCard extends StatelessWidget {
               onUpdateAmount(amount, unitController.text);
               Navigator.pop(context);
             },
-            child: const Text('Save'),
+            child: Text(l10n.save),
           ),
         ],
       ),

@@ -3338,7 +3338,7 @@ abstract class AppLocalizations {
   /// No description provided for @food_name.
   ///
   /// In en, this message translates to:
-  /// **'Food Name *'**
+  /// **'Food name *'**
   String get food_name;
 
   /// No description provided for @nutrition_values_are_for.
@@ -5302,6 +5302,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved meals were expanded into food ingredients for review. Your new saved meal will contain food ingredients only.'**
   String get nutrition_saved_meals_expanded_notice;
+
+  /// No description provided for @enter_meal_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a meal name'**
+  String get enter_meal_name;
+
+  /// No description provided for @nutrition_servings_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Servings *'**
+  String get nutrition_servings_required;
+
+  /// No description provided for @nutrition_preparation_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparation details'**
+  String get nutrition_preparation_details;
+
+  /// No description provided for @nutrition_preparation_details_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Raw and cooked weights, preparation method'**
+  String get nutrition_preparation_details_subtitle;
+
+  /// No description provided for @nutrition_raw_weight_grams.
+  ///
+  /// In en, this message translates to:
+  /// **'Raw weight (g)'**
+  String get nutrition_raw_weight_grams;
+
+  /// No description provided for @nutrition_cooked_weight_grams.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooked weight (g)'**
+  String get nutrition_cooked_weight_grams;
+
+  /// No description provided for @nutrition_preparation_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparation method'**
+  String get nutrition_preparation_method;
+
+  /// No description provided for @nutrition_preparation_method_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., baked, fried, steamed'**
+  String get nutrition_preparation_method_hint;
+
+  /// No description provided for @nutrition_add_food_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food manually'**
+  String get nutrition_add_food_manually;
+
+  /// No description provided for @nutrition_food_name_example.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., olive oil'**
+  String get nutrition_food_name_example;
+
+  /// No description provided for @nutrition_quantity_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get nutrition_quantity_short;
+
+  /// No description provided for @nutrition_calories_kcal.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories (kcal)'**
+  String get nutrition_calories_kcal;
+
+  /// No description provided for @nutrition_no_foods_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No foods yet'**
+  String get nutrition_no_foods_yet;
+
+  /// No description provided for @nutrition_search_or_add_food_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Search or add food manually to start'**
+  String get nutrition_search_or_add_food_manually;
+
+  /// No description provided for @nutrition_unit_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get nutrition_unit_label;
+
+  /// No description provided for @nutrition_per_serving.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition per serving'**
+  String get nutrition_per_serving;
 }
 
 class _AppLocalizationsDelegate

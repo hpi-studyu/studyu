@@ -1766,7 +1766,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get entry_type => 'Entry Type';
 
   @override
-  String get food_name => 'Food Name *';
+  String get food_name => 'Food name *';
 
   @override
   String get nutrition_values_are_for => 'Nutrition values are for';
@@ -2957,4 +2957,54 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get nutrition_saved_meals_expanded_notice =>
       'Saved meals were expanded into food ingredients for review. Your new saved meal will contain food ingredients only.';
+
+  @override
+  String get enter_meal_name => 'Please enter a meal name';
+
+  @override
+  String get nutrition_servings_required => 'Servings *';
+
+  @override
+  String get nutrition_preparation_details => 'Preparation details';
+
+  @override
+  String get nutrition_preparation_details_subtitle =>
+      'Raw and cooked weights, preparation method';
+
+  @override
+  String get nutrition_raw_weight_grams => 'Raw weight (g)';
+
+  @override
+  String get nutrition_cooked_weight_grams => 'Cooked weight (g)';
+
+  @override
+  String get nutrition_preparation_method => 'Preparation method';
+
+  @override
+  String get nutrition_preparation_method_hint => 'e.g., baked, fried, steamed';
+
+  @override
+  String get nutrition_add_food_manually => 'Add food manually';
+
+  @override
+  String get nutrition_food_name_example => 'e.g., olive oil';
+
+  @override
+  String get nutrition_quantity_short => 'Qty';
+
+  @override
+  String get nutrition_calories_kcal => 'Calories (kcal)';
+
+  @override
+  String get nutrition_no_foods_yet => 'No foods yet';
+
+  @override
+  String get nutrition_search_or_add_food_manually =>
+      'Search or add food manually to start';
+
+  @override
+  String get nutrition_unit_label => 'Unit';
+
+  @override
+  String get nutrition_per_serving => 'Nutrition per serving';
 }

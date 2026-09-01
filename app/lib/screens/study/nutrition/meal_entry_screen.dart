@@ -6,6 +6,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
@@ -1880,10 +1881,11 @@ class _FoodCard extends StatelessWidget {
     final icon = food.entryType == FoodEntryType.meal
         ? Icons.restaurant_menu_outlined
         : Icons.restaurant_outlined;
-    final imageUrl = _getFoodImageUrl(food);
+    final imageUrl = foodImageUrl(food);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
+      elevation: 1,
       child: Padding(
         padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
         child: Row(
@@ -1900,14 +1902,14 @@ class _FoodCard extends StatelessWidget {
                         width: 44,
                         height: 44,
                         child: imageUrl == null
-                            ? _buildFallbackIcon(theme, icon)
+                            ? fallbackFoodIcon(theme, icon)
                             : ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.network(
                                   imageUrl,
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, _, _) =>
-                                      _buildFallbackIcon(theme, icon),
+                                      fallbackFoodIcon(theme, icon),
                                 ),
                               ),
                       ),
@@ -1975,28 +1977,6 @@ class _FoodCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildFallbackIcon(ThemeData theme, IconData icon) => Container(
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: theme.colorScheme.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Icon(icon, size: 22, color: theme.colorScheme.onSurfaceVariant),
-  );
-
-  String? _getFoodImageUrl(FoodEntry food) {
-    for (final key in [
-      'image_front_small_url',
-      'image_front_url',
-      'image_url',
-      'imageUrl',
-    ]) {
-      final value = food.originalValues[key];
-      if (value is String && value.trim().isNotEmpty) return value;
-    }
-    return null;
   }
 }
 

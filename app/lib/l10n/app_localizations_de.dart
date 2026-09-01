@@ -1784,7 +1784,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get entry_type => 'Entry Type';
 
   @override
-  String get food_name => 'Food Name *';
+  String get food_name => 'Lebensmittelname *';
 
   @override
   String get nutrition_values_are_for => 'Nährwerte gelten für';
@@ -1793,7 +1793,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get brand_name => 'Brand Name';
 
   @override
-  String get description => 'Description';
+  String get description => 'Beschreibung';
 
   @override
   String get description_hint => 'Optional notes about this food';
@@ -1880,7 +1880,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get required_error => 'Erforderlich';
 
   @override
-  String get enter_food_name => 'Please enter a food name';
+  String get enter_food_name => 'Bitte geben Sie einen Lebensmittelnamen ein';
 
   @override
   String get enter_serving_size => 'Please enter serving size';
@@ -2993,4 +2993,55 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get nutrition_saved_meals_expanded_notice =>
       'Gespeicherte Mahlzeiten wurden zur Überprüfung in Lebensmittelzutaten aufgelöst. Ihre neue gespeicherte Mahlzeit enthält nur Lebensmittelzutaten.';
+
+  @override
+  String get enter_meal_name => 'Bitte geben Sie einen Mahlzeitnamen ein';
+
+  @override
+  String get nutrition_servings_required => 'Portionen *';
+
+  @override
+  String get nutrition_preparation_details => 'Zubereitungsdetails';
+
+  @override
+  String get nutrition_preparation_details_subtitle =>
+      'Roh- und Kochgewichte, Zubereitungsart';
+
+  @override
+  String get nutrition_raw_weight_grams => 'Rohgewicht (g)';
+
+  @override
+  String get nutrition_cooked_weight_grams => 'Gekochtes Gewicht (g)';
+
+  @override
+  String get nutrition_preparation_method => 'Zubereitungsart';
+
+  @override
+  String get nutrition_preparation_method_hint =>
+      'z. B. gebacken, gebraten, gedämpft';
+
+  @override
+  String get nutrition_add_food_manually => 'Lebensmittel manuell hinzufügen';
+
+  @override
+  String get nutrition_food_name_example => 'z. B. Olivenöl';
+
+  @override
+  String get nutrition_quantity_short => 'Menge';
+
+  @override
+  String get nutrition_calories_kcal => 'Kalorien (kcal)';
+
+  @override
+  String get nutrition_no_foods_yet => 'Noch keine Lebensmittel';
+
+  @override
+  String get nutrition_search_or_add_food_manually =>
+      'Suchen Sie nach Lebensmitteln oder fügen Sie sie manuell hinzu';
+
+  @override
+  String get nutrition_unit_label => 'Einheit';
+
+  @override
+  String get nutrition_per_serving => 'Nährwerte pro Portion';
 }
