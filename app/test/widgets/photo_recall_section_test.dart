@@ -11,7 +11,7 @@ Widget _testApp(Locale locale) => MaterialApp(
   supportedLocales: AppLocalizations.supportedLocales,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   locale: locale,
-  home: Scaffold(body: PhotoRecallSection(mealTime: DateTime(2026, 7, 15, 12))),
+  home: Scaffold(body: PhotoRecallSection(date: DateTime(2026, 7, 15))),
 );
 
 void main() {

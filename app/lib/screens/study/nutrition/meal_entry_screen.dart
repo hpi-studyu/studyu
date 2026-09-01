@@ -47,6 +47,8 @@ enum _FoodAction { details, edit, editDefinition, saveTemplate, remove }
 
 enum _LibraryEditChoice { currentEntry, currentEntryAndLibrary }
 
+enum _AddFoodSource { search, photoRecall }
+
 class _MealTypeSelection {
   final MealType type;
   final String? customLabel;
@@ -146,6 +148,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   bool get _allowMeals => widget.task?.allowMeals ?? true;
 
+  DateTime get _occurrenceDate =>
+      widget.occurrenceDate ?? _meal.timestamp ?? DateTime.now();
+
   late TextEditingController _skipReasonController;
 
   @override
@@ -192,7 +197,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     _initialMealSnapshot = _mealSnapshot;
     if (widget.openFoodSearch) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _addFood();
+        if (mounted) _openFoodSearch();
       });
     }
   }
@@ -204,6 +209,41 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   Future<void> _addFood() async {
+    final l10n = AppLocalizations.of(context)!;
+    final source = await showModalBottomSheet<_AddFoodSource>(
+      context: context,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (sheetContext) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            key: const ValueKey('add-food-search-option'),
+            leading: const Icon(Icons.search_outlined),
+            title: Text(l10n.nutrition_add_food_or_saved_meal),
+            onTap: () => Navigator.pop(sheetContext, _AddFoodSource.search),
+          ),
+          ListTile(
+            key: const ValueKey('add-food-photo-recall-option'),
+            leading: const Icon(Icons.photo_library_outlined),
+            title: Text(l10n.photoRecallTitle),
+            subtitle: Text(l10n.photoRecallSubtitle),
+            onTap: () =>
+                Navigator.pop(sheetContext, _AddFoodSource.photoRecall),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || source == null) return;
+    switch (source) {
+      case _AddFoodSource.search:
+        await _openFoodSearch();
+      case _AddFoodSource.photoRecall:
+        await _showPhotoRecall();
+    }
+  }
+
+  Future<void> _openFoodSearch() async {
     final result = await FoodSearchScreen.show(
       context,
       mealLabel: _mealLabel,
@@ -993,31 +1033,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   Future<void> _showPhotoRecall() async {
-    if (_timestamp == null ||
-        _timePrecision == MealOccurrenceTimePrecision.unknown) {
-      final l10n = AppLocalizations.of(context)!;
-      final shouldSetTime = await showDialog<bool>(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: Text(l10n.photo_recall_time_required_title),
-          content: Text(l10n.photo_recall_time_required_message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(l10n.cancel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: Text(l10n.set_time),
-            ),
-          ],
-        ),
-      );
-      if (shouldSetTime != true || !mounted) return;
-      await _selectTime();
-      if (_timestamp == null || !mounted) return;
-    }
-
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -1065,7 +1080,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: PhotoRecallSection(
-                    mealTime: _timestamp!,
+                    date: _occurrenceDate,
                     onPhotoTap: (photo) {
                       PhotoViewerDialog.show(
                         context,
@@ -1191,13 +1206,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                       ? l10n.no_meal_label
                       : _mealLabel,
                   onTap: _selectMealType,
-                ),
-                const SizedBox(height: 16),
-                _SettingsRow(
-                  icon: Icons.photo_library_outlined,
-                  label: l10n.photoRecallTitle,
-                  value: l10n.photoRecallSubtitle,
-                  onTap: _showPhotoRecall,
                 ),
                 if (widget.task?.collectMealContext ?? true) ...[
                   const SizedBox(height: 16),

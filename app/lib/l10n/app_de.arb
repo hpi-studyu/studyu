@@ -769,14 +769,13 @@
   "rename_template": "Element umbenennen",
   "new_name": "Neuer Name",
   "photoRecallTitle": "Foto-Erinnerung",
-  "photoRecallSubtitle": "Nutzen Sie Fotos aus dieser Zeit, um sich daran zu erinnern, was Sie gegessen haben.",
+  "photoRecallSubtitle": "Nutzen Sie Fotos von diesem Tag, um sich daran zu erinnern, was Sie gegessen haben.",
   "photoRecallPermissionNeeded": "Tippen, um Fotozugriff zu aktivieren",
   "photoRecallPermissionTitle": "Fotozugriff aktivieren",
   "photoRecallPermissionDescription": "Der Zugriff auf Ihre Fotos hilft Ihnen, sich an das Gegessene zu erinnern. Fotos werden nur auf Ihrem Gerät angezeigt.",
   "photoRecallNoPhotos": "Keine Fotos gefunden",
-  "photoRecallNoPhotosSubtitle": "Wir konnten keine Fotos von dieser Zeit finden",
+  "photoRecallNoPhotosSubtitle": "Wir konnten keine Fotos von diesem Tag finden",
   "photoRecallTapToEnlarge": "Tippen Sie auf ein Foto, um es Vollbild anzuzeigen",
-  "photoRecallTimeInfo": "Fotos von {time} (±2 Stunden)",
   "grantPermission": "Berechtigung erteilen",
   "analyzePhotoTooltip": "Dieses Foto analysieren",
   "analyzingPhoto": "Foto wird analysiert...",
@@ -813,8 +812,6 @@
   "time_approximate": "Ungefähre Uhrzeit",
   "time_approximate_description": "Ich weiß ungefähr, wann",
   "time_unknown": "Ich erinnere mich nicht",
-  "photo_recall_time_required_title": "Legen Sie zuerst eine Zeit fest",
-  "photo_recall_time_required_message": "Photo Recall benötigt eine Mahlzeitzeit, um Fotos aus diesem Zeitraum zu finden.",
   "set_time": "Zeit festlegen",
   "save": "Speichern",
   "nutrition_values_are_for": "Nährwerte gelten für",
@@ -1181,5 +1178,6 @@
   "nutrition_no_foods_yet": "Noch keine Lebensmittel",
   "nutrition_search_or_add_food_manually": "Suchen Sie nach Lebensmitteln oder fügen Sie sie manuell hinzu",
   "nutrition_unit_label": "Einheit",
-  "nutrition_per_serving": "Nährwerte pro Portion"
+  "nutrition_per_serving": "Nährwerte pro Portion",
+  "photoRecallDateInfo": "Fotos vom {date}"
 }

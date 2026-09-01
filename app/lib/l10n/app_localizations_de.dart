@@ -1611,14 +1611,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get time_unknown => 'Ich erinnere mich nicht';
 
   @override
-  String get photo_recall_time_required_title =>
-      'Legen Sie zuerst eine Zeit fest';
-
-  @override
-  String get photo_recall_time_required_message =>
-      'Photo Recall benötigt eine Mahlzeitzeit, um Fotos aus diesem Zeitraum zu finden.';
-
-  @override
   String get set_time => 'Zeit festlegen';
 
   @override
@@ -2609,7 +2601,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get photoRecallSubtitle =>
-      'Nutzen Sie Fotos aus dieser Zeit, um sich daran zu erinnern, was Sie gegessen haben.';
+      'Nutzen Sie Fotos von diesem Tag, um sich daran zu erinnern, was Sie gegessen haben.';
 
   @override
   String get photoRecallPermissionNeeded =>
@@ -2627,16 +2619,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get photoRecallNoPhotosSubtitle =>
-      'Wir konnten keine Fotos von dieser Zeit finden';
+      'Wir konnten keine Fotos von diesem Tag finden';
 
   @override
   String get photoRecallTapToEnlarge =>
       'Tippen Sie auf ein Foto, um es Vollbild anzuzeigen';
-
-  @override
-  String photoRecallTimeInfo(String time) {
-    return 'Fotos von $time (±2 Stunden)';
-  }
 
   @override
   String get grantPermission => 'Berechtigung erteilen';
@@ -3044,4 +3031,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nutrition_per_serving => 'Nährwerte pro Portion';
+
+  @override
+  String photoRecallDateInfo(Object date) {
+    return 'Fotos vom $date';
+  }
 }

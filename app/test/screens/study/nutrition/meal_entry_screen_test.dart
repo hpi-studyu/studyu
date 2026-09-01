@@ -1,5 +1,3 @@
-import 'dart:ui' show SemanticsAction;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,6 +15,7 @@ import 'package:studyu_app/screens/study/nutrition/nutrition_food_repository.dar
 import 'package:studyu_app/util/nutrition_food_snapshots.dart';
 import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
+import 'package:studyu_app/widgets/photo_recall_section.dart';
 import 'package:studyu_core/core.dart';
 
 import 'fake_nutrition_food_repository.dart';
@@ -380,12 +379,13 @@ MealLog _mealWithMatchingDefinitions() {
   return editableMeal()..foods = [selected, sibling];
 }
 
-Finder foodEditorInput(String label) => find
-    .ancestor(
-      of: find.textContaining(label),
-      matching: find.byType(TextFormField),
-    )
-    .first;
+Finder foodEditorInput(String label) => find.byWidgetPredicate(
+  (widget) =>
+      widget is TextField &&
+      (widget.decoration?.labelText ?? '').toLowerCase().contains(
+        label.toLowerCase(),
+      ),
+);
 
 Future<void> selectMealType(
   WidgetTester tester,
@@ -406,6 +406,23 @@ Future<void> selectMealType(
     await tester.tap(find.text('Apply'));
     await tester.pumpAndSettle();
   }
+}
+
+Future<void> openFoodSearchFromMeal(WidgetTester tester) async {
+  final addFood = find.byTooltip('Add food or saved meal');
+  await tester.ensureVisible(
+    addFood.evaluate().isNotEmpty
+        ? addFood
+        : find.text('Add food or saved meal').first,
+  );
+  await tester.tap(
+    addFood.evaluate().isNotEmpty
+        ? addFood
+        : find.text('Add food or saved meal').first,
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('add-food-search-option')));
+  await tester.pumpAndSettle();
 }
 
 Future<void> chooseMealTime(
@@ -1064,7 +1081,7 @@ void main() {
       expect(chip.checkmarkColor, isNull);
     }
 
-    for (final label in ['Meal label', 'Time', 'Apple', 'Photo Recall']) {
+    for (final label in ['Meal label', 'Time', 'Apple']) {
       final card = tester.widget<Card>(
         find.ancestor(of: find.text(label), matching: find.byType(Card)).first,
       );
@@ -1072,7 +1089,7 @@ void main() {
     }
   });
 
-  testWidgets('opens Photo Recall in a sheet and preserves the meal draft', (
+  testWidgets('routes Photo Recall from Add Food using the occurrence date', (
     tester,
   ) async {
     const channel = MethodChannel('com.fluttercandies/photo_manager');
@@ -1082,7 +1099,7 @@ void main() {
             case 'getPermissionState':
               return PermissionState.authorized.index;
             case 'getAssetPathList':
-              return <dynamic>[];
+              return {'data': <dynamic>[]};
           }
           return null;
         });
@@ -1091,44 +1108,34 @@ void main() {
           .setMockMethodCallHandler(channel, null),
     );
 
-    MealEntryResult? result;
-    await openMealEntry(
-      tester,
-      editableMeal(),
-      onEntryResult: (value) => result = value,
-    );
-    await selectMealType(tester, 'Dinner');
+    final meal = editableMeal()
+      ..timestamp = null
+      ..timePrecision = MealOccurrenceTimePrecision.unknown;
+    await openMealEntry(tester, meal, occurrenceDate: DateTime(2024, 2, 3));
 
-    final semantics = tester.ensureSemantics();
-    final photoRecallRow = find.ancestor(
-      of: find.text('Photo Recall'),
-      matching: find.byType(ListTile),
-    );
-    expect(photoRecallRow, findsOneWidget);
+    expect(find.text('Photo Recall'), findsNothing);
+    await tester.tap(find.byTooltip('Add food or saved meal'));
+    await tester.pumpAndSettle();
+
     expect(
-      tester
-          .getSemantics(photoRecallRow)
-          .getSemanticsData()
-          .hasAction(SemanticsAction.tap),
-      isTrue,
+      find.byKey(const ValueKey('add-food-search-option')),
+      findsOneWidget,
     );
-    semantics.dispose();
-
-    await tester.tap(photoRecallRow);
+    expect(
+      find.byKey(const ValueKey('add-food-photo-recall-option')),
+      findsOneWidget,
+    );
+    await tester.tap(
+      find.byKey(const ValueKey('add-food-photo-recall-option')),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.byType(BottomSheet), findsOneWidget);
+    final section = tester.widget<PhotoRecallSection>(
+      find.byType(PhotoRecallSection),
+    );
+    expect(section.date, DateTime(2024, 2, 3));
+    expect(find.byType(AlertDialog), findsNothing);
     expect(find.text('No photos found'), findsOneWidget);
-
-    await tester.tap(find.byIcon(Icons.close));
-    await tester.pumpAndSettle();
-    expect(find.byType(BottomSheet), findsNothing);
-
-    await tester.tap(find.text('Save'));
-    await tester.pumpAndSettle();
-
-    expect(result, isA<SavedMealEntryResult>());
-    expect((result! as SavedMealEntryResult).meal.mealType, MealType.dinner);
   });
 
   testWidgets('back offers discard and continue actions', (tester) async {
@@ -1557,13 +1564,13 @@ void main() {
         findsOneWidget,
       );
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Meal Name *'),
+        foodEditorInput('Meal name'),
         'Updated fruit bowl',
       );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Servings *'),
-        '2',
-      );
+      await tester.enterText(foodEditorInput('Servings'), '2');
+      await tester.ensureVisible(find.byTooltip('Edit amount'));
+      await tester.drag(find.byType(ListView).last, const Offset(0, -80));
+      await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Edit amount'));
       await tester.pumpAndSettle();
       await tester.enterText(find.widgetWithText(TextField, 'Amount'), '1.5');
@@ -1838,23 +1845,16 @@ void main() {
       customLabel: 'Edited supper',
     );
 
-    final addFoodButton = find.byTooltip('Add food or saved meal');
-    await tester.ensureVisible(addFoodButton);
-    await tester.tap(addFoodButton);
+    final recipeResult = Navigator.of(
+      tester.element(find.byType(MealEntryScreen)),
+    ).push<FoodEntry>(MealCreatorScreen.route());
     await tester.pumpAndSettle();
 
-    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
-    final recipeResult = navigator.push<FoodEntry>(MealCreatorScreen.route());
-    await tester.pumpAndSettle();
-
-    expect(find.text('Create meal'), findsOneWidget);
+    expect(find.text('Create saved meal'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     expect(await recipeResult, isNull);
-
-    await tester.tap(find.byType(CloseButton));
-    await tester.pumpAndSettle();
 
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
@@ -1902,11 +1902,7 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.byTooltip('Add food or saved meal'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Add food or saved meal'));
-    await tester.pumpAndSettle();
+    await openFoodSearchFromMeal(tester);
     await tester.tap(find.text('My library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));
@@ -2007,9 +2003,7 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.byTooltip('Add food or saved meal'));
-    await tester.tap(find.byTooltip('Add food or saved meal'));
-    await tester.pumpAndSettle();
+    await openFoodSearchFromMeal(tester);
     await tester.tap(find.text('My library'));
     await tester.pumpAndSettle();
 
@@ -2120,16 +2114,11 @@ void main() {
       'Custom Meal Label',
       customLabel: 'Edited supper',
     );
-    await tester.ensureVisible(find.byTooltip('Add food or saved meal'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Add food or saved meal'));
-    await tester.pumpAndSettle();
+    await openFoodSearchFromMeal(tester);
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add food or saved meal'));
-    await tester.pumpAndSettle();
+    await openFoodSearchFromMeal(tester);
     await tester.tap(find.text('My library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Saved Pear Template'));

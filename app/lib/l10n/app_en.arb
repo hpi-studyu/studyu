@@ -636,8 +636,6 @@
   "time_approximate": "Approximate time",
   "time_approximate_description": "I know roughly when",
   "time_unknown": "I don't remember",
-  "photo_recall_time_required_title": "Set a meal time first",
-  "photo_recall_time_required_message": "Photo Recall needs a meal time to find photos from around that occasion.",
   "set_time": "Set time",
   "save": "Save",
   "new_item": "New",
@@ -1161,21 +1159,13 @@
   "no_data_yet": "No data yet",
   "start_tracking_nutrition": "Start tracking your nutrition by adding meals",
   "photoRecallTitle": "Photo Recall",
-  "photoRecallSubtitle": "Use photos from around this time to remember what you ate.",
+  "photoRecallSubtitle": "Use photos from this day to remember what you ate.",
   "photoRecallPermissionNeeded": "Tap to enable photo access",
   "photoRecallPermissionTitle": "Enable Photo Access",
   "photoRecallPermissionDescription": "Access to your photos helps you recall what you ate. Photos are only displayed on your device.",
   "photoRecallNoPhotos": "No photos found",
-  "photoRecallNoPhotosSubtitle": "We couldn't find any photos taken around this time",
+  "photoRecallNoPhotosSubtitle": "We couldn’t find any photos taken on this day",
   "photoRecallTapToEnlarge": "Tap a photo to view it full screen",
-  "photoRecallTimeInfo": "Showing photos from around {time} (±2 hours)",
-  "@photoRecallTimeInfo": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
   "grantPermission": "Grant Permission",
   "analyzePhotoTooltip": "Analyze this food photo",
   "analyzingPhoto": "Analyzing photo...",
@@ -1380,5 +1370,6 @@
   "nutrition_no_foods_yet": "No foods yet",
   "nutrition_search_or_add_food_manually": "Search or add food manually to start",
   "nutrition_unit_label": "Unit",
-  "nutrition_per_serving": "Nutrition per serving"
+  "nutrition_per_serving": "Nutrition per serving",
+  "photoRecallDateInfo": "Showing photos from {date}"
 }

@@ -3011,18 +3011,6 @@ abstract class AppLocalizations {
   /// **'I don\'t remember'**
   String get time_unknown;
 
-  /// No description provided for @photo_recall_time_required_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Set a meal time first'**
-  String get photo_recall_time_required_title;
-
-  /// No description provided for @photo_recall_time_required_message.
-  ///
-  /// In en, this message translates to:
-  /// **'Photo Recall needs a meal time to find photos from around that occasion.'**
-  String get photo_recall_time_required_message;
-
   /// No description provided for @set_time.
   ///
   /// In en, this message translates to:
@@ -4706,7 +4694,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoRecallSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Use photos from around this time to remember what you ate.'**
+  /// **'Use photos from this day to remember what you ate.'**
   String get photoRecallSubtitle;
 
   /// No description provided for @photoRecallPermissionNeeded.
@@ -4736,7 +4724,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoRecallNoPhotosSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'We couldn\'t find any photos taken around this time'**
+  /// **'We couldn’t find any photos taken on this day'**
   String get photoRecallNoPhotosSubtitle;
 
   /// No description provided for @photoRecallTapToEnlarge.
@@ -4744,12 +4732,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap a photo to view it full screen'**
   String get photoRecallTapToEnlarge;
-
-  /// No description provided for @photoRecallTimeInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Showing photos from around {time} (±2 hours)'**
-  String photoRecallTimeInfo(String time);
 
   /// No description provided for @grantPermission.
   ///
@@ -5398,6 +5380,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nutrition per serving'**
   String get nutrition_per_serving;
+
+  /// No description provided for @photoRecallDateInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing photos from {date}'**
+  String photoRecallDateInfo(Object date);
 }
 
 class _AppLocalizationsDelegate

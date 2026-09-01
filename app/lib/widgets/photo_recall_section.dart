@@ -6,18 +6,13 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/services/photo_gallery_service.dart';
 
-/// A section that displays photos from the device gallery
-/// taken around the specified meal time to help with recall.
+/// A section that displays photos from a local calendar date.
 class PhotoRecallSection extends StatefulWidget {
   /// Creates a new [PhotoRecallSection].
-  const PhotoRecallSection({
-    required this.mealTime,
-    this.onPhotoTap,
-    super.key,
-  });
+  const PhotoRecallSection({required this.date, this.onPhotoTap, super.key});
 
-  /// The meal time to search for photos around.
-  final DateTime mealTime;
+  /// The local calendar date to show photos for.
+  final DateTime date;
 
   /// Callback when a photo is tapped.
   final ValueChanged<PhotoReference>? onPhotoTap;
@@ -41,8 +36,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
   @override
   void didUpdateWidget(covariant PhotoRecallSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Reload photos if meal time changes and we have permission
-    if (oldWidget.mealTime != widget.mealTime && _hasPermission) {
+    if (oldWidget.date != widget.date && _hasPermission) {
       _loadPhotos();
     }
   }
@@ -62,7 +56,7 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
     setState(() => _isLoading = true);
 
     try {
-      final photos = await _photoService.getPhotosAroundTime(widget.mealTime);
+      final photos = await _photoService.getPhotosForDate(widget.date);
       if (mounted) {
         setState(() {
           _photos = photos;
@@ -194,13 +188,14 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
   }
 
   Widget _buildPhotoGrid(ThemeData theme, AppLocalizations l10n) {
-    final timeString =
-        '${widget.mealTime.hour.toString().padLeft(2, '0')}:${widget.mealTime.minute.toString().padLeft(2, '0')}';
+    final date = MaterialLocalizations.of(
+      context,
+    ).formatMediumDate(widget.date);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Time info banner
+        // Date info banner
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -211,14 +206,14 @@ class _PhotoRecallSectionState extends State<PhotoRecallSection> {
           child: Row(
             children: [
               Icon(
-                Icons.access_time_rounded,
+                Icons.calendar_today_outlined,
                 size: 16,
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  l10n.photoRecallTimeInfo(timeString),
+                  l10n.photoRecallDateInfo(date),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.w500,
