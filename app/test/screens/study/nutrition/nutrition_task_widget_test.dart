@@ -308,6 +308,54 @@ void main() {
     expect(find.byTooltip('Help'), findsNothing);
   });
 
+  testWidgets('history refreshes after an opened record closes', (
+    tester,
+  ) async {
+    final setup = historicalNavigationSetup(
+      'Historical apple',
+      hasPersistenceTarget: false,
+    );
+
+    final appState = AppState()
+      ..activeSubject = setup.subject
+      ..selectedStudy = setup.subject.study;
+    await tester.pumpWidget(nutritionTaskApp(setup.task, appState: appState));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Historical apple'));
+    await tester.pumpAndSettle();
+
+    final previous = setup.subject.progress.single;
+    final correctedRecall =
+        recall([
+            meal(
+              'meal',
+              MealType.breakfast,
+              foods: [food('food', 'Corrected apple', 100)],
+            ),
+          ])
+          ..studyDaySnapshot =
+              (previous.result.result as DailyRecall).studyDaySnapshot;
+    setup.subject.progress[0] = SubjectProgress(
+      subjectId: setup.subject.id,
+      interventionId: previous.interventionId,
+      taskId: setup.task.id,
+      resultType: 'DailyRecall',
+      result: Result<DailyRecall>.app(
+        type: 'DailyRecall',
+        periodId: 'period',
+        result: correctedRecall,
+      ),
+    )..completedAt = previous.completedAt;
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Corrected apple'), findsOneWidget);
+    expect(find.text('Historical apple'), findsNothing);
+  });
+
   testWidgets('returning from history refreshes the mounted food library', (
     tester,
   ) async {

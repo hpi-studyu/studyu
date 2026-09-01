@@ -122,7 +122,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   bool _allowPop = false;
   bool _isSaving = false;
   final GlobalKey _saveButtonKey = GlobalKey();
-  final String _mutationId = const Uuid().v4();
 
   /// Whether the food entry data comes from AI analysis.
   bool get _isAiAnalyzed => widget.confidenceScore != null;
@@ -279,7 +278,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               currentStudyDay: _propagateToCurrentStudyDay
                   ? currentStudyDay
                   : null,
-              mutationId: _mutationId,
+              mutationId: const Uuid().v4(),
             );
         food = applyNutritionFoodSnapshot(
           existingFood,

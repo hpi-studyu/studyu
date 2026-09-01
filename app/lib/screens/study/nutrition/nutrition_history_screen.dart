@@ -4,7 +4,7 @@ import 'package:studyu_app/screens/study/nutrition/nutrition_recall_records.dart
 import 'package:studyu_core/core.dart';
 
 typedef NutritionRecallOpener =
-    void Function(NutritionRecallRecord record, bool editable);
+    Future<void> Function(NutritionRecallRecord record, bool editable);
 
 class NutritionHistoryScreen extends StatefulWidget {
   final StudySubject subject;
@@ -35,16 +35,19 @@ class NutritionHistoryScreen extends StatefulWidget {
 }
 
 class _NutritionHistoryScreenState extends State<NutritionHistoryScreen> {
-  late final Future<List<NutritionRecallRecord>> _records;
+  late Future<List<NutritionRecallRecord>> _records;
 
   @override
   void initState() {
     super.initState();
-    _records = loadNutritionRecallRecords(
-      subject: widget.subject,
-      taskId: widget.task.id,
-    );
+    _records = _loadRecords();
   }
+
+  Future<List<NutritionRecallRecord>> _loadRecords() =>
+      loadNutritionRecallRecords(
+        subject: widget.subject,
+        taskId: widget.task.id,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +145,13 @@ class _NutritionHistoryScreenState extends State<NutritionHistoryScreen> {
       child: ListTile(
         minVerticalPadding: 2,
         visualDensity: const VisualDensity(vertical: -1),
-        onTap: () => widget.onOpenRecall(record, editable),
+        onTap: () async {
+          await widget.onOpenRecall(record, editable);
+          if (!mounted) return;
+          setState(() {
+            _records = _loadRecords();
+          });
+        },
         title: Text(
           MaterialLocalizations.of(
             context,
