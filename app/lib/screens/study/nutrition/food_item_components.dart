@@ -257,6 +257,21 @@ String formatFoodNumber(double value) => value == value.roundToDouble()
 num foodServingAmount(double value) =>
     value == value.roundToDouble() ? value.round() : value;
 
+String formatFoodMetadata(
+  AppLocalizations l10n, {
+  double? grams,
+  required String servingDescription,
+  double? calories,
+}) {
+  final quantity = grams != null && grams.isFinite && grams > 0
+      ? '${formatFoodNumber(grams)} g'
+      : servingDescription;
+  final energy = calories != null && calories.isFinite && calories >= 0
+      ? l10n.kcal_value(calories.round().toString())
+      : '— kcal';
+  return '$quantity · $energy';
+}
+
 String foodTotalMetadata(
   AppLocalizations l10n,
   studyu.FoodEntry food,
@@ -264,38 +279,28 @@ String foodTotalMetadata(
   bool gramsKnown = true,
   bool caloriesKnown = true,
 }) {
-  final grams = gramsKnown
-      ? '${formatFoodNumber(food.servingSizeGrams * food.amount * quantity)} g'
-      : '— g';
-  final calories = caloriesKnown
-      ? l10n.kcal_value(
-          (food.nutrition.energyKcal *
-                  (food.entryType == studyu.FoodEntryType.meal
-                      ? food.amount
-                      : 1) *
-                  quantity)
-              .round()
-              .toString(),
-        )
-      : '— kcal';
-  return '$grams · $calories';
-}
-
-String selectedFoodServingMetadata(
-  AppLocalizations l10n,
-  studyu.FoodEntry food,
-  int quantity,
-) {
-  final unit = food.unit.trim();
-  final baseServing = unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(foodServingAmount(food.amount))
-      : '${formatFoodNumber(food.amount)} $unit';
-  final serving = quantity == 1
-      ? baseServing
-      : unit.isEmpty || unit.toLowerCase() == 'serving'
-      ? l10n.serving_amount(foodServingAmount(food.amount * quantity))
-      : '$quantity × $baseServing';
-  return '$serving · ${l10n.kcal_value((food.nutrition.energyKcal * quantity).round().toString())}';
+  final totalAmount = food.amount * quantity;
+  final portionReference = food.portionReference?.trim();
+  final servingDescription =
+      portionReference != null && portionReference.isNotEmpty
+      ? totalAmount == 1
+            ? portionReference
+            : '${formatFoodNumber(totalAmount)} × $portionReference'
+      : l10n.serving_amount(foodServingAmount(totalAmount));
+  final hasCalories =
+      caloriesKnown &&
+      !food.nutrition.unavailableNutrients.contains('energyKcal');
+  return formatFoodMetadata(
+    l10n,
+    grams: gramsKnown ? food.servingSizeGrams * totalAmount : null,
+    servingDescription: servingDescription,
+    calories: hasCalories
+        ? food.nutrition.energyKcal *
+              (food.entryType == studyu.FoodEntryType.meal
+                  ? totalAmount
+                  : quantity)
+        : null,
+  );
 }
 
 String? foodImageUrl(studyu.FoodEntry food) {

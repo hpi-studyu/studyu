@@ -564,13 +564,13 @@ class _SelectionPreviewRow extends StatelessWidget {
           : theme.colorScheme.onSurfaceVariant,
       fontWeight: overridden ? FontWeight.w600 : null,
     );
-    final grams = item.gramsKnown
-        ? formatFoodNumber(
-            item.baseFood.servingSizeGrams *
-                item.baseFood.amount *
-                item.quantity,
-          )
-        : '—';
+    final metadata = foodTotalMetadata(
+      l10n,
+      item.baseFood,
+      item.quantity,
+      gramsKnown: item.gramsKnown,
+      caloriesKnown: item.caloriesKnown,
+    );
     return Container(
       key: anchorKey,
       child: LayoutBuilder(
@@ -599,7 +599,14 @@ class _SelectionPreviewRow extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  Text('$grams g', style: weightStyle),
+                                  Flexible(
+                                    child: Text(
+                                      metadata,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: weightStyle,
+                                    ),
+                                  ),
                                   if (showCustomLabel) ...[
                                     const SizedBox(width: 6),
                                     Flexible(

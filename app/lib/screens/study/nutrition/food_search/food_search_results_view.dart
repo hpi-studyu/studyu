@@ -115,15 +115,13 @@ class _HistoryFoodCard extends StatelessWidget {
         : l10n.nutrition_food_badge;
     final imageUrl = foodImageUrl(food);
     final selected = selectionStore?.itemFor(canonicalFoodSelectionKey(food));
-    final metadata = selected == null
-        ? _foodServingMetadata(l10n, food)
-        : _selectedFoodServingMetadata(
-            l10n,
-            selected.baselineFood,
-            selected.quantity,
-            caloriesKnown: selected.caloriesKnown,
-            gramsKnown: selected.baselineGramsKnown,
-          );
+    final metadata = foodTotalMetadata(
+      l10n,
+      selected?.baseFood ?? food,
+      selected?.quantity ?? 1,
+      caloriesKnown: selected?.caloriesKnown ?? true,
+      gramsKnown: selected?.gramsKnown ?? true,
+    );
     return SelectionFeedbackCard(
       selected: selected != null,
       child: Padding(
@@ -259,19 +257,22 @@ class _FoodResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final calories = _resultCalories(result);
     final selected = selectionKey == null
         ? null
         : selectionStore?.itemFor(selectionKey!);
     final metadata = selected == null
-        ? '${result.servingSizeGrams == null ? '—' : _formatNumber(result.servingSizeGrams!)} g · '
-              '${calories == null ? '— kcal' : l10n.kcal_value(calories.round().toString())}'
-        : _selectedFoodServingMetadata(
+        ? formatFoodMetadata(
             l10n,
-            selected.baselineFood,
+            grams: result.servingSizeGrams,
+            servingDescription: l10n.serving_amount(1),
+            calories: result.calories,
+          )
+        : foodTotalMetadata(
+            l10n,
+            selected.baseFood,
             selected.quantity,
             caloriesKnown: selected.caloriesKnown,
-            gramsKnown: selected.baselineGramsKnown,
+            gramsKnown: selected.gramsKnown,
           );
 
     return SelectionFeedbackCard(
@@ -904,36 +905,6 @@ class _SearchFilterChips extends StatelessWidget {
     );
   }
 }
-
-String _formatNumber(double value) => value == value.roundToDouble()
-    ? value.round().toString()
-    : value.toStringAsFixed(1);
-
-String _foodServingMetadata(AppLocalizations l10n, studyu.FoodEntry food) =>
-    foodTotalMetadata(
-      l10n,
-      food,
-      1,
-      caloriesKnown: !food.nutrition.unavailableNutrients.contains(
-        'energyKcal',
-      ),
-    );
-
-String _selectedFoodServingMetadata(
-  AppLocalizations l10n,
-  studyu.FoodEntry food,
-  int quantity, {
-  required bool caloriesKnown,
-  required bool gramsKnown,
-}) => foodTotalMetadata(
-  l10n,
-  food,
-  quantity,
-  gramsKnown: gramsKnown,
-  caloriesKnown: caloriesKnown,
-);
-
-double? _resultCalories(UnifiedFoodResult result) => result.calories;
 
 bool resultCaloriesKnown(UnifiedFoodResult result) {
   return switch (result.originalData) {

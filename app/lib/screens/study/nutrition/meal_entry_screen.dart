@@ -6,6 +6,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/models/photo_reference.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_item_components.dart';
 import 'package:studyu_app/screens/study/nutrition/food_quantity_sheet.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_creator_screen.dart';
@@ -1936,27 +1937,11 @@ class _FoodCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                Text(
-                                  '${food.amount} ${food.unit}',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                Text(
-                                  ' • ',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                Text(
-                                  '${food.nutrition.energyKcal.toStringAsFixed(0)} kcal',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              foodTotalMetadata(l10n, food, 1),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                             ),
                           ],
                         ),
