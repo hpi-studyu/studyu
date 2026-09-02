@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/screens/study/dashboard/settings.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
@@ -40,6 +41,69 @@ void main() {
     expect(requestCount, 2);
     expect(key.currentState!.hasError, isFalse);
     expect(key.currentState!.phrase, isNotNull);
+  });
+
+  testWidgets('loads the phrase only after Settings recovery section expands', (
+    tester,
+  ) async {
+    var requestCount = 0;
+    final expectedPhrase = encode(BigInt.two);
+    RestoreAccountService.debugCurrentUserIdGetterForTesting = () => 'user';
+    RestoreAccountService.debugRecoveryIdGetterForTesting = () async {
+      requestCount++;
+      return '00000000-0000-0000-0000-000000000002';
+    };
+
+    await tester.pumpWidget(_wrap(const RecoveryPhraseWidget()));
+    await tester.pumpAndSettle();
+
+    expect(requestCount, 0);
+    expect(find.text(expectedPhrase.first), findsNothing);
+
+    await tester.tap(find.byType(ExpansionTile));
+    await tester.pumpAndSettle();
+
+    expect(requestCount, 1);
+    expect(find.byType(Chip), findsNWidgets(expectedPhrase.length));
+  });
+
+  testWidgets('copies the recovery phrase in its displayed order', (
+    tester,
+  ) async {
+    String? clipboardText;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          clipboardText =
+              (call.arguments as Map<Object?, Object?>)['text']! as String;
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    const phrase = ['first', 'second', 'third'];
+
+    await tester.pumpWidget(
+      _wrap(
+        const RecoveryPhraseContent(
+          initialPhrase: phrase,
+          showConfirmation: false,
+          showRotation: false,
+        ),
+      ),
+    );
+
+    await tester.ensureVisible(find.text('Copy'));
+    await tester.tap(find.text('Copy'));
+    await tester.pump();
+
+    expect(clipboardText, 'first second third');
   });
 
   testWidgets('hides copy and download feedback when disabled', (tester) async {
@@ -141,8 +205,11 @@ void main() {
     tester,
   ) async {
     RestoreAccountService.debugCurrentUserIdGetterForTesting = () => 'user';
-    RestoreAccountService.debugRecoveryIdRotatorForTesting = () async =>
-        '00000000-0000-0000-0000-000000000002';
+    var rotationCount = 0;
+    RestoreAccountService.debugRecoveryIdRotatorForTesting = () async {
+      rotationCount++;
+      return '00000000-0000-0000-0000-000000000002';
+    };
     final newPhrase = encode(BigInt.two).join('\n');
 
     await tester.pumpWidget(
@@ -162,6 +229,7 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'Reissue phrase'));
     await tester.pumpAndSettle();
 
+    expect(rotationCount, 1);
     expect(find.text(newPhrase), findsOneWidget);
     expect(
       find.text('A new recovery phrase has been issued. Save it now.'),
