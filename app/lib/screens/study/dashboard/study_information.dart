@@ -176,15 +176,17 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
     required List<_InformationItem> information,
   }) async {
     final l10n = AppLocalizations.of(context)!;
+    final subject =
+        '${l10n.participant_information_email_subject} - $subjectId';
+    final body =
+        '${l10n.participant_information_email_intro}\n\n'
+        '${_informationText(information)}';
     final uri = Uri(
       scheme: 'mailto',
       path: recipient,
-      queryParameters: {
-        'subject': '${l10n.participant_information_email_subject} - $subjectId',
-        'body':
-            '${l10n.participant_information_email_intro}\n\n'
-            '${_informationText(information)}',
-      },
+      query:
+          'subject=${Uri.encodeComponent(subject)}'
+          '&body=${Uri.encodeComponent(body)}',
     );
 
     if (!await launchUrl(uri) && mounted) {

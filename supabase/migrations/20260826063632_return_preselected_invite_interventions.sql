@@ -44,7 +44,7 @@ AS $$
   )
   FROM public.study s
   JOIN public.study_invite si ON si.study_id = s.id
-  WHERE lower(trim(invite_code)) = lower(trim(si.code));
+  WHERE invite_code = si.code;
 $$;
 
 REVOKE EXECUTE ON FUNCTION public.get_study_record_from_invite(

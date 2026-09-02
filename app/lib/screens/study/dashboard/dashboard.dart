@@ -74,6 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   bool _showcaseCheckStarted = false;
   bool _dashboardShowcaseStarted = false;
   bool _redirectingToLoading = false;
+  bool _recoveryDialogInFlight = false;
   bool _isDisposing = false;
 
   bool get _studyIsAvailable => isStudyAvailableForTesting(subject!.study);
@@ -153,23 +154,27 @@ class _DashboardScreenState extends State<DashboardScreen>
         return;
       }
 
-      final inMemory = appState.showRecoveryPhraseOnDashboard;
-      if (inMemory) appState.showRecoveryPhraseOnDashboard = false;
+      final subjectId = subject!.id;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted) return;
-        final shouldShow =
-            inMemory || await RecoveryPhraseStorage.isPending(subject!.id);
-        if (!mounted) return;
-        if (shouldShow) {
-          final accepted = await _showRecoveryPhraseDialog();
+        if (!mounted || _recoveryDialogInFlight) return;
+        _recoveryDialogInFlight = true;
+        final inMemory = appState.showRecoveryPhraseOnDashboard;
+        if (inMemory) appState.showRecoveryPhraseOnDashboard = false;
+        try {
+          final shouldShow =
+              inMemory || await RecoveryPhraseStorage.isPending(subjectId);
           if (!mounted) return;
-          if (accepted) {
-            await RecoveryPhraseStorage.clearPending(subject!.id);
+          if (shouldShow) {
+            final accepted = await _showRecoveryPhraseDialog();
+            if (!mounted) return;
+            if (accepted) {
+              await RecoveryPhraseStorage.clearPending(subjectId);
+            }
           }
-          unawaited(_startDashboardShowcaseIfNeeded());
-          return;
+          if (mounted) unawaited(_startDashboardShowcaseIfNeeded());
+        } finally {
+          _recoveryDialogInFlight = false;
         }
-        unawaited(_startDashboardShowcaseIfNeeded());
       });
     }
   }
@@ -567,6 +572,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           barrierDismissible: false,
           builder: (dialogContext) {
             var isChecked = kDebugMode;
+            var hasLoadError = false;
             return PopScope(
               canPop: false,
               child: StatefulBuilder(
@@ -589,6 +595,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                               isChecked: isChecked,
                               showSuccessFeedback: false,
                               showRotation: false,
+                              onLoadError: () {
+                                setDialogState(() => hasLoadError = true);
+                              },
                               onCheckedChanged: (value) {
                                 setDialogState(
                                   () => isChecked = value ?? false,
@@ -600,6 +609,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                     ),
                     actions: [
+                      if (hasLoadError)
+                        TextButton(
+                          onPressed: () =>
+                              Navigator.of(dialogContext).pop(false),
+                          child: Text(l10n.cancel),
+                        ),
                       FilledButton(
                         onPressed: isChecked
                             ? () => Navigator.of(dialogContext).pop(true)

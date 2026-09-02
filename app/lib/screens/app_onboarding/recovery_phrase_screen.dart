@@ -78,15 +78,6 @@ class _RecoveryPhraseInfoCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final localizations = AppLocalizations.of(context)!;
-    final hint = localizations.recovery_phrase_save_hint;
-    final warning = localizations.recovery_phrase_save_warning;
-    final warningIndex = hint.indexOf(warning);
-    final mainText = warningIndex == -1
-        ? hint
-        : hint.substring(0, warningIndex).trim();
-    final warningText = warningIndex == -1
-        ? null
-        : hint.substring(warningIndex);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -105,16 +96,17 @@ class _RecoveryPhraseInfoCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(mainText, style: textTheme.bodyMedium),
-                  if (warningText != null) ...[
-                    const SizedBox(height: 12),
-                    Text(
-                      warningText,
-                      style: textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    localizations.recovery_phrase_save_hint,
+                    style: textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    localizations.recovery_phrase_save_warning,
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),

@@ -1030,7 +1030,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!,
-          isSelectionRequired: isSelectionRequiredControl.value!,
+          isSelectionRequired:
+              isMultipleChoiceControl.value! &&
+              isSelectionRequiredControl.value!,
           // required
           answerOptions: validAnswerOptions,
         );

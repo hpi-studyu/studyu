@@ -1363,7 +1363,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.\n\nNever share them with anyone.';
+      'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.';
 
   @override
   String get recovery_phrase_save_warning => 'Never share them with anyone.';

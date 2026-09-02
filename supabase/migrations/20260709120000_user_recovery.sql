@@ -184,10 +184,15 @@ BEGIN
     UPDATE auth.users
     SET
         encrypted_password = v_encrypted_password,
-        updated_at = now() at time zone 'utc'
+        updated_at = now()
     WHERE id = v_user_id;
 
-    -- 5. Find latest active study subject
+    -- 5. Invalidate the recovery ID after the password update succeeds.
+    UPDATE public.user_recovery
+    SET recovery_id = gen_random_uuid()
+    WHERE user_id = v_user_id;
+
+    -- 6. Find latest active study subject
     -- Priority: most recent progress > most recent start date > deterministic ID ordering
     SELECT
         ss.id
@@ -206,7 +211,7 @@ BEGIN
         ss.id DESC                               -- Deterministic ordering for identical dates
     LIMIT 1;
 
-    -- 6. Return success with credentials and optional subject ID.
+    -- 7. Return success with credentials and optional subject ID.
     RETURN jsonb_build_object(
         'success', true,
         'email', v_user_email,

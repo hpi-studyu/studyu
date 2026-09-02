@@ -63,14 +63,29 @@ class AppLanguage extends ChangeNotifier {
         user.preferences.language = _appLocale!.toLanguageTag();
         await user.save(onlyUpdate: true);
       }
-    } catch (_) {}
+    } catch (e, stackTrace) {
+      StudyULogger.warning(
+        'Failed to synchronize language with server',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   Future<void> changeLanguage(Locale? locale) async {
-    final supportedLocale = locale == null
-        ? null
-        : resolveSupportedLocale(locale.toLanguageTag(), supportedLocales);
-    if (_appLocale == supportedLocale) return;
+    if (locale == null) {
+      if (_appLocale == null) return;
+      await _setLocalLocale(null);
+      notifyListeners();
+      await _saveToServer(null);
+      return;
+    }
+
+    final supportedLocale = resolveSupportedLocale(
+      locale.toLanguageTag(),
+      supportedLocales,
+    );
+    if (supportedLocale == null || _appLocale == supportedLocale) return;
 
     await _setLocalLocale(supportedLocale);
     notifyListeners();
@@ -94,6 +109,12 @@ class AppLanguage extends ChangeNotifier {
       final user = await SupabaseQuery.getById<StudyUUser>(userId);
       user.preferences.language = locale?.toLanguageTag() ?? '';
       await user.save(onlyUpdate: true);
-    } catch (_) {}
+    } catch (e, stackTrace) {
+      StudyULogger.warning(
+        'Failed to save language to server',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 }

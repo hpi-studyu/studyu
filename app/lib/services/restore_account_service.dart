@@ -225,15 +225,17 @@ class RestoreAccountService {
 
   static Future<List<String>?> rotateRecoveryPhrase() async {
     clearCache();
+    final currentUserId = _currentUserIdGetter();
     final recoveryId = await _recoveryIdRotator();
     final sanitizedId = recoveryId == null ? null : _sanitizeUuid(recoveryId);
     if (sanitizedId == null) return null;
 
     try {
       final phrase = encode(BigInt.parse(sanitizedId, radix: 16));
+      if (_currentUserIdGetter() != currentUserId) return null;
       _cachedRecoveryId = recoveryId;
       _cachedPhrase = phrase;
-      _cachedUserId = _currentUserIdGetter();
+      _cachedUserId = currentUserId;
       return phrase;
     } on FormatException catch (e) {
       StudyULogger.warning('Failed to parse rotated recovery ID: $e');

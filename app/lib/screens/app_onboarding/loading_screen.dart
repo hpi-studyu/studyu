@@ -200,9 +200,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         await _handleDeferredLink(deferredLink);
         return;
       }
+      final storedLink = await PendingDeepLinkService.readStorage();
       final pendingLink = pendingDeferredLinkFromStorageValues(
-        inviteCode: await SecureStorage.read('pending_deferred_link_invite'),
-        studyId: await SecureStorage.read('pending_deferred_link_study'),
+        inviteCode: storedLink.inviteCode,
+        studyId: storedLink.studyId,
       );
       if (pendingLink != null) {
         if (!mounted) return;

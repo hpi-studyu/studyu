@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(12);
+SELECT plan(11);
 
 SELECT tests.create_supabase_user(
     'recovery_user',
@@ -28,17 +28,18 @@ SELECT is(
         FROM public.user_recovery
         WHERE recovery_id = '00000000-0000-4000-8000-000000000001'
     ),
-    1::bigint,
-    'normal recovery keeps the recovery ID current'
+    0::bigint,
+    'recovery invalidates the used recovery ID'
 );
 
-SELECT ok(
+SELECT is(
     (
         public.recover_account(
             '00000000-0000-4000-8000-000000000001'
         ) ->> 'success'
     )::boolean,
-    'the same recovery ID can be used after a normal reset'
+    false,
+    'the used recovery ID cannot recover the account again'
 );
 
 SELECT is(
@@ -82,6 +83,11 @@ SELECT throws_ok(
 
 SELECT tests.authenticate_as('recovery_user');
 SELECT set_config(
+    'tests.current_recovery_id',
+    public.get_or_create_recovery() ->> 'recovery_id',
+    true
+);
+SELECT set_config(
     'tests.rotated_recovery_id',
     public.rotate_recovery_id()::text,
     true
@@ -89,13 +95,13 @@ SELECT set_config(
 
 SELECT isnt(
     current_setting('tests.rotated_recovery_id'),
-    '00000000-0000-4000-8000-000000000001',
+    current_setting('tests.current_recovery_id'),
     'rotation returns a replacement recovery ID'
 );
 
 SELECT isnt(
     public.get_or_create_recovery() ->> 'recovery_id',
-    '00000000-0000-4000-8000-000000000001',
+    current_setting('tests.current_recovery_id'),
     'the old recovery ID is invalid after explicit rotation'
 );
 
@@ -103,16 +109,6 @@ SELECT is(
     public.get_or_create_recovery() ->> 'recovery_id',
     current_setting('tests.rotated_recovery_id'),
     'the replacement recovery ID is current for the authenticated user'
-);
-
-SELECT is(
-    (
-        public.recover_account(
-            '00000000-0000-4000-8000-000000000001'
-        ) ->> 'success'
-    )::boolean,
-    false,
-    'the old recovery ID cannot recover the account after explicit rotation'
 );
 
 SELECT ok(

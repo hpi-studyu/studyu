@@ -104,6 +104,22 @@ void main() {
       expect(fetchCount, 1);
     });
 
+    test('rotation result is discarded when current user changes', () async {
+      var currentUserId = 'first-user';
+      RestoreAccountService.debugCurrentUserIdGetterForTesting = () =>
+          currentUserId;
+      RestoreAccountService.debugRecoveryIdRotatorForTesting = () async {
+        currentUserId = 'second-user';
+        return '00000000-0000-0000-0000-000000000002';
+      };
+      addTearDown(
+        RestoreAccountService.debugResetCurrentUserIdGetterForTesting,
+      );
+      addTearDown(RestoreAccountService.debugResetRecoveryIdRotatorForTesting);
+
+      expect(await RestoreAccountService.rotateRecoveryPhrase(), isNull);
+    });
+
     test('failed rotation clears the cached phrase', () async {
       var fetchCount = 0;
       RestoreAccountService.debugCurrentUserIdGetterForTesting = () => 'user';

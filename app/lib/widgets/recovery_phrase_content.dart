@@ -13,6 +13,7 @@ class RecoveryPhraseContent extends StatefulWidget {
   final bool showSaveHint;
   final bool showSuccessFeedback;
   final bool showRotation;
+  final VoidCallback? onLoadError;
 
   const RecoveryPhraseContent({
     super.key,
@@ -24,6 +25,7 @@ class RecoveryPhraseContent extends StatefulWidget {
     this.showSaveHint = false,
     this.showSuccessFeedback = true,
     this.showRotation = true,
+    this.onLoadError,
   });
 
   @override
@@ -62,13 +64,15 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
               ? AppLocalizations.of(context)!.recovery_phrase_load_error
               : null;
         });
+        if (phrase == null) widget.onLoadError?.call();
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _error = AppLocalizations.of(context)!.share_error(e.toString());
+          _error = AppLocalizations.of(context)!.recovery_phrase_load_error;
         });
+        widget.onLoadError?.call();
       }
     }
   }

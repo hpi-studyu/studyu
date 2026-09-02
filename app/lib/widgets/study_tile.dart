@@ -57,7 +57,7 @@ class StudyTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  title!,
+                  title ?? '',
                   style: theme.textTheme.titleLarge!.copyWith(
                     color: theme.primaryColor,
                   ),

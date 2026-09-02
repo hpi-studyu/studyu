@@ -475,7 +475,7 @@
   "recovery_phrase_header": "Wiederherstellungsphrase anzeigen",
   "copy_to_clipboard": "In die Zwischenablage kopieren",
   "copied_to_clipboard": "In die Zwischenablage kopiert. Füge die Wiederherstellungsphrase jetzt an einem sicheren Ort auf deinem Handy ein.",
-  "recovery_phrase_save_hint": "Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.\n\nTeile sie niemals mit anderen.",
+  "recovery_phrase_save_hint": "Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.",
   "recovery_phrase_save_warning": "Teile sie niemals mit anderen.",
   "show_recovery_phrase": "Wiederherstellungsphrase anzeigen",
   "recovery_phrase_list_header": "Deine Wiederherstellungsphrase",
@@ -574,8 +574,8 @@
       }
     }
   },
-  "deep_link_switch_open_settings": "Open Settings",
-  "deep_link_switch_continue_study": "Continue Study",
+  "deep_link_switch_open_settings": "Einstellungen öffnen",
+  "deep_link_switch_continue_study": "Studie fortsetzen",
   "deep_link_switch_primary_return": "Zur aktuellen Studie zurückkehren",
   "deep_link_switch_secondary_continue": "Aktuelle Studie verlassen und wechseln",
   "deep_link_switch_data_choice_title": "Wie möchten Sie die aktuelle Studie verlassen?",

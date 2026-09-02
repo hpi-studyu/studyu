@@ -60,9 +60,7 @@ class _SettingsState extends State<Settings> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => context.go('/${RouteNames.dashboard}'),
-        ),
+        leading: BackButton(onPressed: context.pop),
         title: Text(AppLocalizations.of(context)!.settings),
       ),
       body: SingleChildScrollView(
@@ -127,6 +125,7 @@ class _SettingsState extends State<Settings> {
 
               // Dashboard showcase reset
               Card(
+                key: const ValueKey('settings_dashboard_showcase_card'),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -165,6 +164,7 @@ class _SettingsState extends State<Settings> {
               const SizedBox(height: 8),
 
               Card(
+                key: const ValueKey('settings_study_information_card'),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -288,6 +288,7 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
+      key: const ValueKey('settings_recovery_phrase_card'),
       child: ExpansionTile(
         leading: Icon(Icons.lock_outline, color: theme.primaryColor),
         title: Text(
@@ -319,193 +320,195 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
   }
 }
 
-class OptOutAlertDialog extends StatelessWidget {
+class OptOutAlertDialog extends StatefulWidget {
   final StudySubject? subject;
 
   const OptOutAlertDialog({super.key, required this.subject});
 
   @override
+  State<OptOutAlertDialog> createState() => _OptOutAlertDialogState();
+}
+
+class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
+  bool acknowledged = false;
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    var acknowledged = false;
 
-    return StatefulBuilder(
-      builder: (context, setDialogState) => AlertDialog(
-        title: Text(l10n.leave_study_keep_data_title),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                l10n.leave_study_keep_data_body(
-                  subject!.study.title ?? l10n.not_available,
-                ),
+    return AlertDialog(
+      title: Text(l10n.leave_study_keep_data_title),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.leave_study_keep_data_body(
+                widget.subject!.study.title ?? l10n.not_available,
               ),
-              const SizedBox(height: 12),
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                controlAffinity: ListTileControlAffinity.leading,
-                dense: true,
-                visualDensity: VisualDensity.compact,
-                title: Text(
-                  l10n.acknowledge_consequences,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                value: acknowledged,
-                onChanged: (value) {
-                  setDialogState(() => acknowledged = value ?? false);
-                },
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          OutlinedButton(
-            onPressed: context.pop,
-            child: Text(l10n.stay_in_study),
-          ),
-          ElevatedButton.icon(
-            icon: const Icon(MdiIcons.exitToApp),
-            label: Text(l10n.leave_keep_data),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red[700],
-              foregroundColor: Colors.white,
             ),
-            onPressed: acknowledged
-                ? () async {
-                    try {
-                      await subject!.softDelete();
-                    } on SocketException catch (_) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.no_internet_connection,
-                            ),
-                          ),
-                        );
-                      }
-                      return;
-                    }
-                    await deleteActiveStudyReference();
-                    await FitbitHandler.deleteFitbitCredentials(
-                      subject!.studyId,
-                    );
-                    if (context.mounted) await cancelNotifications(context);
-                    if (context.mounted) {
-                      context.go('/${RouteNames.studySelection}');
-                    }
-                  }
-                : null,
-          ),
-        ],
+            const SizedBox(height: 12),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              visualDensity: VisualDensity.compact,
+              title: Text(
+                l10n.acknowledge_consequences,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              value: acknowledged,
+              onChanged: (value) {
+                setState(() => acknowledged = value ?? false);
+              },
+            ),
+          ],
+        ),
       ),
+      actions: [
+        OutlinedButton(onPressed: context.pop, child: Text(l10n.stay_in_study)),
+        ElevatedButton.icon(
+          icon: const Icon(MdiIcons.exitToApp),
+          label: Text(l10n.leave_keep_data),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red[700],
+            foregroundColor: Colors.white,
+          ),
+          onPressed: acknowledged
+              ? () async {
+                  try {
+                    await widget.subject!.softDelete();
+                  } on SocketException catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.no_internet_connection,
+                          ),
+                        ),
+                      );
+                    }
+                    return;
+                  }
+                  await deleteActiveStudyReference();
+                  await FitbitHandler.deleteFitbitCredentials(
+                    widget.subject!.studyId,
+                  );
+                  if (context.mounted) await cancelNotifications(context);
+                  if (context.mounted) {
+                    context.go('/${RouteNames.studySelection}');
+                  }
+                }
+              : null,
+        ),
+      ],
     );
   }
 }
 
-class DeleteAlertDialog extends StatelessWidget {
+class DeleteAlertDialog extends StatefulWidget {
   final StudySubject? subject;
 
   const DeleteAlertDialog({super.key, required this.subject});
 
   @override
+  State<DeleteAlertDialog> createState() => _DeleteAlertDialogState();
+}
+
+class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
+  bool acknowledged = false;
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    var acknowledged = false;
 
-    return StatefulBuilder(
-      builder: (context, setDialogState) => AlertDialog(
-        title: Text(l10n.leave_study_delete_data_title),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                l10n.leave_study_delete_data_body(
-                  subject!.study.title ?? l10n.not_available,
-                ),
+    return AlertDialog(
+      title: Text(l10n.leave_study_delete_data_title),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.leave_study_delete_data_body(
+                widget.subject!.study.title ?? l10n.not_available,
               ),
-              const SizedBox(height: 12),
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                controlAffinity: ListTileControlAffinity.leading,
-                dense: true,
-                visualDensity: VisualDensity.compact,
-                title: Text(
-                  l10n.acknowledge_consequences,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                value: acknowledged,
-                onChanged: (value) {
-                  setDialogState(() => acknowledged = value ?? false);
-                },
+            ),
+            const SizedBox(height: 12),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              visualDensity: VisualDensity.compact,
+              title: Text(
+                l10n.acknowledge_consequences,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
-            ],
-          ),
+              value: acknowledged,
+              onChanged: (value) {
+                setState(() => acknowledged = value ?? false);
+              },
+            ),
+          ],
         ),
-        actions: [
-          OutlinedButton(
-            onPressed: context.pop,
-            child: Text(l10n.stay_in_study),
-          ),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.delete),
-            label: Text(l10n.leave_delete_data),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: acknowledged
-                ? () async {
-                    try {
-                      await subject!.delete();
-                    } on SocketException catch (_) {
-                      // Device is offline — preserve local data so nothing is lost
+      ),
+      actions: [
+        OutlinedButton(onPressed: context.pop, child: Text(l10n.stay_in_study)),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.delete),
+          label: Text(l10n.leave_delete_data),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          onPressed: acknowledged
+              ? () async {
+                  try {
+                    await widget.subject!.delete();
+                  } on SocketException catch (_) {
+                    // Device is offline — preserve local data so nothing is lost
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.no_internet_connection,
+                          ),
+                        ),
+                      );
+                    }
+                    return;
+                  } on PostgrestException catch (e) {
+                    if (e.code != 'PGRST116') {
+                      // Unexpected DB error — don't clear local data
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                               AppLocalizations.of(
                                 context,
-                              )!.no_internet_connection,
+                              )!.error_occurred_with_message(e.message),
                             ),
                           ),
                         );
                       }
                       return;
-                    } on PostgrestException catch (e) {
-                      if (e.code != 'PGRST116') {
-                        // Unexpected DB error — don't clear local data
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.error_occurred_with_message(e.message),
-                              ),
-                            ),
-                          );
-                        }
-                        return;
-                      }
-                      // PGRST116: subject already deleted from DB — proceed with local cleanup
                     }
-                    // Reached when delete succeeded or subject was already gone from DB
-                    RestoreAccountService.clearCache();
-                    await deleteLocalData();
-                    await FitbitHandler.deleteFitbitCredentials(
-                      subject!.studyId,
-                    );
-                    if (context.mounted) await cancelNotifications(context);
-                    if (context.mounted) {
-                      context.go('/${RouteNames.welcome}');
-                    }
+                    // PGRST116: subject already deleted from DB — proceed with local cleanup
                   }
-                : null,
-          ),
-        ],
-      ),
+                  // Reached when delete succeeded or subject was already gone from DB
+                  RestoreAccountService.clearCache();
+                  await deleteLocalData();
+                  await FitbitHandler.deleteFitbitCredentials(
+                    widget.subject!.studyId,
+                  );
+                  if (context.mounted) await cancelNotifications(context);
+                  if (context.mounted) {
+                    context.go('/${RouteNames.welcome}');
+                  }
+                }
+              : null,
+        ),
+      ],
     );
   }
 }

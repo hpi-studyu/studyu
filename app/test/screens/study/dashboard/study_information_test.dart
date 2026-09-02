@@ -155,11 +155,17 @@ void main() {
       tester.widget<Text>(find.text('General')).style?.color,
       tester.widget<Text>(find.text('Study settings')).style?.color,
     );
-    final studyCards = tester
-        .widgetList<Card>(find.byType(Card))
-        .skip(1)
-        .take(3)
-        .toList();
+    final studyCards = [
+      tester.widget<Card>(
+        find.byKey(const ValueKey('settings_dashboard_showcase_card')),
+      ),
+      tester.widget<Card>(
+        find.byKey(const ValueKey('settings_recovery_phrase_card')),
+      ),
+      tester.widget<Card>(
+        find.byKey(const ValueKey('settings_study_information_card')),
+      ),
+    ];
     expect(studyCards[0].margin, studyCards[1].margin);
     expect(studyCards[1].margin, studyCards[2].margin);
     expect(find.text('Sleep study'), findsNothing);
