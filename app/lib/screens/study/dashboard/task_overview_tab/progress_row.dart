@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/util/intervention.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
@@ -32,7 +32,7 @@ class _ProgressRowState extends State<ProgressRow> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(MdiIcons.run, size: 30),
+              const Icon(MdiIcons.run, size: 30),
               const SizedBox(width: 8),
               ...intersperseIndexed(
                 (index) => Expanded(
@@ -64,7 +64,7 @@ class _ProgressRowState extends State<ProgressRow> {
                 }),
               ),
               const SizedBox(width: 8),
-              Icon(MdiIcons.flagCheckered, size: 30),
+              const Icon(MdiIcons.flagCheckered, size: 30),
             ],
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -34,6 +35,7 @@ class EligibilityScreen extends StatefulWidget {
 class _EligibilityScreenState extends State<EligibilityScreen> {
   EligibilityResult? activeResult;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _ignoreNextNullResponse = false;
 
   @override
   void initState() {
@@ -57,10 +59,14 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     }
 
     final criteria = widget.study!.eligibilityCriteria;
-    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
-      (element) => element.isViolated(qs),
-    );
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull((
+      element,
+    ) {
+      return element.isViolated(qs);
+    });
     if (failingResult == null) return true;
+    // QuestionnaireWidget reports null after the continuation predicate stops.
+    _ignoreNextNullResponse = true;
     // freetext quickfix start
     // failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
     // freetext quickfix end
@@ -76,26 +82,28 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   void _evaluateResponse(QuestionnaireState? qs) {
     if (qs == null) {
+      if (_ignoreNextNullResponse) {
+        _ignoreNextNullResponse = false;
+        return;
+      }
       _invalidateResponse();
       return;
     }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final isEligible = criteria.every((criterion) {
+      final firstFailed = criteria.firstWhereOrNull((criterion) {
         // freetext quickfix start
         /*if (_isFreeTextCriterion(criterion)) {
           print('Criterion is free text, automatically satisfying it.');
-          return true;
+          return false;
         }*/
         // freetext quickfix end
-        return criterion.isSatisfied(qs);
+        return !criterion.isSatisfied(qs);
       });
+      final isEligible = firstFailed == null;
       if (isEligible) {
         activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
-        final firstFailed = criteria.firstWhere(
-          (criterion) => criterion.isViolated(qs),
-        );
         activeResult = EligibilityResult(
           qs,
           eligible: isEligible,
@@ -121,11 +129,16 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }*/
 
   void _finish() {
-    Navigator.pop(context, activeResult);
+    context.pop(activeResult);
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-    leading: Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    key: const ValueKey('eligibility_pass_banner'),
+    leading: const Icon(
+      MdiIcons.checkboxMarkedCircle,
+      color: Colors.green,
+      size: 32,
+    ),
     content: Text(
       AppLocalizations.of(context)!.eligible_yes,
       style: Theme.of(context).textTheme.titleMedium,
@@ -136,7 +149,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   );
 
   Widget _constructFailBanner() => MaterialBanner(
-    leading: Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
+    key: const ValueKey('eligibility_fail_banner'),
+    leading: const Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -158,6 +172,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     ),
     actions: [
       TextButton(
+        key: const ValueKey('eligibility_back'),
         onPressed: _finish,
         child: Text(AppLocalizations.of(context)!.eligible_back),
       ),
@@ -173,11 +188,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      key: const ValueKey('eligibility_screen'),
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),
-        leading: Icon(MdiIcons.clipboardList),
+        leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [
@@ -194,12 +210,15 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               title: widget.study!.title,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
+              hideCta: activeResult?.eligible == false,
+              autoComplete: true,
             ),
           ),
           if (activeResult != null) _constructResultBanner(),
         ],
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
+        nextButtonKey: const ValueKey('eligibility_continue'),
         onNext: activeResult?.eligible ?? false ? _finish : null,
         progress: const OnboardingProgress(stage: 0, progress: 0.5),
       ),

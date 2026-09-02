@@ -65,12 +65,20 @@ abstract class FormViewModel<T> implements IFormGroupController {
     _restoreControlsFromFormData();
     _formModeUpdated();
     _applyValidationSet(validationSet);
+    Future.microtask(() {
+      finalizeInitializationBaseline();
+    });
 
     if (autosave) {
       // Push to event queue to avoid listening to update events
       // triggered synchronously during initialization
       runAsync(enableAutosave);
     }
+  }
+
+  void finalizeInitializationBaseline() {
+    prevFormValue = _getFullFormValue();
+    form.markAsPristine();
   }
 
   T? get formData => _formData;
@@ -133,19 +141,36 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// values are initialized in [setControlsFrom] (controls that are set
   /// programmatically are incorrectly marked as dirty without any user input).
   bool get isDirty {
-    _rememberDefaultControlStates();
+    if (prevFormValue == null) return false;
 
-    for (final control in form.controls.values) {
-      control.markAsEnabled(emitEvent: false, updateParent: false);
-    }
-    final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
-
-    for (final control in form.controls.values) {
-      control.markAsEnabled(emitEvent: false, updateParent: false);
-    }
-    _restoreControlStates(emitEvent: false, updateParent: false);
+    final isEqual =
+        jsonEncode(prevFormValue, toEncodable: _jsonEncodable) ==
+        jsonEncode(_getFullFormValue(), toEncodable: _jsonEncodable);
 
     return !isEqual;
+  }
+
+  static Object? _jsonEncodable(Object? value) {
+    if (value is DateTime) {
+      return value.toIso8601String();
+    }
+    if (value is Enum) {
+      return value.name;
+    }
+    if (value is Map) {
+      final result = <String, dynamic>{};
+      for (final entry in value.entries) {
+        result[entry.key.toString()] = _jsonEncodable(entry.value);
+      }
+      return result;
+    }
+    if (value is Iterable) {
+      return value.map(_jsonEncodable).toList();
+    }
+    if (value is num || value is bool || value is String) {
+      return value;
+    }
+    return value?.toString();
   }
 
   /// The [form]'s JSON value after initializing the controls with [formData]
@@ -169,10 +194,31 @@ abstract class FormViewModel<T> implements IFormGroupController {
   void _setFormData(T? formData) {
     _formData = formData;
     if (formData != null) {
-      setControlsFrom(formData); // update [form] controls automatically
+      setControlsFrom(formData);
     }
-    prevFormValue = {...form.value};
-    form.updateValueAndValidity();
+    finalizeInitializationBaseline();
+  }
+
+  JsonMap _getFullFormValue() {
+    _rememberDefaultControlStates();
+
+    // 1. Temporarily enable all controls
+    for (final control in form.controls.values) {
+      control.markAsEnabled(emitEvent: false, updateParent: false);
+    }
+    // 2. CRITICAL: Force the FormGroup to rebuild its value cache!
+    form.updateValueAndValidity(updateParent: false, emitEvent: false);
+
+    // 3. Deep copy the full value
+    final fullValue =
+        jsonDecode(jsonEncode(form.value, toEncodable: _jsonEncodable))
+            as JsonMap;
+
+    // 4. Restore original states and rebuild the cache again
+    _restoreControlStates(emitEvent: false, updateParent: false);
+    form.updateValueAndValidity(updateParent: false, emitEvent: false);
+
+    return fullValue;
   }
 
   void _rememberDefaultControlStates() {
@@ -389,7 +435,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
       // re-initialized, which re-triggers the valueChanges stream subscription
       // used for auto-saving (entering the infinite loop)
     }
-    delegate?.onSave(this, prevFormMode);
+    await delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
     if (prevFormMode == FormMode.create) {

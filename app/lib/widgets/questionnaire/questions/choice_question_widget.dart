@@ -8,12 +8,14 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final ChoiceQuestion question;
   final Function(Answer) onDone;
   final String multiSelectionText;
+  final Answer<List<String>>? initialAnswer;
 
   const ChoiceQuestionWidget({
     super.key,
     required this.question,
     required this.onDone,
     required this.multiSelectionText,
+    this.initialAnswer,
   });
 
   @override
@@ -30,8 +32,11 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   @override
   void initState() {
     super.initState();
-    selected = [];
-    confirmButtonTouched = false;
+    final initialChoiceIds = widget.initialAnswer?.response ?? [];
+    selected = widget.question.choices
+        .where((choice) => initialChoiceIds.contains(choice.id))
+        .toList();
+    confirmButtonTouched = widget.initialAnswer != null;
   }
 
   void tapped(Choice choice) {

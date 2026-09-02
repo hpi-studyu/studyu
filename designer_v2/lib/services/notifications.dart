@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 
@@ -24,6 +24,12 @@ class Notifications {
   );
   static final inviteCodeClipped = SnackbarIntent(
     message: tr.notification_code_clipboard,
+  );
+  static final inviteCodeCopied = SnackbarIntent(
+    message: tr.notification_invite_code_copied,
+  );
+  static final inviteLinkCopied = SnackbarIntent(
+    message: tr.notification_invite_link_copied,
   );
   static final studyDeleteConfirmation = AlertIntent(
     title: tr.dialog_study_delete_title,

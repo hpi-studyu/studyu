@@ -10,11 +10,11 @@ part of 'study_test_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(StudyTestController)
-const studyTestControllerProvider = StudyTestControllerFamily._();
+final studyTestControllerProvider = StudyTestControllerFamily._();
 
 final class StudyTestControllerProvider
     extends $NotifierProvider<StudyTestController, StudyTestControllerState> {
-  const StudyTestControllerProvider._({
+  StudyTestControllerProvider._({
     required StudyTestControllerFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -70,7 +70,7 @@ final class StudyTestControllerFamily extends $Family
           StudyTestControllerState,
           StudyID
         > {
-  const StudyTestControllerFamily._()
+  StudyTestControllerFamily._()
     : super(
         retry: null,
         name: r'studyTestControllerProvider',
@@ -94,8 +94,7 @@ abstract class _$StudyTestController
   StudyTestControllerState build(StudyID studyId);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<StudyTestControllerState, StudyTestControllerState>;
     final element =
@@ -106,14 +105,14 @@ abstract class _$StudyTestController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// Provide a controller parametrized by [StudyID]
 
 @ProviderFor(studyTestPlatformController)
-const studyTestPlatformControllerProvider =
+final studyTestPlatformControllerProvider =
     StudyTestPlatformControllerFamily._();
 
 /// Provide a controller parametrized by [StudyID]
@@ -127,7 +126,7 @@ final class StudyTestPlatformControllerProvider
         >
     with $Provider<PlatformController> {
   /// Provide a controller parametrized by [StudyID]
-  const StudyTestPlatformControllerProvider._({
+  StudyTestPlatformControllerProvider._({
     required StudyTestPlatformControllerFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -187,7 +186,7 @@ String _$studyTestPlatformControllerHash() =>
 
 final class StudyTestPlatformControllerFamily extends $Family
     with $FunctionalFamilyOverride<PlatformController, StudyID> {
-  const StudyTestPlatformControllerFamily._()
+  StudyTestPlatformControllerFamily._()
     : super(
         retry: null,
         name: r'studyTestPlatformControllerProvider',

@@ -1,5 +1,8 @@
 import 'package:flutter/services.dart';
 
+String normalizeStudySequenceInput(String value) =>
+    value.replaceAll(RegExp(r'\s+'), '').toUpperCase();
+
 class NumericalRangeFormatter extends TextInputFormatter {
   NumericalRangeFormatter({this.min, this.max});
 
@@ -14,10 +17,18 @@ class NumericalRangeFormatter extends TextInputFormatter {
     if (newValue.text == '') {
       return newValue;
     } else if (min != null && int.parse(newValue.text) < min!) {
-      return newValue.copyWith(text: min.toString());
+      final text = min.toString();
+      return TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
     } else {
       if (max != null && int.parse(newValue.text) > max!) {
-        return newValue.copyWith(text: max.toString());
+        final text = max.toString();
+        return TextEditingValue(
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
       }
       return newValue;
     }
@@ -30,14 +41,15 @@ class StudySequenceFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text == '') {
-      return newValue.copyWith(text: newValue.text.toUpperCase());
-    } else if (newValue.text
-        .replaceAll(' ', '')
-        .contains(RegExp(r'^[abAB]+$'))) {
-      return newValue.copyWith(text: newValue.text.toUpperCase());
-    } else {
+    final normalized = normalizeStudySequenceInput(newValue.text);
+
+    if (normalized.isNotEmpty && !RegExp(r'^[AB]+$').hasMatch(normalized)) {
       return oldValue;
     }
+
+    return TextEditingValue(
+      text: normalized,
+      selection: TextSelection.collapsed(offset: normalized.length),
+    );
   }
 }

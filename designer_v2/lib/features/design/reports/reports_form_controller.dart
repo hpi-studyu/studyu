@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -220,6 +221,7 @@ class ReportFormItemDelegate
   List<ModelAction> availableActions(ReportItemFormViewModel model) {
     final actions = formViewModelCollection.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_report_section,
       isReadOnly: owner.isReadonly,
     );
     final modalAction = ModelAction(

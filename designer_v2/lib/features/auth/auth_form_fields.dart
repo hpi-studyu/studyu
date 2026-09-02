@@ -36,6 +36,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
         FormTableRow(
           labelStyle: const TextStyle(fontWeight: FontWeight.bold),
           input: ReactiveTextField(
+            key: const ValueKey('auth_email_field'),
             formControl: widget.formControl,
             formControlName: widget.formControlName,
             decoration: InputDecoration(
@@ -85,6 +86,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       rows: [
         FormTableRow(
           input: ReactiveTextField(
+            key: const ValueKey('auth_password_field'),
             formControl: widget.formControl,
             formControlName: widget.formControlName,
             obscureText: !passwordVisibility,
@@ -93,6 +95,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               labelText: widget.labelText,
               hintText: widget.hintText,
               suffixIcon: InkWell(
+                key: const ValueKey('auth_password_visibility_toggle'),
                 onTap: () =>
                     setState(() => passwordVisibility = !passwordVisibility),
                 focusNode: FocusNode(skipTraversal: true),

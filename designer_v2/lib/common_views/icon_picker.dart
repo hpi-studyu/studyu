@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class IconPack {
   static final defaultPack = IconPack.material;
@@ -16,9 +16,9 @@ class IconPack {
     final List<IconOption> iconOptions = [];
 
     // TODO: migrate app + designer to standard material icons & remove library
-    final iconNames = MdiIcons.getNames();
+    final iconNames = MdiIconsHelper.getNames();
     for (final iconName in iconNames) {
-      final iconData = MdiIcons.fromString(iconName);
+      final iconData = MdiIconsHelper.fromString(iconName);
       if (iconData != null) {
         iconOptions.add(IconOption(iconName, iconData));
       }

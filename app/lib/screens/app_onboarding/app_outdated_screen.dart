@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/env.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,11 +15,16 @@ class AppOutdatedScreen extends StatelessWidget {
     String? storeUrl;
     IconData? storeIcon;
     if (!kIsWeb && Platform.isAndroid) {
-      storeUrl = playStoreUrl;
-      storeIcon = MdiIcons.googlePlay;
+      if (androidPackageName != null) {
+        storeUrl =
+            'https://play.google.com/store/apps/details?id=$androidPackageName';
+      }
+      storeIcon = Icons.shop;
     } else if (!kIsWeb && Platform.isIOS) {
-      storeUrl = appstoreUrl;
-      storeIcon = MdiIcons.apple;
+      if (iosAppStoreId != null) {
+        storeUrl = 'https://apps.apple.com/app/id$iosAppStoreId';
+      }
+      storeIcon = Icons.shop;
     }
     return Scaffold(
       body: SafeArea(

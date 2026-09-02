@@ -195,6 +195,7 @@ class _TabbedNavbarState<T extends NavbarTab>
     return Theme(
       data: theme.copyWith(splashColor: Colors.transparent),
       child: TabBar(
+        key: const ValueKey('navbar_tab_bar'),
         dividerColor: Colors.transparent,
         isScrollable: widget.isScrollable,
         labelPadding: widget.labelPadding,
@@ -230,6 +231,7 @@ class _TabbedNavbarState<T extends NavbarTab>
         0.0;
 
     return Container(
+      key: ValueKey('navbar_tab_${t.index}'),
       decoration: (!t.enabled)
           ? BoxDecoration(color: widget.disabledBackgroundColor)
           : null,

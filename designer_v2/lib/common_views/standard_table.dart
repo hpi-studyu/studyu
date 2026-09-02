@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
@@ -393,9 +393,9 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   void sortAction(int i, {PointerEvent? hover}) {
     if (!widget.inputColumns[i].sortable) return;
 
-    final ascendingIcon = Icon(MdiIcons.arrowUp);
-    final descendingIcon = Icon(MdiIcons.arrowDown);
-    final hoveredIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
+    const ascendingIcon = Icon(MdiIcons.arrowUp);
+    const descendingIcon = Icon(MdiIcons.arrowDown);
+    const hoveredIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
 
     setState(() {
       // Clicked
@@ -517,12 +517,17 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     for (var i = 0; i < rawCells.length; i++) {
       final isLeading = i == 0;
       final isTrailing = i == rawCells.length - 1;
-      //final disableOnTap = (widget.trailingActionsAt != null && isTrailing)
-      //    ? true : false;
+      // Avoid triggering row selection while interacting with trailing actions.
+      final disableOnTap = widget.trailingActionsAt != null && isTrailing;
       final cellColumnConfig = widget.inputColumns[i];
 
       Widget cell = rawCells[i];
-      cell = decorateCell(cell, isLeading: isLeading, isTrailing: isTrailing);
+      cell = decorateCell(
+        cell,
+        isLeading: isLeading,
+        isTrailing: isTrailing,
+        disableOnTap: disableOnTap,
+      );
       cell = applyColumnConfiguration(cell, cellColumnConfig);
       dataCells.add(cell);
     }

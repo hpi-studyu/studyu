@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
@@ -11,6 +13,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_fo
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
@@ -218,17 +221,21 @@ class _MeasurementSurveyFormViewState
                       widget.formViewModel.questionModels.length > 1 &&
                       !widget.formViewModel.isReadonly,
                   onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
+                    var effectiveNewIndex = newIndex;
+                    if (effectiveNewIndex > oldIndex) {
+                      effectiveNewIndex -= 1;
                     }
                     final item = widget.formViewModel.questionModels.removeAt(
                       oldIndex,
                     );
-                    widget.formViewModel.questionModels.insert(newIndex, item);
+                    widget.formViewModel.questionModels.insert(
+                      effectiveNewIndex,
+                      item,
+                    );
                     final controlItem = widget.formViewModel.questionsArray
                         .removeAt(oldIndex);
                     widget.formViewModel.questionsArray.insert(
-                      newIndex,
+                      effectiveNewIndex,
                       controlItem,
                     );
                   },
@@ -290,6 +297,7 @@ class _MeasurementSurveyFormViewState
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
+      actionButtons: _buildQuestionFormButtons(surveyQuestionFormViewModel),
       tabs: <FormSideSheetTab<QuestionFormViewModel>>[
         FormSideSheetTab(
           title: tr.navlink_screener_question_content,
@@ -309,5 +317,75 @@ class _MeasurementSurveyFormViewState
         ),
       ],
     );
+  }
+
+  List<Widget> _buildQuestionFormButtons(QuestionFormViewModel formViewModel) {
+    return [
+      const DismissButton(),
+      ReactiveFormConsumer(
+        builder: (context, form, child) {
+          final fitbitCredentialsFormViewModel =
+              formViewModel.fitbitCredentialsFormViewModel;
+          final requiresFitbitCredentials =
+              formViewModel.questionType == SurveyQuestionType.fitbit;
+
+          if (!requiresFitbitCredentials ||
+              fitbitCredentialsFormViewModel == null) {
+            final validationSummary = formViewModel.form.validationErrorSummary
+                .trim();
+            return PrimaryButton(
+              text: tr.dialog_save,
+              tooltipDisabled: _buildInvalidTooltip(validationSummary),
+              icon: null,
+              enabled: formViewModel.isValid,
+              onPressedFuture: formViewModel.isValid
+                  ? () {
+                      final navigator = Navigator.of(context);
+                      return formViewModel.save().then((_) {
+                        if (mounted) navigator.maybePop();
+                      });
+                    }
+                  : null,
+            );
+          }
+
+          return StreamBuilder(
+            stream: fitbitCredentialsFormViewModel.form.statusChanged,
+            builder: (context, _) {
+              final isValid =
+                  formViewModel.isValid &&
+                  fitbitCredentialsFormViewModel.form.valid;
+              final validationSummary = [
+                formViewModel.form.validationErrorSummary.trim(),
+                fitbitCredentialsFormViewModel.form.validationErrorSummary
+                    .trim(),
+              ].where((summary) => summary.trim().isNotEmpty).join('\n\n');
+
+              return PrimaryButton(
+                text: tr.dialog_save,
+                tooltipDisabled: _buildInvalidTooltip(validationSummary),
+                icon: null,
+                enabled: isValid,
+                onPressedFuture: isValid
+                    ? () {
+                        final navigator = Navigator.of(context);
+                        return formViewModel.save().then((_) {
+                          if (mounted) navigator.maybePop();
+                        });
+                      }
+                    : null,
+              );
+            },
+          );
+        },
+      ),
+    ];
+  }
+
+  String _buildInvalidTooltip(String validationSummary) {
+    if (validationSummary.isEmpty) {
+      return tr.form_invalid_prompt;
+    }
+    return '${tr.form_invalid_prompt}\n\n$validationSummary';
   }
 }

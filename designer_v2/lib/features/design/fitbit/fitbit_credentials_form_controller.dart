@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
 
 part 'fitbit_credentials_form_controller.g.dart';
@@ -29,6 +30,7 @@ class FitbitCredentialsFormViewModel
 
   final FormControl<String> clientIdControl = FormControl();
   final FormControl<String> clientSecretControl = FormControl();
+  bool _questionValidationEnabled = false;
 
   @override
   void initControls() {
@@ -63,10 +65,40 @@ class FitbitCredentialsFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-    StudyFormValidationSet.draft: [],
-    StudyFormValidationSet.publish: [fitbitCredentialsValidation],
-    StudyFormValidationSet.test: [],
+    StudyFormValidationSet.draft: _questionValidationEnabled
+        ? [clientIdRequired, clientSecretRequired]
+        : [],
+    StudyFormValidationSet.publish: [
+      if (_questionValidationEnabled) clientIdRequired,
+      if (_questionValidationEnabled) clientSecretRequired,
+      fitbitCredentialsValidation,
+    ],
+    StudyFormValidationSet.test: _questionValidationEnabled
+        ? [clientIdRequired, clientSecretRequired]
+        : [],
   };
+
+  FormControlValidation get clientIdRequired => FormControlValidation(
+    control: clientIdControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (_) => tr.fitbit_client_id_required,
+    },
+  );
+
+  FormControlValidation get clientSecretRequired => FormControlValidation(
+    control: clientSecretControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (_) => tr.fitbit_client_secret_required,
+    },
+  );
+
+  void enableQuestionValidation() {
+    _questionValidationEnabled = true;
+    revalidate();
+    form.updateValueAndValidity();
+  }
 
   FormControlValidation get fitbitCredentialsValidation =>
       FormControlValidation(
@@ -137,6 +169,7 @@ FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
 
   return FitbitCredentialsFormViewModel(
     study: state.studyValueRequired,
+    validationSet: StudyFormValidationSet.draft,
     fitbitCredentialsRepository: fitbitCredentialsRepository,
   );
 }

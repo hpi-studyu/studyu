@@ -74,19 +74,20 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                             interventionPrefix(rowIdx, theme),
                         reorderable: !formViewModel.isReadonly,
                         onReorder: (oldIndex, newIndex) {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
+                          var effectiveNewIndex = newIndex;
+                          if (effectiveNewIndex > oldIndex) {
+                            effectiveNewIndex -= 1;
                           }
                           final item = formViewModel
                               .interventionsCollection
                               .formViewModels
                               .removeAt(oldIndex);
                           formViewModel.interventionsCollection.formViewModels
-                              .insert(newIndex, item);
+                              .insert(effectiveNewIndex, item);
                           final controlItem = formViewModel.interventionsArray
                               .removeAt(oldIndex);
                           formViewModel.interventionsArray.insert(
-                            newIndex,
+                            effectiveNewIndex,
                             controlItem,
                           );
                           formViewModel.save();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class InterventionCard extends StatelessWidget {
   final Intervention intervention;
@@ -66,7 +66,7 @@ class InterventionCardTitle extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: Icon(
-        MdiIcons.fromString(intervention!.icon),
+        MdiIconsHelper.fromString(intervention!.icon),
         color: theme.colorScheme.secondary,
       ),
       trailing: showCheckbox
@@ -94,7 +94,7 @@ class InterventionCardTitle extends StatelessWidget {
                   return AlertDialog(
                     title: ListTile(
                       leading: Icon(
-                        MdiIcons.fromString(intervention!.icon),
+                        MdiIconsHelper.fromString(intervention!.icon),
                         color: theme.colorScheme.secondary,
                       ),
                       dense: true,

@@ -5,6 +5,8 @@ on:
     paths:
       - ".github/workflows/e2e_tests.yml"
       - ".github/workflows/init-workspace/action.yml"
+      - 'supabase/**'
+      - 'scripts/reset-test-db.sh'
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
@@ -19,7 +21,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -38,12 +40,8 @@ jobs:
           dart pub global activate melos
           melos bootstrap
 
-      - name: Prepare Supabase CI Seed
-        run: |
-          cp supabase/seed-ci.sql supabase/seed.sql
-
       - name: Set up Supabase CLI
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v2
         with:
           version: latest
 
@@ -51,11 +49,19 @@ jobs:
         run: |
           supabase start -x studio,imgproxy
 
+      - name: Reset Supabase database
+        run: ./scripts/reset-test-db.sh --yes
+
       - name: Configure local StudyU environment
         run: |
-          cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
-          LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' flutter_common/lib/envs/.env.local
-          echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)" >> flutter_common/lib/envs/.env.local
+          cp flutter_common/lib/envs/.env.local.example \
+            flutter_common/lib/envs/.env.local
+          LC_ALL=C sed -i.bak \
+            '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' \
+            flutter_common/lib/envs/.env.local
+          supabase_anon_key="$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)"
+          echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$supabase_anon_key" \
+            >> flutter_common/lib/envs/.env.local
 
       - name: Start Chrome Driver
         run: |
