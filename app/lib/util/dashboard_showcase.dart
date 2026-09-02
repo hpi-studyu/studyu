@@ -33,7 +33,8 @@ class RecoveryPhraseStorage {
     return await _pendingReader(subjectId) ?? false;
   }
 
-  static Future<void> markPending(String subjectId) => _pendingMarker(subjectId);
+  static Future<void> markPending(String subjectId) =>
+      _pendingMarker(subjectId);
 
   static Future<void> clearPending(String subjectId) =>
       _pendingClearer(subjectId);

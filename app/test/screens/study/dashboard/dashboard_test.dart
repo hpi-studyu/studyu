@@ -113,9 +113,11 @@ void main() {
       await tester.tap(confirmation);
       await tester.pumpAndSettle();
       expect(
-        tester.widget<FilledButton>(
-          find.widgetWithText(FilledButton, 'Continue to study'),
-        ).onPressed,
+        tester
+            .widget<FilledButton>(
+              find.widgetWithText(FilledButton, 'Continue to study'),
+            )
+            .onPressed,
         isNotNull,
       );
 
