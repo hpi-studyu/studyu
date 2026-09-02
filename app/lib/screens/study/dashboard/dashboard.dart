@@ -571,7 +571,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           context: context,
           barrierDismissible: false,
           builder: (dialogContext) {
-            var isChecked = kDebugMode;
+            var isChecked = false;
             var hasLoadError = false;
             return PopScope(
               canPop: false,

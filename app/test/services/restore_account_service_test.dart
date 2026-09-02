@@ -17,25 +17,42 @@ void main() {
       expect(RestoreAccountService.decodeRecoveryPhrase(words), recoveryId);
     });
 
-    test('recovery clears subject state from the previous account', () async {
-      var subjectStateCleared = false;
-      RestoreAccountService.debugConfigureRecoveryForTesting(
-        recoverAccount: (_) async => RecoveryResult(
-          success: true,
-          email: 'recovered@example.com',
-          password: 'password',
-        ),
-        storeCredentials: (_, _) async {},
-        signInParticipant: () async => true,
-        clearActiveSubjectState: () async => subjectStateCleared = true,
-      );
-      addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+    test(
+      'successful recovery clears old subject state before storing recovered subject',
+      () async {
+        final calls = <String>[];
+        RestoreAccountService.debugConfigureRecoveryForTesting(
+          recoverAccount: (_) async => RecoveryResult(
+            success: true,
+            email: 'recovered@example.com',
+            password: 'password',
+            subjectId: 'recovered-subject',
+          ),
+          storeCredentials: (_, _) async => calls.add('store credentials'),
+          signInParticipant: () async {
+            calls.add('sign in');
+            return true;
+          },
+          clearActiveSubjectState: () async => calls.add('clear old subject'),
+          storeActiveSubjectId: (subjectId) async =>
+              calls.add('store $subjectId'),
+        );
+        RestoreAccountService.debugSubjectGetterForTesting = (_) async =>
+            StudySubject.fromStudy(Study('study', 'owner'), 'owner', [], null);
+        addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+        addTearDown(RestoreAccountService.debugResetSubjectGetterForTesting);
 
-      final result = await RestoreAccountService.performRecovery(BigInt.one);
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
 
-      expect(result.success, isTrue);
-      expect(subjectStateCleared, isTrue);
-    });
+        expect(result.success, isTrue);
+        expect(calls, [
+          'store credentials',
+          'sign in',
+          'clear old subject',
+          'store recovered-subject',
+        ]);
+      },
+    );
 
     test('validateSubject propagates failed subject lookups', () async {
       RestoreAccountService.debugSubjectGetterForTesting = (_) async =>

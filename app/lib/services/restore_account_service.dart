@@ -45,6 +45,8 @@ class RestoreAccountService {
   static Future<bool> Function() _participantSignIn = signInParticipant;
   static Future<void> Function() _activeSubjectStateClearer =
       _clearActiveSubjectState;
+  static Future<void> Function(String) _activeSubjectIdStorer =
+      storeActiveSubjectId;
 
   static void clearCache() {
     _cachedPhrase = null;
@@ -120,12 +122,14 @@ class RestoreAccountService {
     Future<void> Function(String, String)? storeCredentials,
     Future<bool> Function()? signInParticipant,
     Future<void> Function()? clearActiveSubjectState,
+    Future<void> Function(String)? storeActiveSubjectId,
   }) {
     _accountRecoverer = recoverAccount ?? _accountRecoverer;
     _credentialsStorer = storeCredentials ?? _credentialsStorer;
     _participantSignIn = signInParticipant ?? _participantSignIn;
     _activeSubjectStateClearer =
         clearActiveSubjectState ?? _activeSubjectStateClearer;
+    _activeSubjectIdStorer = storeActiveSubjectId ?? _activeSubjectIdStorer;
   }
 
   @visibleForTesting
@@ -134,6 +138,7 @@ class RestoreAccountService {
     _credentialsStorer = storeFakeUserEmailAndPassword;
     _participantSignIn = signInParticipant;
     _activeSubjectStateClearer = _clearActiveSubjectState;
+    _activeSubjectIdStorer = storeActiveSubjectId;
   }
 
   static Future<void> _clearActiveSubjectState() async {
@@ -378,7 +383,7 @@ class RestoreAccountService {
           );
         }
 
-        await storeActiveSubjectId(result.subjectId!);
+        await _activeSubjectIdStorer(result.subjectId!);
       }
 
       return result;
