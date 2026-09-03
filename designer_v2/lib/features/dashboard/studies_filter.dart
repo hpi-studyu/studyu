@@ -5,6 +5,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum StudiesFilter with GoRouteParamEnum { all, owned, shared, public }
 
+FilterGroup mergeStudiesFilters({
+  required FilterGroup? baseFilter,
+  required FilterGroup? activeFilter,
+}) {
+  if (baseFilter != null && activeFilter != null) {
+    return FilterGroup(children: [baseFilter, activeFilter]);
+  }
+  return activeFilter ?? baseFilter ?? FilterGroup();
+}
+
 extension StudiesFilterByUser on StudiesFilter {
   FilterGroup toFilterGroup(User user) {
     switch (this) {

@@ -88,14 +88,10 @@ class DashboardState extends Equatable {
 
     // 1. Apply Advanced Filter (or fallback to preset logic)
     // If both are null, default to ALL (empty group)
-    final baseFilter = studiesFilter?.toFilterGroup(currentUser);
-    final FilterGroup filterGroup;
-
-    if (baseFilter != null && activeFilter != null) {
-      filterGroup = FilterGroup(children: [baseFilter, activeFilter!]);
-    } else {
-      filterGroup = activeFilter ?? baseFilter ?? FilterGroup();
-    }
+    final filterGroup = mergeStudiesFilters(
+      baseFilter: studiesFilter?.toFilterGroup(currentUser),
+      activeFilter: activeFilter,
+    );
     final filteredByLogic = studiesList.where(
       (s) => FilterEvaluator.evaluate(filterGroup, s, currentUser),
     );
