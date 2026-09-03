@@ -182,6 +182,3 @@ interview/
 
 .vscode/settings.json
 /.qwen/
-
-# Branch-local QA checklists
-manual-qa-*.md
