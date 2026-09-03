@@ -60,6 +60,10 @@ Future<void> main() async {
     await loadEnv();
   } catch (error) {
     // device could be offline
+    final status = connectionStatusFromError(error);
+    if (status != null) {
+      appConnectionStatusController.setStatus(status);
+    }
     debugPrint('Error loading env: $error');
   }
   await _configureLocalTimeZone();
@@ -78,6 +82,10 @@ Future<void> main() async {
     }
   } catch (error) {
     // device could be offline
+    final status = connectionStatusFromError(error);
+    if (status != null) {
+      appConnectionStatusController.setStatus(status);
+    }
     debugPrint('Error fetching app config: $error');
   }
 
@@ -107,6 +115,10 @@ Future<void> main() async {
         }
       } catch (error) {
         // device could be offline
+        final status = connectionStatusFromError(error);
+        if (status != null) {
+          appConnectionStatusController.setStatus(status);
+        }
         debugPrint('Error fetching app config: $error');
       }
     },

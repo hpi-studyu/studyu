@@ -32,6 +32,17 @@ class SubjectDeletedException implements Exception {
       'SubjectDeletedException: subject no longer exists in the backend';
 }
 
+class SubjectCacheUnavailableException implements Exception {
+  const SubjectCacheUnavailableException([this.cause]);
+
+  final Object? cause;
+
+  @override
+  String toString() =>
+      'SubjectCacheUnavailableException: cached subject is missing or unusable'
+      '${cause == null ? '' : ' ($cause)'}';
+}
+
 @visibleForTesting
 String initialRouteForMissingSubjectRoute({
   required bool isPreview,
@@ -42,6 +53,122 @@ String initialRouteForMissingSubjectRoute({
   return onBoarded || isDebugMode
       ? '/${RouteNames.welcome}'
       : '/${RouteNames.onboarding}';
+}
+
+@visibleForTesting
+AppErrorScreenArguments appErrorArgumentsForSubjectLoadFailure({
+  required String selectedSubjectId,
+  required Object error,
+}) {
+  return AppErrorScreenArguments(
+    selectedSubjectId: selectedSubjectId,
+    reason: switch (error) {
+      SubjectDeletedException() => AppErrorReason.deletedStudy,
+      SubjectCacheUnavailableException(:final cause) =>
+        appErrorReasonForCacheUnavailable(cause),
+      _ => AppErrorReason.loading,
+    },
+  );
+}
+
+@visibleForTesting
+AppErrorReason appErrorReasonForCacheUnavailable(Object? cause) {
+  final message = cause?.toString().toLowerCase() ?? '';
+  if (message.contains('no cached subject found')) {
+    return AppErrorReason.cacheUnavailableMissing;
+  }
+  return AppErrorReason.cacheUnavailableCorrupt;
+}
+
+@visibleForTesting
+Future<T?> restoreCachedValueForStartup<T>({
+  required Future<T?> Function() fetchRemote,
+  required Future<T> Function() loadCached,
+  required Future<bool> Function() signIn,
+  required bool Function(Object error) isDeletedRemoteError,
+}) async {
+  var shouldRetryAuth = true;
+
+  try {
+    final value = await fetchRemote();
+    appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+    return value;
+  } catch (error) {
+    if (isDeletedRemoteError(error)) {
+      throw const SubjectDeletedException();
+    }
+    final status = connectionStatusFromError(error);
+    if (status != null) {
+      shouldRetryAuth = false;
+      appConnectionStatusController.setStatus(status);
+    }
+    StudyULogger.warning(
+      "Could not retrieve startup value, maybe JWT is expired, try logging in: $error",
+    );
+  }
+
+  if (!shouldRetryAuth) {
+    try {
+      final cached = await loadCached();
+      StudyULogger.info("Loaded startup value from cache: $cached");
+      return cached;
+    } catch (error) {
+      StudyULogger.warning("No usable startup value found in cache: $error");
+      throw SubjectCacheUnavailableException(error);
+    }
+  }
+
+  try {
+    if (await signIn()) {
+      final value = await fetchRemote();
+      appConnectionStatusController.setStatus(AppConnectionStatus.healthy);
+      return value;
+    }
+  } on AuthApiException catch (error) {
+    StudyULogger.warning("Invalid credentials during re-login: $error");
+    throw const SubjectDeletedException();
+  } catch (error) {
+    final status = connectionStatusFromError(error);
+    if (status != null) {
+      appConnectionStatusController.setStatus(status);
+    }
+    StudyULogger.warning("Could not login and retrieve startup value: $error");
+    StudyULogger.fatal('Could not login and retrieve startup value.');
+    try {
+      final cached = await loadCached();
+      StudyULogger.info("Loaded startup value from cache: $cached");
+      return cached;
+    } catch (cacheError) {
+      StudyULogger.warning(
+        "No usable startup value found in cache: $cacheError",
+      );
+      throw SubjectCacheUnavailableException(cacheError);
+    }
+  }
+
+  return null;
+}
+
+@visibleForTesting
+Future<void> tryRestoreParticipantSession({
+  required bool Function() isLoggedIn,
+  required Future<bool> Function() hasStoredCredentials,
+  required Future<void> Function() signIn,
+  void Function(AppConnectionStatus status)? onConnectionStatusChanged,
+  void Function(Object error)? onError,
+}) async {
+  if (isLoggedIn()) return;
+  if (!await hasStoredCredentials()) return;
+
+  try {
+    await signIn();
+  } catch (error) {
+    final status = connectionStatusFromError(error);
+    if (status != null) {
+      onConnectionStatusChanged?.call(status);
+    }
+    onError?.call(error);
+  }
 }
 
 class LoadingScreen extends StatefulWidget {
@@ -71,12 +198,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
   String? _error;
 
   Future<void> _restoreParticipantSession() async {
-    if (isUserLoggedIn()) return;
-    final hasStoredCredentials =
-        await SecureStorage.containsKey(userEmailKey) &&
-        await SecureStorage.containsKey(userPasswordKey);
-    if (!hasStoredCredentials) return;
-    await signInParticipant();
+    await tryRestoreParticipantSession(
+      isLoggedIn: isUserLoggedIn,
+      hasStoredCredentials: () async =>
+          await SecureStorage.containsKey(userEmailKey) &&
+          await SecureStorage.containsKey(userPasswordKey),
+      signIn: () => signInParticipant(),
+      onConnectionStatusChanged: appConnectionStatusController.setStatus,
+      onError: (error) {
+        debugPrint('Error restoring participant session: $error');
+      },
+    );
   }
 
   void _storePendingDeepLink({String? studyId, String? inviteCode}) {
@@ -351,16 +483,29 @@ class _LoadingScreenState extends State<LoadingScreen> {
     StudySubject? subject;
     try {
       subject = await _retrieveSubject(selectedSubjectId);
-    } on SubjectDeletedException {
+    } on SubjectDeletedException catch (error) {
       StudyULogger.warning(
         "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
       );
       if (!mounted) return;
       context.go(
         '/${RouteNames.appErrorScreen}',
-        extra: AppErrorScreenArguments(
+        extra: appErrorArgumentsForSubjectLoadFailure(
           selectedSubjectId: selectedSubjectId,
-          reason: AppErrorReason.deletedStudy,
+          error: error,
+        ),
+      );
+      return;
+    } on SubjectCacheUnavailableException catch (error) {
+      StudyULogger.warning(
+        "Subject $selectedSubjectId could not be restored from cache. Showing recovery screen.",
+      );
+      if (!mounted) return;
+      context.go(
+        '/${RouteNames.appErrorScreen}',
+        extra: appErrorArgumentsForSubjectLoadFailure(
+          selectedSubjectId: selectedSubjectId,
+          error: error,
         ),
       );
       return;
@@ -417,49 +562,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  Future<StudySubject?> _retrieveSubject(String selectedStudyObjectId) async {
-    try {
-      return await _fetchRemoteSubject(selectedStudyObjectId);
-    } on PostgrestException catch (e) {
-      if (e.code == 'PGRST116') {
-        // Row does not exist — subject was deleted from the database.
-        // Do not retry or fall back to cache, as that would show stale data.
-        StudyULogger.warning("Subject not found in DB (deleted): $e");
-        throw const SubjectDeletedException();
-      }
-      StudyULogger.warning(
-        "Could not retrieve subject, maybe JWT is expired, try logging in: $e",
-      );
-    } catch (exception) {
-      StudyULogger.warning(
-        "Could not retrieve subject, maybe JWT is expired, try logging in: $exception",
-      );
-    }
-
-    // JWT/network error path — retry with login
-    try {
-      if (await signInParticipant()) {
-        return await _fetchRemoteSubject(selectedStudyObjectId);
-      }
-    } on AuthApiException catch (e) {
-      // Credentials were rejected — the auth account no longer exists.
-      StudyULogger.warning("Invalid credentials during re-login: $e");
-      throw const SubjectDeletedException();
-    } catch (exception) {
-      StudyULogger.warning(
-        "Could not login and retrieve the study subject: $exception",
-      );
-      StudyULogger.fatal('Could not login and retrieve the study subject.');
-      // Only fall back to cache for network errors (device offline)
-      try {
-        final cached = await Cache.loadSubject();
-        StudyULogger.info("Loaded subject from cache: $cached");
-        return cached;
-      } catch (e) {
-        StudyULogger.warning("No subject found in cache");
-      }
-    }
-    return null;
+  Future<StudySubject?> _retrieveSubject(String selectedStudyObjectId) {
+    return restoreCachedValueForStartup<StudySubject>(
+      fetchRemote: () => _fetchRemoteSubject(selectedStudyObjectId),
+      loadCached: Cache.loadSubject,
+      signIn: signInParticipant,
+      isDeletedRemoteError: (error) =>
+          error is PostgrestException && error.code == 'PGRST116',
+    );
   }
 
   Future<bool> _initPreview(AppState state, AppLocalizations l10n) async {
