@@ -11,11 +11,12 @@ import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
-import 'package:studyu_app/screens/app_onboarding/study_switch_dialogs.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/services/deferred_link_service.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
+import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
@@ -44,6 +45,10 @@ String initialRouteForMissingSubjectRoute({
       : '/${RouteNames.onboarding}';
 }
 
+@visibleForTesting
+String activeStudyDeepLinkRoute(bool? openSettings) =>
+    '/${openSettings == true ? RouteNames.appSettings : RouteNames.dashboard}';
+
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
@@ -70,32 +75,62 @@ class _LoadingScreenState extends State<LoadingScreen> {
   String? _pendingPreviewRoute;
   String? _error;
 
-  Future<void> _restoreParticipantSession() async {
-    if (isUserLoggedIn()) return;
+  Future<bool> _restoreParticipantSession() async {
+    if (isUserLoggedIn()) return false;
     final hasStoredCredentials =
         await SecureStorage.containsKey(userEmailKey) &&
         await SecureStorage.containsKey(userPasswordKey);
-    if (!hasStoredCredentials) return;
-    await signInParticipant();
+    if (!hasStoredCredentials) return false;
+    try {
+      await signInParticipant();
+      return false;
+    } on AuthApiException catch (error, stackTrace) {
+      StudyULogger.warning(
+        'Stored participant credentials are invalid. Showing reset screen.',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      if (!mounted) return true;
+      context.go('/${RouteNames.appErrorScreen}');
+      return true;
+    }
   }
 
-  void _storePendingDeepLink({String? studyId, String? inviteCode}) {
+  Future<void> _storePendingDeepLink({
+    required Study study,
+    String? inviteCode,
+    List<String>? preselectedInterventionIds,
+    bool persist = false,
+  }) async {
     final state = context.read<AppState>();
-    state.pendingDeepLinkStudyId = studyId;
-    state.pendingDeepLinkInviteCode = inviteCode;
+    PendingDeepLinkService.storeInState(
+      state: state,
+      study: study,
+      inviteCode: inviteCode,
+      preselectedInterventionIds: preselectedInterventionIds,
+    );
+    if (persist) {
+      await PendingDeepLinkService.persist(
+        studyId: inviteCode == null ? study.id : null,
+        inviteCode: inviteCode,
+      );
+    }
   }
 
   Future<void> _handleIncomingDeepLink({
     String? studyId,
     String? inviteCode,
+    bool isDeferred = false,
+    bool persistPending = true,
   }) async {
     final state = context.read<AppState>();
 
     // 1. Check login status
     final loggedIn = isUserLoggedIn();
 
-    // 2. Only try to get an active study ID if they are actually logged in
-    final activeStudyId = loggedIn ? await _getCurrentStudyId(state) : null;
+    // 2. Only try to get an active study if they are actually logged in
+    final currentSubject = loggedIn ? await _getCurrentSubject(state) : null;
+    final activeStudyId = currentSubject?.studyId;
 
     // 3. ALWAYS process/validate the deep link first
     final result = await DeepLinkService.processDeepLink(
@@ -108,7 +143,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     // 4. Handle the result (Errors will be caught here, NeedsAuth will route to onboarding)
-    await _handleDeepLinkResult(result);
+    await _handleDeepLinkResult(
+      result,
+      isDeferred: isDeferred,
+      persistPending: persistPending,
+      currentSubject: currentSubject,
+    );
   }
 
   @override
@@ -134,13 +174,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> _runStartupFlow() async {
-    await _restoreParticipantSession();
+    if (await _restoreParticipantSession()) return;
 
     if (kIsWeb && widget.hasDeepLink) {
       return;
     }
 
     if (widget.hasDeepLink) {
+      final storedLink = await PendingDeepLinkService.readStorage();
+      if (storedLink.inviteCode != widget.deepLinkInviteCode ||
+          storedLink.studyId != widget.deepLinkStudyId) {
+        await PendingDeepLinkService.clearStorage();
+      }
       await _handleIncomingDeepLink(
         studyId: widget.deepLinkStudyId,
         inviteCode: widget.deepLinkInviteCode,
@@ -155,6 +200,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         await _handleDeferredLink(deferredLink);
         return;
       }
+      final storedLink = await PendingDeepLinkService.readStorage();
+      final pendingLink = pendingDeferredLinkFromStorageValues(
+        inviteCode: storedLink.inviteCode,
+        studyId: storedLink.studyId,
+      );
+      if (pendingLink != null) {
+        if (!mounted) return;
+        await _handleDeferredLink(pendingLink);
+        return;
+      }
     }
 
     await initStudy();
@@ -164,6 +219,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await _handleIncomingDeepLink(
       inviteCode: deferredLink.inviteCode,
       studyId: deferredLink.studyId,
+      isDeferred: true,
     );
   }
 
@@ -174,7 +230,52 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  Future<void> _handleDeepLinkResult(DeepLinkResult result) async {
+  Future<void> _markDeferredLinkProcessed() async {
+    await SecureStorage.write('has_processed_deferred_link', 'true');
+    await PendingDeepLinkService.clearStorage();
+  }
+
+  Future<void> _markDeferredLinkHandedOff() async {
+    await SecureStorage.write('has_processed_deferred_link', 'true');
+  }
+
+  Future<void> _showActiveStudyDeepLinkDialog(
+    Study targetStudy,
+    StudySubject currentSubject,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final openSettings = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.deep_link_switch_warning_title),
+        content: Text(
+          '${l10n.study_selection_single}\n\n'
+          '${l10n.study_selection_single_reason}\n\n'
+          '${l10n.deep_link_switch_warning_description(currentSubject.study.title ?? '', targetStudy.title ?? '')}\n\n'
+          '${l10n.deep_link_switch_warning_opt_out_instruction(l10n.opt_out)}',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(true),
+            child: Text(l10n.deep_link_switch_open_settings),
+          ),
+          FilledButton(
+            onPressed: () => context.pop(false),
+            child: Text(l10n.deep_link_switch_continue_study),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    context.go(activeStudyDeepLinkRoute(openSettings));
+  }
+
+  Future<void> _handleDeepLinkResult(
+    DeepLinkResult result, {
+    bool isDeferred = false,
+    bool persistPending = false,
+    StudySubject? currentSubject,
+  }) async {
     final state = context.read<AppState>();
     switch (result) {
       case DeepLinkNeedsAuth(
@@ -182,45 +283,64 @@ class _LoadingScreenState extends State<LoadingScreen> {
         :final inviteCode,
         :final preselectedInterventionIds,
       ):
-        _storePendingDeepLink(
-          studyId: inviteCode != null ? null : study.id,
+        await _storePendingDeepLink(
+          study: study,
           inviteCode: inviteCode,
+          preselectedInterventionIds: preselectedInterventionIds,
+          persist: persistPending,
         );
-        state.preselectedInterventionIds = preselectedInterventionIds;
+        if (isDeferred) {
+          await _markDeferredLinkHandedOff();
+        }
 
         final onBoarded = await SecureStorage.readBool('onboarded') ?? false;
         if (!mounted) return;
-        context.go('/${onBoarded ? RouteNames.terms : RouteNames.onboarding}');
+        context.go(
+          '/${onBoarded ? RouteNames.welcome : RouteNames.onboarding}',
+        );
 
       case DeepLinkError(type: final errorType, :final errorValue):
         setState(() => _error = _getErrorMessage(errorType, errorValue));
+        if (isDeferred) {
+          await _markDeferredLinkProcessed();
+        }
       case DeepLinkSuccess(
         :final study,
         :final inviteCode,
         :final preselectedInterventionIds,
         :final alreadyEnrolled,
       ):
-        state.selectedStudy = study;
-        if (inviteCode != null) {
-          state.inviteCode = inviteCode;
-          state.preselectedInterventionIds = preselectedInterventionIds;
-        }
-
-        final confirmed = await _confirmSwitchToDeepLinkedStudy(study);
-        if (!confirmed) {
-          if (!mounted) return;
-          context.go('/${RouteNames.dashboard}');
-          return;
-        }
-
         if (alreadyEnrolled) {
+          await PendingDeepLinkService.clear(state);
+          if (isDeferred) await _markDeferredLinkProcessed();
           if (!mounted) return;
           context.go('/${RouteNames.dashboard}');
           return;
         }
 
+        if (currentSubject != null) {
+          await PendingDeepLinkService.clear(state);
+          if (isDeferred) await _markDeferredLinkProcessed();
+          if (!mounted) return;
+          await _showActiveStudyDeepLinkDialog(study, currentSubject);
+          return;
+        }
+
+        await _storePendingDeepLink(
+          study: study,
+          inviteCode: inviteCode,
+          preselectedInterventionIds: preselectedInterventionIds,
+          persist: persistPending,
+        );
+        if (isDeferred) {
+          await _markDeferredLinkHandedOff();
+        }
+
+        final onBoarded = await SecureStorage.readBool('onboarded') ?? false;
         if (!mounted) return;
-        context.go('/${RouteNames.studyOverview}');
+        context.go(
+          '/${onBoarded ? RouteNames.welcome : RouteNames.onboarding}',
+        );
     }
   }
 
@@ -242,28 +362,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     context.goNamed(RouteNames.loading);
   }
 
-  Future<String?> _getCurrentStudyId(AppState state) async {
-    final activeSubjectId = await getActiveSubjectId();
-    if (activeSubjectId == null) {
-      return null;
-    }
-
-    final activeSubject = state.activeSubject;
-    if (activeSubject != null && activeSubject.id == activeSubjectId) {
-      return activeSubject.studyId;
-    }
-
-    try {
-      final cachedSubject = await Cache.loadSubject();
-      if (cachedSubject.id == activeSubjectId) {
-        return cachedSubject.studyId;
-      }
-    } catch (_) {
-      return null;
-    }
-    return null;
-  }
-
   Future<StudySubject?> _getCurrentSubject(AppState state) async {
     final activeSubjectId = await getActiveSubjectId();
     if (activeSubjectId == null) {
@@ -278,6 +376,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       final cachedSubject = await Cache.loadSubject();
       if (cachedSubject.id == activeSubjectId) {
+        state.activeSubject = cachedSubject;
         return cachedSubject;
       }
       return null;
@@ -286,42 +385,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<bool> _confirmSwitchToDeepLinkedStudy(Study targetStudy) async {
-    final state = context.read<AppState>();
-    final currentSubject = await _getCurrentSubject(state);
-    if (currentSubject == null) {
-      return true;
-    }
-
-    if (!mounted) return false;
-
-    if (currentSubject.studyId == targetStudy.id) {
-      return await StudySwitchDialogs.confirmDeepLinkWarning(
-        context,
-        targetStudy,
-        currentSubject,
-      );
-    }
-
-    final confirmedSwitch =
-        await StudySwitchDialogs.confirmSwitchToDeepLinkedStudy(
-          context,
-          targetStudy,
-          currentSubject,
-        );
-
-    if (!confirmedSwitch) {
-      return false;
-    }
-
-    state.activeSubject = null;
-    state.selectedStudy = null;
-    return true;
-  }
-
   Future<void> initStudy() async {
     final state = context.read<AppState>();
     final l10n = AppLocalizations.of(context)!;
+    final appLanguage = context.read<AppLanguage>();
     try {
       final previewHandledNavigation = await _initPreview(state, l10n);
       if (previewHandledNavigation) return;
@@ -340,6 +407,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
 
+    await appLanguage.synchronizeWithServer();
+    if (!mounted) return;
+
     final selectedSubjectId = await getActiveSubjectId();
     if (!mounted) return;
 
@@ -355,6 +425,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       StudyULogger.warning(
         "Subject $selectedSubjectId was deleted from backend. Showing recovery screen.",
       );
+      // The cached recovery secret belongs to the deleted account; clear it
+      // so a subsequent user on this device cannot read it.
+      RestoreAccountService.clearCache();
       if (!mounted) return;
       context.go(
         '/${RouteNames.appErrorScreen}',
@@ -387,7 +460,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     StudyULogger.info("No subject found");
     await cancelNotifications(context);
 
-    await _restoreParticipantSession();
+    if (await _restoreParticipantSession()) return;
     if (isUserLoggedIn() && !state.isPreview) {
       if (!mounted) return;
       context.goNamed(RouteNames.welcome);
@@ -468,16 +541,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return false;
     }
 
-    StudyULogger.info(
-      "Preview: Found query parameters ${widget.queryParameters}",
-    );
+    StudyULogger.info('Preview: Found preview configuration');
     final lang = AppLanguage(AppLocalizations.supportedLocales);
     final preview = study_preview.Preview(widget.queryParameters, lang);
     state.isPreview = true;
     _iFrameHelper.postPreviewStatus(status: 'loading');
     await preview.init();
 
-    final isAuthorized = await preview.handleAuthorization();
+    final session = await _iFrameHelper.requestPreviewSession();
+    final isAuthorized =
+        session != null && await preview.handleAuthorization(session);
     if (!isAuthorized) {
       _iFrameHelper.postPreviewStatus(
         status: 'error',
@@ -642,11 +715,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           if (route != null) 'route': route,
         }, AppLanguage(AppLocalizations.supportedLocales));
         await preview.init();
-        // Recover the Supabase session before making authenticated calls.
-        if (!await preview.handleAuthorization()) return false;
-        // Prefer the already-fetched study from state over the one from
-        // handleAuthorization so the designer's latest edits are used.
-        if (state.selectedStudy != null) preview.study = state.selectedStudy;
+        preview.study = state.selectedStudy;
         state.activeSubject = await preview.getStudySubject(
           state,
           createSubject: true,

@@ -9,10 +9,38 @@ import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart';
 import 'package:supabase/supabase.dart';
 
 void main() {
+  test('internal browser routes initialize before reading empty app state', () {
+    final appState = AppState();
+    final router = createAppRouter(
+      queryParameters: const {},
+      initialLocation: initialRouteFromPlatformRoute(
+        '/${RouteNames.studyInformation}',
+      ),
+    );
+    addTearDown(router.dispose);
+
+    expect(appState.activeSubject, isNull);
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      '/${RouteNames.loading}',
+    );
+  });
+
+  test('browser entry routes bypass initial loading', () {
+    for (final route in [
+      '/${RouteNames.preview}?studyid=study-1',
+      '/${RouteNames.invite}/invite-1',
+      '/${RouteNames.study}/study-1',
+      '$appScheme://${RouteNames.invite}/invite-1',
+      '$appScheme://${RouteNames.study}/study-1',
+    ]) {
+      expect(initialRouteFromPlatformRoute(route), route);
+    }
+  });
+
   testWidgets('invalid study routes stay on unavailable screen', (
     tester,
   ) async {

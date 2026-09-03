@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -6,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/notifications.dart';
@@ -147,6 +149,10 @@ class __DebugDialogState extends State<_DebugDialog> {
           _buildTestNotificationButton(),
           const SizedBox(height: 8),
           _buildResetAppButton(),
+          if (kDebugMode) ...[
+            const SizedBox(height: 8),
+            _buildShowOnboardingButton(),
+          ],
           const SizedBox(height: 16),
           _buildPreviewModeSwitch(),
           const SizedBox(height: 16),
@@ -200,6 +206,16 @@ class __DebugDialogState extends State<_DebugDialog> {
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
       child: const Text('Reset App'),
+    );
+  }
+
+  Widget _buildShowOnboardingButton() {
+    return TextButton.icon(
+      key: const ValueKey('debug_show_onboarding'),
+      style: TextButton.styleFrom(foregroundColor: Colors.orange),
+      icon: const Icon(Icons.bug_report),
+      onPressed: () => context.go('/${RouteNames.onboarding}'),
+      label: const Text('Show onboarding'),
     );
   }
 

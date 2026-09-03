@@ -5,15 +5,16 @@ on:
     paths:
       - ".github/workflows/e2e_tests.yml"
       - ".github/workflows/init-workspace/action.yml"
-      - 'supabase/**'
-      - 'scripts/reset-test-db.sh'
-      - 'designer_v2/**'
-      - 'core/**'
-      - 'flutter_common/**'
+      - "supabase/**"
+      - "scripts/reset-test-db.sh"
+      - "designer_v2/**"
+      - "app/**"
+      - "core/**"
+      - "flutter_common/**"
   workflow_dispatch:
 
 env:
-  MELOS_SDK_PATH: 'auto'
+  MELOS_SDK_PATH: "auto"
 
 jobs:
   drive_web:
@@ -59,7 +60,8 @@ jobs:
           LC_ALL=C sed -i.bak \
             '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' \
             flutter_common/lib/envs/.env.local
-          supabase_anon_key="$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)"
+          supabase_anon_key="$(supabase status -o env | grep ANON_KEY \
+            | cut -d'=' -f2)"
           echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$supabase_anon_key" \
             >> flutter_common/lib/envs/.env.local
 
@@ -69,10 +71,39 @@ jobs:
           chromedriver --port=4444 &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
 
-      - name: Run Flutter E2E tests
+      - name: Run Designer Flutter E2E tests
         working-directory: ./designer_v2
         run: |
           flutter drive --driver=test_driver/integration_driver.dart \
             --target=integration_test/app_test.dart -d web-server \
-            --web-browser-flag="--disable-web-security" \
             --dart-define="STUDYU_ENV=.env.local"
+
+      - name: Run app E2E tests
+        working-directory: ./app
+        run: |
+          # Run every app integration test target, one isolated
+          # Flutter-drive/ChromeDriver browser session each, so targets never
+          # share browser/app state. Successful recovery persists credentials
+          # and an active subject.
+          #
+          # Ordering note: recovery_e2e_active_test.dart must run before
+          # recovery_e2e_reused_phrase_test.dart, because the reused-phrase
+          # target asserts that the active target already consumed (rotated)
+          # its fixed fixture recovery ID. Alphabetical glob order satisfies
+          # this (active < confirmation < no_study < reused_phrase).
+          e2e_email="recovery-signed-in@local.studyu.test"
+          e2e_password="recovery-signed-in-pass"
+          for target in integration_test/*_test.dart; do
+            defines=("--dart-define=STUDYU_ENV=.env.local")
+            case "$target" in
+              *recovery_e2e_confirmation_test.dart)
+                # Only the signed-in journey bootstraps a participant session.
+                defines+=(
+                  "--dart-define=STUDYU_E2E_PARTICIPANT_EMAIL=$e2e_email"
+                  "--dart-define=STUDYU_E2E_PARTICIPANT_PASSWORD=$e2e_password"
+                )
+                ;;
+            esac
+            flutter drive --driver=test_driver/integration_driver.dart \
+              --target="$target" -d web-server "${defines[@]}"
+          done

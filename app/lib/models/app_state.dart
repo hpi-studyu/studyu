@@ -12,6 +12,7 @@ class AppState with ChangeNotifier {
   List<String>? preselectedInterventionIds;
   StudyNotifications? studyNotifications;
   bool isPreview = false;
+  bool showRecoveryPhraseOnDashboard = false;
 
   String? pendingDeepLinkStudyId;
   String? pendingDeepLinkInviteCode;
@@ -19,7 +20,35 @@ class AppState with ChangeNotifier {
   bool get hasPendingDeepLink =>
       pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
 
+  bool get showParticipantRecovery => !isPreview;
+
+  void setPendingDeepLink({
+    required Study study,
+    String? inviteCode,
+    List<String>? preselectedInterventionIds,
+  }) {
+    pendingDeepLinkStudyId = inviteCode == null ? study.id : null;
+    pendingDeepLinkInviteCode = inviteCode;
+    selectedStudy = study;
+    this.inviteCode = inviteCode;
+    this.preselectedInterventionIds = preselectedInterventionIds;
+    notifyListeners();
+  }
+
   void clearPendingDeepLink() {
+    pendingDeepLinkStudyId = null;
+    pendingDeepLinkInviteCode = null;
+    notifyListeners();
+  }
+
+  /// Clears all state that belongs to the signed-out participant.
+  void clearAccountState() {
+    activeSubject = null;
+    selectedStudy = null;
+    selectedInterventions = null;
+    inviteCode = null;
+    preselectedInterventionIds = null;
+    studyNotifications = null;
     pendingDeepLinkStudyId = null;
     pendingDeepLinkInviteCode = null;
     notifyListeners();

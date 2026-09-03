@@ -78,9 +78,9 @@ class Cache {
     return null;
   }
 
-  static Future<void> delete() async {
+  static Future<void> delete() {
     StudyULogger.warning("Delete cache");
-    SecureStorage.delete(cacheSubjectKey);
+    return SecureStorage.delete(cacheSubjectKey);
   }
 
   static Future<void> uploadBlobFiles() async {

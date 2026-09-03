@@ -288,6 +288,11 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   /// Fetches a study by invite code using the RPC function.
+  ///
+  /// The RPC is SECURITY DEFINER and returns the full study row plus the
+  /// matched invite's preselected_intervention_ids as a single jsonb object,
+  /// so anon deep-link callers can resolve both in one call without needing
+  /// SELECT access to study_invite (RLS blocks non-editors).
   /// Returns the Study and StudyInvite, or nulls if not found.
   static Future<(StudyInvite?, Study?)> fetchByInviteCode(String code) async {
     final cleanCode = code.trim().toLowerCase();
@@ -305,20 +310,10 @@ class Study extends SupabaseObjectFunctions<Study>
 
       final study = Study.fromJson(studyResult);
 
-      // Fetch preselected_intervention_ids from study_invite table
-      final inviteResult = await env.client
-          .from(StudyInvite.tableName)
-          .select('preselected_intervention_ids')
-          .eq('code', cleanCode)
-          .maybeSingle();
-
       List<String>? preselectedIds;
-      if (inviteResult != null &&
-          inviteResult.containsKey('preselected_intervention_ids') &&
-          inviteResult['preselected_intervention_ids'] != null) {
-        preselectedIds = List<String>.from(
-          inviteResult['preselected_intervention_ids'] as List,
-        );
+      final preselected = studyResult['preselected_intervention_ids'];
+      if (preselected != null) {
+        preselectedIds = List<String>.from(preselected as List);
       }
 
       final invite = StudyInvite(cleanCode, study.id)

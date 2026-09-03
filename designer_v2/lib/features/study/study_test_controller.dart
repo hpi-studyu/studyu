@@ -38,8 +38,9 @@ class StudyTestController extends _$StudyTestController {
           .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
-      serializedSession:
-          ref.watch(authRepositoryProvider).serializedSession ?? '',
+      hasSession:
+          ref.watch(authRepositoryProvider).serializedSession?.isNotEmpty ??
+          false,
       languageCode: ref.watch(localeProvider).languageCode,
     );
   }
@@ -57,7 +58,11 @@ PlatformController studyTestPlatformController(Ref ref, StudyID studyId) {
     );
   } else {
     // Desktop and Web
-    platformController = WebController(state.appUrl, studyId);
+    platformController = WebController(
+      state.appUrl,
+      studyId,
+      ref.watch(authRepositoryProvider).serializedSession ?? '',
+    );
   }
   return platformController;
 }

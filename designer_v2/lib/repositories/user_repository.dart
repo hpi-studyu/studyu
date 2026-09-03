@@ -16,6 +16,7 @@ abstract class IUserRepository {
     PreferenceAction pinAction,
     String modelId,
   );
+  Future<StudyUUser> updateLanguage(String language);
   Future<StudyUUser> saveCustomPreset(SavedFilter filter);
   Future<StudyUUser> deleteCustomPreset(String id);
   List<SavedFilter> getCustomPresets();
@@ -82,6 +83,13 @@ class UserRepository implements IUserRepository {
         newPinnedStudies.remove(modelId);
     }
     user.preferences.pinnedStudies = newPinnedStudies;
+    return saveUser();
+  }
+
+  @override
+  Future<StudyUUser> updateLanguage(String language) async {
+    await fetchUser();
+    user.preferences.language = language;
     return saveUser();
   }
 
