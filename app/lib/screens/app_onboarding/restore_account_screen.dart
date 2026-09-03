@@ -63,7 +63,7 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
     }
   }
 
-  void _validateAndSubmit() {
+  Future<void> _validateAndSubmit() async {
     setState(() {
       _errorMessage = null;
     });
@@ -84,12 +84,39 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
 
     try {
       final id = RestoreAccountService.decodeRecoveryPhrase(words);
-      _onSuccess(id);
+      if (RestoreAccountService.isUserLoggedIn &&
+          !await _confirmAccountRestoration()) {
+        return;
+      }
+      await _onSuccess(id);
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _errorMessage = localizations.invalid_recovery_phrase;
       });
     }
+  }
+
+  Future<bool> _confirmAccountRestoration() async {
+    final localizations = AppLocalizations.of(context)!;
+    return await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: Text(localizations.restore_account_signed_in_title),
+            content: Text(localizations.restore_account_signed_in_description),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: Text(localizations.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text(localizations.restore_account),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   Future<void> _onSuccess(BigInt id) async {

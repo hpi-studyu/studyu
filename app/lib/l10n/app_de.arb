@@ -491,6 +491,8 @@
   "continue_to_study": "Weiter zur Studie",
   "restore_account": "Konto wiederherstellen",
   "enter_recovery_phrase": "Gib deine Wiederherstellungsphrase ein",
+  "restore_account_signed_in_title": "Bereits angemeldet",
+  "restore_account_signed_in_description": "Du bist auf diesem Gerät bereits angemeldet. Wenn du ein Konto wiederherstellst, wird das aktuelle Konto ersetzt. Die Wiederherstellungsphrase, die du eingibst, funktioniert danach nicht mehr.",
   "required": "Erforderlich",
   "invalid_recovery_phrase": "Diese Wiederherstellungsphrase passt zu keinem Konto. Achte darauf, dass alle 13 Wörter in der richtigen Reihenfolge stehen.",
   "recovery_phrase_too_many_words": "Wiederherstellungsphrasen haben 13 Wörter. Entferne zusätzliche Wörter, um fortzufahren.",

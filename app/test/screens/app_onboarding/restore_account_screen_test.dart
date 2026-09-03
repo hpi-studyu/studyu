@@ -58,6 +58,7 @@ void main() {
 
   setUp(() {
     storage.clear();
+    RestoreAccountService.debugUserLoggedInForTesting = () => false;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(secureStorageChannel, (call) async {
           final arguments = call.arguments as Map<Object?, Object?>;
@@ -73,6 +74,7 @@ void main() {
 
   tearDown(() {
     RestoreAccountService.debugResetRecoveryForTesting();
+    RestoreAccountService.debugResetUserLoggedInForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(secureStorageChannel, null);
   });
@@ -140,6 +142,83 @@ void main() {
     );
     expect(find.textContaining('Checksum mismatch'), findsNothing);
     expect(find.textContaining('ArgumentError'), findsNothing);
+  });
+
+  testWidgets('asks signed-in users to confirm account restoration', (
+    tester,
+  ) async {
+    var recoveryCalls = 0;
+    RestoreAccountService.debugUserLoggedInForTesting = () => true;
+    RestoreAccountService.debugConfigureRecoveryForTesting(
+      recoverAccount: (_) async {
+        recoveryCalls++;
+        return RecoveryResult(success: false);
+      },
+    );
+    await tester.pumpWidget(_wrap(const RestoreAccountScreen()));
+
+    await _enterValidPhrase(tester);
+    await tester.tap(find.widgetWithText(FilledButton, 'Restore account'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Already signed in'), findsOneWidget);
+    expect(
+      find.text(
+        'You are already signed in on this device. Restoring an account will replace the current account. The recovery phrase you enter will stop working after it is used.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Cancel'), findsOneWidget);
+    expect(find.text('Restore account'), findsNWidgets(2));
+    expect(recoveryCalls, 0);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(recoveryCalls, 0);
+  });
+
+  testWidgets('restores after a signed-in user confirms', (tester) async {
+    var recoveryCalls = 0;
+    RestoreAccountService.debugUserLoggedInForTesting = () => true;
+    RestoreAccountService.debugConfigureRecoveryForTesting(
+      recoverAccount: (_) async {
+        recoveryCalls++;
+        return RecoveryResult(
+          success: true,
+          email: 'recovered@example.com',
+          password: 'password',
+        );
+      },
+      storeCredentials: (_, _) async {},
+      signInParticipant: () async => true,
+      clearActiveSubjectState: () async {},
+    );
+    final router = _router();
+    addTearDown(router.dispose);
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: router,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: const Locale('en'),
+      ),
+    );
+
+    await _enterValidPhrase(tester);
+    await tester.tap(find.widgetWithText(FilledButton, 'Restore account'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.widgetWithText(FilledButton, 'Restore account'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(recoveryCalls, 1);
+    expect(find.text('Study selection destination'), findsOneWidget);
   });
 
   testWidgets('routes recovered accounts with a subject to loading', (

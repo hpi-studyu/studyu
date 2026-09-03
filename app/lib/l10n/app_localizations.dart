@@ -2702,6 +2702,18 @@ abstract class AppLocalizations {
   /// **'Enter your recovery phrase'**
   String get enter_recovery_phrase;
 
+  /// No description provided for @restore_account_signed_in_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Already signed in'**
+  String get restore_account_signed_in_title;
+
+  /// No description provided for @restore_account_signed_in_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already signed in on this device. Restoring an account will replace the current account. The recovery phrase you enter will stop working after it is used.'**
+  String get restore_account_signed_in_description;
+
   /// No description provided for @required.
   ///
   /// In en, this message translates to:

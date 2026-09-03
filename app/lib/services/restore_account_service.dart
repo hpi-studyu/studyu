@@ -4,6 +4,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+const bool Function() _defaultUserLoggedIn = isUserLoggedIn;
+
 class RecoveryResult {
   final bool success;
   final String? email;
@@ -43,6 +45,7 @@ class RestoreAccountService {
   static Future<void> Function(String, String) _credentialsStorer =
       storeFakeUserEmailAndPassword;
   static Future<bool> Function() _participantSignIn = signInParticipant;
+  static bool Function() _userLoggedIn = _defaultUserLoggedIn;
   static Future<void> Function() _activeSubjectStateClearer =
       _clearActiveSubjectState;
   static Future<void> Function(String) _activeSubjectIdStorer =
@@ -114,6 +117,21 @@ class RestoreAccountService {
   @visibleForTesting
   static void debugResetSubjectGetterForTesting() {
     _subjectGetter = _fetchSubject;
+  }
+
+  static bool get isUserLoggedIn => _userLoggedIn();
+
+  @visibleForTesting
+  static bool Function() get debugUserLoggedInForTesting => _userLoggedIn;
+
+  @visibleForTesting
+  static set debugUserLoggedInForTesting(bool Function() getter) {
+    _userLoggedIn = getter;
+  }
+
+  @visibleForTesting
+  static void debugResetUserLoggedInForTesting() {
+    _userLoggedIn = _defaultUserLoggedIn;
   }
 
   @visibleForTesting
@@ -364,26 +382,29 @@ class RestoreAccountService {
 
       await _credentialsStorer(result.email!, result.password!);
 
+      // Signing in broadcasts an auth event that can start loading before this
+      // method returns. Remove the former account's subject state first. Then
+      // store the recovered subject ID before sign-in, when one exists.
+      await _activeSubjectStateClearer();
+      if (result.subjectId != null) {
+        await _activeSubjectIdStorer(result.subjectId!);
+      }
+
       final signInResult = await _participantSignIn();
       if (!signInResult) {
+        await _activeSubjectStateClearer();
         StudyULogger.warning('Sign in failed after recovery');
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
-      await _activeSubjectStateClearer();
-
-      if (result.subjectId != null) {
-        final isValid = await validateSubject(result.subjectId!);
-
-        if (!isValid) {
-          return RecoveryResult(
-            success: true,
-            email: result.email,
-            password: result.password,
-          );
-        }
-
-        await _activeSubjectIdStorer(result.subjectId!);
+      if (result.subjectId != null &&
+          !await validateSubject(result.subjectId!)) {
+        await _activeSubjectStateClearer();
+        return RecoveryResult(
+          success: true,
+          email: result.email,
+          password: result.password,
+        );
       }
 
       return result;

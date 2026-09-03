@@ -510,6 +510,8 @@
   "continue_to_study": "Continue to study",
   "restore_account": "Restore account",
   "enter_recovery_phrase": "Enter your recovery phrase",
+  "restore_account_signed_in_title": "Already signed in",
+  "restore_account_signed_in_description": "You are already signed in on this device. Restoring an account will replace the current account. The recovery phrase you enter will stop working after it is used.",
   "required": "Required",
   "invalid_recovery_phrase": "This recovery phrase does not match an account. Make sure all 13 words are in the right order.",
   "recovery_phrase_too_many_words": "Recovery phrases have 13 words. Remove extra words to continue.",

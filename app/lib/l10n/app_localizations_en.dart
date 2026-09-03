@@ -1417,6 +1417,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_recovery_phrase => 'Enter your recovery phrase';
 
   @override
+  String get restore_account_signed_in_title => 'Already signed in';
+
+  @override
+  String get restore_account_signed_in_description =>
+      'You are already signed in on this device. Restoring an account will replace the current account. The recovery phrase you enter will stop working after it is used.';
+
+  @override
   String get required => 'Required';
 
   @override

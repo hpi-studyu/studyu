@@ -18,9 +18,10 @@ void main() {
     });
 
     test(
-      'successful recovery clears old subject state before storing recovered subject',
+      'successful recovery clears old subject state before signing in',
       () async {
         final calls = <String>[];
+        String? activeSubjectId = 'old-subject';
         RestoreAccountService.debugConfigureRecoveryForTesting(
           recoverAccount: (_) async => RecoveryResult(
             success: true,
@@ -30,12 +31,17 @@ void main() {
           ),
           storeCredentials: (_, _) async => calls.add('store credentials'),
           signInParticipant: () async {
-            calls.add('sign in');
+            calls.add('sign in with $activeSubjectId');
             return true;
           },
-          clearActiveSubjectState: () async => calls.add('clear old subject'),
-          storeActiveSubjectId: (subjectId) async =>
-              calls.add('store $subjectId'),
+          clearActiveSubjectState: () async {
+            activeSubjectId = null;
+            calls.add('clear old subject');
+          },
+          storeActiveSubjectId: (subjectId) async {
+            activeSubjectId = subjectId;
+            calls.add('store $subjectId');
+          },
         );
         RestoreAccountService.debugSubjectGetterForTesting = (_) async =>
             StudySubject.fromStudy(Study('study', 'owner'), 'owner', [], null);
@@ -47,9 +53,44 @@ void main() {
         expect(result.success, isTrue);
         expect(calls, [
           'store credentials',
-          'sign in',
           'clear old subject',
           'store recovered-subject',
+          'sign in with recovered-subject',
+        ]);
+      },
+    );
+
+    test(
+      'recovery without a subject clears stale state before signing in',
+      () async {
+        final calls = <String>[];
+        String? activeSubjectId = 'old-subject';
+        RestoreAccountService.debugConfigureRecoveryForTesting(
+          recoverAccount: (_) async => RecoveryResult(
+            success: true,
+            email: 'recovered@example.com',
+            password: 'password',
+          ),
+          storeCredentials: (_, _) async => calls.add('store credentials'),
+          clearActiveSubjectState: () async {
+            activeSubjectId = null;
+            calls.add('clear old subject');
+          },
+          signInParticipant: () async {
+            calls.add('sign in with $activeSubjectId');
+            return true;
+          },
+        );
+        addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isTrue);
+        expect(result.subjectId, isNull);
+        expect(calls, [
+          'store credentials',
+          'clear old subject',
+          'sign in with null',
         ]);
       },
     );

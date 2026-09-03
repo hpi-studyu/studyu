@@ -63,6 +63,7 @@ Future<void> main() async {
     debugPrint('Error loading env: $error');
   }
   await _configureLocalTimeZone();
+  await _storeE2eParticipantCredentials();
   final queryParameters = Uri.base.queryParameters;
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
@@ -135,6 +136,17 @@ Future<bool> isAppOutdated(AppConfig appConfig) async {
 }
 
 /// This is needed for flutter_local_notifications
+/// Stores local-only fixture credentials before production startup for a
+/// browser E2E run. LoadingScreen then signs in through signInParticipant.
+Future<void> _storeE2eParticipantCredentials() async {
+  const email = String.fromEnvironment('STUDYU_E2E_PARTICIPANT_EMAIL');
+  const password = String.fromEnvironment('STUDYU_E2E_PARTICIPANT_PASSWORD');
+
+  if (!kDebugMode || email.isEmpty || password.isEmpty) return;
+
+  await storeFakeUserEmailAndPassword(email, password);
+}
+
 Future<void> _configureLocalTimeZone() async {
   if (kIsWeb || Platform.isLinux) {
     return;
