@@ -26,7 +26,7 @@ The participant app adds a 13-word recovery phrase. A returning participant can 
     4. Enter the saved 13-word phrase for the account with an active study.
     5. Select **Restore account**.
   - Expected: The app signs in to the recovered account. It opens the latest active study. Saved study progress is present. The used phrase cannot restore the account again.
-  - Coverage: Automated against local Supabase by `app/integration_test/recovery_e2e_test.dart` plus `app/integration_test/recovery_e2e_reused_phrase_test.dart` in a separate browser process. Passed on this branch: live RPC recovery, normal auth sign-in, dashboard routing, persisted-progress rendering, and one-time phrase invalidation.
+  - Coverage: Automated against local Supabase by `app/integration_test/recovery_e2e_active_test.dart` plus `app/integration_test/recovery_e2e_reused_phrase_test.dart` in a separate browser process. Passed on this branch: live RPC recovery, normal auth sign-in, dashboard routing, persisted-progress rendering, and one-time phrase invalidation.
 
 - [ ] **Restore an account without an active study**
   - Steps:
@@ -95,7 +95,7 @@ The participant app adds a 13-word recovery phrase. A returning participant can 
 | Lazy phrase loading, exact clipboard text, and phrase reissue | `app/test/widgets/recovery_phrase_content_test.dart` | `fvm exec melos exec --scope studyu_app -- "flutter test test/widgets/recovery_phrase_content_test.dart"` |
 | Dashboard recovery prompt and acknowledgement gate | `app/test/screens/study/dashboard/dashboard_test.dart` | `fvm exec melos exec --scope studyu_app -- "flutter test test/screens/study/dashboard/dashboard_test.dart"` |
 | Recovery cleanup order, active-subject handoff, and German phrase decoding | `app/test/services/restore_account_service_test.dart` | `fvm exec melos exec --scope studyu_app -- "fvm flutter test test/services/restore_account_service_test.dart"` |
-| Live active-study, no-study, signed-in confirmation, and used-ID invalidation recovery (passed on this branch) | `app/integration_test/recovery_e2e_test.dart`, `app/integration_test/recovery_e2e_reused_phrase_test.dart`, `app/integration_test/recovery_e2e_no_study_test.dart`, `app/integration_test/recovery_e2e_confirmation_test.dart` | Run the four `flutter drive` targets sequentially as configured in `.github/workflows/e2e_tests.yml`; each gets a new browser process, and the used-ID target follows active recovery immediately. |
+| Live active-study, no-study, signed-in confirmation, and used-ID invalidation recovery (passed on this branch) | `app/integration_test/recovery_e2e_active_test.dart`, `app/integration_test/recovery_e2e_reused_phrase_test.dart`, `app/integration_test/recovery_e2e_no_study_test.dart`, `app/integration_test/recovery_e2e_confirmation_test.dart` | The workflow runs every `app/integration_test/*_test.dart` target sequentially, one new browser process each; alphabetical order keeps the used-ID target after active recovery. |
 | Used recovery ID invalidation and rotation permissions | `supabase/tests/rls/user_recovery_test.sql` | `./scripts/reset-test-db.sh && supabase test db supabase/tests` |
 
 The focused app suite passed on this branch:

@@ -5,6 +5,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'recovery_e2e_support.dart';
 
+// Uses waitForAbsent from recovery_e2e_support.dart after Cancel so the
+// departing dialog route cannot intercept the resubmission taps.
+
 const _signedInUserId = '55555555-5555-4555-8555-555555555555';
 const _recoveryTargetUserId = '77777777-7777-4777-8777-777777777777';
 
