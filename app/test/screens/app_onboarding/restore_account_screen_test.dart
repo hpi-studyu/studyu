@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/restore_account_screen.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_core/core.dart';
@@ -11,11 +13,26 @@ import 'package:studyu_core/core.dart';
 final _validPhrase = encode(BigInt.one).join(' ');
 
 Widget _wrap(Widget child) {
-  return MaterialApp(
-    supportedLocales: AppLocalizations.supportedLocales,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    locale: const Locale('en'),
-    home: child,
+  return ChangeNotifierProvider(
+    create: (_) => AppState(),
+    child: MaterialApp(
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      locale: const Locale('en'),
+      home: child,
+    ),
+  );
+}
+
+Widget _routerApp(GoRouter router) {
+  return ChangeNotifierProvider(
+    create: (_) => AppState(),
+    child: MaterialApp.router(
+      routerConfig: router,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      locale: const Locale('en'),
+    ),
   );
 }
 
@@ -59,6 +76,10 @@ void main() {
   setUp(() {
     storage.clear();
     RestoreAccountService.debugUserLoggedInForTesting = () => false;
+    RestoreAccountService.debugConfigureRecoveryForTesting(
+      confirmRecovery: () async => true,
+      cancelNotifications: (_) async {},
+    );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(secureStorageChannel, (call) async {
           final arguments = call.arguments as Map<Object?, Object?>;
@@ -197,14 +218,7 @@ void main() {
     );
     final router = _router();
     addTearDown(router.dispose);
-    await tester.pumpWidget(
-      MaterialApp.router(
-        routerConfig: router,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('en'),
-      ),
-    );
+    await tester.pumpWidget(_routerApp(router));
 
     await _enterValidPhrase(tester);
     await tester.tap(find.widgetWithText(FilledButton, 'Restore account'));
@@ -240,14 +254,7 @@ void main() {
     addTearDown(RestoreAccountService.debugResetSubjectGetterForTesting);
     final router = _router();
     addTearDown(router.dispose);
-    await tester.pumpWidget(
-      MaterialApp.router(
-        routerConfig: router,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('en'),
-      ),
-    );
+    await tester.pumpWidget(_routerApp(router));
 
     await _enterValidPhrase(tester);
     await tester.tap(find.widgetWithText(FilledButton, 'Restore account'));
@@ -272,14 +279,7 @@ void main() {
       );
       final router = _router();
       addTearDown(router.dispose);
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: router,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          locale: const Locale('en'),
-        ),
-      );
+      await tester.pumpWidget(_routerApp(router));
 
       await _enterValidPhrase(tester);
       await tester.tap(find.widgetWithText(FilledButton, 'Restore account'));

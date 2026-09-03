@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_core/core.dart';
@@ -126,7 +128,10 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
     });
 
     try {
-      final result = await RestoreAccountService.performRecovery(id);
+      final result = await RestoreAccountService.performRecovery(
+        id,
+        appState: context.read<AppState>(),
+      );
 
       if (!mounted) return;
 

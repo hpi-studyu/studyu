@@ -4,6 +4,21 @@ import 'package:test/test.dart';
 
 void main() {
   group('Recovery Encoding/Decoding', () {
+    test('fixed UUID phrases remain stable', () {
+      expect(
+        encode(BigInt.zero),
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon'
+            .split(' '),
+      );
+      expect(
+        encode(
+          BigInt.parse('1234567890abcdef1234567890abcdef', radix: 16),
+          wordlist: wordlistDe,
+        ),
+        'abitur befinden gepard aufruf piste import schere hemd heilen farn probe rohr stamm'
+            .split(' '),
+      );
+    });
     test('should encode and decode 128-bit ID correctly', () {
       // Test with a known 128-bit value
       final id = BigInt.parse('1234567890ABCDEF1234567890ABCDEF', radix: 16);
@@ -104,6 +119,12 @@ void main() {
   });
 
   group('Wordlist Validation', () {
+    test('English and German wordlists contain 2048 unique words', () {
+      for (final wordlist in [wordlistEn, wordlistDe]) {
+        expect(wordlist, hasLength(2048));
+        expect(wordlist.toSet(), hasLength(2048));
+      }
+    });
     test('should use English wordlist by default', () {
       final id = BigInt.parse('1234567890ABCDEF1234567890ABCDEF', radix: 16);
       final words = encode(id);

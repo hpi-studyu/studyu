@@ -11,6 +11,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public.user_recovery (
     recovery_id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id uuid NOT NULL UNIQUE REFERENCES public.user (id) ON DELETE CASCADE,
+    pending_password text,
     created_at timestamptz DEFAULT now() NOT NULL
 );
 
@@ -21,13 +22,8 @@ COMMENT ON TABLE public.user_recovery IS 'Maps recovery IDs to users for secure 
 -- Enable RLS
 ALTER TABLE public.user_recovery ENABLE ROW LEVEL SECURITY;
 
--- Users can only see their own recovery entry
-CREATE POLICY "Users can view their own recovery entry"
-ON public.user_recovery
-FOR SELECT
-TO authenticated
-USING (user_id = auth.uid());
-
+-- Recovery records, including retry-safe pending credentials, are accessible
+-- only through SECURITY DEFINER recovery RPCs.
 /*
  * Function to get or create a recovery ID for the current user.
  * Called when user accesses the settings/recovery phrase screen.
@@ -80,6 +76,7 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION public.get_or_create_recovery() FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.get_or_create_recovery() TO authenticated;
 
 COMMENT ON FUNCTION public.get_or_create_recovery() IS 'Gets existing recovery_id or creates one for the current authenticated user.';
@@ -176,23 +173,29 @@ BEGIN
         );
     END IF;
 
-    -- 3. Generate new random password
-    v_new_password := gen_random_uuid()::text;
-    v_encrypted_password := extensions.crypt(v_new_password, extensions.gen_salt('bf', 12));
-
-    -- 4. Update user's password in auth.users
-    UPDATE auth.users
-    SET
-        encrypted_password = v_encrypted_password,
-        updated_at = now()
-    WHERE id = v_user_id;
-
-    -- 5. Invalidate the recovery ID after the password update succeeds.
-    UPDATE public.user_recovery
-    SET recovery_id = gen_random_uuid()
+    -- 3. Create a password once. Retries return this pending credential until
+    -- the recovered user confirms the sign-in, so a lost RPC response cannot
+    -- consume the only recovery phrase.
+    SELECT pending_password INTO v_new_password
+    FROM public.user_recovery
     WHERE user_id = v_user_id;
 
-    -- 6. Find latest active study subject
+    IF v_new_password IS NULL THEN
+        v_new_password := gen_random_uuid()::text;
+        v_encrypted_password := extensions.crypt(v_new_password, extensions.gen_salt('bf', 12));
+        UPDATE auth.users
+        SET encrypted_password = v_encrypted_password, updated_at = now()
+        WHERE id = v_user_id;
+        UPDATE public.user_recovery
+        SET pending_password = v_new_password
+        WHERE user_id = v_user_id;
+        -- Revoke sessions before the recovered credential can be used. This
+        -- leaves the new sign-in session intact while evicting lost devices.
+        DELETE FROM auth.refresh_tokens WHERE user_id = v_user_id;
+        DELETE FROM auth.sessions WHERE user_id = v_user_id;
+    END IF;
+
+    -- 4. Find latest active study subject
     -- Priority: most recent progress > most recent start date > deterministic ID ordering
     SELECT
         ss.id
@@ -211,7 +214,7 @@ BEGIN
         ss.id DESC                               -- Deterministic ordering for identical dates
     LIMIT 1;
 
-    -- 7. Return success with credentials and optional subject ID.
+    -- 5. Return success with credentials and optional subject ID.
     RETURN jsonb_build_object(
         'success', true,
         'email', v_user_email,
@@ -231,11 +234,44 @@ EXCEPTION
 END;
 $$;
 
--- Grant execute permission to anon and authenticated roles
--- (anon is required since users call this before authentication)
+REVOKE ALL ON FUNCTION public.recover_account(uuid) FROM public;
+-- anon is required since users call this before authentication.
 GRANT EXECUTE ON FUNCTION public.recover_account(uuid) TO anon, authenticated;
 
 COMMENT ON FUNCTION public.recover_account(uuid) IS
-'Recovers user account by looking up user via recovery_id, generating new password, and finding latest active study.';
+'Returns a retry-safe pending credential for a recovery ID until confirmed.';
+
+/* Confirm a recovered, authenticated account. This is deliberately separate
+ * from recover_account: only a successfully signed-in participant can consume
+ * the phrase. */
+CREATE OR REPLACE FUNCTION public.confirm_recovered_account()
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_user_id uuid := auth.uid();
+BEGIN
+    IF v_user_id IS NULL THEN
+        RAISE EXCEPTION 'Not authenticated' USING ERRCODE = '42501';
+    END IF;
+
+    UPDATE public.user_recovery
+    SET recovery_id = gen_random_uuid(), pending_password = NULL
+    WHERE user_id = v_user_id AND pending_password IS NOT NULL;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No pending recovery' USING ERRCODE = 'P0002';
+    END IF;
+
+    RETURN true;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.confirm_recovered_account() FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.confirm_recovered_account() TO authenticated;
+COMMENT ON FUNCTION public.confirm_recovered_account() IS
+'Consumes a pending recovery, rotates its phrase, and revokes all user sessions.';
 
 COMMIT;

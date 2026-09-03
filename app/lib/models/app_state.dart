@@ -41,6 +41,19 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Clears all state that belongs to the signed-out participant.
+  void clearAccountState() {
+    activeSubject = null;
+    selectedStudy = null;
+    selectedInterventions = null;
+    inviteCode = null;
+    preselectedInterventionIds = null;
+    studyNotifications = null;
+    pendingDeepLinkStudyId = null;
+    pendingDeepLinkInviteCode = null;
+    notifyListeners();
+  }
+
   /// Flag indicating whether the participant's progress should be tracked
   ///
   /// We always track the participant's progress except when the study is

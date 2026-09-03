@@ -49,8 +49,13 @@ class DeepLinkService {
   fetchInviteForDeepLink = Study.fetchByInviteCode;
 
   @visibleForTesting
+  static Future<Study?> Function(String studyId) fetchStudyForDeepLink =
+      fetchStudyById;
+
+  @visibleForTesting
   static void resetTestOverrides() {
     fetchInviteForDeepLink = Study.fetchByInviteCode;
+    fetchStudyForDeepLink = fetchStudyById;
   }
 
   /// Fetches a study by its ID
@@ -128,7 +133,7 @@ class DeepLinkService {
     String? activeStudyId,
     required bool isAuthenticated,
   }) async {
-    final study = await fetchStudyById(studyId);
+    final study = await fetchStudyForDeepLink(studyId);
 
     if (study == null) {
       return DeepLinkError(DeepLinkErrorType.studyNotFound, studyId);

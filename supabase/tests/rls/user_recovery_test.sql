@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(11);
+SELECT plan(19);
 
 SELECT tests.create_supabase_user(
     'recovery_user',
@@ -23,24 +23,39 @@ SELECT ok(
 );
 
 SELECT is(
-    (
-        SELECT count(*)
-        FROM public.user_recovery
-        WHERE recovery_id = '00000000-0000-4000-8000-000000000001'
-    ),
-    0::bigint,
-    'recovery invalidates the used recovery ID'
+    public.recover_account('00000000-0000-4000-8000-000000000001')
+    ->> 'password',
+    public.recover_account('00000000-0000-4000-8000-000000000001')
+    ->> 'password',
+    'retries return the same pending credential'
 );
 
-SELECT is(
-    (
-        public.recover_account(
-            '00000000-0000-4000-8000-000000000001'
-        ) ->> 'success'
-    )::boolean,
-    false,
-    'the used recovery ID cannot recover the account again'
+SELECT tests.create_supabase_user(
+    'other_recovery_user',
+    'other_recovery_user@fake-studyu-email-domain.com'
 );
+INSERT INTO public.user_recovery (recovery_id, user_id)
+VALUES (
+    '00000000-0000-4000-8000-000000000002',
+    tests.get_supabase_uid('other_recovery_user')
+);
+
+SELECT tests.authenticate_as('recovery_user');
+SELECT is(
+    (SELECT count(*) FROM public.user_recovery), 0::bigint,
+    'authenticated users cannot select recovery records containing pending passwords'
+);
+SELECT tests.authenticate_as('other_recovery_user');
+SELECT is(
+    (SELECT count(*) FROM public.user_recovery), 0::bigint,
+    'authenticated users cannot select other users recovery records'
+);
+SELECT set_config('role', 'anon', true);
+SELECT is(
+    (SELECT count(*) FROM public.user_recovery), 0::bigint,
+    'anon cannot select recovery rows'
+);
+SELECT set_config('role', 'postgres', true);
 
 SELECT is(
     (
@@ -48,12 +63,44 @@ SELECT is(
         FROM information_schema.routine_privileges
         WHERE
             routine_schema = 'public'
-            AND routine_name = 'rotate_recovery_id'
-            AND grantee = 'PUBLIC'
-            AND privilege_type = 'EXECUTE'
+            AND routine_name IN (
+                'rotate_recovery_id',
+                'get_or_create_recovery',
+                'recover_account',
+                'confirm_recovered_account'
+            )
+            AND grantee = 'PUBLIC' AND privilege_type = 'EXECUTE'
     ),
     0::bigint,
-    'PUBLIC cannot execute rotate_recovery_id'
+    'PUBLIC cannot execute recovery functions'
+);
+SELECT ok(
+    NOT has_function_privilege(
+        'anon', 'public.get_or_create_recovery()', 'EXECUTE'
+    ),
+    'anon cannot get or create recovery IDs'
+);
+SELECT ok(
+    has_function_privilege(
+        'authenticated', 'public.get_or_create_recovery()', 'EXECUTE'
+    ),
+    'authenticated can get or create recovery IDs'
+);
+SELECT ok(
+    has_function_privilege('anon', 'public.recover_account(uuid)', 'EXECUTE'),
+    'anon can start recovery'
+);
+SELECT ok(
+    has_function_privilege(
+        'authenticated', 'public.confirm_recovered_account()', 'EXECUTE'
+    ),
+    'authenticated can confirm recovery'
+);
+SELECT ok(
+    NOT has_function_privilege(
+        'PUBLIC', 'public.confirm_recovered_account()', 'EXECUTE'
+    ),
+    'PUBLIC cannot confirm recovery'
 );
 
 SELECT ok(
@@ -118,6 +165,18 @@ SELECT ok(
         ) ->> 'success'
     )::boolean,
     'the replacement recovery ID can recover the account'
+);
+
+SELECT tests.authenticate_as('recovery_user');
+SELECT
+    ok(public.confirm_recovered_account(), 'authenticated recovery confirmation succeeds');
+SELECT is(
+    (
+        SELECT count(*) FROM public.user_recovery
+        WHERE recovery_id = '00000000-0000-4000-8000-000000000001'
+    ),
+    0::bigint,
+    'confirmation invalidates the recovered phrase'
 );
 
 SELECT * FROM finish();

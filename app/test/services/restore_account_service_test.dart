@@ -1,10 +1,38 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase/supabase.dart';
 
 void main() {
   group('RestoreAccountService', () {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel(
+      'plugins.it_nomads.com/flutter_secure_storage',
+    );
+    final storage = <String, String>{};
+
+    setUp(() {
+      storage.clear();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+            final arguments = call.arguments as Map<Object?, Object?>;
+            final key = arguments['key'] as String?;
+            return switch (call.method) {
+              'write' => storage[key!] = arguments['value']! as String,
+              'read' => storage[key],
+              'delete' => storage.remove(key),
+              _ => throw UnimplementedError(call.method),
+            };
+          });
+    });
+
+    tearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, null);
+    });
     tearDown(RestoreAccountService.clearCache);
 
     test('decodeRecoveryPhrase accepts German recovery phrases', () {
@@ -34,6 +62,10 @@ void main() {
             calls.add('sign in with $activeSubjectId');
             return true;
           },
+          confirmRecovery: () async {
+            calls.add('confirm recovery');
+            return true;
+          },
           clearActiveSubjectState: () async {
             activeSubjectId = null;
             calls.add('clear old subject');
@@ -56,7 +88,48 @@ void main() {
           'clear old subject',
           'store recovered-subject',
           'sign in with recovered-subject',
+          'confirm recovery',
         ]);
+      },
+    );
+
+    test(
+      'account replacement clears persisted deep links and notifications',
+      () async {
+        final state = AppState()
+          ..setPendingDeepLink(
+            study: Study('study', 'owner'),
+            inviteCode: 'former-account-invite',
+          );
+        await PendingDeepLinkService.persist(
+          inviteCode: 'former-account-invite',
+        );
+        var notificationsCancelled = false;
+        RestoreAccountService.debugConfigureRecoveryForTesting(
+          recoverAccount: (_) async => RecoveryResult(
+            success: true,
+            email: 'recovered@example.com',
+            password: 'password',
+          ),
+          storeCredentials: (_, _) async {},
+          clearActiveSubjectState: () async {},
+          signInParticipant: () async => true,
+          confirmRecovery: () async => true,
+          cancelNotifications: (_) async => notificationsCancelled = true,
+        );
+        addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+
+        final result = await RestoreAccountService.performRecovery(
+          BigInt.one,
+          appState: state,
+        );
+
+        expect(result.success, isTrue);
+        expect(notificationsCancelled, isTrue);
+        expect(await PendingDeepLinkService.readStorage(), (
+          studyId: null,
+          inviteCode: null,
+        ));
       },
     );
 
@@ -80,6 +153,7 @@ void main() {
             calls.add('sign in with $activeSubjectId');
             return true;
           },
+          confirmRecovery: () async => true,
         );
         addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
 
@@ -92,6 +166,55 @@ void main() {
           'clear old subject',
           'sign in with null',
         ]);
+      },
+    );
+
+    test(
+      'storage failure leaves pending recovery retryable and clears state',
+      () async {
+        var cleared = false;
+        RestoreAccountService.debugConfigureRecoveryForTesting(
+          recoverAccount: (_) async => RecoveryResult(
+            success: true,
+            email: 'recovered@example.com',
+            password: 'password',
+          ),
+          storeCredentials: (_, _) async => throw Exception('storage failed'),
+          clearActiveSubjectState: () async => cleared = true,
+        );
+        addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isFalse);
+        expect(result.error, 'recovery_network_error');
+        expect(cleared, isFalse);
+      },
+    );
+
+    test(
+      'sign-in failure clears account state without confirming recovery',
+      () async {
+        var cleared = 0;
+        var confirmed = false;
+        RestoreAccountService.debugConfigureRecoveryForTesting(
+          recoverAccount: (_) async => RecoveryResult(
+            success: true,
+            email: 'recovered@example.com',
+            password: 'password',
+          ),
+          storeCredentials: (_, _) async {},
+          signInParticipant: () async => false,
+          confirmRecovery: () async => confirmed = true,
+          clearActiveSubjectState: () async => cleared++,
+        );
+        addTearDown(RestoreAccountService.debugResetRecoveryForTesting);
+
+        final result = await RestoreAccountService.performRecovery(BigInt.one);
+
+        expect(result.success, isFalse);
+        expect(cleared, 2);
+        expect(confirmed, isFalse);
       },
     );
 

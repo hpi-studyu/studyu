@@ -34,7 +34,9 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     if (consentGiven != null && consentGiven) {
       context.push('/${RouteNames.kickoff}');
     } else {
-      await PendingDeepLinkService.clear(context.read<AppState>());
+      final appState = context.read<AppState>();
+      appState.activeSubject = null;
+      await PendingDeepLinkService.clear(appState);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

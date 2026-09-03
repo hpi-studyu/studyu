@@ -11,6 +11,89 @@ void main() {
       ..participation = Participation.invite;
   }
 
+  group('DeepLinkService.processDeepLink study links', () {
+    test(
+      'returns study not found with attempted ID when lookup misses',
+      () async {
+        DeepLinkService.fetchStudyForDeepLink = (_) async => null;
+
+        final result = await DeepLinkService.processDeepLink(
+          studyId: 'missing-study',
+          inviteCode: null,
+          isAuthenticated: true,
+        );
+
+        expect(result, isA<DeepLinkError>());
+        final error = result as DeepLinkError;
+        expect(error.type, DeepLinkErrorType.studyNotFound);
+        expect(error.errorValue, 'missing-study');
+      },
+    );
+
+    test('returns needs auth for an unauthenticated user', () async {
+      final targetStudy = study()..participation = Participation.open;
+      DeepLinkService.fetchStudyForDeepLink = (_) async => targetStudy;
+
+      final result = await DeepLinkService.processDeepLink(
+        studyId: targetStudy.id,
+        inviteCode: null,
+        isAuthenticated: false,
+      );
+
+      expect(result, isA<DeepLinkNeedsAuth>());
+      expect((result as DeepLinkNeedsAuth).study, same(targetStudy));
+    });
+
+    test('rejects invite-only studies', () async {
+      final targetStudy = study();
+      DeepLinkService.fetchStudyForDeepLink = (_) async => targetStudy;
+
+      final result = await DeepLinkService.processDeepLink(
+        studyId: targetStudy.id,
+        inviteCode: null,
+        isAuthenticated: true,
+      );
+
+      expect(result, isA<DeepLinkError>());
+      final error = result as DeepLinkError;
+      expect(error.type, DeepLinkErrorType.inviteOnly);
+      expect(error.errorValue, targetStudy.id);
+    });
+
+    test('marks a public study as already enrolled', () async {
+      final targetStudy = study()..participation = Participation.open;
+      DeepLinkService.fetchStudyForDeepLink = (_) async => targetStudy;
+
+      final result = await DeepLinkService.processDeepLink(
+        studyId: targetStudy.id,
+        inviteCode: null,
+        isAuthenticated: true,
+        activeStudyId: targetStudy.id,
+      );
+
+      expect(result, isA<DeepLinkSuccess>());
+      final success = result as DeepLinkSuccess;
+      expect(success.study, same(targetStudy));
+      expect(success.alreadyEnrolled, isTrue);
+    });
+
+    test('returns success for an authenticated public study', () async {
+      final targetStudy = study()..participation = Participation.open;
+      DeepLinkService.fetchStudyForDeepLink = (_) async => targetStudy;
+
+      final result = await DeepLinkService.processDeepLink(
+        studyId: targetStudy.id,
+        inviteCode: null,
+        isAuthenticated: true,
+      );
+
+      expect(result, isA<DeepLinkSuccess>());
+      final success = result as DeepLinkSuccess;
+      expect(success.study, same(targetStudy));
+      expect(success.alreadyEnrolled, isFalse);
+    });
+  });
+
   group('DeepLinkService.processDeepLink invite links', () {
     test(
       'returns needs auth with invite details when user is not authenticated',

@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -45,11 +48,16 @@ class RestoreAccountService {
   static Future<void> Function(String, String) _credentialsStorer =
       storeFakeUserEmailAndPassword;
   static Future<bool> Function() _participantSignIn = signInParticipant;
+  static Future<bool> Function() _recoveryConfirmer = _confirmRecovery;
   static bool Function() _userLoggedIn = _defaultUserLoggedIn;
   static Future<void> Function() _activeSubjectStateClearer =
       _clearActiveSubjectState;
   static Future<void> Function(String) _activeSubjectIdStorer =
       storeActiveSubjectId;
+  static Future<void> Function() _pendingDeepLinkStorageClearer =
+      PendingDeepLinkService.clearStorage;
+  static Future<void> Function(AppState) _notificationCanceller =
+      cancelNotificationsForAppState;
 
   static void clearCache() {
     _cachedPhrase = null;
@@ -139,15 +147,22 @@ class RestoreAccountService {
     Future<RecoveryResult> Function(BigInt)? recoverAccount,
     Future<void> Function(String, String)? storeCredentials,
     Future<bool> Function()? signInParticipant,
+    Future<bool> Function()? confirmRecovery,
     Future<void> Function()? clearActiveSubjectState,
     Future<void> Function(String)? storeActiveSubjectId,
+    Future<void> Function()? clearPendingDeepLinkStorage,
+    Future<void> Function(AppState)? cancelNotifications,
   }) {
     _accountRecoverer = recoverAccount ?? _accountRecoverer;
     _credentialsStorer = storeCredentials ?? _credentialsStorer;
     _participantSignIn = signInParticipant ?? _participantSignIn;
+    _recoveryConfirmer = confirmRecovery ?? _recoveryConfirmer;
     _activeSubjectStateClearer =
         clearActiveSubjectState ?? _activeSubjectStateClearer;
     _activeSubjectIdStorer = storeActiveSubjectId ?? _activeSubjectIdStorer;
+    _pendingDeepLinkStorageClearer =
+        clearPendingDeepLinkStorage ?? _pendingDeepLinkStorageClearer;
+    _notificationCanceller = cancelNotifications ?? _notificationCanceller;
   }
 
   @visibleForTesting
@@ -155,13 +170,27 @@ class RestoreAccountService {
     _accountRecoverer = RestoreAccountService.recoverAccount;
     _credentialsStorer = storeFakeUserEmailAndPassword;
     _participantSignIn = signInParticipant;
+    _recoveryConfirmer = _confirmRecovery;
     _activeSubjectStateClearer = _clearActiveSubjectState;
     _activeSubjectIdStorer = storeActiveSubjectId;
+    _pendingDeepLinkStorageClearer = PendingDeepLinkService.clearStorage;
+    _notificationCanceller = cancelNotificationsForAppState;
   }
 
-  static Future<void> _clearActiveSubjectState() async {
+  static Future<void> _clearActiveSubjectState([AppState? appState]) async {
+    appState?.clearAccountState();
     await deleteActiveStudyReference();
     await Cache.delete();
+  }
+
+  static Future<bool> _confirmRecovery() async {
+    try {
+      return await Supabase.instance.client.rpc('confirm_recovered_account') ==
+          true;
+    } catch (e) {
+      StudyULogger.warning('Error confirming recovered account: $e');
+      return false;
+    }
   }
 
   static Future<List<String>?> getRecoveryPhrase() async {
@@ -368,7 +397,10 @@ class RestoreAccountService {
     }
   }
 
-  static Future<RecoveryResult> performRecovery(BigInt recoveryId) async {
+  static Future<RecoveryResult> performRecovery(
+    BigInt recoveryId, {
+    AppState? appState,
+  }) async {
     // Invalidate any cached recovery secret from a prior session before
     // establishing the recovered identity, so it cannot leak to the new
     // account via the static cache on a shared device.
@@ -385,6 +417,11 @@ class RestoreAccountService {
       // Signing in broadcasts an auth event that can start loading before this
       // method returns. Remove the former account's subject state first. Then
       // store the recovered subject ID before sign-in, when one exists.
+      if (appState != null) {
+        await _pendingDeepLinkStorageClearer();
+        await _notificationCanceller(appState);
+        appState.clearAccountState();
+      }
       await _activeSubjectStateClearer();
       if (result.subjectId != null) {
         await _activeSubjectIdStorer(result.subjectId!);
@@ -397,17 +434,22 @@ class RestoreAccountService {
         return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
-      if (result.subjectId != null &&
-          !await validateSubject(result.subjectId!)) {
-        await _activeSubjectStateClearer();
-        return RecoveryResult(
-          success: true,
-          email: result.email,
-          password: result.password,
-        );
+      final subjectIsValid =
+          result.subjectId == null || await validateSubject(result.subjectId!);
+      if (!subjectIsValid) await _activeSubjectStateClearer();
+
+      if (!await _recoveryConfirmer()) {
+        StudyULogger.warning('Recovery confirmation failed');
+        return RecoveryResult(success: false, error: 'recovery_failed');
       }
 
-      return result;
+      return subjectIsValid
+          ? result
+          : RecoveryResult(
+              success: true,
+              email: result.email,
+              password: result.password,
+            );
     } catch (e, stackTrace) {
       StudyULogger.warning('Error in performRecovery: $e\n$stackTrace');
       return RecoveryResult(success: false, error: 'recovery_network_error');
