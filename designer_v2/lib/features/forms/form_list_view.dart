@@ -188,7 +188,7 @@ class FormListView<T> extends StatelessWidget {
   }
 
   Widget _newItemButton() {
-    if (control.disabled) {
+    if (control.disabled || onNewItem == null) {
       return const SizedBox.shrink();
     }
     return PrimaryButton(text: onNewItemLabel, onPressed: onNewItem);
