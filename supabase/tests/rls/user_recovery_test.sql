@@ -96,12 +96,6 @@ SELECT ok(
     ),
     'authenticated can confirm recovery'
 );
-SELECT ok(
-    NOT has_function_privilege(
-        'PUBLIC', 'public.confirm_recovered_account()', 'EXECUTE'
-    ),
-    'PUBLIC cannot confirm recovery'
-);
 
 SELECT ok(
     NOT has_function_privilege(

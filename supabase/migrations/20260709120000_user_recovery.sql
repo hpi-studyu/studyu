@@ -191,7 +191,8 @@ BEGIN
         WHERE user_id = v_user_id;
         -- Revoke sessions before the recovered credential can be used. This
         -- leaves the new sign-in session intact while evicting lost devices.
-        DELETE FROM auth.refresh_tokens WHERE user_id = v_user_id;
+        -- auth.refresh_tokens.user_id is varchar; auth.sessions.user_id is uuid.
+        DELETE FROM auth.refresh_tokens WHERE user_id = v_user_id::text;
         DELETE FROM auth.sessions WHERE user_id = v_user_id;
     END IF;
 
