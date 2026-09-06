@@ -164,13 +164,13 @@ SELECT ok(
 SELECT tests.authenticate_as('recovery_user');
 SELECT
     ok(public.confirm_recovered_account(), 'authenticated recovery confirmation succeeds');
-SELECT is(
+SELECT ok(
     (
-        SELECT count(*) FROM public.user_recovery
-        WHERE recovery_id = '00000000-0000-4000-8000-000000000001'
-    ),
-    0::bigint,
-    'confirmation invalidates the recovered phrase'
+        public.recover_account(
+            current_setting('tests.rotated_recovery_id')::uuid
+        ) ->> 'success'
+    )::boolean,
+    'confirmation keeps the recovery phrase valid'
 );
 
 SELECT * FROM finish();

@@ -1437,7 +1437,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get restore_account_signed_in_description =>
-      'Du bist auf diesem Gerät bereits angemeldet. Wenn du ein Konto wiederherstellst, wird das aktuelle Konto ersetzt. Die Wiederherstellungsphrase, die du eingibst, funktioniert danach nicht mehr.';
+      'Du bist auf diesem Gerät bereits angemeldet. Wenn du ein Konto wiederherstellst, wird das aktuelle Konto ersetzt. Deine Wiederherstellungsphrase bleibt nach der Wiederherstellung gültig.';
 
   @override
   String get required => 'Erforderlich';

@@ -1421,7 +1421,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restore_account_signed_in_description =>
-      'You are already signed in on this device. Restoring an account will replace the current account. The recovery phrase you enter will stop working after it is used.';
+      'You are already signed in on this device. Restoring an account will replace the current account. Your recovery phrase remains valid after recovery.';
 
   @override
   String get required => 'Required';
