@@ -32,7 +32,7 @@ class DashboardScaffold extends StatelessWidget {
             ? const SizedBox.shrink()
             : const AppDrawer(autoCloseDrawer: false),
         rightWidget: body,
-        dividerWidget: const VerticalDivider(width: 1, thickness: 0.3),
+        dividerWidget: null,
         scrollLeft: false,
         paddingLeft: null,
       ),
