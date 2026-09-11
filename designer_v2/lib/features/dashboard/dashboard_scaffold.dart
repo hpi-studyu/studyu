@@ -32,12 +32,7 @@ class DashboardScaffold extends StatelessWidget {
             ? const SizedBox.shrink()
             : const AppDrawer(autoCloseDrawer: false),
         rightWidget: body,
-        dividerWidget: const VerticalDivider(width: 1, thickness: 0.3),
-        // The dashboard body now scrolls itself via PagedListView, so the
-        // outer column must NOT also wrap it in a SingleChildScrollView —
-        // a self-scrolling list inside another scrollable would lose
-        // virtualization (rows would all be laid out at once).
-        scrollRight: false,
+        dividerWidget: null,
         scrollLeft: false,
         paddingLeft: null,
       ),
