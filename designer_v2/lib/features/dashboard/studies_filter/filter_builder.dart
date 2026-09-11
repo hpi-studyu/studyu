@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_draft_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
@@ -112,11 +113,16 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   }
 
   int _calculateMatchCount(FilterGroup filter) {
-    final studies = ref.read(dashboardControllerProvider).studies.value ?? [];
+    final state = ref.read(dashboardControllerProvider);
+    final studies = state.studies.value ?? [];
     final supabaseUser = Supabase.instance.client.auth.currentUser;
     if (supabaseUser == null) return 0;
+    final appliedFilter = mergeStudiesFilters(
+      baseFilter: state.studiesFilter?.toFilterGroup(supabaseUser),
+      activeFilter: filter,
+    );
     return studies
-        .where((s) => FilterEvaluator.evaluate(filter, s, supabaseUser))
+        .where((s) => FilterEvaluator.evaluate(appliedFilter, s, supabaseUser))
         .length;
   }
 
