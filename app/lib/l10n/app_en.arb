@@ -491,11 +491,8 @@
   "recovery_phrase_header": "Recovery phrase",
   "copy_to_clipboard": "Copy to clipboard",
   "copied_to_clipboard": "Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.",
-  "recovery_phrase_save_hint": "Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.",
   "recovery_phrase_save_warning": "Never share them with anyone.",
   "show_recovery_phrase": "Show Recovery Phrase",
-  "recovery_phrase_list_header": "Your recovery phrase",
-  "recovery_phrase_list_helper": "Make sure you save all 13 words in this exact order.",
   "recovery_phrase_saved_confirmation": "I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.",
   "recovery_phrase_rotate_button": "Reissue recovery phrase",
   "recovery_phrase_rotate_dialog_title": "Reissue recovery phrase?",
@@ -702,9 +699,9 @@
     }
   },
   "please_select_interventions_why": "Why?",
-  "recovery_phrase_description": "Save these 13 words to restore your account if you lose access to this device.",
+  "recovery_phrase_description": "Save these 13 words in a safe place. They are the only way to restore your account if you lose access to this device.",
   "recovery_phrase_why": "Why?",
-  "recovery_phrase_reason": "StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.",
+  "recovery_phrase_reason": "StudyU does not use passwords or email accounts. These 13 words are the only way to restore your account if you get a new phone or reinstall the app. Write them down or store them digitally somewhere only you can access. Never share them with anyone. You can view your recovery phrase again at any time under Settings → Study settings.",
   "study_not_started_title": "You’ve joined the study",
   "study_not_started_description": "Come back tomorrow to begin. We’ll remind you when there’s something to do."
 }

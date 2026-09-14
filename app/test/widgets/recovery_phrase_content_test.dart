@@ -5,6 +5,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/dashboard/settings.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 
 Widget _wrap(Widget child) => MaterialApp(
@@ -65,6 +66,41 @@ void main() {
 
     expect(requestCount, 1);
     expect(find.byType(Chip), findsNWidgets(expectedPhrase.length));
+    final description = tester.widget<StudyOnboardingDescription>(
+      find.byType(StudyOnboardingDescription),
+    );
+    expect(
+      description.text,
+      'Save these 13 words in a safe place. They are the only way to restore your account if you lose access to this device.',
+    );
+    expect(find.text('Why?'), findsOneWidget);
+
+    await tester.tap(find.text('Why?'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(
+        'StudyU does not use passwords or email accounts. These 13 words are the only way to restore your account if you get a new phone or reinstall the app. Write them down or store them digitally somewhere only you can access. Never share them with anyone. You can view your recovery phrase again at any time under Settings → Study settings.',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('hides the widget heading and save instructions', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        const RecoveryPhraseContent(
+          initialPhrase: ['word'],
+          showConfirmation: false,
+        ),
+      ),
+    );
+
+    expect(find.text('Your recovery phrase'), findsNothing);
+    expect(
+      find.text('Make sure you save all 13 words in this exact order.'),
+      findsNothing,
+    );
   });
 
   testWidgets('copies the recovery phrase in its displayed order', (

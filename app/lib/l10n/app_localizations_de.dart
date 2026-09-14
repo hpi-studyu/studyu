@@ -1368,21 +1368,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'In die Zwischenablage kopiert. Füge die Wiederherstellungsphrase jetzt an einem sicheren Ort auf deinem Handy ein.';
 
   @override
-  String get recovery_phrase_save_hint =>
-      'Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.';
-
-  @override
   String get recovery_phrase_save_warning => 'Teile sie niemals mit anderen.';
 
   @override
   String get show_recovery_phrase => 'Wiederherstellungsphrase anzeigen';
-
-  @override
-  String get recovery_phrase_list_header => 'Deine Wiederherstellungsphrase';
-
-  @override
-  String get recovery_phrase_list_helper =>
-      'Stelle sicher, dass du alle 13 Wörter in genau dieser Reihenfolge speicherst.';
 
   @override
   String get recovery_phrase_saved_confirmation =>
@@ -1809,14 +1798,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recovery_phrase_description =>
-      'Speichere diese 13 Wörter, um dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.';
+      'Speichere diese 13 Wörter an einem sicheren Ort. Sie sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.';
 
   @override
   String get recovery_phrase_why => 'Warum?';
 
   @override
   String get recovery_phrase_reason =>
-      'StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen. Bewahre sie an einem sicheren Ort auf und teile sie niemals mit anderen.';
+      'StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese 13 Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Schreibe sie auf oder speichere sie digital an einem Ort, auf den nur du zugreifen kannst. Teile sie niemals mit anderen. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.';
 
   @override
   String get study_not_started_title => 'Sie nehmen an der Studie teil';

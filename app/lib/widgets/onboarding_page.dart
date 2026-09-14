@@ -9,6 +9,7 @@ class OnboardingPage extends StatelessWidget {
   final Widget? bottomContent;
   final Widget? bottomNavigationBar;
   final double maxWidth;
+  final double descriptionBottomSpacing;
   final EdgeInsetsGeometry padding;
 
   const OnboardingPage({
@@ -21,6 +22,7 @@ class OnboardingPage extends StatelessWidget {
     this.bottomContent,
     this.bottomNavigationBar,
     this.maxWidth = 700,
+    this.descriptionBottomSpacing = 24,
     this.padding = const EdgeInsets.fromLTRB(24.0, 36.0, 24.0, 16.0),
   });
 
@@ -65,7 +67,7 @@ class OnboardingPage extends StatelessWidget {
                       if (descriptionWidget != null ||
                           description.isNotEmpty) ...[
                         descriptionWidget ?? Text(description),
-                        const SizedBox(height: 24),
+                        SizedBox(height: descriptionBottomSpacing),
                       ],
                       child,
                     ],

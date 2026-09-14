@@ -34,7 +34,9 @@ void main() {
       await tester.tap(find.text('Show Recovery Phrase'));
       await tester.pumpAndSettle();
 
-      expect(find.text('first\nsecond'), findsOneWidget);
+      expect(find.text('first'), findsOneWidget);
+      expect(find.text('second'), findsOneWidget);
+      expect(find.byType(Chip), findsNWidgets(2));
       expect(find.widgetWithText(TextButton, 'Why?'), findsOneWidget);
       expect(find.byType(CheckboxListTile), findsOneWidget);
 
@@ -103,7 +105,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Show Recovery Phrase'), findsNothing);
-    expect(find.text('first\nsecond'), findsOneWidget);
+    expect(find.text('first'), findsOneWidget);
+    expect(find.text('second'), findsOneWidget);
+    expect(find.byType(Chip), findsNWidgets(2));
 
     final confirmation = find.byType(CheckboxListTile);
     await tester.ensureVisible(confirmation);

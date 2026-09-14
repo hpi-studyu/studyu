@@ -1355,21 +1355,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.';
 
   @override
-  String get recovery_phrase_save_hint =>
-      'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.';
-
-  @override
   String get recovery_phrase_save_warning => 'Never share them with anyone.';
 
   @override
   String get show_recovery_phrase => 'Show Recovery Phrase';
-
-  @override
-  String get recovery_phrase_list_header => 'Your recovery phrase';
-
-  @override
-  String get recovery_phrase_list_helper =>
-      'Make sure you save all 13 words in this exact order.';
 
   @override
   String get recovery_phrase_saved_confirmation =>
@@ -1787,14 +1776,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recovery_phrase_description =>
-      'Save these 13 words to restore your account if you lose access to this device.';
+      'Save these 13 words in a safe place. They are the only way to restore your account if you lose access to this device.';
 
   @override
   String get recovery_phrase_why => 'Why?';
 
   @override
   String get recovery_phrase_reason =>
-      'StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.';
+      'StudyU does not use passwords or email accounts. These 13 words are the only way to restore your account if you get a new phone or reinstall the app. Write them down or store them digitally somewhere only you can access. Never share them with anyone. You can view your recovery phrase again at any time under Settings → Study settings.';
 
   @override
   String get study_not_started_title => 'You’ve joined the study';

@@ -10,7 +10,6 @@ class RecoveryPhraseContent extends StatefulWidget {
   final bool isChecked;
   final ValueChanged<bool?>? onCheckedChanged;
   final bool showConfirmation;
-  final bool showSaveHint;
   final bool showSuccessFeedback;
   final bool showRotation;
   final VoidCallback? onLoadError;
@@ -22,7 +21,6 @@ class RecoveryPhraseContent extends StatefulWidget {
     this.isChecked = false,
     this.onCheckedChanged,
     this.showConfirmation = true,
-    this.showSaveHint = false,
     this.showSuccessFeedback = true,
     this.showRotation = true,
     this.onLoadError,
@@ -213,24 +211,6 @@ class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          AppLocalizations.of(context)!.recovery_phrase_list_header,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        if (widget.showSaveHint) ...[
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(context)!.recovery_phrase_save_hint,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-        const SizedBox(height: 16),
-        Text(
-          AppLocalizations.of(context)!.recovery_phrase_list_helper,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
         const SizedBox(height: 16),
         if (widget.useGridLayout) _buildPhraseGrid() else _buildPhraseChips(),
         const SizedBox(height: 16),

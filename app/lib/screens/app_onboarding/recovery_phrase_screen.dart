@@ -77,11 +77,13 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
             ),
           ),
         ),
+        descriptionBottomSpacing: 8,
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         child: _isRevealed
             ? RecoveryPhraseContent(
                 initialPhrase: widget.initialPhrase,
                 isChecked: _isChecked,
+                useGridLayout: false,
                 showRotation: false,
                 onCheckedChanged: (value) {
                   setState(() {

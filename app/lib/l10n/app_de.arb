@@ -472,11 +472,8 @@
   "recovery_phrase_header": "Wiederherstellungsphrase",
   "copy_to_clipboard": "In die Zwischenablage kopieren",
   "copied_to_clipboard": "In die Zwischenablage kopiert. Füge die Wiederherstellungsphrase jetzt an einem sicheren Ort auf deinem Handy ein.",
-  "recovery_phrase_save_hint": "Bitte speichere diese 13 Wörter an einem sicheren Ort. Du kannst sie aufschreiben oder digital speichern, sodass nur du darauf zugreifen kannst. StudyU verwendet keine Passwörter oder E-Mail-Konten, daher sind diese Wörter die einzige Möglichkeit, deinen Studienfortschritt wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.",
   "recovery_phrase_save_warning": "Teile sie niemals mit anderen.",
   "show_recovery_phrase": "Wiederherstellungsphrase anzeigen",
-  "recovery_phrase_list_header": "Deine Wiederherstellungsphrase",
-  "recovery_phrase_list_helper": "Stelle sicher, dass du alle 13 Wörter in genau dieser Reihenfolge speicherst.",
   "recovery_phrase_saved_confirmation": "Ich habe alle 13 Wörter an einem sicheren Ort gespeichert und kann sie abrufen, wenn ich mein Konto wiederherstellen möchte. Ich kann sie auch jederzeit in den Studieneinstellungen einsehen.",
   "recovery_phrase_rotate_button": "Wiederherstellungsphrase neu ausstellen",
   "recovery_phrase_rotate_dialog_title": "Wiederherstellungsphrase neu ausstellen?",
@@ -683,9 +680,9 @@
     }
   },
   "please_select_interventions_why": "Warum?",
-  "recovery_phrase_description": "Speichere diese 13 Wörter, um dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.",
+  "recovery_phrase_description": "Speichere diese 13 Wörter an einem sicheren Ort. Sie sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.",
   "recovery_phrase_why": "Warum?",
-  "recovery_phrase_reason": "StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen. Bewahre sie an einem sicheren Ort auf und teile sie niemals mit anderen.",
+  "recovery_phrase_reason": "StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese 13 Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Schreibe sie auf oder speichere sie digital an einem Ort, auf den nur du zugreifen kannst. Teile sie niemals mit anderen. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.",
   "study_not_started_title": "Sie nehmen an der Studie teil",
   "study_not_started_description": "Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt."
 }

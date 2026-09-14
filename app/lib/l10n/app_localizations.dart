@@ -2594,12 +2594,6 @@ abstract class AppLocalizations {
   /// **'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.'**
   String get copied_to_clipboard;
 
-  /// No description provided for @recovery_phrase_save_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Please save these 13 words in a safe place. You can write them down or store them digitally somewhere only you can access. StudyU does not use passwords or email accounts, so these words are the only way to restore your study progress if you get a new phone or reinstall the app. You can view your recovery phrase again at any time under Settings → Study settings.'**
-  String get recovery_phrase_save_hint;
-
   /// No description provided for @recovery_phrase_save_warning.
   ///
   /// In en, this message translates to:
@@ -2611,18 +2605,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Recovery Phrase'**
   String get show_recovery_phrase;
-
-  /// No description provided for @recovery_phrase_list_header.
-  ///
-  /// In en, this message translates to:
-  /// **'Your recovery phrase'**
-  String get recovery_phrase_list_header;
-
-  /// No description provided for @recovery_phrase_list_helper.
-  ///
-  /// In en, this message translates to:
-  /// **'Make sure you save all 13 words in this exact order.'**
-  String get recovery_phrase_list_helper;
 
   /// No description provided for @recovery_phrase_saved_confirmation.
   ///
@@ -3326,7 +3308,7 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_description.
   ///
   /// In en, this message translates to:
-  /// **'Save these 13 words to restore your account if you lose access to this device.'**
+  /// **'Save these 13 words in a safe place. They are the only way to restore your account if you lose access to this device.'**
   String get recovery_phrase_description;
 
   /// No description provided for @recovery_phrase_why.
@@ -3338,7 +3320,7 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_reason.
   ///
   /// In en, this message translates to:
-  /// **'StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.'**
+  /// **'StudyU does not use passwords or email accounts. These 13 words are the only way to restore your account if you get a new phone or reinstall the app. Write them down or store them digitally somewhere only you can access. Never share them with anyone. You can view your recovery phrase again at any time under Settings → Study settings.'**
   String get recovery_phrase_reason;
 
   /// No description provided for @study_not_started_title.

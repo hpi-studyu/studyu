@@ -13,6 +13,7 @@ import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart' show PostgrestException;
@@ -275,12 +276,13 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
     return Card(
       key: const ValueKey('settings_recovery_phrase_card'),
       child: ExpansionTile(
         leading: Icon(Icons.lock_outline, color: theme.primaryColor),
         title: Text(
-          AppLocalizations.of(context)!.recovery_phrase_header,
+          localizations.recovery_phrase_header,
           style: theme.textTheme.bodyMedium,
         ),
         onExpansionChanged: (expanded) {
@@ -295,10 +297,23 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(color: theme.colorScheme.surface),
-                child: const RecoveryPhraseContent(
-                  useGridLayout: false,
-                  showConfirmation: false,
-                  showSaveHint: true,
+                child: Column(
+                  children: [
+                    StudyOnboardingDescription(
+                      text: localizations.recovery_phrase_description,
+                      actionLabel: localizations.recovery_phrase_why,
+                      onAction: () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: Text(localizations.recovery_phrase_reason),
+                        ),
+                      ),
+                    ),
+                    const RecoveryPhraseContent(
+                      useGridLayout: false,
+                      showConfirmation: false,
+                    ),
+                  ],
                 ),
               ),
             ),
