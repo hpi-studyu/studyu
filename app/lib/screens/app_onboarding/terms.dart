@@ -73,6 +73,7 @@ class _TermsScreenState extends State<TermsScreen> {
         descriptionWidget: StudyOnboardingDescription(
           text: localizations.legal_documents_description,
         ),
+        descriptionBottomSpacing: 0,
         child: RetryFutureBuilder<AppConfig>(
           tryFunction: AppConfig.getAppConfig,
           successBuilder: (BuildContext context, AppConfig? appConfig) =>
