@@ -723,7 +723,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_not_started =>
-      'Your study starts tomorrow. Come back then to begin.';
+      'Congratulations, you’ve joined the study! Come back tomorrow to begin. We’ll remind you when you have a task to complete.';
 
   @override
   String get completed_study =>
@@ -1405,7 +1405,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Could not issue a new recovery phrase. Please try again.';
 
   @override
-  String get continue_to_study => 'Continue to study';
+  String get continue_to_study => 'Done';
 
   @override
   String get restore_account => 'Restore account';

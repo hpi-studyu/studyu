@@ -112,7 +112,7 @@ void main() {
     await tester.tap(confirmation);
     await tester.pump();
 
-    await tester.tap(find.text('Continue to study'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
 
     expect(find.text('Dashboard'), findsOneWidget);

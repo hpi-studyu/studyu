@@ -732,7 +732,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_not_started =>
-      'Ihre Studie beginnt morgen. Kommen Sie dann zurück, um zu beginnen.';
+      'Herzlichen Glückwunsch, Sie nehmen jetzt an der Studie teil! Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, wenn Sie eine Aufgabe erledigen müssen.';
 
   @override
   String get completed_study =>
@@ -1420,7 +1420,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Eine neue Wiederherstellungsphrase konnte nicht ausgestellt werden. Bitte versuche es erneut.';
 
   @override
-  String get continue_to_study => 'Weiter zur Studie';
+  String get continue_to_study => 'Fertig';
 
   @override
   String get restore_account => 'Konto wiederherstellen';

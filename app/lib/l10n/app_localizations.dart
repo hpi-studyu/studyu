@@ -1391,7 +1391,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_not_started.
   ///
   /// In en, this message translates to:
-  /// **'Your study starts tomorrow. Come back then to begin.'**
+  /// **'Congratulations, you’ve joined the study! Come back tomorrow to begin. We’ll remind you when you have a task to complete.'**
   String get study_not_started;
 
   /// No description provided for @completed_study.
@@ -2681,7 +2681,7 @@ abstract class AppLocalizations {
   /// No description provided for @continue_to_study.
   ///
   /// In en, this message translates to:
-  /// **'Continue to study'**
+  /// **'Done'**
   String get continue_to_study;
 
   /// No description provided for @restore_account.
