@@ -305,6 +305,7 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
       title: Text(l10n.leave_study_keep_data_title),
@@ -341,8 +342,8 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
           icon: const Icon(MdiIcons.exitToApp),
           label: Text(l10n.leave_keep_data),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red[700],
-            foregroundColor: Colors.white,
+            backgroundColor: colorScheme.error,
+            foregroundColor: colorScheme.onError,
           ),
           onPressed: acknowledged
               ? () async {
@@ -393,6 +394,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
       title: Text(l10n.leave_study_delete_data_title),
@@ -428,7 +430,10 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
         ElevatedButton.icon(
           icon: const Icon(Icons.delete),
           label: Text(l10n.leave_delete_data),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colorScheme.error,
+            foregroundColor: colorScheme.onError,
+          ),
           onPressed: acknowledged
               ? () async {
                   try {

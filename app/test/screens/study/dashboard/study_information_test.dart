@@ -266,7 +266,7 @@ void main() {
     expect(leaveButton.onPressed, isNotNull);
     expect(
       leaveButton.style?.backgroundColor?.resolve(const {}),
-      Colors.red[700],
+      Theme.of(tester.element(acknowledgement)).colorScheme.error,
     );
 
     await tester.pumpWidget(
@@ -299,6 +299,10 @@ void main() {
       find.widgetWithText(ElevatedButton, 'Leave and delete my data'),
     );
     expect(deleteButton.onPressed, isNotNull);
+    expect(
+      deleteButton.style?.backgroundColor?.resolve(const {}),
+      Theme.of(tester.element(acknowledgement)).colorScheme.error,
+    );
   });
 }
 
