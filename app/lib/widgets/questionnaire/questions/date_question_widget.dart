@@ -283,9 +283,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             icon: const Icon(Icons.calendar_today),
             label: Text(
               _selectedDate != null
-                  ? DateFormat(
-                      widget.question.dateFormat,
-                    ).format(_selectedDate!)
+                  ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
                   : (widget.question.isDateTime
                         ? localizations.date_picker_button_label_datetime
                         : localizations.date_picker_button_label),

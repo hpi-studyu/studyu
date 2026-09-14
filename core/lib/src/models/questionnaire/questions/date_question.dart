@@ -28,9 +28,6 @@ class DateQuestion extends Question<DateTime> {
   @JsonKey(name: 'maxTime')
   String? maxTime;
 
-  @JsonKey(name: 'dateFormatPreset')
-  DateFormatPreset dateFormatPreset;
-
   @JsonKey(name: 'timeFormatPreset')
   TimeFormatPreset timeFormatPreset;
 
@@ -49,7 +46,6 @@ class DateQuestion extends Question<DateTime> {
     this.maxDate,
     this.minTime,
     this.maxTime,
-    this.dateFormatPreset = DateFormatPreset.iso,
     this.timeFormatPreset = TimeFormatPreset.h24,
     this.defaultOption = DefaultDateOption.none,
     this.defaultSpecificDate,
@@ -62,50 +58,20 @@ class DateQuestion extends Question<DateTime> {
     this.maxDate,
     this.minTime,
     this.maxTime,
-    this.dateFormatPreset = DateFormatPreset.iso,
     this.timeFormatPreset = TimeFormatPreset.h24,
     this.defaultOption = DefaultDateOption.none,
     this.defaultSpecificDate,
     this.defaultSpecificTime,
   }) : super.withId(questionType);
 
-  factory DateQuestion.fromJson(Map<String, dynamic> json) {
-    // Handle migration from old format presets
-    final dateFormatPresetValue = json['dateFormatPreset'] as String?;
-    if (dateFormatPresetValue != null) {
-      // Check if this is an old format with time included
-      final timeVariants = [
-        'isoDateTime',
-        'europeanDateTime',
-        'usDateTimeAmPm',
-      ];
-
-      if (timeVariants.contains(dateFormatPresetValue)) {
-        // Migrate old time-inclusive format to new structure
-        json['inputType'] = 'dateTime';
-
-        // Set time format based on old preset
-        if (dateFormatPresetValue == 'usDateTimeAmPm') {
-          json['timeFormatPreset'] = 'h12';
-        } else {
-          json['timeFormatPreset'] = 'h24';
-        }
-      } else if (!json.containsKey('inputType')) {
-        // Old date-only format without inputType field
-        json['inputType'] = 'date';
-      }
-    }
-
-    return _$DateQuestionFromJson(json);
-  }
+  factory DateQuestion.fromJson(Map<String, dynamic> json) =>
+      _$DateQuestionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DateQuestionToJson(this);
 
   Answer<DateTime> constructAnswer(DateTime response) =>
       Answer.forQuestion(this, response);
-
-  String get dateFormat => dateFormatPreset.pattern;
 
   String get timeFormat => timeFormatPreset.pattern;
 

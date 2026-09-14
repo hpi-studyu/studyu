@@ -13,15 +13,6 @@ class DateQuestionFormView extends ConsumerWidget {
 
   final QuestionFormViewModel formViewModel;
 
-  String _formatDate(DateTime date, DateFormatPreset preset) {
-    try {
-      final format = DateFormat(preset.pattern);
-      return format.format(date);
-    } catch (e) {
-      return date.toIso8601String();
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
@@ -52,26 +43,6 @@ class DateQuestionFormView extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-
-            // Step 2: Date Format (if date or datetime)
-            if (inputType.isDate) ...[
-              generateRow(
-                label: localizations.date_format_preset_label,
-                labelHelpText: localizations.date_format_preset_label_helper,
-                input: ReactiveDropdownField<DateFormatPreset>(
-                  formControl: formViewModel.dateFormatPresetControl,
-                  items: DateFormatPreset.values.map((preset) {
-                    final exampleDate = DateTime(2024, 12, 31);
-                    final example = _formatDate(exampleDate, preset);
-                    return DropdownMenuItem(
-                      value: preset,
-                      child: Text(example),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-            ],
 
             // Step 2b: Time Format (if time or datetime)
             if (inputType.isTime) ...[

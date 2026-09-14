@@ -19,12 +19,6 @@ DateQuestion _$DateQuestionFromJson(Map<String, dynamic> json) =>
             : DateTime.parse(json['maxDate'] as String),
         minTime: json['minTime'] as String?,
         maxTime: json['maxTime'] as String?,
-        dateFormatPreset:
-            $enumDecodeNullable(
-              _$DateFormatPresetEnumMap,
-              json['dateFormatPreset'],
-            ) ??
-            DateFormatPreset.iso,
         timeFormatPreset:
             $enumDecodeNullable(
               _$TimeFormatPresetEnumMap,
@@ -64,7 +58,6 @@ Map<String, dynamic> _$DateQuestionToJson(DateQuestion instance) =>
       'maxDate': ?instance.maxDate?.toIso8601String(),
       'minTime': ?instance.minTime,
       'maxTime': ?instance.maxTime,
-      'dateFormatPreset': instance.dateFormatPreset.toJson(),
       'timeFormatPreset': instance.timeFormatPreset.toJson(),
       'defaultOption': instance.defaultOption.toJson(),
       'defaultSpecificDate': ?instance.defaultSpecificDate?.toIso8601String(),
@@ -75,13 +68,6 @@ const _$DateInputTypeEnumMap = {
   DateInputType.date: 'date',
   DateInputType.time: 'time',
   DateInputType.dateTime: 'dateTime',
-};
-
-const _$DateFormatPresetEnumMap = {
-  DateFormatPreset.iso: 'iso',
-  DateFormatPreset.european: 'european',
-  DateFormatPreset.us: 'us',
-  DateFormatPreset.german: 'german',
 };
 
 const _$TimeFormatPresetEnumMap = {

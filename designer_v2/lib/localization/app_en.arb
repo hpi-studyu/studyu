@@ -361,8 +361,6 @@
   "date_min_date_label_helper": "The earliest date participants can select",
   "date_max_date_label": "Latest date",
   "date_max_date_label_helper": "The latest date participants can select",
-  "date_format_preset_label": "Date format preset",
-  "date_format_preset_label_helper": "Select how dates are displayed to participants",
   "date_picker_hint": "Select a date",
   "time_picker_hint": "Select a time",
   "date_input_type_label": "Input type",

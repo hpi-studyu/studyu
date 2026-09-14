@@ -236,8 +236,6 @@
   "date_min_date_label_helper": "Das früheste Datum, das Teilnehmer auswählen können",
   "date_max_date_label": "Spätestes Datum",
   "date_max_date_label_helper": "Das späteste Datum, das Teilnehmer auswählen können",
-  "date_format_preset_label": "Datumsformat-Voreinstellung",
-  "date_format_preset_label_helper": "Wähle aus, wie Datumswerte den Teilnehmern angezeigt werden",
   "date_picker_hint": "Datum auswählen",
   "time_picker_hint": "Zeit auswählen",
   "date_input_type_label": "Eingabetyp",
