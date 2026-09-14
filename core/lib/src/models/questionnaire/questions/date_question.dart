@@ -15,7 +15,6 @@ class DateQuestion extends Question<DateTime> {
 
   @JsonKey(name: 'inputType')
   DateInputType inputType;
-
   @JsonKey(name: 'minDate')
   DateTime? minDate;
 

@@ -42,6 +42,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Need to access your camera to capture a photo for trial observations.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to your photo library helps you recall meals by showing photos taken around meal times. Selected photos may be uploaded for food analysis when you request it.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

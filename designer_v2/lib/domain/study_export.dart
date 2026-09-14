@@ -7,7 +7,8 @@ abstract class ResultTypes {}
 
 class MeasurementResultTypes extends ResultTypes {
   static const String questionnaire = 'QuestionnaireState';
-  static List<String> get values => [questionnaire];
+  static const String nutrition = 'DailyRecall';
+  static List<String> get values => [questionnaire, nutrition];
 }
 
 class InterventionResultTypes extends ResultTypes {
@@ -73,8 +74,13 @@ extension StudyExportX on Study {
     final Map<String, Question> questionById = {};
     final mediaIndices = [];
 
-    for (var i = 1; i < observations.length + 1; i++) {
-      final surveyMeasurement = observations[i - 1] as QuestionnaireTask;
+    // Filter observations to only include QuestionnaireTask instances
+    final questionnaireTasks = observations
+        .whereType<QuestionnaireTask>()
+        .toList();
+
+    for (var i = 1; i < questionnaireTasks.length + 1; i++) {
+      final surveyMeasurement = questionnaireTasks[i - 1];
       final surveyQuestions = surveyMeasurement.questions.questions;
       surveyColumns['survey${i}_id'] = surveyMeasurement.id;
       surveyColumns['survey${i}_name'] = surveyMeasurement.title;
@@ -160,6 +166,36 @@ extension StudyExportX on Study {
               }
             }
           }
+        } else if (record.resultType == MeasurementResultTypes.nutrition) {
+          // Add nutrition columns
+          final dailyRecall = record.result.result as DailyRecall;
+
+          // Calculate nutritional totals
+          double totalCalories = 0;
+          double totalProtein = 0;
+          double totalCarbs = 0;
+          double totalFat = 0;
+          int mealCount = 0;
+
+          for (final meal in dailyRecall.meals) {
+            if (!meal.isSkipped) {
+              mealCount++;
+              for (final food in meal.foods) {
+                totalCalories += food.nutrition.energyKcal;
+                totalProtein += food.nutrition.protein;
+                totalCarbs += food.nutrition.carbs;
+                totalFat += food.nutrition.fat;
+              }
+            }
+          }
+
+          row['total_calories'] = totalCalories;
+          row['total_protein'] = totalProtein;
+          row['total_carbs'] = totalCarbs;
+          row['total_fat'] = totalFat;
+          row['meal_count'] = mealCount;
+          row['entry_completed_at'] =
+              dailyRecall.entryCompletedAt?.toString() ?? '';
         }
         measurementsData.add(row);
       } else if (isIntervention) {
