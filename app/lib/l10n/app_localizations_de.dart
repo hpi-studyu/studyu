@@ -376,7 +376,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get contact => 'Kontakt';
 
   @override
-  String get contact_support => 'Support kontaktieren';
+  String get contact_support => 'Studienteam kontaktieren';
 
   @override
   String support_email_body(String subjectId) {
@@ -418,7 +418,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get view_study_information => 'Details anzeigen';
 
   @override
-  String get email_study_team => 'E-Mail an das Studienteam';
+  String get email_study_team => 'Studienteam kontaktieren';
 
   @override
   String get study_team_email_unavailable =>
@@ -931,11 +931,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get maximum => 'Maximum';
 
   @override
-  String get support_email_sent => 'Support-E-Mail geöffnet';
+  String get support_email_sent => 'E-Mail geöffnet';
 
   @override
   String get support_email_sent_description =>
-      'Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.';
+      'Ihre Nachricht an das Studienteam wurde in Ihrer E-Mail-App vorbereitet. Prüfen und senden Sie die E-Mail. Warten Sie dann auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse außerhalb der App, bis das Problem behoben ist.';
 
   @override
   String get no_contact_email =>

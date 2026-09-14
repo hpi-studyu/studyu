@@ -737,7 +737,7 @@ abstract class AppLocalizations {
   /// No description provided for @contact_support.
   ///
   /// In en, this message translates to:
-  /// **'Contact Support'**
+  /// **'Contact study team'**
   String get contact_support;
 
   /// Body of the support email, includes the subject ID
@@ -815,7 +815,7 @@ abstract class AppLocalizations {
   /// No description provided for @email_study_team.
   ///
   /// In en, this message translates to:
-  /// **'Email study team'**
+  /// **'Contact study team'**
   String get email_study_team;
 
   /// No description provided for @study_team_email_unavailable.
@@ -1751,13 +1751,13 @@ abstract class AppLocalizations {
   /// No description provided for @support_email_sent.
   ///
   /// In en, this message translates to:
-  /// **'Support Email Sent'**
+  /// **'Email opened'**
   String get support_email_sent;
 
   /// No description provided for @support_email_sent_description.
   ///
   /// In en, this message translates to:
-  /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
+  /// **'Your message to the study team was prepared in your email app. Review and send the email, then wait for their reply.\n\nIf you are currently participating in a study, continue tracking your results outside the app until the issue is resolved.'**
   String get support_email_sent_description;
 
   /// No description provided for @no_contact_email.

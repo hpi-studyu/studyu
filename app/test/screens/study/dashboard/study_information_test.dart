@@ -77,14 +77,14 @@ void main() {
     expect(find.text('All information copied to clipboard.'), findsOneWidget);
 
     await tester.scrollUntilVisible(
-      find.text('Email study team'),
+      find.text('Contact study team'),
       200,
       scrollable: find.byType(Scrollable).first,
     );
     expect(
       tester
           .widget<FilledButton>(
-            find.widgetWithText(FilledButton, 'Email study team'),
+            find.widgetWithText(FilledButton, 'Contact study team'),
           )
           .onPressed,
       isNotNull,
