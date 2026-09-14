@@ -3,9 +3,9 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/models/questionnaire/answer.dart';
 import 'package:studyu_core/src/models/questionnaire/question.dart';
 import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
-import 'package:studyu_core/src/models/questionnaire/questions/date_format_preset.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/date_input_type.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/default_date_option.dart';
+import 'package:studyu_core/src/models/questionnaire/questions/time_format_preset.dart';
 
 part 'date_question.g.dart';
 
