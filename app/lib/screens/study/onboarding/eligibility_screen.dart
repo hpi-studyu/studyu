@@ -274,21 +274,15 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         ),
         descriptionBottomSpacing: 0,
         scrollable: false,
+        bottomContent: activeResult != null ? _constructResultBanner() : null,
         child: Expanded(
-          child: Column(
-            children: [
-              Expanded(
-                child: QuestionnaireWidget(
-                  widget.study!.questionnaire.questions,
-                  title: widget.study!.title,
-                  onComplete: _evaluateResponse,
-                  shouldContinue: _checkContinuation,
-                  hideCta: activeResult?.eligible == false,
-                  autoComplete: true,
-                ),
-              ),
-              if (activeResult != null) _constructResultBanner(),
-            ],
+          child: QuestionnaireWidget(
+            widget.study!.questionnaire.questions,
+            title: widget.study!.title,
+            onComplete: _evaluateResponse,
+            shouldContinue: _checkContinuation,
+            hideCta: activeResult?.eligible == false,
+            autoComplete: true,
           ),
         ),
       ),
