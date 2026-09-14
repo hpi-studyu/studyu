@@ -1,5 +1,3 @@
-// ignore_for_file: join_return_with_assignment
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
@@ -142,7 +140,7 @@ class UserRepository implements IUserRepository {
     );
 
     activeFilters[page] = {
-      if (presetId != null) 'preset_id': presetId,
+      'preset_id': ?presetId,
       if (filterGroup != null) 'filter_group': filterGroup.toJson(),
     };
 

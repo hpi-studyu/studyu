@@ -8,6 +8,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/study_unavailable_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
+import 'package:studyu_app/screens/study/onboarding/consent.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_core/core.dart';
@@ -97,7 +98,9 @@ void main() {
 
   test('routes open when their required app state exists', () {
     final study = Study('study', 'user');
-    final appState = AppState()..selectedStudy = study;
+    final appState = AppState()
+      ..selectedStudy = study
+      ..onboardingPhase = StudyOnboardingPhase.interventionSelection;
 
     for (final route in [
       RouteNames.studyOverview,
@@ -107,7 +110,9 @@ void main() {
       expect(routePrerequisiteRedirect('/$route', null, appState), isNull);
     }
 
-    appState.activeSubject = StudySubject.fromStudy(study, 'user', [], null);
+    appState
+      ..activeSubject = StudySubject.fromStudy(study, 'user', [], null)
+      ..onboardingPhase = StudyOnboardingPhase.consent;
     for (final route in [RouteNames.journey, RouteNames.consent]) {
       expect(routePrerequisiteRedirect('/$route', null, appState), isNull);
     }
@@ -207,7 +212,7 @@ void main() {
 
     expect(
       routePrerequisiteRedirect('/${RouteNames.welcome}', null, appState),
-      isNull,
+      '/${RouteNames.journey}',
     );
     expect(
       routePrerequisiteRedirect('/${RouteNames.dashboard}', null, appState),
@@ -245,7 +250,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(find.byType(JourneyOverviewScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -348,9 +353,9 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.navigate_next));
     await tester.pumpAndSettle();
-    expect(find.byIcon(Icons.close), findsOneWidget);
+    expect(find.byType(ConsentScreen), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.close));
+    await tester.tap(find.text('Decline'));
     await tester.pumpAndSettle();
 
     expect(find.byType(WelcomeScreen), findsOneWidget);
