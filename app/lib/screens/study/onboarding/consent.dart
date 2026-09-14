@@ -4,14 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/services/study_start_service.dart';
 import 'package:studyu_app/util/save_pdf.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -86,6 +87,25 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    final localizations = AppLocalizations.of(context)!;
+    final navConfig = OnboardingNavConfig(
+      backLabel: localizations.decline,
+      backIcon: const Icon(Icons.close),
+      onBack: () => context.pop(false),
+      nextLabel: localizations.accept,
+      nextIcon: const Icon(Icons.check),
+      onNext: boxLogic.every((element) => element) || kDebugMode
+          ? _acceptConsent
+          : null,
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.consent,
+      ),
+      loadingMessage: _isStarting ? localizations.starting_study : null,
+    );
+    navNotifier?.register(this, '/${RouteNames.consent}', navConfig);
+
     return Stack(
       children: [
         Scaffold(
@@ -183,23 +203,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: BottomOnboardingNavigation(
-            backLabel: AppLocalizations.of(context)!.decline,
-            backIcon: const Icon(Icons.close),
-            onBack: () => context.pop(false),
-            nextLabel: AppLocalizations.of(context)!.accept,
-            nextIcon: const Icon(Icons.check),
-            onNext: boxLogic.every((element) => element) || kDebugMode
-                ? _acceptConsent
-                : null,
-            progress: OnboardingProgress.forPage(
-              context.read<AppState>(),
-              OnboardingStep.consent,
-            ),
-          ),
+          bottomNavigationBar: navNotifier == null ? navConfig.build() : null,
         ),
-        if (_isStarting)
-          LoadingOverlay(message: AppLocalizations.of(context)!.starting_study),
+        if (navNotifier == null && _isStarting)
+          LoadingOverlay(message: localizations.starting_study),
       ],
     );
   }

@@ -8,9 +8,9 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/services/study_start_service.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -78,6 +78,18 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    final localizations = AppLocalizations.of(context)!;
+    final navConfig = OnboardingNavConfig(
+      onNext: () => getConsentAndNavigateToDashboard(context),
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.journey,
+      ),
+      loadingMessage: _isStartingStudy ? localizations.starting_study : null,
+    );
+    navNotifier?.register(this, '/${RouteNames.journey}', navConfig);
+
     return Stack(
       children: [
         Scaffold(
@@ -102,16 +114,10 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
               ],
             ),
           ),
-          bottomNavigationBar: BottomOnboardingNavigation(
-            onNext: () => getConsentAndNavigateToDashboard(context),
-            progress: OnboardingProgress.forPage(
-              context.read<AppState>(),
-              OnboardingStep.journey,
-            ),
-          ),
+          bottomNavigationBar: navNotifier == null ? navConfig.build() : null,
         ),
-        if (_isStartingStudy)
-          LoadingOverlay(message: AppLocalizations.of(context)!.starting_study),
+        if (navNotifier == null && _isStartingStudy)
+          LoadingOverlay(message: localizations.starting_study),
       ],
     );
   }

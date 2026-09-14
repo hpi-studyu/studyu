@@ -16,6 +16,11 @@ void main() {
       ..condition = (BooleanExpression()..target = question.id);
     final study = Study.withId('user')
       ..title = 'Study'
+      ..interventions = [
+        Intervention('first', 'First'),
+        Intervention('second', 'Second'),
+        Intervention('third', 'Third'),
+      ]
       ..questionnaire.questions = [question]
       ..eligibilityCriteria = [criterion];
     final router = GoRouter(
@@ -24,13 +29,11 @@ void main() {
           path: '/',
           builder: (context, state) => EligibilityScreen(
             study: study,
-            onEligible: (context) async {
-              await context.push('/intervention');
-            },
+            onEligible: continueAfterEligibility,
           ),
         ),
         GoRoute(
-          path: '/intervention',
+          path: '/interventionSelection',
           builder: (_, _) => const Scaffold(body: Text('Intervention')),
         ),
       ],

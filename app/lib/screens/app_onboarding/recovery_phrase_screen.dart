@@ -7,8 +7,8 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
@@ -46,12 +46,16 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    final navConfig = _buildNavigation();
+    navNotifier?.register(this, '/${RouteNames.recoveryPhrase}', navConfig);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.recovery_phrase_header),
       ),
-      bottomNavigationBar: _buildNavigation(),
+      bottomNavigationBar: navNotifier == null ? navConfig.build() : null,
       body: OnboardingPage(
         title: '',
         description: '',
@@ -80,8 +84,8 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
     );
   }
 
-  Widget _buildNavigation() {
-    return BottomOnboardingNavigation(
+  OnboardingNavConfig _buildNavigation() {
+    return OnboardingNavConfig(
       hideBack: widget.continueToDashboard,
       onBack: widget.continueToDashboard
           ? null

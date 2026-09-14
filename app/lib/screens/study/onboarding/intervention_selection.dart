@@ -6,8 +6,8 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
-import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -88,6 +88,20 @@ class _InterventionSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    final navConfig = OnboardingNavConfig(
+      onNext: selectedInterventionIds.length == 2 ? onFinished : null,
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.interventions,
+      ),
+    );
+    navNotifier?.register(
+      this,
+      '/${RouteNames.interventionSelection}',
+      navConfig,
+    );
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -115,13 +129,7 @@ class _InterventionSelectionScreenState
           ),
         ),
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: selectedInterventionIds.length == 2 ? onFinished : null,
-        progress: OnboardingProgress.forPage(
-          context.read<AppState>(),
-          OnboardingStep.interventions,
-        ),
-      ),
+      bottomNavigationBar: navNotifier == null ? navConfig.build() : null,
     );
   }
 }

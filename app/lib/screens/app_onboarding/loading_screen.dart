@@ -595,7 +595,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
         await context.push<EligibilityResult>(
           '/${RouteNames.eligibilityCheck}',
-          extra: preview.study,
+          extra: EligibilityScreenArguments(
+            study: preview.study,
+            onEligible: continueAfterEligibility,
+          ),
         );
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
         _iFrameHelper.postRouteFinished();
