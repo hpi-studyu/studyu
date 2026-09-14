@@ -121,6 +121,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Hero(
                   tag: 'study_tile_${study!.id}',

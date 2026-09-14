@@ -208,7 +208,6 @@ class TimelineChild extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      constraints: const BoxConstraints(minHeight: 100),
       child: Center(child: child),
     );
   }
