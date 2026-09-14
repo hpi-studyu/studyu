@@ -628,8 +628,8 @@
       }
     }
   },
-  "dashboard_tour": "Dashboard walkthrough",
-  "show_again": "Replay tour",
+  "dashboard_tour": "Dashboard tour",
+  "show_again": "View tour again",
   "free_text_hint": "Enter your answer",
   "preview_failed_to_initialize": "Preview failed to initialize.",
   "preview_overlay_reset_hint": "The preview could not be opened right now. Please try resetting the preview.",

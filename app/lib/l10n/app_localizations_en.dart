@@ -1653,10 +1653,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get dashboard_tour => 'Dashboard walkthrough';
+  String get dashboard_tour => 'Dashboard tour';
 
   @override
-  String get show_again => 'Replay tour';
+  String get show_again => 'View tour again';
 
   @override
   String get free_text_hint => 'Enter your answer';

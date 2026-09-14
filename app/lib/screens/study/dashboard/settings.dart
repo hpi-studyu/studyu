@@ -59,6 +59,14 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final activeSubject = context.watch<AppState>().activeSubject;
+    final now = DateTime.now();
+    final dashboardHasTasks =
+        activeSubject?.startedAt != null &&
+        activeSubject!.selectedInterventionIds.length >=
+            StudySchedule.numberOfInterventions &&
+        !activeSubject.startedAt!.isAfter(now) &&
+        activeSubject.scheduleFor(now).isNotEmpty;
     final destructiveButtonStyle = OutlinedButton.styleFrom(
       foregroundColor: theme.colorScheme.error,
       side: BorderSide(color: theme.colorScheme.error),
@@ -147,11 +155,13 @@ class _SettingsState extends State<Settings> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
                         ),
-                        onPressed: () async {
-                          await DashboardShowcaseStorage.reset();
-                          if (!context.mounted) return;
-                          context.pop(true);
-                        },
+                        onPressed: dashboardHasTasks
+                            ? () async {
+                                await DashboardShowcaseStorage.reset();
+                                if (!context.mounted) return;
+                                context.pop(true);
+                              }
+                            : null,
                         child: Text(AppLocalizations.of(context)!.show_again),
                       ),
                     ],

@@ -609,8 +609,8 @@
       }
     }
   },
-  "dashboard_tour": "Dashboard-Einführung",
-  "show_again": "Tour wiederholen",
+  "dashboard_tour": "Dashboard-Tour",
+  "show_again": "Tour erneut ansehen",
   "free_text_hint": "Geben Sie Ihre Antwort ein",
   "preview_failed_to_initialize": "Die Vorschau konnte nicht initialisiert werden.",
   "preview_overlay_reset_hint": "Die Vorschau konnte gerade nicht geöffnet werden. Bitte versuche, die Vorschau zurückzusetzen.",

@@ -140,8 +140,18 @@ void main() {
 
     expect(find.text('Use device language'), findsOneWidget);
     expect(find.text('Study settings'), findsOneWidget);
-    expect(find.text('Dashboard walkthrough'), findsOneWidget);
-    expect(find.text('Replay tour'), findsOneWidget);
+    expect(find.text('Dashboard tour'), findsOneWidget);
+    expect(find.text('View tour again'), findsOneWidget);
+    expect(
+      tester
+          .widget<OutlinedButton>(
+            find.byKey(
+              const ValueKey('settings_show_dashboard_showcase_again'),
+            ),
+          )
+          .onPressed,
+      isNull,
+    );
     expect(find.text('Show dashboard tour again'), findsNothing);
     expect(find.byIcon(Icons.language), findsOneWidget);
     expect(find.byIcon(Icons.help_outline), findsOneWidget);

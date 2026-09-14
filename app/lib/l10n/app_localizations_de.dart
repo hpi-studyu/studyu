@@ -1673,10 +1673,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get dashboard_tour => 'Dashboard-Einführung';
+  String get dashboard_tour => 'Dashboard-Tour';
 
   @override
-  String get show_again => 'Tour wiederholen';
+  String get show_again => 'Tour erneut ansehen';
 
   @override
   String get free_text_hint => 'Geben Sie Ihre Antwort ein';

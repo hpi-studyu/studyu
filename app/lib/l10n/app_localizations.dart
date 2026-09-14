@@ -3104,13 +3104,13 @@ abstract class AppLocalizations {
   /// No description provided for @dashboard_tour.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard walkthrough'**
+  /// **'Dashboard tour'**
   String get dashboard_tour;
 
   /// No description provided for @show_again.
   ///
   /// In en, this message translates to:
-  /// **'Replay tour'**
+  /// **'View tour again'**
   String get show_again;
 
   /// No description provided for @free_text_hint.
