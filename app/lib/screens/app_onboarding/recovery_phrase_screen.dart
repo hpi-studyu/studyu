@@ -1,16 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
   final List<String>? initialPhrase;
+  final bool continueToDashboard;
 
-  const RecoveryPhraseScreen({super.key, this.initialPhrase});
+  const RecoveryPhraseScreen({
+    super.key,
+    this.initialPhrase,
+    this.continueToDashboard = false,
+  });
 
   @override
   State<RecoveryPhraseScreen> createState() => _RecoveryPhraseScreenState();
@@ -19,6 +27,21 @@ class RecoveryPhraseScreen extends StatefulWidget {
 class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
   bool _isChecked = kDebugMode;
   bool _isRevealed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isRevealed = widget.continueToDashboard;
+  }
+
+  Future<void> _continueToDashboard() async {
+    final subjectId = context.read<AppState>().activeSubject?.id;
+    if (subjectId != null) {
+      await RecoveryPhraseStorage.clearPending(subjectId);
+    }
+    if (!mounted) return;
+    context.goNamed(RouteNames.dashboard);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,17 +76,23 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
 
   Widget _buildNavigation() {
     return BottomOnboardingNavigation(
-      onBack: () {
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.goNamed(RouteNames.terms);
-        }
-      },
+      hideBack: widget.continueToDashboard,
+      onBack: widget.continueToDashboard
+          ? null
+          : () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.goNamed(RouteNames.terms);
+              }
+            },
       onNext: _isChecked
-          ? () {
-              context.pushNamed(RouteNames.studySelection);
-            }
+          ? widget.continueToDashboard
+                ? _continueToDashboard
+                : () => context.pushNamed(RouteNames.studySelection)
+          : null,
+      nextLabel: widget.continueToDashboard
+          ? AppLocalizations.of(context)!.continue_to_study
           : null,
     );
   }

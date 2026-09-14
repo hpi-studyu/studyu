@@ -353,12 +353,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'You did not give your consent. To participate you need to give consent.';
 
   @override
-  String get setting_up_study => 'Setting up your study...';
-
-  @override
-  String get good_to_go => 'You are good to go!';
-
-  @override
   String get dashboard => 'Dashboard';
 
   @override
@@ -726,7 +720,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_not_started =>
-      'Your study has not started yet. Please check back tomorrow!';
+      'Your study starts tomorrow. Come back then to begin.';
 
   @override
   String get completed_study =>

@@ -222,7 +222,10 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.recoveryPhrase}',
         name: RouteNames.recoveryPhrase,
-        builder: (context, state) => const RecoveryPhraseScreen(),
+        builder: (context, state) => RecoveryPhraseScreen(
+          continueToDashboard:
+              state.uri.queryParameters['next'] == RouteNames.dashboard,
+        ),
       ),
       GoRoute(
         path: '/${RouteNames.restoreAccount}',

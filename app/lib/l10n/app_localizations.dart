@@ -698,18 +698,6 @@ abstract class AppLocalizations {
   /// **'You did not give your consent. To participate you need to give consent.'**
   String get user_did_not_give_consent;
 
-  /// No description provided for @setting_up_study.
-  ///
-  /// In en, this message translates to:
-  /// **'Setting up your study...'**
-  String get setting_up_study;
-
-  /// No description provided for @good_to_go.
-  ///
-  /// In en, this message translates to:
-  /// **'You are good to go!'**
-  String get good_to_go;
-
   /// No description provided for @dashboard.
   ///
   /// In en, this message translates to:
@@ -1397,7 +1385,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_not_started.
   ///
   /// In en, this message translates to:
-  /// **'Your study has not started yet. Please check back tomorrow!'**
+  /// **'Your study starts tomorrow. Come back then to begin.'**
   String get study_not_started;
 
   /// No description provided for @completed_study.

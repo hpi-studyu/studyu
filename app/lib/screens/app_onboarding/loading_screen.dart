@@ -18,6 +18,7 @@ import 'package:studyu_app/services/deferred_link_service.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
 import 'package:studyu_core/core.dart';
@@ -448,6 +449,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
       }
       state.activeSubject = subject;
       state.init(context);
+      if (state.showParticipantRecovery &&
+          await RecoveryPhraseStorage.isPending(subject.id)) {
+        if (!mounted) return;
+        context.goNamed(
+          RouteNames.recoveryPhrase,
+          queryParameters: {'next': RouteNames.dashboard},
+        );
+        return;
+      }
+      if (!mounted) return;
       context.go('/${RouteNames.dashboard}');
     } else {
       StudyULogger.warning("No subject found for ID: $selectedSubjectId.");

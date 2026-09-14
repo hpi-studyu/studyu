@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
-import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
@@ -20,7 +18,6 @@ class KickoffScreen extends StatefulWidget {
 
 class _KickoffScreen extends State<KickoffScreen> {
   StudySubject? subject;
-  bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
     try {
@@ -38,12 +35,16 @@ class _KickoffScreen extends State<KickoffScreen> {
       await PendingDeepLinkService.clearStorage();
       state.clearPendingDeepLink();
       if (!context.mounted) return;
-      state.showRecoveryPhraseOnDashboard = true;
-      await RecoveryPhraseStorage.markPending(subject!.id);
-      if (!mounted) return;
-      setState(() => ready = true);
-      if (!context.mounted) return;
-      context.go('/${RouteNames.dashboard}');
+      if (state.showParticipantRecovery) {
+        await RecoveryPhraseStorage.markPending(subject!.id);
+        if (!context.mounted) return;
+        context.goNamed(
+          RouteNames.recoveryPhrase,
+          queryParameters: {'next': RouteNames.dashboard},
+        );
+      } else {
+        context.goNamed(RouteNames.dashboard);
+      }
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }
@@ -69,22 +70,6 @@ class _KickoffScreen extends State<KickoffScreen> {
     _storeUserStudy(context);
   }
 
-  Widget _constructStatusIcon(BuildContext context) => !ready
-      ? const SizedBox(
-          height: 64,
-          width: 64,
-          child: CircularProgressIndicator(),
-        )
-      : const Icon(
-          MdiIcons.checkboxMarkedCircle,
-          color: Colors.green,
-          size: 64,
-        );
-
-  String _getStatusText(BuildContext context) => !ready
-      ? AppLocalizations.of(context)!.setting_up_study
-      : AppLocalizations.of(context)!.good_to_go;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,32 +77,7 @@ class _KickoffScreen extends State<KickoffScreen> {
         title: Text(subject!.study.title!),
         leading: Icon(MdiIconsHelper.fromString(subject!.study.iconName)),
       ),
-      body: Builder(
-        builder: (buildContext) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _constructStatusIcon(context),
-                    const SizedBox(height: 32),
-                    Text(
-                      _getStatusText(context),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 16),
-                    /*OutlinedButton(
-                      onPressed: () => _storeUserStudy(context),
-                      child: Text(AppLocalizations.of(context)!.start_study),
-                    ),*/
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+      body: const Center(child: CircularProgressIndicator()),
     );
   }
 }

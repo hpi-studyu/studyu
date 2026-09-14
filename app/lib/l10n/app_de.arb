@@ -101,8 +101,6 @@
   "please_give_consent_why": "Warum?",
   "please_give_consent_reason": "Aus Gründen der Sicherheit und des Datenschutzes müssen Studien das Einverständnis der Teilnehmer einholen. Aus diesem Grund müssen Sie für jede Studie erneut Ihr Einverständnis abgeben.",
   "user_did_not_give_consent": "Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.",
-  "setting_up_study": "Studie wird vorbereitet...",
-  "good_to_go": "Es kann losgehen!",
   "dashboard": "Dashboard",
   "study_not_available_for_testing_yet": "Diese Studie ist noch nicht zum Testen verfügbar.",
   "home": "Home",
@@ -226,7 +224,7 @@
   "report_outcome_neither": "Beide Interventionen scheinen einen negativen Effekt auf das Ereignis zu haben.",
   "report_outcome_one": "Die Intervention {intervention} scheint das Ergebnis zu verbessen.",
   "report_axis_phase": "Phase",
-  "study_not_started": "Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!",
+  "study_not_started": "Ihre Studie beginnt morgen. Kommen Sie dann zurück, um zu beginnen.",
   "completed_study": "Sie haben Ihre letzte Studie abgeschlossen. Schauen Sie vergangene Ergebnisse an oder starten Sie eine neue Studie.",
   "app_support": "App Support",
   "app_support_text": "Bei Problemen oder Fragen zur App kontaktieren",
@@ -470,7 +468,6 @@
   "ok": "OK",
   "submit": "Absenden",
   "go_back": "Zurück",
-
   "study_settings_section": "Studieneinstellungen",
   "recovery_phrase_header": "Wiederherstellungsphrase anzeigen",
   "copy_to_clipboard": "In die Zwischenablage kopieren",
@@ -513,17 +510,14 @@
       }
     }
   },
-
   "recovery_in_progress": "Konto wird wiederhergestellt...",
   "recovery_failed": "Wiederherstellung fehlgeschlagen. Bitte überprüfe deine Wiederherstellungsphrase und versuche es erneut.",
   "recovery_user_not_found": "Kein Konto mit dieser Wiederherstellungsphrase gefunden.",
   "recovery_network_error": "Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.",
-
   "restore_account_description": "Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.",
   "restore_account_help_title": "Mit Wiederherstellungsphrase wiederherstellen",
   "restore_account_help_1": "Gib alle 13 Wörter in der richtigen Reihenfolge ein",
   "restore_account_help_2": "Du kannst die Phrase manuell eingeben oder einfügen",
-
   "share_recovery": "Wiederherstellung teilen",
   "share_as_text": "Als Text teilen",
   "download_recovery": "Wiederherstellung herunterladen",

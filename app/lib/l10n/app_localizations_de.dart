@@ -357,12 +357,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.';
 
   @override
-  String get setting_up_study => 'Studie wird vorbereitet...';
-
-  @override
-  String get good_to_go => 'Es kann losgehen!';
-
-  @override
   String get dashboard => 'Dashboard';
 
   @override
@@ -736,7 +730,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_not_started =>
-      'Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!';
+      'Ihre Studie beginnt morgen. Kommen Sie dann zurück, um zu beginnen.';
 
   @override
   String get completed_study =>

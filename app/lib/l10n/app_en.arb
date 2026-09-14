@@ -114,8 +114,6 @@
   "please_give_consent_why": "Why?",
   "please_give_consent_reason": "Studies need to request specific consent from participants, for reasons of safety and data privacy. Hence, you must explicitly consent to participate in each study.",
   "user_did_not_give_consent": "You did not give your consent. To participate you need to give consent.",
-  "setting_up_study": "Setting up your study...",
-  "good_to_go": "You are good to go!",
   "dashboard": "Dashboard",
   "study_not_available_for_testing_yet": "This study is not available for testing yet.",
   "home": "Home",
@@ -245,7 +243,7 @@
   "report_outcome_neither": "Both interventions seem to have a negative effect on the outcome for you.",
   "report_outcome_one": "The intervention {intervention} seems to improve the outcome for you.",
   "report_axis_phase": "Phase",
-  "study_not_started": "Your study has not started yet. Please check back tomorrow!",
+  "study_not_started": "Your study starts tomorrow. Come back then to begin.",
   "completed_study": "You completed your last study. Look at past reports or start a new study.",
   "app_support": "App support",
   "app_support_text": "Contact for problems or questions with the app",
@@ -489,7 +487,6 @@
   "ok": "OK",
   "submit": "Submit",
   "go_back": "Go back",
-
   "study_settings_section": "Study settings",
   "recovery_phrase_header": "View recovery phrase",
   "copy_to_clipboard": "Copy to clipboard",
@@ -532,17 +529,14 @@
       }
     }
   },
-
   "recovery_in_progress": "Recovering your account...",
   "recovery_failed": "Recovery failed. Please check your recovery phrase and try again.",
   "recovery_user_not_found": "No account found with this recovery phrase.",
   "recovery_network_error": "Network error. Please check your connection and try again.",
-
   "restore_account_description": "Restore your account on this device with the recovery phrase you saved before joining a study.",
   "restore_account_help_title": "Restore with your recovery phrase",
   "restore_account_help_1": "Enter all 13 words in order",
   "restore_account_help_2": "You can type or paste the phrase manually",
-
   "share_recovery": "Share Recovery",
   "share_as_text": "Share as Text",
   "download_recovery": "Download Recovery",

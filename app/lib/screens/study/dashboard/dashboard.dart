@@ -18,7 +18,6 @@ import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overvi
 import 'package:studyu_app/theme.dart' as app_theme;
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
-import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -74,7 +73,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   bool _showcaseCheckStarted = false;
   bool _dashboardShowcaseStarted = false;
   bool _redirectingToLoading = false;
-  bool _recoveryDialogInFlight = false;
   bool _isDisposing = false;
 
   bool get _studyIsAvailable => isStudyAvailableForTesting(subject!.study);
@@ -96,8 +94,8 @@ class _DashboardScreenState extends State<DashboardScreen>
       globalTooltipActions: [
         TooltipActionButton(
           type: TooltipDefaultActionType.skip,
-          backgroundColor: app_theme.theme.colorScheme.primary,
-          textStyle: showcaseActionTextStyle,
+          backgroundColor: Colors.transparent,
+          textStyle: TextStyle(color: app_theme.theme.colorScheme.primary),
           hideActionWidgetForShowcase: [_menuShowcaseKey],
         ),
         TooltipActionButton(
@@ -146,35 +144,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           ).showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
-      final appState = context.read<AppState>();
-      if (!appState.showParticipantRecovery) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) unawaited(_startDashboardShowcaseIfNeeded());
-        });
-        return;
-      }
-
-      final subjectId = subject!.id;
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted || _recoveryDialogInFlight) return;
-        _recoveryDialogInFlight = true;
-        final inMemory = appState.showRecoveryPhraseOnDashboard;
-        if (inMemory) appState.showRecoveryPhraseOnDashboard = false;
-        try {
-          final shouldShow =
-              inMemory || await RecoveryPhraseStorage.isPending(subjectId);
-          if (!mounted) return;
-          if (shouldShow) {
-            final accepted = await _showRecoveryPhraseDialog();
-            if (!mounted) return;
-            if (accepted) {
-              await RecoveryPhraseStorage.clearPending(subjectId);
-            }
-          }
-          if (mounted) unawaited(_startDashboardShowcaseIfNeeded());
-        } finally {
-          _recoveryDialogInFlight = false;
-        }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_startDashboardShowcaseIfNeeded());
       });
     }
   }
@@ -253,8 +224,8 @@ class _DashboardScreenState extends State<DashboardScreen>
             tooltipActions: [
               TooltipActionButton(
                 type: TooltipDefaultActionType.skip,
-                backgroundColor: theme.colorScheme.primary,
-                textStyle: showcaseActionTextStyle,
+                backgroundColor: Colors.transparent,
+                textStyle: TextStyle(color: theme.colorScheme.primary),
               ),
               TooltipActionButton(
                 type: TooltipDefaultActionType.next,
@@ -563,72 +534,6 @@ class _DashboardScreenState extends State<DashboardScreen>
       return;
     }
     unawaited(DashboardShowcaseStorage.markCompleted());
-  }
-
-  Future<bool> _showRecoveryPhraseDialog() async {
-    final l10n = AppLocalizations.of(context)!;
-    return await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) {
-            var isChecked = false;
-            var hasLoadError = false;
-            return PopScope(
-              canPop: false,
-              child: StatefulBuilder(
-                builder: (context, setDialogState) {
-                  return AlertDialog(
-                    title: Text(l10n.recovery_phrase_header),
-                    content: SizedBox(
-                      width: double.maxFinite,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: Text(l10n.recovery_phrase_save_hint),
-                            ),
-                            RecoveryPhraseContent(
-                              useGridLayout: false,
-                              isChecked: isChecked,
-                              showSuccessFeedback: false,
-                              showRotation: false,
-                              onLoadError: () {
-                                setDialogState(() => hasLoadError = true);
-                              },
-                              onCheckedChanged: (value) {
-                                setDialogState(
-                                  () => isChecked = value ?? false,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    actions: [
-                      if (hasLoadError)
-                        TextButton(
-                          onPressed: () =>
-                              Navigator.of(dialogContext).pop(false),
-                          child: Text(l10n.cancel),
-                        ),
-                      FilledButton(
-                        onPressed: isChecked
-                            ? () => Navigator.of(dialogContext).pop(true)
-                            : null,
-                        child: Text(l10n.continue_to_study),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            );
-          },
-        ) ??
-        false;
   }
 }
 
