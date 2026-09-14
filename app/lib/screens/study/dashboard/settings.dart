@@ -15,6 +15,7 @@ import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
+import 'package:studyu_app/widgets/why_dialog.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart' show PostgrestException;
@@ -306,8 +307,8 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
                       actionLabel: localizations.recovery_phrase_why,
                       onAction: () => showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          content: Text(localizations.recovery_phrase_reason),
+                        builder: (context) => WhyDialog(
+                          content: localizations.recovery_phrase_reason,
                         ),
                       ),
                     ),

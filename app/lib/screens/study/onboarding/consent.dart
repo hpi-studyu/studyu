@@ -17,6 +17,7 @@ import 'package:studyu_app/widgets/loading_overlay.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
+import 'package:studyu_app/widgets/why_dialog.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -174,10 +175,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
           actionLabel: AppLocalizations.of(context)!.please_give_consent_why,
           onAction: () => showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              content: Text(
-                AppLocalizations.of(context)!.please_give_consent_reason,
-              ),
+            builder: (context) => WhyDialog(
+              content: AppLocalizations.of(context)!.please_give_consent_reason,
             ),
           ),
         ),

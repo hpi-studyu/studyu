@@ -12,6 +12,7 @@ import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
+import 'package:studyu_app/widgets/why_dialog.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
   final List<String>? initialPhrase;
@@ -70,9 +71,8 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
           actionLabel: localizations.recovery_phrase_why,
           onAction: () => showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              content: Text(localizations.recovery_phrase_reason),
-            ),
+            builder: (context) =>
+                WhyDialog(content: localizations.recovery_phrase_reason),
           ),
         ),
         descriptionBottomSpacing: 8,

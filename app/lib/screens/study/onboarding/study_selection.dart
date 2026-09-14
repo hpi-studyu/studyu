@@ -10,6 +10,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
+import 'package:studyu_app/widgets/why_dialog.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -107,10 +108,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           actionLabel: AppLocalizations.of(context)!.study_selection_single_why,
           onAction: () => showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              content: Text(
-                AppLocalizations.of(context)!.study_selection_single_reason,
-              ),
+            builder: (context) => WhyDialog(
+              content: AppLocalizations.of(
+                context,
+              )!.study_selection_single_reason,
             ),
           ),
         ),
