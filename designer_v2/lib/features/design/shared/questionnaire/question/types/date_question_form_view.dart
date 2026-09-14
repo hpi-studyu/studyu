@@ -44,28 +44,6 @@ class DateQuestionFormView extends ConsumerWidget {
             ),
             const SizedBox(height: 16.0),
 
-            // Step 2b: Time Format (if time or datetime)
-            if (inputType.isTime) ...[
-              generateRow(
-                label: localizations.time_format_preset_label,
-                labelHelpText: localizations.time_format_preset_label_helper,
-                input: ReactiveDropdownField<TimeFormatPreset>(
-                  formControl: formViewModel.timeFormatPresetControl,
-                  items: TimeFormatPreset.values.map((preset) {
-                    final exampleTime = DateTime(2000, 1, 1, 14, 30);
-                    final example = DateFormat(
-                      preset.pattern,
-                    ).format(exampleTime);
-                    return DropdownMenuItem(
-                      value: preset,
-                      child: Text(example),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-            ],
-
             // Step 3: Default Value
             generateRow(
               label: localizations.date_default_option_label,

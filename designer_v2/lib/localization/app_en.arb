@@ -368,8 +368,6 @@
   "date_input_type_date": "Date only",
   "date_input_type_time": "Time only",
   "date_input_type_datetime": "Date and time",
-  "time_format_preset_label": "Time format",
-  "time_format_preset_label_helper": "Select how time is displayed",
   "date_default_option_label": "Default value",
   "date_default_option_label_helper": "Select the initial value shown to participants",
   "date_default_option_none": "No default",

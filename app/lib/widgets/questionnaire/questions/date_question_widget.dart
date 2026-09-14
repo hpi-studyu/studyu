@@ -303,7 +303,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             icon: const Icon(Icons.access_time),
             label: Text(
               _selectedTime != null
-                  ? DateFormat(widget.question.timeFormat).format(
+                  ? DateFormat('HH:mm').format(
                       DateTime(
                         2000,
                         1,

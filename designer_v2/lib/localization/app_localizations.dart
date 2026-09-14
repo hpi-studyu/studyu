@@ -1664,18 +1664,6 @@ abstract class AppLocalizations {
   /// **'Date and time'**
   String get date_input_type_datetime;
 
-  /// No description provided for @time_format_preset_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Time format'**
-  String get time_format_preset_label;
-
-  /// No description provided for @time_format_preset_label_helper.
-  ///
-  /// In en, this message translates to:
-  /// **'Select how time is displayed'**
-  String get time_format_preset_label_helper;
-
   /// No description provided for @date_default_option_label.
   ///
   /// In en, this message translates to:

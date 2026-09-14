@@ -5,7 +5,6 @@ import 'package:studyu_core/src/models/questionnaire/question.dart';
 import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/date_input_type.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/default_date_option.dart';
-import 'package:studyu_core/src/models/questionnaire/questions/time_format_preset.dart';
 
 part 'date_question.g.dart';
 
@@ -28,9 +27,6 @@ class DateQuestion extends Question<DateTime> {
   @JsonKey(name: 'maxTime')
   String? maxTime;
 
-  @JsonKey(name: 'timeFormatPreset')
-  TimeFormatPreset timeFormatPreset;
-
   @JsonKey(name: 'defaultOption')
   DefaultDateOption defaultOption;
 
@@ -46,7 +42,6 @@ class DateQuestion extends Question<DateTime> {
     this.maxDate,
     this.minTime,
     this.maxTime,
-    this.timeFormatPreset = TimeFormatPreset.h24,
     this.defaultOption = DefaultDateOption.none,
     this.defaultSpecificDate,
     this.defaultSpecificTime,
@@ -58,7 +53,6 @@ class DateQuestion extends Question<DateTime> {
     this.maxDate,
     this.minTime,
     this.maxTime,
-    this.timeFormatPreset = TimeFormatPreset.h24,
     this.defaultOption = DefaultDateOption.none,
     this.defaultSpecificDate,
     this.defaultSpecificTime,
@@ -72,8 +66,6 @@ class DateQuestion extends Question<DateTime> {
 
   Answer<DateTime> constructAnswer(DateTime response) =>
       Answer.forQuestion(this, response);
-
-  String get timeFormat => timeFormatPreset.pattern;
 
   bool get isDateOnly => inputType == DateInputType.date;
 

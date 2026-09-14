@@ -845,7 +845,6 @@ class DateQuestionFormData extends QuestionFormData {
     this.maxDate,
     this.minTime,
     this.maxTime,
-    this.timeFormatPreset = TimeFormatPreset.h24,
     this.defaultOption = DefaultDateOption.none,
     this.defaultSpecificDate,
     this.defaultSpecificTime,
@@ -856,7 +855,6 @@ class DateQuestionFormData extends QuestionFormData {
   final DateTime? maxDate;
   final String? minTime;
   final String? maxTime;
-  final TimeFormatPreset timeFormatPreset;
   final DefaultDateOption defaultOption;
   final DateTime? defaultSpecificDate;
   final String? defaultSpecificTime;
@@ -878,7 +876,6 @@ class DateQuestionFormData extends QuestionFormData {
       maxDate: question.maxDate,
       minTime: question.minTime,
       maxTime: question.maxTime,
-      timeFormatPreset: question.timeFormatPreset,
       defaultOption: question.defaultOption,
       defaultSpecificDate: question.defaultSpecificDate,
       defaultSpecificTime: question.defaultSpecificTime,
@@ -896,7 +893,6 @@ class DateQuestionFormData extends QuestionFormData {
       maxDate: maxDate,
       minTime: minTime,
       maxTime: maxTime,
-      timeFormatPreset: timeFormatPreset,
       defaultOption: defaultOption,
       defaultSpecificDate: defaultSpecificDate,
       defaultSpecificTime: defaultSpecificTime,
@@ -925,7 +921,6 @@ class DateQuestionFormData extends QuestionFormData {
       maxDate: maxDate,
       minTime: minTime,
       maxTime: maxTime,
-      timeFormatPreset: timeFormatPreset,
       defaultOption: defaultOption,
       defaultSpecificDate: defaultSpecificDate,
       defaultSpecificTime: defaultSpecificTime,
@@ -955,7 +950,6 @@ class DateQuestionFormData extends QuestionFormData {
       'maxDate': maxDate?.toIso8601String(),
       'minTime': minTime,
       'maxTime': maxTime,
-      'timeFormatPreset': timeFormatPreset.name,
       'defaultOption': defaultOption.name,
       'defaultSpecificDate': defaultSpecificDate?.toIso8601String(),
       'defaultSpecificTime': defaultSpecificTime,

@@ -898,12 +898,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get date_input_type_datetime => 'Date and time';
 
   @override
-  String get time_format_preset_label => 'Time format';
-
-  @override
-  String get time_format_preset_label_helper => 'Select how time is displayed';
-
-  @override
   String get date_default_option_label => 'Default value';
 
   @override

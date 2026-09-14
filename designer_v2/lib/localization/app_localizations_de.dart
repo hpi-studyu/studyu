@@ -909,13 +909,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get date_input_type_datetime => 'Datum und Zeit';
 
   @override
-  String get time_format_preset_label => 'Zeitformat';
-
-  @override
-  String get time_format_preset_label_helper =>
-      'Wähle aus, wie die Zeit angezeigt wird';
-
-  @override
   String get date_default_option_label => 'Standardwert';
 
   @override

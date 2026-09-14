@@ -11,5 +11,4 @@ export 'image_capturing_question.dart';
 export 'pain_question.dart';
 export 'scale_question.dart';
 export 'slider_question.dart';
-export 'time_format_preset.dart';
 export 'visual_analogue_question.dart';

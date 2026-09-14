@@ -243,8 +243,6 @@
   "date_input_type_date": "Nur Datum",
   "date_input_type_time": "Nur Zeit",
   "date_input_type_datetime": "Datum und Zeit",
-  "time_format_preset_label": "Zeitformat",
-  "time_format_preset_label_helper": "Wähle aus, wie die Zeit angezeigt wird",
   "date_default_option_label": "Standardwert",
   "date_default_option_label_helper": "Wähle den anfänglich angezeigten Wert",
   "date_default_option_none": "Kein Standard",
