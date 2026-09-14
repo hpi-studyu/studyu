@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
@@ -278,8 +277,8 @@ class ReactiveDatePickerField extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
+  String _formatDate(BuildContext context, DateTime date) {
+    return MaterialLocalizations.of(context).formatCompactDate(date);
   }
 
   @override
@@ -302,7 +301,7 @@ class ReactiveDatePickerField extends StatelessWidget {
                   : const Icon(Icons.calendar_today),
             ),
             child: value != null
-                ? Text(_formatDate(value))
+                ? Text(_formatDate(context, value))
                 : Text(
                     placeholder ?? '',
                     style: TextStyle(color: Theme.of(context).hintColor),
