@@ -1,8 +1,13 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {
+  test('debug mode requests the recovery phrase dialog', () {
+    expect(AppState().showRecoveryPhraseOnDashboard, kDebugMode);
+  });
+
   test('participant recovery UI is disabled in preview mode', () {
     final state = AppState();
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,13 @@ class _InterventionSelectionScreenState
   void initState() {
     super.initState();
     selectedStudy = context.read<AppState>().selectedStudy;
+    if (kDebugMode && selectedStudy != null) {
+      selectedInterventionIds.addAll(
+        selectedStudy!.interventions
+            .take(2)
+            .map((intervention) => intervention.id),
+      );
+    }
   }
 
   Widget _buildInterventionSelectionList() {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/notifications.dart';
@@ -12,7 +13,7 @@ class AppState with ChangeNotifier {
   List<String>? preselectedInterventionIds;
   StudyNotifications? studyNotifications;
   bool isPreview = false;
-  bool showRecoveryPhraseOnDashboard = false;
+  bool showRecoveryPhraseOnDashboard = kDebugMode;
 
   String? pendingDeepLinkStudyId;
   String? pendingDeepLinkInviteCode;

@@ -88,44 +88,38 @@ void main() {
     expect(find.text('Dashboard'), findsOneWidget);
   });
 
-  testWidgets(
-    'pending recovery phrase requires confirmation before its prompt dismisses',
-    (tester) async {
-      var isPending = true;
-      RecoveryPhraseStorage.debugConfigureForTesting(
-        readPending: (_) async => isPending,
-        clearPending: (_) async => isPending = false,
-      );
+  testWidgets('pending recovery phrase starts confirmed in debug', (
+    tester,
+  ) async {
+    var isPending = true;
+    RecoveryPhraseStorage.debugConfigureForTesting(
+      readPending: (_) async => isPending,
+      clearPending: (_) async => isPending = false,
+    );
 
-      await tester.pumpWidget(
-        _dashboardWith(2, preview: false, startedAt: DateTime.now()),
-      );
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      _dashboardWith(2, preview: false, startedAt: DateTime.now()),
+    );
+    await tester.pumpAndSettle();
 
-      expect(find.text('View recovery phrase'), findsOneWidget);
-      final continueButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Continue to study'),
-      );
-      expect(continueButton.onPressed, isNull);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(
+      tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
+      isTrue,
+    );
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.widgetWithText(FilledButton, 'Continue to study'),
+          )
+          .onPressed,
+      isNotNull,
+    );
 
-      final confirmation = find.byType(CheckboxListTile);
-      await tester.ensureVisible(confirmation);
-      await tester.tap(confirmation);
-      await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<FilledButton>(
-              find.widgetWithText(FilledButton, 'Continue to study'),
-            )
-            .onPressed,
-        isNotNull,
-      );
+    await tester.tap(find.widgetWithText(FilledButton, 'Continue to study'));
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Continue to study'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('View recovery phrase'), findsNothing);
-      expect(isPending, isFalse);
-    },
-  );
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(isPending, isFalse);
+  });
 }

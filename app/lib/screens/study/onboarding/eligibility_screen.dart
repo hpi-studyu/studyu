@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -140,6 +141,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }*/
 
   Future<void> _finish() async {
+    if (kDebugMode && activeResult?.eligible != true) {
+      activeResult = EligibilityResult(
+        activeResult?.answers ?? QuestionnaireState(),
+        eligible: true,
+      );
+    }
     if (activeResult?.eligible == true && widget.onEligible != null) {
       await widget.onEligible!(context);
       return;
@@ -229,7 +236,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         nextButtonKey: const ValueKey('eligibility_continue'),
-        onNext: activeResult?.eligible ?? false ? _finish : null,
+        onNext: activeResult?.eligible == true || kDebugMode ? _finish : null,
         progress: const OnboardingProgress(stage: 0, progress: 0.5),
       ),
     );

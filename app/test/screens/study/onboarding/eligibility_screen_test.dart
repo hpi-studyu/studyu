@@ -6,9 +6,7 @@ import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_core/core.dart';
 
 void main() {
-  testWidgets('keeps eligibility below the next onboarding step', (
-    tester,
-  ) async {
+  testWidgets('debug can continue without eligibility answers', (tester) async {
     final question = BooleanQuestion.withId()
       ..id = 'eligible'
       ..prompt = 'Do you fulfill the criterion?';
@@ -52,8 +50,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('yes'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
 
@@ -207,6 +203,6 @@ void main() {
     final nextButton = tester.widget<TextButton>(
       find.byKey(const ValueKey('eligibility_continue')),
     );
-    expect(nextButton.onPressed, isNull);
+    expect(nextButton.onPressed, isNotNull);
   });
 }
