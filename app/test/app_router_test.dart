@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -41,6 +42,21 @@ void main() {
     expect(
       router.routeInformationProvider.value.uri.path,
       '/${RouteNames.loading}',
+    );
+  });
+
+  test('study selection and overview share the onboarding navigator', () {
+    final router = createAppRouter(queryParameters: const {});
+    addTearDown(router.dispose);
+
+    final shell = router.configuration.routes.whereType<ShellRoute>().single;
+    final shellRouteNames = shell.routes.whereType<GoRoute>().map(
+      (route) => route.name,
+    );
+
+    expect(
+      shellRouteNames,
+      containsAll([RouteNames.studySelection, RouteNames.studyOverview]),
     );
   });
 

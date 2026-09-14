@@ -161,10 +161,12 @@ class OnboardingNavNotifier extends InheritedWidget {
 /// Keeps the onboarding navigation mounted while child routes change.
 class OnboardingShell extends StatefulWidget {
   final String routePath;
+  final bool hideNavigation;
   final Widget child;
 
   const OnboardingShell({
     required this.routePath,
+    this.hideNavigation = false,
     required this.child,
     super.key,
   });
@@ -202,12 +204,13 @@ class _OnboardingShellState extends State<OnboardingShell> {
             children: [
               Scaffold(
                 body: child,
-                bottomNavigationBar:
-                    config?.build() ??
-                    const BottomOnboardingNavigation(
-                      hideBack: true,
-                      hideNext: true,
-                    ),
+                bottomNavigationBar: widget.hideNavigation
+                    ? null
+                    : config?.build() ??
+                          const BottomOnboardingNavigation(
+                            hideBack: true,
+                            hideNext: true,
+                          ),
               ),
               if (config?.loadingMessage != null)
                 LoadingOverlay(message: config!.loadingMessage!),

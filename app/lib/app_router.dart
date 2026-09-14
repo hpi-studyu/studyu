@@ -337,17 +337,21 @@ GoRouter createAppRouter({
         name: RouteNames.restoreAccount,
         builder: (context, state) => const RestoreAccountScreen(),
       ),
-      GoRoute(
-        path: '/${RouteNames.studySelection}',
-        name: RouteNames.studySelection,
-        builder: (context, state) => const StudySelectionScreen(),
-      ),
       // Persistent onboarding shell: BottomOnboardingNavigation stays mounted
       // while only the child page changes during the study-onboarding flow.
+      // Keep selection here so its study-tile Hero shares this navigator.
       ShellRoute(
-        builder: (context, state, child) =>
-            OnboardingShell(routePath: state.uri.path, child: child),
+        builder: (context, state, child) => OnboardingShell(
+          routePath: state.uri.path,
+          hideNavigation: state.uri.path == '/${RouteNames.studySelection}',
+          child: child,
+        ),
         routes: [
+          GoRoute(
+            path: '/${RouteNames.studySelection}',
+            name: RouteNames.studySelection,
+            builder: (context, state) => const StudySelectionScreen(),
+          ),
           GoRoute(
             path: '/${RouteNames.studyOverview}',
             name: RouteNames.studyOverview,

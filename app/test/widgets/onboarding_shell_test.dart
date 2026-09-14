@@ -6,6 +6,22 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 
 void main() {
+  testWidgets('hides navigation for routes without onboarding actions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: OnboardingShell(
+          routePath: '/studySelection',
+          hideNavigation: true,
+          child: Scaffold(body: SizedBox.expand()),
+        ),
+      ),
+    );
+
+    expect(find.byType(BottomOnboardingNavigation), findsNothing);
+  });
+
   testWidgets('ignores navigation updates from the previous route', (
     tester,
   ) async {
