@@ -10,6 +10,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
@@ -148,6 +149,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         },
         nextButtonKey: const ValueKey('study_overview_continue'),
         onNext: () => _continueOnboarding(context),
+        progress: OnboardingProgress.forPage(appState, OnboardingStep.overview),
       ),
     );
   }

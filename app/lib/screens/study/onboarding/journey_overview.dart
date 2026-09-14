@@ -89,10 +89,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
             title: '',
             description: '',
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-            bottomNavigationBar: BottomOnboardingNavigation(
-              onNext: () => getConsentAndNavigateToDashboard(context),
-              progress: const OnboardingProgress(stage: 2, progress: 0.5),
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -104,6 +100,13 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
                 ),
                 Timeline(subject: subject),
               ],
+            ),
+          ),
+          bottomNavigationBar: BottomOnboardingNavigation(
+            onNext: () => getConsentAndNavigateToDashboard(context),
+            progress: OnboardingProgress.forPage(
+              context.read<AppState>(),
+              OnboardingStep.journey,
             ),
           ),
         ),

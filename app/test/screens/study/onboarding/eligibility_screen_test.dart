@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_core/core.dart';
 
@@ -41,11 +43,14 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      MaterialApp.router(
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('en'),
-        routerConfig: router,
+      ChangeNotifierProvider.value(
+        value: AppState()..selectedStudy = study,
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -108,11 +113,14 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      MaterialApp.router(
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('en'),
-        routerConfig: router,
+      ChangeNotifierProvider.value(
+        value: AppState()..selectedStudy = study,
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -182,11 +190,14 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      MaterialApp.router(
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('en'),
-        routerConfig: router,
+      ChangeNotifierProvider.value(
+        value: AppState()..selectedStudy = study,
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
       ),
     );
     await tester.pumpAndSettle();

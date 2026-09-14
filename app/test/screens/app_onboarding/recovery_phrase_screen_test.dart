@@ -9,11 +9,14 @@ import 'package:studyu_app/screens/app_onboarding/recovery_phrase_screen.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_core/core.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
-  supportedLocales: AppLocalizations.supportedLocales,
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  locale: const Locale('en'),
-  home: child,
+Widget _wrap(Widget child) => ChangeNotifierProvider.value(
+  value: AppState(),
+  child: MaterialApp(
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    locale: const Locale('en'),
+    home: child,
+  ),
 );
 
 void main() {

@@ -192,7 +192,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
             onNext: boxLogic.every((element) => element) || kDebugMode
                 ? _acceptConsent
                 : null,
-            progress: const OnboardingProgress(stage: 2, progress: 2.5),
+            progress: OnboardingProgress.forPage(
+              context.read<AppState>(),
+              OnboardingStep.consent,
+            ),
           ),
         ),
         if (_isStarting)

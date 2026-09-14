@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
@@ -66,13 +67,13 @@ class _TermsScreenState extends State<TermsScreen> {
           text: localizations.legal_documents_description,
         ),
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-        bottomNavigationBar: _buildNavigation(),
         child: RetryFutureBuilder<AppConfig>(
           tryFunction: AppConfig.getAppConfig,
           successBuilder: (BuildContext context, AppConfig? appConfig) =>
               legalSection(context, appConfig),
         ),
       ),
+      bottomNavigationBar: _buildNavigation(),
     );
   }
 
@@ -148,6 +149,10 @@ class _TermsScreenState extends State<TermsScreen> {
               }
             }
           : null,
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.terms,
+      ),
     );
   }
 }

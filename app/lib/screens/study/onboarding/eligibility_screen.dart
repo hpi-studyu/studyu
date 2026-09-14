@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
@@ -237,7 +239,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         nextButtonKey: const ValueKey('eligibility_continue'),
         onNext: activeResult?.eligible == true || kDebugMode ? _finish : null,
-        progress: const OnboardingProgress(stage: 0, progress: 0.5),
+        progress: OnboardingProgress.forPage(
+          context.read<AppState>(),
+          OnboardingStep.eligibility,
+        ),
       ),
     );
   }

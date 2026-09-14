@@ -117,9 +117,9 @@ class _InterventionSelectionScreenState
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
-        progress: OnboardingProgress(
-          stage: 1,
-          progress: selectedInterventionIds.length / 2,
+        progress: OnboardingProgress.forPage(
+          context.read<AppState>(),
+          OnboardingStep.interventions,
         ),
       ),
     );

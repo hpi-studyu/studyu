@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
@@ -46,11 +47,16 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations.of(context)!.recovery_phrase_header),
+      ),
+      bottomNavigationBar: _buildNavigation(),
       body: OnboardingPage(
-        title: AppLocalizations.of(context)!.recovery_phrase_header,
+        title: '',
         description: '',
         descriptionWidget: const _RecoveryPhraseInfoCard(),
-        bottomNavigationBar: _buildNavigation(),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         child: _isRevealed
             ? RecoveryPhraseContent(
                 initialPhrase: widget.initialPhrase,
@@ -94,6 +100,10 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
       nextLabel: widget.continueToDashboard
           ? AppLocalizations.of(context)!.continue_to_study
           : null,
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.recovery,
+      ),
     );
   }
 }
