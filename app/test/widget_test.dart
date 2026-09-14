@@ -111,7 +111,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.widgetWithText(OutlinedButton, 'Restore StudyU account'),
+      find.widgetWithText(TextButton, 'Restore account'),
       findsOneWidget,
     );
   });
@@ -140,7 +140,7 @@ void main() {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Restore StudyU account'));
+    await tester.tap(find.text('Restore account'));
     await tester.pumpAndSettle();
 
     expect(find.byType(RestoreAccountScreen), findsOneWidget);
