@@ -71,14 +71,20 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         title: '',
         description: '',
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-        descriptionWidget: StudyOnboardingDescription(
-          text: AppLocalizations.of(context)!.journey_overview_description,
-        ),
         bottomNavigationBar: BottomOnboardingNavigation(
           onNext: () => getConsentAndNavigateToDashboard(context),
           progress: const OnboardingProgress(stage: 2, progress: 0.5),
         ),
-        child: Timeline(subject: subject),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            StudyOnboardingDescription(
+              text: AppLocalizations.of(context)!.journey_overview_description,
+            ),
+            Timeline(subject: subject),
+          ],
+        ),
       ),
     );
   }
@@ -205,6 +211,7 @@ class TimelineChild extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
+      constraints: const BoxConstraints(minHeight: 80),
       child: Center(child: child),
     );
   }
