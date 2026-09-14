@@ -6,6 +6,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class DateQuestionFormView extends ConsumerWidget {
   const DateQuestionFormView({required this.formViewModel, super.key});
@@ -242,7 +244,7 @@ class DateQuestionFormView extends ConsumerWidget {
 }
 
 /// Custom reactive date picker field
-class ReactiveDatePickerField extends StatelessWidget {
+class ReactiveDatePickerField extends ConsumerWidget {
   const ReactiveDatePickerField({
     required this.formControl,
     required this.firstDate,
@@ -277,12 +279,17 @@ class ReactiveDatePickerField extends StatelessWidget {
     }
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
-    return MaterialLocalizations.of(context).formatCompactDate(date);
+  String _formatDate(
+    BuildContext context,
+    DateTime date,
+    DateFormatPreference? preference,
+  ) {
+    return DateTimeFormat.formatDate(context, date, preference: preference);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preference = ref.read(userRepositoryProvider).cachedUser?.preferences;
     return ReactiveValueListenableBuilder<DateTime?>(
       formControl: formControl,
       builder: (context, control, child) {
@@ -301,7 +308,7 @@ class ReactiveDatePickerField extends StatelessWidget {
                   : const Icon(Icons.calendar_today),
             ),
             child: value != null
-                ? Text(_formatDate(context, value))
+                ? Text(_formatDate(context, value, preference?.dateFormat))
                 : Text(
                     placeholder ?? '',
                     style: TextStyle(color: Theme.of(context).hintColor),
@@ -314,7 +321,7 @@ class ReactiveDatePickerField extends StatelessWidget {
 }
 
 /// Custom reactive time picker field
-class ReactiveTimePickerField extends StatelessWidget {
+class ReactiveTimePickerField extends ConsumerWidget {
   const ReactiveTimePickerField({
     required this.formControl,
     this.placeholder,
@@ -347,13 +354,22 @@ class ReactiveTimePickerField extends StatelessWidget {
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
   }
 
-  String _formatTimeDisplay(String? time) {
+  String _formatTimeDisplay(
+    BuildContext context,
+    String? time,
+    TimeFormatPreference? preference,
+  ) {
     if (time == null) return '';
-    return time;
+    return DateTimeFormat.formatTime(
+      context,
+      _parseTime(time),
+      preference: preference,
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preference = ref.read(userRepositoryProvider).cachedUser?.preferences;
     return ReactiveValueListenableBuilder<String?>(
       formControl: formControl,
       builder: (context, control, child) {
@@ -372,7 +388,9 @@ class ReactiveTimePickerField extends StatelessWidget {
                   : const Icon(Icons.access_time),
             ),
             child: value != null
-                ? Text(_formatTimeDisplay(value))
+                ? Text(
+                    _formatTimeDisplay(context, value, preference?.timeFormat),
+                  )
                 : Text(
                     placeholder ?? '',
                     style: TextStyle(color: Theme.of(context).hintColor),

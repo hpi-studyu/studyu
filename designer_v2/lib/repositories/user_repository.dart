@@ -10,12 +10,15 @@ part 'user_repository.g.dart';
 
 abstract class IUserRepository {
   StudyUUser get user;
+  StudyUUser? get cachedUser;
   Future<StudyUUser> fetchUser();
   Future<StudyUUser> saveUser();
   Future<StudyUUser> updatePreferences(
     PreferenceAction pinAction,
     String modelId,
   );
+  Future<StudyUUser> updateDateFormat(DateFormatPreference? value);
+  Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value);
   Future<StudyUUser> saveCustomPreset(SavedFilter filter);
   Future<StudyUUser> deleteCustomPreset(String id);
   List<SavedFilter> getCustomPresets();
@@ -44,6 +47,9 @@ class UserRepository implements IUserRepository {
 
   @override
   StudyUUser get user => _user!;
+
+  @override
+  StudyUUser? get cachedUser => _user;
 
   @override
   Future<StudyUUser> fetchUser() async {
@@ -82,6 +88,18 @@ class UserRepository implements IUserRepository {
         newPinnedStudies.remove(modelId);
     }
     user.preferences.pinnedStudies = newPinnedStudies;
+    return saveUser();
+  }
+
+  @override
+  Future<StudyUUser> updateDateFormat(DateFormatPreference? value) {
+    user.preferences.dateFormat = value;
+    return saveUser();
+  }
+
+  @override
+  Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value) {
+    user.preferences.timeFormat = value;
     return saveUser();
   }
 

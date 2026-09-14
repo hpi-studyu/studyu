@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/date_time_preferences.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class DateQuestionWidget extends QuestionWidget {
   final DateQuestion question;
@@ -287,7 +287,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             label: Text(
               _selectedDate != null
                   ? dateTimePreferences?.formatDate(context, _selectedDate!) ??
-                        DateFormat('yyyy-MM-dd').format(_selectedDate!)
+                        DateTimeFormat.formatDate(context, _selectedDate!)
                   : (widget.question.isDateTime
                         ? localizations.date_picker_button_label_datetime
                         : localizations.date_picker_button_label),

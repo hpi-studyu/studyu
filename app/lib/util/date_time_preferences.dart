@@ -1,82 +1,131 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-enum DateFormatPreference {
-  iso('yyyy-MM-dd'),
-  european('dd/MM/yyyy'),
-  us('MM/dd/yyyy'),
-  german('dd.MM.yyyy');
-
-  const DateFormatPreference(this.pattern);
-
-  final String pattern;
-}
-
-enum TimeFormatPreference {
-  h24('HH:mm'),
-  h12('h:mm a');
-
-  const TimeFormatPreference(this.pattern);
-
-  final String pattern;
-}
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DateTimePreferences extends ChangeNotifier {
-  static const _dateFormatKey = 'date_format';
-  static const _timeFormatKey = 'time_format';
+  static const _dateFormatKeyPrefix = 'date_format_';
+  static const _timeFormatKeyPrefix = 'time_format_';
 
   DateFormatPreference? _dateFormat;
   TimeFormatPreference? _timeFormat;
+  StudyUUser? _user;
+  String? _userId;
+  StreamSubscription<AuthState>? _authSubscription;
+  int _loadGeneration = 0;
 
   DateTimePreferences() {
-    _load();
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
+      (authState) => _loadUser(authState.session?.user.id),
+    );
+    _loadUser(Supabase.instance.client.auth.currentUser?.id);
   }
 
   DateFormatPreference? get dateFormat => _dateFormat;
   TimeFormatPreference? get timeFormat => _timeFormat;
 
-  Future<void> _load() async {
-    final dateFormat = await SecureStorage.read(_dateFormatKey);
-    final timeFormat = await SecureStorage.read(_timeFormatKey);
-    _dateFormat = _parseDateFormat(dateFormat);
-    _timeFormat = _parseTimeFormat(timeFormat);
-    notifyListeners();
+  Future<void> _loadUser(String? userId) async {
+    final generation = ++_loadGeneration;
+    _userId = userId;
+    final localDateFormat = userId == null
+        ? null
+        : _parseDateFormat(
+            await SecureStorage.read('$_dateFormatKeyPrefix$userId'),
+          );
+    final localTimeFormat = userId == null
+        ? null
+        : _parseTimeFormat(
+            await SecureStorage.read('$_timeFormatKeyPrefix$userId'),
+          );
+
+    if (generation != _loadGeneration) return;
+
+    if (userId == null) {
+      _user = null;
+      _dateFormat = localDateFormat;
+      _timeFormat = localTimeFormat;
+      notifyListeners();
+      return;
+    }
+
+    try {
+      final user = await SupabaseQuery.getById<StudyUUser>(userId);
+      if (generation != _loadGeneration) return;
+
+      _user = user;
+      _dateFormat = user.preferences.dateFormat ?? localDateFormat;
+      _timeFormat = user.preferences.timeFormat ?? localTimeFormat;
+
+      final hasMigratedLocalPreferences =
+          user.preferences.dateFormat == null && localDateFormat != null ||
+          user.preferences.timeFormat == null && localTimeFormat != null;
+      if (hasMigratedLocalPreferences) {
+        user.preferences
+          ..dateFormat ??= localDateFormat
+          ..timeFormat ??= localTimeFormat;
+        await user.save(onlyUpdate: true);
+      }
+    } catch (error) {
+      debugPrint('Could not load date and time preferences: $error');
+      _user = null;
+      _dateFormat = localDateFormat;
+      _timeFormat = localTimeFormat;
+    }
+
+    if (generation == _loadGeneration) notifyListeners();
   }
 
   Future<void> changeDateFormat(DateFormatPreference? value) async {
     _dateFormat = value;
-    await _writeOrDelete(_dateFormatKey, value?.name);
+    if (_user != null) _user!.preferences.dateFormat = value;
+    await _persist(_dateFormatKeyPrefix, value?.name);
     notifyListeners();
   }
 
   Future<void> changeTimeFormat(TimeFormatPreference? value) async {
     _timeFormat = value;
-    await _writeOrDelete(_timeFormatKey, value?.name);
+    if (_user != null) _user!.preferences.timeFormat = value;
+    await _persist(_timeFormatKeyPrefix, value?.name);
     notifyListeners();
   }
 
   String formatDate(BuildContext context, DateTime date) {
-    final preference = _dateFormat;
-    if (preference == null) {
-      return MaterialLocalizations.of(context).formatCompactDate(date);
-    }
-
-    return DateFormat(preference.pattern).format(date);
+    return DateTimeFormat.formatDate(context, date, preference: _dateFormat);
   }
 
   String formatTime(BuildContext context, TimeOfDay time) {
-    final preference = _timeFormat;
-    if (preference == null) return time.format(context);
-
-    return DateFormat(
-      preference.pattern,
-      Localizations.localeOf(context).toString(),
-    ).format(DateTime(2000, 1, 1, time.hour, time.minute));
+    return DateTimeFormat.formatTime(context, time, preference: _timeFormat);
   }
 
   String formatDateTime(BuildContext context, DateTime dateTime) {
-    return '${formatDate(context, dateTime)} ${formatTime(context, TimeOfDay.fromDateTime(dateTime))}';
+    return DateTimeFormat.formatDateTime(
+      context,
+      dateTime,
+      datePreference: _dateFormat,
+      timePreference: _timeFormat,
+    );
+  }
+
+  Future<void> _persist(String keyPrefix, String? value) async {
+    final userId = _user?.id ?? _userId;
+    if (userId != null) {
+      final key = '$keyPrefix$userId';
+      if (value == null) {
+        await SecureStorage.delete(key);
+      } else {
+        await SecureStorage.write(key, value);
+      }
+    }
+
+    if (_user != null) {
+      try {
+        _user = await _user!.save(onlyUpdate: true);
+      } catch (error) {
+        debugPrint('Could not save date and time preferences: $error');
+      }
+    }
   }
 
   DateFormatPreference? _parseDateFormat(String? value) {
@@ -93,11 +142,9 @@ class DateTimePreferences extends ChangeNotifier {
         .firstOrNull;
   }
 
-  Future<void> _writeOrDelete(String key, String? value) async {
-    if (value == null) {
-      await SecureStorage.delete(key);
-    } else {
-      await SecureStorage.write(key, value);
-    }
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }

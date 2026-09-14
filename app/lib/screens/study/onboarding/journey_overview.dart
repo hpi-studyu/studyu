@@ -164,7 +164,7 @@ class InterventionTile extends StatelessWidget {
       startChild: TimelineChild(
         child: Text(
           dateTimePreferences?.formatDate(context, date) ??
-              MaterialLocalizations.of(context).formatCompactDate(date),
+              DateTimeFormat.formatDate(context, date),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

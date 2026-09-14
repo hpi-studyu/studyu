@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/question_container.dart';
@@ -7,6 +8,7 @@ import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/date_question_widget.dart';
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 /// Snapshot of answer responses at callback time.
 /// Using a Map copy avoids holding a reference to the mutable QuestionnaireState.
@@ -2076,7 +2078,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(DateQuestionWidget), findsOneWidget);
-      expect(find.textContaining('2025-06-15'), findsOneWidget);
+      expect(
+        find.text(
+          DateFormat(
+            DateTimeFormat.defaultDateFormat().pattern,
+          ).format(DateTime(2025, 6, 15)),
+        ),
+        findsOneWidget,
+      );
     },
   );
 
