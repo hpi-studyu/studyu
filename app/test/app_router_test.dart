@@ -134,6 +134,52 @@ void main() {
     );
   });
 
+  testWidgets('hidden dashboard does not override account exit navigation', (
+    tester,
+  ) async {
+    final study = Study('study', 'user')
+      ..interventions = [
+        Intervention('first', 'First'),
+        Intervention('second', 'Second'),
+      ];
+    final appState = AppState()
+      ..isPreview = true
+      ..activeSubject = (StudySubject.fromStudy(study, 'user', [
+        'first',
+        'second',
+      ], null)..startedAt = DateTime(2100));
+    final router = createAppRouter(
+      queryParameters: const {},
+      initialLocation: '/${RouteNames.dashboard}',
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: appState,
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    router.push('/${RouteNames.faq}');
+    await tester.pumpAndSettle();
+
+    appState.clearAccountState();
+    router.go('/${RouteNames.welcome}');
+    await tester.pumpAndSettle();
+
+    expect(
+      router.routerDelegate.currentConfiguration.uri.path,
+      '/${RouteNames.welcome}',
+    );
+  });
+
   test('partial onboarding subject does not open the dashboard', () {
     final study = Study('study', 'user')
       ..interventions = [

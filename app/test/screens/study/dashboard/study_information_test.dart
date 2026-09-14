@@ -237,6 +237,12 @@ void main() {
 
     expect(find.text('Leave study and keep your data?'), findsOneWidget);
     expect(
+      tester
+          .widget<AlertDialog>(find.byType(AlertDialog))
+          .actionsOverflowButtonSpacing,
+      12,
+    );
+    expect(
       find.text(
         'You will stop participating in the study “Sleep study”. We will keep the progress and responses you have already submitted, and researchers may continue to use your anonymized data.\n\nYou cannot rejoin this participation after leaving. Your previous studies will not be affected.',
       ),
@@ -279,6 +285,12 @@ void main() {
     );
 
     expect(find.text('Leave study and delete my data?'), findsOneWidget);
+    expect(
+      tester
+          .widget<AlertDialog>(find.byType(AlertDialog))
+          .actionsOverflowButtonSpacing,
+      12,
+    );
     expect(
       find.text(
         'You will stop participating in the study “Sleep study”. We will permanently delete your progress and responses for this study from our servers and remove its saved data from this device.\n\nThis cannot be undone. Neither you nor anyone from the study team will be able to recover this data.',

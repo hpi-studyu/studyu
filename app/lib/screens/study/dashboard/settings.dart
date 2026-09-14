@@ -213,11 +213,20 @@ class _SettingsState extends State<Settings> {
                         icon: const Icon(MdiIcons.exitToApp),
                         label: Text(AppLocalizations.of(context)!.opt_out),
                         style: destructiveButtonStyle,
-                        onPressed: () {
-                          showDialog(
+                        onPressed: () async {
+                          TransitionRoute<bool>? dialogRoute;
+                          final completed = await showDialog<bool>(
                             context: context,
-                            builder: (_) => OptOutAlertDialog(subject: subject),
+                            builder: (dialogContext) {
+                              dialogRoute ??= ModalRoute.of<bool>(
+                                dialogContext,
+                              );
+                              return OptOutAlertDialog(subject: subject);
+                            },
                           );
+                          await dialogRoute?.completed;
+                          if (!context.mounted || completed != true) return;
+                          context.go('/${RouteNames.studySelection}');
                         },
                       ),
                       const SizedBox(height: 12),
@@ -225,11 +234,20 @@ class _SettingsState extends State<Settings> {
                         icon: const Icon(Icons.delete),
                         label: Text(AppLocalizations.of(context)!.delete_data),
                         style: destructiveButtonStyle,
-                        onPressed: () {
-                          showDialog(
+                        onPressed: () async {
+                          TransitionRoute<bool>? dialogRoute;
+                          final completed = await showDialog<bool>(
                             context: context,
-                            builder: (_) => DeleteAlertDialog(subject: subject),
+                            builder: (dialogContext) {
+                              dialogRoute ??= ModalRoute.of<bool>(
+                                dialogContext,
+                              );
+                              return DeleteAlertDialog(subject: subject);
+                            },
                           );
+                          await dialogRoute?.completed;
+                          if (!context.mounted || completed != true) return;
+                          context.go('/${RouteNames.welcome}');
                         },
                       ),
                     ],
@@ -309,6 +327,7 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
 
     return AlertDialog(
       title: Text(l10n.leave_study_keep_data_title),
+      actionsOverflowButtonSpacing: 12,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -372,7 +391,7 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
                     // Clear the in-memory active study state so the
                     // participant can legitimately enroll in a new study.
                     context.read<AppState>().clearAccountState();
-                    context.go('/${RouteNames.studySelection}');
+                    context.pop(true);
                   }
                 }
               : null,
@@ -401,6 +420,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
 
     return AlertDialog(
       title: Text(l10n.leave_study_delete_data_title),
+      actionsOverflowButtonSpacing: 12,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -484,7 +504,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                     // Clear the in-memory active study state so the
                     // participant can legitimately enroll in a new study.
                     context.read<AppState>().clearAccountState();
-                    context.go('/${RouteNames.welcome}');
+                    context.pop(true);
                   }
                 }
               : null,
