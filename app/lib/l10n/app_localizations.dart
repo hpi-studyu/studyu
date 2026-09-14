@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'Loading'**
   String get loading;
 
+  /// No description provided for @starting_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting your study…'**
+  String get starting_study;
+
   /// No description provided for @loading_error_title.
   ///
   /// In en, this message translates to:

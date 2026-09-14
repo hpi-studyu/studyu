@@ -12,6 +12,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loading => 'Laden';
 
   @override
+  String get starting_study => 'Ihre Studie wird gestartet…';
+
+  @override
   String get loading_error_title => 'Ladefehler';
 
   @override

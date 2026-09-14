@@ -67,7 +67,6 @@ void main() {
       RouteNames.dashboard,
       RouteNames.journey,
       RouteNames.consent,
-      RouteNames.kickoff,
       RouteNames.appSettings,
       RouteNames.studyInformation,
       RouteNames.reportHistory,
@@ -93,11 +92,7 @@ void main() {
     }
 
     appState.activeSubject = StudySubject.fromStudy(study, 'user', [], null);
-    for (final route in [
-      RouteNames.journey,
-      RouteNames.consent,
-      RouteNames.kickoff,
-    ]) {
+    for (final route in [RouteNames.journey, RouteNames.consent]) {
       expect(routePrerequisiteRedirect('/$route', null, appState), isNull);
     }
 

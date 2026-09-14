@@ -7,9 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/services/study_start_service.dart';
 import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
+import 'package:studyu_app/widgets/loading_overlay.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -25,11 +27,27 @@ class _ConsentScreenState extends State<ConsentScreen> {
   StudySubject? subject;
   late List<bool> boxLogic;
   late List<ConsentItem> consentList;
+  bool _isStarting = false;
 
   void onBoxTapped(int index) {
     setState(() {
       boxLogic[index] = true;
     });
+  }
+
+  // Accepting consent starts the study in place: this screen shows the
+  // loading state while the subject is created, then navigates directly to
+  // the next screen. It deliberately does not pop back to the journey
+  // screen first, so no pop-then-push route animation plays.
+  Future<void> _acceptConsent() async {
+    setState(() => _isStarting = true);
+    final started = await StudyStartService.startStudy(context, subject!);
+    if (started || !mounted) return;
+    setState(() => _isStarting = false);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context)!.error)),
+    );
   }
 
   @override
@@ -68,112 +86,118 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context)!.consent),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () async {
-              if (kIsWeb) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    elevation: 24,
-                    title: Text(
-                      AppLocalizations.of(context)!.save_not_supported,
-                    ),
-                    content: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.save_not_supported_description,
-                    ),
-                  ),
-                );
-              }
-              final pdfContent = await generatePdfContent();
-              if (!context.mounted) return;
-              final savedFilePath = await savePDF(
-                context,
-                '${subject!.study.title}_consent',
-                pdfContent,
-              );
-              if (savedFilePath != null) {
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.',
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                StudyOnboardingDescription(
-                  text: AppLocalizations.of(context)!.please_give_consent,
-                  actionLabel: AppLocalizations.of(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Text(AppLocalizations.of(context)!.consent),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () async {
+                  if (kIsWeb) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        elevation: 24,
+                        title: Text(
+                          AppLocalizations.of(context)!.save_not_supported,
+                        ),
+                        content: Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.save_not_supported_description,
+                        ),
+                      ),
+                    );
+                  }
+                  final pdfContent = await generatePdfContent();
+                  if (!context.mounted) return;
+                  final savedFilePath = await savePDF(
                     context,
-                  )!.please_give_consent_why,
-                  onAction: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      content: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.please_give_consent_reason,
+                    '${subject!.study.title}_consent',
+                    pdfContent,
+                  );
+                  if (savedFilePath != null) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.',
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    StudyOnboardingDescription(
+                      text: AppLocalizations.of(context)!.please_give_consent,
+                      actionLabel: AppLocalizations.of(
+                        context,
+                      )!.please_give_consent_why,
+                      onAction: () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.please_give_consent_reason,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Flexible(
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                        itemCount: consentList.length,
+                        itemBuilder: (context, index) {
+                          return ConsentCard(
+                            consent: consentList[index],
+                            isChecked: boxLogic[index],
+                            index: index,
+                            onTapped: onBoxTapped,
+                          );
+                        },
+                        primary: false,
+                        padding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                  ],
                 ),
-                Flexible(
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                    itemCount: consentList.length,
-                    itemBuilder: (context, index) {
-                      return ConsentCard(
-                        consent: consentList[index],
-                        isChecked: boxLogic[index],
-                        index: index,
-                        onTapped: onBoxTapped,
-                      );
-                    },
-                    primary: false,
-                    padding: const EdgeInsets.all(20),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
+          bottomNavigationBar: BottomOnboardingNavigation(
+            backLabel: AppLocalizations.of(context)!.decline,
+            backIcon: const Icon(Icons.close),
+            onBack: () => context.pop(false),
+            nextLabel: AppLocalizations.of(context)!.accept,
+            nextIcon: const Icon(Icons.check),
+            onNext: boxLogic.every((element) => element) || kDebugMode
+                ? _acceptConsent
+                : null,
+            progress: const OnboardingProgress(stage: 2, progress: 2.5),
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        backLabel: AppLocalizations.of(context)!.decline,
-        backIcon: const Icon(Icons.close),
-        onBack: () => context.pop(false),
-        nextLabel: AppLocalizations.of(context)!.accept,
-        nextIcon: const Icon(Icons.check),
-        onNext: boxLogic.every((element) => element) || kDebugMode
-            ? () => context.pop(true)
-            : null,
-        progress: const OnboardingProgress(stage: 2, progress: 2.5),
-      ),
+        if (_isStarting)
+          LoadingOverlay(message: AppLocalizations.of(context)!.starting_study),
+      ],
     );
   }
 }

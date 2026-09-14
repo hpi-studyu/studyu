@@ -1,6 +1,7 @@
 {
   "@@locale": "de",
   "loading": "Laden",
+  "starting_study": "Ihre Studie wird gestartet…",
   "loading_error_title": "Ladefehler",
   "loading_error_description": "Die Studiendaten konnten nicht abgerufen werden. Wenn Sie aktuell an einer Studie teilnehmen, wenden Sie sich bitte zuerst an Ihre Studienleitung. Kontaktieren Sie den Support nur, wenn Sie nicht an einer Studie teilnehmen oder Ihre Studienleitung Sie dazu auffordert. Löschen Sie Ihre Daten nur, wenn Sie von der Studienleitung oder dem Support dazu aufgefordert werden. Das Löschen entfernt alle Ihre Studiendaten und Sie müssen der Studie erneut beitreten.",
   "try_again": "Erneut versuchen",

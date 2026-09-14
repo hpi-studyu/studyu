@@ -7,7 +7,9 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
+import 'package:studyu_app/services/study_start_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/loading_overlay.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
@@ -23,18 +25,30 @@ class JourneyOverviewScreen extends StatefulWidget {
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   StudySubject? subject;
+  bool _isStartingStudy = false;
+
+  // Creates the study subject on the backend and navigates to the next
+  // screen. Runs in-place on this screen (with a loading state) so no
+  // transient route flickers between the consent screen and the next step.
+  Future<void> _startStudy(BuildContext context) async {
+    setState(() => _isStartingStudy = true);
+    final started = await StudyStartService.startStudy(context, subject!);
+    if (started || !mounted) return;
+    setState(() => _isStartingStudy = false);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context)!.error)),
+    );
+  }
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
-    bool? consentGiven;
     if (subject!.study.hasConsentCheck) {
-      consentGiven = await context.push<bool>('/${RouteNames.consent}');
-    } else {
-      consentGiven = true;
-    }
-    if (!context.mounted) return;
-    if (consentGiven != null && consentGiven) {
-      context.push('/${RouteNames.kickoff}');
-    } else {
+      // Accepting consent is handled inside the consent screen: it shows the
+      // loading state in place and navigates directly, avoiding a
+      // pop-then-push route animation. This await therefore only completes
+      // on decline or when the user leaves the consent screen.
+      final consentGiven = await context.push<bool>('/${RouteNames.consent}');
+      if (!context.mounted) return;
       final appState = context.read<AppState>();
       appState.activeSubject = null;
       await PendingDeepLinkService.clear(appState);
@@ -51,6 +65,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         );
         context.go('/${RouteNames.studySelection}');
       }
+    } else {
+      await _startStudy(context);
     }
   }
 
@@ -62,30 +78,38 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context)!.your_journey),
-      ),
-      body: OnboardingPage(
-        title: '',
-        description: '',
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-        bottomNavigationBar: BottomOnboardingNavigation(
-          onNext: () => getConsentAndNavigateToDashboard(context),
-          progress: const OnboardingProgress(stage: 2, progress: 0.5),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            StudyOnboardingDescription(
-              text: AppLocalizations.of(context)!.journey_overview_description,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Text(AppLocalizations.of(context)!.your_journey),
+          ),
+          body: OnboardingPage(
+            title: '',
+            description: '',
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+            bottomNavigationBar: BottomOnboardingNavigation(
+              onNext: () => getConsentAndNavigateToDashboard(context),
+              progress: const OnboardingProgress(stage: 2, progress: 0.5),
             ),
-            Timeline(subject: subject),
-          ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                StudyOnboardingDescription(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.journey_overview_description,
+                ),
+                Timeline(subject: subject),
+              ],
+            ),
+          ),
         ),
-      ),
+        if (_isStartingStudy)
+          LoadingOverlay(message: AppLocalizations.of(context)!.starting_study),
+      ],
     );
   }
 }

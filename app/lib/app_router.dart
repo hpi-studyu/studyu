@@ -23,7 +23,6 @@ import 'package:studyu_app/screens/study/onboarding/consent.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/intervention_selection.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
-import 'package:studyu_app/screens/study/onboarding/kickoff.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
@@ -50,7 +49,6 @@ class RouteNames {
   static const String interventionSelection = 'interventionSelection';
   static const String journey = 'journey';
   static const String consent = 'consent';
-  static const String kickoff = 'kickoff';
   static const String contact = 'contact';
   static const String studyInformation = 'studyInformation';
   static const String faq = 'faq';
@@ -89,8 +87,7 @@ String? routePrerequisiteRedirect(
           extra is Study ||
           extra is EligibilityScreenArguments && extra.study != null,
     '/${RouteNames.journey}' ||
-    '/${RouteNames.consent}' ||
-    '/${RouteNames.kickoff}' => appState.activeSubject != null,
+    '/${RouteNames.consent}' => appState.activeSubject != null,
     '/${RouteNames.dashboard}' ||
     '/${RouteNames.appSettings}' ||
     '/${RouteNames.studyInformation}' ||
@@ -159,7 +156,6 @@ GoRouter createAppRouter({
         '/${RouteNames.eligibilityCheck}' => appState.selectedStudy,
         '/${RouteNames.journey}' ||
         '/${RouteNames.consent}' ||
-        '/${RouteNames.kickoff}' ||
         '/${RouteNames.dashboard}' ||
         '/${RouteNames.appSettings}' ||
         '/${RouteNames.studyInformation}' ||
@@ -298,11 +294,6 @@ GoRouter createAppRouter({
         path: '/${RouteNames.consent}',
         name: RouteNames.consent,
         builder: (context, state) => const ConsentScreen(),
-      ),
-      GoRoute(
-        path: '/${RouteNames.kickoff}',
-        name: RouteNames.kickoff,
-        builder: (context, state) => const KickoffScreen(),
       ),
       GoRoute(
         path: '/${RouteNames.contact}',
