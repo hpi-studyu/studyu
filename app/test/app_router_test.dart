@@ -41,6 +41,142 @@ void main() {
     }
   });
 
+  test('routes with missing app state return to loading', () {
+    final appState = AppState();
+    const loading = '/${RouteNames.loading}';
+
+    for (final route in [
+      RouteNames.studyOverview,
+      RouteNames.interventionSelection,
+      RouteNames.eligibilityCheck,
+      RouteNames.dashboard,
+      RouteNames.journey,
+      RouteNames.consent,
+      RouteNames.kickoff,
+      RouteNames.appSettings,
+      RouteNames.studyInformation,
+      RouteNames.reportHistory,
+    ]) {
+      expect(
+        routePrerequisiteRedirect('/$route', null, appState),
+        loading,
+        reason: route,
+      );
+    }
+  });
+
+  test('routes open when their required app state exists', () {
+    final study = Study('study', 'user');
+    final appState = AppState()..selectedStudy = study;
+
+    for (final route in [
+      RouteNames.studyOverview,
+      RouteNames.interventionSelection,
+      RouteNames.eligibilityCheck,
+    ]) {
+      expect(routePrerequisiteRedirect('/$route', null, appState), isNull);
+    }
+
+    appState.activeSubject = StudySubject.fromStudy(study, 'user', [], null);
+    for (final route in [
+      RouteNames.journey,
+      RouteNames.consent,
+      RouteNames.kickoff,
+    ]) {
+      expect(routePrerequisiteRedirect('/$route', null, appState), isNull);
+    }
+
+    appState.activeSubject!.startedAt = DateTime(2026, 7, 10);
+    for (final route in [
+      RouteNames.dashboard,
+      RouteNames.appSettings,
+      RouteNames.studyInformation,
+      RouteNames.reportHistory,
+    ]) {
+      expect(routePrerequisiteRedirect('/$route', null, appState), isNull);
+    }
+  });
+
+  test('eligibility route accepts a study argument', () {
+    expect(
+      routePrerequisiteRedirect(
+        '/${RouteNames.eligibilityCheck}',
+        Study('study', 'user'),
+        AppState(),
+      ),
+      isNull,
+    );
+  });
+
+  test('welcome returns an active study to the dashboard', () {
+    final study = Study('study', 'user')
+      ..interventions = [
+        Intervention('first', 'First'),
+        Intervention('second', 'Second'),
+      ];
+    final subject = StudySubject.fromStudy(study, 'user', [], null)
+      ..startedAt = DateTime(2026, 7, 10);
+    final appState = AppState()..activeSubject = subject;
+
+    expect(
+      routePrerequisiteRedirect('/${RouteNames.welcome}', null, appState),
+      '/${RouteNames.dashboard}',
+    );
+  });
+
+  test('partial onboarding subject does not open the dashboard', () {
+    final study = Study('study', 'user')
+      ..interventions = [
+        Intervention('first', 'First'),
+        Intervention('second', 'Second'),
+      ];
+    final appState = AppState()
+      ..activeSubject = StudySubject.fromStudy(study, 'user', [], null);
+
+    expect(
+      routePrerequisiteRedirect('/${RouteNames.welcome}', null, appState),
+      isNull,
+    );
+    expect(
+      routePrerequisiteRedirect('/${RouteNames.dashboard}', null, appState),
+      '/${RouteNames.loading}',
+    );
+  });
+
+  testWidgets('partial onboarding subject stays on welcome', (tester) async {
+    final study = Study('study', 'user')
+      ..interventions = [
+        Intervention('first', 'First'),
+        Intervention('second', 'Second'),
+      ];
+    final appState = AppState()
+      ..activeSubject = StudySubject.fromStudy(study, 'user', [
+        'first',
+        'second',
+      ], null);
+    final router = createAppRouter(
+      queryParameters: const {},
+      initialLocation: '/${RouteNames.welcome}',
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: appState,
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('invalid study routes stay on unavailable screen', (
     tester,
   ) async {
@@ -100,5 +236,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(StudyUnavailableScreen), findsOneWidget);
     expect(find.byType(JourneyOverviewScreen), findsNothing);
+
+    await tester.tap(find.text('Back'));
+    await tester.pumpAndSettle();
+    router.push('/${RouteNames.appSettings}');
+    await tester.pumpAndSettle();
+    expect(find.byType(StudyUnavailableScreen), findsOneWidget);
   });
 }
