@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
@@ -101,17 +102,16 @@ class _ConsentScreenState extends State<ConsentScreen> {
     );
 
     final navNotifier = OnboardingNavNotifier.maybeOf(context);
-    if (navNotifier != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        navNotifier.setConfig(
-          OnboardingNavConfig.fromNav(nav).copyWith(
-            isLoading: _isStarting,
-            loadingMessage: AppLocalizations.of(context)!.starting_study,
-          ),
-        );
-      });
-    }
+    navNotifier?.register(
+      this,
+      '/${RouteNames.consent}',
+      OnboardingNavConfig.fromNav(
+        nav,
+        loadingMessage: _isStarting
+            ? AppLocalizations.of(context)!.starting_study
+            : null,
+      ),
+    );
 
     final scaffold = Scaffold(
       appBar: AppBar(

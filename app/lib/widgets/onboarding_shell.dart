@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
 
-/// Immutable configuration for the persistent onboarding bottom-nav bar.
-///
-/// Built by each onboarding page and pushed to [OnboardingNavNotifier] when
-/// the page is hosted inside an [OnboardingShell]. Pages that are used
-/// outside the shell (e.g. direct widget tests) ignore this entirely and
-/// render their own [BottomOnboardingNavigation] as before.
+/// Configuration for the persistent onboarding navigation bar.
 class OnboardingNavConfig {
   final VoidCallback? onBack;
   final VoidCallback? onNext;
@@ -21,11 +16,7 @@ class OnboardingNavConfig {
   final Widget? progress;
   final Key? backButtonKey;
   final Key? nextButtonKey;
-
-  /// When true the shell overlays a full-screen [LoadingOverlay] and disables
-  /// the nav buttons, matching the scrim behaviour of the old per-screen Stack.
-  final bool isLoading;
-  final String loadingMessage;
+  final String? loadingMessage;
 
   const OnboardingNavConfig({
     this.onBack,
@@ -40,36 +31,29 @@ class OnboardingNavConfig {
     this.progress,
     this.backButtonKey,
     this.nextButtonKey,
-    this.isLoading = false,
-    this.loadingMessage = '',
+    this.loadingMessage,
   });
 
-  /// Derives a config from a [BottomOnboardingNavigation] widget so callers
-  /// do not have to duplicate their parameter lists.
-  factory OnboardingNavConfig.fromNav(BottomOnboardingNavigation nav) =>
-      OnboardingNavConfig(
-        onBack: nav.onBack,
-        onNext: nav.onNext,
-        backLabel: nav.backLabel,
-        nextLabel: nav.nextLabel,
-        hideNext: nav.hideNext,
-        hideBack: nav.hideBack,
-        backEnabled: nav.backEnabled,
-        nextIcon: nav.nextIcon,
-        backIcon: nav.backIcon,
-        progress: nav.progress,
-        backButtonKey: nav.backButtonKey,
-        nextButtonKey: nav.nextButtonKey,
-      );
+  /// Copies the page navigation properties into the shell configuration.
+  OnboardingNavConfig.fromNav(
+    BottomOnboardingNavigation navigation, {
+    this.loadingMessage,
+  }) : onBack = navigation.onBack,
+       onNext = navigation.onNext,
+       backLabel = navigation.backLabel,
+       nextLabel = navigation.nextLabel,
+       hideNext = navigation.hideNext,
+       hideBack = navigation.hideBack,
+       backEnabled = navigation.backEnabled,
+       nextIcon = navigation.nextIcon,
+       backIcon = navigation.backIcon,
+       progress = navigation.progress,
+       backButtonKey = navigation.backButtonKey,
+       nextButtonKey = navigation.nextButtonKey;
 
-  OnboardingNavConfig copyWith({
-    bool? isLoading,
-    String? loadingMessage,
-    VoidCallback? onNext,
-    VoidCallback? onBack,
-  }) => OnboardingNavConfig(
-    onBack: onBack ?? this.onBack,
-    onNext: onNext ?? this.onNext,
+  BottomOnboardingNavigation build() => BottomOnboardingNavigation(
+    onBack: onBack,
+    onNext: onNext,
     backLabel: backLabel,
     nextLabel: nextLabel,
     hideNext: hideNext,
@@ -80,127 +64,138 @@ class OnboardingNavConfig {
     progress: progress,
     backButtonKey: backButtonKey,
     nextButtonKey: nextButtonKey,
-    isLoading: isLoading ?? this.isLoading,
-    loadingMessage: loadingMessage ?? this.loadingMessage,
+  );
+
+  OnboardingNavConfig disabled() => OnboardingNavConfig(
+    backLabel: backLabel,
+    nextLabel: nextLabel,
+    hideNext: hideNext,
+    hideBack: hideBack,
+    backEnabled: false,
+    nextIcon: nextIcon,
+    backIcon: backIcon,
+    progress: progress,
+    backButtonKey: backButtonKey,
+    nextButtonKey: nextButtonKey,
   );
 }
 
-/// Holds the [OnboardingNavConfig] for the currently active onboarding page.
-///
-/// Lives inside [OnboardingShell]. Child pages call [setConfig] (via
-/// [WidgetsBinding.addPostFrameCallback]) to push their nav config up. The
-/// shell reads the config and renders [BottomOnboardingNavigation].
-class OnboardingNavNotifier extends ChangeNotifier {
-  // Start with all buttons hidden until the first child page registers.
-  OnboardingNavConfig _config = const OnboardingNavConfig(
-    hideBack: true,
-    hideNext: true,
-  );
+class _OnboardingNavController extends ChangeNotifier {
+  String routePath;
+  OnboardingNavConfig? config;
+  Object? _owner;
+  bool _disposed = false;
 
-  OnboardingNavConfig get config => _config;
+  _OnboardingNavController(this.routePath);
 
-  /// Updates the nav bar for the active page.
-  /// Safe to call from [WidgetsBinding.addPostFrameCallback].
-  void setConfig(OnboardingNavConfig config) {
-    _config = config;
+  void activateRoute(String routePath) {
+    if (this.routePath == routePath) return;
+    this.routePath = routePath;
+    _owner = null;
+    config = config?.disabled();
+  }
+
+  bool claim(Object owner, String routePath) {
+    if (_disposed || this.routePath != routePath) return false;
+    _owner = owner;
+    return true;
+  }
+
+  void update(Object owner, String routePath, OnboardingNavConfig config) {
+    if (_disposed || this.routePath != routePath || !identical(_owner, owner)) {
+      return;
+    }
+    this.config = config;
     notifyListeners();
   }
 
-  /// Returns the [OnboardingNavNotifier] if [context] is inside an
-  /// [OnboardingShell], otherwise null (e.g. in isolated widget tests).
-  static OnboardingNavNotifier? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_OnboardingShellScope>()
-        ?.notifier;
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }
 
-/// Persistent scaffold shell for the study-onboarding flow.
-///
-/// [BottomOnboardingNavigation] is mounted here and stays alive while the
-/// GoRouter child page changes via [ShellRoute]. Each child page pushes its
-/// own [OnboardingNavConfig] via [OnboardingNavNotifier] so the shell can
-/// render the correct back/next callbacks and progress widget.
-///
-/// Pages used outside this shell (direct widget tests, standalone routes)
-/// fall back to rendering their own [BottomOnboardingNavigation] when
-/// [OnboardingNavNotifier.maybeOf] returns null.
+/// Lets onboarding pages register navigation for the active shell route.
+class OnboardingNavNotifier extends InheritedWidget {
+  final _OnboardingNavController _controller;
+
+  const OnboardingNavNotifier({
+    required _OnboardingNavController controller,
+    required super.child,
+  }) : _controller = controller;
+
+  static OnboardingNavNotifier? maybeOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<OnboardingNavNotifier>();
+
+  /// Schedules a navigation update only for the active route and page owner.
+  void register(Object owner, String routePath, OnboardingNavConfig config) {
+    if (!_controller.claim(owner, routePath)) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.update(owner, routePath, config);
+    });
+  }
+
+  @override
+  bool updateShouldNotify(OnboardingNavNotifier oldWidget) => false;
+}
+
+/// Keeps the onboarding navigation mounted while child routes change.
 class OnboardingShell extends StatefulWidget {
+  final String routePath;
   final Widget child;
 
-  const OnboardingShell({required this.child, super.key});
+  const OnboardingShell({
+    required this.routePath,
+    required this.child,
+    super.key,
+  });
 
   @override
   State<OnboardingShell> createState() => _OnboardingShellState();
 }
 
 class _OnboardingShellState extends State<OnboardingShell> {
-  late final OnboardingNavNotifier _navNotifier;
+  late final _controller = _OnboardingNavController(widget.routePath);
 
   @override
-  void initState() {
-    super.initState();
-    _navNotifier = OnboardingNavNotifier();
+  void didUpdateWidget(OnboardingShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.activateRoute(widget.routePath);
   }
 
   @override
   void dispose() {
-    _navNotifier.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _OnboardingShellScope(
-      notifier: _navNotifier,
-      // Pass widget.child as the stable `child` arg so ListenableBuilder does
-      // not rebuild the page subtree when only the nav config changes.
+    return OnboardingNavNotifier(
+      controller: _controller,
       child: ListenableBuilder(
-        listenable: _navNotifier,
+        listenable: _controller,
         child: widget.child,
         builder: (context, child) {
-          final c = _navNotifier.config;
+          final config = _controller.config;
           return Stack(
             children: [
               Scaffold(
                 body: child,
-                bottomNavigationBar: BottomOnboardingNavigation(
-                  onBack: c.isLoading ? null : c.onBack,
-                  onNext: c.isLoading ? null : c.onNext,
-                  backLabel: c.backLabel,
-                  nextLabel: c.nextLabel,
-                  hideNext: c.hideNext,
-                  hideBack: c.hideBack,
-                  backEnabled: !c.isLoading && c.backEnabled,
-                  nextIcon: c.nextIcon,
-                  backIcon: c.backIcon,
-                  progress: c.progress,
-                  backButtonKey: c.backButtonKey,
-                  nextButtonKey: c.nextButtonKey,
-                ),
+                bottomNavigationBar:
+                    config?.build() ??
+                    const BottomOnboardingNavigation(
+                      hideBack: true,
+                      hideNext: true,
+                    ),
               ),
-              // Full-screen overlay: covers AppBar and bottom nav, which a
-              // child-Scaffold-level Stack cannot do.
-              if (c.isLoading) LoadingOverlay(message: c.loadingMessage),
+              if (config?.loadingMessage != null)
+                LoadingOverlay(message: config!.loadingMessage!),
             ],
           );
         },
       ),
     );
   }
-}
-
-/// InheritedWidget that makes [OnboardingNavNotifier] discoverable via
-/// [OnboardingNavNotifier.maybeOf] without requiring Provider.
-class _OnboardingShellScope extends InheritedWidget {
-  final OnboardingNavNotifier notifier;
-
-  const _OnboardingShellScope({
-    required this.notifier,
-    required super.child,
-  });
-
-  @override
-  bool updateShouldNotify(_OnboardingShellScope old) =>
-      old.notifier != notifier;
 }

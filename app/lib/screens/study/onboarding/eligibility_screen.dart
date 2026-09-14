@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
@@ -12,6 +13,7 @@ import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EligibilityResult {
   final bool eligible;
@@ -22,6 +24,32 @@ class EligibilityResult {
 }
 
 typedef EligibilityContinuation = Future<void> Function(BuildContext context);
+
+Future<void> continueAfterEligibility(BuildContext context) async {
+  final appState = context.read<AppState>();
+  if (!appState.isPreview && appState.activeSubject?.startedAt != null) {
+    context.go('/${RouteNames.dashboard}');
+    return;
+  }
+
+  final study = appState.selectedStudy!;
+  final selectedIds = appState.preselectedInterventionIds;
+  if (selectedIds == null && study.interventions.length > 2) {
+    appState.onboardingPhase = StudyOnboardingPhase.interventionSelection;
+    context.push('/${RouteNames.interventionSelection}');
+    return;
+  }
+
+  appState.activeSubject = StudySubject.fromStudy(
+    study,
+    Supabase.instance.client.auth.currentUser!.id,
+    selectedIds ??
+        study.interventions.map((intervention) => intervention.id).toList(),
+    appState.inviteCode,
+  );
+  appState.onboardingPhase = StudyOnboardingPhase.journey;
+  context.push('/${RouteNames.journey}');
+}
 
 class EligibilityScreenArguments {
   final Study? study;
@@ -221,12 +249,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     );
 
     final navNotifier = OnboardingNavNotifier.maybeOf(context);
-    if (navNotifier != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
-      });
-    }
+    navNotifier?.register(
+      this,
+      '/${RouteNames.eligibilityCheck}',
+      OnboardingNavConfig.fromNav(nav),
+    );
 
     return Scaffold(
       key: const ValueKey('eligibility_screen'),

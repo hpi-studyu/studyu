@@ -104,12 +104,11 @@ class _InterventionSelectionScreenState
     );
 
     final navNotifier = OnboardingNavNotifier.maybeOf(context);
-    if (navNotifier != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
-      });
-    }
+    navNotifier?.register(
+      this,
+      '/${RouteNames.interventionSelection}',
+      OnboardingNavConfig.fromNav(nav),
+    );
 
     return Scaffold(
       appBar: AppBar(

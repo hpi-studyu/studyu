@@ -52,12 +52,11 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
 
     final nav = _buildNavigation();
     final navNotifier = OnboardingNavNotifier.maybeOf(context);
-    if (navNotifier != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
-      });
-    }
+    navNotifier?.register(
+      this,
+      '/${RouteNames.recoveryPhrase}',
+      OnboardingNavConfig.fromNav(nav),
+    );
 
     return Scaffold(
       appBar: AppBar(

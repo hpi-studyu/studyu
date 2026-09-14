@@ -345,7 +345,8 @@ GoRouter createAppRouter({
       // Persistent onboarding shell: BottomOnboardingNavigation stays mounted
       // while only the child page changes during the study-onboarding flow.
       ShellRoute(
-        builder: (context, state, child) => OnboardingShell(child: child),
+        builder: (context, state, child) =>
+            OnboardingShell(routePath: state.uri.path, child: child),
         routes: [
           GoRoute(
             path: '/${RouteNames.studyOverview}',

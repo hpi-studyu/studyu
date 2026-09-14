@@ -90,17 +90,16 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     );
 
     final navNotifier = OnboardingNavNotifier.maybeOf(context);
-    if (navNotifier != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        navNotifier.setConfig(
-          OnboardingNavConfig.fromNav(nav).copyWith(
-            isLoading: _isStartingStudy,
-            loadingMessage: AppLocalizations.of(context)!.starting_study,
-          ),
-        );
-      });
-    }
+    navNotifier?.register(
+      this,
+      '/${RouteNames.journey}',
+      OnboardingNavConfig.fromNav(
+        nav,
+        loadingMessage: _isStartingStudy
+            ? AppLocalizations.of(context)!.starting_study
+            : null,
+      ),
+    );
 
     final scaffold = Scaffold(
       appBar: AppBar(
@@ -116,9 +115,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             StudyOnboardingDescription(
-              text: AppLocalizations.of(
-                context,
-              )!.journey_overview_description,
+              text: AppLocalizations.of(context)!.journey_overview_description,
             ),
             Timeline(subject: subject),
           ],

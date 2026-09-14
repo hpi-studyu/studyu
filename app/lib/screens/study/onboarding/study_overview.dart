@@ -15,7 +15,6 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 @visibleForTesting
 bool shouldReturnToStudySelection(AppState state) => !state.hasPendingDeepLink;
@@ -61,39 +60,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (study!.hasEligibilityCheck) {
       await navigateToEligibilityCheck(context);
     } else {
-      await navigateToJourney(context);
-    }
-  }
-
-  Future<void> navigateToJourney(BuildContext context) async {
-    final appState = context.read<AppState>();
-    // Defense in depth: never replace a started subject's active study.
-    if (!appState.isPreview && appState.activeSubject?.startedAt != null) {
-      context.go('/${RouteNames.dashboard}');
-      return;
-    }
-    if (appState.preselectedInterventionIds != null) {
-      appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy!,
-        Supabase.instance.client.auth.currentUser!.id,
-        appState.preselectedInterventionIds!,
-        appState.inviteCode,
-      );
-      appState.onboardingPhase = StudyOnboardingPhase.journey;
-      context.push('/${RouteNames.journey}');
-    } else if (study!.interventions.length <= 2) {
-      // No need to select interventions if there are only 2 or less
-      appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy!,
-        Supabase.instance.client.auth.currentUser!.id,
-        study!.interventions.map((i) => i.id).toList(),
-        appState.inviteCode,
-      );
-      appState.onboardingPhase = StudyOnboardingPhase.journey;
-      context.push('/${RouteNames.journey}');
-    } else {
-      appState.onboardingPhase = StudyOnboardingPhase.interventionSelection;
-      context.push('/${RouteNames.interventionSelection}');
+      await continueAfterEligibility(context);
     }
   }
 
@@ -105,7 +72,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       '/${RouteNames.eligibilityCheck}',
       extra: EligibilityScreenArguments(
         study: context.read<AppState>().selectedStudy,
-        onEligible: navigateToJourney,
+        onEligible: continueAfterEligibility,
       ),
     );
     // When the eligibility check is popped, the participant is back on
@@ -157,12 +124,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     );
 
     final navNotifier = OnboardingNavNotifier.maybeOf(context);
-    if (navNotifier != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
-      });
-    }
+    navNotifier?.register(
+      this,
+      '/${RouteNames.studyOverview}',
+      OnboardingNavConfig.fromNav(nav),
+    );
 
     return Scaffold(
       appBar: AppBar(
