@@ -84,7 +84,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
 
   @override
-  String get browse_public_studies => 'Öffentliche Studien durchsuchen';
+  String get browse_public_studies => 'Öffentliche Studien';
 
   @override
   String get welcome_returning_participant =>
@@ -168,17 +168,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'Derzeit sind keine öffentlichen Studien verfügbar. Wenn Sie einen Einladungscode haben, können Sie trotzdem an einer privaten Studie teilnehmen.';
 
   @override
-  String get study_overview_title => 'Übersicht';
+  String get study_overview_title => 'Studienübersicht';
 
   @override
-  String get eligibility_questionnaire_title => 'Fragebogen';
+  String get eligibility_questionnaire_title => 'Teilnahmevoraussetzungen';
 
   @override
   String get please_answer_eligibility =>
       'Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist';
 
   @override
-  String get intervention_selection_title => 'Interventionen';
+  String get intervention_selection_title => 'Interventionsauswahl';
 
   @override
   String get please_select_interventions =>
@@ -425,7 +425,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Für diese Studie ist keine Kontakt-E-Mail hinterlegt.';
 
   @override
-  String get copy_all_information => 'Alle Informationen kopieren';
+  String get copy_all_information => 'Alle kopieren';
 
   @override
   String value_copied(String label) {
@@ -1360,7 +1360,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_settings_section => 'Studieneinstellungen';
 
   @override
-  String get recovery_phrase_header => 'Wiederherstellungsphrase anzeigen';
+  String get recovery_phrase_header => 'Wiederherstellungsphrase';
 
   @override
   String get copy_to_clipboard => 'In die Zwischenablage kopieren';

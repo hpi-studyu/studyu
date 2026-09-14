@@ -84,7 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose a public study or use an invitation.';
 
   @override
-  String get browse_public_studies => 'Browse public studies';
+  String get browse_public_studies => 'Public studies';
 
   @override
   String get welcome_returning_participant =>
@@ -104,28 +104,28 @@ class AppLocalizationsEn extends AppLocalizations {
       'Researchers can estimate what works on average. They cannot determine whether a habit or treatment works for you. StudyU helps you test that question yourself.';
 
   @override
-  String get onboarding_page1_title => 'Your Personal Study';
+  String get onboarding_page1_title => 'Your personal study';
 
   @override
   String get onboarding_page1_subtitle =>
       'In an N-of-1 study, you are the only participant. You follow different phases, such as eating early and eating late, and record outcomes such as sleep quality.';
 
   @override
-  String get onboarding_page2_title => 'An Expert Study Plan';
+  String get onboarding_page2_title => 'An expert study plan';
 
   @override
   String get onboarding_page2_subtitle =>
       'Choose a study that matches your question. StudyU provides an expert-designed protocol, checks whether you can participate safely, and helps fit the plan into your routine.';
 
   @override
-  String get onboarding_page3_title => 'Complete Regular Tasks';
+  String get onboarding_page3_title => 'Complete regular tasks';
 
   @override
   String get onboarding_page3_subtitle =>
       'Follow the assigned option and record your observations, usually once a day. The progress bar shows how many tasks remain before you can view your results.';
 
   @override
-  String get onboarding_page4_title => 'Build Reliable Evidence';
+  String get onboarding_page4_title => 'Build reliable evidence';
 
   @override
   String get onboarding_page4_subtitle =>
@@ -168,17 +168,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'There are currently no public studies available. If you have an invite code, you can still join a private study.';
 
   @override
-  String get study_overview_title => 'Overview';
+  String get study_overview_title => 'Study overview';
 
   @override
-  String get eligibility_questionnaire_title => 'Questionnaire';
+  String get eligibility_questionnaire_title => 'Eligibility check';
 
   @override
   String get please_answer_eligibility =>
       'Please answer a few questions to make sure that you can safely participate in this study.';
 
   @override
-  String get intervention_selection_title => 'Interventions';
+  String get intervention_selection_title => 'Intervention selection';
 
   @override
   String get please_select_interventions =>
@@ -297,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'You are about to delete all data from your device and our servers. You will not be able to restore your data.\nYour anonymized data will not be available for research purposes anymore.';
 
   @override
-  String get your_journey => 'Your Journey';
+  String get your_journey => 'Your journey';
 
   @override
   String get journey_overview_description =>
@@ -420,7 +420,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get study_team_email_unavailable => 'This study has no contact email.';
 
   @override
-  String get copy_all_information => 'Copy all information';
+  String get copy_all_information => 'Copy all';
 
   @override
   String value_copied(String label) {
@@ -588,7 +588,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enough_data => 'Enough data';
 
   @override
-  String get legal_documents => 'Legal Documents';
+  String get legal_documents => 'Legal documents';
 
   @override
   String get legal_documents_description =>
@@ -1346,7 +1346,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get study_settings_section => 'Study settings';
 
   @override
-  String get recovery_phrase_header => 'View recovery phrase';
+  String get recovery_phrase_header => 'Recovery phrase';
 
   @override
   String get copy_to_clipboard => 'Copy to clipboard';

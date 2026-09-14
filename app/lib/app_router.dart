@@ -69,6 +69,38 @@ class RouteNames {
 bool isStudyAvailableForTesting(Study study) =>
     study.interventions.length >= StudySchedule.numberOfInterventions;
 
+String? routePrerequisiteRedirect(
+  String path,
+  Object? extra,
+  AppState appState,
+) {
+  final activeSubject = appState.activeSubject;
+  if (path == '/${RouteNames.welcome}' &&
+      activeSubject?.startedAt != null &&
+      isStudyAvailableForTesting(activeSubject!.study)) {
+    return '/${RouteNames.dashboard}';
+  }
+
+  final hasPrerequisite = switch (path) {
+    '/${RouteNames.studyOverview}' ||
+    '/${RouteNames.interventionSelection}' => appState.selectedStudy != null,
+    '/${RouteNames.eligibilityCheck}' =>
+      appState.selectedStudy != null ||
+          extra is Study ||
+          extra is EligibilityScreenArguments && extra.study != null,
+    '/${RouteNames.journey}' ||
+    '/${RouteNames.consent}' ||
+    '/${RouteNames.kickoff}' => appState.activeSubject != null,
+    '/${RouteNames.dashboard}' ||
+    '/${RouteNames.appSettings}' ||
+    '/${RouteNames.studyInformation}' ||
+    '/${RouteNames.reportHistory}' => appState.activeSubject?.startedAt != null,
+    _ => true,
+  };
+
+  return hasPrerequisite ? null : '/${RouteNames.loading}';
+}
+
 String initialRouteFromPlatformRoute(String platformRoute) {
   final uri = Uri.tryParse(platformRoute);
   if (uri == null) return '/${RouteNames.loading}';
@@ -128,13 +160,23 @@ GoRouter createAppRouter({
         '/${RouteNames.journey}' ||
         '/${RouteNames.consent}' ||
         '/${RouteNames.kickoff}' ||
-        '/${RouteNames.dashboard}' =>
+        '/${RouteNames.dashboard}' ||
+        '/${RouteNames.appSettings}' ||
+        '/${RouteNames.studyInformation}' ||
+        '/${RouteNames.reportHistory}' =>
           appState.activeSubject?.study ?? appState.selectedStudy,
         _ => null,
       };
       if (study != null && !isStudyAvailableForTesting(study)) {
         return '/${RouteNames.studyUnavailable}';
       }
+
+      final prerequisiteRedirect = routePrerequisiteRedirect(
+        state.uri.path,
+        state.extra,
+        appState,
+      );
+      if (prerequisiteRedirect != null) return prerequisiteRedirect;
 
       // Remove splash screen when navigating away from loading screen
       if (state.uri.path != '/${RouteNames.loading}') {
@@ -270,7 +312,13 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.studyInformation}',
         name: RouteNames.studyInformation,
-        builder: (context, state) => const StudyInformationScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          name: state.uri.path,
+          transitionsBuilder: (_, animation, _, child) =>
+              FadeTransition(opacity: animation, child: child),
+          child: const StudyInformationScreen(),
+        ),
       ),
       GoRoute(
         path: '/${RouteNames.faq}',
@@ -307,13 +355,14 @@ GoRouter createAppRouter({
         name: RouteNames.eligibilityCheck,
         builder: (context, state) {
           final extra = state.extra;
+          final selectedStudy = context.read<AppState>().selectedStudy;
           if (extra is EligibilityScreenArguments) {
             return EligibilityScreen(
-              study: extra.study,
+              study: extra.study ?? selectedStudy,
               onEligible: extra.onEligible,
             );
           }
-          return EligibilityScreen(study: extra as Study?);
+          return EligibilityScreen(study: extra as Study? ?? selectedStudy);
         },
       ),
       GoRoute(

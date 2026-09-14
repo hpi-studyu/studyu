@@ -58,6 +58,10 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final destructiveButtonStyle = OutlinedButton.styleFrom(
+      foregroundColor: theme.colorScheme.error,
+      side: BorderSide(color: theme.colorScheme.error),
+    );
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: context.pop),
@@ -205,15 +209,10 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 12),
-                      // Leave study button
-                      FilledButton.icon(
+                      OutlinedButton.icon(
                         icon: const Icon(MdiIcons.exitToApp),
                         label: Text(AppLocalizations.of(context)!.opt_out),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.red[700],
-                          foregroundColor: Colors.white,
-                          side: BorderSide(color: Colors.red[700]!),
-                        ),
+                        style: destructiveButtonStyle,
                         onPressed: () {
                           showDialog(
                             context: context,
@@ -221,40 +220,17 @@ class _SettingsState extends State<Settings> {
                           );
                         },
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        AppLocalizations.of(context)!.leave_study_description,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Leave and delete button
-                      FilledButton.tonalIcon(
+                      const SizedBox(height: 12),
+                      OutlinedButton.icon(
                         icon: const Icon(Icons.delete),
                         label: Text(AppLocalizations.of(context)!.delete_data),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.pink[50],
-                          foregroundColor: Colors.red[900],
-                        ),
+                        style: destructiveButtonStyle,
                         onPressed: () {
                           showDialog(
                             context: context,
                             builder: (_) => DeleteAlertDialog(subject: subject),
                           );
                         },
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.delete_study_data_description,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
                       ),
                     ],
                   ),
