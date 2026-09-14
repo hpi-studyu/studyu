@@ -303,15 +303,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             icon: const Icon(Icons.access_time),
             label: Text(
               _selectedTime != null
-                  ? DateFormat('HH:mm').format(
-                      DateTime(
-                        2000,
-                        1,
-                        1,
-                        _selectedTime!.hour,
-                        _selectedTime!.minute,
-                      ),
-                    )
+                  ? _selectedTime!.format(context)
                   : (widget.question.isDateTime
                         ? localizations.time_picker_button_label_datetime
                         : localizations.time_picker_button_label),
