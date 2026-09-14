@@ -36,10 +36,19 @@ class WelcomeEntryHub extends StatelessWidget {
       minimumSize: const Size.fromHeight(56),
       textStyle: theme.textTheme.titleMedium,
     );
-    final footerLinkStyle = TextButton.styleFrom(
+    final tertiaryButtonStyle = TextButton.styleFrom(
+      foregroundColor: theme.colorScheme.primary,
       minimumSize: const Size(0, 48),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textStyle: theme.textTheme.bodyMedium?.copyWith(fontSize: 15),
+    );
+    final footerLinkStyle = TextButton.styleFrom(
+      foregroundColor: theme.colorScheme.onSurfaceVariant,
+      minimumSize: const Size(0, 48),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textStyle: theme.textTheme.labelLarge?.copyWith(fontSize: 13),
     );
 
     return Scaffold(
@@ -102,21 +111,23 @@ class WelcomeEntryHub extends StatelessWidget {
                         ),
                         const SizedBox(height: 32),
                         const Divider(),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Text(
                           l10n.welcome_returning_participant,
-                          style: theme.textTheme.titleSmall,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 12),
-                        OutlinedButton.icon(
+                        const SizedBox(height: 8),
+                        TextButton.icon(
                           key: const ValueKey('welcome_restore_account'),
-                          style: secondaryButtonStyle,
+                          style: tertiaryButtonStyle,
                           icon: const Icon(Icons.restore),
                           onPressed: onRestoreAccount,
-                          label: Text(l10n.restore_studyu_account),
+                          label: Text(l10n.restore_account),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
                       ],
                     ),
                     Column(
@@ -125,32 +136,57 @@ class WelcomeEntryHub extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                              child: TextButton.icon(
+                              child: TextButton(
                                 key: const ValueKey('welcome_about'),
                                 style: footerLinkStyle,
                                 onPressed: onAbout,
-                                icon: const Icon(MdiIcons.helpCircleOutline),
-                                label: Text(l10n.what_is_studyu),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      MdiIcons.helpCircleOutline,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Flexible(child: Text(l10n.about)),
+                                  ],
+                                ),
                               ),
                             ),
                             Expanded(
-                              child: TextButton.icon(
+                              child: TextButton(
                                 key: const ValueKey('welcome_faq'),
                                 style: footerLinkStyle,
                                 onPressed: onFaq,
-                                icon: const Icon(
-                                  MdiIcons.frequentlyAskedQuestions,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      MdiIcons.frequentlyAskedQuestions,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Flexible(child: Text(l10n.faq)),
+                                  ],
                                 ),
-                                label: Text(l10n.faq),
                               ),
                             ),
                             Expanded(
-                              child: TextButton.icon(
+                              child: TextButton(
                                 key: const ValueKey('welcome_contact'),
                                 style: footerLinkStyle,
                                 onPressed: onContact,
-                                icon: const Icon(MdiIcons.email),
-                                label: Text(l10n.contact),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(MdiIcons.email, size: 18),
+                                    const SizedBox(width: 4),
+                                    Flexible(child: Text(l10n.contact)),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
