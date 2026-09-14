@@ -10,6 +10,7 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -126,36 +127,29 @@ class _InterventionSelectionScreenState
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                StudyOnboardingDescription(
-                  text: AppLocalizations.of(
-                    context,
-                  )!.please_select_interventions,
-                  actionLabel: AppLocalizations.of(
-                    context,
-                  )!.please_select_interventions_why,
-                  onAction: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      content: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.please_select_interventions_description,
-                      ),
-                    ),
-                  ),
-                ),
-                _buildInterventionSelectionList(),
-                const SizedBox(height: 16),
-              ],
+      body: TitleDescriptionLayout(
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.please_select_interventions,
+          actionLabel: AppLocalizations.of(
+            context,
+          )!.please_select_interventions_why,
+          onAction: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text(
+                AppLocalizations.of(
+                  context,
+                )!.please_select_interventions_description,
+              ),
             ),
           ),
+        ),
+        descriptionBottomSpacing: 0,
+        child: Column(
+          children: [
+            _buildInterventionSelectionList(),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
       bottomNavigationBar: navNotifier != null ? null : nav,

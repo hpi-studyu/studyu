@@ -5,8 +5,8 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
-import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 
 class RestoreAccountScreen extends StatefulWidget {
@@ -178,14 +178,10 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
           },
         ),
       ),
-      body: OnboardingPage(
-        title: '',
-        description: '',
+      body: TitleDescriptionLayout(
         descriptionWidget: StudyOnboardingDescription(
           text: AppLocalizations.of(context)!.restore_account_description,
         ),
-        maxWidth: 900,
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         child: Form(
           key: _formKey,
           child: Column(

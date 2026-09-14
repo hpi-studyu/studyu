@@ -8,9 +8,9 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
-import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -69,13 +69,10 @@ class _TermsScreenState extends State<TermsScreen> {
         automaticallyImplyLeading: false,
         title: Text(localizations.legal_documents),
       ),
-      body: OnboardingPage(
-        title: '',
-        description: '',
+      body: TitleDescriptionLayout(
         descriptionWidget: StudyOnboardingDescription(
           text: localizations.legal_documents_description,
         ),
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         child: RetryFutureBuilder<AppConfig>(
           tryFunction: AppConfig.getAppConfig,
           successBuilder: (BuildContext context, AppConfig? appConfig) =>

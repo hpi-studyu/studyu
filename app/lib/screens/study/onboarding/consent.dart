@@ -16,6 +16,7 @@ import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -167,53 +168,34 @@ class _ConsentScreenState extends State<ConsentScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                StudyOnboardingDescription(
-                  text: AppLocalizations.of(context)!.please_give_consent,
-                  actionLabel: AppLocalizations.of(
-                    context,
-                  )!.please_give_consent_why,
-                  onAction: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      content: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.please_give_consent_reason,
-                      ),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                    itemCount: consentList.length,
-                    itemBuilder: (context, index) {
-                      return ConsentCard(
-                        consent: consentList[index],
-                        isChecked: boxLogic[index],
-                        index: index,
-                        onTapped: onBoxTapped,
-                      );
-                    },
-                    primary: false,
-                    padding: const EdgeInsets.all(20),
-                  ),
-                ),
-              ],
+      body: TitleDescriptionLayout(
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.please_give_consent,
+          actionLabel: AppLocalizations.of(context)!.please_give_consent_why,
+          onAction: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text(
+                AppLocalizations.of(context)!.please_give_consent_reason,
+              ),
             ),
+          ),
+        ),
+        descriptionBottomSpacing: 0,
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: consentList.length,
+          itemBuilder: (context, index) => ConsentCard(
+            consent: consentList[index],
+            isChecked: boxLogic[index],
+            index: index,
+            onTapped: onBoxTapped,
           ),
         ),
       ),

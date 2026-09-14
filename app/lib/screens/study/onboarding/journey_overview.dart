@@ -10,9 +10,9 @@ import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/services/study_start_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
-import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -123,20 +123,12 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.your_journey),
       ),
-      body: OnboardingPage(
-        title: '',
-        description: '',
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            StudyOnboardingDescription(
-              text: AppLocalizations.of(context)!.journey_overview_description,
-            ),
-            Timeline(subject: subject),
-          ],
+      body: TitleDescriptionLayout(
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.journey_overview_description,
         ),
+        descriptionBottomSpacing: 0,
+        child: Timeline(subject: subject),
       ),
       bottomNavigationBar: navNotifier != null ? null : nav,
     );

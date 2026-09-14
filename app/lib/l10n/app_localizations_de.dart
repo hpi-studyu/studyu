@@ -602,7 +602,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get legal_documents_description =>
-      'Bitte lies und akzeptiere die Nutzungsbedingungen und Datenschutzbestimmung, bevor du fortfährst.';
+      'Bitte prüfe und akzeptiere diese Dokumente, um fortzufahren.';
 
   @override
   String get terms => 'Bedingungen';

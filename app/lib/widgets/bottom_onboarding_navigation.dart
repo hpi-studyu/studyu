@@ -12,6 +12,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final bool backEnabled;
   final bool showNextIcon;
   final bool showBackIcon;
+  final bool primaryNext;
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
@@ -29,6 +30,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.backEnabled = true,
     this.showNextIcon = true,
     this.showBackIcon = true,
+    this.primaryNext = false,
     this.nextIcon,
     this.backIcon,
     this.progress,
@@ -52,6 +54,13 @@ class BottomOnboardingNavigation extends StatelessWidget {
 
       context.pop();
     }
+
+    final nextButtonChild = Row(
+      children: [
+        Text(nextLabel ?? AppLocalizations.of(context)!.next),
+        if (showNextIcon) nextIcon ?? const Icon(Icons.navigate_next),
+      ],
+    );
 
     return BottomAppBar(
       child: Padding(
@@ -86,17 +95,17 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
-              child: TextButton(
-                key: nextButtonKey,
-                onPressed: onNext,
-                child: Row(
-                  children: [
-                    Text(nextLabel ?? AppLocalizations.of(context)!.next),
-                    if (showNextIcon)
-                      nextIcon ?? const Icon(Icons.navigate_next),
-                  ],
-                ),
-              ),
+              child: primaryNext
+                  ? FilledButton(
+                      key: nextButtonKey,
+                      onPressed: onNext,
+                      child: nextButtonChild,
+                    )
+                  : TextButton(
+                      key: nextButtonKey,
+                      onPressed: onNext,
+                      child: nextButtonChild,
+                    ),
             ),
           ],
         ),

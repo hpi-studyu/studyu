@@ -20,7 +20,9 @@ class StudyOnboardingDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryStyle = theme.textTheme.titleMedium!;
+    final primaryStyle = theme.textTheme.bodyLarge!.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
 
     return SizedBox(
       width: double.infinity,
@@ -52,7 +54,7 @@ class StudyOnboardingDescription extends StatelessWidget {
                   ],
                 ],
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
             ),
             if (supportingText != null) ...[
               const SizedBox(height: 8),
@@ -61,7 +63,7 @@ class StudyOnboardingDescription extends StatelessWidget {
                 style: theme.textTheme.bodyMedium!.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
               ),
             ],
           ],

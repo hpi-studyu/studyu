@@ -28,15 +28,18 @@ void main() {
         .descendant(of: description, matching: find.byType(Text))
         .first;
     final primaryText = tester.widget<Text>(primaryTextFinder);
-    expect(primaryText.textAlign, TextAlign.center);
+    expect(primaryText.textAlign, TextAlign.start);
+    final theme = Theme.of(tester.element(primaryTextFinder));
     expect(
       primaryText.textSpan!.style,
-      Theme.of(tester.element(primaryTextFinder)).textTheme.titleMedium,
+      theme.textTheme.bodyLarge!.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
     );
 
     final supportingTextFinder = find.text('Supporting description.');
     final supportingText = tester.widget<Text>(supportingTextFinder);
-    expect(supportingText.textAlign, TextAlign.center);
+    expect(supportingText.textAlign, TextAlign.start);
     expect(
       supportingText.style!.color,
       Theme.of(

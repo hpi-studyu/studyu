@@ -12,6 +12,7 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -266,23 +267,29 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),
       ),
-      body: Column(
-        children: [
-          StudyOnboardingDescription(
-            text: AppLocalizations.of(context)!.please_answer_eligibility,
+      body: TitleDescriptionLayout(
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.please_answer_eligibility,
+        ),
+        descriptionBottomSpacing: 0,
+        scrollable: false,
+        child: Expanded(
+          child: Column(
+            children: [
+              Expanded(
+                child: QuestionnaireWidget(
+                  widget.study!.questionnaire.questions,
+                  title: widget.study!.title,
+                  onComplete: _evaluateResponse,
+                  shouldContinue: _checkContinuation,
+                  hideCta: activeResult?.eligible == false,
+                  autoComplete: true,
+                ),
+              ),
+              if (activeResult != null) _constructResultBanner(),
+            ],
           ),
-          Expanded(
-            child: QuestionnaireWidget(
-              widget.study!.questionnaire.questions,
-              title: widget.study!.title,
-              onComplete: _evaluateResponse,
-              shouldContinue: _checkContinuation,
-              hideCta: activeResult?.eligible == false,
-              autoComplete: true,
-            ),
-          ),
-          if (activeResult != null) _constructResultBanner(),
-        ],
+        ),
       ),
       bottomNavigationBar: navNotifier != null ? null : nav,
     );

@@ -1163,7 +1163,7 @@ abstract class AppLocalizations {
   /// No description provided for @legal_documents_description.
   ///
   /// In en, this message translates to:
-  /// **'Please read and accept the terms of use and privacy policy before continuing.'**
+  /// **'Please review and accept these documents to continue.'**
   String get legal_documents_description;
 
   /// No description provided for @terms.

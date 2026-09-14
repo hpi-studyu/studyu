@@ -595,7 +595,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legal_documents_description =>
-      'Please read and accept the terms of use and privacy policy before continuing.';
+      'Please review and accept these documents to continue.';
 
   @override
   String get terms => 'Terms of Use';

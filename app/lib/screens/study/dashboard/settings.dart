@@ -14,6 +14,7 @@ import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
+import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart' show PostgrestException;
@@ -76,197 +77,188 @@ class _SettingsState extends State<Settings> {
         leading: BackButton(onPressed: context.pop),
         title: Text(AppLocalizations.of(context)!.settings),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // General section header
-              Text(
-                AppLocalizations.of(context)!.general_section,
-                style: theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 12),
+      body: TitleDescriptionLayout(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // General section header
+            Text(
+              AppLocalizations.of(context)!.general_section,
+              style: theme.textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
 
-              // Language card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Icon(Icons.language, color: theme.primaryColor),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context)!.language,
-                          style: theme.textTheme.bodyMedium!.copyWith(),
-                        ),
+            // Language card
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.language, color: theme.primaryColor),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.language,
+                        style: theme.textTheme.bodyMedium!.copyWith(),
                       ),
-                      DropdownButton<Locale>(
-                        value: _selectedValue,
-                        style: theme.textTheme.bodyMedium,
-                        hint: Text(
-                          AppLocalizations.of(context)!.use_device_language,
-                        ),
-                        underline: const SizedBox(),
-                        items: _buildDropdownItems(context),
-                        onChanged: (value) async {
-                          setState(() {
-                            _selectedValue = value;
-                          });
-                          await context.read<AppLanguage>().changeLanguage(
-                            value,
-                          );
-                        },
+                    ),
+                    DropdownButton<Locale>(
+                      value: _selectedValue,
+                      style: theme.textTheme.bodyMedium,
+                      hint: Text(
+                        AppLocalizations.of(context)!.use_device_language,
                       ),
-                    ],
-                  ),
+                      underline: const SizedBox(),
+                      items: _buildDropdownItems(context),
+                      onChanged: (value) async {
+                        setState(() {
+                          _selectedValue = value;
+                        });
+                        await context.read<AppLanguage>().changeLanguage(value);
+                      },
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
+            ),
+            const SizedBox(height: 24),
 
-              Text(
-                AppLocalizations.of(context)!.study_settings_section,
-                style: theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 12),
+            Text(
+              AppLocalizations.of(context)!.study_settings_section,
+              style: theme.textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
 
-              // Dashboard showcase reset
-              Card(
-                key: const ValueKey('settings_dashboard_showcase_card'),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Icon(Icons.help_outline, color: theme.primaryColor),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context)!.dashboard_tour,
-                          style: theme.textTheme.bodyMedium!.copyWith(),
-                        ),
+            // Dashboard showcase reset
+            Card(
+              key: const ValueKey('settings_dashboard_showcase_card'),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.help_outline, color: theme.primaryColor),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.dashboard_tour,
+                        style: theme.textTheme.bodyMedium!.copyWith(),
                       ),
-                      const SizedBox(width: 12),
-                      OutlinedButton(
-                        key: const ValueKey(
-                          'settings_show_dashboard_showcase_again',
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.primary,
-                        ),
-                        onPressed: dashboardHasTasks
-                            ? () async {
-                                await DashboardShowcaseStorage.reset();
-                                if (!context.mounted) return;
-                                context.pop(true);
-                              }
-                            : null,
-                        child: Text(AppLocalizations.of(context)!.show_again),
+                    ),
+                    const SizedBox(width: 12),
+                    OutlinedButton(
+                      key: const ValueKey(
+                        'settings_show_dashboard_showcase_again',
                       ),
-                    ],
-                  ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: theme.colorScheme.primary,
+                      ),
+                      onPressed: dashboardHasTasks
+                          ? () async {
+                              await DashboardShowcaseStorage.reset();
+                              if (!context.mounted) return;
+                              context.pop(true);
+                            }
+                          : null,
+                      child: Text(AppLocalizations.of(context)!.show_again),
+                    ),
+                  ],
                 ),
               ),
-              if (context.watch<AppState>().showParticipantRecovery) ...[
-                const SizedBox(height: 8),
-                const RecoveryPhraseWidget(),
-              ],
+            ),
+            if (context.watch<AppState>().showParticipantRecovery) ...[
               const SizedBox(height: 8),
-
-              Card(
-                key: const ValueKey('settings_study_information_card'),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Icon(Icons.science_outlined, color: theme.primaryColor),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context)!.study_information,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                      OutlinedButton(
-                        key: const ValueKey('settings_study_information'),
-                        onPressed: () =>
-                            context.push('/${RouteNames.studyInformation}'),
-                        child: Text(
-                          AppLocalizations.of(context)!.view_study_information,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              //wrap buttons to fill the width for mobile phones but for web fixed width
-              Text(
-                textAlign: TextAlign.start,
-                AppLocalizations.of(context)!.participation_options_section,
-                style: theme.textTheme.titleLarge,
-              ),
-              Align(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width < 600
-                        ? double.infinity
-                        : 400,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 12),
-                      OutlinedButton.icon(
-                        icon: const Icon(MdiIcons.exitToApp),
-                        label: Text(AppLocalizations.of(context)!.opt_out),
-                        style: destructiveButtonStyle,
-                        onPressed: () async {
-                          TransitionRoute<bool>? dialogRoute;
-                          final completed = await showDialog<bool>(
-                            context: context,
-                            builder: (dialogContext) {
-                              dialogRoute ??= ModalRoute.of<bool>(
-                                dialogContext,
-                              );
-                              return OptOutAlertDialog(subject: subject);
-                            },
-                          );
-                          await dialogRoute?.completed;
-                          if (!context.mounted || completed != true) return;
-                          context.go('/${RouteNames.welcome}');
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      OutlinedButton.icon(
-                        icon: const Icon(Icons.delete),
-                        label: Text(AppLocalizations.of(context)!.delete_data),
-                        style: destructiveButtonStyle,
-                        onPressed: () async {
-                          TransitionRoute<bool>? dialogRoute;
-                          final completed = await showDialog<bool>(
-                            context: context,
-                            builder: (dialogContext) {
-                              dialogRoute ??= ModalRoute.of<bool>(
-                                dialogContext,
-                              );
-                              return DeleteAlertDialog(subject: subject);
-                            },
-                          );
-                          await dialogRoute?.completed;
-                          if (!context.mounted || completed != true) return;
-                          context.go('/${RouteNames.welcome}');
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const RecoveryPhraseWidget(),
             ],
-          ),
+            const SizedBox(height: 8),
+
+            Card(
+              key: const ValueKey('settings_study_information_card'),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.science_outlined, color: theme.primaryColor),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.study_information,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                    OutlinedButton(
+                      key: const ValueKey('settings_study_information'),
+                      onPressed: () =>
+                          context.push('/${RouteNames.studyInformation}'),
+                      child: Text(
+                        AppLocalizations.of(context)!.view_study_information,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            //wrap buttons to fill the width for mobile phones but for web fixed width
+            Text(
+              textAlign: TextAlign.start,
+              AppLocalizations.of(context)!.participation_options_section,
+              style: theme.textTheme.titleLarge,
+            ),
+            Align(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width < 600
+                      ? double.infinity
+                      : 400,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      icon: const Icon(MdiIcons.exitToApp),
+                      label: Text(AppLocalizations.of(context)!.opt_out),
+                      style: destructiveButtonStyle,
+                      onPressed: () async {
+                        TransitionRoute<bool>? dialogRoute;
+                        final completed = await showDialog<bool>(
+                          context: context,
+                          builder: (dialogContext) {
+                            dialogRoute ??= ModalRoute.of<bool>(dialogContext);
+                            return OptOutAlertDialog(subject: subject);
+                          },
+                        );
+                        await dialogRoute?.completed;
+                        if (!context.mounted || completed != true) return;
+                        context.go('/${RouteNames.welcome}');
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.delete),
+                      label: Text(AppLocalizations.of(context)!.delete_data),
+                      style: destructiveButtonStyle,
+                      onPressed: () async {
+                        TransitionRoute<bool>? dialogRoute;
+                        final completed = await showDialog<bool>(
+                          context: context,
+                          builder: (dialogContext) {
+                            dialogRoute ??= ModalRoute.of<bool>(dialogContext);
+                            return DeleteAlertDialog(subject: subject);
+                          },
+                        );
+                        await dialogRoute?.completed;
+                        if (!context.mounted || completed != true) return;
+                        context.go('/${RouteNames.welcome}');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
