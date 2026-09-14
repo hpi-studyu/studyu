@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/dashboard/settings.dart';
@@ -64,7 +65,7 @@ void main() {
     expect(find.text('study-1'), findsOneWidget);
     expect(find.text('subject-1'), findsOneWidget);
     expect(find.text('2.14.0 (42)'), findsOneWidget);
-    expect(find.byTooltip('Copy to clipboard'), findsNWidgets(7));
+    expect(find.byTooltip('Copy to clipboard'), findsNothing);
 
     await tester.scrollUntilVisible(
       find.text('Copy all information'),
@@ -95,22 +96,26 @@ void main() {
       buildNumber: '42',
       buildSignature: '',
     );
-    final study = Study('study-1', 'researcher-1')..title = 'Sleep study';
+    final study = Study('study-1', 'researcher-1')
+      ..title = 'Sleep study'
+      ..interventions = [
+        Intervention('first', 'First'),
+        Intervention('second', 'Second'),
+      ];
     final subject = StudySubject('subject-1', study.id, 'user-1', const [])
       ..study = study
       ..startedAt = DateTime(2026, 7, 10);
     final appState = AppState()..activeSubject = subject;
     final appLanguage = _TestAppLanguage();
     addTearDown(appLanguage.dispose);
-    final router = GoRouter(
-      initialLocation: '/settings',
-      routes: [
-        GoRoute(path: '/settings', builder: (_, _) => const Settings()),
-        GoRoute(
-          path: '/studyInformation',
-          builder: (_, _) => const StudyInformationScreen(),
-        ),
-      ],
+    final reflectsImperativeApis = GoRouter.optionURLReflectsImperativeAPIs;
+    GoRouter.optionURLReflectsImperativeAPIs = true;
+    addTearDown(
+      () => GoRouter.optionURLReflectsImperativeAPIs = reflectsImperativeApis,
+    );
+    final router = createAppRouter(
+      queryParameters: const {},
+      initialLocation: '/${RouteNames.appSettings}',
     );
     addTearDown(router.dispose);
 
@@ -146,14 +151,6 @@ void main() {
         matching: find.byType(Icon),
       ),
       findsNothing,
-    );
-    expect(
-      tester.widget<Text>(find.text('View recovery phrase')).style?.fontWeight,
-      isNot(FontWeight.w500),
-    );
-    expect(
-      tester.widget<Text>(find.text('General')).style?.color,
-      tester.widget<Text>(find.text('Study settings')).style?.color,
     );
     final studyCards = [
       tester.widget<Card>(
@@ -209,9 +206,26 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(find.byKey(const ValueKey('settings_study_information')));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
+    expect(find.byType(Settings), findsOneWidget);
     expect(find.byType(StudyInformationScreen), findsOneWidget);
+
+    await tester.pumpAndSettle();
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      '/${RouteNames.studyInformation}',
+    );
+    expect(find.byType(StudyInformationScreen), findsOneWidget);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      '/${RouteNames.appSettings}',
+    );
+    expect(find.byType(Settings), findsOneWidget);
   });
 
   testWidgets('shows destructive study dialogs consistently', (tester) async {

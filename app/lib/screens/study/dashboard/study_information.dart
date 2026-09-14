@@ -53,11 +53,7 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
                       index < information.length;
                       index++
                     ) ...[
-                      _InformationTile(
-                        item: information[index],
-                        copyTooltip: l10n.copy_to_clipboard,
-                        onCopy: () => _copyValue(information[index]),
-                      ),
+                      _InformationTile(item: information[index]),
                       if (index < information.length - 1)
                         const Divider(height: 1, indent: 72),
                     ],
@@ -150,16 +146,6 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
     ];
   }
 
-  Future<void> _copyValue(_InformationItem item) async {
-    await Clipboard.setData(ClipboardData(text: item.value));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.value_copied(item.label)),
-      ),
-    );
-  }
-
   Future<void> _copyAll(List<_InformationItem> information) async {
     await Clipboard.setData(ClipboardData(text: _informationText(information)));
     if (!mounted) return;
@@ -201,15 +187,9 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
 }
 
 class _InformationTile extends StatelessWidget {
-  const _InformationTile({
-    required this.item,
-    required this.copyTooltip,
-    required this.onCopy,
-  });
+  const _InformationTile({required this.item});
 
   final _InformationItem item;
-  final String copyTooltip;
-  final VoidCallback onCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -217,11 +197,6 @@ class _InformationTile extends StatelessWidget {
       leading: Icon(item.icon),
       title: Text(item.label),
       subtitle: SelectableText(item.value),
-      trailing: IconButton(
-        tooltip: copyTooltip,
-        onPressed: onCopy,
-        icon: const Icon(Icons.copy_outlined),
-      ),
     );
   }
 }
