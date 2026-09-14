@@ -42,6 +42,23 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     );
   }
 
+  void _goBack() {
+    final appState = context.read<AppState>();
+    if (!appState.isPreview) {
+      final study = subject!.study;
+      final needsInterventionSelection =
+          appState.preselectedInterventionIds == null &&
+          study.interventions.length > 2;
+      appState.activeSubject = null;
+      appState.onboardingPhase = needsInterventionSelection
+          ? StudyOnboardingPhase.interventionSelection
+          : study.hasEligibilityCheck
+          ? StudyOnboardingPhase.eligibility
+          : StudyOnboardingPhase.terms;
+    }
+    context.pop();
+  }
+
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     if (subject!.study.hasConsentCheck) {
       // Accepting consent is handled inside the consent screen: it shows the
@@ -54,8 +71,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       final appState = context.read<AppState>();
       appState.activeSubject = null;
       appState.onboardingPhase = null;
-      await PendingDeepLinkService.clear(appState);
-      if (!context.mounted) return;
       if (consentGiven == false) {
         context.go('/${RouteNames.welcome}');
       } else {
@@ -68,6 +83,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         );
         context.go('/${RouteNames.studySelection}');
       }
+      await PendingDeepLinkService.clear(appState);
     } else {
       await _startStudy(context);
     }
@@ -82,6 +98,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     final nav = BottomOnboardingNavigation(
+      onBack: context.canPop() ? _goBack : null,
       onNext: () => getConsentAndNavigateToDashboard(context),
       progress: OnboardingProgress.forPage(
         context.read<AppState>(),

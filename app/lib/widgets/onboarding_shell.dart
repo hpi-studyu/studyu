@@ -129,14 +129,16 @@ class _OnboardingNavController extends ChangeNotifier {
 /// Lets onboarding pages register navigation for the active shell route.
 class OnboardingNavNotifier extends InheritedWidget {
   final _OnboardingNavController _controller;
+  final String routePath;
 
   const OnboardingNavNotifier({
     required _OnboardingNavController controller,
+    required this.routePath,
     required super.child,
   }) : _controller = controller;
 
   static OnboardingNavNotifier? maybeOf(BuildContext context) =>
-      context.getInheritedWidgetOfExactType<OnboardingNavNotifier>();
+      context.dependOnInheritedWidgetOfExactType<OnboardingNavNotifier>();
 
   /// Schedules a navigation update only for the active route and page owner.
   void register(Object owner, String routePath, OnboardingNavConfig config) {
@@ -147,7 +149,8 @@ class OnboardingNavNotifier extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(OnboardingNavNotifier oldWidget) => false;
+  bool updateShouldNotify(OnboardingNavNotifier oldWidget) =>
+      routePath != oldWidget.routePath;
 }
 
 /// Keeps the onboarding navigation mounted while child routes change.
@@ -184,6 +187,7 @@ class _OnboardingShellState extends State<OnboardingShell> {
   Widget build(BuildContext context) {
     return OnboardingNavNotifier(
       controller: _controller,
+      routePath: widget.routePath,
       child: ListenableBuilder(
         listenable: _controller,
         child: widget.child,

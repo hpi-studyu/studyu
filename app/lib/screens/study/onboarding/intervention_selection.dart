@@ -76,6 +76,16 @@ class _InterventionSelectionScreenState
     });
   }
 
+  void _goBack() {
+    final appState = context.read<AppState>();
+    if (!appState.isPreview) {
+      appState.onboardingPhase = selectedStudy!.hasEligibilityCheck
+          ? StudyOnboardingPhase.eligibility
+          : StudyOnboardingPhase.terms;
+    }
+    context.pop();
+  }
+
   Future<void> onFinished() async {
     final appState = context.read<AppState>();
     // Defense in depth: never replace a started subject's active study.
@@ -96,6 +106,7 @@ class _InterventionSelectionScreenState
   @override
   Widget build(BuildContext context) {
     final nav = BottomOnboardingNavigation(
+      onBack: context.canPop() ? _goBack : null,
       onNext: selectedInterventionIds.length == 2 ? onFinished : null,
       progress: OnboardingProgress.forPage(
         context.read<AppState>(),

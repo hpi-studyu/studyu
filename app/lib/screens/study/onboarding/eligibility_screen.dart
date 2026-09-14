@@ -242,6 +242,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   @override
   Widget build(BuildContext context) {
     final nav = BottomOnboardingNavigation(
+      onBack: context.canPop() ? () => context.pop() : null,
       nextButtonKey: const ValueKey('eligibility_continue'),
       onNext: activeResult?.eligible == true || kDebugMode ? _finish : null,
       progress: OnboardingProgress.forPage(
