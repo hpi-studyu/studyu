@@ -172,17 +172,19 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }*/
 
   Future<void> _finish() async {
-    if (kDebugMode && activeResult?.eligible != true) {
-      activeResult = EligibilityResult(
-        activeResult?.answers ?? QuestionnaireState(),
-        eligible: true,
-      );
-    }
-    if (activeResult?.eligible == true && widget.onEligible != null) {
+    final result = kDebugMode && activeResult?.eligible != true
+        ? EligibilityResult(
+            activeResult?.answers ?? QuestionnaireState(),
+            eligible: true,
+          )
+        : activeResult;
+
+    if (result?.eligible == true && widget.onEligible != null) {
       await widget.onEligible!(context);
       return;
     }
-    context.pop(activeResult);
+
+    context.pop(result);
   }
 
   Widget _constructPassBanner() => MaterialBanner(
