@@ -244,7 +244,6 @@
   "report_outcome_neither": "Both interventions seem to have a negative effect on the outcome for you.",
   "report_outcome_one": "The intervention {intervention} seems to improve the outcome for you.",
   "report_axis_phase": "Phase",
-  "study_not_started": "Congratulations, you’ve joined the study! Come back tomorrow to begin. We’ll remind you when you have a task to complete.",
   "completed_study": "You completed your last study. Look at past reports or start a new study.",
   "app_support": "App support",
   "app_support_text": "Contact for problems or questions with the app",
@@ -705,5 +704,7 @@
   "please_select_interventions_why": "Why?",
   "recovery_phrase_description": "Save these 13 words to restore your account if you lose access to this device.",
   "recovery_phrase_why": "Why?",
-  "recovery_phrase_reason": "StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone."
+  "recovery_phrase_reason": "StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.",
+  "study_not_started_title": "You’ve joined the study",
+  "study_not_started_description": "Come back tomorrow to begin. We’ll remind you when there’s something to do."
 }

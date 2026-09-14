@@ -731,10 +731,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get report_axis_phase => 'Phase';
 
   @override
-  String get study_not_started =>
-      'Herzlichen Glückwunsch, Sie nehmen jetzt an der Studie teil! Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, wenn Sie eine Aufgabe erledigen müssen.';
-
-  @override
   String get completed_study =>
       'Sie haben Ihre letzte Studie abgeschlossen. Schauen Sie vergangene Ergebnisse an oder starten Sie eine neue Studie.';
 
@@ -1821,4 +1817,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get recovery_phrase_reason =>
       'StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen. Bewahre sie an einem sicheren Ort auf und teile sie niemals mit anderen.';
+
+  @override
+  String get study_not_started_title => 'Sie nehmen an der Studie teil';
+
+  @override
+  String get study_not_started_description =>
+      'Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt.';
 }

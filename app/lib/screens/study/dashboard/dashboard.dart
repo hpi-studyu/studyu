@@ -161,10 +161,10 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   Widget build(BuildContext context) {
     if (subject == null) {
-      if (!_redirectingToLoading) {
+      if (ModalRoute.of(context)?.isCurrent == true && !_redirectingToLoading) {
         _redirectingToLoading = true;
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
+          if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
           context.go('/${RouteNames.loading}');
         });
       }
@@ -461,22 +461,48 @@ class _DashboardScreenState extends State<DashboardScreen>
     if (subject!.completedStudy) {
       return const StudyFinishedPlaceholder();
     } else if (subject!.startedAt!.isAfter(DateTime.now())) {
+      final l10n = AppLocalizations.of(context)!;
       final theme = Theme.of(context);
       return Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.study_not_started,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.bold,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.flag_outlined,
+                    size: 26,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  l10n.study_not_started_title,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  l10n.study_not_started_description,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

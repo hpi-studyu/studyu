@@ -1388,12 +1388,6 @@ abstract class AppLocalizations {
   /// **'Phase'**
   String get report_axis_phase;
 
-  /// No description provided for @study_not_started.
-  ///
-  /// In en, this message translates to:
-  /// **'Congratulations, you’ve joined the study! Come back tomorrow to begin. We’ll remind you when you have a task to complete.'**
-  String get study_not_started;
-
   /// No description provided for @completed_study.
   ///
   /// In en, this message translates to:
@@ -3346,6 +3340,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.'**
   String get recovery_phrase_reason;
+
+  /// No description provided for @study_not_started_title.
+  ///
+  /// In en, this message translates to:
+  /// **'You’ve joined the study'**
+  String get study_not_started_title;
+
+  /// No description provided for @study_not_started_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow to begin. We’ll remind you when there’s something to do.'**
+  String get study_not_started_description;
 }
 
 class _AppLocalizationsDelegate
