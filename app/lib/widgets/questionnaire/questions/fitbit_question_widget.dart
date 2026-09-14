@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/date_time_preferences.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/string_extensions.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -103,6 +104,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
   }
 
   void _showSyncDetailsDialog(Map<String, Map<String, DateTime>> syncDates) {
+    final dateTimePreferences = context.read<DateTimePreferences?>();
     final earliestDates = syncDates['earliest']!;
     final latestDates = syncDates['latest']!;
     showDialog(
@@ -130,16 +132,24 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
                       Text(
                         AppLocalizations.of(context)!.fitbit_data_earliest_date(
                           //textual representation of the date
-                          DateFormat.yMMMd().add_jm().format(
-                            earliestDates[type]!,
-                          ),
+                          dateTimePreferences?.formatDateTime(
+                                context,
+                                earliestDates[type]!,
+                              ) ??
+                              DateFormat.yMMMd().add_jm().format(
+                                earliestDates[type]!,
+                              ),
                         ),
                       ),
                       Text(
                         AppLocalizations.of(context)!.fitbit_data_latest_date(
-                          DateFormat.yMMMd().add_jm().format(
-                            latestDates[type]!,
-                          ),
+                          dateTimePreferences?.formatDateTime(
+                                context,
+                                latestDates[type]!,
+                              ) ??
+                              DateFormat.yMMMd().add_jm().format(
+                                latestDates[type]!,
+                              ),
                         ),
                       ),
                     ],

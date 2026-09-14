@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/util/date_time_preferences.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -270,6 +273,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+    final dateTimePreferences = context.watch<DateTimePreferences?>();
     final validationError = _hasInteracted ? _getValidationError() : null;
 
     return Column(
@@ -282,9 +286,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             icon: const Icon(Icons.calendar_today),
             label: Text(
               _selectedDate != null
-                  ? MaterialLocalizations.of(
-                      context,
-                    ).formatCompactDate(_selectedDate!)
+                  ? dateTimePreferences?.formatDate(context, _selectedDate!) ??
+                        DateFormat('yyyy-MM-dd').format(_selectedDate!)
                   : (widget.question.isDateTime
                         ? localizations.date_picker_button_label_datetime
                         : localizations.date_picker_button_label),
@@ -304,7 +307,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
             icon: const Icon(Icons.access_time),
             label: Text(
               _selectedTime != null
-                  ? _selectedTime!.format(context)
+                  ? dateTimePreferences?.formatTime(context, _selectedTime!) ??
+                        _selectedTime!.format(context)
                   : (widget.question.isDateTime
                         ? localizations.time_picker_button_label_datetime
                         : localizations.time_picker_button_label),
