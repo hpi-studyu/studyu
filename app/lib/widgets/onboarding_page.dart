@@ -81,7 +81,7 @@ class OnboardingPage extends StatelessWidget {
                 child: bottomContent,
               ),
             ),
-          if (bottomNavigationBar != null) bottomNavigationBar!,
+          ?bottomNavigationBar,
         ],
       ),
     );

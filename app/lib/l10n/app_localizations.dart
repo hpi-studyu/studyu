@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcome_find_study_title.
   ///
   /// In en, this message translates to:
-  /// **'Discover what works for you'**
+  /// **'Find what works for you'**
   String get welcome_find_study_title;
 
   /// No description provided for @made_with_love_in_potsdam.

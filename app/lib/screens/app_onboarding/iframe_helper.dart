@@ -64,7 +64,7 @@ class IFrameHelper {
       jsonEncode({
         'type': 'previewStatus',
         'status': status,
-        if (message != null) 'message': message,
+        'message': ?message,
       }),
     );
   }

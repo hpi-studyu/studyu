@@ -723,7 +723,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         final preview = study_preview.Preview({
           ...?widget.queryParameters,
-          if (route != null) 'route': route,
+          'route': ?route,
         }, AppLanguage(AppLocalizations.supportedLocales));
         await preview.init();
         preview.study = state.selectedStudy;

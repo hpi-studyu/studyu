@@ -77,7 +77,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
-  String get welcome_find_study_title => 'Finde heraus, was bei dir wirkt';
+  String get welcome_find_study_title => 'Finde, was bei dir wirkt';
 
   @override
   String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';

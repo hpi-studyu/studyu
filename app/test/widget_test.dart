@@ -92,10 +92,8 @@ void main() {
     await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Discover what works for you'), findsOneWidget);
-    final heading = tester.widget<Text>(
-      find.text('Discover what works for you'),
-    );
+    expect(find.text('Find what works for you'), findsOneWidget);
+    final heading = tester.widget<Text>(find.text('Find what works for you'));
     expect(heading.style?.fontWeight, isNot(FontWeight.w600));
     expect(find.text('Made with ♥ in Potsdam'), findsOneWidget);
     expect(

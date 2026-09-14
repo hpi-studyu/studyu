@@ -166,7 +166,7 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.enter_recovery_phrase),
+        title: Text(AppLocalizations.of(context)!.restore_account),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

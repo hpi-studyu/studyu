@@ -147,7 +147,6 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         question is DateQuestion ||
         question is AnnotatedScaleQuestion ||
         // todo remove this when older studies are finished
-        // ignore: deprecated_member_use_from_same_package
         question is VisualAnalogueQuestion;
   }
 

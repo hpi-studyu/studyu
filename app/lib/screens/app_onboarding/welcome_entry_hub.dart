@@ -39,8 +39,8 @@ class WelcomeEntryHub extends StatelessWidget {
     );
     final tertiaryButtonStyle = TextButton.styleFrom(
       foregroundColor: theme.colorScheme.primary,
-      minimumSize: const Size(0, 40),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      minimumSize: const Size(0, 32),
+      padding: EdgeInsets.zero,
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: theme.textTheme.bodyMedium?.copyWith(fontSize: 15),
     );
@@ -77,7 +77,7 @@ class WelcomeEntryHub extends StatelessWidget {
                           onDoubleTap: onLogoDoubleTap,
                           child: Image.asset(logoAssetPath, height: 140),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 8),
                         Semantics(
                           header: true,
                           child: Text(
@@ -94,7 +94,7 @@ class WelcomeEntryHub extends StatelessWidget {
                         //   style: theme.textTheme.bodyLarge,
                         //   textAlign: TextAlign.center,
                         // ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 40),
                         FilledButton.icon(
                           key: const ValueKey('welcome_get_started'),
                           style: primaryButtonStyle,
@@ -118,7 +118,7 @@ class WelcomeEntryHub extends StatelessWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 2),
                         TextButton.icon(
                           key: const ValueKey('welcome_restore_account'),
                           style: tertiaryButtonStyle,
@@ -195,7 +195,9 @@ class WelcomeEntryHub extends StatelessWidget {
                           child: Text.rich(
                             TextSpan(
                               style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
+                                color: theme.colorScheme.onSurfaceVariant
+                                    .withValues(alpha: 0.65),
+                                fontSize: 11,
                               ),
                               children: [
                                 TextSpan(text: madeWithLove.first),

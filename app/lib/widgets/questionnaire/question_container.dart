@@ -82,7 +82,6 @@ class QuestionContainer extends StatelessWidget {
         );
       case final VisualAnalogueQuestion visualAnalogueQuestion:
         // todo remove this when older studies are finished
-        // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
           question: visualAnalogueQuestion,
           onDone: (answer) => onDone(answer, index),

@@ -190,7 +190,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Cancel'), findsOneWidget);
-    expect(find.text('Restore account'), findsNWidgets(2));
+    expect(find.text('Restore account'), findsNWidgets(3));
     expect(recoveryCalls, 0);
 
     await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
