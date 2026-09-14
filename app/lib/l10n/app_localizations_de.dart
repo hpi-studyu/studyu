@@ -77,7 +77,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
-  String get welcome_find_study_title => 'An einer Studie teilnehmen';
+  String get welcome_find_study_title => 'Finde heraus, was bei dir wirkt';
 
   @override
   String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';
@@ -87,7 +87,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
 
   @override
-  String get browse_public_studies => 'Öffentliche Studien';
+  String get browse_public_studies => 'Öffentliche Studien ansehen';
 
   @override
   String get welcome_returning_participant =>
@@ -189,7 +189,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      'Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen. Die Interventionen erfolgen in der Reihenfolge, in der Sie sie auswählen. Wenn Sie A vor B wählen, wird A zuerst durchgeführt.';
+      'Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen.';
 
   @override
   String get no_interventions_available => 'Keine Interventionen verfügbar.';
@@ -1808,4 +1808,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String date_picker_validation_max_date(String maxDate) {
     return 'Das Datum muss vor $maxDate liegen';
   }
+
+  @override
+  String get please_select_interventions_why => 'Warum?';
+
+  @override
+  String get recovery_phrase_description =>
+      'Speichere diese 13 Wörter, um dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.';
+
+  @override
+  String get recovery_phrase_why => 'Warum?';
+
+  @override
+  String get recovery_phrase_reason =>
+      'StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen. Bewahre sie an einem sicheren Ort auf und teile sie niemals mit anderen.';
 }

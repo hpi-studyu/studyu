@@ -8,6 +8,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
@@ -210,6 +211,23 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final nav = BottomOnboardingNavigation(
+      nextButtonKey: const ValueKey('eligibility_continue'),
+      onNext: activeResult?.eligible == true || kDebugMode ? _finish : null,
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.eligibility,
+      ),
+    );
+
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
+      });
+    }
+
     return Scaffold(
       key: const ValueKey('eligibility_screen'),
       appBar: AppBar(
@@ -236,14 +254,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           if (activeResult != null) _constructResultBanner(),
         ],
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        nextButtonKey: const ValueKey('eligibility_continue'),
-        onNext: activeResult?.eligible == true || kDebugMode ? _finish : null,
-        progress: OnboardingProgress.forPage(
-          context.read<AppState>(),
-          OnboardingStep.eligibility,
-        ),
-      ),
+      bottomNavigationBar: navNotifier != null ? null : nav,
     );
   }
 }

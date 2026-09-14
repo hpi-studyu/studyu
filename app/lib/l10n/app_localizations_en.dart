@@ -77,7 +77,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
-  String get welcome_find_study_title => 'Take part in a study';
+  String get welcome_find_study_title => 'Discover what works for you';
 
   @override
   String get made_with_love_in_potsdam => 'Made with ♥ in Potsdam';
@@ -87,7 +87,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose a public study or use an invitation.';
 
   @override
-  String get browse_public_studies => 'Public studies';
+  String get browse_public_studies => 'Browse public studies';
 
   @override
   String get welcome_returning_participant =>
@@ -189,7 +189,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first';
+      'The effects of these two interventions will be measured and compared during the study.';
 
   @override
   String get no_interventions_available => 'No interventions available.';
@@ -1785,4 +1785,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String date_picker_validation_max_date(String maxDate) {
     return 'Date must be before $maxDate';
   }
+
+  @override
+  String get please_select_interventions_why => 'Why?';
+
+  @override
+  String get recovery_phrase_description =>
+      'Save these 13 words to restore your account if you lose access to this device.';
+
+  @override
+  String get recovery_phrase_why => 'Why?';
+
+  @override
+  String get recovery_phrase_reason =>
+      'StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.';
 }

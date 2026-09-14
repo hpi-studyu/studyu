@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcome_find_study_title.
   ///
   /// In en, this message translates to:
-  /// **'Take part in a study'**
+  /// **'Discover what works for you'**
   String get welcome_find_study_title;
 
   /// No description provided for @made_with_love_in_potsdam.
@@ -233,7 +233,7 @@ abstract class AppLocalizations {
   /// No description provided for @browse_public_studies.
   ///
   /// In en, this message translates to:
-  /// **'Public studies'**
+  /// **'Browse public studies'**
   String get browse_public_studies;
 
   /// No description provided for @welcome_returning_participant.
@@ -407,7 +407,7 @@ abstract class AppLocalizations {
   /// No description provided for @please_select_interventions_description.
   ///
   /// In en, this message translates to:
-  /// **'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first'**
+  /// **'The effects of these two interventions will be measured and compared during the study.'**
   String get please_select_interventions_description;
 
   /// No description provided for @no_interventions_available.
@@ -3322,6 +3322,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Date must be before {maxDate}'**
   String date_picker_validation_max_date(String maxDate);
+
+  /// No description provided for @please_select_interventions_why.
+  ///
+  /// In en, this message translates to:
+  /// **'Why?'**
+  String get please_select_interventions_why;
+
+  /// No description provided for @recovery_phrase_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Save these 13 words to restore your account if you lose access to this device.'**
+  String get recovery_phrase_description;
+
+  /// No description provided for @recovery_phrase_why.
+  ///
+  /// In en, this message translates to:
+  /// **'Why?'**
+  String get recovery_phrase_why;
+
+  /// No description provided for @recovery_phrase_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU does not use passwords or email accounts. These words are the only way to restore your account. Store them somewhere safe and never share them with anyone.'**
+  String get recovery_phrase_reason;
 }
 
 class _AppLocalizationsDelegate

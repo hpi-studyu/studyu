@@ -8,6 +8,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -88,6 +89,22 @@ class _InterventionSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
+    final nav = BottomOnboardingNavigation(
+      onNext: selectedInterventionIds.length == 2 ? onFinished : null,
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.interventions,
+      ),
+    );
+
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -104,9 +121,19 @@ class _InterventionSelectionScreenState
                   text: AppLocalizations.of(
                     context,
                   )!.please_select_interventions,
-                  supportingText: AppLocalizations.of(
+                  actionLabel: AppLocalizations.of(
                     context,
-                  )!.please_select_interventions_description,
+                  )!.please_select_interventions_why,
+                  onAction: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.please_select_interventions_description,
+                      ),
+                    ),
+                  ),
                 ),
                 _buildInterventionSelectionList(),
                 const SizedBox(height: 16),
@@ -115,13 +142,7 @@ class _InterventionSelectionScreenState
           ),
         ),
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: selectedInterventionIds.length == 2 ? onFinished : null,
-        progress: OnboardingProgress.forPage(
-          context.read<AppState>(),
-          OnboardingStep.interventions,
-        ),
-      ),
+      bottomNavigationBar: navNotifier != null ? null : nav,
     );
   }
 }

@@ -9,7 +9,9 @@ import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/recovery_phrase_content.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
   final List<String>? initialPhrase;
@@ -46,16 +48,36 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    final nav = _buildNavigation();
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.recovery_phrase_header),
       ),
-      bottomNavigationBar: _buildNavigation(),
+      bottomNavigationBar: navNotifier != null ? null : nav,
       body: OnboardingPage(
         title: '',
         description: '',
-        descriptionWidget: const _RecoveryPhraseInfoCard(),
+        descriptionWidget: StudyOnboardingDescription(
+          text: localizations.recovery_phrase_description,
+          actionLabel: localizations.recovery_phrase_why,
+          onAction: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text(localizations.recovery_phrase_reason),
+            ),
+          ),
+        ),
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         child: _isRevealed
             ? RecoveryPhraseContent(
@@ -80,7 +102,7 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
     );
   }
 
-  Widget _buildNavigation() {
+  BottomOnboardingNavigation _buildNavigation() {
     return BottomOnboardingNavigation(
       hideBack: widget.continueToDashboard,
       onBack: widget.continueToDashboard
@@ -103,54 +125,6 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
       progress: OnboardingProgress.forPage(
         context.read<AppState>(),
         OnboardingStep.recovery,
-      ),
-    );
-  }
-}
-
-class _RecoveryPhraseInfoCard extends StatelessWidget {
-  const _RecoveryPhraseInfoCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-    final localizations = AppLocalizations.of(context)!;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withValues(alpha: 0.25),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.18)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.lock_outline, color: colorScheme.primary),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    localizations.recovery_phrase_save_hint,
-                    style: textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    localizations.recovery_phrase_save_warning,
-                    style: textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

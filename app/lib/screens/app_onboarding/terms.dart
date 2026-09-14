@@ -9,6 +9,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -55,6 +56,15 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
+    final nav = _buildNavigation();
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -73,7 +83,7 @@ class _TermsScreenState extends State<TermsScreen> {
               legalSection(context, appConfig),
         ),
       ),
-      bottomNavigationBar: _buildNavigation(),
+      bottomNavigationBar: navNotifier != null ? null : nav,
     );
   }
 
@@ -116,7 +126,7 @@ class _TermsScreenState extends State<TermsScreen> {
     );
   }
 
-  Widget _buildNavigation() {
+  BottomOnboardingNavigation _buildNavigation() {
     return BottomOnboardingNavigation(
       backButtonKey: const ValueKey('terms_back'),
       onBack: () {

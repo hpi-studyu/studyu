@@ -12,6 +12,7 @@ import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.da
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -110,6 +111,28 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     final appState = context.watch<AppState>();
     final returnToStudySelection = shouldReturnToStudySelection(appState);
 
+    final nav = BottomOnboardingNavigation(
+      backButtonKey: const ValueKey('study_overview_back'),
+      onBack: () {
+        if (!returnToStudySelection) {
+          context.pop();
+          return;
+        }
+        unawaited(_returnToStudySelection(appState));
+      },
+      nextButtonKey: const ValueKey('study_overview_continue'),
+      onNext: () => _continueOnboarding(context),
+      progress: OnboardingProgress.forPage(appState, OnboardingStep.overview),
+    );
+
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(OnboardingNavConfig.fromNav(nav));
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -138,19 +161,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        backButtonKey: const ValueKey('study_overview_back'),
-        onBack: () {
-          if (!returnToStudySelection) {
-            context.pop();
-            return;
-          }
-          unawaited(_returnToStudySelection(appState));
-        },
-        nextButtonKey: const ValueKey('study_overview_continue'),
-        onNext: () => _continueOnboarding(context),
-        progress: OnboardingProgress.forPage(appState, OnboardingStep.overview),
-      ),
+      bottomNavigationBar: navNotifier != null ? null : nav,
     );
   }
 }

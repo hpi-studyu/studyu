@@ -42,7 +42,7 @@ class StudyOnboardingDescription extends StatelessWidget {
                         onPressed: onAction,
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: const Size(48, 48),
+                          minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           textStyle: primaryStyle,
                         ),

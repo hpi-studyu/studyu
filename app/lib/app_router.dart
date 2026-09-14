@@ -28,6 +28,7 @@ import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/screens/study/report/report_history.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_core/core.dart';
 
 /// Route name constants
@@ -242,29 +243,8 @@ GoRouter createAppRouter({
         name: RouteNames.about,
         builder: (context, state) => const AboutScreen(),
       ),
-      GoRoute(
-        path: '/${RouteNames.terms}',
-        name: RouteNames.terms,
-        builder: (context, state) {
-          final arguments = state.extra;
-          return TermsScreen(
-            isPushed: arguments == true || arguments is TermsScreenArguments
-                ? true
-                : null,
-            onAccepted: arguments is TermsScreenArguments
-                ? arguments.onAccepted
-                : null,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/${RouteNames.recoveryPhrase}',
-        name: RouteNames.recoveryPhrase,
-        builder: (context, state) => RecoveryPhraseScreen(
-          continueToDashboard:
-              state.uri.queryParameters['next'] == RouteNames.dashboard,
-        ),
-      ),
+
+
       GoRoute(
         path: '/${RouteNames.restoreAccount}',
         name: RouteNames.restoreAccount,
@@ -275,25 +255,70 @@ GoRouter createAppRouter({
         name: RouteNames.studySelection,
         builder: (context, state) => const StudySelectionScreen(),
       ),
-      GoRoute(
-        path: '/${RouteNames.studyOverview}',
-        name: RouteNames.studyOverview,
-        builder: (context, state) => const StudyOverviewScreen(),
-      ),
-      GoRoute(
-        path: '/${RouteNames.interventionSelection}',
-        name: RouteNames.interventionSelection,
-        builder: (context, state) => const InterventionSelectionScreen(),
-      ),
-      GoRoute(
-        path: '/${RouteNames.journey}',
-        name: RouteNames.journey,
-        builder: (context, state) => const JourneyOverviewScreen(),
-      ),
-      GoRoute(
-        path: '/${RouteNames.consent}',
-        name: RouteNames.consent,
-        builder: (context, state) => const ConsentScreen(),
+      // Persistent onboarding shell: BottomOnboardingNavigation stays mounted
+      // while only the child page changes during the study-onboarding flow.
+      ShellRoute(
+        builder: (context, state, child) => OnboardingShell(child: child),
+        routes: [
+          GoRoute(
+            path: '/${RouteNames.studyOverview}',
+            name: RouteNames.studyOverview,
+            builder: (context, state) => const StudyOverviewScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.terms}',
+            name: RouteNames.terms,
+            builder: (context, state) {
+              final arguments = state.extra;
+              return TermsScreen(
+                isPushed: arguments == true || arguments is TermsScreenArguments
+                    ? true
+                    : null,
+                onAccepted: arguments is TermsScreenArguments
+                    ? arguments.onAccepted
+                    : null,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/${RouteNames.eligibilityCheck}',
+            name: RouteNames.eligibilityCheck,
+            builder: (context, state) {
+              final extra = state.extra;
+              final selectedStudy = context.read<AppState>().selectedStudy;
+              if (extra is EligibilityScreenArguments) {
+                return EligibilityScreen(
+                  study: extra.study ?? selectedStudy,
+                  onEligible: extra.onEligible,
+                );
+              }
+              return EligibilityScreen(study: extra as Study? ?? selectedStudy);
+            },
+          ),
+          GoRoute(
+            path: '/${RouteNames.interventionSelection}',
+            name: RouteNames.interventionSelection,
+            builder: (context, state) => const InterventionSelectionScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.journey}',
+            name: RouteNames.journey,
+            builder: (context, state) => const JourneyOverviewScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.consent}',
+            name: RouteNames.consent,
+            builder: (context, state) => const ConsentScreen(),
+          ),
+          GoRoute(
+            path: '/${RouteNames.recoveryPhrase}',
+            name: RouteNames.recoveryPhrase,
+            builder: (context, state) => RecoveryPhraseScreen(
+              continueToDashboard:
+                  state.uri.queryParameters['next'] == RouteNames.dashboard,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: '/${RouteNames.contact}',
@@ -341,21 +366,7 @@ GoRouter createAppRouter({
           return TaskScreen(taskInstance: taskInstance);
         },
       ),
-      GoRoute(
-        path: '/${RouteNames.eligibilityCheck}',
-        name: RouteNames.eligibilityCheck,
-        builder: (context, state) {
-          final extra = state.extra;
-          final selectedStudy = context.read<AppState>().selectedStudy;
-          if (extra is EligibilityScreenArguments) {
-            return EligibilityScreen(
-              study: extra.study ?? selectedStudy,
-              onEligible: extra.onEligible,
-            );
-          }
-          return EligibilityScreen(study: extra as Study? ?? selectedStudy);
-        },
-      ),
+
       GoRoute(
         path: '/${RouteNames.reportDetails}',
         name: RouteNames.reportDetails,

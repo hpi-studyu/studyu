@@ -11,6 +11,7 @@ import 'package:studyu_app/services/study_start_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -78,38 +79,59 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final nav = BottomOnboardingNavigation(
+      onNext: () => getConsentAndNavigateToDashboard(context),
+      progress: OnboardingProgress.forPage(
+        context.read<AppState>(),
+        OnboardingStep.journey,
+      ),
+    );
+
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(
+          OnboardingNavConfig.fromNav(nav).copyWith(
+            isLoading: _isStartingStudy,
+            loadingMessage: AppLocalizations.of(context)!.starting_study,
+          ),
+        );
+      });
+    }
+
+    final scaffold = Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations.of(context)!.your_journey),
+      ),
+      body: OnboardingPage(
+        title: '',
+        description: '',
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            StudyOnboardingDescription(
+              text: AppLocalizations.of(
+                context,
+              )!.journey_overview_description,
+            ),
+            Timeline(subject: subject),
+          ],
+        ),
+      ),
+      bottomNavigationBar: navNotifier != null ? null : nav,
+    );
+
+    // In shell mode the loading overlay is rendered by OnboardingShell so it
+    // covers the full screen including the persistent bottom nav.
+    if (navNotifier != null) return scaffold;
+
     return Stack(
       children: [
-        Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Text(AppLocalizations.of(context)!.your_journey),
-          ),
-          body: OnboardingPage(
-            title: '',
-            description: '',
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                StudyOnboardingDescription(
-                  text: AppLocalizations.of(
-                    context,
-                  )!.journey_overview_description,
-                ),
-                Timeline(subject: subject),
-              ],
-            ),
-          ),
-          bottomNavigationBar: BottomOnboardingNavigation(
-            onNext: () => getConsentAndNavigateToDashboard(context),
-            progress: OnboardingProgress.forPage(
-              context.read<AppState>(),
-              OnboardingStep.journey,
-            ),
-          ),
-        ),
+        scaffold,
         if (_isStartingStudy)
           LoadingOverlay(message: AppLocalizations.of(context)!.starting_study),
       ],

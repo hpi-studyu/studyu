@@ -19,10 +19,10 @@
   "description_part8": "Aber bitte beachten Sie Folgendes: Ergebnisse sind umso aussagekräftiger, je länger Sie aktiv an der Studie teilnehmen. Um systematische Fehler zu vermeiden, ist eine weitere Teilnahme nach Freischaltung der Ergebnisse ausgeschlossen. Daher werden wir Ihnen mit einem Fortschrittsbalken anzeigen, wie viele weitere Aufgaben mindestens noch absolviert werden müssen und wie sehr sie die Aussagekraft der Ergebnisse mit ein paar weiteren Wochen verbessern können.",
   "description_part9": "Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!",
   "get_started": "Los geht's",
-  "welcome_find_study_title": "An einer Studie teilnehmen",
+  "welcome_find_study_title": "Finde heraus, was bei dir wirkt",
   "made_with_love_in_potsdam": "Mit ♥ in Potsdam gemacht",
   "welcome_find_study_description": "Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.",
-  "browse_public_studies": "Öffentliche Studien",
+  "browse_public_studies": "Öffentliche Studien ansehen",
   "welcome_returning_participant": "Sie haben bereits mit StudyU an einer Studie teilgenommen?",
   "restore_studyu_account": "StudyU-Konto wiederherstellen",
   "show_onboarding_again": "Onboarding erneut ansehen",
@@ -52,7 +52,7 @@
   "please_answer_eligibility": "Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist",
   "intervention_selection_title": "Interventionsauswahl",
   "please_select_interventions": "Bitte wählen Sie zwei Interventionen für die Studie aus.",
-  "please_select_interventions_description": "Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen. Die Interventionen erfolgen in der Reihenfolge, in der Sie sie auswählen. Wenn Sie A vor B wählen, wird A zuerst durchgeführt.",
+  "please_select_interventions_description": "Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
   "task_already_completed": "Die Aufgabe wurde heute bereits erledigt",
@@ -682,5 +682,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "please_select_interventions_why": "Warum?",
+  "recovery_phrase_description": "Speichere diese 13 Wörter, um dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.",
+  "recovery_phrase_why": "Warum?",
+  "recovery_phrase_reason": "StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen. Bewahre sie an einem sicheren Ort auf und teile sie niemals mit anderen."
 }

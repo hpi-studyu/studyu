@@ -42,40 +42,33 @@ class StudyTile extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: contentPadding,
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            width: 24,
-            child: Icon(
-              MdiIconsHelper.fromString(iconName),
-              color: theme.primaryColor,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
+          Row(
+            children: [
+              SizedBox(
+                width: 24,
+                child: Icon(
+                  MdiIconsHelper.fromString(iconName),
+                  color: theme.primaryColor,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
                   title ?? '',
                   style: theme.textTheme.titleLarge!.copyWith(
                     color: theme.primaryColor,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                if (description != null && description!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      description!,
-                      style: theme.textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(width: 40),
+          if (description != null && description!.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(description!, style: theme.textTheme.bodyMedium),
+          ],
         ],
       ),
     );

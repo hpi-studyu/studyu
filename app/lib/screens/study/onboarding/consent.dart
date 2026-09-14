@@ -12,6 +12,7 @@ import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/loading_overlay.dart';
+import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -86,13 +87,37 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Text(AppLocalizations.of(context)!.consent),
-            actions: [
+    final appState = context.read<AppState>();
+    final nav = BottomOnboardingNavigation(
+      backLabel: AppLocalizations.of(context)!.decline,
+      backIcon: const Icon(Icons.close),
+      onBack: () => context.pop(false),
+      nextLabel: AppLocalizations.of(context)!.accept,
+      nextIcon: const Icon(Icons.check),
+      onNext: boxLogic.every((element) => element) || kDebugMode
+          ? _acceptConsent
+          : null,
+      progress: OnboardingProgress.forPage(appState, OnboardingStep.consent),
+    );
+
+    final navNotifier = OnboardingNavNotifier.maybeOf(context);
+    if (navNotifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        navNotifier.setConfig(
+          OnboardingNavConfig.fromNav(nav).copyWith(
+            isLoading: _isStarting,
+            loadingMessage: AppLocalizations.of(context)!.starting_study,
+          ),
+        );
+      });
+    }
+
+    final scaffold = Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations.of(context)!.consent),
+        actions: [
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () async {
@@ -183,21 +208,16 @@ class _ConsentScreenState extends State<ConsentScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: BottomOnboardingNavigation(
-            backLabel: AppLocalizations.of(context)!.decline,
-            backIcon: const Icon(Icons.close),
-            onBack: () => context.pop(false),
-            nextLabel: AppLocalizations.of(context)!.accept,
-            nextIcon: const Icon(Icons.check),
-            onNext: boxLogic.every((element) => element) || kDebugMode
-                ? _acceptConsent
-                : null,
-            progress: OnboardingProgress.forPage(
-              context.read<AppState>(),
-              OnboardingStep.consent,
-            ),
-          ),
-        ),
+          bottomNavigationBar: navNotifier != null ? null : nav,
+    );
+
+    // In shell mode the loading overlay is rendered by OnboardingShell so it
+    // covers the full screen including the persistent bottom nav.
+    if (navNotifier != null) return scaffold;
+
+    return Stack(
+      children: [
+        scaffold,
         if (_isStarting)
           LoadingOverlay(message: AppLocalizations.of(context)!.starting_study),
       ],

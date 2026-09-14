@@ -20,53 +20,44 @@ Widget _wrap(Widget child) => ChangeNotifierProvider.value(
 );
 
 void main() {
-  testWidgets('reveals the recovery phrase and its save confirmation on demand', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _wrap(const RecoveryPhraseScreen(initialPhrase: ['first', 'second'])),
-    );
+  testWidgets(
+    'reveals the recovery phrase and its save confirmation on demand',
+    (tester) async {
+      await tester.pumpWidget(
+        _wrap(const RecoveryPhraseScreen(initialPhrase: ['first', 'second'])),
+      );
 
-    expect(find.text('Show Recovery Phrase'), findsOneWidget);
-    expect(find.text('first'), findsNothing);
-    expect(
-      find.text(
-        'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.',
-      ),
-      findsNothing,
-    );
+      expect(find.text('Show Recovery Phrase'), findsOneWidget);
+      expect(find.text('first'), findsNothing);
+      expect(find.widgetWithText(TextButton, 'Why?'), findsOneWidget);
 
-    await tester.tap(find.text('Show Recovery Phrase'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Show Recovery Phrase'));
+      await tester.pumpAndSettle();
 
-    expect(find.text('first\nsecond'), findsOneWidget);
-    expect(
-      find.text(
-        'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.',
-      ),
-      findsOneWidget,
-    );
-    expect(find.byType(CheckboxListTile), findsOneWidget);
+      expect(find.text('first\nsecond'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Why?'), findsOneWidget);
+      expect(find.byType(CheckboxListTile), findsOneWidget);
 
-    await tester.ensureVisible(find.byType(Checkbox));
-    await tester.tap(find.byType(Checkbox));
-    await tester.pump();
-    expect(
-      tester
-          .widget<TextButton>(find.widgetWithText(TextButton, 'Next'))
-          .onPressed,
-      isNull,
-    );
+      await tester.ensureVisible(find.byType(Checkbox));
+      await tester.tap(find.byType(Checkbox));
+      await tester.pump();
+      expect(
+        tester
+            .widget<TextButton>(find.widgetWithText(TextButton, 'Next'))
+            .onPressed,
+        isNull,
+      );
 
-    await tester.tap(find.byType(Checkbox));
-    await tester.pump();
-    expect(
-      tester
-          .widget<TextButton>(find.widgetWithText(TextButton, 'Next'))
-          .onPressed,
-      isNotNull,
-    );
-  });
+      await tester.tap(find.byType(Checkbox));
+      await tester.pump();
+      expect(
+        tester
+            .widget<TextButton>(find.widgetWithText(TextButton, 'Next'))
+            .onPressed,
+        isNotNull,
+      );
+    },
+  );
 
   testWidgets('study launch confirmation opens the dashboard', (tester) async {
     var clearedSubjectId = '';
