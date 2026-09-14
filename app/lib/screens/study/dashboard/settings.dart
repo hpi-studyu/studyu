@@ -226,7 +226,7 @@ class _SettingsState extends State<Settings> {
                           );
                           await dialogRoute?.completed;
                           if (!context.mounted || completed != true) return;
-                          context.go('/${RouteNames.studySelection}');
+                          context.go('/${RouteNames.welcome}');
                         },
                       ),
                       const SizedBox(height: 12),
