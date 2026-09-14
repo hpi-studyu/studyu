@@ -38,14 +38,18 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       appState.activeSubject = null;
       await PendingDeepLinkService.clear(appState);
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context)!.user_did_not_give_consent,
+      if (consentGiven == false) {
+        context.go('/${RouteNames.welcome}');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.user_did_not_give_consent,
+            ),
           ),
-        ),
-      );
-      context.go('/${RouteNames.studySelection}');
+        );
+        context.go('/${RouteNames.studySelection}');
+      }
     }
   }
 

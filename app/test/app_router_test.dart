@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
@@ -12,6 +13,20 @@ import 'package:studyu_core/core.dart';
 import 'package:supabase/supabase.dart';
 
 void main() {
+  setUpAll(() {
+    final supabase = SupabaseClient(
+      'http://localhost',
+      'anon',
+      authOptions: const AuthClientOptions(autoRefreshToken: false),
+    );
+    setEnv(
+      'http://localhost',
+      'anon',
+      supabaseClient: supabase,
+      envAppDeepLinkScheme: 'studyu-app://',
+    );
+  });
+
   test('internal browser routes initialize before reading empty app state', () {
     final appState = AppState();
     final router = createAppRouter(
@@ -44,17 +59,6 @@ void main() {
   testWidgets('invalid study routes stay on unavailable screen', (
     tester,
   ) async {
-    final supabase = SupabaseClient(
-      'http://localhost',
-      'anon',
-      authOptions: const AuthClientOptions(autoRefreshToken: false),
-    );
-    setEnv(
-      'http://localhost',
-      'anon',
-      supabaseClient: supabase,
-      envAppDeepLinkScheme: 'studyu-app://',
-    );
     final study = Study('study', 'user')
       ..interventions = [Intervention('intervention', 'Intervention')];
     final appState = AppState()..selectedStudy = study;
@@ -100,5 +104,61 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(StudyUnavailableScreen), findsOneWidget);
     expect(find.byType(JourneyOverviewScreen), findsNothing);
+  });
+
+  testWidgets('declining consent returns to welcome', (tester) async {
+    const storageChannel = MethodChannel(
+      'plugins.it_nomads.com/flutter_secure_storage',
+    );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(storageChannel, (call) async => null);
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(storageChannel, null),
+    );
+
+    final study = Study('study', 'user')
+      ..interventions = [
+        Intervention('intervention-a', 'Intervention A'),
+        Intervention('intervention-b', 'Intervention B'),
+      ]
+      ..consent = [ConsentItem('consent')..title = 'Consent'];
+    final appState = AppState()
+      ..activeSubject = StudySubject.fromStudy(study, 'user', [
+        'intervention-a',
+        'intervention-b',
+      ], null);
+    final router = createAppRouter(
+      queryParameters: const {},
+      initialLocation: '/${RouteNames.journey}',
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: appState,
+        child: MaterialApp.router(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale('en'),
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.navigate_next));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.close), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(find.byType(JourneyOverviewScreen), findsNothing);
+    expect(
+      router.routerDelegate.currentConfiguration.uri.path,
+      '/${RouteNames.welcome}',
+    );
   });
 }

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
 import 'package:studyu_core/core.dart';
 
@@ -38,7 +39,11 @@ void main() {
       ..study = study;
     final state = AppState()
       ..activeSubject = subject
-      ..setPendingDeepLink(study: study, inviteCode: 'invite-1');
+      ..setPendingDeepLink(
+        study: study,
+        inviteCode: 'invite-1',
+        preselectedInterventionIds: ['intervention-1'],
+      );
     final router = GoRouter(
       initialLocation: '/${RouteNames.journey}',
       routes: [
@@ -56,8 +61,8 @@ void main() {
           ),
         ),
         GoRoute(
-          path: '/${RouteNames.studySelection}',
-          builder: (_, _) => const Scaffold(body: Text('Study selection')),
+          path: '/${RouteNames.welcome}',
+          builder: (_, _) => const WelcomeScreen(),
         ),
       ],
     );
@@ -81,11 +86,18 @@ void main() {
     await tester.tap(find.text('Decline consent'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Study selection'), findsOneWidget);
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(
+      router.routerDelegate.currentConfiguration.uri.path,
+      '/${RouteNames.welcome}',
+    );
+    expect(find.byKey(const ValueKey('invite_dialog_accept')), findsNothing);
     expect(state.activeSubject, isNull);
     expect(state.selectedStudy, isNull);
     expect(state.inviteCode, isNull);
     expect(state.preselectedInterventionIds, isNull);
+    expect(state.pendingDeepLinkStudyId, isNull);
+    expect(state.pendingDeepLinkInviteCode, isNull);
     expect(state.hasPendingDeepLink, isFalse);
   });
 }
