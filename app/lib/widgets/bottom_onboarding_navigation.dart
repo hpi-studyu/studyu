@@ -10,6 +10,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final bool hideNext;
   final bool hideBack;
   final bool backEnabled;
+  final bool showNextIcon;
+  final bool showBackIcon;
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
@@ -25,6 +27,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.hideNext = false,
     this.hideBack = false,
     this.backEnabled = true,
+    this.showNextIcon = true,
+    this.showBackIcon = true,
     this.nextIcon,
     this.backIcon,
     this.progress,
@@ -64,7 +68,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 onPressed: canNavigateBack ? handleBack : null,
                 child: Row(
                   children: [
-                    backIcon ?? const Icon(Icons.navigate_before),
+                    if (showBackIcon)
+                      backIcon ?? const Icon(Icons.navigate_before),
                     Text(backLabel ?? AppLocalizations.of(context)!.back),
                   ],
                 ),
@@ -87,7 +92,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(nextLabel ?? AppLocalizations.of(context)!.next),
-                    nextIcon ?? const Icon(Icons.navigate_next),
+                    if (showNextIcon)
+                      nextIcon ?? const Icon(Icons.navigate_next),
                   ],
                 ),
               ),

@@ -91,10 +91,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
     final appState = context.read<AppState>();
     final nav = BottomOnboardingNavigation(
       backLabel: AppLocalizations.of(context)!.decline,
-      backIcon: const Icon(Icons.close),
+      showBackIcon: false,
       onBack: () => context.pop(false),
       nextLabel: AppLocalizations.of(context)!.accept,
-      nextIcon: const Icon(Icons.check),
+      showNextIcon: false,
       onNext: boxLogic.every((element) => element) || kDebugMode
           ? _acceptConsent
           : null,

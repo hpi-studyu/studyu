@@ -11,6 +11,8 @@ class OnboardingNavConfig {
   final bool hideNext;
   final bool hideBack;
   final bool backEnabled;
+  final bool showNextIcon;
+  final bool showBackIcon;
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
@@ -26,6 +28,8 @@ class OnboardingNavConfig {
     this.hideNext = false,
     this.hideBack = false,
     this.backEnabled = true,
+    this.showNextIcon = true,
+    this.showBackIcon = true,
     this.nextIcon,
     this.backIcon,
     this.progress,
@@ -45,6 +49,8 @@ class OnboardingNavConfig {
        hideNext = navigation.hideNext,
        hideBack = navigation.hideBack,
        backEnabled = navigation.backEnabled,
+       showNextIcon = navigation.showNextIcon,
+       showBackIcon = navigation.showBackIcon,
        nextIcon = navigation.nextIcon,
        backIcon = navigation.backIcon,
        progress = navigation.progress,
@@ -59,6 +65,8 @@ class OnboardingNavConfig {
     hideNext: hideNext,
     hideBack: hideBack,
     backEnabled: backEnabled,
+    showNextIcon: showNextIcon,
+    showBackIcon: showBackIcon,
     nextIcon: nextIcon,
     backIcon: backIcon,
     progress: progress,
@@ -72,6 +80,8 @@ class OnboardingNavConfig {
     hideNext: hideNext,
     hideBack: hideBack,
     backEnabled: false,
+    showNextIcon: showNextIcon,
+    showBackIcon: showBackIcon,
     nextIcon: nextIcon,
     backIcon: backIcon,
     progress: progress,

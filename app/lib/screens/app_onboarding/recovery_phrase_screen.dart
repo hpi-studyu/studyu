@@ -121,10 +121,13 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
       nextLabel: widget.continueToDashboard
           ? AppLocalizations.of(context)!.continue_to_study
           : null,
-      progress: OnboardingProgress.forPage(
-        context.read<AppState>(),
-        OnboardingStep.recovery,
-      ),
+      showNextIcon: false,
+      progress: widget.continueToDashboard
+          ? null
+          : OnboardingProgress.forPage(
+              context.read<AppState>(),
+              OnboardingStep.recovery,
+            ),
     );
   }
 }
