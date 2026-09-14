@@ -6,6 +6,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/widgets/onboarding_page.dart';
+import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 
 class RestoreAccountScreen extends StatefulWidget {
@@ -180,9 +181,11 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
       body: OnboardingPage(
         title: '',
         description: '',
-        descriptionWidget: const _RestoreAccountInfoCard(),
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.restore_account_description,
+        ),
         maxWidth: 900,
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -268,40 +271,6 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RestoreAccountInfoCard extends StatelessWidget {
-  const _RestoreAccountInfoCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withValues(alpha: 0.25),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.18)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.lock_outline, color: colorScheme.primary),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                AppLocalizations.of(context)!.restore_account_description,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
-          ],
         ),
       ),
     );

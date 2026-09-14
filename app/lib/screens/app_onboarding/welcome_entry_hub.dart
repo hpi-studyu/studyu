@@ -28,6 +28,7 @@ class WelcomeEntryHub extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final madeWithLove = l10n.made_with_love_in_potsdam.split('♥');
     final primaryButtonStyle = FilledButton.styleFrom(
       minimumSize: const Size.fromHeight(56),
       textStyle: theme.textTheme.titleMedium,
@@ -38,7 +39,7 @@ class WelcomeEntryHub extends StatelessWidget {
     );
     final tertiaryButtonStyle = TextButton.styleFrom(
       foregroundColor: theme.colorScheme.primary,
-      minimumSize: const Size(0, 48),
+      minimumSize: const Size(0, 40),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: theme.textTheme.bodyMedium?.copyWith(fontSize: 15),
@@ -109,9 +110,7 @@ class WelcomeEntryHub extends StatelessWidget {
                           onPressed: onUseInviteCode,
                           label: Text(l10n.invite_code_button),
                         ),
-                        const SizedBox(height: 32),
-                        const Divider(),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 24),
                         Text(
                           l10n.welcome_returning_participant,
                           style: theme.textTheme.titleSmall?.copyWith(
@@ -119,7 +118,7 @@ class WelcomeEntryHub extends StatelessWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 4),
                         TextButton.icon(
                           key: const ValueKey('welcome_restore_account'),
                           style: tertiaryButtonStyle,
@@ -193,10 +192,22 @@ class WelcomeEntryHub extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 16, bottom: 8),
-                          child: Text(
-                            l10n.made_with_love_in_potsdam,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                          child: Text.rich(
+                            TextSpan(
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              children: [
+                                TextSpan(text: madeWithLove.first),
+                                TextSpan(
+                                  text: '♥',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.error,
+                                  ),
+                                ),
+                                if (madeWithLove.length > 1)
+                                  TextSpan(text: madeWithLove.last),
+                              ],
                             ),
                             textAlign: TextAlign.center,
                           ),

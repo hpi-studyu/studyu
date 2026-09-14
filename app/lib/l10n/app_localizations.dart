@@ -1241,7 +1241,7 @@ abstract class AppLocalizations {
   /// No description provided for @private_study_invite_code.
   ///
   /// In en, this message translates to:
-  /// **'Join a study with an invite code'**
+  /// **'Enter invite code'**
   String get private_study_invite_code;
 
   /// No description provided for @private_study_invite_code_description.

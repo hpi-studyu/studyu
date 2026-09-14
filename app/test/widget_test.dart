@@ -110,10 +110,7 @@ void main() {
       find.widgetWithText(OutlinedButton, 'Join with an invite code'),
       findsOneWidget,
     );
-    expect(
-      find.widgetWithText(TextButton, 'Restore account'),
-      findsOneWidget,
-    );
+    expect(find.widgetWithText(TextButton, 'Restore account'), findsOneWidget);
   });
 
   testWidgets('invite dialog returns after backing out of study overview', (
@@ -210,7 +207,7 @@ void main() {
 
     expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.byType(InviteCodeDialog), findsOneWidget);
-    expect(find.text('Join a study with an invite code'), findsOneWidget);
+    expect(find.text('Enter invite code'), findsOneWidget);
     expect(
       find.text('Enter the code shared by your study team.'),
       findsOneWidget,

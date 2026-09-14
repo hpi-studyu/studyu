@@ -646,8 +646,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get invite_code_button => 'Mit einem Einladungscode beitreten';
 
   @override
-  String get private_study_invite_code =>
-      'Mit Einladungscode an einer Studie teilnehmen';
+  String get private_study_invite_code => 'Einladungscode eingeben';
 
   @override
   String get private_study_invite_code_description =>

@@ -637,7 +637,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invite_code_button => 'Join with an invite code';
 
   @override
-  String get private_study_invite_code => 'Join a study with an invite code';
+  String get private_study_invite_code => 'Enter invite code';
 
   @override
   String get private_study_invite_code_description =>
