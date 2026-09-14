@@ -72,6 +72,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<void> _showInviteCodeDialog() => showDialog<void>(
     context: context,
+    animationStyle: const AnimationStyle(
+      duration: Duration(milliseconds: 220),
+      reverseDuration: Duration(milliseconds: 140),
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    ),
     builder: (_) => const InviteCodeDialog(),
   );
 
