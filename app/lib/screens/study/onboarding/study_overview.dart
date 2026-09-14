@@ -37,13 +37,27 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<void> _continueOnboarding(BuildContext context) async {
+    final appState = context.read<AppState>();
+    // The terms phase is entered only through this action.
+    appState.onboardingPhase = StudyOnboardingPhase.terms;
     await context.push<void>(
       '/${RouteNames.terms}',
       extra: TermsScreenArguments(onAccepted: _continueAfterTerms),
     );
+    // When the terms screen is popped, the enrollment restarts at the
+    // overview phase (unless a later phase has since taken over).
+    if (appState.onboardingPhase == StudyOnboardingPhase.terms) {
+      appState.onboardingPhase = StudyOnboardingPhase.overview;
+    }
   }
 
   Future<void> _continueAfterTerms(BuildContext context) async {
+    // Only the terms-accept callback advances enrollment past the terms
+    // phase; informational `/terms` access carries no callback.
+    if (context.read<AppState>().onboardingPhase !=
+        StudyOnboardingPhase.terms) {
+      return;
+    }
     if (study!.hasEligibilityCheck) {
       await navigateToEligibilityCheck(context);
     } else {
@@ -53,6 +67,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
+    // Defense in depth: never replace a started subject's active study.
+    if (!appState.isPreview && appState.activeSubject?.startedAt != null) {
+      context.go('/${RouteNames.dashboard}');
+      return;
+    }
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy!,
@@ -60,6 +79,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         appState.preselectedInterventionIds!,
         appState.inviteCode,
       );
+      appState.onboardingPhase = StudyOnboardingPhase.journey;
       context.push('/${RouteNames.journey}');
     } else if (study!.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
@@ -69,13 +89,18 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         study!.interventions.map((i) => i.id).toList(),
         appState.inviteCode,
       );
+      appState.onboardingPhase = StudyOnboardingPhase.journey;
       context.push('/${RouteNames.journey}');
     } else {
+      appState.onboardingPhase = StudyOnboardingPhase.interventionSelection;
       context.push('/${RouteNames.interventionSelection}');
     }
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
+    final appState = context.read<AppState>();
+    // The eligibility phase is entered only after terms were accepted.
+    appState.onboardingPhase = StudyOnboardingPhase.eligibility;
     await context.push<void>(
       '/${RouteNames.eligibilityCheck}',
       extra: EligibilityScreenArguments(
@@ -83,6 +108,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         onEligible: navigateToJourney,
       ),
     );
+    // When the eligibility check is popped, the participant is back on
+    // the terms screen (unless a later phase has since taken over).
+    if (appState.onboardingPhase == StudyOnboardingPhase.eligibility) {
+      appState.onboardingPhase = StudyOnboardingPhase.terms;
+    }
   }
 
   void _clearStudySelection(AppState appState) {
@@ -90,7 +120,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       ..selectedStudy = null
       ..selectedInterventions = null
       ..inviteCode = null
-      ..preselectedInterventionIds = null;
+      ..preselectedInterventionIds = null
+      ..onboardingPhase = null;
   }
 
   Future<void> _returnToStudySelection(AppState appState) async {

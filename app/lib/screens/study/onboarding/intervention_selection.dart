@@ -78,12 +78,18 @@ class _InterventionSelectionScreenState
 
   Future<void> onFinished() async {
     final appState = context.read<AppState>();
+    // Defense in depth: never replace a started subject's active study.
+    if (!appState.isPreview && appState.activeSubject?.startedAt != null) {
+      context.go('/${RouteNames.dashboard}');
+      return;
+    }
     appState.activeSubject = StudySubject.fromStudy(
       appState.selectedStudy!,
       Supabase.instance.client.auth.currentUser!.id,
       selectedInterventionIds,
       appState.inviteCode,
     );
+    appState.onboardingPhase = StudyOnboardingPhase.journey;
     context.push('/${RouteNames.journey}');
   }
 

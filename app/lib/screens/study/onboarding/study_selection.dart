@@ -20,9 +20,17 @@ Future<void> navigateToStudyOverview(
   String? inviteCode,
   List<String>? preselectedIds,
 }) async {
-  context.read<AppState>().preselectedInterventionIds = preselectedIds;
-  context.read<AppState>().inviteCode = inviteCode;
-  context.read<AppState>().selectedStudy = study;
+  final state = context.read<AppState>()
+    ..preselectedInterventionIds = preselectedIds
+    ..inviteCode = inviteCode
+    ..selectedStudy = study
+    // Reset any state left over from an abandoned enrollment.
+    ..onboardingPhase = null;
+  // Selecting a different study abandons a draft (un-started) subject;
+  // a started subject can never reach this flow.
+  if (!state.isPreview && state.activeSubject?.startedAt == null) {
+    state.activeSubject = null;
+  }
   context.push('/${RouteNames.studyOverview}');
 }
 

@@ -60,6 +60,7 @@ class RouteNames {
   static const String performanceDetails = 'performanceDetails';
   static const String task = 'task';
   static const String eligibilityCheck = 'eligibilityCheck';
+  static const String kickoff = 'kickoff';
   static const String capturePicture = 'capturePicture';
   static const String invite = 'invite';
   static const String study = 'study';
@@ -68,16 +69,78 @@ class RouteNames {
 bool isStudyAvailableForTesting(Study study) =>
     study.interventions.length >= StudySchedule.numberOfInterventions;
 
+/// Enrollment routes a started participant must not re-enter. `/terms`
+/// stays readable as an informational document.
+const Set<String> _enrollmentRoutePaths = <String>{
+  '/${RouteNames.welcome}',
+  '/${RouteNames.studySelection}',
+  '/${RouteNames.studyOverview}',
+  '/${RouteNames.interventionSelection}',
+  '/${RouteNames.eligibilityCheck}',
+  '/${RouteNames.journey}',
+  '/${RouteNames.consent}',
+  '/${RouteNames.kickoff}',
+};
+
+/// Phase guarded by each study onboarding route.
+StudyOnboardingPhase? _phaseForRoute(String path) => switch (path) {
+  '/${RouteNames.studyOverview}' => StudyOnboardingPhase.overview,
+  '/${RouteNames.terms}' => StudyOnboardingPhase.terms,
+  '/${RouteNames.eligibilityCheck}' => StudyOnboardingPhase.eligibility,
+  '/${RouteNames.interventionSelection}' =>
+    StudyOnboardingPhase.interventionSelection,
+  '/${RouteNames.journey}' => StudyOnboardingPhase.journey,
+  '/${RouteNames.consent}' => StudyOnboardingPhase.consent,
+  _ => null,
+};
+
+/// Canonical route for each onboarding phase.
+String onboardingStepRoute(StudyOnboardingPhase? phase) => switch (phase) {
+  StudyOnboardingPhase.overview => '/${RouteNames.studyOverview}',
+  StudyOnboardingPhase.terms => '/${RouteNames.terms}',
+  StudyOnboardingPhase.eligibility => '/${RouteNames.eligibilityCheck}',
+  StudyOnboardingPhase.interventionSelection =>
+    '/${RouteNames.interventionSelection}',
+  StudyOnboardingPhase.journey => '/${RouteNames.journey}',
+  StudyOnboardingPhase.consent => '/${RouteNames.consent}',
+  StudyOnboardingPhase.complete => '/${RouteNames.dashboard}',
+  null => '/${RouteNames.loading}',
+};
+
 String? routePrerequisiteRedirect(
   String path,
   Object? extra,
   AppState appState,
 ) {
   final activeSubject = appState.activeSubject;
-  if (path == '/${RouteNames.welcome}' &&
-      activeSubject?.startedAt != null &&
-      isStudyAvailableForTesting(activeSubject!.study)) {
-    return '/${RouteNames.dashboard}';
+  final started = activeSubject?.startedAt != null;
+
+  // Enrollment-phase restrictions apply only to the non-preview flow;
+  // preview mode intentionally retains direct access to onboarding routes.
+  if (!appState.isPreview) {
+    // A started participant must not re-enter any enrollment route.
+    if (started && _enrollmentRoutePaths.contains(path)) {
+      return '/${RouteNames.dashboard}';
+    }
+
+    final phase = appState.effectiveOnboardingPhase;
+    if (phase != null) {
+      // `/welcome` must not stay open once a participant has an active
+      // subject: the entry hub must not abandon or replace an in-progress
+      // enrollment. A pending invite deep link has no subject yet and
+      // still enters through the welcome dialog.
+      if (path == '/${RouteNames.welcome}' && activeSubject != null) {
+        return onboardingStepRoute(phase);
+      }
+
+      // An enrolling participant may open the current phase route and
+      // navigate back to an earlier phase; every forward jump redirects
+      // to the canonical current step.
+      final routePhase = _phaseForRoute(path);
+      if (routePhase != null && routePhase.index > phase.index) {
+        return onboardingStepRoute(phase);
+      }
+    }
   }
 
   final hasPrerequisite = switch (path) {
@@ -93,10 +156,29 @@ String? routePrerequisiteRedirect(
     '/${RouteNames.appSettings}' ||
     '/${RouteNames.studyInformation}' ||
     '/${RouteNames.reportHistory}' => appState.activeSubject?.startedAt != null,
+    // Route extras cannot be supplied through a URL, so a missing or
+    // mismatched extra means the route was opened outside the app flow.
+    '/${RouteNames.task}' => extra is TaskInstance,
+    '/${RouteNames.reportDetails}' =>
+      // Historical reports are loaded per user id
+      // (StudySubject.getStudyHistory), so matching the signed-in
+      // participant's user id is the trustworthy ownership invariant.
+      appState.activeSubject?.startedAt != null &&
+          extra is StudySubject &&
+          extra.userId == appState.activeSubject!.userId,
+    '/${RouteNames.capturePicture}' =>
+      appState.activeSubject?.startedAt != null &&
+          extra is Map<String, String> &&
+          extra['studyId'] == appState.activeSubject!.studyId &&
+          extra['userId'] == appState.activeSubject!.userId,
     _ => true,
   };
 
-  return hasPrerequisite ? null : '/${RouteNames.loading}';
+  return hasPrerequisite
+      ? null
+      : appState.activeSubject?.startedAt != null
+      ? '/${RouteNames.dashboard}'
+      : '/${RouteNames.loading}';
 }
 
 String initialRouteFromPlatformRoute(String platformRoute) {
@@ -129,6 +211,12 @@ GoRouter createAppRouter({
   return GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,
+    errorBuilder: (context, state) {
+      // Unknown routes restart through the loading flow so the canonical
+      // router (with its availability and prerequisite guards) decides
+      // the next screen instead of stranding the user on an error page.
+      return const LoadingScreen();
+    },
     redirect: (context, state) {
       if (state.uri.scheme == appScheme) {
         if (state.uri.host == 'invite') {
@@ -243,7 +331,6 @@ GoRouter createAppRouter({
         name: RouteNames.about,
         builder: (context, state) => const AboutScreen(),
       ),
-
 
       GoRoute(
         path: '/${RouteNames.restoreAccount}',

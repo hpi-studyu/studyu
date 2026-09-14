@@ -24,6 +24,22 @@ class StudyStartService {
     BuildContext context,
     StudySubject subject,
   ) async {
+    final state = context.read<AppState>();
+    final expectedPhase = subject.study.hasConsentCheck
+        ? StudyOnboardingPhase.consent
+        : StudyOnboardingPhase.journey;
+    // Defense in depth: only the current enrollment step may start an
+    // un-started subject. The route policy normally enforces this first.
+    if (!state.isPreview &&
+        (subject.startedAt != null ||
+            state.effectiveOnboardingPhase != expectedPhase)) {
+      StudyULogger.warning('Study start skipped: invalid enrollment state');
+      if (context.mounted) {
+        context.go(onboardingStepRoute(state.effectiveOnboardingPhase));
+      }
+      return false;
+    }
+
     try {
       // Start study at the next day
       final now = DateTime.now();

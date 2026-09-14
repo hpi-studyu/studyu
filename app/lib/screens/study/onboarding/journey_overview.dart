@@ -48,10 +48,12 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       // loading state in place and navigates directly, avoiding a
       // pop-then-push route animation. This await therefore only completes
       // on decline or when the user leaves the consent screen.
+      context.read<AppState>().onboardingPhase = StudyOnboardingPhase.consent;
       final consentGiven = await context.push<bool>('/${RouteNames.consent}');
       if (!context.mounted) return;
       final appState = context.read<AppState>();
       appState.activeSubject = null;
+      appState.onboardingPhase = null;
       await PendingDeepLinkService.clear(appState);
       if (!context.mounted) return;
       if (consentGiven == false) {

@@ -369,6 +369,9 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
                   );
                   if (context.mounted) await cancelNotifications(context);
                   if (context.mounted) {
+                    // Clear the in-memory active study state so the
+                    // participant can legitimately enroll in a new study.
+                    context.read<AppState>().clearAccountState();
                     context.go('/${RouteNames.studySelection}');
                   }
                 }
@@ -478,6 +481,9 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                   );
                   if (context.mounted) await cancelNotifications(context);
                   if (context.mounted) {
+                    // Clear the in-memory active study state so the
+                    // participant can legitimately enroll in a new study.
+                    context.read<AppState>().clearAccountState();
                     context.go('/${RouteNames.welcome}');
                   }
                 }
