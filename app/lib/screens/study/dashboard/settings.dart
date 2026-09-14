@@ -72,9 +72,7 @@ class _SettingsState extends State<Settings> {
               // General section header
               Text(
                 AppLocalizations.of(context)!.general_section,
-                style: theme.textTheme.titleMedium!.copyWith(
-                  color: theme.primaryColor,
-                ),
+                style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
 
@@ -117,9 +115,7 @@ class _SettingsState extends State<Settings> {
 
               Text(
                 AppLocalizations.of(context)!.study_settings_section,
-                style: theme.textTheme.titleMedium!.copyWith(
-                  color: theme.primaryColor,
-                ),
+                style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
 
@@ -196,9 +192,7 @@ class _SettingsState extends State<Settings> {
               Text(
                 textAlign: TextAlign.start,
                 AppLocalizations.of(context)!.participation_options_section,
-                style: theme.textTheme.titleMedium!.copyWith(
-                  color: theme.primaryColor,
-                ),
+                style: theme.textTheme.titleMedium,
               ),
               Align(
                 child: ConstrainedBox(

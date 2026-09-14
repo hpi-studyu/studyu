@@ -227,7 +227,7 @@ abstract class AppLocalizations {
   /// No description provided for @browse_public_studies.
   ///
   /// In en, this message translates to:
-  /// **'Browse public studies'**
+  /// **'Public studies'**
   String get browse_public_studies;
 
   /// No description provided for @welcome_returning_participant.
@@ -263,7 +263,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page1_title.
   ///
   /// In en, this message translates to:
-  /// **'Your Personal Study'**
+  /// **'Your personal study'**
   String get onboarding_page1_title;
 
   /// No description provided for @onboarding_page1_subtitle.
@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page2_title.
   ///
   /// In en, this message translates to:
-  /// **'An Expert Study Plan'**
+  /// **'An expert study plan'**
   String get onboarding_page2_title;
 
   /// No description provided for @onboarding_page2_subtitle.
@@ -287,7 +287,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page3_title.
   ///
   /// In en, this message translates to:
-  /// **'Complete Regular Tasks'**
+  /// **'Complete regular tasks'**
   String get onboarding_page3_title;
 
   /// No description provided for @onboarding_page3_subtitle.
@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page4_title.
   ///
   /// In en, this message translates to:
-  /// **'Build Reliable Evidence'**
+  /// **'Build reliable evidence'**
   String get onboarding_page4_title;
 
   /// No description provided for @onboarding_page4_subtitle.
@@ -371,13 +371,13 @@ abstract class AppLocalizations {
   /// No description provided for @study_overview_title.
   ///
   /// In en, this message translates to:
-  /// **'Overview'**
+  /// **'Study overview'**
   String get study_overview_title;
 
   /// No description provided for @eligibility_questionnaire_title.
   ///
   /// In en, this message translates to:
-  /// **'Questionnaire'**
+  /// **'Eligibility check'**
   String get eligibility_questionnaire_title;
 
   /// No description provided for @please_answer_eligibility.
@@ -389,7 +389,7 @@ abstract class AppLocalizations {
   /// No description provided for @intervention_selection_title.
   ///
   /// In en, this message translates to:
-  /// **'Interventions'**
+  /// **'Intervention selection'**
   String get intervention_selection_title;
 
   /// No description provided for @please_select_interventions.
@@ -599,7 +599,7 @@ abstract class AppLocalizations {
   /// No description provided for @your_journey.
   ///
   /// In en, this message translates to:
-  /// **'Your Journey'**
+  /// **'Your journey'**
   String get your_journey;
 
   /// No description provided for @journey_overview_description.
@@ -1163,7 +1163,7 @@ abstract class AppLocalizations {
   /// No description provided for @legal_documents.
   ///
   /// In en, this message translates to:
-  /// **'Legal Documents'**
+  /// **'Legal documents'**
   String get legal_documents;
 
   /// No description provided for @legal_documents_description.
@@ -2591,7 +2591,7 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_header.
   ///
   /// In en, this message translates to:
-  /// **'View recovery phrase'**
+  /// **'Recovery phrase'**
   String get recovery_phrase_header;
 
   /// No description provided for @copy_to_clipboard.

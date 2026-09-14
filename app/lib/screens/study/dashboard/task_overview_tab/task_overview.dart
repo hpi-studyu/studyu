@@ -117,7 +117,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                     Flexible(
                       child: Text(
                         AppLocalizations.of(context)!.intervention_current,
-                        style: theme.textTheme.titleLarge,
+                        style: theme.textTheme.titleMedium,
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -141,7 +141,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                 description: l10n.dashboard_showcase_today_tasks_description,
                 child: Text(
                   AppLocalizations.of(context)!.today_tasks,
-                  style: theme.textTheme.titleLarge,
+                  style: theme.textTheme.titleMedium,
                 ),
               ),
             ],
