@@ -76,6 +76,11 @@ void main() {
     expect(clipboardText, contains('Study ID: study-1\nSubject ID: subject-1'));
     expect(find.text('All information copied to clipboard.'), findsOneWidget);
 
+    await tester.scrollUntilVisible(
+      find.text('Email study team'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(
       tester
           .widget<FilledButton>(
