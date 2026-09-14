@@ -8,6 +8,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/onboarding_page.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -66,26 +67,18 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.your_journey),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                StudyOnboardingDescription(
-                  text: AppLocalizations.of(
-                    context,
-                  )!.journey_overview_description,
-                ),
-                Timeline(subject: subject),
-              ],
-            ),
-          ),
+      body: OnboardingPage(
+        title: '',
+        description: '',
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+        descriptionWidget: StudyOnboardingDescription(
+          text: AppLocalizations.of(context)!.journey_overview_description,
         ),
-      ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: () => getConsentAndNavigateToDashboard(context),
-        progress: const OnboardingProgress(stage: 2, progress: 0.5),
+        bottomNavigationBar: BottomOnboardingNavigation(
+          onNext: () => getConsentAndNavigateToDashboard(context),
+          progress: const OnboardingProgress(stage: 2, progress: 0.5),
+        ),
+        child: Timeline(subject: subject),
       ),
     );
   }
