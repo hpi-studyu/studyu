@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_ko.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +97,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
     Locale('en'),
+    Locale('ko'),
   ];
 
   /// No description provided for @loading.
@@ -2758,6 +2760,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Date must be before {maxDate}'**
   String date_picker_validation_max_date(String maxDate);
+
+  /// No description provided for @ko.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean'**
+  String get ko;
 }
 
 class _AppLocalizationsDelegate
@@ -2771,7 +2779,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en'].contains(locale.languageCode);
+      <String>['de', 'en', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2784,6 +2792,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'ko':
+      return AppLocalizationsKo();
   }
 
   throw FlutterError(

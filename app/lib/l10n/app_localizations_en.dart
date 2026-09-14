@@ -1460,4 +1460,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String date_picker_validation_max_date(String maxDate) {
     return 'Date must be before $maxDate';
   }
+
+  @override
+  String get ko => 'Korean';
 }
