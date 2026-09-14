@@ -127,6 +127,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     final scaffold = Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.consent),
         actions: [
           IconButton(

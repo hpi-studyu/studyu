@@ -67,6 +67,7 @@ class _TermsScreenState extends State<TermsScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(localizations.legal_documents),
       ),
       body: TitleDescriptionLayout(
@@ -262,9 +263,14 @@ class LegalSection extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Expanded(
-                              child: Text(
-                                acknowledgment!,
-                                style: theme.textTheme.bodyMedium,
+                              child: InkWell(
+                                onTap: onChanged == null
+                                    ? null
+                                    : () => onChanged!(!(isChecked ?? false)),
+                                child: Text(
+                                  acknowledgment!,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
                               ),
                             ),
                           ],

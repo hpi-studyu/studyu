@@ -91,6 +91,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: BackButton(
           onPressed: () {
             if (context.canPop()) {

@@ -126,6 +126,7 @@ class _InterventionSelectionScreenState
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.intervention_selection_title),
       ),
       body: TitleDescriptionLayout(

@@ -65,4 +65,31 @@ void main() {
     expect(checkboxX, greaterThan(titleX));
     expect(checkboxX, lessThan(tester.getCenter(find.text('I agree')).dx));
   });
+
+  testWidgets('toggles acceptance when the acknowledgment is tapped', (
+    tester,
+  ) async {
+    var isChecked = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: LegalSection(
+            title: 'Terms',
+            description: 'Description',
+            acknowledgment: 'I agree',
+            isChecked: isChecked,
+            onChanged: (value) => isChecked = value ?? false,
+            icon: const Icon(Icons.description),
+            pdfUrl: 'https://example.com',
+            pdfUrlLabel: 'Read document',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('I agree'));
+
+    expect(isChecked, isTrue);
+  });
 }

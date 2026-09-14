@@ -134,6 +134,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: TitleDescriptionLayout(

@@ -13,7 +13,10 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasActiveSubject = context.read<AppState>().activeSubject != null;
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.what_is_studyu)),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(AppLocalizations.of(context)!.what_is_studyu),
+      ),
       body: PageView(
         scrollDirection: Axis.vertical,
         children: <Widget>[

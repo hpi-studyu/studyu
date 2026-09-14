@@ -62,6 +62,7 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.recovery_phrase_header),
       ),
       bottomNavigationBar: navNotifier != null ? null : nav,

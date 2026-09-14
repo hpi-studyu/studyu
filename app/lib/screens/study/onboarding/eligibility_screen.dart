@@ -263,6 +263,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       key: const ValueKey('eligibility_screen'),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.eligibility_questionnaire_title,
         ),

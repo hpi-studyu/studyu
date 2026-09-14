@@ -121,6 +121,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     final scaffold = Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.your_journey),
       ),
       body: TitleDescriptionLayout(
