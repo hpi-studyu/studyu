@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +17,7 @@ import 'package:studyu_app/theme.dart' as app_theme;
 import 'package:studyu_app/util/dashboard_showcase.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -61,6 +60,20 @@ class _DashboardScreenState extends State<DashboardScreen>
   bool get showNextDay =>
       (kDebugMode || context.read<AppState>().isPreview) &&
       !subject!.completedStudy;
+
+  SnackBar _buildStatusSnackBar(String message) {
+    final theme = Theme.of(context);
+    return SnackBar(
+      backgroundColor: theme.colorScheme.primary,
+      content: Text(
+        message,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onPrimary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -395,7 +408,23 @@ class _DashboardScreenState extends State<DashboardScreen>
                     setState(() {
                       scheduleToday = subject!.scheduleFor(DateTime.now());
                     });
-                  } on SocketException catch (_) {}
+                  } catch (error) {
+                    final status = connectionStatusFromError(error);
+                    if (status == null) rethrow;
+                    appConnectionStatusController.setStatus(status);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      _buildStatusSnackBar(
+                        status == AppConnectionStatus.deviceOffline
+                            ? AppLocalizations.of(
+                                context,
+                              )!.no_internet_connection
+                            : AppLocalizations.of(
+                                context,
+                              )!.connection_banner_backend_unavailable,
+                      ),
+                    );
+                  }
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
                 style: ElevatedButton.styleFrom(

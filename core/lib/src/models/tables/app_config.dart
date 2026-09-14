@@ -1,12 +1,15 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'dart:async';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:supabase/supabase.dart';
 
 part 'app_config.g.dart';
 
 @JsonSerializable()
 class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static const String tableName = 'app_config';
+  static const Duration requestTimeout = Duration(seconds: 5);
 
   @override
   Map<String, Object> get primaryKeys => {'id': id};
@@ -46,8 +49,16 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
 
   static Future<AppConfig> getAppConfig() async {
     try {
-      return await SupabaseQuery.getById<AppConfig>('prod');
+      return await SupabaseQuery.getById<AppConfig>('prod').timeout(
+        requestTimeout,
+        onTimeout: () => throw TimeoutException(
+          'Connection timeout after ${requestTimeout.inSeconds} seconds',
+        ),
+      );
     } catch (error) {
+      if (shouldRethrowAppConfigError(error)) {
+        rethrow;
+      }
       throw Exception(
         "Could not load app config. Check if the database is "
         "running and app_config table is properly set up.",
@@ -58,4 +69,17 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static Future<Contact> getAppContact() async {
     return (await getAppConfig()).contact;
   }
+}
+
+bool shouldRethrowAppConfigError(Object error) {
+  if (error is TimeoutException || error is PostgrestException) {
+    return true;
+  }
+
+  final message = error.toString().toLowerCase();
+  return message.contains('clientexception') ||
+      message.contains('failed to fetch') ||
+      message.contains('socketexception') ||
+      message.contains('xmlhttprequest error') ||
+      message.contains('timed out');
 }
