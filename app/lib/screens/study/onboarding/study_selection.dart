@@ -319,10 +319,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         ],
       ),
       actions: [
-        OutlinedButton.icon(
-          icon: const Icon(Icons.arrow_forward),
-          label: Text(l10n.next),
+        FilledButton(
           onPressed: _submitInviteCode,
+          child: Text(l10n.continue_label),
         ),
       ],
     );
