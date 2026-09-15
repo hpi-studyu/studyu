@@ -21,6 +21,7 @@ class QrCodePreviewDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const dialogWidth = 450.0;
     final theme = Theme.of(context);
 
     return ScaffoldMessenger(
@@ -38,10 +39,11 @@ class QrCodePreviewDialog extends ConsumerWidget {
                     color: theme.colorScheme.onPrimary,
                   ),
                 ),
+                width: dialogWidth,
                 duration: const Duration(milliseconds: 2500),
                 persist: false,
                 padding: const EdgeInsets.fromLTRB(40.0, 16.0, 24.0, 16.0),
-                behavior: SnackBarBehavior.fixed,
+                behavior: SnackBarBehavior.floating,
                 showCloseIcon: true,
                 closeIconColor: theme.colorScheme.onPrimary,
               ),
@@ -50,94 +52,112 @@ class QrCodePreviewDialog extends ConsumerWidget {
 
           return Scaffold(
             backgroundColor: Colors.transparent,
-            body: StandardDialog(
-              titleText: title ?? tr.action_qr_code_show,
-              width: 450,
-              minHeight: 400,
-              body: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    tr.dialog_qr_code_description,
-                    style: theme.textTheme.bodyMedium,
+            body: Stack(
+              children: [
+                Positioned.fill(
+                  child: ModalBarrier(
+                    color: Colors.transparent,
+                    semanticsLabel: MaterialLocalizations.of(
+                      dialogContext,
+                    ).modalBarrierDismissLabel,
+                    onDismiss: () => Navigator.of(dialogContext).maybePop(),
                   ),
-                  const SizedBox(height: 16.0),
-                  FutureBuilder<Widget>(
-                    future: QrCodeDownloader.generateQrWidget(data: data),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            'Error: ${snapshot.error}',
-                            style: TextStyle(color: theme.colorScheme.error),
-                          ),
-                        );
-                      }
-                      return Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: snapshot.data,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  Material(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(8.0),
-                      mouseCursor: SystemMouseCursors.click,
-                      onTap: copyLink,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            Expanded(
+                ),
+                StandardDialog(
+                  titleText: title ?? tr.action_qr_code_show,
+                  width: dialogWidth,
+                  minHeight: 400,
+                  body: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        tr.dialog_qr_code_description,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 16.0),
+                      FutureBuilder<Widget>(
+                        future: QrCodeDownloader.generateQrWidget(data: data),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return Center(
                               child: Text(
-                                data,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                'Error: ${snapshot.error}',
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 12.0),
-                            Tooltip(
-                              message: tr.action_copy_link,
-                              preferBelow: true,
-                              child: Icon(
-                                Icons.copy_rounded,
-                                color: theme.colorScheme.onSurfaceVariant,
+                            );
+                          }
+                          return Center(
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
+                              child: snapshot.data,
                             ),
-                          ],
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16.0),
+                      Material(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          mouseCursor: SystemMouseCursors.click,
+                          onTap: copyLink,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    data,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Tooltip(
+                                  message: tr.action_copy_link,
+                                  preferBelow: true,
+                                  child: Icon(
+                                    Icons.copy_rounded,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              actionButtons: [
-                DismissButton(text: tr.dialog_close),
-                PrimaryButton(
-                  text: tr.action_qr_code_download,
-                  icon: Icons.download,
-                  onPressed: () async {
-                    await QrCodeDownloader.downloadQrCode(
-                      data: data,
-                      filename: filename,
-                    );
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  actionButtons: [
+                    DismissButton(text: tr.dialog_close),
+                    PrimaryButton(
+                      text: tr.action_qr_code_download,
+                      icon: Icons.download,
+                      onPressed: () async {
+                        await QrCodeDownloader.downloadQrCode(
+                          data: data,
+                          filename: filename,
+                        );
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
