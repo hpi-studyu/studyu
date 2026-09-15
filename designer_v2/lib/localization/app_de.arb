@@ -65,7 +65,7 @@
   "@__________________DOMAIN__________________": {},
   "study_status_draft": "Entwurf",
   "study_status_draft_description": "Die Studie ist noch in Planung",
-  "study_status_running": "Live",
+  "study_status_running": "Läuft",
   "study_status_running_description": "Die Studie wird gerade durchgeführt",
   "study_status_closed": "Abgeschlossen",
   "study_status_closed_description": "Diese Studie ist abgeschlossen.\nEs können sich keine neuen Teilnehmer mehr einschreiben.",
@@ -95,7 +95,9 @@
   "navlink_logout": "Abmelden",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "Neue Studie",
+  "action_button_retry": "Erneut versuchen",
   "search": "Suche",
+  "navlink_all_studies": "Alle Studien",
   "studies_list_header_title": "Titel",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Teilnahme",
@@ -105,8 +107,34 @@
   "studies_list_header_participants_completed": "Abgeschlossen",
   "studies_not_found": "Es konnten keine Studien gefunden werden",
   "modify_query": "Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen",
+  "studies_count_total": "{total, plural, =1{1 Studie} other{{total} Studien}}",
+  "@studies_count_total": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_count_filtered": "{visible} von {total, plural, =1{1 Studie} other{{total} Studien}}",
+  "@studies_count_filtered": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_filter_server_side_unsupported": "Dieser Filter kann hier gerade nicht verwendet werden. Setze den Filter zurück und versuche es erneut.",
   "studies_empty": "Du hast noch keine Studien erstellt",
   "studies_empty_description": "Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie",
+  "studies_empty_public": "Keine öffentlichen Studien gefunden",
+  "studies_empty_public_description": "Es gibt keine Studien im öffentlichen Register, die deinen aktuellen Filtern entsprechen.",
+  "studies_empty_shared": "Keine geteilten Studien gefunden",
+  "studies_empty_shared_description": "Es wurden noch keine Studien mit dir geteilt.",
+  "studies_end_of_list": "Alle Studien geladen.",
+  "studies_load_failed": "Studien konnten nicht geladen werden. Bitte versuche es erneut.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Lernen",
   "navlink_study_design": "Entwerfen",
@@ -751,7 +779,6 @@
   "preview_overlay_remote_unavailable_message": "Die StudyU-App ist vorübergehend nicht verfügbar oder wird gewartet. Bitte versuche es später noch einmal.",
   "preview_overlay_could_not_load": "Die App-Vorschau konnte nicht geladen werden.",
   "preview_overlay_preview_not_opened": "Die App-Vorschau konnte gerade nicht geöffnet werden.",
-
   "banner_study_test_unavailable": "Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
   "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt und vollständig ein:",
   "dialog_study_test_help_title": "Teste deine Studie!",
@@ -852,9 +879,9 @@
   "monitoring_table_column_completed_intervention_tasks": "Abgeschlossene Interventionsaufgaben",
   "monitoring_table_column_completed_surveys": "Abgeschlossene Fragebögen",
   "monitoring_table_row_tooltip_dropout": "Dieser Teilnehmer hat die Studie verlassen und es wird keine neue Aktivität hinzugefügt",
-  "monitoring_table_days_in_study_header_tooltip":"Die Anzahl der Tage, die der Teilnehmer in der Studie verbracht hat",
+  "monitoring_table_days_in_study_header_tooltip": "Die Anzahl der Tage, die der Teilnehmer in der Studie verbracht hat",
   "monitoring_table_completed_interventions_header_tooltip": "Alle Interventionsaufgaben wurden während der gesamten Studie abgeschlossen",
-  "monitoring_table_completed_surveys_header_tooltip":"Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden",
+  "monitoring_table_completed_surveys_header_tooltip": "Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
   "banner_text_study_recruit_draft": "Solange die Studie noch nicht live ist, funktionieren die Links auf dieser Seite noch nicht.",
   "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf den Daten aus den Testläufen der Studie.\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
@@ -863,7 +890,7 @@
   "study_export_unavailable_empty_tooltip": "Es sind noch keine Ergebnisdaten verfügbar",
   "study_export_unavailable_no_permission_tooltip": "Du bist nicht berechtigt, auf die Ergebnisdaten der Studie zuzugreifen",
   "@__________________STUDY_LAUNCH_DIALOG__________________": {},
-  "study_launch_title": "Super Arbeit! \uD83D\uDC4F Alles bereit?",
+  "study_launch_title": "Super Arbeit! 👏 Alles bereit?",
   "study_launch_participation_intro": "Die von dir erstellte Studie ist",
   "study_launch_participation_outro": "",
   "study_launch_post_launch_intro": "Wenn die Studie gestartet wird, beachte:",
@@ -1101,14 +1128,16 @@
   "filter_result_sharing_public": "Öffentlich",
   "filter_result_sharing_private": "Privat",
   "filter_result_sharing_organization": "Organisation",
-  "study_status_draft": "Entwurf",
-  "study_status_running": "Läuft",
-  "study_status_closed": "Abgeschlossen",
   "participation_open": "Offen",
   "participation_invite": "Nur Einladung",
   "filter_section_default_presets": "Standardvorlagen",
   "filter_section_custom_presets": "Benutzerdefinierte Vorlagen",
   "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
-  "filter_button_main": "Filtern"
+  "filter_button_main": "Filtern",
+  "all_studies": "Alle Studien",
+  "studies_filter_add_filter": "Filter hinzufügen",
+  "studies_filter_remove_filter": "Filter entfernen",
+  "studies_end_of_list_create": "Erstelle eine Studie.",
+  "studies_end_of_list_public": "Nicht gefunden, was du suchst?"
 }

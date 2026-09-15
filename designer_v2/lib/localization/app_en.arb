@@ -73,7 +73,7 @@
   "@__________________DOMAIN__________________": {},
   "study_status_draft": "Draft",
   "study_status_draft_description": "This study is still being drafted.",
-  "study_status_running": "Live",
+  "study_status_running": "Running",
   "study_status_running_description": "This study is currently in progress.",
   "study_status_closed": "Closed",
   "study_status_closed_description": "This study has been completed.\nNew participants can no longer enroll.",
@@ -99,7 +99,9 @@
   "notification_invite_link_copied": "Invite link copied",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "New study",
+  "action_button_retry": "Retry",
   "search": "Search",
+  "navlink_all_studies": "All Studies",
   "studies_list_header_title": "Title",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Participation",
@@ -109,8 +111,34 @@
   "studies_list_header_participants_completed": "Completed",
   "studies_not_found": "No Studies found",
   "modify_query": "Modify your query",
+  "studies_count_total": "{total, plural, =1{1 study} other{{total} studies}}",
+  "@studies_count_total": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_count_filtered": "{visible} of {total, plural, =1{1 study} other{{total} studies}}",
+  "@studies_count_filtered": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studies_filter_server_side_unsupported": "This filter can't be used here right now. Clear the filter and try again.",
   "studies_empty": "You don't have any studies yet",
   "studies_empty_description": "Build your own study from scratch or create a new draft copy from an already published study!",
+  "studies_empty_public": "No public studies found",
+  "studies_empty_public_description": "There are no studies in the public registry matching your current filters.",
+  "studies_empty_shared": "No shared studies found",
+  "studies_empty_shared_description": "No studies have been shared with you yet.",
+  "studies_end_of_list": "All studies loaded.",
+  "studies_load_failed": "Couldn't load studies. Try again.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Learn",
   "navlink_study_design": "Design",
@@ -755,7 +783,6 @@
   "preview_overlay_remote_unavailable_message": "The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.",
   "preview_overlay_could_not_load": "The StudyU app preview could not be loaded.",
   "preview_overlay_preview_not_opened": "The StudyU app preview could not be opened right now.",
-
   "banner_study_test_unavailable": "The test mode is unavailable until you update the following information:",
   "banner_study_preview_unavailable": "The preview is unavailable until you update the following information:",
   "dialog_study_test_help_title": "Test your study!",
@@ -830,8 +857,8 @@
   "participant_details_completed_legend_tooltip": "All intervention and survey tasks have been completed for this day",
   "participant_details_partially_completed_legend_tooltip": "Not all intervention or survey tasks have been completed for this day",
   "participant_details_incomplete_legend_tooltip": "No intervention or survey tasks have been completed for this day",
-  "participant_details_progress_empty_title":"No progress data available yet",
-  "participant_details_progress_empty_description":"Once the participant has started the study, you can monitor their progress here.",
+  "participant_details_progress_empty_title": "No progress data available yet",
+  "participant_details_progress_empty_description": "Once the participant has started the study, you can monitor their progress here.",
   "monitoring_no_participants_title": "There are no participants in this study yet",
   "monitoring_no_participants_description": "Once participants have enrolled in your study, you can monitor their progress and view their data here.",
   "monitoring_participants_title": "Participant overview",
@@ -863,7 +890,7 @@
   "study_export_unavailable_empty_tooltip": "There is no data available yet",
   "study_export_unavailable_no_permission_tooltip": "You do not have sufficient permission to access this study's data",
   "@__________________STUDY_LAUNCH_DIALOG__________________": {},
-  "study_launch_title": "Great work! \uD83D\uDC4F Ready to launch?",
+  "study_launch_title": "Great work! 👏 Ready to launch?",
   "study_launch_participation_intro": "The study you are creating is",
   "study_launch_participation_outro": "",
   "study_launch_post_launch_intro": "After launching your study:",
@@ -1101,14 +1128,16 @@
   "filter_result_sharing_public": "Public",
   "filter_result_sharing_private": "Private",
   "filter_result_sharing_organization": "Organization",
-  "study_status_draft": "Draft",
-  "study_status_running": "Running",
-  "study_status_closed": "Closed",
   "participation_open": "Open",
   "participation_invite": "Invite-only",
   "filter_section_default_presets": "Default Presets",
   "filter_section_custom_presets": "Custom Presets",
   "filter_button_advanced": "Configure Filters...",
   "filter_button_clear": "Clear filter",
-  "filter_button_main": "Filter"
+  "filter_button_main": "Filter",
+  "all_studies": "All Studies",
+  "studies_filter_add_filter": "Add filter",
+  "studies_filter_remove_filter": "Remove filter",
+  "studies_end_of_list_create": "Create a study.",
+  "studies_end_of_list_public": "Didn't find what you're looking for?"
 }
