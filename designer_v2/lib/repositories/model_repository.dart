@@ -81,8 +81,7 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   });
   Stream<List<WrappedModel<T>>> watchAll({bool fetchOnSubscribe = true});
   Stream<ModelEvent<T>> watchChanges(ModelID modelId);
-
-  // Stream<ModelEvent<T>> watchAllChanges();
+  Stream<ModelEvent<T>> watchAllChanges();
   Future<WrappedModel<T>?> ensurePersisted(ModelID modelId);
   void dispose();
 }
@@ -352,10 +351,10 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     return modelController;
   }
 
-  /* @override
+  @override
   Stream<ModelEvent<T>> watchAllChanges() {
     return _allModelEventsStreamController;
-  } */
+  }
 
   @override
   Stream<ModelEvent<T>> watchChanges(ModelID modelId) {

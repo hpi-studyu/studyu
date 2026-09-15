@@ -86,9 +86,9 @@ void main() {
       expect(pageRequest.uri.queryParameters, containsPair('limit', '50'));
 
       final countRequest = requests.last;
-      expect(countRequest.method, 'GET');
+      expect(countRequest.method, 'HEAD');
       expect(countRequest.uri.path, '/rest/v1/study_invite');
-      expect(countRequest.uri.queryParameters, containsPair('select', '*'));
+      expect(countRequest.uri.queryParameters, isNot(contains('select')));
       expect(
         countRequest.uri.queryParameters,
         containsPair('study_id', 'eq.study-id'),

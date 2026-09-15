@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -43,18 +41,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     implements PopEntry {
   ModalRoute<dynamic>? _route;
   final ValueNotifier<bool> _canPopNotifier = ValueNotifier(false);
-  late final StreamSubscription<Object?> _formChangesSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _syncCanPopWithFormState();
-    _formChangesSubscription = widget.formViewModel.form.valueChanges.listen((
-      _,
-    ) {
-      _syncCanPopWithFormState();
-    });
-  }
 
   @override
   void didChangeDependencies() {
@@ -69,7 +55,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
   void dispose() {
     _route?.unregisterPopEntry(this);
     _route = null;
-    _formChangesSubscription.cancel();
     _canPopNotifier.dispose();
     super.dispose();
   }
@@ -97,16 +82,12 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     debugPrint(
       '[PopEntry] _handleDismiss isDirty=${widget.formViewModel.isDirty}',
     );
+    _canPopNotifier.value = false;
 
     if (!widget.formViewModel.isDirty) {
       await widget.formViewModel.cancel();
       if (mounted) {
-        _canPopNotifier.value = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            _popCurrentRoute();
-          }
-        });
+        _schedulePop();
       }
       return;
     }
@@ -121,14 +102,18 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     if (shouldDiscard == true && mounted) {
       await widget.formViewModel.cancel();
       if (mounted) {
-        _canPopNotifier.value = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            _popCurrentRoute();
-          }
-        });
+        _schedulePop();
       }
     }
+  }
+
+  void _schedulePop() {
+    _canPopNotifier.value = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _popCurrentRoute();
+      }
+    });
   }
 
   void _popCurrentRoute() {
@@ -137,13 +122,6 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
       return;
     }
     navigator.pop();
-  }
-
-  void _syncCanPopWithFormState() {
-    final canPop = !widget.formViewModel.isDirty;
-    if (_canPopNotifier.value != canPop) {
-      _canPopNotifier.value = canPop;
-    }
   }
 
   @override

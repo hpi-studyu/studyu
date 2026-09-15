@@ -109,6 +109,27 @@ void main() {
     expect(copied, isTrue);
   });
 
+  testWidgets('invite table scrolls horizontally at 375 px', (tester) async {
+    final invite = StudyInvite('invite-narrow', 'study-1');
+    await tester.binding.setSurfaceSize(const Size(375, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      buildSubject(
+        invites: [invite],
+        getInlineActions: (_) => const <ModelAction>[],
+        getActions: (_) => const <ModelAction>[],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final scrollView = tester.widget<SingleChildScrollView>(
+      find.byType(SingleChildScrollView),
+    );
+    expect(scrollView.scrollDirection, Axis.horizontal);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('row menu shows link qr and delete actions', (tester) async {
     final invite = StudyInvite('invite-3', 'study-1');
     await tester.binding.setSurfaceSize(const Size(1600, 1200));

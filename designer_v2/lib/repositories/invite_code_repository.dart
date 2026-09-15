@@ -65,7 +65,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Study get study => studyRepository.get(studyId)!.model;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final Ref? ref;
+  final Ref ref;
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -167,12 +167,12 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
           ),
           onExecute: () async {
             await delete(getKey(model), runOptimistically: false);
-            ref!
+            ref
                 .read(routerProvider)
                 .dispatch(RoutingIntents.studyRecruit(model.studyId));
             await Future.delayed(
               const Duration(milliseconds: 200),
-              () => ref!
+              () => ref
                   .read(notificationServiceProvider)
                   .show(Notifications.inviteCodeDeleted),
             );
@@ -186,8 +186,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   }
 
   Future<void> _copy(String value, SnackbarIntent notification) async {
-    await ref!.read(clipboardServiceProvider).copy(value);
-    ref!.read(notificationServiceProvider).show(notification);
+    await ref.read(clipboardServiceProvider).copy(value);
+    ref.read(notificationServiceProvider).show(notification);
   }
 
   void _showSharePopup(BuildContext context, String deepLink, String filename) {
@@ -315,6 +315,7 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<void> delete(StudyInvite model) {
+    final prevInvites = [...?study.invites];
     final deleteOperation = OptimisticUpdate(
       applyOptimistic: () {
         study.invites!.remove(model);
@@ -322,7 +323,10 @@ class InviteCodeRepositoryDelegate
         studyRepository.upsertLocally(study);
       },
       apply: () => apiClient.deleteStudyInvite(model),
-      rollback: () {},
+      rollback: () {
+        study.invites = prevInvites;
+        studyRepository.upsertLocally(study);
+      },
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
       completeFutureOptimistically: false,

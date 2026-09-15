@@ -114,11 +114,11 @@ class StudyRecruitScreen extends StudyPageWidget {
   ) {
     return state.invites.when(
       data: (studyInvites) {
+        if (state.isSearchPending) {
+          return const Center(child: CircularProgressIndicator());
+        }
         if (studyInvites == null || studyInvites.isEmpty) {
           final hasSearchQuery = state.inviteCodeSearchQuery.trim().isNotEmpty;
-          if (state.isSearchPending && !hasSearchQuery) {
-            return const Center(child: CircularProgressIndicator());
-          }
           if (hasSearchQuery) {
             return Padding(
               padding: const EdgeInsets.only(top: _sectionSpacing),
@@ -393,7 +393,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           }
 
           return PrimaryButton(
-            text: tr.dialog_save,
+            text: tr.action_button_code_save,
             icon: null,
             enabled: formViewModel.isValid,
             onPressedFuture: formViewModel.isValid

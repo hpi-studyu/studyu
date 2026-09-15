@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_sta
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -23,6 +24,9 @@ class StudyRecruitController extends _$StudyRecruitController
   /// [inviteCodeRepository] Reference to the repository for invite codes (resolved dynamically via Riverpod when the [state.study] becomes available)
   @override
   StudyRecruitControllerState build(StudyID studyId) {
+    final inviteCodeRepository = ref.watch(
+      inviteCodeRepositoryProvider(studyId),
+    );
     state = StudyRecruitControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
@@ -31,12 +35,21 @@ class StudyRecruitController extends _$StudyRecruitController
           .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
-      inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
+      inviteCodeRepository: inviteCodeRepository,
     );
+    _inviteCodeChangesSubscription?.cancel();
+    _inviteCodeChangesSubscription = inviteCodeRepository
+        .watchAllChanges()
+        .where(
+          (event) =>
+              event is IsSaved<StudyInvite> || event is IsDeleted<StudyInvite>,
+        )
+        .listen((_) => _schedulePageRefresh());
     ref.onDispose(() {
       print("StudyRecruitController.dispose");
       _searchDebounce?.cancel();
       _refreshTimer?.cancel();
+      _inviteCodeChangesSubscription?.cancel();
     });
     Future.microtask(() => loadInviteCodePage(0));
     return state;
@@ -44,6 +57,7 @@ class StudyRecruitController extends _$StudyRecruitController
 
   Timer? _searchDebounce;
   Timer? _refreshTimer;
+  StreamSubscription<ModelEvent<StudyInvite>>? _inviteCodeChangesSubscription;
   int _fetchToken = 0;
 
   Future<void> loadInviteCodePage(

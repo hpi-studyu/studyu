@@ -11,12 +11,8 @@ BEGIN;
 --
 -- ============================================================================
 
-CREATE INDEX IF NOT EXISTS study_subject_invite_code_active_idx
-ON public.study_subject (invite_code)
-WHERE is_deleted = false;
-
 CREATE OR REPLACE FUNCTION public.study_invite_participant_count(
-  invite public.study_invite
+    invite public.study_invite
 )
 RETURNS integer
 LANGUAGE sql
@@ -29,9 +25,13 @@ AS $$
     AND study_subject.is_deleted = false;
 $$;
 
-REVOKE EXECUTE ON FUNCTION public.study_invite_participant_count(public.study_invite)
+REVOKE EXECUTE ON FUNCTION public.study_invite_participant_count(
+    public.study_invite
+)
 FROM public, anon;
-GRANT EXECUTE ON FUNCTION public.study_invite_participant_count(public.study_invite)
+GRANT EXECUTE ON FUNCTION public.study_invite_participant_count(
+    public.study_invite
+)
 TO authenticated;
 
 COMMIT;

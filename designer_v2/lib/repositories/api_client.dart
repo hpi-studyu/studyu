@@ -12,7 +12,11 @@ part 'api_client.g.dart';
 abstract class StudyUApi {
   Future<Study> saveStudy(Study study);
 
-  Future<Study> fetchStudy(StudyID studyId);
+  Future<Study> fetchStudy(
+    StudyID studyId, {
+    bool withParticipantActivity = true,
+    bool withInvites = false,
+  });
 
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,
@@ -107,10 +111,11 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   final SupabaseClient supabaseClient;
 
+  static const studyInviteColumn = 'study_invite!study_invite_studyId_fkey(*)';
+
   static final studyColumns = [
     '*',
     'repo(*)',
-    'study_invite!study_invite_studyId_fkey(*)',
     'study_fitbit_credentials!study_fitbit_credentials_studyId_fkey(*)',
     'study_participant_count',
     'study_ended_count',
@@ -200,11 +205,15 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<Study> fetchStudy(
     StudyID studyId, {
     bool withParticipantActivity = true,
+    bool withInvites = false,
   }) async {
     await _testDelay();
-    final columns = withParticipantActivity
-        ? studyWithParticipantActivityColumns
-        : studyColumns;
+    final columns = [
+      ...(withParticipantActivity
+          ? studyWithParticipantActivityColumns
+          : studyColumns),
+      if (withInvites) studyInviteColumn,
+    ];
     final request = getById<Study>(studyId, selectedColumns: columns);
     return _awaitGuarded(
       request,
@@ -306,14 +315,13 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<int> countStudyInvites(StudyID studyId, {String? query}) async {
     await _testDelay();
-    final response = await _awaitGuarded(
+    return _awaitGuarded(
       _applyInviteCodeQuery(
-        supabaseClient.from(StudyInvite.tableName).select(),
+        supabaseClient.from(StudyInvite.tableName).count(),
         studyId: studyId,
         query: query,
-      ).count(),
+      ),
     );
-    return response.count;
   }
 
   @override
@@ -350,15 +358,12 @@ class StudyUApiClient extends SupabaseClientDependant
     };
   }
 
-  PostgrestFilterBuilder<PostgrestList> _applyInviteCodeQuery(
-    PostgrestFilterBuilder<PostgrestList> request, {
+  PostgrestFilterBuilder<T> _applyInviteCodeQuery<T>(
+    PostgrestFilterBuilder<T> request, {
     required StudyID studyId,
     required String? query,
   }) {
-    PostgrestFilterBuilder<PostgrestList> filtered = request.eq(
-      'study_id',
-      studyId,
-    );
+    PostgrestFilterBuilder<T> filtered = request.eq('study_id', studyId);
 
     final trimmedQuery = _trimmedOrNull(query);
     if (trimmedQuery != null) {

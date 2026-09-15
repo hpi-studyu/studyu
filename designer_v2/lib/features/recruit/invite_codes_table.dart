@@ -95,6 +95,10 @@ class StudyInvitesTable extends StatelessWidget {
           minRowHeight: _tableMinRowHeight,
           rowSpacing: _rowSpacing,
           rowStyle: StandardTableStyle.flat,
+          tableWrapper: (table) => SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: table,
+          ),
         );
       },
     );
