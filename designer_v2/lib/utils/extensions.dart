@@ -72,6 +72,10 @@ extension StringX on String {
     }
     return this;
   }
+
+  String compactWhitespace() {
+    return trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
 }
 
 extension DurationX on Duration {

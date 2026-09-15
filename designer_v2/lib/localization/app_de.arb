@@ -539,6 +539,7 @@
   "form_field_consent_text_tooltip": "Gib den Text ein, der bei der Anmeldung zur Studie in der StudyU App gelesen & bestätigt werden muss",
   "form_field_consent_text_hint": "Gib den Text ein, der gelesen & bestätigt werden muss",
   "form_field_consent_text_required": "Die Einwilligungserklärung darf nicht leer sein",
+  "form_field_consent_icon_required": "Du musst ein Icon für die Einwilligungserklärung auswählen",
   "@__________________STUDYPAGE_DESIGN_INTERVENTIONS_________________": {},
   "form_study_design_interventions_description": "Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Studienplan wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.",
   "link_n_of_1_learn_more": "Mehr über N-of-1 Studien erfahren",

@@ -2607,6 +2607,12 @@ abstract class AppLocalizations {
   /// **'The text for your participant consent must not be empty'**
   String get form_field_consent_text_required;
 
+  /// No description provided for @form_field_consent_icon_required.
+  ///
+  /// In en, this message translates to:
+  /// **'You must select an icon for your participant consent'**
+  String get form_field_consent_icon_required;
+
   /// No description provided for @form_study_design_interventions_description.
   ///
   /// In en, this message translates to:

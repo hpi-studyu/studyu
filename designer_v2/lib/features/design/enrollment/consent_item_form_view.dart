@@ -69,6 +69,10 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
                         child: ReactiveIconPicker(
                           formControl: widget.formViewModel.iconControl,
                           iconOptions: IconPack.material,
+                          validationMessages: widget
+                              .formViewModel
+                              .iconControl
+                              .validationMessages,
                         ),
                       ),
                     ],

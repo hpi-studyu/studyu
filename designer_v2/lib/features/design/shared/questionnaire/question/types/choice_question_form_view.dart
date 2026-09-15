@@ -10,12 +10,16 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ChoiceQuestionFormView extends ConsumerWidget {
+  static const double _multipleChoiceSwitchScale = 0.66;
+
   const ChoiceQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         FormTableLayout(
@@ -23,8 +27,33 @@ class ChoiceQuestionFormView extends ConsumerWidget {
             FormTableRow(
               label: tr.form_field_response_choice_multiple,
               labelHelpText: tr.form_field_response_choice_multiple_tooltip,
-              input: ReactiveSwitch(
-                formControl: formViewModel.isMultipleChoiceControl,
+              input: Align(
+                alignment: Alignment.centerLeft,
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Transform.translate(
+                    offset: const Offset(-8.0, 0),
+                    child: Transform.scale(
+                      scale: _multipleChoiceSwitchScale,
+                      alignment: Alignment.centerLeft,
+                      child: Theme(
+                        data: theme.copyWith(
+                          switchTheme: theme.switchTheme.copyWith(
+                            overlayColor: const WidgetStatePropertyAll(
+                              Colors.transparent,
+                            ),
+                            splashRadius: 0,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                        child: ReactiveSwitch(
+                          formControl: formViewModel.isMultipleChoiceControl,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -89,6 +118,12 @@ List<Widget> buildChoiceOptionRow(
   AbstractControl formControl,
 ) {
   final theme = Theme.of(context);
+  final isReadonly = formControl.disabled;
+
+  Widget buildOptionField(Widget child) {
+    return IgnorePointer(ignoring: isReadonly, child: child);
+  }
+
   return [
     Center(
       child: Icon(
@@ -98,18 +133,26 @@ List<Widget> buildChoiceOptionRow(
       ),
     ),
     if (formControl is FormControl<Choice>)
-      ReactiveTextField<Choice>(
-        formControl: formControl,
-        valueAccessor: ChoiceValueAccessor(formControl),
-        decoration: InputDecoration(
-          hintText: tr.form_array_response_options_choice_hint,
+      buildOptionField(
+        ReactiveTextField<Choice>(
+          formControl: formControl,
+          valueAccessor: ChoiceValueAccessor(formControl),
+          readOnly: isReadonly,
+          decoration: InputDecoration(
+            hintText: tr.form_array_response_options_choice_hint,
+            enabled: !isReadonly,
+          ),
         ),
       )
     else
-      ReactiveTextField<String>(
-        formControl: formControl as FormControl<String>,
-        decoration: InputDecoration(
-          hintText: tr.form_array_response_options_choice_hint,
+      buildOptionField(
+        ReactiveTextField<String>(
+          formControl: formControl as FormControl<String>,
+          readOnly: isReadonly,
+          decoration: InputDecoration(
+            hintText: tr.form_array_response_options_choice_hint,
+            enabled: !isReadonly,
+          ),
         ),
       ),
   ];

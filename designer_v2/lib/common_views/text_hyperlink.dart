@@ -82,20 +82,22 @@ class _HyperlinkState extends State<Hyperlink> {
         final textWidget = Text(widget.text, style: actualStyle);
 
         if (widget.icon != null) {
-          return Row(
-            children: [
-              Icon(
-                widget.icon,
-                color: actualColor,
-                size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0,
-              ),
-              const SizedBox(width: 2.0),
-              textWidget,
-            ],
+          return SelectionContainer.disabled(
+            child: Row(
+              children: [
+                Icon(
+                  widget.icon,
+                  color: actualColor,
+                  size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0,
+                ),
+                const SizedBox(width: 2.0),
+                textWidget,
+              ],
+            ),
           );
         }
 
-        return textWidget;
+        return SelectionContainer.disabled(child: textWidget);
       },
       onTap: () async {
         if (widget.url != null) {

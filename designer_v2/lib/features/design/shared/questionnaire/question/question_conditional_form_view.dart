@@ -14,6 +14,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ConditionalQuestionFormView extends FormConsumerWidget {
+  static const _questionTooltipMaxCharacters = 80;
+
   ConditionalQuestionFormView({
     required this.formViewModel,
     required this.allQuestions,
@@ -86,26 +88,38 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     return !oldIds.containsAll(newIds) || !newIds.containsAll(oldIds);
   }
 
+  String _buildQuestionTooltipMessage(String prompt) {
+    final normalizedPrompt = prompt.replaceAll(RegExp(r'\s+'), ' ').trim();
+    if (normalizedPrompt.length <= _questionTooltipMaxCharacters) {
+      return normalizedPrompt;
+    }
+    return '${normalizedPrompt.substring(0, _questionTooltipMaxCharacters - 3)}...';
+  }
+
   Widget _buildQuestionOptionContent(Question option, int index) {
-    return Tooltip(
-      message: option.prompt ?? '',
-      child: SizedBox(
-        width: double.infinity,
-        child: Row(
-          children: [
-            Icon(
-              SurveyQuestionType.of(option).icon,
-              size: 16,
-              color: Colors.grey,
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          Icon(
+            SurveyQuestionType.of(option).icon,
+            size: 16,
+            color: Colors.grey,
+          ),
+          const SizedBox(width: 8),
+          Text('${index + 1}.', style: const TextStyle(color: Colors.grey)),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Tooltip(
+              message: _buildQuestionTooltipMessage(option.prompt ?? ''),
+              child: Text(
+                option.prompt!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            const SizedBox(width: 8),
-            Text('${index + 1}.', style: const TextStyle(color: Colors.grey)),
-            const SizedBox(width: 4),
-            Expanded(
-              child: Text(option.prompt!, overflow: TextOverflow.ellipsis),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -229,40 +243,37 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Tooltip(
-              message: conditionVm.selectedQuestion?.prompt ?? '',
-              child: ReactiveDropdownField<String>(
-                formControl: conditionVm.questionIdControl,
-                isExpanded: true,
-                selectedItemBuilder: (context) => availableQuestions
-                    .asMap()
-                    .map(
-                      (index, option) => MapEntry(
-                        index,
-                        _buildQuestionOptionContent(option, index),
+            child: ReactiveDropdownField<String>(
+              formControl: conditionVm.questionIdControl,
+              isExpanded: true,
+              selectedItemBuilder: (context) => availableQuestions
+                  .asMap()
+                  .map(
+                    (index, option) => MapEntry(
+                      index,
+                      _buildQuestionOptionContent(option, index),
+                    ),
+                  )
+                  .values
+                  .toList(),
+              items: availableQuestions
+                  .asMap()
+                  .map(
+                    (index, option) => MapEntry(
+                      index,
+                      DropdownMenuItem(
+                        value: option.id,
+                        child: _buildQuestionOptionContent(option, index),
                       ),
-                    )
-                    .values
-                    .toList(),
-                items: availableQuestions
-                    .asMap()
-                    .map(
-                      (index, option) => MapEntry(
-                        index,
-                        DropdownMenuItem(
-                          value: option.id,
-                          child: _buildQuestionOptionContent(option, index),
-                        ),
-                      ),
-                    )
-                    .values
-                    .toList(),
-                decoration: InputDecoration(
-                  labelText:
-                      tr.form_array_question_visibility_logic_question_title,
-                  border: const OutlineInputBorder(),
-                  isDense: true,
-                ),
+                    ),
+                  )
+                  .values
+                  .toList(),
+              decoration: InputDecoration(
+                labelText:
+                    tr.form_array_question_visibility_logic_question_title,
+                border: const OutlineInputBorder(),
+                isDense: true,
               ),
             ),
           ),

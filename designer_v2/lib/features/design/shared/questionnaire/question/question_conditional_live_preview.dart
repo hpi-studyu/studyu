@@ -4,6 +4,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class LiveConditionPreview extends StatelessWidget {
+  static const _previewQuestionMaxCharacters = 80;
+
   final CompositeExpression? compositeExpression;
   final List<Question> allQuestions;
   final String currentQuestionId;
@@ -15,13 +17,23 @@ class LiveConditionPreview extends StatelessWidget {
     required this.currentQuestionId,
   });
 
+  String _truncatePreviewQuestionText(String prompt) {
+    final normalizedPrompt = prompt.replaceAll(RegExp(r'\s+'), ' ').trim();
+    if (normalizedPrompt.length <= _previewQuestionMaxCharacters) {
+      return normalizedPrompt;
+    }
+    return '${normalizedPrompt.substring(0, _previewQuestionMaxCharacters - 3)}...';
+  }
+
   String _getQuestionPreviewText(String questionId) {
     /*if (questionId == currentQuestionId) {
       // Use the specific question text from the ViewModel for clarity
       return tr.form_array_question_visibility_logic_this_question;
     }*/
     final question = allQuestions.firstWhereOrNull((q) => q.id == questionId);
-    return question != null ? 'Q[${question.prompt}]' : 'Q[$questionId]';
+    return question != null
+        ? 'Q[${_truncatePreviewQuestionText(question.prompt ?? '')}]'
+        : 'Q[$questionId]';
   }
 
   String _formatExpressionForPreview(Expression expression) {
@@ -144,9 +156,11 @@ class LiveConditionPreview extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: SelectableText(
+      child: Text(
         previewText,
         style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+        maxLines: 12,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

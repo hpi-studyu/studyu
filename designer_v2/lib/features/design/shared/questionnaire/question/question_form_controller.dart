@@ -28,6 +28,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         IListActionProvider<FormControl<dynamic>>,
         IConditionalQuestionProperties {
   static const defaultQuestionType = SurveyQuestionType.choice;
+  static const Set<SurveyQuestionType> _hiddenQuestionTypes = {
+    SurveyQuestionType.fitbit,
+  };
 
   QuestionFormViewModel({
     super.formData,
@@ -150,6 +153,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
       QuestionFormData.questionTypeFormDataFactories.keys
+          .where(
+            (questionType) =>
+                !_hiddenQuestionTypes.contains(questionType) ||
+                questionType == questionTypeControl.value,
+          )
           .map(
             (questionType) =>
                 FormControlOption(questionType, questionType.string),
@@ -216,6 +224,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       .toList();
   late final FormArray<String> boolResponseOptionsArray = FormArray(
     boolOptions,
+    disabled: true,
   );
 
   // Image
@@ -226,6 +235,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       .toList();
   late final FormArray<String> imageResponseOptionsArray = FormArray(
     imageOptions,
+    disabled: true,
   );
 
   //Pain
@@ -237,6 +247,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   late final FormArray<String> painResponseOptionsArray = FormArray(
     painOptions,
+    disabled: true,
   );
 
   // Date
@@ -903,6 +914,27 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     onResponseOptionsChanged(answerOptionsControls);
   }
 
+  void _syncFixedResponseOptionStates() {
+    final fixedArrays = [
+      ('bool', boolResponseOptionsArray),
+      ('image', imageResponseOptionsArray),
+      ('audio', audioResponseOptionsArray),
+      ('pain', painResponseOptionsArray),
+    ];
+
+    for (final (_, formArray) in fixedArrays) {
+      if (formArray.enabled) {
+        formArray.markAsDisabled(emitEvent: false, updateParent: false);
+      }
+      for (final control in formArray.controls) {
+        if (control.enabled) {
+          control.markAsDisabled(emitEvent: false, updateParent: false);
+        }
+      }
+    }
+    form.updateValueAndValidity(updateParent: false, emitEvent: false);
+  }
+
   void attachFitbitCredentialsFormViewModel(
     FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel,
   ) {
@@ -921,6 +953,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   void initControls() {
     _updateScaleMidValueControls();
+    _syncFixedResponseOptionStates();
+  }
+
+  @override
+  void markFormGroupChanged() {
+    super.markFormGroupChanged();
+    _syncFixedResponseOptionStates();
   }
 
   @override
@@ -939,7 +978,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     // Type-specific controls
     switch (data.questionType) {
       case SurveyQuestionType.bool:
-        break;
       case SurveyQuestionType.image:
         break;
       case SurveyQuestionType.audio:
@@ -1001,6 +1039,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         dateDefaultSpecificDateControl.value = data.defaultSpecificDate;
         dateDefaultSpecificTimeControl.value = data.defaultSpecificTime;
     }
+    _syncFixedResponseOptionStates();
   }
 
   @override

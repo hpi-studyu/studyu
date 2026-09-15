@@ -120,10 +120,10 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     onResponseOptionsChanged(answerOptionsControls);
 
     for (final entry in data.responseOptionsValidity.entries) {
-      final responseOption = entry.key;
+      final responseOptionKey = entry.key;
       final responseValidity = entry.value;
       final logicControl = _findAssociatedLogicControlFor(
-        responseOption: responseOption,
+        responseOption: responseOptionKey,
       );
       if (logicControl != null) {
         logicControl.value = responseValidity;
@@ -139,8 +139,12 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     for (var i = 0; i < answerOptionsControls.length; i++) {
       final optionControl = answerOptionsControls[i];
       final logicControl = responseOptionsLogicControls.controls[i];
-      responseOptionsValidity[optionControl.value] =
+      final normalizedKey = QuestionFormData.normalizeResponseOptionKey(
+        optionControl.value,
+      );
+      final normalizedValue =
           logicControl.value ?? defaultResponseOptionValidity;
+      responseOptionsValidity[normalizedKey] = normalizedValue;
     }
     data.responseOptionsValidity = responseOptionsValidity;
 
@@ -179,7 +183,13 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     for (var i = 0; i < controls.length; i++) {
       final optionControl = answerOptionsControls[i];
       final associatedControl = controls[i];
-      if (optionControl.value == responseOption) {
+      final optionKey = QuestionFormData.normalizeResponseOptionKey(
+        optionControl.value,
+      );
+      final targetKey = QuestionFormData.normalizeResponseOptionKey(
+        responseOption,
+      );
+      if (optionKey == targetKey) {
         return associatedControl;
       }
     }
