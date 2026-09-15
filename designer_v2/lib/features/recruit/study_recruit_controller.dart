@@ -75,13 +75,11 @@ class StudyRecruitController extends _$StudyRecruitController
         state = state.copyWith(
           paginationStatus: InviteCodePaginationStatus.loading,
           pendingInviteCodePageIndex: pageIndex,
-          isSearchPending: false,
           clearPaginationError: true,
         );
       } else {
         state = state.copyWith(
           invites: const AsyncValue.loading(),
-          isSearchPending: false,
           paginationStatus: InviteCodePaginationStatus.idle,
           clearPendingInviteCodePageIndex: true,
           clearPaginationError: true,
@@ -91,7 +89,6 @@ class StudyRecruitController extends _$StudyRecruitController
       state = state.copyWith(
         paginationStatus: InviteCodePaginationStatus.loading,
         pendingInviteCodePageIndex: pageIndex,
-        isSearchPending: false,
         clearPaginationError: true,
       );
     }
