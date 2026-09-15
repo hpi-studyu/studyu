@@ -236,7 +236,8 @@ class StudyUApiClient extends SupabaseClientDependant
 
       final trimmed = searchQuery?.trim() ?? '';
       if (trimmed.isNotEmpty) {
-        q = q.ilike('title', '%$trimmed%');
+        final escaped = escapePostgrestLikeLiteral(trimmed);
+        q = q.ilike('title', '%$escaped%');
       }
 
       if (advancedFilter != null) {

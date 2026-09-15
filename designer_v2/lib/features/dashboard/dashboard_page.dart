@@ -484,113 +484,62 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (useWideHeaderLayout)
-            Table(
-              columnWidths: const {
-                0: IntrinsicColumnWidth(),
-                1: FlexColumnWidth(),
-                2: IntrinsicColumnWidth(),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
+          Table(
+            columnWidths: const {
+              0: IntrinsicColumnWidth(),
+              1: FlexColumnWidth(),
+              2: IntrinsicColumnWidth(),
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: [
+              TableRow(
+                children: [
+                  SizedBox(
+                    height: 36.0,
+                    child: PrimaryButton(
+                      key: const ValueKey('new_study_button'),
+                      text: tr.action_button_new_study,
+                      onPressed: controller.onClickNewStudy,
+                    ),
+                  ),
+                  if (showHeaderTitleAndCount)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text(
+                        state.visibleListTitle,
+                        style: theme.textTheme.headlineMedium,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: _buildHeaderActions(
+                      context,
+                      state,
+                      controller,
+                      showCount: showInlineCount,
+                    ),
+                  ),
+                ],
+              ),
+              if (showHeaderTitleAndCount &&
+                  showHeaderCount &&
+                  !showInlineCount)
                 TableRow(
                   children: [
-                    SizedBox(
-                      height: 36.0,
-                      child: PrimaryButton(
-                        key: const ValueKey('new_study_button'),
-                        text: tr.action_button_new_study,
-                        onPressed: controller.onClickNewStudy,
-                      ),
+                    const SizedBox.shrink(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 4.0),
+                      child: _buildStudiesCount(context, state),
                     ),
-                    if (showHeaderTitleAndCount)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                        child: Text(
-                          state.visibleListTitle,
-                          style: theme.textTheme.headlineMedium,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      )
-                    else
-                      const SizedBox.shrink(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _buildHeaderActions(
-                        context,
-                        state,
-                        controller,
-                        showCount: showInlineCount,
-                      ),
-                    ),
+                    const SizedBox.shrink(),
                   ],
                 ),
-                if (showHeaderTitleAndCount &&
-                    showHeaderCount &&
-                    !showInlineCount)
-                  TableRow(
-                    children: [
-                      const SizedBox.shrink(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0, top: 4.0),
-                        child: _buildStudiesCount(context, state),
-                      ),
-                      const SizedBox.shrink(),
-                    ],
-                  ),
-              ],
-            )
-          else
-            Table(
-              columnWidths: const {
-                0: IntrinsicColumnWidth(),
-                1: FlexColumnWidth(),
-                2: IntrinsicColumnWidth(),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                TableRow(
-                  children: [
-                    SizedBox(
-                      height: 36.0,
-                      child: PrimaryButton(
-                        key: const ValueKey('new_study_button'),
-                        text: tr.action_button_new_study,
-                        onPressed: controller.onClickNewStudy,
-                      ),
-                    ),
-                    if (showHeaderTitleAndCount)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                        child: Text(
-                          state.visibleListTitle,
-                          style: theme.textTheme.headlineMedium,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      )
-                    else
-                      const SizedBox.shrink(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _buildHeaderActions(context, state, controller),
-                    ),
-                  ],
-                ),
-                if (showHeaderTitleAndCount && showHeaderCount)
-                  TableRow(
-                    children: [
-                      const SizedBox.shrink(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0, top: 4.0),
-                        child: _buildStudiesCount(context, state),
-                      ),
-                      const SizedBox.shrink(),
-                    ],
-                  ),
-              ],
-            ),
+            ],
+          ),
           if (state.activeFilter != null &&
               state.activeFilter!.children.isNotEmpty) ...[
             const SizedBox(height: 16.0),

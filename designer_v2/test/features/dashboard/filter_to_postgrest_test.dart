@@ -175,6 +175,22 @@ void main() {
       );
     });
 
+    test('contains escapes literal wildcards before adding wildcards', () {
+      final group = FilterGroup(
+        children: [
+          FilterCondition(
+            property: StudyProperty.title,
+            operator: FilterOperator.contains,
+            value: 'sleep*study',
+          ),
+        ],
+      );
+      expect(
+        buildPostgrestFilterExpression(group, _user()),
+        r'title.ilike."*sleep\*study*"',
+      );
+    });
+
     test('startsWith and endsWith use anchored ilike patterns', () {
       final start = FilterGroup(
         children: [
@@ -233,6 +249,23 @@ void main() {
       expect(
         buildPostgrestFilterExpression(group, _user(email: 'alice@x.test')),
         'collaborator_emails.cs.{"alice@x.test"}',
+      );
+    });
+
+    test('missedDays remains unsupported for server filtering', () {
+      final group = FilterGroup(
+        children: [
+          FilterCondition(
+            property: StudyProperty.missedDays,
+            operator: FilterOperator.greaterThan,
+            value: 2,
+          ),
+        ],
+      );
+
+      expect(
+        () => buildPostgrestFilterExpression(group, _user()),
+        throwsA(isA<UnsupportedFilterException>()),
       );
     });
 

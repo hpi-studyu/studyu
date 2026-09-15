@@ -57,6 +57,8 @@ class FilterEvaluator {
         return study.activeSubjectCount;
       case StudyProperty.endedCount:
         return study.endedCount;
+      case StudyProperty.missedDays:
+        return study.missedDays.fold(0, (sum, days) => sum + days);
       case StudyProperty.resultSharing:
         return study.resultSharing.name;
       case StudyProperty.registryPublished:

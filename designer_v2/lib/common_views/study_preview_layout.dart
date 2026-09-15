@@ -12,6 +12,7 @@ class StudyPreviewLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final banner = previewBanner(ref, routeArgs.studyId);
     return ColoredBox(
       color: ThemeConfig.sidesheetBackgroundColor(Theme.of(context)),
       child: Stack(
@@ -27,7 +28,10 @@ class StudyPreviewLayout extends ConsumerWidget {
               ],
             ),
           ),
-          previewBanner(ref, routeArgs.studyId) ?? const SizedBox.shrink(),
+          if (banner == null)
+            const SizedBox.shrink()
+          else
+            Positioned(top: 0, left: 0, right: 0, child: banner),
         ],
       ),
     );

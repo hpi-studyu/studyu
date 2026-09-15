@@ -7,6 +7,7 @@ library;
 
 import 'dart:async';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -335,10 +336,8 @@ void main() {
       ).thenAnswer((_) => completer.future);
 
       // Two rapid loadMore calls — only the first should hit the repo.
-      // ignore: unawaited_futures
-      h.controller.loadMore();
-      // ignore: unawaited_futures
-      h.controller.loadMore();
+      final firstLoad = h.controller.loadMore();
+      final secondLoad = h.controller.loadMore();
       await Future<void>.delayed(Duration.zero);
 
       verify(
@@ -361,6 +360,7 @@ void main() {
           totalCount: 100,
         ),
       );
+      await Future.wait([firstLoad, secondLoad]);
     });
 
     test('setSorting resets pagination and reloads with new sort', () async {
@@ -420,57 +420,59 @@ void main() {
       },
     );
 
-    test('search query change is debounced before triggering reload', () async {
-      final h = _Harness();
-      await h.settle();
-      clearInteractions(h.studyRepo);
-
-      await h.controller.filterStudies('foo');
-      // Just after triggering, no fetch should have fired yet.
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      verifyNever(
-        h.studyRepo.fetchPage(
-          offset: anyNamed('offset'),
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: anyNamed('searchQuery'),
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
-        ),
-      );
-
-      await Future<void>.delayed(const Duration(milliseconds: 350));
-      verify(
-        h.studyRepo.fetchPage(
-          offset: 0,
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: 'foo',
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
-        ),
-      ).called(1);
-    });
-
-    test(
-      'rapid keystrokes only trigger one fetch (debounce coalesces)',
-      () async {
+    test('search query change is debounced before triggering reload', () {
+      fakeAsync((async) {
         final h = _Harness();
-        await h.settle();
+        async.flushMicrotasks();
         clearInteractions(h.studyRepo);
 
-        await h.controller.filterStudies('f');
-        await Future<void>.delayed(const Duration(milliseconds: 50));
-        await h.controller.filterStudies('fo');
-        await Future<void>.delayed(const Duration(milliseconds: 50));
-        await h.controller.filterStudies('foo');
-        await Future<void>.delayed(const Duration(milliseconds: 400));
+        h.controller.filterStudies('foo');
+        async.elapse(const Duration(milliseconds: 50));
+        verifyNever(
+          h.studyRepo.fetchPage(
+            offset: anyNamed('offset'),
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: anyNamed('searchQuery'),
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        );
+
+        async.elapse(const Duration(milliseconds: 300));
+        async.flushMicrotasks();
+        verify(
+          h.studyRepo.fetchPage(
+            offset: 0,
+            limit: anyNamed('limit'),
+            sortBy: anyNamed('sortBy'),
+            ascending: anyNamed('ascending'),
+            preset: anyNamed('preset'),
+            currentUser: anyNamed('currentUser'),
+            searchQuery: 'foo',
+            advancedFilter: anyNamed('advancedFilter'),
+            excludeIds: anyNamed('excludeIds'),
+          ),
+        ).called(1);
+      });
+    });
+
+    test('rapid keystrokes only trigger one fetch (debounce coalesces)', () {
+      fakeAsync((async) {
+        final h = _Harness();
+        async.flushMicrotasks();
+        clearInteractions(h.studyRepo);
+
+        h.controller.filterStudies('f');
+        async.elapse(const Duration(milliseconds: 50));
+        h.controller.filterStudies('fo');
+        async.elapse(const Duration(milliseconds: 50));
+        h.controller.filterStudies('foo');
+        async.elapse(const Duration(milliseconds: 301));
+        async.flushMicrotasks();
 
         verify(
           h.studyRepo.fetchPage(
@@ -485,8 +487,8 @@ void main() {
             excludeIds: anyNamed('excludeIds'),
           ),
         ).called(1);
-      },
-    );
+      });
+    });
 
     test('stale fetch responses are discarded by token mechanism', () async {
       final h = _Harness();
@@ -501,7 +503,6 @@ void main() {
         totalCount: 2,
       );
 
-      var callIndex = 0;
       when(
         h.studyRepo.fetchPage(
           offset: anyNamed('offset'),
@@ -514,9 +515,13 @@ void main() {
           advancedFilter: anyNamed('advancedFilter'),
           excludeIds: anyNamed('excludeIds'),
         ),
-      ).thenAnswer((_) {
-        callIndex++;
-        if (callIndex == 1) return slowCompleter.future;
+      ).thenAnswer((invocation) {
+        final limit = invocation.namedArguments[#limit] as int;
+        final preset = invocation.namedArguments[#preset] as StudiesFilter;
+        if (limit == DashboardState.pageSize &&
+            preset == StudiesFilter.public) {
+          return slowCompleter.future;
+        }
         return Future.value(fastPage);
       });
 
@@ -538,6 +543,68 @@ void main() {
       );
       await h.settle();
       expect(h.state.loadedStudies.map((s) => s.id), ['fast1', 'fast2']);
+    });
+
+    test('in-flight fetches do not update state after disposal', () async {
+      final studyRepo = MockStudyRepository();
+      final authRepo = MockAuthRepository();
+      final userRepo = MockUserRepository();
+      final user = MockUser();
+      final studyUUser = StudyUUser(
+        id: 'me',
+        email: 'me@x.test',
+        preferences: Preferences(),
+      );
+      when(user.id).thenReturn('me');
+      when(user.email).thenReturn('me@x.test');
+      when(authRepo.currentUser).thenReturn(user);
+      when(userRepo.fetchUser()).thenAnswer((_) async => studyUUser);
+      when(userRepo.user).thenReturn(studyUUser);
+      when(userRepo.getCustomPresets()).thenReturn(const []);
+      when(
+        userRepo.getActiveFilter(any),
+      ).thenReturn((presetId: null, filterGroup: null));
+      when(
+        userRepo.getActiveSort(any),
+      ).thenReturn((sortColumn: null, sortAscending: null));
+      final pageCompleter = Completer<StudiesPage>();
+      when(
+        studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).thenAnswer((_) => pageCompleter.future);
+
+      final container = ProviderContainer(
+        overrides: [
+          studyRepositoryProvider.overrideWithValue(studyRepo),
+          authRepositoryProvider.overrideWithValue(authRepo),
+          userRepositoryProvider.overrideWithValue(userRepo),
+          dashboardDispatchProvider.overrideWithValue((_) {}),
+        ],
+      );
+      final subscription = container.listen(
+        dashboardControllerProvider,
+        (_, _) {},
+        fireImmediately: true,
+      );
+      final loading = container
+          .read(dashboardControllerProvider.notifier)
+          .setStudiesFilter(null);
+      await Future<void>.delayed(Duration.zero);
+
+      subscription.close();
+      container.dispose();
+      pageCompleter.complete(const StudiesPage(studies: [], totalCount: 0));
+
+      await loading;
     });
 
     test(
@@ -591,13 +658,15 @@ void main() {
       );
       await h.settle();
 
+      var currentUser = h.studyUUser;
+      when(h.userRepo.user).thenAnswer((_) => currentUser);
       final updatedUser = StudyUUser(
         id: 'me',
         email: 'me@x.test',
         preferences: Preferences(pinnedStudies: {'b'}),
       );
       when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
-        when(h.userRepo.user).thenReturn(updatedUser);
+        currentUser = updatedUser;
         return updatedUser;
       });
       clearInteractions(h.studyRepo);
@@ -634,13 +703,15 @@ void main() {
       );
       await h.settle();
 
+      var currentUser = h.studyUUser;
+      when(h.userRepo.user).thenAnswer((_) => currentUser);
       final updatedUser = StudyUUser(
         id: 'me',
         email: 'me@x.test',
         preferences: Preferences(pinnedStudies: {'missing'}),
       );
       when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
-        when(h.userRepo.user).thenReturn(updatedUser);
+        currentUser = updatedUser;
         return updatedUser;
       });
       when(
@@ -692,13 +763,15 @@ void main() {
       );
       await h.settle();
 
+      var currentUser = h.studyUUser;
+      when(h.userRepo.user).thenAnswer((_) => currentUser);
       final updatedUser = StudyUUser(
         id: 'me',
         email: 'me@x.test',
         preferences: Preferences(),
       );
       when(h.userRepo.updatePreferences(any, any)).thenAnswer((_) async {
-        when(h.userRepo.user).thenReturn(updatedUser);
+        currentUser = updatedUser;
         return updatedUser;
       });
       when(h.studyRepo.fetchPinned(any)).thenAnswer((_) async => const []);
@@ -886,7 +959,6 @@ void main() {
 
       expect(state.displayedStudies.requireValue.map((study) => study.id), [
         'matching',
-        'page',
       ]);
     });
 
@@ -979,17 +1051,25 @@ void main() {
 
       verify(
         h.studyRepo.fetchPage(
-          offset: anyNamed('offset'),
-          limit: anyNamed('limit'),
-          sortBy: anyNamed('sortBy'),
-          ascending: anyNamed('ascending'),
-          preset: anyNamed('preset'),
-          currentUser: anyNamed('currentUser'),
-          searchQuery: anyNamed('searchQuery'),
-          advancedFilter: anyNamed('advancedFilter'),
-          excludeIds: anyNamed('excludeIds'),
+          offset: 0,
+          limit: DashboardState.pageSize,
+          sortBy: StudiesTableColumn.createdAt,
+          ascending: false,
+          preset: StudiesFilter.owned,
+          currentUser: h.user,
+          searchQuery: '',
         ),
-      ).called(2);
+      ).called(1);
+      verify(
+        h.studyRepo.fetchPage(
+          offset: 0,
+          limit: 1,
+          sortBy: StudiesTableColumn.createdAt,
+          ascending: false,
+          preset: StudiesFilter.owned,
+          currentUser: h.user,
+        ),
+      ).called(1);
     });
 
     test('delete keeps list populated while refresh is in flight', () async {
@@ -1049,6 +1129,89 @@ void main() {
 
       expect(h.state.loadedStudies.map((study) => study.id), ['s2']);
       expect(h.state.totalCount, 1);
+    });
+
+    test('deleting a pinned study does not decrement page counts', () async {
+      final pinnedStudy = _study('pinned');
+      final pageStudy = _study('page');
+      final h = _Harness(
+        pinnedIds: {'pinned'},
+        initialPinned: [pinnedStudy],
+        initialPage: StudiesPage(studies: [pageStudy], totalCount: 1),
+      );
+      await h.settle();
+      clearInteractions(h.studyRepo);
+
+      var currentUser = h.studyUUser;
+      when(h.userRepo.user).thenAnswer((_) => currentUser);
+      when(h.studyRepo.availableActions(pinnedStudy)).thenReturn([
+        ModelAction(
+          type: StudyActionType.delete,
+          label: 'delete',
+          onExecute: () {
+            currentUser = StudyUUser(
+              id: 'me',
+              email: 'me@x.test',
+              preferences: Preferences(),
+            );
+          },
+        ),
+      ]);
+      final pageCompleter = Completer<StudiesPage>();
+      when(
+        h.studyRepo.fetchPage(
+          offset: anyNamed('offset'),
+          limit: anyNamed('limit'),
+          sortBy: anyNamed('sortBy'),
+          ascending: anyNamed('ascending'),
+          preset: anyNamed('preset'),
+          currentUser: anyNamed('currentUser'),
+          searchQuery: anyNamed('searchQuery'),
+          advancedFilter: anyNamed('advancedFilter'),
+          excludeIds: anyNamed('excludeIds'),
+        ),
+      ).thenAnswer((invocation) {
+        if (invocation.namedArguments[#limit] == 1) {
+          return Future.value(const StudiesPage(studies: [], totalCount: 1));
+        }
+        return pageCompleter.future;
+      });
+
+      final action = h.controller
+          .availableActions(pinnedStudy)
+          .firstWhere((action) => action.type == StudyActionType.delete);
+      final execution = action.onExecute();
+      await h.settle();
+
+      expect(h.state.pinnedStudiesList, isEmpty);
+      expect(h.state.totalCount, 1);
+      expect(h.state.pageTotalCount, 1);
+
+      pageCompleter.complete(StudiesPage(studies: [pageStudy], totalCount: 1));
+      await execution;
+    });
+
+    test('duplicate action failures update loadError', () async {
+      final study = _study('study');
+      final error = StateError('duplicate failed');
+      final h = _Harness(
+        initialPage: StudiesPage(studies: [study], totalCount: 1),
+      );
+      await h.settle();
+      when(h.studyRepo.availableActions(study)).thenReturn([
+        ModelAction(
+          type: StudyActionType.duplicate,
+          label: 'duplicate',
+          onExecute: () => Future<void>.error(error),
+        ),
+      ]);
+
+      final action = h.controller
+          .availableActions(study)
+          .firstWhere((action) => action.type == StudyActionType.duplicate);
+      await action.onExecute();
+
+      expect(h.state.loadError, same(error));
     });
 
     test(

@@ -68,6 +68,7 @@ class DashboardController extends _$DashboardController
   Future<void> _loadSavedFilters() async {
     try {
       await _userRepository.fetchUser();
+      if (!ref.mounted) return;
       final savedFilters = _userRepository.getCustomPresets();
       state = state.copyWith(savedFilters: () => savedFilters);
     } catch (e) {
@@ -90,12 +91,13 @@ class DashboardController extends _$DashboardController
     );
 
     final pinnedError = await _fetchPinnedFor(token);
-    if (token != _fetchToken) return;
+    if (!ref.mounted || token != _fetchToken) return;
 
     final pageTotalFuture = _fetchPageTotalCount(token);
     await _fetchPage(token, isInitial: true);
+    if (!ref.mounted || token != _fetchToken) return;
     final pageTotalError = await pageTotalFuture;
-    if (token != _fetchToken) return;
+    if (!ref.mounted || token != _fetchToken) return;
 
     final auxiliaryError = pinnedError ?? pageTotalError;
     if (state.loadError == null && auxiliaryError != null) {
@@ -107,7 +109,7 @@ class DashboardController extends _$DashboardController
   Future<Object?> _fetchPinnedFor(int token) async {
     final pinnedIds = _userRepository.user.preferences.pinnedStudies;
     if (pinnedIds.isEmpty) {
-      if (token != _fetchToken) return null;
+      if (!ref.mounted || token != _fetchToken) return null;
       state = state.copyWith(
         pinnedStudiesList: () => const [],
         isLoadingPinned: false,
@@ -116,14 +118,14 @@ class DashboardController extends _$DashboardController
     }
     try {
       final pinned = await _studyRepository.fetchPinned(pinnedIds.toSet());
-      if (token != _fetchToken) return null;
+      if (!ref.mounted || token != _fetchToken) return null;
       state = state.copyWith(
         pinnedStudiesList: () => pinned,
         isLoadingPinned: false,
       );
       return null;
     } catch (e) {
-      if (token != _fetchToken) return null;
+      if (!ref.mounted || token != _fetchToken) return null;
       state = state.copyWith(isLoadingPinned: false);
       return e;
     }
@@ -155,7 +157,7 @@ class DashboardController extends _$DashboardController
         excludeIds: pinnedIds.toList(),
       );
 
-      if (token != _fetchToken) return;
+      if (!ref.mounted || token != _fetchToken) return;
 
       final updatedLoaded = isInitial
           ? page.studies
@@ -171,7 +173,7 @@ class DashboardController extends _$DashboardController
         advancedFilterUnsupported: false,
       );
     } on UnsupportedFilterException catch (e) {
-      if (token != _fetchToken) return;
+      if (!ref.mounted || token != _fetchToken) return;
       state = state.copyWith(
         loadedStudies: () => const [],
         totalCount: 0,
@@ -181,7 +183,7 @@ class DashboardController extends _$DashboardController
         advancedFilterUnsupported: true,
       );
     } catch (e) {
-      if (token != _fetchToken) return;
+      if (!ref.mounted || token != _fetchToken) return;
       state = state.copyWith(
         isLoadingMore: false,
         hasMore: false,
@@ -205,12 +207,13 @@ class DashboardController extends _$DashboardController
     );
 
     final pinnedError = await _fetchPinnedFor(token);
-    if (token != _fetchToken) return;
+    if (!ref.mounted || token != _fetchToken) return;
 
     final pageTotalFuture = _fetchPageTotalCount(token);
     await _fetchPageWithLimit(token, isInitial: true, limit: refreshLimit);
+    if (!ref.mounted || token != _fetchToken) return;
     final pageTotalError = await pageTotalFuture;
-    if (token != _fetchToken) return;
+    if (!ref.mounted || token != _fetchToken) return;
 
     final auxiliaryError = pinnedError ?? pageTotalError;
     if (state.loadError == null && auxiliaryError != null) {
@@ -237,12 +240,13 @@ class DashboardController extends _$DashboardController
         state.pinnedStudiesList.length - updatedPinnedStudies.length;
     final removedLoadedCount =
         state.loadedStudies.length - updatedLoadedStudies.length;
-    final removedCount = removedPinnedCount + removedLoadedCount;
+    if (removedPinnedCount + removedLoadedCount == 0) return;
 
-    if (removedCount == 0) return;
-
-    final updatedTotalCount = max(state.totalCount - removedCount, 0);
-    final updatedPageTotalCount = max(state.pageTotalCount - removedCount, 0);
+    final updatedTotalCount = max(state.totalCount - removedLoadedCount, 0);
+    final updatedPageTotalCount = max(
+      state.pageTotalCount - removedLoadedCount,
+      0,
+    );
 
     state = state.copyWith(
       pinnedStudiesList: () => updatedPinnedStudies,
@@ -267,12 +271,12 @@ class DashboardController extends _$DashboardController
         excludeIds: pinnedIds.toList(),
       );
 
-      if (token != _fetchToken) return null;
+      if (!ref.mounted || token != _fetchToken) return null;
 
       state = state.copyWith(pageTotalCount: page.totalCount);
       return null;
     } catch (e) {
-      if (token != _fetchToken) return null;
+      if (!ref.mounted || token != _fetchToken) return null;
       return e;
     }
   }
@@ -293,6 +297,7 @@ class DashboardController extends _$DashboardController
 
   Future<void> setStudiesFilter(StudiesFilter? filter) async {
     await _userRepository.fetchUser();
+    if (!ref.mounted) return;
     final newFilter = filter ?? DashboardState.defaultFilter;
     final pageKey = _getPageKey(newFilter);
     final active = _userRepository.getActiveFilter(pageKey);
@@ -324,6 +329,7 @@ class DashboardController extends _$DashboardController
 
   Future<void> saveFilter(SavedFilter filter) async {
     await _userRepository.saveCustomPreset(filter);
+    if (!ref.mounted) return;
     state = state.copyWith(
       savedFilters: () => _userRepository.getCustomPresets(),
     );
@@ -331,6 +337,7 @@ class DashboardController extends _$DashboardController
 
   Future<void> deleteFilter(String id) async {
     await _userRepository.deleteCustomPreset(id);
+    if (!ref.mounted) return;
     state = state.copyWith(
       savedFilters: () => _userRepository.getCustomPresets(),
     );
@@ -363,6 +370,7 @@ class DashboardController extends _$DashboardController
         state.isLoadingInitial || state.isLoadingMore || state.isLoadingPinned;
     final wasLoaded = state.loadedStudies.any((study) => study.id == modelId);
     await _userRepository.updatePreferences(PreferenceAction.pin, modelId);
+    if (!ref.mounted) return;
 
     final studyIndex = state.loadedStudies.indexWhere(
       (study) => study.id == modelId,
@@ -399,6 +407,7 @@ class DashboardController extends _$DashboardController
 
   Future<void> pinOffStudy(String modelId) async {
     await _userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
+    if (!ref.mounted) return;
     await _resetAndReload();
   }
 
@@ -462,6 +471,26 @@ class DashboardController extends _$DashboardController
     return _userRepository.user.preferences.pinnedStudies.contains(study.id);
   }
 
+  ModelAction _wrapAction(
+    ModelAction action,
+    Future<void> Function() onExecute,
+  ) {
+    return ModelAction(
+      type: action.type,
+      label: action.label,
+      icon: action.icon,
+      tooltip: action.tooltip,
+      confirmation: action.confirmation,
+      isAvailable: action.isAvailable,
+      isDestructive: action.isDestructive,
+      isSeparator: action.isSeparator,
+      isHeader: action.isHeader,
+      isChecked: action.isChecked,
+      showBadge: action.showBadge,
+      onExecute: onExecute,
+    );
+  }
+
   @override
   List<ModelAction> availableActions(Study model) {
     final pinActions = [
@@ -493,55 +522,37 @@ class DashboardController extends _$DashboardController
     final studyActions = repoActions.map((action) {
       final type = action.type as StudyActionType?;
       if (type == StudyActionType.delete) {
-        return ModelAction(
-          type: action.type,
-          label: action.label,
-          icon: action.icon,
-          tooltip: action.tooltip,
-          confirmation: action.confirmation,
-          isAvailable: action.isAvailable,
-          isDestructive: action.isDestructive,
-          isSeparator: action.isSeparator,
-          isHeader: action.isHeader,
-          isChecked: action.isChecked,
-          showBadge: action.showBadge,
-          onExecute: () async {
-            final loadedStudyCountBeforeDelete = state.loadedStudies.length;
-            try {
-              await action.onExecute();
-              _removeStudyLocally(model.id);
-              await _refreshAfterMutation(
-                targetLoadedStudyCount: loadedStudyCountBeforeDelete,
-              );
-            } catch (e) {
-              state = state.copyWith(loadError: () => e);
-            }
-          },
-        );
+        return _wrapAction(action, () async {
+          final loadedStudyCountBeforeDelete = state.loadedStudies.length;
+          try {
+            await action.onExecute();
+            if (!ref.mounted) return;
+            _removeStudyLocally(model.id);
+            await _refreshAfterMutation(
+              targetLoadedStudyCount: loadedStudyCountBeforeDelete,
+            );
+          } catch (e) {
+            if (!ref.mounted) return;
+            state = state.copyWith(loadError: () => e);
+          }
+        });
       }
       if (type == StudyActionType.duplicate ||
           type == StudyActionType.duplicateDraft ||
           type == StudyActionType.close) {
-        return ModelAction(
-          type: action.type,
-          label: action.label,
-          icon: action.icon,
-          tooltip: action.tooltip,
-          confirmation: action.confirmation,
-          isAvailable: action.isAvailable,
-          isDestructive: action.isDestructive,
-          isSeparator: action.isSeparator,
-          isHeader: action.isHeader,
-          isChecked: action.isChecked,
-          showBadge: action.showBadge,
-          onExecute: () async {
-            final loadedStudyCountBeforeRefresh = state.loadedStudies.length;
+        return _wrapAction(action, () async {
+          final loadedStudyCountBeforeRefresh = state.loadedStudies.length;
+          try {
             await action.onExecute();
+            if (!ref.mounted) return;
             await _refreshAfterMutation(
               targetLoadedStudyCount: loadedStudyCountBeforeRefresh,
             );
-          },
-        );
+          } catch (e) {
+            if (!ref.mounted) return;
+            state = state.copyWith(loadError: () => e);
+          }
+        });
       }
       return action;
     }).toList();

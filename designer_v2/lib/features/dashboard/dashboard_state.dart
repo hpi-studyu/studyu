@@ -115,7 +115,10 @@ class DashboardState extends Equatable {
     if (isLoadingInitial && loadedStudies.isEmpty && pinnedStudies.isEmpty) {
       return const AsyncValue.loading();
     }
-    return AsyncValue.data([...pinnedStudies, ...loadedStudies]);
+    return AsyncValue.data([
+      ...pinnedStudies,
+      ...loadedStudies.where(_matchesSearchQuery),
+    ]);
   }
 
   DashboardState copyWith({

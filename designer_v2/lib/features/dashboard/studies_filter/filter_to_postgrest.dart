@@ -40,6 +40,13 @@ String? _renderGroup(FilterGroup group, User currentUser) {
 String _renderCondition(FilterCondition condition, User currentUser) {
   final property = condition.property;
 
+  if (property == StudyProperty.missedDays) {
+    throw const UnsupportedFilterException(
+      'missedDays is computed from an array column and cannot be filtered '
+      'server-side without a generated column or RPC.',
+    );
+  }
+
   if (property == StudyProperty.owner) {
     final isOwner = condition.value == true;
     final eqOp = condition.operator == FilterOperator.notEquals
@@ -134,6 +141,7 @@ String _columnFor(StudyProperty property) {
       return 'result_sharing';
     case StudyProperty.registryPublished:
       return 'registry_published';
+    case StudyProperty.missedDays:
     case StudyProperty.owner:
     case StudyProperty.editor:
       throw StateError('synthetic property: ${property.name}');
@@ -153,6 +161,12 @@ String _formatScalar(String value) {
   return '"$escaped"';
 }
 
+String escapePostgrestLikeLiteral(String value) => value
+    .replaceAll('*', r'\*')
+    .replaceAll('%', r'\%')
+    .replaceAll('_', r'\_')
+    .replaceAll('"', r'\"');
+
 String _formatLikePattern(
   dynamic value, {
   bool exact = false,
@@ -160,12 +174,7 @@ String _formatLikePattern(
   bool startsWith = false,
   bool endsWith = false,
 }) {
-  final raw = (value ?? '').toString();
-  // Escape PostgREST/SQL wildcard characters to prevent accidental injection
-  final escaped = raw
-      .replaceAll('%', '\\%')
-      .replaceAll('_', '\\_')
-      .replaceAll('"', r'\"');
+  final escaped = escapePostgrestLikeLiteral((value ?? '').toString());
   final pattern = exact
       ? escaped
       : contains

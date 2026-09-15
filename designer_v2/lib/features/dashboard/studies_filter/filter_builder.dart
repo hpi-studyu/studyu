@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_draft_controller.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/bool_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/date_range_filter.dart';
@@ -13,7 +12,6 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/num
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/text_filter.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class FilterBuilder extends ConsumerStatefulWidget {
@@ -109,16 +107,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     _activeSubjectCountController.dispose();
     _endedCountController.dispose();
     super.dispose();
-  }
-
-  int _calculateMatchCount(FilterGroup filter) {
-    final state = ref.read(dashboardControllerProvider);
-    final studies = [...state.pinnedStudiesList, ...state.loadedStudies];
-    final supabaseUser = Supabase.instance.client.auth.currentUser;
-    if (supabaseUser == null) return 0;
-    return studies
-        .where((s) => FilterEvaluator.evaluate(filter, s, supabaseUser))
-        .length;
   }
 
   bool _areFiltersEqual(FilterElement? a, FilterElement? b) {
@@ -298,7 +286,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   Widget build(BuildContext context) {
     final draft = ref.watch(filterDraftControllerProvider);
     final controller = ref.watch(filterDraftControllerProvider.notifier);
-    final matchCount = _calculateMatchCount(draft.toFilterGroup);
 
     SavedFilter? loadedPreset;
     if (draft.loadedPresetId != null) {
@@ -766,9 +753,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         },
                         icon: const Icon(Icons.check),
                         label: Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.filter_show_studies(matchCount),
+                          AppLocalizations.of(context)!.filter_studies,
                         ),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
