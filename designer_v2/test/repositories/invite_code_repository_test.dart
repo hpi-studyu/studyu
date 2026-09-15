@@ -138,4 +138,19 @@ void main() {
     expect(repository.get(invite.code), isNull);
     expect(study.invites, isNull);
   });
+
+  test('dispose closes all model change streams', () async {
+    final allChangesSubscription = repository.watchAllChanges().listen((_) {});
+    final inviteChangesSubscription = repository
+        .watchChanges('invite-a')
+        .listen((_) {});
+    final allChangesDone = allChangesSubscription.asFuture<void>();
+    final inviteChangesDone = inviteChangesSubscription.asFuture<void>();
+
+    repository.dispose();
+
+    await Future.wait([allChangesDone, inviteChangesDone]);
+    await allChangesSubscription.cancel();
+    await inviteChangesSubscription.cancel();
+  });
 }

@@ -495,9 +495,13 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   @override
   void dispose() {
     _allModelsStreamController.close();
-    modelStreamControllers.forEach((_, controller) {
+    _allModelEventsStreamController.close();
+    for (final controller in modelStreamControllers.values.toList()) {
       controller.close();
-    });
+    }
+    for (final controller in modelEventsStreamControllers.values.toList()) {
+      controller.close();
+    }
   }
 
   @override
