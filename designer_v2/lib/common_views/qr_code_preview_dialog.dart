@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
-class QrCodePreviewDialog extends ConsumerWidget {
+class QrCodePreviewDialog extends ConsumerStatefulWidget {
   const QrCodePreviewDialog({
     required this.data,
     required this.filename,
@@ -22,7 +22,29 @@ class QrCodePreviewDialog extends ConsumerWidget {
   final String? inviteCode;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<QrCodePreviewDialog> createState() =>
+      _QrCodePreviewDialogState();
+}
+
+class _QrCodePreviewDialogState extends ConsumerState<QrCodePreviewDialog> {
+  late Future<Widget> _qrWidgetFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _qrWidgetFuture = QrCodeDownloader.generateQrWidget(data: widget.data);
+  }
+
+  @override
+  void didUpdateWidget(QrCodePreviewDialog oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.data != widget.data) {
+      _qrWidgetFuture = QrCodeDownloader.generateQrWidget(data: widget.data);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     const dialogWidth = 450.0;
     final theme = Theme.of(context);
 
@@ -30,7 +52,7 @@ class QrCodePreviewDialog extends ConsumerWidget {
       child: Builder(
         builder: (dialogContext) {
           Future<void> copyLink() async {
-            await ref.read(clipboardServiceProvider).copy(data);
+            await ref.read(clipboardServiceProvider).copy(widget.data);
             if (!dialogContext.mounted) return;
 
             ScaffoldMessenger.of(dialogContext).showSnackBar(
@@ -66,7 +88,7 @@ class QrCodePreviewDialog extends ConsumerWidget {
                   ),
                 ),
                 StandardDialog(
-                  titleText: title ?? tr.action_qr_code_show,
+                  titleText: widget.title ?? tr.action_qr_code_show,
                   width: dialogWidth,
                   minHeight: 400,
                   body: Column(
@@ -77,10 +99,10 @@ class QrCodePreviewDialog extends ConsumerWidget {
                         tr.dialog_qr_code_description,
                         style: theme.textTheme.bodyMedium,
                       ),
-                      if (inviteCode != null) ...[
+                      if (widget.inviteCode != null) ...[
                         const SizedBox(height: 16.0),
                         Text(
-                          '${tr.form_field_code}: $inviteCode',
+                          '${tr.form_field_code}: ${widget.inviteCode}',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -88,7 +110,7 @@ class QrCodePreviewDialog extends ConsumerWidget {
                       ],
                       const SizedBox(height: 16.0),
                       FutureBuilder<Widget>(
-                        future: QrCodeDownloader.generateQrWidget(data: data),
+                        future: _qrWidgetFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -132,7 +154,7 @@ class QrCodePreviewDialog extends ConsumerWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    data,
+                                    widget.data,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -160,8 +182,8 @@ class QrCodePreviewDialog extends ConsumerWidget {
                       icon: Icons.download,
                       onPressed: () async {
                         await QrCodeDownloader.downloadQrCode(
-                          data: data,
-                          filename: filename,
+                          data: widget.data,
+                          filename: widget.filename,
                         );
                         if (context.mounted) {
                           Navigator.of(context).pop();
