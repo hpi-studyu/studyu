@@ -5,18 +5,12 @@ import 'package:studyu_designer_v2/domain/study_subject.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_to_postgrest.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'api_client.g.dart';
-
-class StudiesPage {
-  const StudiesPage({required this.studies, required this.totalCount});
-  final List<Study> studies;
-  final int totalCount;
-}
 
 abstract class StudyUApi {
   Future<Study> saveStudy(Study study);

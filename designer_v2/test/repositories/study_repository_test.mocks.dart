@@ -23,10 +23,10 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart'
     as _i14;
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart'
     as _i15;
-import 'package:studyu_designer_v2/features/dashboard/studies_table.dart'
-    as _i13;
-import 'package:studyu_designer_v2/repositories/api_client.dart' as _i3;
+import 'package:studyu_designer_v2/repositories/api_client.dart' as _i13;
 import 'package:studyu_designer_v2/repositories/auth_repository.dart' as _i17;
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart'
+    as _i3;
 import 'package:studyu_designer_v2/services/notification_service.dart' as _i22;
 import 'package:studyu_designer_v2/services/notification_types.dart' as _i23;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
@@ -153,7 +153,7 @@ class _FakeRouteInformation_18 extends _i1.SmartFake
 /// A class which mocks [StudyUApiClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStudyUApiClient extends _i1.Mock implements _i3.StudyUApiClient {
+class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
   @override
   _i2.SupabaseClient get supabaseClient =>
       (super.noSuchMethod(
@@ -215,7 +215,7 @@ class MockStudyUApiClient extends _i1.Mock implements _i3.StudyUApiClient {
   _i5.Future<_i3.StudiesPage> getUserStudiesPage({
     required int? offset,
     required int? limit,
-    required _i13.StudiesTableColumn? sortBy,
+    required _i3.StudiesTableColumn? sortBy,
     required bool? ascending,
     required _i14.StudiesFilter? preset,
     required _i2.User? currentUser,

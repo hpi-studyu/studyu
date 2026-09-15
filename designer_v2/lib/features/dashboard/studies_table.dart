@@ -8,18 +8,10 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 
-enum StudiesTableColumn {
-  pin,
-  title,
-  status,
-  participation,
-  createdAt,
-  enrolled,
-  active,
-  completed,
-  action,
-}
+export 'package:studyu_designer_v2/repositories/study_repository_interface.dart'
+    show StudiesTableColumn;
 
 class StudiesTableColumnSize {
   final bool collapsed;

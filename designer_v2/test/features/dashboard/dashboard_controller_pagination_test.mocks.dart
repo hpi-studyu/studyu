@@ -3,28 +3,28 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i12;
+import 'dart:async' as _i13;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i10;
-import 'package:riverpod_annotation/riverpod_annotation.dart' as _i9;
-import 'package:rxdart/subjects.dart' as _i6;
-import 'package:studyu_core/core.dart' as _i7;
+import 'package:mockito/src/dummies.dart' as _i11;
+import 'package:riverpod_annotation/riverpod_annotation.dart' as _i10;
+import 'package:rxdart/subjects.dart' as _i7;
+import 'package:studyu_core/core.dart' as _i8;
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart'
     as _i14;
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart'
     as _i15;
-import 'package:studyu_designer_v2/features/dashboard/studies_table.dart'
-    as _i13;
 import 'package:studyu_designer_v2/repositories/api_client.dart' as _i2;
 import 'package:studyu_designer_v2/repositories/auth_repository.dart' as _i3;
 import 'package:studyu_designer_v2/repositories/model_repository.dart' as _i4;
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart'
-    as _i11;
-import 'package:studyu_designer_v2/repositories/study_repository.dart' as _i8;
+    as _i12;
+import 'package:studyu_designer_v2/repositories/study_repository.dart' as _i9;
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart'
+    as _i5;
 import 'package:studyu_designer_v2/repositories/user_repository.dart' as _i17;
 import 'package:studyu_designer_v2/utils/model_action.dart' as _i16;
-import 'package:supabase_flutter/supabase_flutter.dart' as _i5;
+import 'package:supabase_flutter/supabase_flutter.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -58,7 +58,7 @@ class _FakeIModelRepositoryDelegate_2<T> extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeStudiesPage_3 extends _i1.SmartFake implements _i2.StudiesPage {
+class _FakeStudiesPage_3 extends _i1.SmartFake implements _i5.StudiesPage {
   _FakeStudiesPage_3(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
@@ -70,33 +70,33 @@ class _FakeWrappedModel_4<T> extends _i1.SmartFake
 }
 
 class _FakeSupabaseClient_5 extends _i1.SmartFake
-    implements _i5.SupabaseClient {
+    implements _i6.SupabaseClient {
   _FakeSupabaseClient_5(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeGoTrueClient_6 extends _i1.SmartFake implements _i5.GoTrueClient {
+class _FakeGoTrueClient_6 extends _i1.SmartFake implements _i6.GoTrueClient {
   _FakeGoTrueClient_6(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
 class _FakeBehaviorSubject_7<T> extends _i1.SmartFake
-    implements _i6.BehaviorSubject<T> {
+    implements _i7.BehaviorSubject<T> {
   _FakeBehaviorSubject_7(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeAuthResponse_8 extends _i1.SmartFake implements _i5.AuthResponse {
+class _FakeAuthResponse_8 extends _i1.SmartFake implements _i6.AuthResponse {
   _FakeAuthResponse_8(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeUserResponse_9 extends _i1.SmartFake implements _i5.UserResponse {
+class _FakeUserResponse_9 extends _i1.SmartFake implements _i6.UserResponse {
   _FakeUserResponse_9(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeStudyUUser_10 extends _i1.SmartFake implements _i7.StudyUUser {
+class _FakeStudyUUser_10 extends _i1.SmartFake implements _i8.StudyUUser {
   _FakeStudyUUser_10(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
@@ -104,7 +104,7 @@ class _FakeStudyUUser_10 extends _i1.SmartFake implements _i7.StudyUUser {
 /// A class which mocks [StudyRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
+class MockStudyRepository extends _i1.Mock implements _i9.StudyRepository {
   @override
   _i2.StudyUApi get apiClient =>
       (super.noSuchMethod(
@@ -133,69 +133,69 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
           as _i3.IAuthRepository);
 
   @override
-  _i9.Ref get ref =>
+  _i10.Ref get ref =>
       (super.noSuchMethod(
             Invocation.getter(#ref),
-            returnValue: _i10.dummyValue<_i9.Ref>(
+            returnValue: _i11.dummyValue<_i10.Ref>(
               this,
               Invocation.getter(#ref),
             ),
-            returnValueForMissingStub: _i10.dummyValue<_i9.Ref>(
+            returnValueForMissingStub: _i11.dummyValue<_i10.Ref>(
               this,
               Invocation.getter(#ref),
             ),
           )
-          as _i9.Ref);
+          as _i10.Ref);
 
   @override
-  _i4.IModelRepositoryDelegate<_i7.Study> get delegate =>
+  _i4.IModelRepositoryDelegate<_i8.Study> get delegate =>
       (super.noSuchMethod(
             Invocation.getter(#delegate),
-            returnValue: _FakeIModelRepositoryDelegate_2<_i7.Study>(
+            returnValue: _FakeIModelRepositoryDelegate_2<_i8.Study>(
               this,
               Invocation.getter(#delegate),
             ),
             returnValueForMissingStub:
-                _FakeIModelRepositoryDelegate_2<_i7.Study>(
+                _FakeIModelRepositoryDelegate_2<_i8.Study>(
                   this,
                   Invocation.getter(#delegate),
                 ),
           )
-          as _i4.IModelRepositoryDelegate<_i7.Study>);
+          as _i4.IModelRepositoryDelegate<_i8.Study>);
 
   @override
-  Map<String, _i6.BehaviorSubject<_i4.WrappedModel<_i7.Study>>>
+  Map<String, _i7.BehaviorSubject<_i4.WrappedModel<_i8.Study>>>
   get modelStreamControllers =>
       (super.noSuchMethod(
             Invocation.getter(#modelStreamControllers),
             returnValue:
-                <String, _i6.BehaviorSubject<_i4.WrappedModel<_i7.Study>>>{},
+                <String, _i7.BehaviorSubject<_i4.WrappedModel<_i8.Study>>>{},
             returnValueForMissingStub:
-                <String, _i6.BehaviorSubject<_i4.WrappedModel<_i7.Study>>>{},
+                <String, _i7.BehaviorSubject<_i4.WrappedModel<_i8.Study>>>{},
           )
-          as Map<String, _i6.BehaviorSubject<_i4.WrappedModel<_i7.Study>>>);
+          as Map<String, _i7.BehaviorSubject<_i4.WrappedModel<_i8.Study>>>);
 
   @override
-  Map<String, _i6.BehaviorSubject<_i11.ModelEvent<_i7.Study>>>
+  Map<String, _i7.BehaviorSubject<_i12.ModelEvent<_i8.Study>>>
   get modelEventsStreamControllers =>
       (super.noSuchMethod(
             Invocation.getter(#modelEventsStreamControllers),
             returnValue:
-                <String, _i6.BehaviorSubject<_i11.ModelEvent<_i7.Study>>>{},
+                <String, _i7.BehaviorSubject<_i12.ModelEvent<_i8.Study>>>{},
             returnValueForMissingStub:
-                <String, _i6.BehaviorSubject<_i11.ModelEvent<_i7.Study>>>{},
+                <String, _i7.BehaviorSubject<_i12.ModelEvent<_i8.Study>>>{},
           )
-          as Map<String, _i6.BehaviorSubject<_i11.ModelEvent<_i7.Study>>>);
+          as Map<String, _i7.BehaviorSubject<_i12.ModelEvent<_i8.Study>>>);
 
   @override
-  String getKey(_i7.Study? model) =>
+  String getKey(_i8.Study? model) =>
       (super.noSuchMethod(
             Invocation.method(#getKey, [model]),
-            returnValue: _i10.dummyValue<String>(
+            returnValue: _i11.dummyValue<String>(
               this,
               Invocation.method(#getKey, [model]),
             ),
-            returnValueForMissingStub: _i10.dummyValue<String>(
+            returnValueForMissingStub: _i11.dummyValue<String>(
               this,
               Invocation.method(#getKey, [model]),
             ),
@@ -203,49 +203,49 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
           as String);
 
   @override
-  _i12.Future<void> deleteParticipants(_i7.Study? study) =>
+  _i13.Future<void> deleteParticipants(_i8.Study? study) =>
       (super.noSuchMethod(
             Invocation.method(#deleteParticipants, [study]),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Future<void> launch(_i7.Study? study) =>
+  _i13.Future<void> launch(_i8.Study? study) =>
       (super.noSuchMethod(
             Invocation.method(#launch, [study]),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Future<void> duplicateAndSave(_i7.Study? model) =>
+  _i13.Future<void> duplicateAndSave(_i8.Study? model) =>
       (super.noSuchMethod(
             Invocation.method(#duplicateAndSave, [model]),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Future<void> close(_i7.Study? study) =>
+  _i13.Future<void> close(_i8.Study? study) =>
       (super.noSuchMethod(
             Invocation.method(#close, [study]),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Future<_i2.StudiesPage> fetchPage({
+  _i13.Future<_i5.StudiesPage> fetchPage({
     required int? offset,
     required int? limit,
-    required _i13.StudiesTableColumn? sortBy,
+    required _i5.StudiesTableColumn? sortBy,
     required bool? ascending,
     required _i14.StudiesFilter? preset,
-    required _i5.User? currentUser,
+    required _i6.User? currentUser,
     String? searchQuery,
     _i15.FilterGroup? advancedFilter,
     List<String>? excludeIds = const [],
@@ -262,7 +262,7 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
               #advancedFilter: advancedFilter,
               #excludeIds: excludeIds,
             }),
-            returnValue: _i12.Future<_i2.StudiesPage>.value(
+            returnValue: _i13.Future<_i5.StudiesPage>.value(
               _FakeStudiesPage_3(
                 this,
                 Invocation.method(#fetchPage, [], {
@@ -278,7 +278,7 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
                 }),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i2.StudiesPage>.value(
+            returnValueForMissingStub: _i13.Future<_i5.StudiesPage>.value(
               _FakeStudiesPage_3(
                 this,
                 Invocation.method(#fetchPage, [], {
@@ -295,21 +295,21 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
               ),
             ),
           )
-          as _i12.Future<_i2.StudiesPage>);
+          as _i13.Future<_i5.StudiesPage>);
 
   @override
-  _i12.Future<List<_i7.Study>> fetchPinned(Set<String>? pinnedIds) =>
+  _i13.Future<List<_i8.Study>> fetchPinned(Set<String>? pinnedIds) =>
       (super.noSuchMethod(
             Invocation.method(#fetchPinned, [pinnedIds]),
-            returnValue: _i12.Future<List<_i7.Study>>.value(<_i7.Study>[]),
-            returnValueForMissingStub: _i12.Future<List<_i7.Study>>.value(
-              <_i7.Study>[],
+            returnValue: _i13.Future<List<_i8.Study>>.value(<_i8.Study>[]),
+            returnValueForMissingStub: _i13.Future<List<_i8.Study>>.value(
+              <_i8.Study>[],
             ),
           )
-          as _i12.Future<List<_i7.Study>>);
+          as _i13.Future<List<_i8.Study>>);
 
   @override
-  List<_i16.ModelAction<dynamic>> availableActions(_i7.Study? model) =>
+  List<_i16.ModelAction<dynamic>> availableActions(_i8.Study? model) =>
       (super.noSuchMethod(
             Invocation.method(#availableActions, [model]),
             returnValue: <_i16.ModelAction<dynamic>>[],
@@ -318,50 +318,50 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
           as List<_i16.ModelAction<dynamic>>);
 
   @override
-  _i4.WrappedModel<_i7.Study>? get(String? modelId, {bool? strict = false}) =>
+  _i4.WrappedModel<_i8.Study>? get(String? modelId, {bool? strict = false}) =>
       (super.noSuchMethod(
             Invocation.method(#get, [modelId], {#strict: strict}),
             returnValueForMissingStub: null,
           )
-          as _i4.WrappedModel<_i7.Study>?);
+          as _i4.WrappedModel<_i8.Study>?);
 
   @override
-  _i12.Future<List<_i4.WrappedModel<_i7.Study>>> fetchAll() =>
+  _i13.Future<List<_i4.WrappedModel<_i8.Study>>> fetchAll() =>
       (super.noSuchMethod(
             Invocation.method(#fetchAll, []),
-            returnValue: _i12.Future<List<_i4.WrappedModel<_i7.Study>>>.value(
-              <_i4.WrappedModel<_i7.Study>>[],
+            returnValue: _i13.Future<List<_i4.WrappedModel<_i8.Study>>>.value(
+              <_i4.WrappedModel<_i8.Study>>[],
             ),
             returnValueForMissingStub:
-                _i12.Future<List<_i4.WrappedModel<_i7.Study>>>.value(
-                  <_i4.WrappedModel<_i7.Study>>[],
+                _i13.Future<List<_i4.WrappedModel<_i8.Study>>>.value(
+                  <_i4.WrappedModel<_i8.Study>>[],
                 ),
           )
-          as _i12.Future<List<_i4.WrappedModel<_i7.Study>>>);
+          as _i13.Future<List<_i4.WrappedModel<_i8.Study>>>);
 
   @override
-  _i12.Future<_i4.WrappedModel<_i7.Study>> fetch(String? modelId) =>
+  _i13.Future<_i4.WrappedModel<_i8.Study>> fetch(String? modelId) =>
       (super.noSuchMethod(
             Invocation.method(#fetch, [modelId]),
-            returnValue: _i12.Future<_i4.WrappedModel<_i7.Study>>.value(
-              _FakeWrappedModel_4<_i7.Study>(
+            returnValue: _i13.Future<_i4.WrappedModel<_i8.Study>>.value(
+              _FakeWrappedModel_4<_i8.Study>(
                 this,
                 Invocation.method(#fetch, [modelId]),
               ),
             ),
             returnValueForMissingStub:
-                _i12.Future<_i4.WrappedModel<_i7.Study>>.value(
-                  _FakeWrappedModel_4<_i7.Study>(
+                _i13.Future<_i4.WrappedModel<_i8.Study>>.value(
+                  _FakeWrappedModel_4<_i8.Study>(
                     this,
                     Invocation.method(#fetch, [modelId]),
                   ),
                 ),
           )
-          as _i12.Future<_i4.WrappedModel<_i7.Study>>);
+          as _i13.Future<_i4.WrappedModel<_i8.Study>>);
 
   @override
-  _i12.Future<_i4.WrappedModel<_i7.Study>?> save(
-    _i7.Study? model, {
+  _i13.Future<_i4.WrappedModel<_i8.Study>?> save(
+    _i8.Study? model, {
     bool? runOptimistically = true,
   }) =>
       (super.noSuchMethod(
@@ -370,41 +370,41 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
               [model],
               {#runOptimistically: runOptimistically},
             ),
-            returnValue: _i12.Future<_i4.WrappedModel<_i7.Study>?>.value(),
+            returnValue: _i13.Future<_i4.WrappedModel<_i8.Study>?>.value(),
             returnValueForMissingStub:
-                _i12.Future<_i4.WrappedModel<_i7.Study>?>.value(),
+                _i13.Future<_i4.WrappedModel<_i8.Study>?>.value(),
           )
-          as _i12.Future<_i4.WrappedModel<_i7.Study>?>);
+          as _i13.Future<_i4.WrappedModel<_i8.Study>?>);
 
   @override
-  _i12.Future<void> delete(String? modelId, {bool? runOptimistically = true}) =>
+  _i13.Future<void> delete(String? modelId, {bool? runOptimistically = true}) =>
       (super.noSuchMethod(
             Invocation.method(
               #delete,
               [modelId],
               {#runOptimistically: runOptimistically},
             ),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Stream<List<_i4.WrappedModel<_i7.Study>>> watchAll({
+  _i13.Stream<List<_i4.WrappedModel<_i8.Study>>> watchAll({
     bool? fetchOnSubscribe = true,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#watchAll, [], {
               #fetchOnSubscribe: fetchOnSubscribe,
             }),
-            returnValue: _i12.Stream<List<_i4.WrappedModel<_i7.Study>>>.empty(),
+            returnValue: _i13.Stream<List<_i4.WrappedModel<_i8.Study>>>.empty(),
             returnValueForMissingStub:
-                _i12.Stream<List<_i4.WrappedModel<_i7.Study>>>.empty(),
+                _i13.Stream<List<_i4.WrappedModel<_i8.Study>>>.empty(),
           )
-          as _i12.Stream<List<_i4.WrappedModel<_i7.Study>>>);
+          as _i13.Stream<List<_i4.WrappedModel<_i8.Study>>>);
 
   @override
-  _i12.Stream<_i4.WrappedModel<_i7.Study>> watch(
+  _i13.Stream<_i4.WrappedModel<_i8.Study>> watch(
     String? modelIdParam, {
     bool? fetchOnSubscribe = true,
     bool? emitLastEvent = true,
@@ -418,35 +418,35 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
                 #emitLastEvent: emitLastEvent,
               },
             ),
-            returnValue: _i12.Stream<_i4.WrappedModel<_i7.Study>>.empty(),
+            returnValue: _i13.Stream<_i4.WrappedModel<_i8.Study>>.empty(),
             returnValueForMissingStub:
-                _i12.Stream<_i4.WrappedModel<_i7.Study>>.empty(),
+                _i13.Stream<_i4.WrappedModel<_i8.Study>>.empty(),
           )
-          as _i12.Stream<_i4.WrappedModel<_i7.Study>>);
+          as _i13.Stream<_i4.WrappedModel<_i8.Study>>);
 
   @override
-  _i12.Stream<_i11.ModelEvent<_i7.Study>> watchChanges(String? modelId) =>
+  _i13.Stream<_i12.ModelEvent<_i8.Study>> watchChanges(String? modelId) =>
       (super.noSuchMethod(
             Invocation.method(#watchChanges, [modelId]),
-            returnValue: _i12.Stream<_i11.ModelEvent<_i7.Study>>.empty(),
+            returnValue: _i13.Stream<_i12.ModelEvent<_i8.Study>>.empty(),
             returnValueForMissingStub:
-                _i12.Stream<_i11.ModelEvent<_i7.Study>>.empty(),
+                _i13.Stream<_i12.ModelEvent<_i8.Study>>.empty(),
           )
-          as _i12.Stream<_i11.ModelEvent<_i7.Study>>);
+          as _i13.Stream<_i12.ModelEvent<_i8.Study>>);
 
   @override
-  _i12.Future<_i4.WrappedModel<_i7.Study>?> ensurePersisted(String? modelId) =>
+  _i13.Future<_i4.WrappedModel<_i8.Study>?> ensurePersisted(String? modelId) =>
       (super.noSuchMethod(
             Invocation.method(#ensurePersisted, [modelId]),
-            returnValue: _i12.Future<_i4.WrappedModel<_i7.Study>?>.value(),
+            returnValue: _i13.Future<_i4.WrappedModel<_i8.Study>?>.value(),
             returnValueForMissingStub:
-                _i12.Future<_i4.WrappedModel<_i7.Study>?>.value(),
+                _i13.Future<_i4.WrappedModel<_i8.Study>?>.value(),
           )
-          as _i12.Future<_i4.WrappedModel<_i7.Study>?>);
+          as _i13.Future<_i4.WrappedModel<_i8.Study>?>);
 
   @override
-  _i4.WrappedModel<_i7.Study> upsertLocally(
-    _i7.Study? newModel, {
+  _i4.WrappedModel<_i8.Study> upsertLocally(
+    _i8.Study? newModel, {
     bool? emitUpdate = false,
   }) =>
       (super.noSuchMethod(
@@ -455,7 +455,7 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
               [newModel],
               {#emitUpdate: emitUpdate},
             ),
-            returnValue: _FakeWrappedModel_4<_i7.Study>(
+            returnValue: _FakeWrappedModel_4<_i8.Study>(
               this,
               Invocation.method(
                 #upsertLocally,
@@ -463,7 +463,7 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
                 {#emitUpdate: emitUpdate},
               ),
             ),
-            returnValueForMissingStub: _FakeWrappedModel_4<_i7.Study>(
+            returnValueForMissingStub: _FakeWrappedModel_4<_i8.Study>(
               this,
               Invocation.method(
                 #upsertLocally,
@@ -472,11 +472,11 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
               ),
             ),
           )
-          as _i4.WrappedModel<_i7.Study>);
+          as _i4.WrappedModel<_i8.Study>);
 
   @override
-  List<_i4.WrappedModel<_i7.Study>> upsertAllLocally(
-    List<_i7.Study>? newModels, {
+  List<_i4.WrappedModel<_i8.Study>> upsertAllLocally(
+    List<_i8.Study>? newModels, {
     bool? emitUpdate = false,
   }) =>
       (super.noSuchMethod(
@@ -485,10 +485,10 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
               [newModels],
               {#emitUpdate: emitUpdate},
             ),
-            returnValue: <_i4.WrappedModel<_i7.Study>>[],
-            returnValueForMissingStub: <_i4.WrappedModel<_i7.Study>>[],
+            returnValue: <_i4.WrappedModel<_i8.Study>>[],
+            returnValueForMissingStub: <_i4.WrappedModel<_i8.Study>>[],
           )
-          as List<_i4.WrappedModel<_i7.Study>>);
+          as List<_i4.WrappedModel<_i8.Study>>);
 
   @override
   void emitUpdate() => super.noSuchMethod(
@@ -497,14 +497,14 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
   );
 
   @override
-  void emitModelEvent(_i11.ModelEvent<_i7.Study>? event) => super.noSuchMethod(
+  void emitModelEvent(_i12.ModelEvent<_i8.Study>? event) => super.noSuchMethod(
     Invocation.method(#emitModelEvent, [event]),
     returnValueForMissingStub: null,
   );
 
   @override
   void emitError(
-    _i12.StreamController<dynamic>? controller,
+    _i13.StreamController<dynamic>? controller,
     Object? e,
     StackTrace? stackTrace,
   ) => super.noSuchMethod(
@@ -530,7 +530,7 @@ class MockStudyRepository extends _i1.Mock implements _i8.StudyRepository {
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
   @override
-  _i5.SupabaseClient get supabaseClient =>
+  _i6.SupabaseClient get supabaseClient =>
       (super.noSuchMethod(
             Invocation.getter(#supabaseClient),
             returnValue: _FakeSupabaseClient_5(
@@ -542,10 +542,10 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
               Invocation.getter(#supabaseClient),
             ),
           )
-          as _i5.SupabaseClient);
+          as _i6.SupabaseClient);
 
   @override
-  _i5.GoTrueClient get authClient =>
+  _i6.GoTrueClient get authClient =>
       (super.noSuchMethod(
             Invocation.getter(#authClient),
             returnValue: _FakeGoTrueClient_6(
@@ -557,7 +557,7 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
               Invocation.getter(#authClient),
             ),
           )
-          as _i5.GoTrueClient);
+          as _i6.GoTrueClient);
 
   @override
   bool get allowPasswordReset =>
@@ -584,30 +584,30 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
   );
 
   @override
-  _i6.BehaviorSubject<_i5.User?> watchAuthStateChanges({
+  _i7.BehaviorSubject<_i6.User?> watchAuthStateChanges({
     bool? emitLastEvent = true,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#watchAuthStateChanges, [], {
               #emitLastEvent: emitLastEvent,
             }),
-            returnValue: _FakeBehaviorSubject_7<_i5.User?>(
+            returnValue: _FakeBehaviorSubject_7<_i6.User?>(
               this,
               Invocation.method(#watchAuthStateChanges, [], {
                 #emitLastEvent: emitLastEvent,
               }),
             ),
-            returnValueForMissingStub: _FakeBehaviorSubject_7<_i5.User?>(
+            returnValueForMissingStub: _FakeBehaviorSubject_7<_i6.User?>(
               this,
               Invocation.method(#watchAuthStateChanges, [], {
                 #emitLastEvent: emitLastEvent,
               }),
             ),
           )
-          as _i6.BehaviorSubject<_i5.User?>);
+          as _i7.BehaviorSubject<_i6.User?>);
 
   @override
-  _i12.Future<_i5.AuthResponse> signUp({
+  _i13.Future<_i6.AuthResponse> signUp({
     required String? email,
     required String? password,
   }) =>
@@ -616,7 +616,7 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
               #email: email,
               #password: password,
             }),
-            returnValue: _i12.Future<_i5.AuthResponse>.value(
+            returnValue: _i13.Future<_i6.AuthResponse>.value(
               _FakeAuthResponse_8(
                 this,
                 Invocation.method(#signUp, [], {
@@ -625,7 +625,7 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
                 }),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i5.AuthResponse>.value(
+            returnValueForMissingStub: _i13.Future<_i6.AuthResponse>.value(
               _FakeAuthResponse_8(
                 this,
                 Invocation.method(#signUp, [], {
@@ -635,10 +635,10 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
               ),
             ),
           )
-          as _i12.Future<_i5.AuthResponse>);
+          as _i13.Future<_i6.AuthResponse>);
 
   @override
-  _i12.Future<_i5.AuthResponse> signInWith({
+  _i13.Future<_i6.AuthResponse> signInWith({
     required String? email,
     required String? password,
   }) =>
@@ -647,7 +647,7 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
               #email: email,
               #password: password,
             }),
-            returnValue: _i12.Future<_i5.AuthResponse>.value(
+            returnValue: _i13.Future<_i6.AuthResponse>.value(
               _FakeAuthResponse_8(
                 this,
                 Invocation.method(#signInWith, [], {
@@ -656,7 +656,7 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
                 }),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i5.AuthResponse>.value(
+            returnValueForMissingStub: _i13.Future<_i6.AuthResponse>.value(
               _FakeAuthResponse_8(
                 this,
                 Invocation.method(#signInWith, [], {
@@ -666,44 +666,44 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
               ),
             ),
           )
-          as _i12.Future<_i5.AuthResponse>);
+          as _i13.Future<_i6.AuthResponse>);
 
   @override
-  _i12.Future<void> signOut() =>
+  _i13.Future<void> signOut() =>
       (super.noSuchMethod(
             Invocation.method(#signOut, []),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Future<void> resetPasswordForEmail({required String? email}) =>
+  _i13.Future<void> resetPasswordForEmail({required String? email}) =>
       (super.noSuchMethod(
             Invocation.method(#resetPasswordForEmail, [], {#email: email}),
-            returnValue: _i12.Future<void>.value(),
-            returnValueForMissingStub: _i12.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i12.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i12.Future<_i5.UserResponse> updateUser({required String? newPassword}) =>
+  _i13.Future<_i6.UserResponse> updateUser({required String? newPassword}) =>
       (super.noSuchMethod(
             Invocation.method(#updateUser, [], {#newPassword: newPassword}),
-            returnValue: _i12.Future<_i5.UserResponse>.value(
+            returnValue: _i13.Future<_i6.UserResponse>.value(
               _FakeUserResponse_9(
                 this,
                 Invocation.method(#updateUser, [], {#newPassword: newPassword}),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i5.UserResponse>.value(
+            returnValueForMissingStub: _i13.Future<_i6.UserResponse>.value(
               _FakeUserResponse_9(
                 this,
                 Invocation.method(#updateUser, [], {#newPassword: newPassword}),
               ),
             ),
           )
-          as _i12.Future<_i5.UserResponse>);
+          as _i13.Future<_i6.UserResponse>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -712,13 +712,13 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
   );
 
   @override
-  _i12.Future<bool> onAppStart() =>
+  _i13.Future<bool> onAppStart() =>
       (super.noSuchMethod(
             Invocation.method(#onAppStart, []),
-            returnValue: _i12.Future<bool>.value(false),
-            returnValueForMissingStub: _i12.Future<bool>.value(false),
+            returnValue: _i13.Future<bool>.value(false),
+            returnValueForMissingStub: _i13.Future<bool>.value(false),
           )
-          as _i12.Future<bool>);
+          as _i13.Future<bool>);
 }
 
 /// A class which mocks [UserRepository].
@@ -753,22 +753,22 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
           as _i3.IAuthRepository);
 
   @override
-  _i9.Ref get ref =>
+  _i10.Ref get ref =>
       (super.noSuchMethod(
             Invocation.getter(#ref),
-            returnValue: _i10.dummyValue<_i9.Ref>(
+            returnValue: _i11.dummyValue<_i10.Ref>(
               this,
               Invocation.getter(#ref),
             ),
-            returnValueForMissingStub: _i10.dummyValue<_i9.Ref>(
+            returnValueForMissingStub: _i11.dummyValue<_i10.Ref>(
               this,
               Invocation.getter(#ref),
             ),
           )
-          as _i9.Ref);
+          as _i10.Ref);
 
   @override
-  _i7.StudyUUser get user =>
+  _i8.StudyUUser get user =>
       (super.noSuchMethod(
             Invocation.getter(#user),
             returnValue: _FakeStudyUUser_10(this, Invocation.getter(#user)),
@@ -777,93 +777,93 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
               Invocation.getter(#user),
             ),
           )
-          as _i7.StudyUUser);
+          as _i8.StudyUUser);
 
   @override
-  _i12.Future<_i7.StudyUUser> fetchUser() =>
+  _i13.Future<_i8.StudyUUser> fetchUser() =>
       (super.noSuchMethod(
             Invocation.method(#fetchUser, []),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(this, Invocation.method(#fetchUser, [])),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(this, Invocation.method(#fetchUser, [])),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 
   @override
-  _i12.Future<_i7.StudyUUser> saveUser() =>
+  _i13.Future<_i8.StudyUUser> saveUser() =>
       (super.noSuchMethod(
             Invocation.method(#saveUser, []),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(this, Invocation.method(#saveUser, [])),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(this, Invocation.method(#saveUser, [])),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 
   @override
-  _i12.Future<_i7.StudyUUser> updatePreferences(
+  _i13.Future<_i8.StudyUUser> updatePreferences(
     _i17.PreferenceAction? pinAction,
     String? modelId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#updatePreferences, [pinAction, modelId]),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#updatePreferences, [pinAction, modelId]),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#updatePreferences, [pinAction, modelId]),
               ),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 
   @override
-  _i12.Future<_i7.StudyUUser> saveCustomPreset(_i15.SavedFilter? filter) =>
+  _i13.Future<_i8.StudyUUser> saveCustomPreset(_i15.SavedFilter? filter) =>
       (super.noSuchMethod(
             Invocation.method(#saveCustomPreset, [filter]),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#saveCustomPreset, [filter]),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#saveCustomPreset, [filter]),
               ),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 
   @override
-  _i12.Future<_i7.StudyUUser> deleteCustomPreset(String? id) =>
+  _i13.Future<_i8.StudyUUser> deleteCustomPreset(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#deleteCustomPreset, [id]),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#deleteCustomPreset, [id]),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#deleteCustomPreset, [id]),
               ),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 
   @override
   List<_i15.SavedFilter> getCustomPresets() =>
@@ -875,7 +875,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
           as List<_i15.SavedFilter>);
 
   @override
-  _i12.Future<_i7.StudyUUser> saveActiveFilter({
+  _i13.Future<_i8.StudyUUser> saveActiveFilter({
     required String? page,
     String? presetId,
     _i15.FilterGroup? filterGroup,
@@ -886,7 +886,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
               #presetId: presetId,
               #filterGroup: filterGroup,
             }),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#saveActiveFilter, [], {
@@ -896,7 +896,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
                 }),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#saveActiveFilter, [], {
@@ -907,7 +907,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
               ),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 
   @override
   ({_i15.FilterGroup? filterGroup, String? presetId}) getActiveFilter(
@@ -930,7 +930,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
           as ({bool? sortAscending, String? sortColumn}));
 
   @override
-  _i12.Future<_i7.StudyUUser> saveActiveSort({
+  _i13.Future<_i8.StudyUUser> saveActiveSort({
     required String? page,
     required String? sortColumn,
     required bool? sortAscending,
@@ -941,7 +941,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
               #sortColumn: sortColumn,
               #sortAscending: sortAscending,
             }),
-            returnValue: _i12.Future<_i7.StudyUUser>.value(
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#saveActiveSort, [], {
@@ -951,7 +951,7 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
                 }),
               ),
             ),
-            returnValueForMissingStub: _i12.Future<_i7.StudyUUser>.value(
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#saveActiveSort, [], {
@@ -962,19 +962,19 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
               ),
             ),
           )
-          as _i12.Future<_i7.StudyUUser>);
+          as _i13.Future<_i8.StudyUUser>);
 }
 
 /// A class which mocks [User].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUser extends _i1.Mock implements _i5.User {
+class MockUser extends _i1.Mock implements _i6.User {
   @override
   String get id =>
       (super.noSuchMethod(
             Invocation.getter(#id),
-            returnValue: _i10.dummyValue<String>(this, Invocation.getter(#id)),
-            returnValueForMissingStub: _i10.dummyValue<String>(
+            returnValue: _i11.dummyValue<String>(this, Invocation.getter(#id)),
+            returnValueForMissingStub: _i11.dummyValue<String>(
               this,
               Invocation.getter(#id),
             ),
@@ -994,8 +994,8 @@ class MockUser extends _i1.Mock implements _i5.User {
   String get aud =>
       (super.noSuchMethod(
             Invocation.getter(#aud),
-            returnValue: _i10.dummyValue<String>(this, Invocation.getter(#aud)),
-            returnValueForMissingStub: _i10.dummyValue<String>(
+            returnValue: _i11.dummyValue<String>(this, Invocation.getter(#aud)),
+            returnValueForMissingStub: _i11.dummyValue<String>(
               this,
               Invocation.getter(#aud),
             ),
@@ -1006,11 +1006,11 @@ class MockUser extends _i1.Mock implements _i5.User {
   String get createdAt =>
       (super.noSuchMethod(
             Invocation.getter(#createdAt),
-            returnValue: _i10.dummyValue<String>(
+            returnValue: _i11.dummyValue<String>(
               this,
               Invocation.getter(#createdAt),
             ),
-            returnValueForMissingStub: _i10.dummyValue<String>(
+            returnValueForMissingStub: _i11.dummyValue<String>(
               this,
               Invocation.getter(#createdAt),
             ),

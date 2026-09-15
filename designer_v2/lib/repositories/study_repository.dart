@@ -10,12 +10,12 @@ import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -25,28 +25,9 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+export 'study_repository_interface.dart';
+
 part 'study_repository.g.dart';
-
-abstract class IStudyRepository implements ModelRepository<Study> {
-  Future<void> launch(Study study);
-  Future<void> deleteParticipants(Study study);
-  Future<void> close(Study study);
-  // Future<void> deleteProgress(Study study);
-
-  Future<StudiesPage> fetchPage({
-    required int offset,
-    required int limit,
-    required StudiesTableColumn sortBy,
-    required bool ascending,
-    required StudiesFilter preset,
-    required User currentUser,
-    String? searchQuery,
-    FilterGroup? advancedFilter,
-    List<String> excludeIds,
-  });
-
-  Future<List<Study>> fetchPinned(Set<String> pinnedIds);
-}
 
 class StudyRepository extends ModelRepository<Study>
     implements IStudyRepository {
