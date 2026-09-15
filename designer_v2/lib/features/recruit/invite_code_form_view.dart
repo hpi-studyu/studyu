@@ -38,38 +38,45 @@ class InviteCodeFormView extends FormConsumerRefWidget {
                   suffixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Tooltip(
-                        message: tr.action_copy_invite_code,
-                        child: IconButton(
-                          splashRadius: 18.0,
-                          onPressed: () async {
-                            await ref
-                                .read(clipboardServiceProvider)
-                                .copy(formViewModel.codeControl.value ?? '');
-                            if (context.mounted) {
-                              final messenger = ScaffoldMessenger.of(context);
-                              messenger
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      tr.notification_invite_code_copied,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Tooltip(
+                          message: tr.action_copy_invite_code,
+                          child: IconButton(
+                            splashRadius: 18.0,
+                            onPressed: () async {
+                              await ref
+                                  .read(clipboardServiceProvider)
+                                  .copy(formViewModel.codeControl.value ?? '');
+                              if (context.mounted) {
+                                final messenger = ScaffoldMessenger.of(context);
+                                messenger
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        tr.notification_invite_code_copied,
+                                      ),
+                                      showCloseIcon: true,
                                     ),
-                                    showCloseIcon: true,
-                                  ),
-                                );
-                            }
-                          },
-                          icon: const Icon(Icons.copy_rounded),
+                                  );
+                              }
+                            },
+                            icon: const Icon(Icons.copy_rounded),
+                          ),
                         ),
                       ),
                       if (isEditableCodeField)
-                        Material(
-                          color: Colors.transparent,
-                          child: IconButton(
-                            splashRadius: 18.0,
-                            onPressed: formViewModel.regenerateCode,
-                            icon: const Icon(Icons.refresh_rounded),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: IconButton(
+                              splashRadius: 18.0,
+                              tooltip: tr.action_regenerate_invite_code,
+                              onPressed: formViewModel.regenerateCode,
+                              icon: const Icon(Icons.refresh_rounded),
+                            ),
                           ),
                         ),
                     ],
