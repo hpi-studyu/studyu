@@ -5,31 +5,32 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'dart:async' as _i5;
-import 'dart:ui' as _i20;
+import 'dart:ui' as _i21;
 
-import 'package:flutter/services.dart' as _i21;
+import 'package:flutter/services.dart' as _i22;
 import 'package:flutter/widgets.dart' as _i9;
 import 'package:go_router/src/configuration.dart' as _i8;
 import 'package:go_router/src/delegate.dart' as _i10;
 import 'package:go_router/src/information_provider.dart' as _i11;
-import 'package:go_router/src/match.dart' as _i19;
+import 'package:go_router/src/match.dart' as _i20;
 import 'package:go_router/src/parser.dart' as _i12;
-import 'package:go_router/src/router.dart' as _i18;
+import 'package:go_router/src/router.dart' as _i19;
 import 'package:go_router/src/state.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i16;
+import 'package:mockito/src/dummies.dart' as _i17;
 import 'package:rxdart/subjects.dart' as _i6;
 import 'package:studyu_core/core.dart' as _i4;
+import 'package:studyu_designer_v2/domain/study_invite.dart' as _i16;
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart'
     as _i14;
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart'
     as _i15;
 import 'package:studyu_designer_v2/repositories/api_client.dart' as _i13;
-import 'package:studyu_designer_v2/repositories/auth_repository.dart' as _i17;
+import 'package:studyu_designer_v2/repositories/auth_repository.dart' as _i18;
 import 'package:studyu_designer_v2/repositories/study_repository_interface.dart'
     as _i3;
-import 'package:studyu_designer_v2/services/notification_service.dart' as _i22;
-import 'package:studyu_designer_v2/services/notification_types.dart' as _i23;
+import 'package:studyu_designer_v2/services/notification_service.dart' as _i23;
+import 'package:studyu_designer_v2/services/notification_types.dart' as _i24;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -290,12 +291,16 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
   _i5.Future<_i4.Study> fetchStudy(
     String? studyId, {
     bool? withParticipantActivity = true,
+    bool? withInvites = false,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
               #fetchStudy,
               [studyId],
-              {#withParticipantActivity: withParticipantActivity},
+              {
+                #withParticipantActivity: withParticipantActivity,
+                #withInvites: withInvites,
+              },
             ),
             returnValue: _i5.Future<_i4.Study>.value(
               _FakeStudy_2(
@@ -303,7 +308,10 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
                 Invocation.method(
                   #fetchStudy,
                   [studyId],
-                  {#withParticipantActivity: withParticipantActivity},
+                  {
+                    #withParticipantActivity: withParticipantActivity,
+                    #withInvites: withInvites,
+                  },
                 ),
               ),
             ),
@@ -313,7 +321,10 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
                 Invocation.method(
                   #fetchStudy,
                   [studyId],
-                  {#withParticipantActivity: withParticipantActivity},
+                  {
+                    #withParticipantActivity: withParticipantActivity,
+                    #withInvites: withInvites,
+                  },
                 ),
               ),
             ),
@@ -362,6 +373,45 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
           as _i5.Future<_i4.StudyInvite>);
 
   @override
+  _i5.Future<List<_i4.StudyInvite>> fetchStudyInvitesPage(
+    String? studyId, {
+    required int? offset,
+    required int? limit,
+    String? query,
+    _i16.InviteCodesSortColumn? sortBy = _i16.InviteCodesSortColumn.code,
+    bool? ascending = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #fetchStudyInvitesPage,
+              [studyId],
+              {
+                #offset: offset,
+                #limit: limit,
+                #query: query,
+                #sortBy: sortBy,
+                #ascending: ascending,
+              },
+            ),
+            returnValue: _i5.Future<List<_i4.StudyInvite>>.value(
+              <_i4.StudyInvite>[],
+            ),
+            returnValueForMissingStub: _i5.Future<List<_i4.StudyInvite>>.value(
+              <_i4.StudyInvite>[],
+            ),
+          )
+          as _i5.Future<List<_i4.StudyInvite>>);
+
+  @override
+  _i5.Future<int> countStudyInvites(String? studyId, {String? query}) =>
+      (super.noSuchMethod(
+            Invocation.method(#countStudyInvites, [studyId], {#query: query}),
+            returnValue: _i5.Future<int>.value(0),
+            returnValueForMissingStub: _i5.Future<int>.value(0),
+          )
+          as _i5.Future<int>);
+
+  @override
   _i5.Future<_i4.Study> fetchStudyFromInvite(String? code) =>
       (super.noSuchMethod(
             Invocation.method(#fetchStudyFromInvite, [code]),
@@ -403,6 +453,15 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
   _i5.Future<void> deleteStudyInvite(_i4.StudyInvite? invite) =>
       (super.noSuchMethod(
             Invocation.method(#deleteStudyInvite, [invite]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> deleteStudyInvites(String? studyId) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteStudyInvites, [studyId]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
@@ -538,8 +597,8 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
               {#selectedColumns: selectedColumns},
             ),
             returnValue:
-                _i16.ifNotNull(
-                  _i16.dummyValueOrNull<T>(
+                _i17.ifNotNull(
+                  _i17.dummyValueOrNull<T>(
                     this,
                     Invocation.method(
                       #getById,
@@ -558,8 +617,8 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
                   ),
                 ),
             returnValueForMissingStub:
-                _i16.ifNotNull(
-                  _i16.dummyValueOrNull<T>(
+                _i17.ifNotNull(
+                  _i17.dummyValueOrNull<T>(
                     this,
                     Invocation.method(
                       #getById,
@@ -593,8 +652,8 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
               {#selectedColumns: selectedColumns},
             ),
             returnValue:
-                _i16.ifNotNull(
-                  _i16.dummyValueOrNull<T>(
+                _i17.ifNotNull(
+                  _i17.dummyValueOrNull<T>(
                     this,
                     Invocation.method(
                       #getByColumn,
@@ -613,8 +672,8 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
                   ),
                 ),
             returnValueForMissingStub:
-                _i16.ifNotNull(
-                  _i16.dummyValueOrNull<T>(
+                _i17.ifNotNull(
+                  _i17.dummyValueOrNull<T>(
                     this,
                     Invocation.method(
                       #getByColumn,
@@ -660,11 +719,11 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
   T deserializeObject<T extends _i4.SupabaseObject>(dynamic data) =>
       (super.noSuchMethod(
             Invocation.method(#deserializeObject, [data]),
-            returnValue: _i16.dummyValue<T>(
+            returnValue: _i17.dummyValue<T>(
               this,
               Invocation.method(#deserializeObject, [data]),
             ),
-            returnValueForMissingStub: _i16.dummyValue<T>(
+            returnValueForMissingStub: _i17.dummyValue<T>(
               this,
               Invocation.method(#deserializeObject, [data]),
             ),
@@ -675,7 +734,7 @@ class MockStudyUApiClient extends _i1.Mock implements _i13.StudyUApiClient {
 /// A class which mocks [AuthRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthRepository extends _i1.Mock implements _i17.AuthRepository {
+class MockAuthRepository extends _i1.Mock implements _i18.AuthRepository {
   @override
   _i2.SupabaseClient get supabaseClient =>
       (super.noSuchMethod(
@@ -871,7 +930,7 @@ class MockAuthRepository extends _i1.Mock implements _i17.AuthRepository {
 /// A class which mocks [GoRouter].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGoRouter extends _i1.Mock implements _i18.GoRouter {
+class MockGoRouter extends _i1.Mock implements _i19.GoRouter {
   @override
   _i7.GoRouterState get state =>
       (super.noSuchMethod(
@@ -1020,7 +1079,7 @@ class MockGoRouter extends _i1.Mock implements _i18.GoRouter {
                 #fragment: fragment,
               },
             ),
-            returnValue: _i16.dummyValue<String>(
+            returnValue: _i17.dummyValue<String>(
               this,
               Invocation.method(
                 #namedLocation,
@@ -1032,7 +1091,7 @@ class MockGoRouter extends _i1.Mock implements _i18.GoRouter {
                 },
               ),
             ),
-            returnValueForMissingStub: _i16.dummyValue<String>(
+            returnValueForMissingStub: _i17.dummyValue<String>(
               this,
               Invocation.method(
                 #namedLocation,
@@ -1054,7 +1113,7 @@ class MockGoRouter extends _i1.Mock implements _i18.GoRouter {
   );
 
   @override
-  void restore(_i19.RouteMatchList? matchList) => super.noSuchMethod(
+  void restore(_i20.RouteMatchList? matchList) => super.noSuchMethod(
     Invocation.method(#restore, [matchList]),
     returnValueForMissingStub: null,
   );
@@ -1247,7 +1306,7 @@ class MockGoRouteInformationProvider extends _i1.Mock
   @override
   _i5.Future<T?> push<T>(
     String? location, {
-    required _i19.RouteMatchList? base,
+    required _i20.RouteMatchList? base,
     Object? extra,
   }) =>
       (super.noSuchMethod(
@@ -1264,7 +1323,7 @@ class MockGoRouteInformationProvider extends _i1.Mock
   );
 
   @override
-  void restore(String? location, {required _i19.RouteMatchList? matchList}) =>
+  void restore(String? location, {required _i20.RouteMatchList? matchList}) =>
       super.noSuchMethod(
         Invocation.method(#restore, [location], {#matchList: matchList}),
         returnValueForMissingStub: null,
@@ -1273,7 +1332,7 @@ class MockGoRouteInformationProvider extends _i1.Mock
   @override
   _i5.Future<T?> pushReplacement<T>(
     String? location, {
-    required _i19.RouteMatchList? base,
+    required _i20.RouteMatchList? base,
     Object? extra,
   }) =>
       (super.noSuchMethod(
@@ -1290,7 +1349,7 @@ class MockGoRouteInformationProvider extends _i1.Mock
   @override
   _i5.Future<T?> replace<T>(
     String? location, {
-    required _i19.RouteMatchList? base,
+    required _i20.RouteMatchList? base,
     Object? extra,
   }) =>
       (super.noSuchMethod(
@@ -1305,13 +1364,13 @@ class MockGoRouteInformationProvider extends _i1.Mock
           as _i5.Future<T?>);
 
   @override
-  void addListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i21.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i21.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
@@ -1343,7 +1402,7 @@ class MockGoRouteInformationProvider extends _i1.Mock
           as _i5.Future<bool>);
 
   @override
-  bool handleStartBackGesture(_i21.PredictiveBackEvent? backEvent) =>
+  bool handleStartBackGesture(_i22.PredictiveBackEvent? backEvent) =>
       (super.noSuchMethod(
             Invocation.method(#handleStartBackGesture, [backEvent]),
             returnValue: false,
@@ -1352,7 +1411,7 @@ class MockGoRouteInformationProvider extends _i1.Mock
           as bool);
 
   @override
-  void handleUpdateBackGestureProgress(_i21.PredictiveBackEvent? backEvent) =>
+  void handleUpdateBackGestureProgress(_i22.PredictiveBackEvent? backEvent) =>
       super.noSuchMethod(
         Invocation.method(#handleUpdateBackGestureProgress, [backEvent]),
         returnValueForMissingStub: null,
@@ -1404,36 +1463,36 @@ class MockGoRouteInformationProvider extends _i1.Mock
   );
 
   @override
-  void didChangeLocales(List<_i20.Locale>? locales) => super.noSuchMethod(
+  void didChangeLocales(List<_i21.Locale>? locales) => super.noSuchMethod(
     Invocation.method(#didChangeLocales, [locales]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void didChangeAppLifecycleState(_i20.AppLifecycleState? state) =>
+  void didChangeAppLifecycleState(_i21.AppLifecycleState? state) =>
       super.noSuchMethod(
         Invocation.method(#didChangeAppLifecycleState, [state]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void didChangeViewFocus(_i20.ViewFocusEvent? event) => super.noSuchMethod(
+  void didChangeViewFocus(_i21.ViewFocusEvent? event) => super.noSuchMethod(
     Invocation.method(#didChangeViewFocus, [event]),
     returnValueForMissingStub: null,
   );
 
   @override
-  _i5.Future<_i20.AppExitResponse> didRequestAppExit() =>
+  _i5.Future<_i21.AppExitResponse> didRequestAppExit() =>
       (super.noSuchMethod(
             Invocation.method(#didRequestAppExit, []),
-            returnValue: _i5.Future<_i20.AppExitResponse>.value(
-              _i20.AppExitResponse.exit,
+            returnValue: _i5.Future<_i21.AppExitResponse>.value(
+              _i21.AppExitResponse.exit,
             ),
-            returnValueForMissingStub: _i5.Future<_i20.AppExitResponse>.value(
-              _i20.AppExitResponse.exit,
+            returnValueForMissingStub: _i5.Future<_i21.AppExitResponse>.value(
+              _i21.AppExitResponse.exit,
             ),
           )
-          as _i5.Future<_i20.AppExitResponse>);
+          as _i5.Future<_i21.AppExitResponse>);
 
   @override
   void didHaveMemoryPressure() => super.noSuchMethod(
@@ -1452,19 +1511,19 @@ class MockGoRouteInformationProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockNotificationService extends _i1.Mock
-    implements _i22.NotificationService {
+    implements _i23.NotificationService {
   @override
-  _i5.Stream<_i23.NotificationIntent> watchNotifications() =>
+  _i5.Stream<_i24.NotificationIntent> watchNotifications() =>
       (super.noSuchMethod(
             Invocation.method(#watchNotifications, []),
-            returnValue: _i5.Stream<_i23.NotificationIntent>.empty(),
+            returnValue: _i5.Stream<_i24.NotificationIntent>.empty(),
             returnValueForMissingStub:
-                _i5.Stream<_i23.NotificationIntent>.empty(),
+                _i5.Stream<_i24.NotificationIntent>.empty(),
           )
-          as _i5.Stream<_i23.NotificationIntent>);
+          as _i5.Stream<_i24.NotificationIntent>);
 
   @override
-  void showMessage(String? message, {List<_i23.NotificationAction>? actions}) =>
+  void showMessage(String? message, {List<_i24.NotificationAction>? actions}) =>
       super.noSuchMethod(
         Invocation.method(#showMessage, [message], {#actions: actions}),
         returnValueForMissingStub: null,
@@ -1472,8 +1531,8 @@ class MockNotificationService extends _i1.Mock
 
   @override
   void show(
-    _i23.NotificationIntent? notification, {
-    List<_i23.NotificationAction>? actions,
+    _i24.NotificationIntent? notification, {
+    List<_i24.NotificationAction>? actions,
   }) => super.noSuchMethod(
     Invocation.method(#show, [notification], {#actions: actions}),
     returnValueForMissingStub: null,
@@ -1494,8 +1553,8 @@ class MockUser extends _i1.Mock implements _i2.User {
   String get id =>
       (super.noSuchMethod(
             Invocation.getter(#id),
-            returnValue: _i16.dummyValue<String>(this, Invocation.getter(#id)),
-            returnValueForMissingStub: _i16.dummyValue<String>(
+            returnValue: _i17.dummyValue<String>(this, Invocation.getter(#id)),
+            returnValueForMissingStub: _i17.dummyValue<String>(
               this,
               Invocation.getter(#id),
             ),
@@ -1515,8 +1574,8 @@ class MockUser extends _i1.Mock implements _i2.User {
   String get aud =>
       (super.noSuchMethod(
             Invocation.getter(#aud),
-            returnValue: _i16.dummyValue<String>(this, Invocation.getter(#aud)),
-            returnValueForMissingStub: _i16.dummyValue<String>(
+            returnValue: _i17.dummyValue<String>(this, Invocation.getter(#aud)),
+            returnValueForMissingStub: _i17.dummyValue<String>(
               this,
               Invocation.getter(#aud),
             ),
@@ -1527,11 +1586,11 @@ class MockUser extends _i1.Mock implements _i2.User {
   String get createdAt =>
       (super.noSuchMethod(
             Invocation.getter(#createdAt),
-            returnValue: _i16.dummyValue<String>(
+            returnValue: _i17.dummyValue<String>(
               this,
               Invocation.getter(#createdAt),
             ),
-            returnValueForMissingStub: _i16.dummyValue<String>(
+            returnValueForMissingStub: _i17.dummyValue<String>(
               this,
               Invocation.getter(#createdAt),
             ),

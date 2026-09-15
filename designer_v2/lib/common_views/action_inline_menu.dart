@@ -8,6 +8,8 @@ class ActionMenuInline extends StatelessWidget {
     this.splashRadius = 18.0,
     this.iconSize,
     this.iconColor,
+    this.buttonConstraints,
+    this.visualDensity,
     this.visible = true,
     this.paddingHorizontal = 2.0,
     this.paddingVertical = 0.0,
@@ -17,6 +19,8 @@ class ActionMenuInline extends StatelessWidget {
   final List<ModelAction> actions;
   final WidgetStateProperty<Color>? iconColor;
   final double? iconSize;
+  final BoxConstraints? buttonConstraints;
+  final VisualDensity? visualDensity;
   final bool visible;
   final double? splashRadius;
 
@@ -45,7 +49,9 @@ class ActionMenuInline extends StatelessWidget {
           builder: (context, state) {
             return IconButton(
               padding: EdgeInsets.zero,
+              constraints: buttonConstraints,
               splashRadius: splashRadius,
+              visualDensity: visualDensity,
               onPressed: () => action.execute(context),
               iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
               icon: Icon(

@@ -189,6 +189,15 @@ class MockStudyRepository extends _i1.Mock implements _i9.StudyRepository {
           as Map<String, _i7.BehaviorSubject<_i12.ModelEvent<_i8.Study>>>);
 
   @override
+  Map<String, _i4.WrappedModel<_i8.Study>> get modelCache =>
+      (super.noSuchMethod(
+            Invocation.getter(#modelCache),
+            returnValue: <String, _i4.WrappedModel<_i8.Study>>{},
+            returnValueForMissingStub: <String, _i4.WrappedModel<_i8.Study>>{},
+          )
+          as Map<String, _i4.WrappedModel<_i8.Study>>);
+
+  @override
   String getKey(_i8.Study? model) =>
       (super.noSuchMethod(
             Invocation.method(#getKey, [model]),
@@ -424,6 +433,16 @@ class MockStudyRepository extends _i1.Mock implements _i9.StudyRepository {
                 _i13.Stream<_i4.WrappedModel<_i8.Study>>.empty(),
           )
           as _i13.Stream<_i4.WrappedModel<_i8.Study>>);
+
+  @override
+  _i13.Stream<_i12.ModelEvent<_i8.Study>> watchAllChanges() =>
+      (super.noSuchMethod(
+            Invocation.method(#watchAllChanges, []),
+            returnValue: _i13.Stream<_i12.ModelEvent<_i8.Study>>.empty(),
+            returnValueForMissingStub:
+                _i13.Stream<_i12.ModelEvent<_i8.Study>>.empty(),
+          )
+          as _i13.Stream<_i12.ModelEvent<_i8.Study>>);
 
   @override
   _i13.Stream<_i12.ModelEvent<_i8.Study>> watchChanges(String? modelId) =>

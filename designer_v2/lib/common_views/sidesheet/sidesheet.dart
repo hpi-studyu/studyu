@@ -97,16 +97,22 @@ class _SidesheetState extends State<Sidesheet> {
         child: SizedBox(
           width: actualWidth,
           height: actualHeight,
-          child: Scaffold(
-            backgroundColor: backgroundColor,
-            body: widget.withCloseButton
-                ? Stack(
-                    children: [
-                      _build(context, widget.body, widget.tabs),
-                      const Positioned(top: 5, right: 5, child: CloseButton()),
-                    ],
-                  )
-                : _build(context, widget.body, widget.tabs),
+          child: ScaffoldMessenger(
+            child: Scaffold(
+              backgroundColor: backgroundColor,
+              body: widget.withCloseButton
+                  ? Stack(
+                      children: [
+                        _build(context, widget.body, widget.tabs),
+                        const Positioned(
+                          top: 5,
+                          right: 5,
+                          child: CloseButton(),
+                        ),
+                      ],
+                    )
+                  : _build(context, widget.body, widget.tabs),
+            ),
           ),
         ),
       ),
