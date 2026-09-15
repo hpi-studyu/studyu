@@ -123,10 +123,12 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   /// [_unpersistedModels]) as well as models fetched from the backend
   final Map<ModelID, WrappedModel<T>> _allModels = {};
 
+  Map<ModelID, WrappedModel<T>> get modelCache => _allModels;
+
   @override
   WrappedModel<T>? get(ModelID modelId, {bool strict = false}) {
-    if (_allModels.containsKey(modelId)) {
-      return _allModels[modelId];
+    if (modelCache.containsKey(modelId)) {
+      return modelCache[modelId];
     }
     if (strict) {
       throw ModelNotFoundException();
@@ -203,7 +205,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       rollback: () {
         if (prevModel == null) {
           // didn't exist previously
-          _allModels.remove(modelId);
+          modelCache.remove(modelId);
         } else {
           // undo any changes
           final wrappedModel = get(modelId);
@@ -240,8 +242,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
           await delegate.delete(model);
         }
         // Model already flagged as deleted, free it for garbage collection
-        if (_allModels.containsKey(modelId)) {
-          _allModels.remove(modelId);
+        if (modelCache.containsKey(modelId)) {
+          modelCache.remove(modelId);
         }
         emitModelEvent(IsDeleted(modelId, model));
       },
@@ -427,19 +429,19 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
 
   WrappedModel<T> upsertLocally(T newModel, {bool emitUpdate = false}) {
     final newModelId = getKey(newModel);
-    if (_allModels.containsKey(newModelId)) {
+    if (modelCache.containsKey(newModelId)) {
       // print("Upserting existing model $newModelId locally");
       // Model already exists, replace with the new object
-      final wrapped = _allModels[newModelId]!;
+      final wrapped = modelCache[newModelId]!;
       wrapped.model = newModel;
     } else {
       // Model does not exist locally yet, add it to the client-side list
-      _allModels[newModelId] = WrappedModel(newModel);
+      modelCache[newModelId] = WrappedModel(newModel);
     }
     if (emitUpdate) {
       this.emitUpdate();
     }
-    return _allModels[newModelId]!;
+    return modelCache[newModelId]!;
   }
 
   List<WrappedModel<T>> upsertAllLocally(
@@ -461,7 +463,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     if (!_allModelsStreamController.isClosed) {
       _allModelsStreamController.add(
         // Filter out models marked as deleted
-        _allModels.values.where((model) => !model.isDeleted).toList(),
+        modelCache.values.where((model) => !model.isDeleted).toList(),
       );
     }
   }

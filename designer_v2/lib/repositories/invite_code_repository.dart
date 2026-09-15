@@ -71,6 +71,12 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   final IAuthRepository authRepository;
   final IStudyRepository studyRepository;
 
+  final Map<ModelID, WrappedModel<StudyInvite>> _pageCache = {};
+  int _pageFetchToken = 0;
+
+  @override
+  Map<ModelID, WrappedModel<StudyInvite>> get modelCache => _pageCache;
+
   @override
   ModelID getKey(StudyInvite model) {
     return model.code;
@@ -101,6 +107,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     InviteCodesSortColumn sortBy = InviteCodesSortColumn.code,
     bool ascending = true,
   }) async {
+    final fetchToken = ++_pageFetchToken;
     final invites = await apiClient.fetchStudyInvitesPage(
       studyId,
       offset: offset,
@@ -108,6 +115,18 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       query: query,
       sortBy: sortBy,
       ascending: ascending,
+    );
+    if (fetchToken != _pageFetchToken) {
+      return invites;
+    }
+
+    final pageIds = invites.map(getKey).toSet();
+    modelCache.removeWhere(
+      (modelId, wrappedModel) =>
+          !pageIds.contains(modelId) &&
+          !modelStreamControllers.containsKey(modelId) &&
+          !wrappedModel.isDirty &&
+          !wrappedModel.isLocalOnly,
     );
     for (final invite in invites) {
       final wrappedInvite = upsertLocally(invite);
@@ -315,24 +334,7 @@ class InviteCodeRepositoryDelegate
 
   @override
   Future<void> delete(StudyInvite model) {
-    final prevInvites = [...?study.invites];
-    final deleteOperation = OptimisticUpdate(
-      applyOptimistic: () {
-        study.invites!.remove(model);
-        /*study.invites!.removeWhere((i) => i.code == model.code);*/
-        studyRepository.upsertLocally(study);
-      },
-      apply: () => apiClient.deleteStudyInvite(model),
-      rollback: () {
-        study.invites = prevInvites;
-        studyRepository.upsertLocally(study);
-      },
-      onUpdate: studyRepository.emitUpdate,
-      rethrowErrors: true,
-      completeFutureOptimistically: false,
-    );
-
-    return deleteOperation.execute();
+    return apiClient.deleteStudyInvite(model);
   }
 
   @override
