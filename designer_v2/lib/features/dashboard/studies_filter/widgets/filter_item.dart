@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class FilterItem extends StatefulWidget {
   final String keyName;
@@ -73,7 +73,7 @@ class _FilterItemState extends State<FilterItem> {
                   onPressed: () {
                     widget.onExpansionChanged?.call(true);
                   },
-                  tooltip: "Add filter".hardcoded,
+                  tooltip: tr.studies_filter_add_filter,
                   constraints: const BoxConstraints(),
                   padding: EdgeInsets.zero,
                   color: Theme.of(context).colorScheme.primary,
@@ -85,7 +85,7 @@ class _FilterItemState extends State<FilterItem> {
                     widget.onExpansionChanged?.call(false);
                     widget.onReset?.call();
                   },
-                  tooltip: "Remove filter".hardcoded,
+                  tooltip: tr.studies_filter_remove_filter,
                   constraints: const BoxConstraints(),
                   padding: EdgeInsets.zero,
                   color: Theme.of(context).colorScheme.error,
