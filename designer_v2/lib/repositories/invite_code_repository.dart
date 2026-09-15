@@ -168,7 +168,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         label: ModelActionType.qrCodeShow.string,
         onExecute: () {},
         onExecuteWithContext: (context) {
-          _showQrCode(context, deepLink, model.code);
+          _showQrCode(context, deepLink, model.code, inviteCode: model.code);
         },
       ),
     ];
@@ -272,15 +272,24 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       if (value == _copyInviteLinkActionValue) {
         _copy(deepLink, Notifications.inviteLinkCopied);
       } else if (value == _showQrCodeActionValue && effectiveContext.mounted) {
-        _showQrCode(effectiveContext, deepLink, filename);
+        _showQrCode(effectiveContext, deepLink, filename, inviteCode: filename);
       }
     });
   }
 
-  void _showQrCode(BuildContext context, String deepLink, String filename) {
+  void _showQrCode(
+    BuildContext context,
+    String deepLink,
+    String filename, {
+    String? inviteCode,
+  }) {
     showDialog(
       context: context,
-      builder: (ctx) => QrCodePreviewDialog(data: deepLink, filename: filename),
+      builder: (ctx) => QrCodePreviewDialog(
+        data: deepLink,
+        filename: filename,
+        inviteCode: inviteCode,
+      ),
     );
   }
 }

@@ -12,12 +12,14 @@ class QrCodePreviewDialog extends ConsumerWidget {
     required this.data,
     required this.filename,
     this.title,
+    this.inviteCode,
     super.key,
   });
 
   final String data;
   final String filename;
   final String? title;
+  final String? inviteCode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,6 +77,15 @@ class QrCodePreviewDialog extends ConsumerWidget {
                         tr.dialog_qr_code_description,
                         style: theme.textTheme.bodyMedium,
                       ),
+                      if (inviteCode != null) ...[
+                        const SizedBox(height: 16.0),
+                        Text(
+                          '${tr.form_field_code}: $inviteCode',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16.0),
                       FutureBuilder<Widget>(
                         future: QrCodeDownloader.generateQrWidget(data: data),
