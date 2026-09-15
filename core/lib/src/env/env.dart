@@ -9,13 +9,16 @@ late final String? projectGeneratorUrl;
 late final String? androidPackageName;
 late final String? iosAppStoreId;
 late final String? developerEmail;
-late final String? appDeepLinkScheme;
+String? deepLinkDomain;
+String? appDeepLinkScheme;
 
 String get appScheme {
   if (appDeepLinkScheme != null) {
     try {
       final scheme = Uri.parse(appDeepLinkScheme!).scheme;
-      if (scheme.isNotEmpty) return scheme;
+      if (scheme.isNotEmpty && scheme != 'http' && scheme != 'https') {
+        return scheme;
+      }
     } catch (_) {}
   }
   return 'studyu-app';
@@ -40,6 +43,7 @@ void setEnv(
   String? envAndroidPackageName,
   String? envIosAppStoreId,
   String? envDeveloperEmail,
+  String? envDeepLinkDomain,
   String? envAppDeepLinkScheme,
 }) {
   supabaseUrl = envSupabaseUrl;
@@ -68,6 +72,7 @@ void setEnv(
   androidPackageName = envAndroidPackageName;
   iosAppStoreId = envIosAppStoreId;
   developerEmail = envDeveloperEmail;
+  deepLinkDomain = envDeepLinkDomain ?? 'app.studyu.health';
   // Remove trailing slashes from deep link scheme
   if (envAppDeepLinkScheme != null && envAppDeepLinkScheme.endsWith('/')) {
     appDeepLinkScheme = envAppDeepLinkScheme.substring(

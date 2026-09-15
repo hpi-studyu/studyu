@@ -59,11 +59,9 @@ class OnboardingScreen extends StatelessWidget {
         final state = context.read<AppState>();
         if (state.activeSubject != null) {
           context.goNamed(RouteNames.dashboard);
-          // Check for pending deep link
         } else if (state.pendingDeepLinkStudyId != null ||
             state.pendingDeepLinkInviteCode != null) {
-          // If pending deep link, go directly to terms to skip welcome screen
-          context.pushNamed(RouteNames.terms);
+          context.goNamed(RouteNames.welcome);
         } else {
           context.goNamed(RouteNames.welcome);
         }

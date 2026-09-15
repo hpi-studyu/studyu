@@ -92,7 +92,7 @@ class ParticipantLegend extends StatelessWidget {
                     : null,
               ),
             ),
-          if (widget != null) widget,
+          ?widget,
           const SizedBox(width: 8.0),
           Text(text),
         ],

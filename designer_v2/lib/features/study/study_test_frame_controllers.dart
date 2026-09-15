@@ -193,8 +193,8 @@ class WebController extends PlatformController {
       send(
         jsonEncode({
           'type': 'previewNavigate',
-          if (route != null) 'route': route,
-          if (extra != null) 'extra': extra,
+          'route': ?route,
+          'extra': ?extra,
         }),
       );
       navigationEnabled.value = false;
