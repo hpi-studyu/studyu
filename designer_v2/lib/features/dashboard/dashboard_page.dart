@@ -511,7 +511,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       scaffoldKey: _scaffoldKey,
       endDrawer: const Drawer(width: 400, child: FilterBuilder()),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Table(
             columnWidths: const {
