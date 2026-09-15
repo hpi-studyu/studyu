@@ -375,6 +375,7 @@ class StudyRecruitScreen extends StudyPageWidget {
     WidgetRef ref,
     InviteCodeFormViewModel formViewModel,
   ) {
+    var keepSaveButtonVisible = false;
     return [
       DismissButton(
         text: formViewModel.formMode == FormMode.edit
@@ -387,7 +388,9 @@ class StudyRecruitScreen extends StudyPageWidget {
       ReactiveFormConsumer(
         builder: (context, form, child) {
           final showSaveButton =
-              formViewModel.formMode != FormMode.edit || form.dirty;
+              keepSaveButtonVisible ||
+              formViewModel.formMode != FormMode.edit ||
+              form.dirty;
           if (!showSaveButton) {
             return const SizedBox.shrink();
           }
@@ -395,9 +398,11 @@ class StudyRecruitScreen extends StudyPageWidget {
           return PrimaryButton(
             text: tr.action_button_code_save,
             icon: null,
+            innerPadding: EdgeInsets.zero,
             enabled: formViewModel.isValid,
             onPressedFuture: formViewModel.isValid
                 ? () async {
+                    keepSaveButtonVisible = true;
                     final wasCreate = formViewModel.formMode == FormMode.create;
                     final savedInvite = await formViewModel.save();
                     final controller = ref.read(
