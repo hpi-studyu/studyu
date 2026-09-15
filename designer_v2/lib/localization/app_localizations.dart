@@ -5270,6 +5270,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next page'**
   String get code_list_next_page;
+
+  /// No description provided for @action_regenerate_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate invite code'**
+  String get action_regenerate_invite_code;
+
+  /// No description provided for @dialog_qr_code_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.'**
+  String get dialog_qr_code_description;
 }
 
 class _AppLocalizationsDelegate

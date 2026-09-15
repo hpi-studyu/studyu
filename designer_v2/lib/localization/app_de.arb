@@ -65,7 +65,7 @@
   "@__________________DOMAIN__________________": {},
   "study_status_draft": "Entwurf",
   "study_status_draft_description": "Die Studie ist noch in Planung",
-  "study_status_running": "Live",
+  "study_status_running": "Läuft",
   "study_status_running_description": "Die Studie wird gerade durchgeführt",
   "study_status_closed": "Abgeschlossen",
   "study_status_closed_description": "Diese Studie ist abgeschlossen.\nEs können sich keine neuen Teilnehmer mehr einschreiben.",
@@ -758,7 +758,6 @@
   "preview_overlay_remote_unavailable_message": "Die StudyU-App ist vorübergehend nicht verfügbar oder wird gewartet. Bitte versuche es später noch einmal.",
   "preview_overlay_could_not_load": "Die App-Vorschau konnte nicht geladen werden.",
   "preview_overlay_preview_not_opened": "Die App-Vorschau konnte gerade nicht geöffnet werden.",
-
   "banner_study_test_unavailable": "Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
   "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt und vollständig ein:",
   "dialog_study_test_help_title": "Teste deine Studie!",
@@ -861,9 +860,9 @@
   "monitoring_table_column_completed_intervention_tasks": "Abgeschlossene Interventionsaufgaben",
   "monitoring_table_column_completed_surveys": "Abgeschlossene Fragebögen",
   "monitoring_table_row_tooltip_dropout": "Dieser Teilnehmer hat die Studie verlassen und es wird keine neue Aktivität hinzugefügt",
-  "monitoring_table_days_in_study_header_tooltip":"Die Anzahl der Tage, die der Teilnehmer in der Studie verbracht hat",
+  "monitoring_table_days_in_study_header_tooltip": "Die Anzahl der Tage, die der Teilnehmer in der Studie verbracht hat",
   "monitoring_table_completed_interventions_header_tooltip": "Alle Interventionsaufgaben wurden während der gesamten Studie abgeschlossen",
-  "monitoring_table_completed_surveys_header_tooltip":"Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden",
+  "monitoring_table_completed_surveys_header_tooltip": "Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
   "banner_text_study_recruit_draft": "Solange die Studie noch nicht live ist, funktionieren die Links auf dieser Seite noch nicht.",
   "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf den Daten aus den Testläufen der Studie.\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
@@ -872,7 +871,7 @@
   "study_export_unavailable_empty_tooltip": "Es sind noch keine Ergebnisdaten verfügbar",
   "study_export_unavailable_no_permission_tooltip": "Du bist nicht berechtigt, auf die Ergebnisdaten der Studie zuzugreifen",
   "@__________________STUDY_LAUNCH_DIALOG__________________": {},
-  "study_launch_title": "Super Arbeit! \uD83D\uDC4F Alles bereit?",
+  "study_launch_title": "Super Arbeit! 👏 Alles bereit?",
   "study_launch_participation_intro": "Die von dir erstellte Studie ist",
   "study_launch_participation_outro": "",
   "study_launch_post_launch_intro": "Wenn die Studie gestartet wird, beachte:",
@@ -1128,9 +1127,6 @@
   "filter_result_sharing_public": "Öffentlich",
   "filter_result_sharing_private": "Privat",
   "filter_result_sharing_organization": "Organisation",
-  "study_status_draft": "Entwurf",
-  "study_status_running": "Läuft",
-  "study_status_closed": "Abgeschlossen",
   "participation_open": "Offen",
   "participation_invite": "Nur Einladung",
   "filter_section_default_presets": "Standardvorlagen",
@@ -1167,7 +1163,7 @@
       }
     }
   },
-  "code_list_page_range": "{start}\u2013{end} von {count}",
+  "code_list_page_range": "{start}–{end} von {count}",
   "@code_list_page_range": {
     "placeholders": {
       "start": {
@@ -1181,7 +1177,7 @@
       }
     }
   },
-  "code_list_page_loading": "{start}\u2013{end} wird geladen...",
+  "code_list_page_loading": "{start}–{end} wird geladen...",
   "@code_list_page_loading": {
     "placeholders": {
       "start": {
@@ -1196,5 +1192,7 @@
   "code_list_retry": "Erneut versuchen",
   "code_list_previous_page": "Vorherige Seite",
   "code_list_next_page": "Nächste Seite",
-  "code_list_search_hint_compact": "Codes suchen"
+  "code_list_search_hint_compact": "Codes suchen",
+  "action_regenerate_invite_code": "Teilnahmecode neu generieren",
+  "dialog_qr_code_description": "Teilen Sie diesen Link oder QR-Code mit den Teilnehmenden, damit sie auf diese Studie zugreifen können. Wenn Teilnehmende den Link öffnen oder den QR-Code mit ihrem Smartphone scannen, öffnet sich die StudyU-App und fügt sie dieser Studie hinzu."
 }

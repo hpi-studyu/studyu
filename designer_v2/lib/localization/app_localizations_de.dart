@@ -3105,4 +3105,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get code_list_next_page => 'Nächste Seite';
+
+  @override
+  String get action_regenerate_invite_code => 'Teilnahmecode neu generieren';
+
+  @override
+  String get dialog_qr_code_description =>
+      'Teilen Sie diesen Link oder QR-Code mit den Teilnehmenden, damit sie auf diese Studie zugreifen können. Wenn Teilnehmende den Link öffnen oder den QR-Code mit ihrem Smartphone scannen, öffnet sich die StudyU-App und fügt sie dieser Studie hinzu.';
 }

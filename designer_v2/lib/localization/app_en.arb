@@ -73,7 +73,7 @@
   "@__________________DOMAIN__________________": {},
   "study_status_draft": "Draft",
   "study_status_draft_description": "This study is still being drafted.",
-  "study_status_running": "Live",
+  "study_status_running": "Running",
   "study_status_running_description": "This study is currently in progress.",
   "study_status_closed": "Closed",
   "study_status_closed_description": "This study has been completed.\nNew participants can no longer enroll.",
@@ -762,7 +762,6 @@
   "preview_overlay_remote_unavailable_message": "The StudyU mobile app is temporarily unavailable or under maintenance. Please try again in a little while.",
   "preview_overlay_could_not_load": "The StudyU app preview could not be loaded.",
   "preview_overlay_preview_not_opened": "The StudyU app preview could not be opened right now.",
-
   "banner_study_test_unavailable": "The test mode is unavailable until you update the following information:",
   "banner_study_preview_unavailable": "The preview is unavailable until you update the following information:",
   "dialog_study_test_help_title": "Test your study!",
@@ -839,8 +838,8 @@
   "participant_details_completed_legend_tooltip": "All intervention and survey tasks have been completed for this day",
   "participant_details_partially_completed_legend_tooltip": "Not all intervention or survey tasks have been completed for this day",
   "participant_details_incomplete_legend_tooltip": "No intervention or survey tasks have been completed for this day",
-  "participant_details_progress_empty_title":"No progress data available yet",
-  "participant_details_progress_empty_description":"Once the participant has started the study, you can monitor their progress here.",
+  "participant_details_progress_empty_title": "No progress data available yet",
+  "participant_details_progress_empty_description": "Once the participant has started the study, you can monitor their progress here.",
   "monitoring_no_participants_title": "There are no participants in this study yet",
   "monitoring_no_participants_description": "Once participants have enrolled in your study, you can monitor their progress and view their data here.",
   "monitoring_participants_title": "Participant overview",
@@ -872,7 +871,7 @@
   "study_export_unavailable_empty_tooltip": "There is no data available yet",
   "study_export_unavailable_no_permission_tooltip": "You do not have sufficient permission to access this study's data",
   "@__________________STUDY_LAUNCH_DIALOG__________________": {},
-  "study_launch_title": "Great work! \uD83D\uDC4F Ready to launch?",
+  "study_launch_title": "Great work! 👏 Ready to launch?",
   "study_launch_participation_intro": "The study you are creating is",
   "study_launch_participation_outro": "",
   "study_launch_post_launch_intro": "After launching your study:",
@@ -1128,9 +1127,6 @@
   "filter_result_sharing_public": "Public",
   "filter_result_sharing_private": "Private",
   "filter_result_sharing_organization": "Organization",
-  "study_status_draft": "Draft",
-  "study_status_running": "Running",
-  "study_status_closed": "Closed",
   "participation_open": "Open",
   "participation_invite": "Invite-only",
   "filter_section_default_presets": "Default Presets",
@@ -1168,7 +1164,7 @@
       }
     }
   },
-  "code_list_page_range": "{start}\u2013{end} of {count}",
+  "code_list_page_range": "{start}–{end} of {count}",
   "@code_list_page_range": {
     "placeholders": {
       "start": {
@@ -1182,7 +1178,7 @@
       }
     }
   },
-  "code_list_page_loading": "Loading {start}\u2013{end}...",
+  "code_list_page_loading": "Loading {start}–{end}...",
   "@code_list_page_loading": {
     "placeholders": {
       "start": {
@@ -1193,8 +1189,10 @@
       }
     }
   },
-  "code_list_page_fetch_error": "Couldn\u2019t load the next page. Check your connection and try again.",
+  "code_list_page_fetch_error": "Couldn’t load the next page. Check your connection and try again.",
   "code_list_retry": "Retry",
   "code_list_previous_page": "Previous page",
-  "code_list_next_page": "Next page"
+  "code_list_next_page": "Next page",
+  "action_regenerate_invite_code": "Regenerate invite code",
+  "dialog_qr_code_description": "Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study."
 }

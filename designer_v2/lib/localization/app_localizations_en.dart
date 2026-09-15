@@ -3075,4 +3075,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get code_list_next_page => 'Next page';
+
+  @override
+  String get action_regenerate_invite_code => 'Regenerate invite code';
+
+  @override
+  String get dialog_qr_code_description =>
+      'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.';
 }

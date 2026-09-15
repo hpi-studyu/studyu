@@ -62,6 +62,11 @@ class QrCodePreviewDialog extends ConsumerWidget {
             },
           ),
           const SizedBox(height: 16.0),
+          Text(
+            tr.dialog_qr_code_description,
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16.0),
           Material(
             color: theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8.0),
