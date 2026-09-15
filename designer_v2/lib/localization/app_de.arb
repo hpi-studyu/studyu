@@ -133,7 +133,7 @@
   "studies_empty_public_description": "Es gibt keine Studien im öffentlichen Register, die deinen aktuellen Filtern entsprechen.",
   "studies_empty_shared": "Keine geteilten Studien gefunden",
   "studies_empty_shared_description": "Es wurden noch keine Studien mit dir geteilt.",
-  "studies_end_of_list": "Das war's fürs Erste.",
+  "studies_end_of_list": "Alle Studien geladen.",
   "studies_load_failed": "Studien konnten nicht geladen werden. Bitte versuche es erneut.",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Lernen",
@@ -1135,5 +1135,7 @@
   "filter_button_main": "Filtern",
   "all_studies": "Alle Studien",
   "studies_filter_add_filter": "Filter hinzufügen",
-  "studies_filter_remove_filter": "Filter entfernen"
+  "studies_filter_remove_filter": "Filter entfernen",
+  "studies_end_of_list_create": "Erstelle eine Studie.",
+  "studies_end_of_list_public": "Nicht gefunden, was du suchst?"
 }

@@ -249,56 +249,66 @@ class StudiesTable extends StatelessWidget {
             ),
             SizedBox(height: rowSpacing),
             Expanded(
-              child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(
-                  context,
-                ).copyWith(scrollbars: true),
-                child: ListView.builder(
-                  key: const ValueKey('studies_table_rows'),
-                  prototypeItem: StudiesTableItem.prototype(
-                    columnSizes: columnDefinitionsMap.values.toList(),
-                    itemHeight: itemHeight,
-                    itemPadding: itemPadding,
-                    rowSpacing: rowSpacing,
-                    columnSpacing: columnSpacing,
-                  ),
-                  itemCount: studies.length + (_showsFooter ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index >= studies.length) {
-                      return _buildFooter(context);
-                    }
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final needsScrolling =
+                      studies.length * (itemHeight + rowSpacing) >
+                      constraints.maxHeight;
+                  final showsFooter = _showsFooter(needsScrolling);
 
-                    if (hasMore &&
-                        !isLoadingMore &&
-                        index >= studies.length - _loadMorePrefetchThreshold) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        onLoadMore?.call();
-                      });
-                    }
-
-                    final item = studies[index];
-                    return RepaintBoundary(
-                      child: StudiesTableItem(
-                        key: ValueKey('study_row_${item.id}'),
-                        study: item,
+                  return ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(
+                      context,
+                    ).copyWith(scrollbars: true),
+                    child: ListView.builder(
+                      key: const ValueKey('studies_table_rows'),
+                      prototypeItem: StudiesTableItem.prototype(
                         columnSizes: columnDefinitionsMap.values.toList(),
-                        actions: getActions(item),
-                        isPinned: pinnedStudies.contains(item.id),
-                        isBusy: pendingStudyIds.contains(item.id),
                         itemHeight: itemHeight,
                         itemPadding: itemPadding,
                         rowSpacing: rowSpacing,
                         columnSpacing: columnSpacing,
-                        onPinnedChanged: (study, pinned) {
-                          pinnedStudies.contains(item.id)
-                              ? dashboardController.pinOffStudy(item.id)
-                              : dashboardController.pinStudy(item.id);
-                        },
-                        onTap: (study) => onSelect.call(study),
                       ),
-                    );
-                  },
-                ),
+                      itemCount: studies.length + (showsFooter ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index >= studies.length) {
+                          return _buildFooter(context);
+                        }
+
+                        if (hasMore &&
+                            !isLoadingMore &&
+                            index >=
+                                studies.length - _loadMorePrefetchThreshold) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            onLoadMore?.call();
+                          });
+                        }
+
+                        final item = studies[index];
+                        return RepaintBoundary(
+                          child: StudiesTableItem(
+                            key: ValueKey('study_row_${item.id}'),
+                            study: item,
+                            columnSizes: columnDefinitionsMap.values.toList(),
+                            actions: getActions(item),
+                            isPinned: pinnedStudies.contains(item.id),
+                            isBusy: pendingStudyIds.contains(item.id),
+                            itemHeight: itemHeight,
+                            itemPadding: itemPadding,
+                            rowSpacing: rowSpacing,
+                            columnSpacing: columnSpacing,
+                            onPinnedChanged: (study, pinned) {
+                              pinnedStudies.contains(item.id)
+                                  ? dashboardController.pinOffStudy(item.id)
+                                  : dashboardController.pinStudy(item.id);
+                            },
+                            onTap: (study) => onSelect.call(study),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -354,7 +364,8 @@ class StudiesTable extends StatelessWidget {
     );
   }
 
-  bool get _showsFooter => isLoadingMore || loadError != null || !hasMore;
+  bool _showsFooter(bool needsScrolling) =>
+      isLoadingMore || loadError != null || (!hasMore && needsScrolling);
 
   Widget _buildFooter(BuildContext context) {
     if (isLoadingMore) {

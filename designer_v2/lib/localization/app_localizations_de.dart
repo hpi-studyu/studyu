@@ -376,7 +376,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Es wurden noch keine Studien mit dir geteilt.';
 
   @override
-  String get studies_end_of_list => 'Das war\'s fürs Erste.';
+  String get studies_end_of_list => 'Alle Studien geladen.';
 
   @override
   String get studies_load_failed =>
@@ -3052,4 +3052,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get studies_filter_remove_filter => 'Filter entfernen';
+
+  @override
+  String get studies_end_of_list_create => 'Erstelle eine Studie.';
+
+  @override
+  String get studies_end_of_list_public => 'Nicht gefunden, was du suchst?';
 }

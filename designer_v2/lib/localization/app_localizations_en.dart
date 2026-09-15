@@ -369,7 +369,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'No studies have been shared with you yet.';
 
   @override
-  String get studies_end_of_list => 'That\'s all for now.';
+  String get studies_end_of_list => 'All studies loaded.';
 
   @override
   String get studies_load_failed => 'Couldn\'t load studies. Try again.';
@@ -3015,4 +3015,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studies_filter_remove_filter => 'Remove filter';
+
+  @override
+  String get studies_end_of_list_create => 'Create a study.';
+
+  @override
+  String get studies_end_of_list_public =>
+      'Didn\'t find what you\'re looking for?';
 }
