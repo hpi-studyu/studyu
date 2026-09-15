@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -21,14 +22,9 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
-part 'study_repository.g.dart';
+export 'study_repository_interface.dart';
 
-abstract class IStudyRepository implements ModelRepository<Study> {
-  Future<void> launch(Study study);
-  Future<void> deleteParticipants(Study study);
-  Future<void> close(Study study);
-  // Future<void> deleteProgress(Study study);
-}
+part 'study_repository.g.dart';
 
 class StudyRepository extends ModelRepository<Study>
     implements IStudyRepository {
