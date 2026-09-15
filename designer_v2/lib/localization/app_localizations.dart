@@ -4275,6 +4275,12 @@ abstract class AppLocalizations {
   /// **'Pick an icon'**
   String get iconpicker_dialog_title;
 
+  /// No description provided for @iconpicker_remove_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove icon'**
+  String get iconpicker_remove_action;
+
   /// No description provided for @dialog_unsaved_changes_title.
   ///
   /// In en, this message translates to:

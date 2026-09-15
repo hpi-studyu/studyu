@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/character_count_text_field.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
@@ -15,6 +15,13 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
   const StudyDesignInfoFormView(super.studyId, {super.key});
+
+  static const _singleLineFieldHeight = 56.0;
+  static const _studyTitleMaxLength = 100;
+  static const _studyDescriptionMaxLength = 500;
+  static const _contactFieldMaxLength = 100;
+  static const _websiteMaxLength = 300;
+  static const _additionalInfoMaxLength = 500;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,35 +47,37 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     label: tr.form_field_study_title,
                     labelHelpText: tr.form_field_study_title_tooltip,
                     input: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // TODO: responsive layout (input field gets too small)
                         Expanded(
-                          child: ReactiveTextField(
+                          child: CharacterCountTextField(
                             formControl: formViewModel.titleControl,
-                            decoration: InputDecoration(
-                              hintText: tr.form_field_study_title,
-                            ),
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(100),
-                            ],
+                            hintText: tr.form_field_study_title,
+                            maxLength: _studyTitleMaxLength,
                             validationMessages:
                                 formViewModel.titleControl.validationMessages,
                           ),
                         ),
-                        ReactiveFormConsumer(
-                          builder: (context, form, child) {
-                            return (formViewModel.iconControl.value != null)
-                                ? const SizedBox(width: 4.0)
-                                : const SizedBox(width: 8.0);
+                        const SizedBox(width: 12.0),
+                        ReactiveValueListenableBuilder<IconOption>(
+                          formControl: formViewModel.iconControl,
+                          builder: (context, control, child) {
+                            return SizedBox(
+                              height: StudyDesignInfoFormView
+                                  ._singleLineFieldHeight,
+                              child: Center(
+                                child: ReactiveIconPicker(
+                                  formControl: formViewModel.iconControl,
+                                  iconOptions: IconPack.material,
+                                  selectedIconSize: 24.0,
+                                  validationMessages: formViewModel
+                                      .iconControl
+                                      .validationMessages,
+                                ),
+                              ),
+                            );
                           },
-                        ),
-                        IntrinsicWidth(
-                          child: ReactiveIconPicker(
-                            formControl: formViewModel.iconControl,
-                            iconOptions: IconPack.material,
-                            validationMessages:
-                                formViewModel.iconControl.validationMessages,
-                          ),
                         ),
                       ],
                     ),
@@ -77,17 +86,15 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     control: formViewModel.descriptionControl,
                     label: tr.form_field_study_description,
                     labelHelpText: tr.form_field_study_description_tooltip,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.descriptionControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_study_description_hint,
-                      ),
+                      hintText: tr.form_field_study_description_hint,
+                      maxLength: _studyDescriptionMaxLength,
                       validationMessages:
                           formViewModel.descriptionControl.validationMessages,
                       keyboardType: TextInputType.multiline,
                       minLines: 5,
                       maxLines: 5,
-                      inputFormatters: [LengthLimitingTextInputFormatter(500)],
                     ),
                   ),
                 ],
@@ -106,12 +113,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.organizationControl,
                     label: tr.form_field_organization,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.organizationControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_organization,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                      hintText: tr.form_field_organization,
+                      maxLength: _contactFieldMaxLength,
                       validationMessages:
                           formViewModel.organizationControl.validationMessages,
                     ),
@@ -119,12 +124,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.reviewBoardControl,
                     label: tr.form_field_review_board,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.reviewBoardControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_review_board,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                      hintText: tr.form_field_review_board,
+                      maxLength: _contactFieldMaxLength,
                       validationMessages:
                           formViewModel.reviewBoardControl.validationMessages,
                     ),
@@ -132,12 +135,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.reviewBoardNumberControl,
                     label: tr.form_field_review_board_number,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.reviewBoardNumberControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_review_board_number,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                      hintText: tr.form_field_review_board_number,
+                      maxLength: _contactFieldMaxLength,
                       validationMessages: formViewModel
                           .reviewBoardNumberControl
                           .validationMessages,
@@ -146,12 +147,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.researchersControl,
                     label: tr.form_field_researchers,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.researchersControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_researchers,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                      hintText: tr.form_field_researchers,
+                      maxLength: _contactFieldMaxLength,
                       validationMessages:
                           formViewModel.researchersControl.validationMessages,
                     ),
@@ -159,38 +158,42 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.websiteControl,
                     label: tr.form_field_website,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.websiteControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_website,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(300)],
+                      hintText: tr.form_field_website,
+                      maxLength: _websiteMaxLength,
+                      showErrors: (control) => control.invalid && control.dirty,
                       validationMessages:
                           formViewModel.websiteControl.validationMessages,
+                      helperTextBuilder: (control) =>
+                          control.invalid && control.dirty
+                          ? tr.sync_dirty
+                          : null,
                     ),
                   ),
                   FormTableRow(
                     control: formViewModel.emailControl,
                     label: tr.form_field_contact_email,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.emailControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_contact_email,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                      hintText: tr.form_field_contact_email,
+                      maxLength: _contactFieldMaxLength,
+                      showErrors: (control) => control.invalid && control.dirty,
                       validationMessages:
                           formViewModel.emailControl.validationMessages,
+                      helperTextBuilder: (control) =>
+                          control.invalid && control.dirty
+                          ? tr.sync_dirty
+                          : null,
                     ),
                   ),
                   FormTableRow(
                     control: formViewModel.phoneControl,
                     label: tr.form_field_contact_phone,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.phoneControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_contact_phone,
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                      hintText: tr.form_field_contact_phone,
+                      maxLength: _contactFieldMaxLength,
                       validationMessages:
                           formViewModel.phoneControl.validationMessages,
                     ),
@@ -198,15 +201,13 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.additionalInfoControl,
                     label: tr.form_field_contact_additional_info,
-                    input: ReactiveTextField(
+                    input: CharacterCountTextField(
                       formControl: formViewModel.additionalInfoControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_contact_additional_info,
-                      ),
+                      hintText: tr.form_field_contact_additional_info,
+                      maxLength: _additionalInfoMaxLength,
                       keyboardType: TextInputType.multiline,
                       minLines: 5,
                       maxLines: 5,
-                      inputFormatters: [LengthLimitingTextInputFormatter(500)],
                     ),
                   ),
                 ],

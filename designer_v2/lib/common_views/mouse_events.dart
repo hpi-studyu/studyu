@@ -19,6 +19,7 @@ class MouseEventsRegion extends StatefulWidget {
     this.onExit,
     this.cursor = defaultCursor,
     this.autoselectCursor = true,
+    this.behavior = HitTestBehavior.deferToChild,
     super.key,
   });
 
@@ -32,6 +33,7 @@ class MouseEventsRegion extends StatefulWidget {
 
   final bool autoselectCursor;
   final SystemMouseCursor cursor;
+  final HitTestBehavior behavior;
   static const defaultCursor = SystemMouseCursors.basic;
 
   SystemMouseCursor get autoCursor {
@@ -67,6 +69,7 @@ class _MouseEventsRegionState extends State<MouseEventsRegion> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: widget.behavior,
       onTap: widget.onTap,
       onTapDown: (_) => statesController.update(WidgetState.pressed, true),
       onTapUp: (_) => statesController.update(WidgetState.pressed, false),
