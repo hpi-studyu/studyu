@@ -126,7 +126,6 @@ class _Harness {
     // setStudiesFilter call (with widget.filter, possibly null) after build.
     // The controller itself no longer drives an initial fetch from build();
     // setStudiesFilter is the single load path.
-    // ignore: unawaited_futures
     container
         .read(dashboardControllerProvider.notifier)
         .setStudiesFilter(initialFilter);
@@ -726,12 +725,10 @@ void main() {
       });
 
       // Kick off the slow reload.
-      // ignore: unawaited_futures
       h.controller.setStudiesFilter(StudiesFilter.public);
       await Future<void>.delayed(Duration.zero);
 
       // Trigger the second reload while the first is still pending.
-      // ignore: unawaited_futures
       h.controller.setStudiesFilter(StudiesFilter.all);
       await h.settle();
 

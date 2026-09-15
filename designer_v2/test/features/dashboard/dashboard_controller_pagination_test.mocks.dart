@@ -3,6 +3,7 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+
 import 'dart:async' as _i13;
 
 import 'package:mockito/mockito.dart' as _i1;
@@ -822,6 +823,25 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
               _FakeStudyUUser_10(
                 this,
                 Invocation.method(#updatePreferences, [pinAction, modelId]),
+              ),
+            ),
+          )
+          as _i13.Future<_i8.StudyUUser>);
+
+  @override
+  _i13.Future<_i8.StudyUUser> updateLanguage(String? language) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateLanguage, [language]),
+            returnValue: _i13.Future<_i8.StudyUUser>.value(
+              _FakeStudyUUser_10(
+                this,
+                Invocation.method(#updateLanguage, [language]),
+              ),
+            ),
+            returnValueForMissingStub: _i13.Future<_i8.StudyUUser>.value(
+              _FakeStudyUUser_10(
+                this,
+                Invocation.method(#updateLanguage, [language]),
               ),
             ),
           )

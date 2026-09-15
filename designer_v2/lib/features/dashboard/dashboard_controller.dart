@@ -71,7 +71,6 @@ class DashboardController extends _$DashboardController
       final savedFilters = _userRepository.getCustomPresets();
       state = state.copyWith(savedFilters: () => savedFilters);
     } catch (e) {
-      // ignore: avoid_print
       print("Failed to load user preferences: $e");
     }
   }
