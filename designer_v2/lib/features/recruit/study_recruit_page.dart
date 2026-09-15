@@ -69,7 +69,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   static const _footerDropdownMenuElevation = 5.0;
   static const _footerDropdownMenuOffsetX = -6.0;
   static const _feedbackBorderRadius = 8.0;
-  static const _inviteCodePageSizes = [15, 25, 50, 100];
+  static const _inviteCodePageSizes = [10, 15, 25, 50];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -520,7 +520,9 @@ class StudyRecruitScreen extends StudyPageWidget {
               ? controller.loadPreviousInviteCodePage
               : null,
           icon: const Icon(Icons.chevron_left_rounded),
-          tooltip: MaterialLocalizations.of(context).previousPageTooltip,
+          tooltip: state.hasPreviousInviteCodePage && !isPaginationDisabled
+              ? MaterialLocalizations.of(context).previousPageTooltip
+              : null,
           style: IconButton.styleFrom(
             shape: const CircleBorder(),
             minimumSize: const Size.square(_paginationButtonSize),
@@ -534,7 +536,9 @@ class StudyRecruitScreen extends StudyPageWidget {
               ? controller.loadNextInviteCodePage
               : null,
           icon: const Icon(Icons.chevron_right_rounded),
-          tooltip: MaterialLocalizations.of(context).nextPageTooltip,
+          tooltip: state.hasComputedNextInviteCodePage && !isPaginationDisabled
+              ? MaterialLocalizations.of(context).nextPageTooltip
+              : null,
           style: IconButton.styleFrom(
             shape: const CircleBorder(),
             minimumSize: const Size.square(_paginationButtonSize),
@@ -543,6 +547,10 @@ class StudyRecruitScreen extends StudyPageWidget {
         ),
       ],
     );
+
+    if (state.inviteCodeCount <= state.inviteCodePageSize) {
+      return pageSizeControl;
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
