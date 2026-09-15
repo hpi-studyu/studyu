@@ -1,13 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:stack_deferred_link/stack_deferred_link.dart';
-import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-@visibleForTesting
-String deferredInviteDeepLinkHost(String? configuredDeepLinkScheme) {
-  final scheme = configuredDeepLinkScheme ?? 'https://app.studyu.health';
-  return Uri.parse(scheme).host;
-}
 
 class DeferredLink {
   final String? inviteCode;
@@ -73,6 +66,19 @@ DeferredLink? parseIosDeferredLinkPath(String? referralPath) {
   return null;
 }
 
+DeferredLink? pendingDeferredLinkFromStorageValues({
+  required String? inviteCode,
+  required String? studyId,
+}) {
+  final parsedInviteCode = _sanitizeDeferredValue(inviteCode);
+  if (parsedInviteCode != null) return DeferredLink.invite(parsedInviteCode);
+
+  final parsedStudyId = _sanitizeDeferredValue(studyId);
+  if (parsedStudyId != null) return DeferredLink.study(parsedStudyId);
+
+  return null;
+}
+
 String? _extractReferrerValue(String referrer, String key) {
   try {
     final regexp = RegExp('(?:^|&)$key=([^&]+)');
@@ -110,29 +116,26 @@ class DeferredLinkService {
           referrer: referrer,
         );
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
-        final host = Uri.parse(scheme).host;
         await SecureStorage.write(
           'debug_install_referrer',
-          'iOS Check. Host: $host',
+          'iOS deferred deep linking disabled: clipboard handoff removed.',
         );
-
-        final result = await StackDeferredLink.getInstallReferrerIos(
-          deepLinks: ['$host/invite', '$host/study'],
-        );
-
-        await SecureStorage.write(
-          'debug_install_referrer',
-          'iOS Result: ${result?.fullReferralDeepLinkPath}',
-        );
-
-        deferredLink = parseIosDeferredLinkPath(
-          result?.fullReferralDeepLinkPath,
-        );
+        return null;
       }
 
       if (deferredLink != null) {
-        await SecureStorage.write('has_processed_deferred_link', 'true');
+        if (deferredLink.inviteCode != null) {
+          await SecureStorage.write(
+            'pending_deferred_link_invite',
+            deferredLink.inviteCode!,
+          );
+        }
+        if (deferredLink.studyId != null) {
+          await SecureStorage.write(
+            'pending_deferred_link_study',
+            deferredLink.studyId!,
+          );
+        }
         return deferredLink;
       }
       // Add else block for debugging empty code

@@ -181,3 +181,4 @@ interview/
 .pi-subagents/
 
 .vscode/settings.json
+/.qwen/
