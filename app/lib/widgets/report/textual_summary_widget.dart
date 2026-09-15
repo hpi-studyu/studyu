@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:statistics/statistics.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/sections/t_test.dart';
@@ -136,7 +137,7 @@ class TextualSummaryWidget extends StatelessWidget {
             TextButton(
               child: Text(AppLocalizations.of(context)!.close),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
           ],

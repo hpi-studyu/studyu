@@ -112,6 +112,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     final actions = surveyMeasurementFormViewModels.availableActions(
       model,
       onEdit: onSelectItem,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -122,6 +123,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   ) {
     final actions = surveyMeasurementFormViewModels.availablePopupActions(
       model,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -132,6 +134,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   ) {
     final actions = surveyMeasurementFormViewModels.availableInlineActions(
       model,
+      confirmationSubject: tr.dialog_subject_survey,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
@@ -148,9 +151,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onNewItem() {
-    final studyId = study.id;
+    final viewModel = provide(
+      MeasurementFormRouteArgs(
+        studyId: study.id,
+        measurementId: Config.newModelId,
+      ),
+    );
     router.dispatch(
-      RoutingIntents.studyEditMeasurement(studyId, Config.newModelId),
+      RoutingIntents.studyEditMeasurement(study.id, viewModel.measurementId),
     );
   }
 
@@ -159,14 +167,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   @override
   MeasurementSurveyFormViewModel provide(MeasurementFormRouteArgs args) {
     if (args.measurementId.isNewId) {
-      // Eagerly add the managed viewmodel in case it needs to be [provide]d
-      // to a child controller
+      final existingDraft = surveyMeasurementFormViewModels.findWhere(
+        (viewModel) => viewModel.formMode == FormMode.create,
+      );
+      if (existingDraft != null) return existingDraft;
+
       final viewModel = MeasurementSurveyFormViewModel(
         study: study,
         delegate: this,
         validationSet: validationSet,
       );
-      surveyMeasurementFormViewModels.stage(viewModel);
+      surveyMeasurementFormViewModels.add(viewModel);
       return viewModel;
     }
 
@@ -186,7 +197,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     MeasurementSurveyFormViewModel formViewModel,
     FormMode formMode,
   ) {
-    return; // no-op
+    if (formMode == FormMode.create) {
+      surveyMeasurementFormViewModels.remove(formViewModel);
+    }
   }
 
   @override
@@ -194,6 +207,8 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     MeasurementSurveyFormViewModel formViewModel,
     FormMode prevFormMode,
   ) async {
+    final isNewMeasurement = prevFormMode == FormMode.create;
+
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       surveyMeasurementFormViewModels.commit(formViewModel);
@@ -201,5 +216,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       // nothing to do here
     }
     await super.save();
+
+    if (isNewMeasurement) {
+      router.dispatch(
+        RoutingIntents.studyEditMeasurement(
+          study.id,
+          formViewModel.measurementId,
+        ),
+      );
+    }
   }
 }

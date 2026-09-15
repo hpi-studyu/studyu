@@ -93,7 +93,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   CompositeExpression? get compositeExpression {
     final List<Expression> currentExpressions = [];
     for (final formViewModel in conditionFormViewModels.formViewModels) {
-      final expression = formViewModel.buildFormData().buildExpression();
+      final expression = formViewModel.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
       }

@@ -412,7 +412,7 @@ class AuthFormController extends _$AuthFormController {
   }
 
   Future<void> _readDebugUser() async {
-    if (!kDebugMode) return;
+    if (!kDebugMode || getFormKey() != AuthFormKey.login) return;
     const email = String.fromEnvironment('EMAIL');
     const password = String.fromEnvironment('PASSWORD');
     const autoLogin = bool.fromEnvironment('AUTO_LOGIN');

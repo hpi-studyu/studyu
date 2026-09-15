@@ -28,10 +28,12 @@ Preferences _$PreferencesFromJson(Map<String, dynamic> json) => Preferences(
           ?.map((e) => e as String)
           .toSet() ??
       const {},
+  studyFiltering: json['study_filtering'] as Map<String, dynamic>? ?? const {},
 );
 
 Map<String, dynamic> _$PreferencesToJson(Preferences instance) =>
     <String, dynamic>{
       'lang': instance.language,
       'pinned_studies': instance.pinnedStudies.toList(),
+      'study_filtering': instance.studyFiltering,
     };

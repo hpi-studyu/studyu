@@ -4,15 +4,9 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 // todo move this either to study_test_fame_views or do something like PreviewWidget(
 class FrameControlsWidget extends ConsumerWidget {
-  const FrameControlsWidget({
-    this.enabled = true,
-    this.onRefresh,
-    this.onOpenNewTab,
-    super.key,
-  });
+  const FrameControlsWidget({this.enabled = true, this.onRefresh, super.key});
 
   final VoidCallback? onRefresh;
-  final VoidCallback? onOpenNewTab;
   final bool enabled;
 
   @override
@@ -24,11 +18,6 @@ class FrameControlsWidget extends ConsumerWidget {
           icon: const Icon(Icons.restart_alt),
           label: Text(tr.action_button_study_test_reset),
           onPressed: (!enabled) ? null : onRefresh,
-        ),
-        TextButton.icon(
-          icon: const Icon(Icons.open_in_new_sharp),
-          label: Text(tr.action_button_study_test_open_new_tab),
-          onPressed: (!enabled) ? null : onOpenNewTab,
         ),
       ],
     );

@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
+enum PreviewOverlayStage { healthChecking, connecting, appLoading, error, none }
+
 class WebFrame extends StatelessWidget {
   final String previewSrc;
   final String studyId;
@@ -54,9 +56,130 @@ class DisabledFrame extends StatelessWidget {
   }
 }
 
+class PreviewStatusFrame extends StatelessWidget {
+  const PreviewStatusFrame({
+    required this.icon,
+    required this.title,
+    required this.description,
+    this.action,
+    this.borderColor,
+    this.innerContentBackgroundColor,
+    super.key,
+  });
+
+  final IconData icon;
+  final String title;
+  final String description;
+  final Widget? action;
+  final Color? borderColor;
+  final Color? innerContentBackgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return PhoneContainer(
+      innerContent: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: EmptyBody(
+          icon: icon,
+          title: title,
+          description: description,
+          button: action,
+        ),
+      ),
+      borderColor:
+          borderColor ?? theme.colorScheme.secondary.withValues(alpha: 0.35),
+      innerContentBackgroundColor:
+          innerContentBackgroundColor ??
+          theme.colorScheme.secondary.withValues(alpha: 0.08),
+    );
+  }
+}
+
+class LoadingFrame extends StatelessWidget {
+  const LoadingFrame({
+    required this.configuredUrl,
+    required this.isLocalDevelopment,
+    required this.stage,
+    this.message,
+    super.key,
+  });
+
+  final String configuredUrl;
+  final bool isLocalDevelopment;
+  final PreviewOverlayStage stage;
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = tr;
+    final title = switch (stage) {
+      PreviewOverlayStage.healthChecking =>
+        l10n.preview_overlay_health_checking_title,
+      PreviewOverlayStage.connecting => l10n.preview_overlay_connecting_title,
+      PreviewOverlayStage.appLoading => l10n.preview_overlay_loading_title,
+      PreviewOverlayStage.error || PreviewOverlayStage.none => '',
+    };
+    final description =
+        message ??
+        switch (stage) {
+          PreviewOverlayStage.healthChecking =>
+            isLocalDevelopment
+                ? l10n.preview_overlay_health_checking_description_local(
+                    configuredUrl,
+                  )
+                : l10n.preview_overlay_health_checking_description_remote(
+                    configuredUrl,
+                  ),
+          PreviewOverlayStage.connecting =>
+            isLocalDevelopment
+                ? l10n.preview_overlay_connecting_description_local
+                : l10n.preview_overlay_connecting_description_remote,
+          PreviewOverlayStage.appLoading =>
+            isLocalDevelopment
+                ? l10n.preview_overlay_loading_description_local
+                : l10n.preview_overlay_loading_description_remote,
+          PreviewOverlayStage.error || PreviewOverlayStage.none => '',
+        };
+
+    return PreviewStatusFrame(
+      icon: Icons.sync_rounded,
+      title: title,
+      description: description,
+      action: const Padding(
+        padding: EdgeInsets.only(top: 8.0),
+        child: SizedBox(
+          width: 28,
+          height: 28,
+          child: CircularProgressIndicator(strokeWidth: 2.5),
+        ),
+      ),
+      innerContentBackgroundColor: Colors.white,
+    );
+  }
+}
+
+class ErrorFrame extends StatelessWidget {
+  const ErrorFrame({required this.title, required this.message, super.key});
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return PreviewStatusFrame(
+      icon: Icons.warning_amber_rounded,
+      title: title,
+      description: message,
+      innerContentBackgroundColor: Colors.white,
+    );
+  }
+}
+
 class PhoneContainer extends StatelessWidget {
-  static const double defaultWidth = 300.0;
-  static const double defaultHeight = 600.0;
+  static const double minWidth = 260.0;
+  static const double defaultWidth = 360.0;
+  static const double defaultHeight = 720.0;
 
   const PhoneContainer({
     required this.innerContent,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -148,7 +149,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               child: Text(AppLocalizations.of(context)!.fitbit_data_close_btn),
             ),
           ],

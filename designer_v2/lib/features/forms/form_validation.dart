@@ -90,7 +90,7 @@ List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
 
     final validationMessageFunc = control.validationMessages[error.key];
     final String validationMessage =
-        validationMessageFunc?.call(error.value) ?? '[${error.key}]';
+        validationMessageFunc?.call(error.value as Object) ?? '[${error.key}]';
     allValidationErrorMessages.add(Tuple(control, validationMessage));
   }
 
@@ -162,9 +162,16 @@ extension FormGroupX on FormGroup {
   String get validationErrorSummary => getValidationErrorSummary();
 
   String getValidationErrorSummary({bool uniqueErrors = true}) {
-    final errorMessages = uniqueErrors
-        ? {...formattedErrorMessages}.toList()
-        : formattedErrorMessages;
+    final errorMessages =
+        (uniqueErrors
+                ? {...formattedErrorMessages}.toList()
+                : formattedErrorMessages)
+            .map((message) => message.trim())
+            .where((message) => message.isNotEmpty)
+            .toList();
+    if (errorMessages.isEmpty) {
+      return '';
+    }
     return "- ${errorMessages.join("\n- ")}";
   }
 }

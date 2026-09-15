@@ -35,6 +35,7 @@ class FormTableLayout extends StatelessWidget {
     this.rowDivider,
     this.rowLayout = FormTableRowLayout.horizontal,
     this.rowLabelStyle,
+    this.rowSpacing = 10.0,
     super.key,
   });
 
@@ -43,6 +44,7 @@ class FormTableLayout extends StatelessWidget {
   final Widget? rowDivider;
   final FormTableRowLayout? rowLayout;
   final TextStyle? rowLabelStyle;
+  final double rowSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class FormTableLayout extends StatelessWidget {
       final row = rows[i];
       final isTrailing = i == rows.length - 1;
 
-      final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
+      final bottomSpacing = (!isTrailing) ? rowSpacing : 0.0;
       final stateColorStyle = (row.control != null && row.control!.disabled)
           ? TextStyle(color: theme.disabledColor)
           : null;

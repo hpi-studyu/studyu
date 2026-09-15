@@ -37,7 +37,14 @@ class Preferences {
   @JsonKey(name: 'pinned_studies')
   Set<String> pinnedStudies;
 
-  Preferences({this.language = '', this.pinnedStudies = const {}});
+  @JsonKey(name: 'study_filtering')
+  Map<String, dynamic> studyFiltering;
+
+  Preferences({
+    this.language = '',
+    this.pinnedStudies = const {},
+    this.studyFiltering = const {},
+  });
 
   factory Preferences.fromJson(Map<String, dynamic> json) =>
       _$PreferencesFromJson(json);
