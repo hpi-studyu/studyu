@@ -46,5 +46,5 @@ Future<void> openRestoreAccount(WidgetTester tester) async {
 Future<void> submitPhrase(WidgetTester tester, String uuid) async {
   await tester.enterText(find.byType(TextFormField), phraseFor(uuid));
   await tester.pump();
-  await tester.tap(find.text('Restore account').last);
+  await tester.tap(find.widgetWithText(FilledButton, 'Restore account'));
 }
