@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
@@ -8,14 +9,15 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/services/clipboard.dart';
 
-class InviteCodeFormView extends FormConsumerWidget {
+class InviteCodeFormView extends FormConsumerRefWidget {
   const InviteCodeFormView({required this.formViewModel, super.key});
 
   final InviteCodeFormViewModel formViewModel;
 
   @override
-  Widget build(BuildContext context, FormGroup form) {
+  Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
     final isEditableCodeField = formViewModel.formMode == FormMode.create;
     return Column(
       children: [
@@ -31,10 +33,38 @@ class InviteCodeFormView extends FormConsumerWidget {
                 readOnly: !isEditableCodeField,
                 validationMessages:
                     formViewModel.codeControl.validationMessages,
-                decoration: isEditableCodeField
-                    ? InputDecoration(
-                        helperText: "",
-                        suffixIcon: Material(
+                decoration: InputDecoration(
+                  helperText: isEditableCodeField ? '' : null,
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Tooltip(
+                        message: tr.action_copy_invite_code,
+                        child: IconButton(
+                          splashRadius: 18.0,
+                          onPressed: () async {
+                            await ref
+                                .read(clipboardServiceProvider)
+                                .copy(formViewModel.codeControl.value ?? '');
+                            if (context.mounted) {
+                              final messenger = ScaffoldMessenger.of(context);
+                              messenger
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      tr.notification_invite_code_copied,
+                                    ),
+                                    showCloseIcon: true,
+                                  ),
+                                );
+                            }
+                          },
+                          icon: const Icon(Icons.copy_rounded),
+                        ),
+                      ),
+                      if (isEditableCodeField)
+                        Material(
                           color: Colors.transparent,
                           child: IconButton(
                             splashRadius: 18.0,
@@ -42,8 +72,9 @@ class InviteCodeFormView extends FormConsumerWidget {
                             icon: const Icon(Icons.refresh_rounded),
                           ),
                         ),
-                      )
-                    : const InputDecoration(),
+                    ],
+                  ),
+                ),
               ),
             ),
             FormTableRow(

@@ -5,8 +5,6 @@ import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
-import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
 class QrCodePreviewDialog extends ConsumerWidget {
@@ -23,20 +21,15 @@ class QrCodePreviewDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void copyLink() {
-      ref
-          .read(clipboardServiceProvider)
-          .copy(data)
-          .then(
-            (_) => ref
-                .read(notificationServiceProvider)
-                .show(Notifications.inviteLinkCopied),
-          );
+    final theme = Theme.of(context);
+
+    Future<void> copyLink() async {
+      await ref.read(clipboardServiceProvider).copy(data);
     }
 
     return StandardDialog(
       titleText: title ?? tr.action_qr_code_show,
-      width: 400,
+      width: 450,
       minHeight: 400,
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -52,9 +45,7 @@ class QrCodePreviewDialog extends ConsumerWidget {
                 return Center(
                   child: Text(
                     'Error: ${snapshot.error}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                    style: TextStyle(color: theme.colorScheme.error),
                   ),
                 );
               }
@@ -71,15 +62,35 @@ class QrCodePreviewDialog extends ConsumerWidget {
             },
           ),
           const SizedBox(height: 16.0),
-          TextFormField(
-            initialValue: data,
-            readOnly: true,
-            onTap: copyLink,
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                tooltip: tr.action_copy_link,
-                onPressed: copyLink,
-                icon: const Icon(Icons.copy_rounded),
+          Material(
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(8.0),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8.0),
+              mouseCursor: SystemMouseCursors.click,
+              onTap: copyLink,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        data,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Tooltip(
+                      message: tr.action_copy_link,
+                      preferBelow: true,
+                      child: Icon(
+                        Icons.copy_rounded,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
