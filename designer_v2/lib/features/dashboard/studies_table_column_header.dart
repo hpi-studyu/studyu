@@ -55,7 +55,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 textAlign: textAlign,
-                style: theme.textTheme.bodySmall!.copyWith(
+                style: theme.textTheme.bodyMedium!.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
               ),

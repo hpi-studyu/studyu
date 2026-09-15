@@ -46,12 +46,9 @@ class StudyInvitesTable extends StatelessWidget {
   static const _codeColumnMinWidth = 168.0;
   static const _codeColumnMaxWidth = 256.0;
   static const _codeColumnWidthFactor = 0.3;
-  static const _actionColumnWidth = 64.0;
-  static const _countColumnMinWidth = 64.0;
-  static const _countColumnMaxWidth = 84.0;
-  static const _countColumnWidthFactor = 0.09;
+  static const _actionColumnWidth = 88.0;
+  static const _enrolledColumnWidth = 132.0;
   static const _interventionColumnMinWidth = 96.0;
-  static const _interventionColumnMaxWidth = 148.0;
   static const _headerVerticalPadding = 12.0;
   static const _codeCellSpacing = 8.0;
   static const _copyIconSize = 18.0;
@@ -83,7 +80,7 @@ class StudyInvitesTable extends StatelessWidget {
           items: invites,
           columns: columns,
           trailingActionsColumn: StandardTableColumn(
-            label: tr.action_share,
+            label: '',
             columnWidth: const FixedColumnWidth(_actionColumnWidth),
           ),
           headerRowBuilder: (context, tableColumns) =>
@@ -169,10 +166,7 @@ class StudyInvitesTable extends StatelessWidget {
       _codeColumnMinWidth,
       _codeColumnMaxWidth,
     );
-    final enrolledWidth = (tableWidth * _countColumnWidthFactor).clamp(
-      _countColumnMinWidth,
-      _countColumnMaxWidth,
-    );
+    const enrolledWidth = _enrolledColumnWidth;
 
     final availableInterventionWidth =
         tableWidth - codeWidth - enrolledWidth - _actionColumnWidth;
@@ -180,7 +174,7 @@ class StudyInvitesTable extends StatelessWidget {
         ? 0.0
         : (availableInterventionWidth / interventionColumnCount).clamp(
             _interventionColumnMinWidth,
-            _interventionColumnMaxWidth,
+            double.infinity,
           );
 
     return _InviteCodeTableWidthConfig(
@@ -203,12 +197,7 @@ class StudyInvitesTable extends StatelessWidget {
           columns[i],
           sortTarget: _sortTargetForColumn(activeColumns[i]),
         ),
-      _buildHeaderCell(
-        context,
-        null,
-        columns.last,
-        labelOverride: tr.code_list_header_actions,
-      ),
+      _buildHeaderCell(context, null, columns.last, labelOverride: ''),
     ];
 
     return TableRow(children: headerWidgets);

@@ -100,7 +100,7 @@ void main() {
       find.text(tr.form_field_preconfigured_schedule_intervention_b),
       findsOneWidget,
     );
-    expect(find.text(tr.code_list_header_actions), findsOneWidget);
+    expect(find.text(tr.code_list_header_actions), findsNothing);
     expect(find.text('#'), findsNothing);
 
     await tester.tap(find.byIcon(Icons.copy_rounded));
