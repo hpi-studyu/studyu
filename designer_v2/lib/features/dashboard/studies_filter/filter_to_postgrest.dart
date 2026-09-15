@@ -162,6 +162,7 @@ String _formatScalar(String value) {
 }
 
 String escapePostgrestLikeLiteral(String value) => value
+    .replaceAll(r'\', r'\\')
     .replaceAll('*', r'\*')
     .replaceAll('%', r'\%')
     .replaceAll('_', r'\_')

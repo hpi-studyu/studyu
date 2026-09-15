@@ -191,6 +191,10 @@ void main() {
       );
     });
 
+    test('escapes backslashes before LIKE metacharacters', () {
+      expect(escapePostgrestLikeLiteral(r'\*%_"'), r'\\\*\%\_\"');
+    });
+
     test('startsWith and endsWith use anchored ilike patterns', () {
       final start = FilterGroup(
         children: [
