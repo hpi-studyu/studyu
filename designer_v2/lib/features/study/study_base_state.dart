@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
-import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudyControllerBaseState extends Equatable {

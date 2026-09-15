@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:js_interop' as js;
+import 'dart:js_interop';
 import 'dart:ui_web' as ui;
 
 import 'package:flutter/material.dart';
@@ -100,7 +101,7 @@ abstract class PlatformController {
   void listen();
   void updateData(String data) {
     routeInformation.data = data;
-    send(data);
+    send(createPreviewStudyMessage(data));
   }
 
   void send(String message);
@@ -112,6 +113,7 @@ class WebController extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
   final String serializedSession;
   bool _isListening = false;
+  StreamSubscription<web.MessageEvent>? _messageSubscription;
 
   WebController(super.baseSrc, super.studyId, this.serializedSession) {
     super.frameWidget = Container();
@@ -158,21 +160,13 @@ class WebController extends PlatformController {
     );
   }
 
-  String _buildPreviewUrl({
-    String? route,
-    String? extra,
-    String? cmd,
-    String? data,
-  }) {
+  String _buildPreviewUrl({String? route, String? extra, String? cmd}) {
     if (baseSrc == '') return '';
 
     var url = baseSrc;
     if (route != null) url = "$url&route=$route";
     if (extra != null) url = "$url&extra=$extra";
     if (cmd != null) url = "$url&cmd=$cmd";
-    if (data != null) {
-      url = "$url&data=${Uri.encodeQueryComponent(data)}";
-    }
     return url;
   }
 
@@ -181,43 +175,33 @@ class WebController extends PlatformController {
     onLoadStarted?.call();
     navigationEnabled.value = false;
     routeInformation = RouteInformation(route, extra, cmd, data);
-    previewSrc = _buildPreviewUrl(
-      route: route,
-      extra: extra,
-      cmd: cmd,
-      data: data,
-    );
+    previewSrc = _buildPreviewUrl(route: route, extra: extra, cmd: cmd);
   }
 
   @override
   void updateData(String data) {
     routeInformation.data = data;
-    previewSrc = _buildPreviewUrl(
-      route: routeInformation.route,
-      extra: routeInformation.extra,
-      cmd: routeInformation.cmd,
-      data: data,
-    );
-    if (_isListening) send(data);
+    if (_isListening) send(createPreviewStudyMessage(data));
   }
 
   @override
   void navigate({String? route, String? extra, String? cmd, String? data}) {
+    final latestData = data ?? routeInformation.data;
     if (navigationEnabled.value && cmd == null) {
-      routeInformation = RouteInformation(route, extra, cmd, data);
+      routeInformation = RouteInformation(route, extra, cmd, latestData);
+      if (data != null) send(createPreviewStudyMessage(data));
       send(
         jsonEncode({
           'type': 'previewNavigate',
           'route': ?route,
           'extra': ?extra,
-          'data': ?data,
         }),
       );
       navigationEnabled.value = false;
       return;
     }
 
-    generateUrl(route: route, extra: extra, cmd: cmd, data: data);
+    generateUrl(route: route, extra: extra, cmd: cmd, data: latestData);
     if (iFrameElement.src != previewSrc) {
       iFrameElement.src = previewSrc;
     }
@@ -258,7 +242,7 @@ class WebController extends PlatformController {
   void listen() {
     if (_isListening) return;
     _isListening = true;
-    web.window.onMessage.listen((event) {
+    _messageSubscription = web.window.onMessage.listen((event) {
       final appOrigin = _appOrigin;
       final frameWindow = iFrameElement.contentWindow;
       if (appOrigin == null ||
@@ -274,6 +258,16 @@ class WebController extends PlatformController {
           createPreviewSessionMessage(serializedSession).toJS,
           appOrigin.toJS,
         );
+        return;
+      }
+      if (isPreviewStudyRequest(data)) {
+        final study = routeInformation.data;
+        if (study != null) {
+          frameWindow.postMessage(
+            createPreviewStudyMessage(study).toJS,
+            appOrigin.toJS,
+          );
+        }
         return;
       }
       if (data is String) {
@@ -331,6 +325,8 @@ class WebController extends PlatformController {
 
   @override
   void dispose() {
+    _messageSubscription?.cancel();
+    _messageSubscription = null;
     // Clean up injected styles when the controller is disposed
     _removePreviewIframeStyles();
   }

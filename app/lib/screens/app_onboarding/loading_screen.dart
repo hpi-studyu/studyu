@@ -559,7 +559,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
     _iFrameHelper.postPreviewStatus(status: 'loading');
     await preview.init();
 
-    final session = await _iFrameHelper.requestPreviewSession();
+    _iFrameHelper.listen(
+      state,
+      onNavigate: (route) => _navigatePreviewRoute(state, route, l10n),
+      onStudy: (study) => preview.study = study,
+    );
+    final sessionFuture = _iFrameHelper.requestPreviewSession();
+    final studyFuture = _iFrameHelper.requestPreviewStudy();
+    final session = await sessionFuture;
+    await studyFuture;
     final isAuthorized =
         session != null && await preview.handleAuthorization(session);
     if (!isAuthorized) {
@@ -572,11 +580,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     state.selectedStudy = preview.study;
 
     await preview.runCommands();
-
-    _iFrameHelper.listen(
-      state,
-      onNavigate: (route) => _navigatePreviewRoute(state, route, l10n),
-    );
 
     if (preview.hasRoute()) {
       // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');

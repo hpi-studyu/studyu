@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:studyu_core/src/util/preview_session.dart';
 import 'package:test/test.dart';
 
@@ -15,12 +17,20 @@ void main() {
     expect(parsePreviewSession(createPreviewSessionMessage(session)), session);
     expect(
       parsePreviewSession(
-        '{"type":"previewSession","session":"$session","extra":true}',
+        jsonEncode({
+          'type': previewSessionType,
+          'session': session,
+          'extra': true,
+        }),
       ),
       isNull,
     );
     expect(
       parsePreviewSession('{"type":"previewSession","session":1}'),
+      isNull,
+    );
+    expect(
+      parsePreviewSession('{"type":"previewSession","session":""}'),
       isNull,
     );
   });
