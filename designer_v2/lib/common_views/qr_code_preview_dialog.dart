@@ -5,6 +5,8 @@ import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
 class QrCodePreviewDialog extends ConsumerWidget {
@@ -25,6 +27,9 @@ class QrCodePreviewDialog extends ConsumerWidget {
 
     Future<void> copyLink() async {
       await ref.read(clipboardServiceProvider).copy(data);
+      ref
+          .read(notificationServiceProvider)
+          .show(Notifications.inviteLinkCopied);
     }
 
     return StandardDialog(
@@ -35,6 +40,11 @@ class QrCodePreviewDialog extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Text(
+            tr.dialog_qr_code_description,
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16.0),
           FutureBuilder<Widget>(
             future: QrCodeDownloader.generateQrWidget(data: data),
             builder: (context, snapshot) {
@@ -60,11 +70,6 @@ class QrCodePreviewDialog extends ConsumerWidget {
                 ),
               );
             },
-          ),
-          const SizedBox(height: 16.0),
-          Text(
-            tr.dialog_qr_code_description,
-            style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16.0),
           Material(
