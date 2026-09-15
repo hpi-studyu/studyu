@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
-import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 
 void main() {
   test('states with different preview languages are not equal', () {
