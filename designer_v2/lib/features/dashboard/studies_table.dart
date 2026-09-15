@@ -118,21 +118,18 @@ class StudiesTable extends StatelessWidget {
             10;
 
         // Calculate the minimum status column width
-        int maxStatusLength = tr.study_status_draft.length;
-        maxStatusLength = max(
-          maxStatusLength,
-          tr.studies_list_header_status.length,
-        );
+        final maxStatusLength = [
+          tr.study_status_draft,
+          tr.study_status_running,
+          tr.study_status_closed,
+          tr.studies_list_header_status,
+        ].map((label) => label.length).reduce(max);
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum participation column width
         final int maxParticipationLength = isCompact
             ? "Invite-only".length
             : tr.participation_invite_who.length;
-        maxStatusLength = max(
-          maxStatusLength,
-          tr.studies_list_header_participation.length,
-        );
         final double participationColumnWidth =
             20 + (maxParticipationLength * 7.5);
 
@@ -250,7 +247,7 @@ class StudiesTable extends StatelessWidget {
               child: ScrollConfiguration(
                 behavior: ScrollConfiguration.of(
                   context,
-                ).copyWith(scrollbars: false),
+                ).copyWith(scrollbars: true),
                 child: ListView.builder(
                   key: const ValueKey('studies_table_rows'),
                   prototypeItem: StudiesTableItem.prototype(
