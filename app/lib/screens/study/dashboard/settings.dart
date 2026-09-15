@@ -93,7 +93,14 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ],
-          onChanged: (value) => preferences.changeDateFormat(value),
+          onChanged: (value) async {
+            try {
+              await preferences.changeDateFormat(value);
+            } catch (error) {
+              if (!mounted) return;
+              _showPreferenceSaveError(error);
+            }
+          },
         ),
       ],
     );
@@ -121,9 +128,27 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ],
-          onChanged: (value) => preferences.changeTimeFormat(value),
+          onChanged: (value) async {
+            try {
+              await preferences.changeTimeFormat(value);
+            } catch (error) {
+              if (!mounted) return;
+              _showPreferenceSaveError(error);
+            }
+          },
         ),
       ],
+    );
+  }
+
+  void _showPreferenceSaveError(Object error) {
+    final localizations = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          localizations.error_occurred_with_message(error.toString()),
+        ),
+      ),
     );
   }
 

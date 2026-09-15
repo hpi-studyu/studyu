@@ -177,10 +177,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           date = DateTime.tryParse(condition.value as String);
         }
         if (date != null) {
-          final preferences = ref
-              .read(userRepositoryProvider)
-              .cachedUser
-              ?.preferences;
+          final preferences = ref.watch(userStateProvider).value?.preferences;
           valueLabel = DateTimeFormat.formatDate(
             context,
             date,
@@ -210,6 +207,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
+    final userState = ref.watch(userStateProvider);
 
     return DashboardScaffold(
       scaffoldKey: _scaffoldKey,
@@ -533,53 +531,48 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           ],
           const SizedBox(height: 24.0), // spacing between body elements
-          FutureBuilder<StudyUUser>(
-            future: ref.read(userRepositoryProvider).fetchUser(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return AsyncValueWidget<List<Study>>(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  value: state.displayedStudies(
-                    snapshot.data!.preferences.pinnedStudies,
-                    state.query,
-                  ),
-                  data: (visibleStudies) => StudiesTable(
-                    studies: visibleStudies,
-                    pinnedStudies: snapshot.data!.preferences.pinnedStudies,
-                    dashboardController: ref.watch(
-                      dashboardControllerProvider.notifier,
-                    ),
-                    onSelect: controller.onSelectStudy,
-                    getActions: controller.availableActions,
-                    emptyWidget:
-                        (widget.filter == null ||
-                            widget.filter == StudiesFilter.owned)
-                        ? (state.query.isNotEmpty)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_not_found,
-                                    description: tr.modify_query,
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 24.0),
-                                  child: EmptyBody(
-                                    icon: Icons.content_paste_search_rounded,
-                                    title: tr.studies_empty,
-                                    description: tr.studies_empty_description,
-                                    // "...or create a new draft copy from an already published study!",
-                                    /* button: PrimaryButton(text: "From template",); */
-                                  ),
-                                )
-                        : const SizedBox.shrink(),
-                  ),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
+          userState.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stackTrace) => Text(error.toString()),
+            data: (user) => AsyncValueWidget<List<Study>>(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              value: state.displayedStudies(
+                user.preferences.pinnedStudies,
+                state.query,
+              ),
+              data: (visibleStudies) => StudiesTable(
+                studies: visibleStudies,
+                pinnedStudies: user.preferences.pinnedStudies,
+                dashboardController: ref.watch(
+                  dashboardControllerProvider.notifier,
+                ),
+                onSelect: controller.onSelectStudy,
+                getActions: controller.availableActions,
+                emptyWidget:
+                    (widget.filter == null ||
+                        widget.filter == StudiesFilter.owned)
+                    ? (state.query.isNotEmpty)
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 24.0),
+                              child: EmptyBody(
+                                icon: Icons.content_paste_search_rounded,
+                                title: tr.studies_not_found,
+                                description: tr.modify_query,
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 24.0),
+                              child: EmptyBody(
+                                icon: Icons.content_paste_search_rounded,
+                                title: tr.studies_empty,
+                                description: tr.studies_empty_description,
+                                // "...or create a new draft copy from an already published study!",
+                                /* button: PrimaryButton(text: "From template",); */
+                              ),
+                            )
+                    : const SizedBox.shrink(),
+              ),
+            ),
           ),
         ],
       ),

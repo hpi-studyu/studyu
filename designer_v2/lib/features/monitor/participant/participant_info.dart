@@ -14,10 +14,7 @@ class ParticipantInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final languageCode = ref.watch(localeProvider).languageCode;
-    final preferences = ref
-        .read(userRepositoryProvider)
-        .cachedUser
-        ?.preferences;
+    final preferences = ref.watch(userStateProvider).value?.preferences;
     return SelectionArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

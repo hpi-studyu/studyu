@@ -1488,7 +1488,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get date_format_iso => 'ISO (2024-12-31)';
 
   @override
-  String get date_format_european => 'Europäisch (31.12.2024)';
+  String get date_format_european => 'Europäisch (31/12/2024)';
 
   @override
   String get date_format_us => 'US (12/31/2024)';

@@ -1945,6 +1945,31 @@ void main() {
     expect(completion!['dq'], isA<DateTime>());
   });
 
+  testWidgets('formats date question time range using the system time format', (
+    tester,
+  ) async {
+    final dateQ = DateQuestion.withId()
+      ..id = 'dq'
+      ..prompt = 'Pick time'
+      ..minTime = '14:30'
+      ..maxTime = '16:45';
+
+    await tester.pumpWidget(
+      setup(
+        MediaQuery(
+          data: const MediaQueryData(),
+          child: DateQuestionWidget(question: dateQ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Select a time between 2:30 PM and 4:45 PM'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('clearing a date answer invalidates questionnaire completion', (
     tester,
   ) async {

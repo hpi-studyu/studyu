@@ -19,8 +19,52 @@ void main() {
       DateFormatPreference.european,
     );
     expect(
+      DateTimeFormat.defaultDateFormat(const Locale('en', 'AU')),
+      DateFormatPreference.european,
+    );
+    expect(
+      DateTimeFormat.defaultDateFormat(const Locale('en', 'IE')),
+      DateFormatPreference.european,
+    );
+    expect(
       DateTimeFormat.defaultDateFormat(const Locale('fr', 'FR')),
       DateFormatPreference.iso,
+    );
+  });
+
+  test('infers time format from locale', () {
+    expect(
+      DateTimeFormat.defaultTimeFormatForLocale(const Locale('en', 'US')),
+      TimeFormatPreference.h12,
+    );
+    expect(
+      DateTimeFormat.defaultTimeFormatForLocale(const Locale('en', 'GB')),
+      TimeFormatPreference.h24,
+    );
+    expect(
+      DateTimeFormat.defaultTimeFormatForLocale(const Locale('de', 'DE')),
+      TimeFormatPreference.h24,
+    );
+  });
+
+  test('formats time with the selected preference', () {
+    const time = TimeOfDay(hour: 14, minute: 30);
+
+    expect(
+      DateTimeFormat.formatTimeForLocale(
+        const Locale('en', 'US'),
+        time,
+        preference: TimeFormatPreference.h12,
+      ),
+      '2:30 PM',
+    );
+    expect(
+      DateTimeFormat.formatTimeForLocale(
+        const Locale('en', 'US'),
+        time,
+        preference: TimeFormatPreference.h24,
+      ),
+      '14:30',
     );
   });
 

@@ -28,13 +28,6 @@ class AccountSettingsDialog extends ConsumerStatefulWidget {
 
 class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
   bool _isImported = false;
-  late final Future<StudyUUser> _userFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _userFuture = ref.read(userRepositoryProvider).fetchUser();
-  }
 
   Widget _buildDateTimePreferences(StudyUUser user) {
     final repository = ref.read(userRepositoryProvider);
@@ -57,9 +50,12 @@ class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
                 ),
               ],
               onChanged: (value) async {
-                await repository.updateDateFormat(value);
-                ref.invalidate(userRepositoryProvider);
-                if (mounted) setState(() {});
+                try {
+                  final savedUser = await repository.updateDateFormat(value);
+                  ref.read(userStateProvider.notifier).setUser(savedUser);
+                } catch (error) {
+                  debugPrint('Could not save date format preference: $error');
+                }
               },
             ),
           ),
@@ -80,9 +76,12 @@ class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
                 ),
               ],
               onChanged: (value) async {
-                await repository.updateTimeFormat(value);
-                ref.invalidate(userRepositoryProvider);
-                if (mounted) setState(() {});
+                try {
+                  final savedUser = await repository.updateTimeFormat(value);
+                  ref.read(userStateProvider.notifier).setUser(savedUser);
+                } catch (error) {
+                  debugPrint('Could not save time format preference: $error');
+                }
               },
             ),
           ),
@@ -112,6 +111,7 @@ class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
     const formKey = AuthFormKey.passwordReset;
     final state = ref.watch(authFormControllerProvider(formKey));
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
+    final userState = ref.watch(userStateProvider);
 
     return PointerInterceptor(
       child: SelectionArea(
@@ -159,17 +159,10 @@ class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              FutureBuilder<StudyUUser>(
-                future: _userFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return _buildDateTimePreferences(snapshot.data!);
-                },
+              userState.when(
+                data: _buildDateTimePreferences,
+                error: (error, stackTrace) => Text(error.toString()),
+                loading: () => const Center(child: CircularProgressIndicator()),
               ),
               const SizedBox(height: 16.0),
               ReactiveFormConfig(

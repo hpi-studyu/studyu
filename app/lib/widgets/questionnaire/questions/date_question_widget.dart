@@ -105,10 +105,25 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
     final now = TimeOfDay.now();
     final initialTime = _selectedTime ?? now;
 
+    final timeFormat = context.read<DateTimePreferences?>()?.timeFormat;
+    final use24HourFormat = switch (timeFormat) {
+      TimeFormatPreference.h12 => false,
+      TimeFormatPreference.h24 => true,
+      null => null,
+    };
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: initialTime,
       helpText: widget.question.prompt,
+      builder: (context, child) {
+        if (use24HourFormat == null) return child!;
+        return MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(alwaysUse24HourFormat: use24HourFormat),
+          child: child!,
+        );
+      },
     );
 
     if (pickedTime != null) {
@@ -336,7 +351,7 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
         if (widget.question.minTime != null ||
             widget.question.maxTime != null) ...[
           Text(
-            _formatTimeRangeHint(localizations),
+            _formatTimeRangeHint(localizations, dateTimePreferences),
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 8),
@@ -358,17 +373,41 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
     );
   }
 
-  String _formatTimeRangeHint(AppLocalizations localizations) {
+  String _formatTimeRangeHint(
+    AppLocalizations localizations,
+    DateTimePreferences? preferences,
+  ) {
     final minTime = widget.question.minTime;
     final maxTime = widget.question.maxTime;
+    final formattedMinTime = minTime == null
+        ? null
+        : _formatTimeValue(minTime, preferences);
+    final formattedMaxTime = maxTime == null
+        ? null
+        : _formatTimeValue(maxTime, preferences);
 
-    if (minTime != null && maxTime != null) {
-      return localizations.time_picker_range_hint(minTime, maxTime);
-    } else if (minTime != null) {
-      return localizations.time_picker_min_hint(minTime);
-    } else if (maxTime != null) {
-      return localizations.time_picker_max_hint(maxTime);
+    if (formattedMinTime != null && formattedMaxTime != null) {
+      return localizations.time_picker_range_hint(
+        formattedMinTime,
+        formattedMaxTime,
+      );
+    } else if (formattedMinTime != null) {
+      return localizations.time_picker_min_hint(formattedMinTime);
+    } else if (formattedMaxTime != null) {
+      return localizations.time_picker_max_hint(formattedMaxTime);
     }
     return '';
+  }
+
+  String _formatTimeValue(String value, DateTimePreferences? preferences) {
+    final parts = value.split(':');
+    if (parts.length != 2) return value;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return value;
+
+    final time = TimeOfDay(hour: hour, minute: minute);
+    return preferences?.formatTime(context, time) ??
+        DateTimeFormat.formatTime(context, time);
   }
 }

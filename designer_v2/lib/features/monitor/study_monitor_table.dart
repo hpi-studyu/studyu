@@ -112,10 +112,7 @@ class StudyMonitorTable extends ConsumerWidget {
     Set<WidgetState> states,
   ) {
     final languageCode = ref.watch(localeProvider).languageCode;
-    final preferences = ref
-        .read(userRepositoryProvider)
-        .cachedUser
-        ?.preferences;
+    final preferences = ref.watch(userStateProvider).value?.preferences;
     final theme = Theme.of(context);
     return [
       Tooltip(

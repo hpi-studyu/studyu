@@ -289,7 +289,7 @@ class ReactiveDatePickerField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final preference = ref.read(userRepositoryProvider).cachedUser?.preferences;
+    final preference = ref.watch(userStateProvider).value?.preferences;
     return ReactiveValueListenableBuilder<DateTime?>(
       formControl: formControl,
       builder: (context, control, child) {
@@ -331,16 +331,31 @@ class ReactiveTimePickerField extends ConsumerWidget {
   final FormControl<String?> formControl;
   final String? placeholder;
 
-  Future<void> _pickTime(BuildContext context) async {
+  Future<void> _pickTime(
+    BuildContext context,
+    TimeFormatPreference? preference,
+  ) async {
     final now = TimeOfDay.now();
     final initialTime = formControl.value != null
         ? _parseTime(formControl.value!)
         : now;
+    final platformUses24HourFormat = MediaQuery.of(
+      context,
+    ).alwaysUse24HourFormat;
 
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: initialTime,
-      builder: (context, child) => PointerInterceptor(child: child!),
+      builder: (context, child) => PointerInterceptor(
+        child: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            alwaysUse24HourFormat: preference == null
+                ? platformUses24HourFormat
+                : preference == TimeFormatPreference.h24,
+          ),
+          child: child!,
+        ),
+      ),
     );
 
     if (pickedTime != null) {
@@ -369,14 +384,14 @@ class ReactiveTimePickerField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final preference = ref.read(userRepositoryProvider).cachedUser?.preferences;
+    final preference = ref.watch(userStateProvider).value?.preferences;
     return ReactiveValueListenableBuilder<String?>(
       formControl: formControl,
       builder: (context, control, child) {
         final value = control.value;
 
         return InkWell(
-          onTap: () => _pickTime(context),
+          onTap: () => _pickTime(context, preference?.timeFormat),
           child: InputDecorator(
             decoration: InputDecoration(
               hintText: placeholder,
