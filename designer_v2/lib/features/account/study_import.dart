@@ -42,7 +42,6 @@ class StudyImport {
       await ref.read(studyRepositoryProvider).save(newDraft);
       return true;
     } catch (e) {
-      // ignore: avoid_print
       print('Failed to import study: $e');
       return false;
     }

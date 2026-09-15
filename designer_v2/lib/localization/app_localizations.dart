@@ -1151,7 +1151,7 @@ abstract class AppLocalizations {
   /// No description provided for @question_type_choice.
   ///
   /// In en, this message translates to:
-  /// **'Multiple choice'**
+  /// **'Choice'**
   String get question_type_choice;
 
   /// No description provided for @question_type_free_text.
@@ -1277,14 +1277,26 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_response_choice_multiple.
   ///
   /// In en, this message translates to:
-  /// **'Select multiple'**
+  /// **'Allow multiple selections'**
   String get form_field_response_choice_multiple;
 
   /// No description provided for @form_field_response_choice_multiple_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Allow the participant to select multiple response options. Otherwise only a single option can be selected.'**
+  /// **'Participants can select more than one answer.'**
   String get form_field_response_choice_multiple_tooltip;
+
+  /// No description provided for @form_field_response_choice_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Require at least one selection'**
+  String get form_field_response_choice_required;
+
+  /// No description provided for @form_field_response_choice_required_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Require the participant to select at least one response option.'**
+  String get form_field_response_choice_required_tooltip;
 
   /// No description provided for @form_array_response_options_choice_new.
   ///

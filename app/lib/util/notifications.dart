@@ -176,14 +176,9 @@ class StudyNotifications {
       settings: initializationSettings,
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) {
-            switch (notificationResponse.notificationResponseType) {
-              case NotificationResponseType.selectedNotification:
-                selectNotificationStream.add(notificationResponse.payload);
-              case NotificationResponseType.selectedNotificationAction:
-                /*if (notificationResponse.actionId == navigationActionId) {
+            if (notificationResponse.notificationResponseType ==
+                NotificationResponseType.selectedNotification) {
               selectNotificationStream.add(notificationResponse.payload);
-            }*/
-                break;
             }
           },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,

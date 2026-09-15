@@ -1,5 +1,3 @@
-// ignore_for_file: join_return_with_assignment
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
@@ -16,6 +14,7 @@ abstract class IUserRepository {
     PreferenceAction pinAction,
     String modelId,
   );
+  Future<StudyUUser> updateLanguage(String language);
   Future<StudyUUser> saveCustomPreset(SavedFilter filter);
   Future<StudyUUser> deleteCustomPreset(String id);
   List<SavedFilter> getCustomPresets();
@@ -86,6 +85,13 @@ class UserRepository implements IUserRepository {
   }
 
   @override
+  Future<StudyUUser> updateLanguage(String language) async {
+    await fetchUser();
+    user.preferences.language = language;
+    return saveUser();
+  }
+
+  @override
   Future<StudyUUser> saveCustomPreset(SavedFilter filter) {
     final presets = getCustomPresets();
     final index = presets.indexWhere((p) => p.id == filter.id);
@@ -134,7 +140,7 @@ class UserRepository implements IUserRepository {
     );
 
     activeFilters[page] = {
-      if (presetId != null) 'preset_id': presetId,
+      'preset_id': ?presetId,
       if (filterGroup != null) 'filter_group': filterGroup.toJson(),
     };
 
