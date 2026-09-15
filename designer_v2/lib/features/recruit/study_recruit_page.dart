@@ -390,7 +390,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           final showSaveButton =
               keepSaveButtonVisible ||
               formViewModel.formMode != FormMode.edit ||
-              form.dirty;
+              formViewModel.isDirty;
           if (!showSaveButton) {
             return const SizedBox.shrink();
           }
