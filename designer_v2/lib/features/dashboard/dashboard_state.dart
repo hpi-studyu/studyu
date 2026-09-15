@@ -21,6 +21,9 @@ class DashboardState extends Equatable {
     this.isLoadingInitial = true,
     this.isLoadingMore = false,
     this.isLoadingPinned = false,
+    this.isRefreshing = false,
+    this.retainedStudies,
+    this.pendingStudyIds = const {},
     this.hasMore = true,
     this.loadError,
     this.studiesFilter = defaultFilter,
@@ -58,6 +61,15 @@ class DashboardState extends Equatable {
 
   /// True while pinned studies are being refreshed.
   final bool isLoadingPinned;
+
+  /// True while existing results refresh in the background.
+  final bool isRefreshing;
+
+  /// Visible rows retained until replacement results arrive, including on failure.
+  final List<Study>? retainedStudies;
+
+  /// Study actions remain disabled until their requests and refreshes finish.
+  final Set<String> pendingStudyIds;
 
   /// Whether more pages remain on the server.
   final bool hasMore;
@@ -106,6 +118,8 @@ class DashboardState extends Equatable {
   /// they keep the unsupported-filter and retry affordances even with an
   /// empty list.
   AsyncValue<List<Study>> get displayedStudies {
+    if (retainedStudies != null) return AsyncValue.data(retainedStudies!);
+
     final pinnedStudies = pinnedStudiesList
         .where(_matchesPagePreset)
         .where(_matchesSearchQuery)
@@ -129,6 +143,9 @@ class DashboardState extends Equatable {
     bool? isLoadingInitial,
     bool? isLoadingMore,
     bool? isLoadingPinned,
+    bool? isRefreshing,
+    List<Study>? Function()? retainedStudies,
+    Set<String>? pendingStudyIds,
     bool? hasMore,
     Object? Function()? loadError,
     bool? advancedFilterUnsupported,
@@ -154,6 +171,11 @@ class DashboardState extends Equatable {
       isLoadingInitial: isLoadingInitial ?? this.isLoadingInitial,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       isLoadingPinned: isLoadingPinned ?? this.isLoadingPinned,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
+      retainedStudies: retainedStudies != null
+          ? retainedStudies()
+          : this.retainedStudies,
+      pendingStudyIds: pendingStudyIds ?? this.pendingStudyIds,
       hasMore: hasMore ?? this.hasMore,
       loadError: loadError != null ? loadError() : this.loadError,
       advancedFilterUnsupported:
@@ -185,6 +207,9 @@ class DashboardState extends Equatable {
     isLoadingInitial,
     isLoadingMore,
     isLoadingPinned,
+    isRefreshing,
+    retainedStudies,
+    pendingStudyIds,
     hasMore,
     loadError,
     advancedFilterUnsupported,

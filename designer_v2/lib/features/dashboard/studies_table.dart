@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
@@ -45,9 +46,11 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
+    this.pendingStudyIds = const {},
     this.isLoadingMore = false,
     this.hasMore = false,
     this.advancedFilterUnsupported = false,
+    this.showCreateStudyLink = false,
     this.loadError,
     this.onRetry,
     this.onLoadMore,
@@ -74,9 +77,11 @@ class StudiesTable extends StatelessWidget {
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
+  final Set<String> pendingStudyIds;
   final bool isLoadingMore;
   final bool hasMore;
   final bool advancedFilterUnsupported;
+  final bool showCreateStudyLink;
   final Object? loadError;
   final VoidCallback? onRetry;
   final Future<void> Function()? onLoadMore;
@@ -279,6 +284,7 @@ class StudiesTable extends StatelessWidget {
                         columnSizes: columnDefinitionsMap.values.toList(),
                         actions: getActions(item),
                         isPinned: pinnedStudies.contains(item.id),
+                        isBusy: pendingStudyIds.contains(item.id),
                         itemHeight: itemHeight,
                         itemPadding: itemPadding,
                         rowSpacing: rowSpacing,
@@ -377,15 +383,37 @@ class StudiesTable extends StatelessWidget {
       );
     }
 
+    final theme = Theme.of(context);
+    final footerStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.hintColor,
+    );
+
     return Padding(
       padding: EdgeInsets.only(top: rowSpacing, bottom: rowSpacing),
       child: Center(
-        child: Text(
-          tr.studies_end_of_list,
-          textAlign: TextAlign.center,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 4,
+          children: [
+            Text(
+              showCreateStudyLink
+                  ? tr.studies_end_of_list_public
+                  : tr.studies_end_of_list,
+              style: footerStyle,
+            ),
+            if (showCreateStudyLink)
+              Hyperlink(
+                text: tr.studies_end_of_list_create,
+                onClick: dashboardController.onClickNewStudy,
+                style: footerStyle?.copyWith(
+                  decoration: TextDecoration.underline,
+                ),
+                hoverStyle: const TextStyle(
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+          ],
         ),
       ),
     );

@@ -22,6 +22,7 @@ class StudiesTableItem extends StatefulWidget {
   final List<ModelAction> actions;
   final List<StudiesTableColumnSize> columnSizes;
   final bool isPinned;
+  final bool isBusy;
   final void Function(Study, bool)? onPinnedChanged;
   final void Function(Study)? onTap;
 
@@ -31,6 +32,7 @@ class StudiesTableItem extends StatefulWidget {
     required this.actions,
     required this.columnSizes,
     required this.isPinned,
+    this.isBusy = false,
     this.onPinnedChanged,
     this.onTap,
     this.itemHeight = 60.0,
@@ -106,7 +108,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
         child: InkWell(
           key: ValueKey('study_row_ink_${widget.study.id}'),
           splashColor: Colors.transparent,
-          onTap: () => widget.onTap?.call(widget.study),
+          onTap: widget.isBusy ? null : () => widget.onTap?.call(widget.study),
           onHover: (hover) {
             if (isHovering == hover) return;
             setState(() {
@@ -122,10 +124,12 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                   height: widget.itemHeight,
                   child: MouseEventsRegion(
                     key: ValueKey('pin_icon_${widget.study.id}'),
-                    onTap: () => widget.onPinnedChanged?.call(
-                      widget.study,
-                      !widget.isPinned,
-                    ),
+                    onTap: widget.isBusy
+                        ? null
+                        : () => widget.onPinnedChanged?.call(
+                            widget.study,
+                            !widget.isPinned,
+                          ),
                     onEnter: (_) => setState(() => isHoveringPin = true),
                     onExit: (_) => setState(() => isHoveringPin = false),
                     builder: (context, mouseEventState) {
@@ -255,6 +259,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       child: ActionPopUpMenuButton(
         key: ValueKey('study_row_actions_${widget.study.id}'),
         actions: actions,
+        enabled: !widget.isBusy,
         triggerIconColor: ThemeConfig.bodyTextMuted(
           theme,
         ).color?.withValues(alpha: 0.6),

@@ -144,6 +144,24 @@ class _Harness {
 
   DashboardState get state => container.read(dashboardControllerProvider);
 
+  Completer<StudiesPage> holdPage() {
+    final completer = Completer<StudiesPage>();
+    when(
+      studyRepo.fetchPage(
+        offset: anyNamed('offset'),
+        limit: anyNamed('limit'),
+        sortBy: anyNamed('sortBy'),
+        ascending: anyNamed('ascending'),
+        preset: anyNamed('preset'),
+        currentUser: anyNamed('currentUser'),
+        searchQuery: anyNamed('searchQuery'),
+        advancedFilter: anyNamed('advancedFilter'),
+        excludeIds: anyNamed('excludeIds'),
+      ),
+    ).thenAnswer((_) => completer.future);
+    return completer;
+  }
+
   Future<void> settle() async {
     for (var i = 0; i < 5; i++) {
       await Future<void>.delayed(Duration.zero);
@@ -220,6 +238,190 @@ void main() {
       expect(h.state.isLoadingInitial, isFalse);
       expect(h.state.displayTotalStudyCount, 4);
     });
+
+    for (final change in ['sort', 'filter', 'search']) {
+      test('$change retains rows until replacement results arrive', () async {
+        final h = _Harness(
+          initialFilter: StudiesFilter.all,
+          pinnedIds: {'p'},
+          initialPinned: [_study('p')],
+          initialPage: StudiesPage(studies: [_study('a')], totalCount: 40),
+        );
+        await h.settle();
+        final pending = h.holdPage();
+
+        switch (change) {
+          case 'sort':
+            h.controller.setSorting(StudiesTableColumn.title, true);
+          case 'filter':
+            unawaited(
+              h.controller.updateFilter(
+                FilterGroup(
+                  children: [
+                    FilterCondition(
+                      property: StudyProperty.participantCount,
+                      operator: FilterOperator.greaterThan,
+                      value: 5,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          case 'search':
+            await h.controller.filterStudies('no match');
+            expect(h.state.displayedStudies.requireValue.map((s) => s.id), [
+              'p',
+              'a',
+            ]);
+            await Future<void>.delayed(const Duration(milliseconds: 350));
+        }
+        await h.settle();
+
+        expect(h.state.isLoadingInitial, isFalse);
+        expect(h.state.isRefreshing, isTrue);
+        expect(h.state.displayedStudies.requireValue.map((s) => s.id), [
+          'p',
+          'a',
+        ]);
+        clearInteractions(h.studyRepo);
+        await h.controller.loadMore();
+        verifyZeroInteractions(h.studyRepo);
+
+        pending.complete(const StudiesPage(studies: [], totalCount: 0));
+        await h.settle();
+        expect(h.state.isRefreshing, isFalse);
+        expect(h.state.retainedStudies, isNull);
+        expect(h.state.loadedStudies, isEmpty);
+      });
+    }
+
+    test('failed search retains rows and retry replaces them', () async {
+      final h = _Harness(
+        initialPage: StudiesPage(studies: [_study('a')], totalCount: 1),
+      );
+      await h.settle();
+      final pending = h.holdPage();
+      await h.controller.filterStudies('no match');
+      await Future<void>.delayed(const Duration(milliseconds: 350));
+      final error = StateError('refresh failed');
+      pending.completeError(error);
+      await h.settle();
+
+      expect(h.state.isRefreshing, isFalse);
+      expect(h.state.loadError, same(error));
+      expect(h.state.displayedStudies.requireValue.map((s) => s.id), ['a']);
+
+      final retryPage = h.holdPage();
+      final retry = h.controller.retry();
+      expect(h.state.displayedStudies.requireValue.map((s) => s.id), ['a']);
+      retryPage.complete(const StudiesPage(studies: [], totalCount: 0));
+      await retry;
+      expect(h.state.displayedStudies.requireValue, isEmpty);
+      expect(h.state.loadError, isNull);
+    });
+
+    test(
+      'unpin keeps the only row visible and blocks repeat actions',
+      () async {
+        final pinned = _study('p');
+        final h = _Harness(
+          initialFilter: StudiesFilter.all,
+          pinnedIds: {'p'},
+          initialPinned: [pinned],
+        );
+        await h.settle();
+        final save = Completer<StudyUUser>();
+        when(
+          h.userRepo.updatePreferences(PreferenceAction.pinOff, 'p'),
+        ).thenAnswer((_) => save.future);
+        final page = h.holdPage();
+
+        final action = h.controller.pinOffStudy('p');
+        await h.controller.pinOffStudy('p');
+        expect(h.state.pendingStudyIds, {'p'});
+        verify(
+          h.userRepo.updatePreferences(PreferenceAction.pinOff, 'p'),
+        ).called(1);
+        expect(h.state.displayedStudies.requireValue, [pinned]);
+
+        h.studyUUser.preferences.pinnedStudies.clear();
+        save.complete(h.studyUUser);
+        await h.settle();
+        expect(h.state.pinnedStudiesList, isEmpty);
+        expect(h.state.isLoadingInitial, isFalse);
+        expect(h.state.isRefreshing, isTrue);
+        expect(h.state.pendingStudyIds, {'p'});
+        expect(h.state.displayedStudies.requireValue, [pinned]);
+
+        page.complete(StudiesPage(studies: [pinned], totalCount: 1));
+        await action;
+        expect(h.state.displayedStudies.requireValue, [pinned]);
+        expect(h.state.isRefreshing, isFalse);
+        expect(h.state.pendingStudyIds, isEmpty);
+      },
+    );
+
+    test('failed pin keeps rows and releases the action lock', () async {
+      final study = _study('a');
+      final h = _Harness(
+        initialPage: StudiesPage(studies: [study], totalCount: 1),
+      );
+      await h.settle();
+      final error = StateError('save failed');
+      when(
+        h.userRepo.updatePreferences(PreferenceAction.pin, 'a'),
+      ).thenAnswer((_) => Future<StudyUUser>.error(error));
+
+      await h.controller.pinStudy('a');
+      expect(h.state.displayedStudies.requireValue, [study]);
+      expect(h.state.pendingStudyIds, isEmpty);
+      expect(h.state.loadError, same(error));
+    });
+
+    test(
+      'duplicate stays busy through refresh and blocks repeat actions',
+      () async {
+        final study = _study('a');
+        final h = _Harness(
+          initialPage: StudiesPage(studies: [study], totalCount: 1),
+        );
+        await h.settle();
+        final save = Completer<void>();
+        var executions = 0;
+        when(h.studyRepo.availableActions(study)).thenReturn([
+          ModelAction(
+            type: StudyActionType.duplicate,
+            label: 'duplicate',
+            onExecute: () {
+              executions++;
+              return save.future;
+            },
+          ),
+        ]);
+        final page = h.holdPage();
+        final action = h.controller
+            .availableActions(study)
+            .firstWhere((action) => action.type == StudyActionType.duplicate);
+        final execution = action.onExecute();
+        await action.onExecute();
+        expect(executions, 1);
+        expect(h.state.pendingStudyIds, {'a'});
+
+        save.complete();
+        await h.settle();
+        await action.onExecute();
+        expect(executions, 1);
+        expect(h.state.pendingStudyIds, {'a'});
+        expect(h.state.displayedStudies.requireValue, [study]);
+
+        page.complete(
+          StudiesPage(studies: [study, _study('copy')], totalCount: 2),
+        );
+        await execution;
+        expect(h.state.pendingStudyIds, isEmpty);
+        expect(h.state.displayedStudies.requireValue, hasLength(2));
+      },
+    );
 
     test('hasMore is false when total <= loaded', () async {
       final h = _Harness(
@@ -753,7 +955,7 @@ void main() {
       expect(h.state.pinnedStudiesList.map((s) => s.id), ['missing']);
     });
 
-    test('pinOffStudy keeps the full reload behavior', () async {
+    test('pinOffStudy reloads the unpinned study in server order', () async {
       final h = _Harness(
         pinnedIds: {'p'},
         initialPage: StudiesPage(studies: [_study('a')], totalCount: 1),

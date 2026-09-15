@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +41,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   static const _headerSearchMaxWidthDefault = 300.0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Timer? _refreshIndicatorDelay;
+  bool _showRefreshIndicator = false;
+
+  void _updateRefreshIndicator(bool busy) {
+    _refreshIndicatorDelay?.cancel();
+    if (!busy) {
+      if (_showRefreshIndicator) {
+        setState(() => _showRefreshIndicator = false);
+      }
+      return;
+    }
+    _refreshIndicatorDelay = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) setState(() => _showRefreshIndicator = true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshIndicatorDelay?.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -465,6 +488,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(
+      dashboardControllerProvider.select(
+        (state) => state.isRefreshing || state.pendingStudyIds.isNotEmpty,
+      ),
+      (_, busy) => _updateRefreshIndicator(busy),
+    );
     final theme = Theme.of(context);
     final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
@@ -564,7 +593,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               }).toList(),
             ),
           ],
-          const SizedBox(height: 24.0), // spacing between body elements
+          SizedBox(
+            height: 24.0,
+            child: Center(
+              child: _showRefreshIndicator
+                  ? const LinearProgressIndicator(minHeight: 2)
+                  : null,
+            ),
+          ),
           Expanded(
             child: AsyncValueWidget<List<Study>>(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -572,12 +608,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               data: (visibleStudies) => StudiesTable(
                 studies: visibleStudies,
                 pinnedStudies: pinnedStudyIds,
+                pendingStudyIds: state.pendingStudyIds,
                 dashboardController: ref.watch(
                   dashboardControllerProvider.notifier,
                 ),
                 isLoadingMore: state.isLoadingMore,
                 hasMore: state.hasMore,
                 advancedFilterUnsupported: state.advancedFilterUnsupported,
+                showCreateStudyLink: widget.filter == StudiesFilter.public,
                 loadError: state.loadError,
                 onRetry: state.advancedFilterUnsupported
                     ? () => controller.updateFilter(FilterGroup())
