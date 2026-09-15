@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class ParticipantInfo extends ConsumerWidget {
@@ -13,6 +14,7 @@ class ParticipantInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final languageCode = ref.watch(localeProvider).languageCode;
+    final preferences = ref.watch(userStateProvider).value?.preferences;
     return SelectionArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,11 +32,16 @@ class ParticipantInfo extends ConsumerWidget {
             monitorItem.startedAt.toLocalizedString(
               locale: languageCode,
               showTime: false,
+              datePreference: preferences?.dateFormat,
             ),
           ),
           _buildInfoRow(
             tr.monitoring_table_column_last_activity,
-            monitorItem.lastActivityAt.toLocalizedString(locale: languageCode),
+            monitorItem.lastActivityAt.toLocalizedString(
+              locale: languageCode,
+              datePreference: preferences?.dateFormat,
+              timePreference: preferences?.timeFormat,
+            ),
           ),
           const SizedBox(height: 8.0),
           _buildInfoRow(

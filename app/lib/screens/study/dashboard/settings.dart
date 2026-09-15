@@ -8,6 +8,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
+import 'package:studyu_app/util/date_time_preferences.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -33,7 +34,7 @@ class _SettingsState extends State<Settings> {
     subject = context.read<AppState>().activeSubject;
   }
 
-  Widget getDropdownRow(BuildContext context) {
+  Widget getLanguageDropdownRow(BuildContext context) {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
     for (final locale in AppLocalizations.supportedLocales) {
@@ -70,6 +71,115 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  Widget getDateFormatDropdownRow(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final preferences = context.watch<DateTimePreferences>();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${localizations.date_format}:'),
+        const SizedBox(width: 5),
+        DropdownButton<DateFormatPreference?>(
+          value: preferences.dateFormat,
+          items: [
+            DropdownMenuItem<DateFormatPreference?>(
+              child: Text(localizations.system),
+            ),
+            ...DateFormatPreference.values.map(
+              (format) => DropdownMenuItem(
+                value: format,
+                child: Text(_dateFormatLabel(localizations, format)),
+              ),
+            ),
+          ],
+          onChanged: (value) async {
+            try {
+              await preferences.changeDateFormat(value);
+            } catch (error) {
+              if (!mounted) return;
+              _showPreferenceSaveError(error);
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget getTimeFormatDropdownRow(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final preferences = context.watch<DateTimePreferences>();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${localizations.time_format}:'),
+        const SizedBox(width: 5),
+        DropdownButton<TimeFormatPreference?>(
+          value: preferences.timeFormat,
+          items: [
+            DropdownMenuItem<TimeFormatPreference?>(
+              child: Text(localizations.system),
+            ),
+            ...TimeFormatPreference.values.map(
+              (format) => DropdownMenuItem(
+                value: format,
+                child: Text(_timeFormatLabel(localizations, format)),
+              ),
+            ),
+          ],
+          onChanged: (value) async {
+            try {
+              await preferences.changeTimeFormat(value);
+            } catch (error) {
+              if (!mounted) return;
+              _showPreferenceSaveError(error);
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showPreferenceSaveError(Object error) {
+    final localizations = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          localizations.error_occurred_with_message(error.toString()),
+        ),
+      ),
+    );
+  }
+
+  String _dateFormatLabel(
+    AppLocalizations localizations,
+    DateFormatPreference format,
+  ) {
+    switch (format) {
+      case DateFormatPreference.iso:
+        return localizations.date_format_iso;
+      case DateFormatPreference.european:
+        return localizations.date_format_european;
+      case DateFormatPreference.us:
+        return localizations.date_format_us;
+      case DateFormatPreference.german:
+        return localizations.date_format_german;
+    }
+  }
+
+  String _timeFormatLabel(
+    AppLocalizations localizations,
+    TimeFormatPreference format,
+  ) {
+    switch (format) {
+      case TimeFormatPreference.h24:
+        return localizations.time_format_24_hour;
+      case TimeFormatPreference.h12:
+        return localizations.time_format_12_hour;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -82,7 +192,11 @@ class _SettingsState extends State<Settings> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              getDropdownRow(context),
+              getLanguageDropdownRow(context),
+              const SizedBox(height: 16),
+              getDateFormatDropdownRow(context),
+              const SizedBox(height: 16),
+              getTimeFormatDropdownRow(context),
               const SizedBox(height: 16),
               OutlinedButton.icon(
                 key: const ValueKey('settings_show_dashboard_showcase_again'),

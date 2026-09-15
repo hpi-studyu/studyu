@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/util/date_time_preferences.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -139,6 +139,7 @@ class InterventionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dateTimePreferences = context.watch<DateTimePreferences?>();
     return TimelineTile(
       alignment: TimelineAlign.manual,
       lineXY: 0.4,
@@ -162,7 +163,8 @@ class InterventionTile extends StatelessWidget {
       ),
       startChild: TimelineChild(
         child: Text(
-          DateFormat('dd-MM-yyyy').format(date),
+          dateTimePreferences?.formatDate(context, date) ??
+              DateTimeFormat.formatDate(context, date),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class DateQuestionFormView extends ConsumerWidget {
   const DateQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
-
-  String _formatDate(DateTime date, DateFormatPreset preset) {
-    try {
-      final format = DateFormat(preset.pattern);
-      return format.format(date);
-    } catch (e) {
-      return date.toIso8601String();
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,48 +44,6 @@ class DateQuestionFormView extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-
-            // Step 2: Date Format (if date or datetime)
-            if (inputType.isDate) ...[
-              generateRow(
-                label: localizations.date_format_preset_label,
-                labelHelpText: localizations.date_format_preset_label_helper,
-                input: ReactiveDropdownField<DateFormatPreset>(
-                  formControl: formViewModel.dateFormatPresetControl,
-                  items: DateFormatPreset.values.map((preset) {
-                    final exampleDate = DateTime(2024, 12, 31);
-                    final example = _formatDate(exampleDate, preset);
-                    return DropdownMenuItem(
-                      value: preset,
-                      child: Text(example),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-            ],
-
-            // Step 2b: Time Format (if time or datetime)
-            if (inputType.isTime) ...[
-              generateRow(
-                label: localizations.time_format_preset_label,
-                labelHelpText: localizations.time_format_preset_label_helper,
-                input: ReactiveDropdownField<TimeFormatPreset>(
-                  formControl: formViewModel.timeFormatPresetControl,
-                  items: TimeFormatPreset.values.map((preset) {
-                    final exampleTime = DateTime(2000, 1, 1, 14, 30);
-                    final example = DateFormat(
-                      preset.pattern,
-                    ).format(exampleTime);
-                    return DropdownMenuItem(
-                      value: preset,
-                      child: Text(example),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-            ],
 
             // Step 3: Default Value
             generateRow(
@@ -294,7 +244,7 @@ class DateQuestionFormView extends ConsumerWidget {
 }
 
 /// Custom reactive date picker field
-class ReactiveDatePickerField extends StatelessWidget {
+class ReactiveDatePickerField extends ConsumerWidget {
   const ReactiveDatePickerField({
     required this.formControl,
     required this.firstDate,
@@ -329,12 +279,17 @@ class ReactiveDatePickerField extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
+  String _formatDate(
+    BuildContext context,
+    DateTime date,
+    DateFormatPreference? preference,
+  ) {
+    return DateTimeFormat.formatDate(context, date, preference: preference);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preference = ref.watch(userStateProvider).value?.preferences;
     return ReactiveValueListenableBuilder<DateTime?>(
       formControl: formControl,
       builder: (context, control, child) {
@@ -353,7 +308,7 @@ class ReactiveDatePickerField extends StatelessWidget {
                   : const Icon(Icons.calendar_today),
             ),
             child: value != null
-                ? Text(_formatDate(value))
+                ? Text(_formatDate(context, value, preference?.dateFormat))
                 : Text(
                     placeholder ?? '',
                     style: TextStyle(color: Theme.of(context).hintColor),
@@ -366,7 +321,7 @@ class ReactiveDatePickerField extends StatelessWidget {
 }
 
 /// Custom reactive time picker field
-class ReactiveTimePickerField extends StatelessWidget {
+class ReactiveTimePickerField extends ConsumerWidget {
   const ReactiveTimePickerField({
     required this.formControl,
     this.placeholder,
@@ -376,16 +331,31 @@ class ReactiveTimePickerField extends StatelessWidget {
   final FormControl<String?> formControl;
   final String? placeholder;
 
-  Future<void> _pickTime(BuildContext context) async {
+  Future<void> _pickTime(
+    BuildContext context,
+    TimeFormatPreference? preference,
+  ) async {
     final now = TimeOfDay.now();
     final initialTime = formControl.value != null
         ? _parseTime(formControl.value!)
         : now;
+    final platformUses24HourFormat = MediaQuery.of(
+      context,
+    ).alwaysUse24HourFormat;
 
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: initialTime,
-      builder: (context, child) => PointerInterceptor(child: child!),
+      builder: (context, child) => PointerInterceptor(
+        child: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            alwaysUse24HourFormat: preference == null
+                ? platformUses24HourFormat
+                : preference == TimeFormatPreference.h24,
+          ),
+          child: child!,
+        ),
+      ),
     );
 
     if (pickedTime != null) {
@@ -399,20 +369,29 @@ class ReactiveTimePickerField extends StatelessWidget {
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
   }
 
-  String _formatTimeDisplay(String? time) {
+  String _formatTimeDisplay(
+    BuildContext context,
+    String? time,
+    TimeFormatPreference? preference,
+  ) {
     if (time == null) return '';
-    return time;
+    return DateTimeFormat.formatTime(
+      context,
+      _parseTime(time),
+      preference: preference,
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preference = ref.watch(userStateProvider).value?.preferences;
     return ReactiveValueListenableBuilder<String?>(
       formControl: formControl,
       builder: (context, control, child) {
         final value = control.value;
 
         return InkWell(
-          onTap: () => _pickTime(context),
+          onTap: () => _pickTime(context, preference?.timeFormat),
           child: InputDecorator(
             decoration: InputDecoration(
               hintText: placeholder,
@@ -424,7 +403,9 @@ class ReactiveTimePickerField extends StatelessWidget {
                   : const Icon(Icons.access_time),
             ),
             child: value != null
-                ? Text(_formatTimeDisplay(value))
+                ? Text(
+                    _formatTimeDisplay(context, value, preference?.timeFormat),
+                  )
                 : Text(
                     placeholder ?? '',
                     style: TextStyle(color: Theme.of(context).hintColor),

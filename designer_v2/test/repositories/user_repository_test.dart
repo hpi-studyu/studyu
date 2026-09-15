@@ -1,0 +1,117 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+void main() {
+  final initialUser = StudyUUser(id: 'user-id', email: 'user@example.com');
+
+  ProviderContainer createContainer(_FakeApi api) {
+    return ProviderContainer(
+      overrides: [
+        userRepositoryProvider.overrideWith(
+          (ref) => UserRepository(
+            authRepository: _FakeAuthRepository(),
+            apiClient: api,
+            ref: ref,
+          ),
+        ),
+      ],
+    );
+  }
+
+  test('consecutive date and time updates use the loaded user', () async {
+    final api = _FakeApi(initialUser);
+    final container = createContainer(api);
+    addTearDown(container.dispose);
+
+    final repository = container.read(userRepositoryProvider);
+    await repository.fetchUser();
+
+    final savedDate = await repository.updateDateFormat(
+      DateFormatPreference.iso,
+    );
+    final savedTime = await repository.updateTimeFormat(
+      TimeFormatPreference.h12,
+    );
+
+    expect(savedDate.preferences.dateFormat, DateFormatPreference.iso);
+    expect(savedTime.preferences.timeFormat, TimeFormatPreference.h12);
+    expect(repository.cachedUser, same(savedTime));
+    expect(api.savedUsers, hasLength(2));
+  });
+
+  test('user state publishes the saved preferences to consumers', () async {
+    final api = _FakeApi(initialUser);
+    final container = createContainer(api);
+    addTearDown(container.dispose);
+
+    await container.read(userStateProvider.future);
+    final repository = container.read(userRepositoryProvider);
+    final savedUser = await repository.updateDateFormat(
+      DateFormatPreference.german,
+    );
+
+    container.read(userStateProvider.notifier).setUser(savedUser);
+
+    expect(
+      container.read(userStateProvider).value?.preferences.dateFormat,
+      DateFormatPreference.german,
+    );
+  });
+
+  test('failed preference save does not mutate the cached user', () async {
+    final api = _FakeApi(initialUser)..throwOnSave = true;
+    final container = createContainer(api);
+    addTearDown(container.dispose);
+
+    final repository = container.read(userRepositoryProvider);
+    await repository.fetchUser();
+
+    await expectLater(
+      repository.updateDateFormat(DateFormatPreference.german),
+      throwsStateError,
+    );
+
+    expect(repository.cachedUser?.preferences.dateFormat, isNull);
+  });
+}
+
+class _FakeApi implements StudyUApi {
+  _FakeApi(this.user);
+
+  StudyUUser user;
+  bool throwOnSave = false;
+  final savedUsers = <StudyUUser>[];
+
+  @override
+  Future<StudyUUser> fetchUser(String userId) async => user;
+
+  @override
+  Future<StudyUUser> saveUser(StudyUUser user) async {
+    if (throwOnSave) throw StateError('save failed');
+    this.user = user;
+    savedUsers.add(user);
+    return user;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _FakeAuthRepository implements IAuthRepository {
+  @override
+  User? get currentUser => const User(
+    id: 'user-id',
+    appMetadata: {},
+    userMetadata: null,
+    aud: 'authenticated',
+    createdAt: '',
+  );
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}

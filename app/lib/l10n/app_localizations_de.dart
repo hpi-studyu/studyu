@@ -1474,4 +1474,31 @@ class AppLocalizationsDe extends AppLocalizations {
   String date_picker_validation_max_date(String maxDate) {
     return 'Das Datum muss vor $maxDate liegen';
   }
+
+  @override
+  String get date_format => 'Datumsformat';
+
+  @override
+  String get time_format => 'Zeitformat';
+
+  @override
+  String get system => 'System';
+
+  @override
+  String get date_format_iso => 'ISO (2024-12-31)';
+
+  @override
+  String get date_format_european => 'Europäisch (31/12/2024)';
+
+  @override
+  String get date_format_us => 'US (12/31/2024)';
+
+  @override
+  String get date_format_german => 'Deutsch (31.12.2024)';
+
+  @override
+  String get time_format_12_hour => '12-Stunden (2:30 PM)';
+
+  @override
+  String get time_format_24_hour => '24-Stunden (14:30)';
 }

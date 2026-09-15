@@ -4,6 +4,32 @@ import 'package:studyu_core/core.dart';
 
 part 'user.g.dart';
 
+enum DateFormatPreference {
+  @JsonValue('iso')
+  iso('yyyy-MM-dd'),
+  @JsonValue('european')
+  european('dd/MM/yyyy'),
+  @JsonValue('us')
+  us('MM/dd/yyyy'),
+  @JsonValue('german')
+  german('dd.MM.yyyy');
+
+  const DateFormatPreference(this.pattern);
+
+  final String pattern;
+}
+
+enum TimeFormatPreference {
+  @JsonValue('h24')
+  h24('HH:mm'),
+  @JsonValue('h12')
+  h12('h:mm a');
+
+  const TimeFormatPreference(this.pattern);
+
+  final String pattern;
+}
+
 @JsonSerializable()
 class StudyUUser extends SupabaseObjectFunctions<StudyUUser> {
   static const String tableName = 'user';
@@ -34,6 +60,12 @@ class Preferences {
   @JsonKey(name: 'lang')
   String language;
 
+  @JsonKey(name: 'date_format')
+  DateFormatPreference? dateFormat;
+
+  @JsonKey(name: 'time_format')
+  TimeFormatPreference? timeFormat;
+
   @JsonKey(name: 'pinned_studies')
   Set<String> pinnedStudies;
 
@@ -42,6 +74,8 @@ class Preferences {
 
   Preferences({
     this.language = '',
+    this.dateFormat,
+    this.timeFormat,
     this.pinnedStudies = const {},
     this.studyFiltering = const {},
   });
