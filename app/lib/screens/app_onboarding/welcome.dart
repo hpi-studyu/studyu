@@ -84,7 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appLanguage = context.watch<AppLanguage>();
+    final appLanguage = context.watch<AppLanguage?>();
 
     return WelcomeEntryHub(
       onLogoDoubleTap: () => DebugScreen.showDebugScreen(context),
@@ -95,8 +95,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onAbout: () => context.push('/${RouteNames.about}'),
       onFaq: () => context.push('/${RouteNames.faq}'),
       onContact: () => context.push('/${RouteNames.contact}'),
-      selectedLocale: appLanguage.appLocal,
-      onLocaleChanged: appLanguage.changeLanguage,
+      selectedLocale: appLanguage?.appLocal ?? Localizations.localeOf(context),
+      onLocaleChanged: appLanguage?.changeLanguage,
     );
   }
 }

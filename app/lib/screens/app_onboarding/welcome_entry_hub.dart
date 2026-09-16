@@ -12,7 +12,7 @@ class WelcomeEntryHub extends StatelessWidget {
   final VoidCallback onFaq;
   final VoidCallback onContact;
   final Locale? selectedLocale;
-  final ValueChanged<Locale?> onLocaleChanged;
+  final ValueChanged<Locale?>? onLocaleChanged;
   final String logoAssetPath;
 
   const WelcomeEntryHub({
