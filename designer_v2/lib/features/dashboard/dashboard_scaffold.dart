@@ -7,12 +7,14 @@ class DashboardScaffold extends StatelessWidget {
   static const double compactWidthThreshold = 900;
   const DashboardScaffold({
     required this.body,
+    this.overlay,
     this.endDrawer,
     this.scaffoldKey,
     super.key,
   });
 
   final Widget body;
+  final Widget? overlay;
   final Widget? endDrawer;
   final Key? scaffoldKey;
 
@@ -31,7 +33,15 @@ class DashboardScaffold extends StatelessWidget {
         leftWidget: isCompact
             ? const SizedBox.shrink()
             : const AppDrawer(autoCloseDrawer: false),
-        rightWidget: body,
+        rightWidget: overlay == null
+            ? body
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  body,
+                  Positioned.fill(child: overlay!),
+                ],
+              ),
         dividerWidget: null,
         scrollLeft: false,
         scrollRight: false,
