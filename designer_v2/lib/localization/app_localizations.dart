@@ -3785,12 +3785,6 @@ abstract class AppLocalizations {
   /// **'New code'**
   String get action_button_code_new;
 
-  /// No description provided for @action_button_code_save.
-  ///
-  /// In en, this message translates to:
-  /// **'Save code'**
-  String get action_button_code_save;
-
   /// No description provided for @participant_details_title.
   ///
   /// In en, this message translates to:

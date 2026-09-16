@@ -2226,9 +2226,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_button_code_new => 'Neuer Code';
 
   @override
-  String get action_button_code_save => 'Code speichern';
-
-  @override
   String get participant_details_title => 'Teilnehmerdetails';
 
   @override

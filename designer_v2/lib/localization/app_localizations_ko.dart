@@ -2110,9 +2110,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get action_button_code_new => '새 코드';
 
   @override
-  String get action_button_code_save => '코드 저장';
-
-  @override
   String get participant_details_title => '참여자 상세 정보';
 
   @override

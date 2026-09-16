@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -96,6 +98,14 @@ class InviteCodeFormView extends FormConsumerRefWidget {
         const SizedBox(height: 4.0),
         TextParagraph(
           text: tr.form_field_is_preconfigured_schedule_description,
+        ),
+        const SizedBox(height: 24.0),
+        ReactiveValueListenableBuilder<String>(
+          formControl: formViewModel.codeControl,
+          builder: (context, control, _) {
+            final code = control.value?.trim().toLowerCase() ?? '';
+            return QrCodePreview(data: env.generateAppDeepLink('invite/$code'));
+          },
         ),
         const SizedBox(height: 24.0),
         FormTableLayout(rows: [..._conditionalInterventionRows(context)]),

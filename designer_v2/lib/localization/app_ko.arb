@@ -830,7 +830,6 @@
   "under_construction": "준비 중",
   "under_construction_description": "이 부분은 아직 작업 중입니다. 곧 다시 확인하세요!",
   "validation_number_required": "값은 숫자여야 합니다",
-  "action_button_code_save": "코드 저장",
   "action_button_retry": "다시 시도",
   "action_delete_code": "코드 삭제",
   "action_regenerate_invite_code": "초대 코드 재생성",

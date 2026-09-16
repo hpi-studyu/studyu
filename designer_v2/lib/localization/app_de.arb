@@ -845,7 +845,6 @@
   "code_list_header_code": "Code",
   "code_list_header_actions": "Aktionen",
   "action_button_code_new": "Neuer Code",
-  "action_button_code_save": "Code speichern",
   "notification_code_deleted": "Teilnahmecode gelöscht",
   "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",
   "notification_invite_code_copied": "Teilnahmecode kopiert",

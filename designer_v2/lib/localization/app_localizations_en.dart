@@ -2202,9 +2202,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_code_new => 'New code';
 
   @override
-  String get action_button_code_save => 'Save code';
-
-  @override
   String get participant_details_title => 'Participant details';
 
   @override
