@@ -3334,6 +3334,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Come back tomorrow to begin. We’ll remind you when there’s something to do.'**
   String get study_not_started_description;
+
+  /// No description provided for @recovery_phrase_word_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/{total} words'**
+  String recovery_phrase_word_count(Object count, Object total);
 }
 
 class _AppLocalizationsDelegate

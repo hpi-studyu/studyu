@@ -16,7 +16,7 @@ class OnboardingScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return IntroductionScreen(
-      pages: [
+      rawPages: [
         _buildPage(
           title: l10n.onboarding_page0_title,
           body: l10n.onboarding_page0_subtitle,
@@ -69,24 +69,48 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 
-  PageViewModel _buildPage({
+  Widget _buildPage({
     required String title,
     required String body,
     required String imagePath,
   }) {
-    return PageViewModel(
-      title: title,
-      body: body,
-      image: Center(
-        child: imagePath.endsWith('.svg')
-            ? SvgPicture.asset(imagePath, height: 250)
-            : Image.asset(imagePath, height: 250),
-      ),
-      decoration: const PageDecoration(
-        titleTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        bodyTextStyle: TextStyle(fontSize: 16),
-        imagePadding: EdgeInsets.only(top: 40),
-        contentMargin: EdgeInsets.symmetric(horizontal: 16),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (imagePath.endsWith('.svg'))
+                    SvgPicture.asset(imagePath, height: 250)
+                  else
+                    Image.asset(imagePath, height: 250),
+                  const SizedBox(height: 24),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    body,
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

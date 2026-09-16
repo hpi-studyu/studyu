@@ -703,5 +703,6 @@
   "recovery_phrase_why": "Why?",
   "recovery_phrase_reason": "StudyU does not use passwords or email accounts. These 13 words are the only way to restore your account if you get a new phone or reinstall the app. Write them down or store them digitally somewhere only you can access. Never share them with anyone. You can view your recovery phrase again at any time under Settings → Study settings.",
   "study_not_started_title": "You’ve joined the study",
-  "study_not_started_description": "Come back tomorrow to begin. We’ll remind you when there’s something to do."
+  "study_not_started_description": "Come back tomorrow to begin. We’ll remind you when there’s something to do.",
+  "recovery_phrase_word_count": "{count}/{total} words"
 }

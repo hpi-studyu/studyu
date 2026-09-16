@@ -1,0 +1,99 @@
+name: SonarQube
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  MELOS_SDK_PATH: auto
+
+concurrency:
+  group: sonarqube-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: SonarQube Quality Gate
+    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'pull_request' && github.base_ref == 'dev' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.user.login != 'dependabot[bot]') ||
+      (github.event_name == 'workflow_dispatch' &&
+        github.ref == 'refs/heads/dev')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify SonarQube configuration
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$SONAR_TOKEN" ]]; then
+            echo "::error::SONAR_TOKEN is unavailable." >&2
+            exit 1
+          fi
+          if [[ -z "$SONAR_HOST_URL" ]]; then
+            echo "::error::SONAR_HOST_URL is not configured." >&2
+            exit 1
+          fi
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
+      - name: Verify coverage normalizer
+        run: dart scripts/normalize_lcov.dart --check
+
+      - name: Run tests with coverage
+        run: melos run test:coverage --no-select
+
+      - name: Validate and normalize coverage
+        run: dart scripts/normalize_lcov.dart coverage/sonar/lcov.info
+
+      - name: Generate Dart analyzer report
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p coverage/sonar
+          dart analyze --no-fatal-warnings --format=machine \
+            > coverage/sonar/dart-analyze.txt
+
+      - name: Scan project for pull request
+        if: github.event_name == 'pull_request'
+        uses: "SonarSource/sonarqube-scan-action@\
+          c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2" # v7
+        with:
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+            -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+
+      - name: Scan project
+        if: github.event_name != 'pull_request'
+        uses: "SonarSource/sonarqube-scan-action@\
+          c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2" # v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
