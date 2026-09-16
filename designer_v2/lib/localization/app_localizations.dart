@@ -616,11 +616,23 @@ abstract class AppLocalizations {
   /// **'New study'**
   String get action_button_new_study;
 
+  /// No description provided for @action_button_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get action_button_retry;
+
   /// No description provided for @search.
   ///
   /// In en, this message translates to:
   /// **'Search'**
   String get search;
+
+  /// No description provided for @navlink_all_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Studies'**
+  String get navlink_all_studies;
 
   /// No description provided for @studies_list_header_title.
   ///
@@ -676,6 +688,24 @@ abstract class AppLocalizations {
   /// **'Modify your query'**
   String get modify_query;
 
+  /// No description provided for @studies_count_total.
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, =1{1 study} other{{total} studies}}'**
+  String studies_count_total(int total);
+
+  /// No description provided for @studies_count_filtered.
+  ///
+  /// In en, this message translates to:
+  /// **'{visible} of {total, plural, =1{1 study} other{{total} studies}}'**
+  String studies_count_filtered(int visible, int total);
+
+  /// No description provided for @studies_filter_server_side_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This filter can\'t be used here right now. Clear the filter and try again.'**
+  String get studies_filter_server_side_unsupported;
+
   /// No description provided for @studies_empty.
   ///
   /// In en, this message translates to:
@@ -687,6 +717,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Build your own study from scratch or create a new draft copy from an already published study!'**
   String get studies_empty_description;
+
+  /// No description provided for @studies_empty_public.
+  ///
+  /// In en, this message translates to:
+  /// **'No public studies found'**
+  String get studies_empty_public;
+
+  /// No description provided for @studies_empty_public_description.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no studies in the public registry matching your current filters.'**
+  String get studies_empty_public_description;
+
+  /// No description provided for @studies_empty_shared.
+  ///
+  /// In en, this message translates to:
+  /// **'No shared studies found'**
+  String get studies_empty_shared;
+
+  /// No description provided for @studies_empty_shared_description.
+  ///
+  /// In en, this message translates to:
+  /// **'No studies have been shared with you yet.'**
+  String get studies_empty_shared_description;
+
+  /// No description provided for @studies_end_of_list.
+  ///
+  /// In en, this message translates to:
+  /// **'All studies loaded.'**
+  String get studies_end_of_list;
+
+  /// No description provided for @studies_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load studies. Try again.'**
+  String get studies_load_failed;
 
   /// No description provided for @navlink_learn.
   ///
@@ -1060,6 +1126,18 @@ abstract class AppLocalizations {
   /// **'invite code'**
   String get dialog_subject_invite_code;
 
+  /// No description provided for @dialog_delete_invite_code_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete invite code?'**
+  String get dialog_delete_invite_code_title;
+
+  /// No description provided for @dialog_delete_invite_code_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone with invite code {code} will no longer be able to use it.'**
+  String dialog_delete_invite_code_message(Object code);
+
   /// No description provided for @dialog_subject_fitbit_credentials.
   ///
   /// In en, this message translates to:
@@ -1153,7 +1231,7 @@ abstract class AppLocalizations {
   /// No description provided for @question_type_choice.
   ///
   /// In en, this message translates to:
-  /// **'Multiple choice'**
+  /// **'Choice'**
   String get question_type_choice;
 
   /// No description provided for @question_type_free_text.
@@ -1279,14 +1357,26 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_response_choice_multiple.
   ///
   /// In en, this message translates to:
-  /// **'Select multiple'**
+  /// **'Allow multiple selections'**
   String get form_field_response_choice_multiple;
 
   /// No description provided for @form_field_response_choice_multiple_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Allow the participant to select multiple response options. Otherwise only a single option can be selected.'**
+  /// **'Participants can select more than one answer.'**
   String get form_field_response_choice_multiple_tooltip;
+
+  /// No description provided for @form_field_response_choice_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Require at least one selection'**
+  String get form_field_response_choice_required;
+
+  /// No description provided for @form_field_response_choice_required_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Require the participant to select at least one response option.'**
+  String get form_field_response_choice_required_tooltip;
 
   /// No description provided for @form_array_response_options_choice_new.
   ///
@@ -3650,7 +3740,7 @@ abstract class AppLocalizations {
   /// No description provided for @code_list_section_title.
   ///
   /// In en, this message translates to:
-  /// **'Invite codes'**
+  /// **'Invite Codes'**
   String get code_list_section_title;
 
   /// No description provided for @code_public_disabled.
@@ -3683,11 +3773,23 @@ abstract class AppLocalizations {
   /// **'Code'**
   String get code_list_header_code;
 
+  /// No description provided for @code_list_header_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get code_list_header_actions;
+
   /// No description provided for @action_button_code_new.
   ///
   /// In en, this message translates to:
   /// **'New code'**
   String get action_button_code_new;
+
+  /// No description provided for @action_button_code_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save code'**
+  String get action_button_code_save;
 
   /// No description provided for @participant_details_title.
   ///
@@ -4120,6 +4222,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete invite code'**
   String get action_delete_invite_code;
+
+  /// No description provided for @action_delete_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete code'**
+  String get action_delete_code;
 
   /// No description provided for @action_remove.
   ///
@@ -4757,6 +4865,66 @@ abstract class AppLocalizations {
   /// **'Clear all'**
   String get filter_reset_all;
 
+  /// No description provided for @code_list_filter_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter invite codes'**
+  String get code_list_filter_title;
+
+  /// No description provided for @code_list_filter_enrolled_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled status'**
+  String get code_list_filter_enrolled_status;
+
+  /// No description provided for @code_list_filter_enrolled_min.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled min'**
+  String get code_list_filter_enrolled_min;
+
+  /// No description provided for @code_list_filter_enrolled_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled max'**
+  String get code_list_filter_enrolled_max;
+
+  /// No description provided for @code_list_filter_intervention_assignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Intervention assignment'**
+  String get code_list_filter_intervention_assignment;
+
+  /// No description provided for @code_list_filter_apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get code_list_filter_apply;
+
+  /// No description provided for @code_list_filter_option_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get code_list_filter_option_all;
+
+  /// No description provided for @code_list_filter_option_unused.
+  ///
+  /// In en, this message translates to:
+  /// **'Unused'**
+  String get code_list_filter_option_unused;
+
+  /// No description provided for @code_list_filter_option_used.
+  ///
+  /// In en, this message translates to:
+  /// **'Used'**
+  String get code_list_filter_option_used;
+
+  /// No description provided for @code_list_filter_button_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter ({count})'**
+  String code_list_filter_button_active(int count);
+
   /// No description provided for @filter_show_studies.
   ///
   /// In en, this message translates to:
@@ -5080,6 +5248,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter'**
   String get filter_button_main;
+
+  /// No description provided for @code_list_no_results_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching invite codes'**
+  String get code_list_no_results_title;
+
+  /// No description provided for @code_list_no_results_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Try changing your search to see more invite codes.'**
+  String get code_list_no_results_description;
+
+  /// No description provided for @code_list_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search invite codes'**
+  String get code_list_search_hint;
+
+  /// No description provided for @code_list_search_hint_compact.
+  ///
+  /// In en, this message translates to:
+  /// **'Search codes'**
+  String get code_list_search_hint_compact;
+
+  /// No description provided for @code_list_active_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active invite codes'**
+  String code_list_active_count(int count);
+
+  /// No description provided for @code_list_total_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 invite} other{{count} invites}}'**
+  String code_list_total_count(int count);
+
+  /// No description provided for @code_list_page_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows'**
+  String get code_list_page_size;
+
+  /// No description provided for @code_list_rows_per_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows per page:'**
+  String get code_list_rows_per_page;
+
+  /// No description provided for @code_list_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page}'**
+  String code_list_page(int page);
+
+  /// No description provided for @code_list_page_range.
+  ///
+  /// In en, this message translates to:
+  /// **'{start}–{end} of {count}'**
+  String code_list_page_range(int start, int end, int count);
+
+  /// No description provided for @code_list_page_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading {start}–{end}...'**
+  String code_list_page_loading(int start, int end);
+
+  /// No description provided for @code_list_page_fetch_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t load the next page. Check your connection and try again.'**
+  String get code_list_page_fetch_error;
+
+  /// No description provided for @code_list_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get code_list_retry;
+
+  /// No description provided for @code_list_previous_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous page'**
+  String get code_list_previous_page;
+
+  /// No description provided for @code_list_next_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Next page'**
+  String get code_list_next_page;
+
+  /// No description provided for @action_regenerate_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate invite code'**
+  String get action_regenerate_invite_code;
+
+  /// No description provided for @dialog_qr_code_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.'**
+  String get dialog_qr_code_description;
+
+  /// No description provided for @all_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Studies'**
+  String get all_studies;
+
+  /// No description provided for @studies_filter_add_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Add filter'**
+  String get studies_filter_add_filter;
+
+  /// No description provided for @studies_filter_remove_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove filter'**
+  String get studies_filter_remove_filter;
+
+  /// No description provided for @studies_end_of_list_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a study.'**
+  String get studies_end_of_list_create;
+
+  /// No description provided for @studies_end_of_list_public.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t find what you\'re looking for?'**
+  String get studies_end_of_list_public;
 }
 
 class _AppLocalizationsDelegate

@@ -279,7 +279,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get action_button_new_study => '새 연구';
 
   @override
+  String get action_button_retry => '다시 시도';
+
+  @override
   String get search => '검색';
+
+  @override
+  String get navlink_all_studies => '모든 연구';
 
   @override
   String get studies_list_header_title => '제목';
@@ -309,11 +315,55 @@ class AppLocalizationsKo extends AppLocalizations {
   String get modify_query => '쿼리 수정';
 
   @override
+  String studies_count_total(int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '연구 $total개',
+      one: '연구 1개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studies_count_filtered(int visible, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '연구 $total개',
+      one: '연구 1개',
+    );
+    return '$_temp0 중 $visible개';
+  }
+
+  @override
+  String get studies_filter_server_side_unsupported =>
+      '현재 이 필터를 여기에서 사용할 수 없습니다. 필터를 지우고 다시 시도하세요.';
+
+  @override
   String get studies_empty => '아직 연구가 없습니다';
 
   @override
   String get studies_empty_description =>
       '새로 연구를 처음부터 만들거나 이미 게시된 연구에서 새 초안 복사본을 만드세요!';
+
+  @override
+  String get studies_empty_public => '공개 연구를 찾을 수 없음';
+
+  @override
+  String get studies_empty_public_description => '현재 필터와 일치하는 연구가 공개 목록에 없습니다.';
+
+  @override
+  String get studies_empty_shared => '공유된 연구를 찾을 수 없음';
+
+  @override
+  String get studies_empty_shared_description => '아직 공유된 연구가 없습니다.';
+
+  @override
+  String get studies_end_of_list => '모든 연구를 불러왔습니다.';
+
+  @override
+  String get studies_load_failed => '연구를 불러올 수 없습니다. 다시 시도하세요.';
 
   @override
   String get navlink_learn => '배우기';
@@ -530,6 +580,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dialog_subject_invite_code => '초대 코드';
 
   @override
+  String get dialog_delete_invite_code_title => '초대 코드를 삭제할까요?';
+
+  @override
+  String dialog_delete_invite_code_message(Object code) {
+    return '초대 코드 $code를 가진 사람은 더 이상 이 코드를 사용할 수 없습니다.';
+  }
+
+  @override
   String get dialog_subject_fitbit_credentials => 'Fitbit 자격 증명';
 
   @override
@@ -651,6 +709,13 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get form_field_response_choice_multiple_tooltip =>
       '참가자가 여러 응답 옵션을 선택할 수 있도록 허용합니다. 그렇지 않으면 단일 옵션만 선택할 수 있습니다.';
+
+  @override
+  String get form_field_response_choice_required => '하나 이상 선택 필수';
+
+  @override
+  String get form_field_response_choice_required_tooltip =>
+      '참여자가 응답 옵션을 하나 이상 선택하도록 요구합니다.';
 
   @override
   String get form_array_response_options_choice_new => '옵션 추가';
@@ -2039,7 +2104,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get code_list_header_code => '코드';
 
   @override
+  String get code_list_header_actions => '작업';
+
+  @override
   String get action_button_code_new => '새 코드';
+
+  @override
+  String get action_button_code_save => '코드 저장';
 
   @override
   String get participant_details_title => '참여자 상세 정보';
@@ -2324,6 +2395,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get action_delete_invite_code => '초대 코드 삭제';
+
+  @override
+  String get action_delete_code => '코드 삭제';
 
   @override
   String get action_remove => '제거';
@@ -2677,6 +2751,38 @@ class AppLocalizationsKo extends AppLocalizations {
   String get filter_reset_all => '모두 지우기';
 
   @override
+  String get code_list_filter_title => '초대 코드 필터';
+
+  @override
+  String get code_list_filter_enrolled_status => '등록 상태';
+
+  @override
+  String get code_list_filter_enrolled_min => '등록 인원 최솟값';
+
+  @override
+  String get code_list_filter_enrolled_max => '등록 인원 최댓값';
+
+  @override
+  String get code_list_filter_intervention_assignment => '중재 배정';
+
+  @override
+  String get code_list_filter_apply => '적용';
+
+  @override
+  String get code_list_filter_option_all => '전체';
+
+  @override
+  String get code_list_filter_option_unused => '미사용';
+
+  @override
+  String get code_list_filter_option_used => '사용됨';
+
+  @override
+  String code_list_filter_button_active(int count) {
+    return '필터 ($count)';
+  }
+
+  @override
   String filter_show_studies(int count) {
     return '$count건의 연구 보기';
   }
@@ -2839,4 +2945,88 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get filter_button_main => '필터';
+
+  @override
+  String get code_list_no_results_title => '일치하는 초대 코드 없음';
+
+  @override
+  String get code_list_no_results_description => '더 많은 초대 코드를 보려면 검색어를 변경하세요.';
+
+  @override
+  String get code_list_search_hint => '초대 코드 검색';
+
+  @override
+  String get code_list_search_hint_compact => '코드 검색';
+
+  @override
+  String code_list_active_count(int count) {
+    return '활성 초대 코드 $count개';
+  }
+
+  @override
+  String code_list_total_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '초대 $count개',
+      one: '초대 1개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get code_list_page_size => '행';
+
+  @override
+  String get code_list_rows_per_page => '페이지당 행 수:';
+
+  @override
+  String code_list_page(int page) {
+    return '$page페이지';
+  }
+
+  @override
+  String code_list_page_range(int start, int end, int count) {
+    return '$count개 중 $start–$end';
+  }
+
+  @override
+  String code_list_page_loading(int start, int end) {
+    return '$start–$end 불러오는 중...';
+  }
+
+  @override
+  String get code_list_page_fetch_error =>
+      '다음 페이지를 불러올 수 없습니다. 연결을 확인하고 다시 시도하세요.';
+
+  @override
+  String get code_list_retry => '다시 시도';
+
+  @override
+  String get code_list_previous_page => '이전 페이지';
+
+  @override
+  String get code_list_next_page => '다음 페이지';
+
+  @override
+  String get action_regenerate_invite_code => '초대 코드 재생성';
+
+  @override
+  String get dialog_qr_code_description =>
+      '참여자가 이 연구에 접근할 수 있도록 이 링크나 QR 코드를 공유하세요. 참여자가 휴대전화로 링크를 열거나 QR 코드를 스캔하면 StudyU 앱이 열리고 연구에 참여하게 됩니다.';
+
+  @override
+  String get all_studies => '모든 연구';
+
+  @override
+  String get studies_filter_add_filter => '필터 추가';
+
+  @override
+  String get studies_filter_remove_filter => '필터 제거';
+
+  @override
+  String get studies_end_of_list_create => '연구를 만드세요.';
+
+  @override
+  String get studies_end_of_list_public => '원하는 연구를 찾지 못했나요?';
 }

@@ -91,7 +91,7 @@ class RoutingIntents {
       RoutingIntent(
         route: RouterConf.route(studyTestRouteName),
         params: {RouteParams.studyId: studyId},
-        queryParams: {if (appRoute != null) RouteParams.testAppRoute: appRoute},
+        queryParams: {RouteParams.testAppRoute: ?appRoute},
       );
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
     route: RouterConf.route(studyRecruitRouteName),

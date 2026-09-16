@@ -106,6 +106,12 @@ abstract class AppLocalizations {
   /// **'Loading'**
   String get loading;
 
+  /// No description provided for @starting_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting your study…'**
+  String get starting_study;
+
   /// No description provided for @loading_error_title.
   ///
   /// In en, this message translates to:
@@ -208,6 +214,42 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get get_started;
 
+  /// No description provided for @welcome_find_study_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Find what works for you'**
+  String get welcome_find_study_title;
+
+  /// No description provided for @made_with_love_in_potsdam.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with ♥ in Potsdam'**
+  String get made_with_love_in_potsdam;
+
+  /// No description provided for @welcome_find_study_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a public study or use an invitation.'**
+  String get welcome_find_study_description;
+
+  /// No description provided for @browse_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse public studies'**
+  String get browse_public_studies;
+
+  /// No description provided for @welcome_returning_participant.
+  ///
+  /// In en, this message translates to:
+  /// **'Already participated with StudyU?'**
+  String get welcome_returning_participant;
+
+  /// No description provided for @restore_studyu_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore StudyU account'**
+  String get restore_studyu_account;
+
   /// No description provided for @show_onboarding_again.
   ///
   /// In en, this message translates to:
@@ -229,7 +271,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page1_title.
   ///
   /// In en, this message translates to:
-  /// **'Your Personal Study'**
+  /// **'Your personal study'**
   String get onboarding_page1_title;
 
   /// No description provided for @onboarding_page1_subtitle.
@@ -241,7 +283,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page2_title.
   ///
   /// In en, this message translates to:
-  /// **'An Expert Study Plan'**
+  /// **'An expert study plan'**
   String get onboarding_page2_title;
 
   /// No description provided for @onboarding_page2_subtitle.
@@ -253,7 +295,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page3_title.
   ///
   /// In en, this message translates to:
-  /// **'Complete Regular Tasks'**
+  /// **'Complete regular tasks'**
   String get onboarding_page3_title;
 
   /// No description provided for @onboarding_page3_subtitle.
@@ -265,7 +307,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding_page4_title.
   ///
   /// In en, this message translates to:
-  /// **'Build Reliable Evidence'**
+  /// **'Build reliable evidence'**
   String get onboarding_page4_title;
 
   /// No description provided for @onboarding_page4_subtitle.
@@ -279,12 +321,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Study Selection'**
   String get study_selection;
-
-  /// No description provided for @study_selection_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select a study.'**
-  String get study_selection_description;
 
   /// No description provided for @study_selection_single.
   ///
@@ -334,16 +370,22 @@ abstract class AppLocalizations {
   /// **'Some studies could not be displayed. This can happen when your app version is outdated. Please update the app to see all available studies, or join one of the studies shown below.'**
   String get study_selection_hidden_studies;
 
+  /// No description provided for @study_selection_no_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'There are currently no public studies available. If you have an invite code, you can still join a private study.'**
+  String get study_selection_no_public_studies;
+
   /// No description provided for @study_overview_title.
   ///
   /// In en, this message translates to:
-  /// **'Overview'**
+  /// **'Study overview'**
   String get study_overview_title;
 
   /// No description provided for @eligibility_questionnaire_title.
   ///
   /// In en, this message translates to:
-  /// **'Questionnaire'**
+  /// **'Eligibility check'**
   String get eligibility_questionnaire_title;
 
   /// No description provided for @please_answer_eligibility.
@@ -355,7 +397,7 @@ abstract class AppLocalizations {
   /// No description provided for @intervention_selection_title.
   ///
   /// In en, this message translates to:
-  /// **'Interventions'**
+  /// **'Intervention selection'**
   String get intervention_selection_title;
 
   /// No description provided for @please_select_interventions.
@@ -367,7 +409,7 @@ abstract class AppLocalizations {
   /// No description provided for @please_select_interventions_description.
   ///
   /// In en, this message translates to:
-  /// **'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first'**
+  /// **'The effects of these two interventions will be measured and compared during the study.'**
   String get please_select_interventions_description;
 
   /// No description provided for @no_interventions_available.
@@ -478,11 +520,71 @@ abstract class AppLocalizations {
   /// **'Leave study'**
   String get opt_out;
 
+  /// No description provided for @leave_study_keep_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave study and keep your data?'**
+  String get leave_study_keep_data_title;
+
+  /// No description provided for @leave_study_keep_data_body.
+  ///
+  /// In en, this message translates to:
+  /// **'You will stop participating in the study “{studyName}”. We will keep the progress and responses you have already submitted, and researchers may continue to use your anonymized data.\n\nYou cannot rejoin this participation after leaving. Your previous studies will not be affected.'**
+  String leave_study_keep_data_body(String studyName);
+
+  /// No description provided for @stay_in_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay in study'**
+  String get stay_in_study;
+
+  /// No description provided for @acknowledge_consequences.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read this information and understand the consequences.'**
+  String get acknowledge_consequences;
+
+  /// No description provided for @leave_keep_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave and keep my data'**
+  String get leave_keep_data;
+
+  /// No description provided for @leave_study_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop participating. Your existing study data will be retained.'**
+  String get leave_study_description;
+
   /// No description provided for @delete_data.
   ///
   /// In en, this message translates to:
-  /// **'Leave study and delete all data'**
+  /// **'Leave study and delete my data'**
   String get delete_data;
+
+  /// No description provided for @leave_study_delete_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave study and delete my data?'**
+  String get leave_study_delete_data_title;
+
+  /// No description provided for @leave_study_delete_data_body.
+  ///
+  /// In en, this message translates to:
+  /// **'You will stop participating in the study “{studyName}”. We will permanently delete your progress and responses for this study from our servers and remove its saved data from this device.\n\nThis cannot be undone. Neither you nor anyone from the study team will be able to recover this data.'**
+  String leave_study_delete_data_body(String studyName);
+
+  /// No description provided for @leave_delete_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave and delete my data'**
+  String get leave_delete_data;
+
+  /// No description provided for @delete_study_data_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your study data. This cannot be undone.'**
+  String get delete_study_data_description;
 
   /// No description provided for @soft_delete_desc.
   ///
@@ -505,8 +607,14 @@ abstract class AppLocalizations {
   /// No description provided for @your_journey.
   ///
   /// In en, this message translates to:
-  /// **'Your Journey'**
+  /// **'Your journey'**
   String get your_journey;
+
+  /// No description provided for @journey_overview_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your study timeline before continuing.'**
+  String get journey_overview_description;
 
   /// No description provided for @journey_results_available.
   ///
@@ -598,18 +706,6 @@ abstract class AppLocalizations {
   /// **'You did not give your consent. To participate you need to give consent.'**
   String get user_did_not_give_consent;
 
-  /// No description provided for @setting_up_study.
-  ///
-  /// In en, this message translates to:
-  /// **'Setting up your study...'**
-  String get setting_up_study;
-
-  /// No description provided for @good_to_go.
-  ///
-  /// In en, this message translates to:
-  /// **'You are good to go!'**
-  String get good_to_go;
-
   /// No description provided for @dashboard.
   ///
   /// In en, this message translates to:
@@ -649,7 +745,7 @@ abstract class AppLocalizations {
   /// No description provided for @contact_support.
   ///
   /// In en, this message translates to:
-  /// **'Contact Support'**
+  /// **'Contact study team'**
   String get contact_support;
 
   /// Body of the support email, includes the subject ID
@@ -663,6 +759,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About'**
   String get about;
+
+  /// No description provided for @study_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Study information'**
+  String get study_information;
+
+  /// No description provided for @study_information_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Only share these details with your study team when they ask for them.'**
+  String get study_information_description;
+
+  /// No description provided for @study_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Study name'**
+  String get study_name;
+
+  /// No description provided for @study_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Study ID'**
+  String get study_id;
+
+  /// No description provided for @subject_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject ID'**
+  String get subject_id;
+
+  /// No description provided for @study_start_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Study start date'**
+  String get study_start_date;
+
+  /// No description provided for @app_version.
+  ///
+  /// In en, this message translates to:
+  /// **'App version'**
+  String get app_version;
+
+  /// No description provided for @platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get platform;
+
+  /// No description provided for @not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get not_available;
+
+  /// No description provided for @view_study_information.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get view_study_information;
+
+  /// No description provided for @email_study_team.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact study team'**
+  String get email_study_team;
+
+  /// No description provided for @study_team_email_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This study has no contact email.'**
+  String get study_team_email_unavailable;
+
+  /// No description provided for @copy_all_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy all'**
+  String get copy_all_information;
+
+  /// No description provided for @value_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} copied to clipboard.'**
+  String value_copied(String label);
+
+  /// No description provided for @all_information_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'All information copied to clipboard.'**
+  String get all_information_copied;
+
+  /// No description provided for @participant_information_email_subject.
+  ///
+  /// In en, this message translates to:
+  /// **'[StudyU] Participant information'**
+  String get participant_information_email_subject;
+
+  /// No description provided for @participant_information_email_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,\n\nI am contacting you about my participation in the study. These are my StudyU details:'**
+  String get participant_information_email_intro;
+
+  /// No description provided for @email_app_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app is available.'**
+  String get email_app_unavailable;
 
   /// No description provided for @settings.
   ///
@@ -868,6 +1072,12 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get language;
 
+  /// No description provided for @use_device_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Use device language'**
+  String get use_device_language;
+
   /// No description provided for @en.
   ///
   /// In en, this message translates to:
@@ -946,6 +1156,18 @@ abstract class AppLocalizations {
   /// **'Enough data'**
   String get enough_data;
 
+  /// No description provided for @legal_documents.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal documents'**
+  String get legal_documents;
+
+  /// No description provided for @legal_documents_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review and accept these documents to continue.'**
+  String get legal_documents_description;
+
   /// No description provided for @terms.
   ///
   /// In en, this message translates to:
@@ -961,7 +1183,7 @@ abstract class AppLocalizations {
   /// No description provided for @terms_content.
   ///
   /// In en, this message translates to:
-  /// **'The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.'**
+  /// **'The terms of use give an overview on the purpose and use of the StudyU app.'**
   String get terms_content;
 
   /// No description provided for @terms_agree.
@@ -985,7 +1207,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacy_content.
   ///
   /// In en, this message translates to:
-  /// **'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.'**
+  /// **'The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have.'**
   String get privacy_content;
 
   /// No description provided for @privacy_agree.
@@ -993,6 +1215,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I have read and agree to the privacy policy'**
   String get privacy_agree;
+
+  /// No description provided for @legal_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Notice'**
+  String get legal_notice;
+
+  /// No description provided for @legal_notice_content.
+  ///
+  /// In en, this message translates to:
+  /// **'The legal notice shows who is responsible for StudyU and how you can contact us.'**
+  String get legal_notice_content;
 
   /// No description provided for @imprint_read.
   ///
@@ -1003,14 +1237,20 @@ abstract class AppLocalizations {
   /// No description provided for @invite_code_button.
   ///
   /// In en, this message translates to:
-  /// **'Use invite code'**
+  /// **'Join with an invite code'**
   String get invite_code_button;
 
   /// No description provided for @private_study_invite_code.
   ///
   /// In en, this message translates to:
-  /// **'Private study invite code'**
+  /// **'Enter invite code'**
   String get private_study_invite_code;
+
+  /// No description provided for @private_study_invite_code_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code shared by your study team.'**
+  String get private_study_invite_code_description;
 
   /// No description provided for @invite_code.
   ///
@@ -1075,8 +1315,14 @@ abstract class AppLocalizations {
   /// No description provided for @eligible_choice_multi_selection.
   ///
   /// In en, this message translates to:
-  /// **'Select all that apply'**
+  /// **'Select all that apply (optional)'**
   String get eligible_choice_multi_selection;
+
+  /// No description provided for @eligible_choice_multi_selection_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply (at least one required)'**
+  String get eligible_choice_multi_selection_required;
 
   /// No description provided for @report_overview.
   ///
@@ -1143,12 +1389,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Phase'**
   String get report_axis_phase;
-
-  /// No description provided for @study_not_started.
-  ///
-  /// In en, this message translates to:
-  /// **'Your study has not started yet. Please check back tomorrow!'**
-  String get study_not_started;
 
   /// No description provided for @completed_study.
   ///
@@ -1513,13 +1753,13 @@ abstract class AppLocalizations {
   /// No description provided for @support_email_sent.
   ///
   /// In en, this message translates to:
-  /// **'Support Email Sent'**
+  /// **'Email opened'**
   String get support_email_sent;
 
   /// No description provided for @support_email_sent_description.
   ///
   /// In en, this message translates to:
-  /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
+  /// **'Your message to the study team was prepared in your email app. Review and send the email, then wait for their reply.\n\nIf you are currently participating in a study, continue tracking your results outside the app until the issue is resolved.'**
   String get support_email_sent_description;
 
   /// No description provided for @no_contact_email.
@@ -2332,6 +2572,144 @@ abstract class AppLocalizations {
   /// **'Go back'**
   String get go_back;
 
+  /// No description provided for @study_settings_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Study settings'**
+  String get study_settings_section;
+
+  /// No description provided for @recovery_phrase_header.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery phrase'**
+  String get recovery_phrase_header;
+
+  /// No description provided for @copy_to_clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to clipboard'**
+  String get copy_to_clipboard;
+
+  /// No description provided for @copied_to_clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard. Paste the recovery phrase somewhere secure on your phone now.'**
+  String get copied_to_clipboard;
+
+  /// No description provided for @recovery_phrase_save_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Never share them with anyone.'**
+  String get recovery_phrase_save_warning;
+
+  /// No description provided for @show_recovery_phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Recovery Phrase'**
+  String get show_recovery_phrase;
+
+  /// No description provided for @recovery_phrase_saved_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I have saved all 13 words in a safe place and can retrieve them when I want to restore my account. I can also view them again in Study Settings.'**
+  String get recovery_phrase_saved_confirmation;
+
+  /// No description provided for @recovery_phrase_rotate_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Reissue recovery phrase'**
+  String get recovery_phrase_rotate_button;
+
+  /// No description provided for @recovery_phrase_rotate_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reissue recovery phrase?'**
+  String get recovery_phrase_rotate_dialog_title;
+
+  /// No description provided for @recovery_phrase_rotate_dialog_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current recovery phrase will immediately stop working. You must save the new phrase to recover your account in the future.'**
+  String get recovery_phrase_rotate_dialog_description;
+
+  /// No description provided for @recovery_phrase_rotate_acknowledgement.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that my current recovery phrase will immediately stop working.'**
+  String get recovery_phrase_rotate_acknowledgement;
+
+  /// No description provided for @recovery_phrase_rotate_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reissue phrase'**
+  String get recovery_phrase_rotate_confirm;
+
+  /// No description provided for @recovery_phrase_rotate_success.
+  ///
+  /// In en, this message translates to:
+  /// **'A new recovery phrase has been issued. Save it now.'**
+  String get recovery_phrase_rotate_success;
+
+  /// No description provided for @recovery_phrase_rotate_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not issue a new recovery phrase. Please try again.'**
+  String get recovery_phrase_rotate_error;
+
+  /// No description provided for @continue_to_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get continue_to_study;
+
+  /// No description provided for @restore_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore account'**
+  String get restore_account;
+
+  /// No description provided for @enter_recovery_phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your recovery phrase'**
+  String get enter_recovery_phrase;
+
+  /// No description provided for @restore_account_signed_in_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Already signed in'**
+  String get restore_account_signed_in_title;
+
+  /// No description provided for @restore_account_signed_in_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already signed in on this device. Restoring an account will replace the current account. Your recovery phrase remains valid after recovery.'**
+  String get restore_account_signed_in_description;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @invalid_recovery_phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'This recovery phrase does not match an account. Make sure all 13 words are in the right order.'**
+  String get invalid_recovery_phrase;
+
+  /// No description provided for @recovery_phrase_too_many_words.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery phrases have 13 words. Remove extra words to continue.'**
+  String get recovery_phrase_too_many_words;
+
+  /// No description provided for @recovery_successful.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery successful! ID: {id}'**
+  String recovery_successful(String id);
+
   /// No description provided for @deep_link_error_title.
   ///
   /// In en, this message translates to:
@@ -2343,6 +2721,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Study with ID {studyId} not found or not available'**
   String deep_link_study_not_found(String studyId);
+
+  /// No description provided for @recovery_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovering your account...'**
+  String get recovery_in_progress;
+
+  /// No description provided for @recovery_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery failed. Please check your recovery phrase and try again.'**
+  String get recovery_failed;
+
+  /// No description provided for @recovery_user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this recovery phrase.'**
+  String get recovery_user_not_found;
+
+  /// No description provided for @recovery_network_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection and try again.'**
+  String get recovery_network_error;
+
+  /// No description provided for @restore_account_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore your account on this device with the recovery phrase you saved before joining a study.'**
+  String get restore_account_description;
+
+  /// No description provided for @restore_account_help_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore with your recovery phrase'**
+  String get restore_account_help_title;
+
+  /// No description provided for @restore_account_help_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter all 13 words in order'**
+  String get restore_account_help_1;
+
+  /// No description provided for @restore_account_help_2.
+  ///
+  /// In en, this message translates to:
+  /// **'You can type or paste the phrase manually'**
+  String get restore_account_help_2;
+
+  /// No description provided for @share_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Recovery'**
+  String get share_recovery;
+
+  /// No description provided for @share_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as Text'**
+  String get share_as_text;
+
+  /// No description provided for @download_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Recovery'**
+  String get download_recovery;
+
+  /// No description provided for @download_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Download as Text File'**
+  String get download_as_text;
+
+  /// No description provided for @file_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'File saved successfully'**
+  String get file_saved;
+
+  /// No description provided for @file_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving file'**
+  String get file_save_error;
+
+  /// No description provided for @share_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_btn;
+
+  /// No description provided for @copy_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy_btn;
+
+  /// No description provided for @download_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download_btn;
+
+  /// No description provided for @general_section.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general_section;
+
+  /// No description provided for @current_study_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Current study'**
+  String get current_study_section;
+
+  /// No description provided for @participation_options_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage participation'**
+  String get participation_options_section;
+
+  /// No description provided for @share_recovery_text_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Recovery Text'**
+  String get share_recovery_text_btn;
+
+  /// No description provided for @recovery_phrase_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recovery phrase'**
+  String get recovery_phrase_load_error;
+
+  /// No description provided for @share_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sharing: {error}'**
+  String share_error(String error);
 
   /// No description provided for @deep_link_study_invite_only.
   ///
@@ -2376,6 +2892,24 @@ abstract class AppLocalizations {
     String currentStudy,
     String targetStudy,
   );
+
+  /// No description provided for @deep_link_switch_warning_opt_out_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'If you want to leave your current study, open Settings and use \"{optOut}\" first. Then open the invite again.'**
+  String deep_link_switch_warning_opt_out_instruction(String optOut);
+
+  /// No description provided for @deep_link_switch_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get deep_link_switch_open_settings;
+
+  /// No description provided for @deep_link_switch_continue_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Study'**
+  String get deep_link_switch_continue_study;
 
   /// No description provided for @deep_link_switch_primary_return.
   ///
@@ -2569,11 +3103,17 @@ abstract class AppLocalizations {
   /// **'Hello,\n\nThe StudyU app says that my study is no longer available from the server. My subject ID is: {subjectId}\n\nPlease let me know whether I should keep my local data or reset the app.\n\nThank you.'**
   String deleted_study_support_email_body(String subjectId);
 
-  /// No description provided for @show_dashboard_showcase_again.
+  /// No description provided for @dashboard_tour.
   ///
   /// In en, this message translates to:
-  /// **'Show dashboard tour again'**
-  String get show_dashboard_showcase_again;
+  /// **'Dashboard tour'**
+  String get dashboard_tour;
+
+  /// No description provided for @show_again.
+  ///
+  /// In en, this message translates to:
+  /// **'View tour again'**
+  String get show_again;
 
   /// No description provided for @free_text_hint.
   ///
@@ -2760,6 +3300,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Date must be before {maxDate}'**
   String date_picker_validation_max_date(String maxDate);
+
+  /// No description provided for @please_select_interventions_why.
+  ///
+  /// In en, this message translates to:
+  /// **'Why?'**
+  String get please_select_interventions_why;
+
+  /// No description provided for @recovery_phrase_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Save these 13 words in a safe place. They are the only way to restore your account if you lose access to this device.'**
+  String get recovery_phrase_description;
+
+  /// No description provided for @recovery_phrase_why.
+  ///
+  /// In en, this message translates to:
+  /// **'Why?'**
+  String get recovery_phrase_why;
+
+  /// No description provided for @recovery_phrase_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU does not use passwords or email accounts. These 13 words are the only way to restore your account if you get a new phone or reinstall the app. Write them down or store them digitally somewhere only you can access. Never share them with anyone. You can view your recovery phrase again at any time under Settings → Study settings.'**
+  String get recovery_phrase_reason;
+
+  /// No description provided for @study_not_started_title.
+  ///
+  /// In en, this message translates to:
+  /// **'You’ve joined the study'**
+  String get study_not_started_title;
+
+  /// No description provided for @study_not_started_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow to begin. We’ll remind you when there’s something to do.'**
+  String get study_not_started_description;
 
   /// No description provided for @ko.
   ///

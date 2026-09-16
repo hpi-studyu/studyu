@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/services/clipboard.dart';
 
-class InviteCodeFormView extends FormConsumerWidget {
+class InviteCodeFormView extends FormConsumerRefWidget {
   const InviteCodeFormView({required this.formViewModel, super.key});
 
   final InviteCodeFormViewModel formViewModel;
 
   @override
-  Widget build(BuildContext context, FormGroup form) {
+  Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
+    final isEditableCodeField = formViewModel.formMode == FormMode.create;
     return Column(
       children: [
         FormTableLayout(
@@ -26,21 +30,58 @@ class InviteCodeFormView extends FormConsumerWidget {
               control: formViewModel.codeControl,
               input: ReactiveTextField(
                 formControl: formViewModel.codeControl,
+                readOnly: !isEditableCodeField,
                 validationMessages:
                     formViewModel.codeControl.validationMessages,
-                decoration: (formViewModel.codeControl.enabled)
-                    ? InputDecoration(
-                        helperText: "",
-                        suffixIcon: Material(
-                          color: Colors.transparent,
+                decoration: InputDecoration(
+                  helperText: isEditableCodeField ? '' : null,
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Tooltip(
+                          message: tr.action_copy_invite_code,
                           child: IconButton(
                             splashRadius: 18.0,
-                            onPressed: formViewModel.regenerateCode,
-                            icon: const Icon(Icons.refresh_rounded),
+                            onPressed: () async {
+                              await ref
+                                  .read(clipboardServiceProvider)
+                                  .copy(formViewModel.codeControl.value ?? '');
+                              if (context.mounted) {
+                                final messenger = ScaffoldMessenger.of(context);
+                                messenger
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        tr.notification_invite_code_copied,
+                                      ),
+                                      showCloseIcon: true,
+                                    ),
+                                  );
+                              }
+                            },
+                            icon: const Icon(Icons.copy_rounded),
                           ),
                         ),
-                      )
-                    : const InputDecoration(),
+                      ),
+                      if (isEditableCodeField)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: IconButton(
+                              splashRadius: 18.0,
+                              tooltip: tr.action_regenerate_invite_code,
+                              onPressed: formViewModel.regenerateCode,
+                              icon: const Icon(Icons.refresh_rounded),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
             FormTableRow(

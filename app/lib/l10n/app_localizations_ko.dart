@@ -12,6 +12,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get loading => '로딩 중';
 
   @override
+  String get starting_study => '연구를 시작하는 중…';
+
+  @override
   String get loading_error_title => '로딩 오류';
 
   @override
@@ -73,6 +76,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get get_started => '시작하기';
 
   @override
+  String get welcome_find_study_title => '나에게 맞는 연구 찾기';
+
+  @override
+  String get made_with_love_in_potsdam => '포츠담에서 정성을 담아 제작';
+
+  @override
+  String get welcome_find_study_description => '공개 연구를 선택하거나 초대장을 사용하세요.';
+
+  @override
+  String get browse_public_studies => '공개 연구 둘러보기';
+
+  @override
+  String get welcome_returning_participant => 'StudyU 연구에 참여한 적이 있나요?';
+
+  @override
+  String get restore_studyu_account => 'StudyU 계정 복구';
+
+  @override
   String get show_onboarding_again => '온보딩 다시 보기';
 
   @override
@@ -114,9 +135,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get study_selection => '연구 선택';
 
   @override
-  String get study_selection_description => '연구를 선택해 주세요.';
-
-  @override
   String get study_selection_single => '한 번에 하나의 연구에만 참여할 수 있습니다.';
 
   @override
@@ -142,6 +160,10 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get study_selection_hidden_studies =>
       '일부 연구를 표시할 수 없습니다. 이는 앱 버전이 오래된 경우 발생할 수 있습니다. 모든 사용 가능한 연구를 확인하려면 앱을 업데이트하거나 아래에 표시된 연구 중 하나에 참여하세요.';
+
+  @override
+  String get study_selection_no_public_studies =>
+      '현재 참여할 수 있는 공개 연구가 없습니다. 초대 코드가 있으면 비공개 연구에 참여할 수 있습니다.';
 
   @override
   String get study_overview_title => '개요';
@@ -219,7 +241,42 @@ class AppLocalizationsKo extends AppLocalizations {
   String get opt_out => '연구 탈퇴';
 
   @override
+  String get leave_study_keep_data_title => '연구를 종료하고 데이터를 유지할까요?';
+
+  @override
+  String leave_study_keep_data_body(String studyName) {
+    return '“$studyName” 연구 참여를 종료합니다. 이미 제출한 진행 상황과 응답은 유지되며, 연구자는 익명화된 데이터를 계속 사용할 수 있습니다.\n\n연구를 종료한 뒤에는 이 참여에 다시 참여할 수 없습니다. 이전 연구에는 영향을 주지 않습니다.';
+  }
+
+  @override
+  String get stay_in_study => '연구 계속 참여';
+
+  @override
+  String get acknowledge_consequences => '이 정보를 읽었으며 그 결과를 이해했습니다.';
+
+  @override
+  String get leave_keep_data => '연구를 종료하고 내 데이터 유지';
+
+  @override
+  String get leave_study_description => '연구 참여를 종료합니다. 기존 연구 데이터는 유지됩니다.';
+
+  @override
   String get delete_data => '연구를 탈퇴하고 모든 데이터를 삭제하세요';
+
+  @override
+  String get leave_study_delete_data_title => '연구를 종료하고 내 데이터를 삭제할까요?';
+
+  @override
+  String leave_study_delete_data_body(String studyName) {
+    return '“$studyName” 연구 참여를 종료합니다. 서버에서 이 연구의 진행 상황과 응답을 영구적으로 삭제하고, 이 기기에 저장된 데이터도 삭제합니다.\n\n이 작업은 취소할 수 없습니다. 본인과 연구팀 모두 이 데이터를 복구할 수 없습니다.';
+  }
+
+  @override
+  String get leave_delete_data => '연구를 종료하고 내 데이터 삭제';
+
+  @override
+  String get delete_study_data_description =>
+      '연구 데이터를 영구적으로 삭제합니다. 이 작업은 취소할 수 없습니다.';
 
   @override
   String get soft_delete_desc => '';
@@ -234,6 +291,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get your_journey => '나의 연구 여정';
+
+  @override
+  String get journey_overview_description => '계속하기 전에 연구 일정을 확인하세요.';
 
   @override
   String get journey_results_available => '결과 이용 가능';
@@ -284,12 +344,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get user_did_not_give_consent => '동의하지 않으셨습니다. 참여하려면 동의가 필요합니다.';
 
   @override
-  String get setting_up_study => '연구 설정 중...';
-
-  @override
-  String get good_to_go => '준비가 완료되었습니다!';
-
-  @override
   String get dashboard => '대시보드';
 
   @override
@@ -317,6 +371,63 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get about => '정보';
+
+  @override
+  String get study_information => '연구 정보';
+
+  @override
+  String get study_information_description => '연구팀에서 요청하는 경우에만 이 정보를 공유하세요.';
+
+  @override
+  String get study_name => '연구 이름';
+
+  @override
+  String get study_id => '연구 ID';
+
+  @override
+  String get subject_id => '참여자 ID';
+
+  @override
+  String get study_start_date => '연구 시작일';
+
+  @override
+  String get app_version => '앱 버전';
+
+  @override
+  String get platform => '플랫폼';
+
+  @override
+  String get not_available => '사용할 수 없음';
+
+  @override
+  String get view_study_information => '세부 정보 보기';
+
+  @override
+  String get email_study_team => '연구팀에 문의';
+
+  @override
+  String get study_team_email_unavailable => '이 연구에는 문의 이메일이 없습니다.';
+
+  @override
+  String get copy_all_information => '모두 복사';
+
+  @override
+  String value_copied(String label) {
+    return '$label이(가) 클립보드에 복사되었습니다.';
+  }
+
+  @override
+  String get all_information_copied => '모든 정보가 클립보드에 복사되었습니다.';
+
+  @override
+  String get participant_information_email_subject => '[StudyU] 참여자 정보';
+
+  @override
+  String get participant_information_email_intro =>
+      '안녕하세요,\n\n연구 참여와 관련하여 문의드립니다. 제 StudyU 정보는 다음과 같습니다:';
+
+  @override
+  String get email_app_unavailable => '사용할 수 있는 이메일 앱이 없습니다.';
 
   @override
   String get settings => '설정';
@@ -422,6 +533,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get language => '언어';
 
   @override
+  String get use_device_language => '기기 언어 사용';
+
+  @override
   String get en => '영어';
 
   @override
@@ -462,6 +576,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get enough_data => '충분한 데이터';
 
   @override
+  String get legal_documents => '법적 문서';
+
+  @override
+  String get legal_documents_description => '계속하려면 이 문서를 검토하고 동의하세요.';
+
+  @override
   String get terms => '이용 약관';
 
   @override
@@ -488,6 +608,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get privacy_agree => '개인정보 처리방침을 읽었으며 이에 동의합니다';
 
   @override
+  String get legal_notice => '법적 고지';
+
+  @override
+  String get legal_notice_content => '법적 고지에는 StudyU의 책임자와 문의 방법이 나와 있습니다.';
+
+  @override
   String get imprint_read => '법적 고지 읽기';
 
   @override
@@ -495,6 +621,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get private_study_invite_code => '비공개 연구 초대 코드';
+
+  @override
+  String get private_study_invite_code_description => '연구팀에서 받은 코드를 입력하세요.';
 
   @override
   String get invite_code => '초대 코드';
@@ -528,6 +657,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get eligible_choice_multi_selection => '해당되는 모든 항목 선택';
+
+  @override
+  String get eligible_choice_multi_selection_required =>
+      '해당하는 항목을 모두 선택하세요(하나 이상 필수)';
 
   @override
   String get report_overview => '보고서 개요';
@@ -564,9 +697,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get report_axis_phase => '단계';
-
-  @override
-  String get study_not_started => '귀하의 연구가 아직 시작되지 않았습니다. 내일 다시 확인해 주세요!';
 
   @override
   String get completed_study => '마지막 연구를 완료했습니다. 이전 보고서를 확인하거나 새 연구를 시작하세요.';
@@ -1179,11 +1309,161 @@ class AppLocalizationsKo extends AppLocalizations {
   String get go_back => '뒤로 가기';
 
   @override
+  String get study_settings_section => '연구 설정';
+
+  @override
+  String get recovery_phrase_header => '복구 문구';
+
+  @override
+  String get copy_to_clipboard => '클립보드에 복사';
+
+  @override
+  String get copied_to_clipboard =>
+      '클립보드에 복사되었습니다. 지금 휴대전화의 안전한 곳에 복구 문구를 붙여 넣으세요.';
+
+  @override
+  String get recovery_phrase_save_warning => '다른 사람과 절대 공유하지 마세요.';
+
+  @override
+  String get show_recovery_phrase => '복구 문구 표시';
+
+  @override
+  String get recovery_phrase_saved_confirmation =>
+      '13개 단어를 모두 안전한 곳에 저장했으며, 계정을 복구할 때 다시 확인할 수 있습니다. 연구 설정에서도 다시 확인할 수 있습니다.';
+
+  @override
+  String get recovery_phrase_rotate_button => '복구 문구 재발급';
+
+  @override
+  String get recovery_phrase_rotate_dialog_title => '복구 문구를 재발급할까요?';
+
+  @override
+  String get recovery_phrase_rotate_dialog_description =>
+      '현재 복구 문구는 즉시 더 이상 작동하지 않습니다. 나중에 계정을 복구하려면 새 문구를 저장해야 합니다.';
+
+  @override
+  String get recovery_phrase_rotate_acknowledgement =>
+      '현재 복구 문구가 즉시 더 이상 작동하지 않는다는 점을 이해합니다.';
+
+  @override
+  String get recovery_phrase_rotate_confirm => '문구 재발급';
+
+  @override
+  String get recovery_phrase_rotate_success => '새 복구 문구가 발급되었습니다. 지금 저장하세요.';
+
+  @override
+  String get recovery_phrase_rotate_error => '새 복구 문구를 발급할 수 없습니다. 다시 시도하세요.';
+
+  @override
+  String get continue_to_study => '완료';
+
+  @override
+  String get restore_account => '계정 복구';
+
+  @override
+  String get enter_recovery_phrase => '복구 문구를 입력하세요';
+
+  @override
+  String get restore_account_signed_in_title => '이미 로그인됨';
+
+  @override
+  String get restore_account_signed_in_description =>
+      '이 기기에는 이미 로그인되어 있습니다. 계정을 복구하면 현재 계정이 교체됩니다. 복구 후에도 복구 문구는 계속 유효합니다.';
+
+  @override
+  String get required => '필수';
+
+  @override
+  String get invalid_recovery_phrase =>
+      '이 복구 문구와 일치하는 계정이 없습니다. 13개 단어가 올바른 순서인지 확인하세요.';
+
+  @override
+  String get recovery_phrase_too_many_words =>
+      '복구 문구는 13개 단어로 구성됩니다. 계속하려면 추가 단어를 삭제하세요.';
+
+  @override
+  String recovery_successful(String id) {
+    return '복구에 성공했습니다! ID: $id';
+  }
+
+  @override
   String get deep_link_error_title => '오류';
 
   @override
   String deep_link_study_not_found(String studyId) {
     return '연구 ID $studyId에 해당하는 연구를 찾을 수 없거나 사용할 수 없습니다';
+  }
+
+  @override
+  String get recovery_in_progress => '계정을 복구하는 중...';
+
+  @override
+  String get recovery_failed => '계정 복구에 실패했습니다. 복구 문구를 확인하고 다시 시도하세요.';
+
+  @override
+  String get recovery_user_not_found => '이 복구 문구와 일치하는 계정을 찾을 수 없습니다.';
+
+  @override
+  String get recovery_network_error => '네트워크 오류입니다. 연결을 확인하고 다시 시도하세요.';
+
+  @override
+  String get restore_account_description =>
+      '연구에 참여하기 전에 저장한 복구 문구를 사용하여 이 기기에서 계정을 복구하세요.';
+
+  @override
+  String get restore_account_help_title => '복구 문구로 계정 복구';
+
+  @override
+  String get restore_account_help_1 => '13개 단어를 순서대로 모두 입력하세요';
+
+  @override
+  String get restore_account_help_2 => '문구를 직접 입력하거나 붙여 넣을 수 있습니다';
+
+  @override
+  String get share_recovery => '복구 문구 공유';
+
+  @override
+  String get share_as_text => '텍스트로 공유';
+
+  @override
+  String get download_recovery => '복구 문구 다운로드';
+
+  @override
+  String get download_as_text => '텍스트 파일로 다운로드';
+
+  @override
+  String get file_saved => '파일이 저장되었습니다';
+
+  @override
+  String get file_save_error => '파일 저장 오류';
+
+  @override
+  String get share_btn => '공유';
+
+  @override
+  String get copy_btn => '복사';
+
+  @override
+  String get download_btn => '다운로드';
+
+  @override
+  String get general_section => '일반';
+
+  @override
+  String get current_study_section => '현재 연구';
+
+  @override
+  String get participation_options_section => '참여 관리';
+
+  @override
+  String get share_recovery_text_btn => '복구 문구 텍스트 공유';
+
+  @override
+  String get recovery_phrase_load_error => '복구 문구를 불러오지 못했습니다';
+
+  @override
+  String share_error(String error) {
+    return '공유 오류: $error';
   }
 
   @override
@@ -1207,6 +1487,17 @@ class AppLocalizationsKo extends AppLocalizations {
   ) {
     return '현재 다음 연구에 참여 중입니다:\n$currentStudy\n\n딥 링크가 가리키는 곳:\n$targetStudy\n\n현재 연구로 돌아가거나(권장) 계속해서 떠나고 전환할 수 있습니다.';
   }
+
+  @override
+  String deep_link_switch_warning_opt_out_instruction(String optOut) {
+    return '현재 연구를 종료하려면 설정을 열고 먼저 \"$optOut\"을 사용하세요. 그런 다음 초대장을 다시 여세요.';
+  }
+
+  @override
+  String get deep_link_switch_open_settings => '설정 열기';
+
+  @override
+  String get deep_link_switch_continue_study => '연구 계속하기';
 
   @override
   String get deep_link_switch_primary_return => '현재 연구로 돌아가기';
@@ -1315,7 +1606,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get show_dashboard_showcase_again => '대시보드 안내 다시 보기';
+  String get dashboard_tour => '대시보드 둘러보기';
+
+  @override
+  String get show_again => '둘러보기 다시 보기';
 
   @override
   String get free_text_hint => '답변을 입력해 주세요';
@@ -1423,6 +1717,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String date_picker_validation_max_date(String maxDate) {
     return '날짜는 $maxDate 이전이어야 합니다';
   }
+
+  @override
+  String get please_select_interventions_why => '왜인가요?';
+
+  @override
+  String get recovery_phrase_description =>
+      '이 13개 단어를 안전한 곳에 보관하세요. 이 기기에 접근할 수 없게 될 경우 계정을 복구할 수 있는 유일한 방법입니다.';
+
+  @override
+  String get recovery_phrase_why => '왜 필요한가요?';
+
+  @override
+  String get recovery_phrase_reason =>
+      'StudyU는 비밀번호나 이메일 계정을 사용하지 않습니다. 이 13개 단어는 새 휴대전화를 사용하거나 앱을 다시 설치할 때 계정을 복구할 수 있는 유일한 방법입니다. 단어를 적어 두거나 본인만 접근할 수 있는 곳에 디지털 방식으로 보관하세요. 다른 사람과 절대 공유하지 마세요. 설정 → 연구 설정에서 언제든지 복구 문구를 다시 확인할 수 있습니다.';
+
+  @override
+  String get study_not_started_title => '연구에 참여했습니다';
+
+  @override
+  String get study_not_started_description =>
+      '내일 다시 방문하여 시작하세요. 할 일이 생기면 알려드리겠습니다.';
 
   @override
   String get ko => '한국어';

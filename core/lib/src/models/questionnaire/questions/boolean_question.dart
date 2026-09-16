@@ -19,7 +19,6 @@ class BooleanQuestion extends Question<bool> {
   @override
   Map<String, dynamic> toJson() => _$BooleanQuestionToJson(this);
 
-  // ignore: avoid_positional_boolean_parameters
   Answer<bool> constructAnswer(bool response) =>
       Answer.forQuestion(this, response);
 }

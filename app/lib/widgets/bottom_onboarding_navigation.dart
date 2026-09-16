@@ -10,6 +10,9 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final bool hideNext;
   final bool hideBack;
   final bool backEnabled;
+  final bool showNextIcon;
+  final bool showBackIcon;
+  final bool primaryNext;
   final Icon? nextIcon;
   final Icon? backIcon;
   final Widget? progress;
@@ -25,6 +28,9 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.hideNext = false,
     this.hideBack = false,
     this.backEnabled = true,
+    this.showNextIcon = true,
+    this.showBackIcon = true,
+    this.primaryNext = false,
     this.nextIcon,
     this.backIcon,
     this.progress,
@@ -49,6 +55,13 @@ class BottomOnboardingNavigation extends StatelessWidget {
       context.pop();
     }
 
+    final nextButtonChild = Row(
+      children: [
+        Text(nextLabel ?? AppLocalizations.of(context)!.next),
+        if (showNextIcon) nextIcon ?? const Icon(Icons.navigate_next),
+      ],
+    );
+
     return BottomAppBar(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -64,7 +77,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 onPressed: canNavigateBack ? handleBack : null,
                 child: Row(
                   children: [
-                    backIcon ?? const Icon(Icons.navigate_before),
+                    if (showBackIcon)
+                      backIcon ?? const Icon(Icons.navigate_before),
                     Text(backLabel ?? AppLocalizations.of(context)!.back),
                   ],
                 ),
@@ -81,16 +95,17 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
-              child: TextButton(
-                key: nextButtonKey,
-                onPressed: onNext,
-                child: Row(
-                  children: [
-                    Text(nextLabel ?? AppLocalizations.of(context)!.next),
-                    nextIcon ?? const Icon(Icons.navigate_next),
-                  ],
-                ),
-              ),
+              child: primaryNext
+                  ? FilledButton(
+                      key: nextButtonKey,
+                      onPressed: onNext,
+                      child: nextButtonChild,
+                    )
+                  : TextButton(
+                      key: nextButtonKey,
+                      onPressed: onNext,
+                      child: nextButtonChild,
+                    ),
             ),
           ],
         ),

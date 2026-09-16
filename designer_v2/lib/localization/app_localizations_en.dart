@@ -286,7 +286,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_new_study => 'New study';
 
   @override
+  String get action_button_retry => 'Retry';
+
+  @override
   String get search => 'Search';
+
+  @override
+  String get navlink_all_studies => 'All Studies';
 
   @override
   String get studies_list_header_title => 'Title';
@@ -316,11 +322,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modify_query => 'Modify your query';
 
   @override
+  String studies_count_total(int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total studies',
+      one: '1 study',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studies_count_filtered(int visible, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total studies',
+      one: '1 study',
+    );
+    return '$visible of $_temp0';
+  }
+
+  @override
+  String get studies_filter_server_side_unsupported =>
+      'This filter can\'t be used here right now. Clear the filter and try again.';
+
+  @override
   String get studies_empty => 'You don\'t have any studies yet';
 
   @override
   String get studies_empty_description =>
       'Build your own study from scratch or create a new draft copy from an already published study!';
+
+  @override
+  String get studies_empty_public => 'No public studies found';
+
+  @override
+  String get studies_empty_public_description =>
+      'There are no studies in the public registry matching your current filters.';
+
+  @override
+  String get studies_empty_shared => 'No shared studies found';
+
+  @override
+  String get studies_empty_shared_description =>
+      'No studies have been shared with you yet.';
+
+  @override
+  String get studies_end_of_list => 'All studies loaded.';
+
+  @override
+  String get studies_load_failed => 'Couldn\'t load studies. Try again.';
 
   @override
   String get navlink_learn => 'Learn';
@@ -541,6 +593,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dialog_subject_invite_code => 'invite code';
 
   @override
+  String get dialog_delete_invite_code_title => 'Delete invite code?';
+
+  @override
+  String dialog_delete_invite_code_message(Object code) {
+    return 'Anyone with invite code $code will no longer be able to use it.';
+  }
+
+  @override
   String get dialog_subject_fitbit_credentials => 'fitbit credentials';
 
   @override
@@ -592,7 +652,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose the response type that best matches your question and define the response options according to the data you want to collect.';
 
   @override
-  String get question_type_choice => 'Multiple choice';
+  String get question_type_choice => 'Choice';
 
   @override
   String get question_type_free_text => 'Free text';
@@ -659,11 +719,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Maximum recording duration in seconds';
 
   @override
-  String get form_field_response_choice_multiple => 'Select multiple';
+  String get form_field_response_choice_multiple => 'Allow multiple selections';
 
   @override
   String get form_field_response_choice_multiple_tooltip =>
-      'Allow the participant to select multiple response options. Otherwise only a single option can be selected.';
+      'Participants can select more than one answer.';
+
+  @override
+  String get form_field_response_choice_required =>
+      'Require at least one selection';
+
+  @override
+  String get form_field_response_choice_required_tooltip =>
+      'Require the participant to select at least one response option.';
 
   @override
   String get form_array_response_options_choice_new => 'Add option';
@@ -2108,7 +2176,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Select intervention...';
 
   @override
-  String get code_list_section_title => 'Invite codes';
+  String get code_list_section_title => 'Invite Codes';
 
   @override
   String get code_public_disabled => 'Public Recruitment';
@@ -2128,7 +2196,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get code_list_header_code => 'Code';
 
   @override
+  String get code_list_header_actions => 'Actions';
+
+  @override
   String get action_button_code_new => 'New code';
+
+  @override
+  String get action_button_code_save => 'Save code';
 
   @override
   String get participant_details_title => 'Participant details';
@@ -2426,6 +2500,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_delete_invite_code => 'Delete invite code';
+
+  @override
+  String get action_delete_code => 'Delete code';
 
   @override
   String get action_remove => 'Remove';
@@ -2788,6 +2865,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filter_reset_all => 'Clear all';
 
   @override
+  String get code_list_filter_title => 'Filter invite codes';
+
+  @override
+  String get code_list_filter_enrolled_status => 'Enrolled status';
+
+  @override
+  String get code_list_filter_enrolled_min => 'Enrolled min';
+
+  @override
+  String get code_list_filter_enrolled_max => 'Enrolled max';
+
+  @override
+  String get code_list_filter_intervention_assignment =>
+      'Intervention assignment';
+
+  @override
+  String get code_list_filter_apply => 'Apply';
+
+  @override
+  String get code_list_filter_option_all => 'All';
+
+  @override
+  String get code_list_filter_option_unused => 'Unused';
+
+  @override
+  String get code_list_filter_option_used => 'Used';
+
+  @override
+  String code_list_filter_button_active(int count) {
+    return 'Filter ($count)';
+  }
+
+  @override
   String filter_show_studies(int count) {
     return 'Show $count Studies';
   }
@@ -2954,4 +3064,90 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_button_main => 'Filter';
+
+  @override
+  String get code_list_no_results_title => 'No matching invite codes';
+
+  @override
+  String get code_list_no_results_description =>
+      'Try changing your search to see more invite codes.';
+
+  @override
+  String get code_list_search_hint => 'Search invite codes';
+
+  @override
+  String get code_list_search_hint_compact => 'Search codes';
+
+  @override
+  String code_list_active_count(int count) {
+    return '$count active invite codes';
+  }
+
+  @override
+  String code_list_total_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count invites',
+      one: '1 invite',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get code_list_page_size => 'Rows';
+
+  @override
+  String get code_list_rows_per_page => 'Rows per page:';
+
+  @override
+  String code_list_page(int page) {
+    return 'Page $page';
+  }
+
+  @override
+  String code_list_page_range(int start, int end, int count) {
+    return '$start–$end of $count';
+  }
+
+  @override
+  String code_list_page_loading(int start, int end) {
+    return 'Loading $start–$end...';
+  }
+
+  @override
+  String get code_list_page_fetch_error =>
+      'Couldn’t load the next page. Check your connection and try again.';
+
+  @override
+  String get code_list_retry => 'Retry';
+
+  @override
+  String get code_list_previous_page => 'Previous page';
+
+  @override
+  String get code_list_next_page => 'Next page';
+
+  @override
+  String get action_regenerate_invite_code => 'Regenerate invite code';
+
+  @override
+  String get dialog_qr_code_description =>
+      'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.';
+
+  @override
+  String get all_studies => 'All Studies';
+
+  @override
+  String get studies_filter_add_filter => 'Add filter';
+
+  @override
+  String get studies_filter_remove_filter => 'Remove filter';
+
+  @override
+  String get studies_end_of_list_create => 'Create a study.';
+
+  @override
+  String get studies_end_of_list_public =>
+      'Didn\'t find what you\'re looking for?';
 }
