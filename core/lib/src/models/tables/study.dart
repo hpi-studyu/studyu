@@ -333,7 +333,7 @@ class Study extends SupabaseObjectFunctions<Study>
 
   /// Creates the metadata needed to display an invite before the study is
   /// configured for enrollment.
-  static Study fromInvitePreviewJson(Map<String, dynamic> json) {
+  factory Study.fromInvitePreviewJson(Map<String, dynamic> json) {
     final study = Study(json['id'] as String, json['user_id'] as String? ?? '')
       ..title = json['title'] as String?
       ..description = json['description'] as String?

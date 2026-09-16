@@ -80,7 +80,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get welcome_find_study_title => 'Finde, was bei dir wirkt';
 
   @override
-  String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';
+  String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam entwickelt';
 
   @override
   String get welcome_find_study_description =>
@@ -1878,4 +1878,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get invite_landing_copied => 'Kopiert';
+
+  @override
+  String recovery_phrase_word_count(Object count, Object total) {
+    return '$count/$total Wörter';
+  }
 }

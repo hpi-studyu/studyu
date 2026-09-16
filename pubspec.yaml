@@ -58,6 +58,18 @@ melos:
       packageFilters:
         dirExists: test
 
+    test:coverage:
+      run: |
+        rtk_prefix=""
+        if command -v rtk >/dev/null 2>&1; then
+          rtk_prefix="rtk "
+        fi
+        melos exec -c 6 --fail-fast -- \
+          "${rtk_prefix}flutter test --coverage"
+      description: Run `flutter test --coverage` per package with a test directory
+      packageFilters:
+        dirExists: test
+
     generate:
       run: |
         rtk_prefix=""

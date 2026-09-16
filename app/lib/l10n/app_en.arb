@@ -722,5 +722,6 @@
   "invite_landing_other_device_instruction": "On another device: Scan the QR code with StudyU Health.",
   "invite_landing_enter_code_title": "Enter invite code",
   "invite_landing_scan_qr_title": "Scan QR code",
-  "invite_landing_copied": "Copied"
+  "invite_landing_copied": "Copied",
+  "recovery_phrase_word_count": "{count}/{total} words"
 }
