@@ -50,7 +50,7 @@ abstract class FilterElement extends Equatable {
     } else if (type == 'condition') {
       return FilterCondition.fromJson(json);
     }
-    throw ArgumentError('Unknown FilterElement type: $type');
+    throw FormatException('Unknown FilterElement type: $type');
   }
 }
 
@@ -69,8 +69,19 @@ class FilterCondition extends FilterElement {
   }) : id = id ?? const Uuid().v4();
 
   factory FilterCondition.fromJson(Map<String, dynamic> json) {
-    final property = StudyProperty.values.byName(json['property'] as String);
-    final operator = FilterOperator.values.byName(json['operator'] as String);
+    final propertyName = json['property'];
+    final operatorName = json['operator'];
+    final property = propertyName is String
+        ? StudyProperty.values.asNameMap()[propertyName]
+        : null;
+    final operator = operatorName is String
+        ? FilterOperator.values.asNameMap()[operatorName]
+        : null;
+    if (property == null || operator == null) {
+      throw FormatException(
+        'Unknown filter condition: $propertyName/$operatorName',
+      );
+    }
     dynamic value = json['value'];
 
     // Handle DateTime deserialization
@@ -133,12 +144,20 @@ class FilterGroup extends FilterElement {
        children = children ?? [];
 
   factory FilterGroup.fromJson(Map<String, dynamic> json) {
+    final children = <FilterElement>[];
+    for (final child in json['children'] as List<dynamic>) {
+      if (child is! Map<String, dynamic>) continue;
+      try {
+        children.add(FilterElement.fromJson(child));
+      } on FormatException {
+        // Persisted filters may contain removed conditions or invalid values.
+        // Keep their still-valid siblings.
+      }
+    }
     return FilterGroup(
       id: json['id'] as String?,
       logic: FilterLogic.values.byName(json['logic'] as String),
-      children: (json['children'] as List<dynamic>)
-          .map((e) => FilterElement.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      children: children,
     );
   }
 

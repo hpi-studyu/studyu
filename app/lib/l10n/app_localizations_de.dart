@@ -12,6 +12,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loading => 'Laden';
 
   @override
+  String get starting_study => 'Ihre Studie wird gestartet…';
+
+  @override
   String get loading_error_title => 'Ladefehler';
 
   @override
@@ -74,6 +77,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get get_started => 'Los geht\'s';
 
   @override
+  String get welcome_find_study_title => 'Finde, was bei dir wirkt';
+
+  @override
+  String get made_with_love_in_potsdam => 'Mit ♥ in Potsdam gemacht';
+
+  @override
+  String get welcome_find_study_description =>
+      'Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.';
+
+  @override
+  String get browse_public_studies => 'Öffentliche Studien ansehen';
+
+  @override
+  String get welcome_returning_participant =>
+      'Sie haben bereits mit StudyU an einer Studie teilgenommen?';
+
+  @override
+  String get restore_studyu_account => 'StudyU-Konto wiederherstellen';
+
+  @override
   String get show_onboarding_again => 'Onboarding erneut ansehen';
 
   @override
@@ -115,9 +138,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_selection => 'Studienauswahl';
 
   @override
-  String get study_selection_description => 'Bitte wählen Sie eine Studie aus.';
-
-  @override
   String get study_selection_single =>
       'Sie können zu jeder Zeit maximal an einer Studie teilnehmen.';
 
@@ -147,17 +167,21 @@ class AppLocalizationsDe extends AppLocalizations {
       'Einige Studien konnten nicht angezeigt werden. Das kann passieren, wenn Ihre App-Version veraltet ist. Bitte aktualisieren Sie die App, um alle verfügbaren Studien zu sehen, oder nehmen Sie an einer der unten angezeigten Studien teil.';
 
   @override
-  String get study_overview_title => 'Übersicht';
+  String get study_selection_no_public_studies =>
+      'Derzeit sind keine öffentlichen Studien verfügbar. Wenn Sie einen Einladungscode haben, können Sie trotzdem an einer privaten Studie teilnehmen.';
 
   @override
-  String get eligibility_questionnaire_title => 'Fragebogen';
+  String get study_overview_title => 'Studienübersicht';
+
+  @override
+  String get eligibility_questionnaire_title => 'Teilnahmevoraussetzungen';
 
   @override
   String get please_answer_eligibility =>
       'Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist';
 
   @override
-  String get intervention_selection_title => 'Interventionen';
+  String get intervention_selection_title => 'Interventionsauswahl';
 
   @override
   String get please_select_interventions =>
@@ -165,7 +189,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      'Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen. Die Interventionen erfolgen in der Reihenfolge, in der Sie sie auswählen. Wenn Sie A vor B wählen, wird A zuerst durchgeführt.';
+      'Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen.';
 
   @override
   String get no_interventions_available => 'Keine Interventionen verfügbar.';
@@ -227,7 +251,46 @@ class AppLocalizationsDe extends AppLocalizations {
   String get opt_out => 'Aussteigen';
 
   @override
-  String get delete_data => 'Aussteigen und Daten löschen';
+  String get leave_study_keep_data_title =>
+      'Studie verlassen und Ihre Daten behalten?';
+
+  @override
+  String leave_study_keep_data_body(String studyName) {
+    return 'Sie beenden Ihre Teilnahme an der Studie „$studyName“. Wir behalten die bereits übermittelten Fortschrittsdaten und Antworten. Forschende dürfen Ihre anonymisierten Daten weiterhin verwenden.\n\nNach dem Verlassen können Sie dieser Studienteilnahme nicht erneut beitreten. Ihre früheren Studien bleiben unverändert.';
+  }
+
+  @override
+  String get stay_in_study => 'In der Studie bleiben';
+
+  @override
+  String get acknowledge_consequences =>
+      'Ich habe diese Informationen gelesen und bin mir der Folgen bewusst.';
+
+  @override
+  String get leave_keep_data => 'Verlassen und meine Daten behalten';
+
+  @override
+  String get leave_study_description =>
+      'Beenden Sie Ihre Teilnahme. Ihre bestehenden Studiendaten bleiben erhalten.';
+
+  @override
+  String get delete_data => 'Studie verlassen und meine Daten löschen';
+
+  @override
+  String get leave_study_delete_data_title =>
+      'Studie verlassen und meine Daten löschen?';
+
+  @override
+  String leave_study_delete_data_body(String studyName) {
+    return 'Sie beenden Ihre Teilnahme an der Studie „$studyName“. Wir löschen Ihre Fortschrittsdaten und Antworten für diese Studie dauerhaft von unseren Servern und entfernen die auf diesem Gerät gespeicherten Daten.\n\nDies kann nicht rückgängig gemacht werden. Weder Sie noch Mitglieder des Studienteams können diese Daten danach wiederherstellen.';
+  }
+
+  @override
+  String get leave_delete_data => 'Verlassen und meine Daten löschen';
+
+  @override
+  String get delete_study_data_description =>
+      'Löschen Sie Ihre Studiendaten dauerhaft. Dies kann nicht rückgängig gemacht werden.';
 
   @override
   String get soft_delete_desc => 'Sie werden Ihren Fortschritt in der Studie ';
@@ -242,6 +305,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get your_journey => 'Deine Reise';
+
+  @override
+  String get journey_overview_description =>
+      'Sehen Sie sich den Ablauf Ihrer Studie an, bevor Sie fortfahren.';
 
   @override
   String get journey_results_available => 'Ergebnisse verfügbar';
@@ -293,12 +360,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.';
 
   @override
-  String get setting_up_study => 'Studie wird vorbereitet...';
-
-  @override
-  String get good_to_go => 'Es kann losgehen!';
-
-  @override
   String get dashboard => 'Dashboard';
 
   @override
@@ -318,7 +379,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get contact => 'Kontakt';
 
   @override
-  String get contact_support => 'Support kontaktieren';
+  String get contact_support => 'Studienteam kontaktieren';
 
   @override
   String support_email_body(String subjectId) {
@@ -327,6 +388,67 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get about => 'Über StudyU';
+
+  @override
+  String get study_information => 'Studieninformationen';
+
+  @override
+  String get study_information_description =>
+      'Teilen Sie diese Angaben nur mit Ihrem Studienteam, wenn Sie dazu aufgefordert werden.';
+
+  @override
+  String get study_name => 'Studienname';
+
+  @override
+  String get study_id => 'Studien-ID';
+
+  @override
+  String get subject_id => 'Subject-ID';
+
+  @override
+  String get study_start_date => 'Studienbeginn';
+
+  @override
+  String get app_version => 'App-Version';
+
+  @override
+  String get platform => 'Plattform';
+
+  @override
+  String get not_available => 'Nicht verfügbar';
+
+  @override
+  String get view_study_information => 'Details anzeigen';
+
+  @override
+  String get email_study_team => 'Studienteam kontaktieren';
+
+  @override
+  String get study_team_email_unavailable =>
+      'Für diese Studie ist keine Kontakt-E-Mail hinterlegt.';
+
+  @override
+  String get copy_all_information => 'Alle kopieren';
+
+  @override
+  String value_copied(String label) {
+    return '$label wurde in die Zwischenablage kopiert.';
+  }
+
+  @override
+  String get all_information_copied =>
+      'Alle Informationen wurden in die Zwischenablage kopiert.';
+
+  @override
+  String get participant_information_email_subject =>
+      '[StudyU] Teilnahmeinformationen';
+
+  @override
+  String get participant_information_email_intro =>
+      'Hallo,\n\nich kontaktiere Sie wegen meiner Studienteilnahme. Das sind meine StudyU-Angaben:';
+
+  @override
+  String get email_app_unavailable => 'Es ist keine E-Mail-App verfügbar.';
 
   @override
   String get settings => 'Einstellungen';
@@ -433,6 +555,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get language => 'Sprache';
 
   @override
+  String get use_device_language => 'Gerätesprache verwenden';
+
+  @override
   String get en => 'Englisch';
 
   @override
@@ -473,6 +598,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enough_data => 'Genügend Daten';
 
   @override
+  String get legal_documents => 'Rechtliche Dokumente';
+
+  @override
+  String get legal_documents_description =>
+      'Bitte prüfe und akzeptiere diese Dokumente, um fortzufahren.';
+
+  @override
   String get terms => 'Bedingungen';
 
   @override
@@ -480,7 +612,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get terms_content =>
-      'Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
+      'Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. ';
 
   @override
   String get terms_agree =>
@@ -494,20 +626,31 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get privacy_content =>
-      'Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
+      'Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben.';
 
   @override
   String get privacy_agree =>
       'Ich habe die Datenschutzbestimmung gelesen und bin damit einverstanden';
 
   @override
+  String get legal_notice => 'Impressum';
+
+  @override
+  String get legal_notice_content =>
+      'Im Impressum steht, wer für StudyU verantwortlich ist und wie du uns kontaktieren kannst.';
+
+  @override
   String get imprint_read => 'Impressum lesen';
 
   @override
-  String get invite_code_button => 'Einladungscode verwenden';
+  String get invite_code_button => 'Mit einem Einladungscode beitreten';
 
   @override
-  String get private_study_invite_code => 'Privater Studien Einladungscode';
+  String get private_study_invite_code => 'Einladungscode eingeben';
+
+  @override
+  String get private_study_invite_code_description =>
+      'Geben Sie den Code ein, den Sie vom Studienteam erhalten haben.';
 
   @override
   String get invite_code => 'Einladungscode';
@@ -543,7 +686,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eligible_choice_multi_selection =>
-      'Alle zutreffenden Antworten auswählen';
+      'Alle zutreffenden Antworten auswählen (optional)';
+
+  @override
+  String get eligible_choice_multi_selection_required =>
+      'Alle zutreffenden Antworten auswählen (mindestens eine erforderlich)';
 
   @override
   String get report_overview => 'Ergebnisübersicht';
@@ -582,10 +729,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get report_axis_phase => 'Phase';
-
-  @override
-  String get study_not_started =>
-      'Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!';
 
   @override
   String get completed_study =>
@@ -786,11 +929,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get maximum => 'Maximum';
 
   @override
-  String get support_email_sent => 'Support-E-Mail geöffnet';
+  String get support_email_sent => 'E-Mail geöffnet';
 
   @override
   String get support_email_sent_description =>
-      'Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.';
+      'Ihre Nachricht an das Studienteam wurde in Ihrer E-Mail-App vorbereitet. Prüfen und senden Sie die E-Mail. Warten Sie dann auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse außerhalb der App, bis das Problem behoben ist.';
 
   @override
   String get no_contact_email =>
@@ -1212,11 +1355,172 @@ class AppLocalizationsDe extends AppLocalizations {
   String get go_back => 'Zurück';
 
   @override
+  String get study_settings_section => 'Studieneinstellungen';
+
+  @override
+  String get recovery_phrase_header => 'Wiederherstellungsphrase';
+
+  @override
+  String get copy_to_clipboard => 'In die Zwischenablage kopieren';
+
+  @override
+  String get copied_to_clipboard =>
+      'In die Zwischenablage kopiert. Füge die Wiederherstellungsphrase jetzt an einem sicheren Ort auf deinem Handy ein.';
+
+  @override
+  String get recovery_phrase_save_warning => 'Teile sie niemals mit anderen.';
+
+  @override
+  String get show_recovery_phrase => 'Wiederherstellungsphrase anzeigen';
+
+  @override
+  String get recovery_phrase_saved_confirmation =>
+      'Ich habe alle 13 Wörter an einem sicheren Ort gespeichert und kann sie abrufen, wenn ich mein Konto wiederherstellen möchte. Ich kann sie auch jederzeit in den Studieneinstellungen einsehen.';
+
+  @override
+  String get recovery_phrase_rotate_button =>
+      'Wiederherstellungsphrase neu ausstellen';
+
+  @override
+  String get recovery_phrase_rotate_dialog_title =>
+      'Wiederherstellungsphrase neu ausstellen?';
+
+  @override
+  String get recovery_phrase_rotate_dialog_description =>
+      'Deine aktuelle Wiederherstellungsphrase funktioniert danach sofort nicht mehr. Du musst die neue Phrase speichern, um dein Konto zukünftig wiederherstellen zu können.';
+
+  @override
+  String get recovery_phrase_rotate_acknowledgement =>
+      'Ich verstehe, dass meine aktuelle Wiederherstellungsphrase sofort nicht mehr funktionieren wird.';
+
+  @override
+  String get recovery_phrase_rotate_confirm => 'Phrase neu ausstellen';
+
+  @override
+  String get recovery_phrase_rotate_success =>
+      'Eine neue Wiederherstellungsphrase wurde ausgestellt. Speichere sie jetzt.';
+
+  @override
+  String get recovery_phrase_rotate_error =>
+      'Eine neue Wiederherstellungsphrase konnte nicht ausgestellt werden. Bitte versuche es erneut.';
+
+  @override
+  String get continue_to_study => 'Fertig';
+
+  @override
+  String get restore_account => 'Konto wiederherstellen';
+
+  @override
+  String get enter_recovery_phrase => 'Gib deine Wiederherstellungsphrase ein';
+
+  @override
+  String get restore_account_signed_in_title => 'Bereits angemeldet';
+
+  @override
+  String get restore_account_signed_in_description =>
+      'Du bist auf diesem Gerät bereits angemeldet. Wenn du ein Konto wiederherstellst, wird das aktuelle Konto ersetzt. Deine Wiederherstellungsphrase bleibt nach der Wiederherstellung gültig.';
+
+  @override
+  String get required => 'Erforderlich';
+
+  @override
+  String get invalid_recovery_phrase =>
+      'Diese Wiederherstellungsphrase passt zu keinem Konto. Achte darauf, dass alle 13 Wörter in der richtigen Reihenfolge stehen.';
+
+  @override
+  String get recovery_phrase_too_many_words =>
+      'Wiederherstellungsphrasen haben 13 Wörter. Entferne zusätzliche Wörter, um fortzufahren.';
+
+  @override
+  String recovery_successful(String id) {
+    return 'Wiederherstellung erfolgreich! ID: $id';
+  }
+
+  @override
   String get deep_link_error_title => 'Fehler';
 
   @override
   String deep_link_study_not_found(String studyId) {
     return 'Studie mit ID $studyId nicht gefunden oder nicht verfügbar';
+  }
+
+  @override
+  String get recovery_in_progress => 'Konto wird wiederhergestellt...';
+
+  @override
+  String get recovery_failed =>
+      'Wiederherstellung fehlgeschlagen. Bitte überprüfe deine Wiederherstellungsphrase und versuche es erneut.';
+
+  @override
+  String get recovery_user_not_found =>
+      'Kein Konto mit dieser Wiederherstellungsphrase gefunden.';
+
+  @override
+  String get recovery_network_error =>
+      'Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.';
+
+  @override
+  String get restore_account_description =>
+      'Stelle dein Konto auf diesem Gerät mit der Wiederherstellungsphrase wieder her, die du beim Beitritt zur Studie gespeichert hast.';
+
+  @override
+  String get restore_account_help_title =>
+      'Mit Wiederherstellungsphrase wiederherstellen';
+
+  @override
+  String get restore_account_help_1 =>
+      'Gib alle 13 Wörter in der richtigen Reihenfolge ein';
+
+  @override
+  String get restore_account_help_2 =>
+      'Du kannst die Phrase manuell eingeben oder einfügen';
+
+  @override
+  String get share_recovery => 'Wiederherstellung teilen';
+
+  @override
+  String get share_as_text => 'Als Text teilen';
+
+  @override
+  String get download_recovery => 'Wiederherstellung herunterladen';
+
+  @override
+  String get download_as_text => 'Als Textdatei herunterladen';
+
+  @override
+  String get file_saved => 'Datei erfolgreich gespeichert';
+
+  @override
+  String get file_save_error => 'Fehler beim Speichern der Datei';
+
+  @override
+  String get share_btn => 'Teilen';
+
+  @override
+  String get copy_btn => 'Kopieren';
+
+  @override
+  String get download_btn => 'Download';
+
+  @override
+  String get general_section => 'Allgemein';
+
+  @override
+  String get current_study_section => 'Aktuelle Studie';
+
+  @override
+  String get participation_options_section => 'Teilnahme verwalten';
+
+  @override
+  String get share_recovery_text_btn => 'Wiederherstellungstext teilen';
+
+  @override
+  String get recovery_phrase_load_error =>
+      'Wiederherstellungsphrase konnte nicht geladen werden';
+
+  @override
+  String share_error(String error) {
+    return 'Fehler beim Teilen: $error';
   }
 
   @override
@@ -1242,6 +1546,17 @@ class AppLocalizationsDe extends AppLocalizations {
   ) {
     return 'Sie sind aktuell eingeschrieben in:\n$currentStudy\n\nDer Deep Link verweist auf:\n$targetStudy\n\nSie können zur aktuellen Studie zurückkehren (empfohlen) oder fortfahren, diese zu verlassen und zu wechseln.';
   }
+
+  @override
+  String deep_link_switch_warning_opt_out_instruction(String optOut) {
+    return 'Wenn Sie Ihre aktuelle Studie verlassen möchten, öffnen Sie die Einstellungen und verwenden Sie zuerst \"$optOut\". Öffnen Sie dann die Einladung erneut.';
+  }
+
+  @override
+  String get deep_link_switch_open_settings => 'Einstellungen öffnen';
+
+  @override
+  String get deep_link_switch_continue_study => 'Studie fortsetzen';
 
   @override
   String get deep_link_switch_primary_return =>
@@ -1358,7 +1673,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get show_dashboard_showcase_again => 'Dashboard-Tour erneut anzeigen';
+  String get dashboard_tour => 'Dashboard-Tour';
+
+  @override
+  String get show_again => 'Tour erneut ansehen';
 
   @override
   String get free_text_hint => 'Geben Sie Ihre Antwort ein';
@@ -1474,4 +1792,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String date_picker_validation_max_date(String maxDate) {
     return 'Das Datum muss vor $maxDate liegen';
   }
+
+  @override
+  String get please_select_interventions_why => 'Warum?';
+
+  @override
+  String get recovery_phrase_description =>
+      'Speichere diese 13 Wörter an einem sicheren Ort. Sie sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du den Zugriff auf dieses Gerät verlierst.';
+
+  @override
+  String get recovery_phrase_why => 'Warum?';
+
+  @override
+  String get recovery_phrase_reason =>
+      'StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese 13 Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Schreibe sie auf oder speichere sie digital an einem Ort, auf den nur du zugreifen kannst. Teile sie niemals mit anderen. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.';
+
+  @override
+  String get study_not_started_title => 'Sie nehmen an der Studie teil';
+
+  @override
+  String get study_not_started_description =>
+      'Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt.';
 }

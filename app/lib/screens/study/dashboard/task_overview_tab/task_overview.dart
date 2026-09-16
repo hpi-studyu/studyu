@@ -91,7 +91,14 @@ class _TaskOverviewState extends State<TaskOverview> {
           key: widget.progressShowcaseKey,
           title: l10n.dashboard_showcase_progress_title,
           description: l10n.dashboard_showcase_progress_description,
-          child: ProgressRow(subject: widget.subject),
+          child: ProgressRow(
+            // Unlike the dashboard container, this marker exists only when
+            // the loaded subject has actual persisted subject_progress.
+            key: widget.subject!.progress.isNotEmpty
+                ? const ValueKey('dashboard_persisted_progress')
+                : null,
+            subject: widget.subject,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),

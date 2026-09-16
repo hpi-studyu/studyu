@@ -51,7 +51,7 @@ dependencies:
   rainbow_color: ^2.0.1
   record: ^7.1.1
   shared_preferences: ^2.5.5
-  showcaseview: 5.1.0
+  showcaseview: ^5.1.0
   stack_deferred_link: ^1.0.1
   statistics: ^1.2.1
   studyu_core: ^4.9.0
@@ -72,6 +72,8 @@ dev_dependencies:
   # Deprecated? icons_launcher may be an alternative.
   flutter_lints: ^6.0.0
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   lint: ^2.8.0
 

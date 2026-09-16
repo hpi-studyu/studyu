@@ -34,6 +34,7 @@ class DashboardScaffold extends StatelessWidget {
         rightWidget: body,
         dividerWidget: null,
         scrollLeft: false,
+        scrollRight: false,
         paddingLeft: null,
       ),
     );

@@ -59,7 +59,7 @@ class FormListView<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (leadingWidget != null) leadingWidget!,
+        ?leadingWidget,
         if (sectionTitle != null && !(hasEmptyWidget && items.isEmpty))
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),

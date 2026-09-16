@@ -82,18 +82,12 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
     debugPrint(
       '[PopEntry] _handleDismiss isDirty=${widget.formViewModel.isDirty}',
     );
+    _canPopNotifier.value = false;
 
     if (!widget.formViewModel.isDirty) {
       await widget.formViewModel.cancel();
       if (mounted) {
-        _canPopNotifier.value = true;
-
-        // CHANGE HERE: Wait for the frame to finish so Navigator is unlocked
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            Navigator.of(context, rootNavigator: true).pop();
-          }
-        });
+        _schedulePop();
       }
       return;
     }
@@ -107,17 +101,27 @@ class _FormSidesheetPopEntryState<T extends FormViewModel>
 
     if (shouldDiscard == true && mounted) {
       await widget.formViewModel.cancel();
-      if (mounted && Navigator.of(context).canPop()) {
-        _canPopNotifier.value = true;
-
-        // CHANGE HERE: Wait for the frame to finish
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            Navigator.of(context, rootNavigator: true).pop();
-          }
-        });
+      if (mounted) {
+        _schedulePop();
       }
     }
+  }
+
+  void _schedulePop() {
+    _canPopNotifier.value = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _popCurrentRoute();
+      }
+    });
+  }
+
+  void _popCurrentRoute() {
+    final navigator = _route?.navigator;
+    if (navigator == null || !navigator.canPop()) {
+      return;
+    }
+    navigator.pop();
   }
 
   @override

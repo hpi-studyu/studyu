@@ -115,50 +115,45 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              constraints: const BoxConstraints(maxHeight: 88.0),
-              child: const StudyULogo(),
-            ),
-            const SizedBox(height: 32.0),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: widget.leftContentMinWidth - 24.0,
+                    maxWidth: widget.leftContentMinWidth,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SelectableText(
-                        formKey.title,
-                        style: theme.textTheme.displaySmall,
-                      ),
-                      const SizedBox(height: 8.0),
-                      if (formKey.description != null)
-                        TextParagraph(
-                          text: formKey.description,
-                          style: ThemeConfig.bodyTextMuted(theme),
-                        )
-                      else
-                        const SizedBox.shrink(),
-                      const SizedBox(height: 24.0),
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 24.0),
-                            child: widget.body,
-                          ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          constraints: const BoxConstraints(maxHeight: 88.0),
+                          child: const StudyULogo(),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 20.0),
+                        SelectableText(
+                          formKey.title,
+                          style: theme.textTheme.displaySmall,
+                        ),
+                        const SizedBox(height: 8.0),
+                        if (formKey.description != null)
+                          TextParagraph(
+                            text: formKey.description,
+                            style: ThemeConfig.bodyTextMuted(theme),
+                          )
+                        else
+                          const SizedBox.shrink(),
+                        const SizedBox(height: 24.0),
+                        widget.body,
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 24.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: widget.leftContentMinWidth,
@@ -201,7 +196,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                       const Center(
                         child: SizedBox(height: 72.0, child: StudyULogo()),
                       ),
-                      const SizedBox(height: 32.0),
+                      const SizedBox(height: 20.0),
                       SelectableText(
                         formKey.title,
                         style: theme.textTheme.displaySmall,

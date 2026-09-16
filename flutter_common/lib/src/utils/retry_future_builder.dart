@@ -96,7 +96,6 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             if (snapshot.hasError) {
-              // ignore: only_throw_errors
               if (widget.errorWidgetBuilder != null) {
                 return widget.errorWidgetBuilder!(
                   context,

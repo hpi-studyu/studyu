@@ -42,7 +42,7 @@ final class LocaleStateNotifierProvider
 }
 
 String _$localeStateNotifierHash() =>
-    r'b46bc9c75e031b5fb7fea260827e94ca4522bd2f';
+    r'f600a00fcfc7b38a617a3ef23eb8db6f5892f197';
 
 abstract class _$LocaleStateNotifier extends $Notifier<LocaleState> {
   LocaleState build();

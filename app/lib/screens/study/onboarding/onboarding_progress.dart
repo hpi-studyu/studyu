@@ -1,45 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_core/core.dart';
+
+/// Pages of the study onboarding flow, in the order participants see them.
+enum OnboardingStep {
+  overview,
+  terms,
+  eligibility,
+  interventions,
+  journey,
+  consent,
+  recovery,
+}
 
 class OnboardingProgress extends StatelessWidget {
-  final int stage;
-  final double progress;
+  /// 0-based index of the page the participant is currently on.
+  final int currentStep;
+
+  /// Number of pages this study's onboarding flow shows.
+  final int stepCount;
 
   const OnboardingProgress({
-    required this.stage,
-    required this.progress,
+    required this.currentStep,
+    required this.stepCount,
     super.key,
   });
 
-  double _getProgressForStage(int stage) {
-    if (stage < this.stage) return 1;
-    if (stage == this.stage) return progress;
-    return 0;
+  /// Builds the progress for [page] with one segment per page that this
+  /// study's onboarding flow actually shows. Conditional pages (eligibility
+  /// check, intervention selection, consent, recovery phrase) only count
+  /// when the study includes them.
+  factory OnboardingProgress.forPage(AppState state, OnboardingStep page) {
+    final study = state.selectedStudy ?? state.activeSubject?.study;
+    final shownPages = [
+      true, // study overview
+      true, // terms
+      study?.hasEligibilityCheck ?? false,
+      _showsInterventionSelection(state, study),
+      true, // journey
+      study?.hasConsentCheck ?? false,
+      state.showParticipantRecovery,
+    ];
+    return OnboardingProgress(
+      currentStep: shownPages.take(page.index).where((shown) => shown).length,
+      stepCount: shownPages.where((shown) => shown).length,
+    );
   }
+
+  /// Intervention selection is skipped when interventions are preselected
+  /// (deep link) or when there are at most two interventions to pick from.
+  static bool _showsInterventionSelection(AppState state, Study? study) {
+    if (study == null) return false;
+    return state.preselectedInterventionIds == null &&
+        study.interventions.length > 2;
+  }
+
+  double _segmentValue(int segment) => segment <= currentStep ? 1 : 0;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(value: _getProgressForStage(0)),
+        for (var segment = 0; segment < stepCount; segment++) ...[
+          if (segment > 0) const SizedBox(width: 4),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(value: _segmentValue(segment)),
+            ),
           ),
-        ),
-        const SizedBox(width: 4),
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(value: _getProgressForStage(1)),
-          ),
-        ),
-        const SizedBox(width: 4),
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(value: _getProgressForStage(2)),
-          ),
-        ),
+        ],
       ],
     );
   }
