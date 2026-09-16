@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/util/localization.dart';
 
 class WelcomeEntryHub extends StatelessWidget {
   final VoidCallback onLogoDoubleTap;
@@ -10,6 +11,8 @@ class WelcomeEntryHub extends StatelessWidget {
   final VoidCallback onAbout;
   final VoidCallback onFaq;
   final VoidCallback onContact;
+  final Locale? selectedLocale;
+  final ValueChanged<Locale?> onLocaleChanged;
   final String logoAssetPath;
 
   const WelcomeEntryHub({
@@ -20,6 +23,8 @@ class WelcomeEntryHub extends StatelessWidget {
     required this.onAbout,
     required this.onFaq,
     required this.onContact,
+    required this.selectedLocale,
+    required this.onLocaleChanged,
     this.logoAssetPath = 'assets/icon/logo.png',
     super.key,
   });
@@ -73,6 +78,50 @@ class WelcomeEntryHub extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Semantics(
+                            label: l10n.language,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.language,
+                                  color: theme.colorScheme.primary,
+                                ),
+                                const SizedBox(width: 8),
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton<Locale>(
+                                    key: const ValueKey(
+                                      'welcome_language_picker',
+                                    ),
+                                    value: selectedLocale,
+                                    hint: Text(l10n.use_device_language),
+                                    borderRadius: BorderRadius.circular(12),
+                                    items: [
+                                      DropdownMenuItem<Locale>(
+                                        child: Text(l10n.use_device_language),
+                                      ),
+                                      for (final locale
+                                          in AppLocalizations.supportedLocales)
+                                        DropdownMenuItem(
+                                          value: locale,
+                                          child: Text(
+                                            localeName(
+                                              context,
+                                              locale.languageCode,
+                                            )!,
+                                          ),
+                                        ),
+                                    ],
+                                    onChanged: onLocaleChanged,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
                         GestureDetector(
                           onDoubleTap: onLogoDoubleTap,
                           child: Image.asset(logoAssetPath, height: 140),
