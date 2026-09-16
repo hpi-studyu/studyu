@@ -1851,12 +1851,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get invite_landing_step_download => 'StudyU Health herunterladen';
 
   @override
-  String get invite_landing_step_join =>
-      'StudyU Health öffnen und der Studie beitreten';
+  String get invite_landing_step_join => 'In der App an der Studie teilnehmen';
 
   @override
   String get invite_landing_step_join_description =>
-      'Öffnen Sie StudyU Health. Scannen Sie dann den QR-Code oder geben Sie diesen Code ein:';
+      'Öffnen Sie StudyU Health auf Ihrem Smartphone und tippen Sie auf „Mit einem Einladungscode beitreten“. Geben Sie den Einladungscode ein oder scannen Sie den QR-Code, um an der Studie teilzunehmen.';
 
   @override
   String get invite_landing_invited_title =>
@@ -1864,11 +1863,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get invite_landing_phone_instruction =>
-      'Auf diesem Smartphone: Geben Sie den Einladungscode unten ein.';
+      'Geben Sie diesen Einladungscode in der StudyU Health-App ein.';
 
   @override
   String get invite_landing_other_device_instruction =>
-      'Auf einem anderen Gerät: Scannen Sie den QR-Code mit StudyU Health.';
+      'Für einen schnellen Zugang scannen Sie diesen QR-Code mit Ihrem Smartphone.';
 
   @override
   String get invite_landing_enter_code_title => 'Einladungscode eingeben';

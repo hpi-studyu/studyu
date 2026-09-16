@@ -3404,13 +3404,13 @@ abstract class AppLocalizations {
   /// No description provided for @invite_landing_step_join.
   ///
   /// In en, this message translates to:
-  /// **'Open StudyU Health and join the study'**
+  /// **'Join the study in the app'**
   String get invite_landing_step_join;
 
   /// No description provided for @invite_landing_step_join_description.
   ///
   /// In en, this message translates to:
-  /// **'Open StudyU Health, then scan the QR code or enter this code:'**
+  /// **'Open StudyU Health on your phone and tap Join with an invite code. Enter the invite code or scan the QR code to join the study.'**
   String get invite_landing_step_join_description;
 
   /// No description provided for @invite_landing_invited_title.
@@ -3422,13 +3422,13 @@ abstract class AppLocalizations {
   /// No description provided for @invite_landing_phone_instruction.
   ///
   /// In en, this message translates to:
-  /// **'On this phone: Enter the invite code below.'**
+  /// **'Enter this invite code in the StudyU Health app.'**
   String get invite_landing_phone_instruction;
 
   /// No description provided for @invite_landing_other_device_instruction.
   ///
   /// In en, this message translates to:
-  /// **'On another device: Scan the QR code with StudyU Health.'**
+  /// **'For quick access, scan this QR code with your phone.'**
   String get invite_landing_other_device_instruction;
 
   /// No description provided for @invite_landing_enter_code_title.
