@@ -95,7 +95,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onAbout: () => context.push('/${RouteNames.about}'),
       onFaq: () => context.push('/${RouteNames.faq}'),
       onContact: () => context.push('/${RouteNames.contact}'),
-      selectedLocale: appLanguage?.appLocal ?? Localizations.localeOf(context),
+      selectedLocale:
+          appLanguage?.appLocal ??
+          resolveSupportedLocale(
+            Localizations.localeOf(context).toLanguageTag(),
+            AppLocalizations.supportedLocales,
+          ),
       onLocaleChanged: appLanguage?.changeLanguage,
     );
   }
