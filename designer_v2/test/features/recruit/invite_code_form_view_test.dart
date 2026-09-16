@@ -14,7 +14,18 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:supabase/supabase.dart';
+
+class _FakeClipboardService implements IClipboardService {
+  String? copiedText;
+
+  @override
+  Future<String> copy(String text) async {
+    copiedText = text;
+    return text;
+  }
+}
 
 class _FakeInviteCodeRepository implements InviteCodeFormRepository {
   @override
@@ -48,9 +59,11 @@ void main() {
       study: Study('study-12345678', 'owner-id'),
       inviteCodeRepository: _FakeInviteCodeRepository(),
     );
+    final clipboard = _FakeClipboardService();
 
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [clipboardServiceProvider.overrideWithValue(clipboard)],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -66,7 +79,7 @@ void main() {
       ),
     );
 
-    await tester.enterText(find.byType(TextField).first, 'New-Code');
+    await tester.enterText(find.byType(TextField).first, ' New-Code ');
     await tester.pump(const Duration(milliseconds: 250));
 
     const expectedLink = 'https://app.studyu.health/invite/new-code';
@@ -75,5 +88,10 @@ void main() {
       tester.widget<QrCodePreview>(find.byType(QrCodePreview)).data,
       expectedLink,
     );
+
+    await tester.tap(find.byTooltip(tr.action_copy_invite_code));
+    await tester.pump();
+
+    expect(clipboard.copiedText, 'new-code');
   });
 }

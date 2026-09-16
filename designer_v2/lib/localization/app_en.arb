@@ -1226,5 +1226,6 @@
   "studies_filter_add_filter": "Add filter",
   "studies_filter_remove_filter": "Remove filter",
   "studies_end_of_list_create": "Create a study.",
-  "studies_end_of_list_public": "Didn't find what you're looking for?"
+  "studies_end_of_list_public": "Didn't find what you're looking for?",
+  "error_qr_code_generation": "The QR code could not be displayed."
 }

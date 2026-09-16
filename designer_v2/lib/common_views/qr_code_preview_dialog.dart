@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
+import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
 class QrCodePreviewDialog extends StatelessWidget {
@@ -157,9 +158,10 @@ class _QrCodePreviewState extends ConsumerState<QrCodePreview> {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasError) {
+              debugLog('Failed to generate QR code: ${snapshot.error}');
               return Center(
                 child: Text(
-                  'Error: ${snapshot.error}',
+                  tr.error_qr_code_generation,
                   style: TextStyle(color: theme.colorScheme.error),
                 ),
               );

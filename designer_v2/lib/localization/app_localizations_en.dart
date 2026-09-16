@@ -3147,4 +3147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get studies_end_of_list_public =>
       'Didn\'t find what you\'re looking for?';
+
+  @override
+  String get error_qr_code_generation => 'The QR code could not be displayed.';
 }

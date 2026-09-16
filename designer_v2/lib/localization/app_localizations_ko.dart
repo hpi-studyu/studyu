@@ -3026,4 +3026,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get studies_end_of_list_public => '원하는 연구를 찾지 못했나요?';
+
+  @override
+  String get error_qr_code_generation => 'QR 코드를 표시할 수 없습니다.';
 }

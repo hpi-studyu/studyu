@@ -5374,6 +5374,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Didn\'t find what you\'re looking for?'**
   String get studies_end_of_list_public;
+
+  /// No description provided for @error_qr_code_generation.
+  ///
+  /// In en, this message translates to:
+  /// **'The QR code could not be displayed.'**
+  String get error_qr_code_generation;
 }
 
 class _AppLocalizationsDelegate

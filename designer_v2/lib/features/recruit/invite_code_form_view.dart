@@ -49,7 +49,12 @@ class InviteCodeFormView extends FormConsumerRefWidget {
                             onPressed: () async {
                               await ref
                                   .read(clipboardServiceProvider)
-                                  .copy(formViewModel.codeControl.value ?? '');
+                                  .copy(
+                                    formViewModel.codeControl.value
+                                            ?.trim()
+                                            .toLowerCase() ??
+                                        '',
+                                  );
                               if (context.mounted) {
                                 final messenger = ScaffoldMessenger.of(context);
                                 messenger

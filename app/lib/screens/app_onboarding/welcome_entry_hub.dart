@@ -95,7 +95,9 @@ class WelcomeEntryHub extends StatelessWidget {
                                     key: const ValueKey(
                                       'welcome_language_picker',
                                     ),
-                                    value: selectedLocale,
+                                    value: selectedLocale?.languageCode == 'ko'
+                                        ? null
+                                        : selectedLocale,
                                     hint: Text(l10n.use_device_language),
                                     borderRadius: BorderRadius.circular(12),
                                     items: [
@@ -103,7 +105,11 @@ class WelcomeEntryHub extends StatelessWidget {
                                         child: Text(l10n.use_device_language),
                                       ),
                                       for (final locale
-                                          in AppLocalizations.supportedLocales)
+                                          in AppLocalizations.supportedLocales
+                                              .where(
+                                                (locale) =>
+                                                    locale.languageCode != 'ko',
+                                              ))
                                         DropdownMenuItem(
                                           value: locale,
                                           child: Text(
