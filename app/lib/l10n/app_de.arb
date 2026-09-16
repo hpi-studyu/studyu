@@ -20,7 +20,7 @@
   "description_part9": "Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!",
   "get_started": "Los geht's",
   "welcome_find_study_title": "Finde, was bei dir wirkt",
-  "made_with_love_in_potsdam": "Mit ♥ in Potsdam gemacht",
+  "made_with_love_in_potsdam": "Mit ♥ in Potsdam entwickelt",
   "welcome_find_study_description": "Wählen Sie eine öffentliche Studie aus oder verwenden Sie eine Einladung.",
   "browse_public_studies": "Öffentliche Studien ansehen",
   "welcome_returning_participant": "Sie haben bereits mit StudyU an einer Studie teilgenommen?",
@@ -684,5 +684,6 @@
   "recovery_phrase_why": "Warum?",
   "recovery_phrase_reason": "StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese 13 Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Schreibe sie auf oder speichere sie digital an einem Ort, auf den nur du zugreifen kannst. Teile sie niemals mit anderen. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.",
   "study_not_started_title": "Sie nehmen an der Studie teil",
-  "study_not_started_description": "Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt."
+  "study_not_started_description": "Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt.",
+  "recovery_phrase_word_count": "{count}/{total} Wörter"
 }

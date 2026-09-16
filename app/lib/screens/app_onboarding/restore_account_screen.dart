@@ -201,7 +201,12 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
                       ? AppLocalizations.of(
                           context,
                         )!.recovery_phrase_too_many_words
-                      : '${_words.length}/${RecoveryConstants.totalWordCount} words',
+                      : AppLocalizations.of(
+                          context,
+                        )!.recovery_phrase_word_count(
+                          _words.length,
+                          RecoveryConstants.totalWordCount,
+                        ),
                   helperStyle: TextStyle(
                     color: _hasTooManyWords
                         ? Theme.of(context).colorScheme.error
