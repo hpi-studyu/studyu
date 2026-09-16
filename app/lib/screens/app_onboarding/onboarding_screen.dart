@@ -85,8 +85,10 @@ class OnboardingScreen extends StatelessWidget {
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         bodyTextStyle: TextStyle(fontSize: 16),
-        imagePadding: EdgeInsets.only(top: 40),
+        imagePadding: EdgeInsets.zero,
         contentMargin: EdgeInsets.symmetric(horizontal: 16),
+        bodyAlignment: Alignment.center,
+        imageAlignment: Alignment.center,
       ),
     );
   }
