@@ -64,7 +64,7 @@ class UserRepository implements IUserRepository {
 
     // If a fetch is already in progress, return the same future
     if (_fetchFuture != null) {
-      return _fetchFuture!;
+      return await _fetchFuture!;
     }
 
     final userId = ref.read(authRepositoryProvider).currentUser!.id;
@@ -102,7 +102,7 @@ class UserRepository implements IUserRepository {
   Future<StudyUUser> updateLanguage(String language) async {
     await fetchUser();
     user.preferences.language = language;
-    return saveUser();
+    return await saveUser();
   }
 
   @override

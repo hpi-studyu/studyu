@@ -441,7 +441,7 @@ class FitbitHandler {
         'Failed to obtain Fitbit credentials. Please try syncing again',
       );
     }
-    return _getFitbitData(
+    return await _getFitbitData(
       question.types,
       study.fitbitCredentials!.fitbitCredentials,
       credentials,

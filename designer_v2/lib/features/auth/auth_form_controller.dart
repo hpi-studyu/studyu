@@ -270,7 +270,7 @@ class AuthFormController extends _$AuthFormController {
     _forceValidationMessages(AuthFormKey._loginSubmit);
     final currentForm = getForm();
     if (currentForm == null || !currentForm.valid) {
-      return Future.value(AuthResponse());
+      return await Future.value(AuthResponse());
     }
     try {
       state = const AsyncValue.loading();
@@ -290,7 +290,7 @@ class AuthFormController extends _$AuthFormController {
         !currentForm.valid ||
         getEmailControl().isNullOrEmpty ||
         getPasswordControl().isNullOrEmpty) {
-      return Future.value(AuthResponse());
+      return await Future.value(AuthResponse());
     }
     return await _signInWith(
       getEmailControl().value!,
@@ -311,7 +311,7 @@ class AuthFormController extends _$AuthFormController {
     } finally {
       state = const AsyncValue.data(null);
     }
-    return Future.value(AuthResponse());
+    return await Future.value(AuthResponse());
   }
 
   Future<void> signOut() async {
@@ -372,7 +372,7 @@ class AuthFormController extends _$AuthFormController {
       return false;
     }
 
-    return updateUser(getPasswordControl().value!);
+    return await updateUser(getPasswordControl().value!);
   }
 
   Future<bool> updateUser(String newPassword) async {
