@@ -36,6 +36,7 @@
   "onboarding_page3_subtitle": "Befolgen Sie die zugewiesene Option und dokumentieren Sie Ihre Beobachtungen, meist einmal täglich. Der Fortschrittsbalken zeigt, wie viele Aufgaben bis zur Auswertung fehlen.",
   "onboarding_page4_title": "Aussagekräftige Ergebnisse",
   "onboarding_page4_subtitle": "Nach einigen Wochen können Sie vergleichen, welche Option bei Ihnen besser funktioniert hat. Mit jeder zusätzlichen Aufgabe erhöhen Sie die Aussagekraft. Wenn Sie die Ergebnisse freischalten, beendet StudyU die Studie, damit die Auswertung unverfälscht bleibt.",
+  "test": "test10",
   "study_selection": "Studienauswahl",
   "study_selection_single": "Sie können zu jeder Zeit maximal an einer Studie teilnehmen.",
   "study_selection_single_why": "Warum?",
@@ -160,6 +161,7 @@
   "error_recording": "Fehler bei der Aufnahme",
   "photo_captured": "Foto aufgenommen",
   "audio_recorded": "Audio aufgenommen",
+  "data_captured": "Daten aufgenommen",
   "multimodal_not_supported": "Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.",
   "camera_access_denied": "Zugriff auf Kamera verweigert",
   "no_camera_available": "Keine Kamera verfügbar",
@@ -683,7 +685,5 @@
   "recovery_phrase_reason": "StudyU verwendet keine Passwörter oder E-Mail-Konten. Diese 13 Wörter sind die einzige Möglichkeit, dein Konto wiederherzustellen, wenn du ein neues Handy bekommst oder die App neu installierst. Schreibe sie auf oder speichere sie digital an einem Ort, auf den nur du zugreifen kannst. Teile sie niemals mit anderen. Du kannst deine Wiederherstellungsphrase jederzeit unter Einstellungen → Studieneinstellungen erneut ansehen.",
   "study_not_started_title": "Sie nehmen an der Studie teil",
   "study_not_started_description": "Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt.",
-  "ko": "Koreanisch",
-  "data_captured": "Daten aufgenommen",
-  "test": "test10"
+  "ko": "Koreanisch"
 }
