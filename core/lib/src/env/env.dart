@@ -9,7 +9,6 @@ late final String? projectGeneratorUrl;
 late final String? androidPackageName;
 late final String? iosAppStoreId;
 late final String? developerEmail;
-String? deepLinkDomain;
 String? appDeepLinkScheme;
 
 String get appScheme {
@@ -29,8 +28,8 @@ String generateAppSchemeLink(String path) {
 }
 
 String generateAppDeepLink(String path) {
-  final scheme = appDeepLinkScheme ?? 'https://app.studyu.health';
-  return '$scheme/${path.startsWith('/') ? path.substring(1) : path}';
+  final baseUrl = appUrl ?? 'https://app.studyu.health';
+  return '$baseUrl/${path.startsWith('/') ? path.substring(1) : path}';
 }
 
 void setEnv(
@@ -43,7 +42,6 @@ void setEnv(
   String? envAndroidPackageName,
   String? envIosAppStoreId,
   String? envDeveloperEmail,
-  String? envDeepLinkDomain,
   String? envAppDeepLinkScheme,
 }) {
   supabaseUrl = envSupabaseUrl;
@@ -72,7 +70,6 @@ void setEnv(
   androidPackageName = envAndroidPackageName;
   iosAppStoreId = envIosAppStoreId;
   developerEmail = envDeveloperEmail;
-  deepLinkDomain = envDeepLinkDomain ?? 'app.studyu.health';
   // Remove trailing slashes from deep link scheme
   if (envAppDeepLinkScheme != null && envAppDeepLinkScheme.endsWith('/')) {
     appDeepLinkScheme = envAppDeepLinkScheme.substring(
