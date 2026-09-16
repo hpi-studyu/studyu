@@ -294,7 +294,10 @@ class Study extends SupabaseObjectFunctions<Study>
   /// so anon deep-link callers can resolve both in one call without needing
   /// SELECT access to study_invite (RLS blocks non-editors).
   /// Returns the Study and StudyInvite, or nulls if not found.
-  static Future<(StudyInvite?, Study?)> fetchByInviteCode(String code) async {
+  static Future<(StudyInvite?, Study?)> fetchByInviteCode(
+    String code, {
+    bool previewOnly = false,
+  }) async {
     final cleanCode = code.trim().toLowerCase();
     try {
       final studyResult = await env.client
@@ -308,7 +311,9 @@ class Study extends SupabaseObjectFunctions<Study>
         return (null, null);
       }
 
-      final study = Study.fromJson(studyResult);
+      final study = previewOnly
+          ? Study.fromInvitePreviewJson(studyResult)
+          : Study.fromJson(studyResult);
 
       List<String>? preselectedIds;
       final preselected = studyResult['preselected_intervention_ids'];
@@ -324,6 +329,24 @@ class Study extends SupabaseObjectFunctions<Study>
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
     }
+  }
+
+  /// Creates the metadata needed to display an invite before the study is
+  /// configured for enrollment.
+  static Study fromInvitePreviewJson(Map<String, dynamic> json) {
+    final study = Study(json['id'] as String, json['user_id'] as String? ?? '')
+      ..title = json['title'] as String?
+      ..description = json['description'] as String?
+      ..iconName = json['icon_name'] as String? ?? 'accountHeart';
+
+    final status = json['status'];
+    if (status is String) {
+      study.status = StudyStatus.values.firstWhere(
+        (value) => value.name == status,
+        orElse: () => StudyStatus.draft,
+      );
+    }
+    return study;
   }
 
   bool isOwner(User? user) => user != null && userId == user.id;

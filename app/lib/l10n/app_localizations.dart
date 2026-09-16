@@ -2975,12 +2975,6 @@ abstract class AppLocalizations {
   /// **'Confirm hard delete'**
   String get deep_link_switch_confirm_hard_button;
 
-  /// No description provided for @open_link_on_mobile.
-  ///
-  /// In en, this message translates to:
-  /// **'Please open this link on your mobile device.'**
-  String get open_link_on_mobile;
-
   /// No description provided for @you_have_been_invited.
   ///
   /// In en, this message translates to:
@@ -3334,6 +3328,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Come back tomorrow to begin. We’ll remind you when there’s something to do.'**
   String get study_not_started_description;
+
+  /// No description provided for @invite_landing_instruction_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the study with StudyU Health'**
+  String get invite_landing_instruction_title;
+
+  /// No description provided for @invite_landing_qr_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Study invitation QR code'**
+  String get invite_landing_qr_label;
+
+  /// No description provided for @invite_landing_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code'**
+  String get invite_landing_invite_code;
+
+  /// No description provided for @invite_landing_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation is no longer available. Please check the link or code and try again.'**
+  String get invite_landing_invalid;
+
+  /// No description provided for @invite_landing_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not load this invitation. Please try again later.'**
+  String get invite_landing_load_error;
+
+  /// No description provided for @invite_landing_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading invitation…'**
+  String get invite_landing_loading;
+
+  /// No description provided for @scan_invite_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get scan_invite_code;
+
+  /// No description provided for @scan_invite_code_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at the invitation QR code.'**
+  String get scan_invite_code_description;
+
+  /// No description provided for @open_study_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in StudyU Health'**
+  String get open_study_app;
+
+  /// No description provided for @invite_landing_google_play.
+  ///
+  /// In en, this message translates to:
+  /// **'Get it on Google Play'**
+  String get invite_landing_google_play;
+
+  /// No description provided for @invite_landing_app_store.
+  ///
+  /// In en, this message translates to:
+  /// **'Download on the App Store'**
+  String get invite_landing_app_store;
+
+  /// No description provided for @invite_landing_step_download.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the StudyU Health app'**
+  String get invite_landing_step_download;
+
+  /// No description provided for @invite_landing_step_join.
+  ///
+  /// In en, this message translates to:
+  /// **'Open StudyU Health and join the study'**
+  String get invite_landing_step_join;
+
+  /// No description provided for @invite_landing_step_join_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Open StudyU Health, then scan the QR code or enter this code:'**
+  String get invite_landing_step_join_description;
+
+  /// No description provided for @invite_landing_invited_title.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re invited to join'**
+  String get invite_landing_invited_title;
+
+  /// No description provided for @invite_landing_phone_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'On this phone: Enter the invite code below.'**
+  String get invite_landing_phone_instruction;
+
+  /// No description provided for @invite_landing_other_device_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'On another device: Scan the QR code with StudyU Health.'**
+  String get invite_landing_other_device_instruction;
+
+  /// No description provided for @invite_landing_enter_code_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter invite code'**
+  String get invite_landing_enter_code_title;
+
+  /// No description provided for @invite_landing_scan_qr_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get invite_landing_scan_qr_title;
+
+  /// No description provided for @invite_landing_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get invite_landing_copied;
 }
 
 class _AppLocalizationsDelegate

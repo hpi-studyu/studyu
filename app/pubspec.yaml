@@ -40,7 +40,9 @@ dependencies:
   intersperse: ^2.0.0
   intl: ^0.20.2
   introduction_screen: ^4.0.0
+  mobile_scanner: ^7.4.0
   package_info_plus: ^10.2.0
+  pretty_qr_code: ^3.6.0
   path: ^1.9.1
   path_drawing: ^1.0.1
   path_provider: ^2.1.6

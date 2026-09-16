@@ -1597,10 +1597,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deep_link_switch_confirm_hard_button => 'Hard-Delete bestätigen';
 
   @override
-  String get open_link_on_mobile =>
-      'Bitte öffnen Sie diesen Link auf Ihrem mobilen Gerät.';
-
-  @override
   String get you_have_been_invited => 'Sie wurden zu einer Studie eingeladen!';
 
   @override
@@ -1813,4 +1809,73 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get study_not_started_description =>
       'Kommen Sie morgen zurück, um zu beginnen. Wir erinnern Sie, sobald es etwas zu tun gibt.';
+
+  @override
+  String get invite_landing_instruction_title =>
+      'Nehmen Sie mit StudyU Health an der Studie teil';
+
+  @override
+  String get invite_landing_qr_label => 'QR-Code für die Studieneinladung';
+
+  @override
+  String get invite_landing_invite_code => 'Einladungscode';
+
+  @override
+  String get invite_landing_invalid =>
+      'Diese Einladung ist nicht mehr verfügbar. Bitte überprüfen Sie den Link oder Code und versuchen Sie es erneut.';
+
+  @override
+  String get invite_landing_load_error =>
+      'Diese Einladung konnte nicht geladen werden. Bitte versuchen Sie es später erneut.';
+
+  @override
+  String get invite_landing_loading => 'Einladung wird geladen …';
+
+  @override
+  String get scan_invite_code => 'QR-Code scannen';
+
+  @override
+  String get scan_invite_code_description =>
+      'Richten Sie Ihre Kamera auf den QR-Code der Einladung.';
+
+  @override
+  String get open_study_app => 'In StudyU Health öffnen';
+
+  @override
+  String get invite_landing_google_play => 'Bei Google Play herunterladen';
+
+  @override
+  String get invite_landing_app_store => 'Im App Store laden';
+
+  @override
+  String get invite_landing_step_download => 'StudyU Health herunterladen';
+
+  @override
+  String get invite_landing_step_join =>
+      'StudyU Health öffnen und der Studie beitreten';
+
+  @override
+  String get invite_landing_step_join_description =>
+      'Öffnen Sie StudyU Health. Scannen Sie dann den QR-Code oder geben Sie diesen Code ein:';
+
+  @override
+  String get invite_landing_invited_title =>
+      'Sie sind eingeladen zur Teilnahme an';
+
+  @override
+  String get invite_landing_phone_instruction =>
+      'Auf diesem Smartphone: Geben Sie den Einladungscode unten ein.';
+
+  @override
+  String get invite_landing_other_device_instruction =>
+      'Auf einem anderen Gerät: Scannen Sie den QR-Code mit StudyU Health.';
+
+  @override
+  String get invite_landing_enter_code_title => 'Einladungscode eingeben';
+
+  @override
+  String get invite_landing_scan_qr_title => 'QR-Code scannen';
+
+  @override
+  String get invite_landing_copied => 'Kopiert';
 }
