@@ -506,10 +506,42 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final pinnedStudyIds = state.pinnedStudiesList
         .map((study) => study.id)
         .toSet();
+    final emptyWidget =
+        (widget.filter == null || widget.filter == StudiesFilter.owned)
+        ? (state.query.isNotEmpty)
+              ? EmptyBody(
+                  icon: Icons.content_paste_search_rounded,
+                  title: tr.studies_not_found,
+                  description: tr.modify_query,
+                )
+              : EmptyBody(
+                  icon: Icons.content_paste_search_rounded,
+                  title: tr.studies_empty,
+                  description: tr.studies_empty_description,
+                )
+        : widget.filter == StudiesFilter.public
+        ? EmptyBody(
+            icon: Icons.content_paste_search_rounded,
+            title: tr.studies_empty_public,
+            description: tr.studies_empty_public_description,
+          )
+        : EmptyBody(
+            icon: Icons.content_paste_search_rounded,
+            title: tr.studies_empty_shared,
+            description: tr.studies_empty_shared_description,
+          );
+    final showEmptyStudies = state.displayedStudies.maybeWhen(
+      data: (studies) =>
+          studies.isEmpty &&
+          state.loadError == null &&
+          !state.advancedFilterUnsupported,
+      orElse: () => false,
+    );
 
     return DashboardScaffold(
       scaffoldKey: _scaffoldKey,
       endDrawer: const Drawer(width: 400, child: FilterBuilder()),
+      overlay: showEmptyStudies ? emptyWidget : null,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -623,43 +655,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 onLoadMore: controller.loadMore,
                 onSelect: controller.onSelectStudy,
                 getActions: controller.availableActions,
-                emptyWidget:
-                    (widget.filter == null ||
-                        widget.filter == StudiesFilter.owned)
-                    ? (state.query.isNotEmpty)
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 24.0),
-                              child: EmptyBody(
-                                icon: Icons.content_paste_search_rounded,
-                                title: tr.studies_not_found,
-                                description: tr.modify_query,
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 24.0),
-                              child: EmptyBody(
-                                icon: Icons.content_paste_search_rounded,
-                                title: tr.studies_empty,
-                                description: tr.studies_empty_description,
-                              ),
-                            )
-                    : widget.filter == StudiesFilter.public
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: EmptyBody(
-                          icon: Icons.content_paste_search_rounded,
-                          title: tr.studies_empty_public,
-                          description: tr.studies_empty_public_description,
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: EmptyBody(
-                          icon: Icons.content_paste_search_rounded,
-                          title: tr.studies_empty_shared,
-                          description: tr.studies_empty_shared_description,
-                        ),
-                      ),
+                emptyWidget: showEmptyStudies
+                    ? const SizedBox.shrink()
+                    : emptyWidget,
               ),
             ),
           ),
