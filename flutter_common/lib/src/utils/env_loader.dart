@@ -55,7 +55,6 @@ Future<void> loadEnv() async {
   );
   final envIosAppStoreId = getEnv('STUDYU_IOS_APP_STORE_ID', optional: true);
   final envDeveloperEmail = getEnv('STUDYU_DEVELOPER_EMAIL', optional: true);
-  final envDeepLinkDomain = getEnv('STUDYU_DEEP_LINK_DOMAIN', optional: true);
   final envAppDeepLinkScheme = getEnv(
     'STUDYU_APP_DEEP_LINK_SCHEME',
     optional: true,
@@ -85,7 +84,6 @@ Future<void> loadEnv() async {
     envAndroidPackageName: envAndroidPackageName,
     envIosAppStoreId: envIosAppStoreId,
     envDeveloperEmail: envDeveloperEmail,
-    envDeepLinkDomain: envDeepLinkDomain,
     envAppDeepLinkScheme: envAppDeepLinkScheme,
     supabaseClient: Supabase.instance.client,
   );

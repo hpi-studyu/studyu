@@ -23,7 +23,7 @@ void main() {
 
   group('buildAppLaunchLink with prod-like env', () {
     setUp(() {
-      appDeepLinkScheme = 'https://app.studyu.health';
+      appDeepLinkScheme = 'studyu-app://';
     });
     tearDown(() {
       appDeepLinkScheme = null;
