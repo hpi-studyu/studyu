@@ -183,7 +183,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      '연구 동안 이 두 개입의 효과를 측정하고 비교합니다. 개입은 귀하가 선택한 순서를 따릅니다. B보다 A를 먼저 선택하면 A가 먼저 진행됩니다.';
+      '연구 동안 이 두 개입의 효과를 측정하고 비교합니다.';
 
   @override
   String get no_interventions_available => '사용 가능한 개입이 없습니다';
@@ -1738,6 +1738,11 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get study_not_started_description =>
       '내일 다시 방문하여 시작하세요. 할 일이 생기면 알려드리겠습니다.';
+
+  @override
+  String recovery_phrase_word_count(Object count, Object total) {
+    return '$count/$total개 단어';
+  }
 
   @override
   String get ko => '한국어';

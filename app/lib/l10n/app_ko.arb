@@ -312,7 +312,7 @@
   "please_give_consent_reason": "연구자는 안전 및 데이터 개인정보 보호를 위해 참가자로부터 특정 동의를 요청해야 합니다. 따라서 각 연구에 참여하려면 명시적으로 동의해야 합니다.",
   "please_give_consent_why": "이유는 무엇입니까?",
   "please_select_interventions": "연구 중에 적용할 두 가지 개입을 선택해 주십시오.",
-  "please_select_interventions_description": "연구 동안 이 두 개입의 효과를 측정하고 비교합니다. 개입은 귀하가 선택한 순서를 따릅니다. B보다 A를 먼저 선택하면 A가 먼저 진행됩니다.",
+  "please_select_interventions_description": "연구 동안 이 두 개입의 효과를 측정하고 비교합니다.",
   "preview_failed_to_initialize": "미리보기를 초기화하지 못했습니다.",
   "preview_mode": "미리보기 모드",
   "preview_mode_active": "미리보기 모드 활성",
@@ -539,5 +539,6 @@
   "view_study_information": "세부 정보 보기",
   "welcome_find_study_description": "공개 연구를 선택하거나 초대장을 사용하세요.",
   "welcome_find_study_title": "나에게 맞는 연구 찾기",
-  "welcome_returning_participant": "StudyU 연구에 참여한 적이 있나요?"
+  "welcome_returning_participant": "StudyU 연구에 참여한 적이 있나요?",
+  "recovery_phrase_word_count": "{count}/{total}개 단어"
 }

@@ -1793,5 +1793,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Come back tomorrow to begin. We’ll remind you when there’s something to do.';
 
   @override
+  String recovery_phrase_word_count(Object count, Object total) {
+    return '$count/$total words';
+  }
+
+  @override
   String get ko => 'Korean';
 }
