@@ -74,31 +74,49 @@ jobs:
                 })[0];
             }
 
-            async function waitForRun(workflow) {
+            // Poll all workflows for a run of this commit inside one shared
+            // startup window, so optional path-filtered workflows that never
+            // start cost one window in total instead of one per workflow.
+            async function waitForRuns() {
+              const pending = [...workflowsToCheck];
+              const started = [];
               for (let attempt = 0; attempt <= startupRetries; attempt += 1) {
-                let run;
-                try {
-                  run = await findNewestRun(workflow.id);
-                } catch (error) {
-                  if (error.status !== 404) {
-                    throw error;
+                for (const workflow of pending) {
+                  let run;
+                  try {
+                    run = await findNewestRun(workflow.id);
+                  } catch (error) {
+                    if (error.status !== 404) {
+                      throw error;
+                    }
+                  }
+                  if (run) {
+                    console.log(
+                      `Found ${workflow.id} run ${run.id} for ${commitSha}.`
+                    );
+                    started.push({ workflow, run });
                   }
                 }
-                if (run) {
-                  console.log(
-                    `Found ${workflow.id} run ${run.id} for ${commitSha}.`
-                  );
-                  return run;
+                pending.splice(
+                  0,
+                  pending.length,
+                  ...pending.filter(
+                    (workflow) =>
+                      !started.some((entry) => entry.workflow === workflow)
+                  )
+                );
+                if (!pending.length || attempt === startupRetries) {
+                  break;
                 }
-                if (attempt < startupRetries) {
-                  console.log(
-                    `Waiting for ${workflow.id} to start ` +
-                    `(${attempt + 1}/${startupRetries})...`
-                  );
-                  await sleep(startupDelay);
-                }
+                console.log(
+                  `Waiting for ${pending
+                    .map((workflow) => workflow.id)
+                    .join(", ")} to start ` +
+                  `(${attempt + 1}/${startupRetries})...`
+                );
+                await sleep(startupDelay);
               }
-              return undefined;
+              return started;
             }
 
             async function failedChecks(run) {
@@ -171,28 +189,30 @@ jobs:
 
             const failures = [];
             console.log(`Checking workflows for immutable SHA ${commitSha}.`);
+            const started = await waitForRuns();
             for (const workflow of workflowsToCheck) {
-              const run = await waitForRun(workflow);
-              if (!run) {
-                if (workflow.required) {
-                  failures.push(
-                    `${workflow.id} did not start for ${commitSha} ` +
-                    `within the startup limit.`
-                  );
-                } else {
-                  console.log(
-                    `Skipping optional path-filtered workflow ${workflow.id};` +
-                    "no run was found."
-                  );
-                }
+              if (started.some((entry) => entry.workflow === workflow)) {
                 continue;
               }
-              try {
-                await waitForCompletion(run);
-              } catch (error) {
-                failures.push(error.message);
+              if (workflow.required) {
+                failures.push(
+                  `${workflow.id} did not start for ${commitSha} ` +
+                  `within the startup limit.`
+                );
+              } else {
+                console.log(
+                  `Skipping optional path-filtered workflow ${workflow.id}; ` +
+                  "no run was found."
+                );
               }
             }
+            await Promise.all(
+              started.map(({ run }) =>
+                waitForCompletion(run).catch((error) => {
+                  failures.push(error.message);
+                })
+              )
+            );
 
             if (failures.length) {
               core.setFailed(failures.join("\n"));
