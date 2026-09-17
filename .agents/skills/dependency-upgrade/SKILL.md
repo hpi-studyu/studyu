@@ -51,12 +51,12 @@ worktree and all unrelated changes. In the fresh worktree, run:
 ```bash
 fvm install
 ./setup.sh
-fvm exec melos setup
+fvm dart run melos setup
 ```
 
 `./setup.sh` bootstraps the workspace. If the repository setup script no longer
-bootstraps the workspace, run `fvm exec melos bootstrap` after inspecting its
-current definition.
+bootstraps the workspace, run `fvm dart run melos bootstrap` after inspecting
+its current definition.
 
 Create the local environment file only when it does not exist:
 
@@ -423,11 +423,23 @@ Show the verified local endpoint without printing credentials. State that the
 reset deletes local database data and that the reset script applies test
 fixtures to the verified endpoint. Ask the user for explicit authorization to
 run the reset with the validated URL. Do not infer authorization from an
-earlier approval. After that immediate authorization, pin the validated URL
-for the reset and fixture inserts:
+earlier approval.
+
+For the default validated local endpoint, remove `SUPABASE_DB_URL` from the
+reset process. This preserves the script's Docker fallback. For another
+validated local endpoint, pass the effective URL. The script then requires
+`psql` and does not use the Docker fallback:
 
 ```bash
-SUPABASE_DB_URL="$effective_db_url" ./scripts/reset-test-db.sh --yes
+default_db_url="postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+if [ "$effective_db_url" = "$default_db_url" ]; then
+  (
+    unset SUPABASE_DB_URL
+    ./scripts/reset-test-db.sh --yes
+  )
+else
+  SUPABASE_DB_URL="$effective_db_url" ./scripts/reset-test-db.sh --yes
+fi
 ```
 
 Ensure the ignored `.env.local` exists without overwriting it. Populate local

@@ -148,7 +148,15 @@ After preparation, record the full temporary-worktree baseline before regenerati
 git status --short --untracked-files=all
 git status --short --ignored --untracked-files=all
 git ls-files --others --ignored --exclude-standard
+
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "Preparation changed tracked files. Stop before regeneration." >&2
+  exit 1
+fi
 ```
+
+Stop if preparation changes a tracked file. Do not include preparation changes in the
+regeneration artifact.
 
 After the user approves the exact command, run only this regeneration command from the
 temporary worktree root:
@@ -219,9 +227,10 @@ Do not hand-edit lockfiles. Do not accept generated output by default. Show the 
 Ask the user to approve the exact changed-file set before reapplying custom configuration.
 
 Before creating the artifact, obtain an explicit approved changed-file list. Stage only the
-approved tracked and untracked paths. Verify that `git diff --cached --name-status` exactly
-matches that list. Generate a binary-capable patch from only those staged paths at the recorded
-absolute path:
+approved paths that regeneration created or changed after the post-preparation baseline. Do
+not stage a path that preparation created. Verify that `git diff --cached --name-status`
+exactly matches the approved list. Generate a binary-capable patch from only those staged
+paths at the recorded absolute path:
 
 ```bash
 git diff --cached --binary --no-ext-diff > "$artifact_path"
