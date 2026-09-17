@@ -4,9 +4,8 @@
 
 1. Install [FVM](https://fvm.app/documentation/getting-started/installation).
 2. Clone this repository and open its root directory.
-3. Run `fvm install` to install the Flutter SDK version defined in `.fvmrc`.
-4. Run `./setup.sh` to install Melos, dependencies, and workspace links.
-5. Run `fvm exec melos setup` to configure the tracked Git hooks.
+3. Run `./setup.sh` to install the pinned Flutter SDK, Melos, dependencies, workspace links,
+   and tracked Git hooks.
 
 The root [`pubspec.yaml`](pubspec.yaml) is the command catalog. Run its Melos
 scripts as `fvm exec melos <script>`.
@@ -27,16 +26,16 @@ must be run from the repository root.
 After installing FVM, run:
 
 ```bash
-fvm install
+./setup.sh
 fvm flutter --version
 fvm dart --version
-./setup.sh
-fvm exec melos setup
 ```
 
-`fvm install` reads `.fvmrc` and creates the ignored `.fvm/flutter_sdk` link to the
-cached project SDK. The root `pubspec.yaml` points Melos to the same SDK through
-`melos.sdkPath`; no manual `MELOS_SDK_PATH` export is required.
+`./setup.sh` reads `.fvmrc`, installs the pinned Flutter SDK, and creates the ignored
+`.fvm/flutter_sdk` link to the cached project SDK. It also installs Melos, bootstraps the
+workspace, fetches root dependencies, creates `.env.local` from `.env.local.example` when
+needed, and configures the tracked Git hooks. The root `pubspec.yaml` points Melos to the same
+SDK through `melos.sdkPath`; no manual `MELOS_SDK_PATH` export is required.
 
 Use the project SDK for development commands:
 
@@ -94,7 +93,8 @@ Environment files live under `flutter_common/lib/envs/`:
 
 - `.env` — Production database using main branch (default; do **not** use for routine development).
 - `.env.dev` — Development database using dev branch.
-- `.env.local` — Local Supabase CLI instance (copy from `.env.local.example`).
+- `.env.local` — Local Supabase CLI instance. `./setup.sh` creates this file from
+  `.env.local.example` when it does not exist.
 
 Use the `dev:*` Melos scripts for the development environment and `local:*`
 for a local Supabase instance. Only `.env.dev` or `.env.local` should be used
@@ -160,11 +160,11 @@ resolution.
 
 The shared Dart and Flutter lint rules are defined in [`analysis_options.yaml`](analysis_options.yaml).
 The tracked pre-commit hook runs [`scripts/pre-commit-check`](scripts/pre-commit-check), which
-formats, generates affected output, and analyzes the workspace. The Git hooks are configured
-by `fvm exec melos setup`. If you develop manually without the automated pre-commit check
-running your changes, run `fvm exec melos qualitycheck` instead; it formats, analyzes, and
-regenerates code across the workspace. Otherwise run `fvm exec melos qualitycheck` for a full
-CI-style workspace check or when explicitly requested.
+formats, generates affected output, and analyzes the workspace. The Git hooks are configured by
+`./setup.sh`. If you develop manually without the automated pre-commit check running your
+changes, run `fvm exec melos qualitycheck` instead; it formats, analyzes, and regenerates code
+across the workspace. Otherwise run `fvm exec melos qualitycheck` for a full CI-style workspace
+check or when explicitly requested.
 
 ## Frontend
 
