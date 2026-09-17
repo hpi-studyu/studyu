@@ -64,7 +64,10 @@ class ConsentItemFormViewModel
     consentIdControl.value = data.consentId;
     titleControl.value = data.title;
     descriptionControl.value = data.description;
-    iconControl.value = IconOption(data.iconName ?? '');
+    final iconName = data.iconName;
+    iconControl.value = iconName == null || iconName.isEmpty
+        ? null
+        : IconOption(iconName);
   }
 
   @override

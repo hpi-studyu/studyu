@@ -53,6 +53,26 @@ class StudyDesignRobot {
   }
 
   Future<void> tapSkipForNowButton() async {
-    await $(tr.action_button_post_launch_followup_skip).tap();
+    const timeout = Duration(seconds: 10);
+    final endTime = DateTime.now().add(timeout);
+
+    while (DateTime.now().isBefore(endTime)) {
+      await $.pump(const Duration(milliseconds: 100));
+
+      if ($.tester.any(find.text(tr.action_button_post_launch_followup_skip))) {
+        await $(tr.action_button_post_launch_followup_skip).tap();
+        return;
+      }
+
+      if ($.tester.any(find.text(tr.dialog_continue))) {
+        await $(tr.dialog_continue).tap();
+        return;
+      }
+    }
+
+    throw TestFailure(
+      'Neither "${tr.action_button_post_launch_followup_skip}" nor '
+      '"${tr.dialog_continue}" became visible within $timeout.',
+    );
   }
 }
