@@ -283,6 +283,7 @@ try:
     parsed = urlparse(os.environ["EFFECTIVE_DB_URL"])
     if parsed.scheme not in {"postgres", "postgresql"} or not parsed.hostname:
         raise ValueError
+    _ = parsed.port
     print(parsed.hostname)
 except (TypeError, ValueError):
     raise SystemExit(1)
