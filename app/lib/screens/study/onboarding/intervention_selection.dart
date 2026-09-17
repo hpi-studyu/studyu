@@ -132,15 +132,13 @@ class _InterventionSelectionScreenState
       body: TitleDescriptionLayout(
         descriptionWidget: StudyOnboardingDescription(
           text: AppLocalizations.of(context)!.please_select_interventions,
-          actionLabel: AppLocalizations.of(
-            context,
-          )!.please_select_interventions_why,
+          actionLabel: AppLocalizations.of(context)!
+              .please_select_interventions_why,
           onAction: () => showDialog(
             context: context,
             builder: (context) => WhyDialog(
-              content: AppLocalizations.of(
-                context,
-              )!.please_select_interventions_description,
+              content: AppLocalizations.of(context)!
+                  .please_select_interventions_description,
             ),
           ),
         ),

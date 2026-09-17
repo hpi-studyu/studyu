@@ -128,9 +128,8 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
         label: l10n.study_start_date,
         value: startedAt == null
             ? l10n.not_available
-            : MaterialLocalizations.of(
-                context,
-              ).formatFullDate(startedAt.toLocal()),
+            : MaterialLocalizations.of(context)
+                  .formatFullDate(startedAt.toLocal()),
       ),
       (
         icon: Icons.phone_android_outlined,
@@ -182,9 +181,8 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
     );
 
     if (!await launchUrl(uri) && mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.email_app_unavailable)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.email_app_unavailable)));
     }
   }
 

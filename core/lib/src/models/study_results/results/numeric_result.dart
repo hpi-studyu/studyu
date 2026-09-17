@@ -26,9 +26,9 @@ class NumericResult extends StudyResult {
   List<String> getHeaders(Study studySpec) {
     final schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
-    return Iterable<int>.generate(
-      numberOfDays,
-    ).map((e) => e.toString()).toList();
+    return Iterable<int>.generate(numberOfDays)
+        .map((e) => e.toString())
+        .toList();
   }
 
   @override
@@ -41,8 +41,8 @@ class NumericResult extends StudyResult {
     final numberOfDays =
         subject.study.schedule.getNumberOfPhases() *
         subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(
-      numberOfDays,
-    ).map((day) => resultSet[day]).toList();
+    return Iterable<int>.generate(numberOfDays)
+        .map((day) => resultSet[day])
+        .toList();
   }
 }

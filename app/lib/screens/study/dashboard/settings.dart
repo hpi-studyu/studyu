@@ -391,9 +391,8 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!.no_internet_connection,
+                            AppLocalizations.of(context)!
+                                .no_internet_connection,
                           ),
                         ),
                       );
@@ -485,9 +484,8 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!.no_internet_connection,
+                            AppLocalizations.of(context)!
+                                .no_internet_connection,
                           ),
                         ),
                       );
@@ -500,9 +498,8 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.error_occurred_with_message(e.message),
+                              AppLocalizations.of(context)!
+                                  .error_occurred_with_message(e.message),
                             ),
                           ),
                         );

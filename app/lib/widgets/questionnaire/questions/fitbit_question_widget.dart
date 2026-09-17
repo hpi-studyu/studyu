@@ -73,9 +73,8 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(
-              context,
-            )!.error_syncing_fitbit_data(e.toString()),
+            AppLocalizations.of(context)!
+                .error_syncing_fitbit_data(e.toString()),
           ),
         ),
       );

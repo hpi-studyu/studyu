@@ -257,9 +257,8 @@ class StudiesTable extends StatelessWidget {
                   final showsFooter = _showsFooter(needsScrolling);
 
                   return ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(
-                      context,
-                    ).copyWith(scrollbars: true),
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(scrollbars: true),
                     child: ListView.builder(
                       key: const ValueKey('studies_table_rows'),
                       prototypeItem: StudiesTableItem.prototype(

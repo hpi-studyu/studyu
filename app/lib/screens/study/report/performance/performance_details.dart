@@ -45,9 +45,8 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.performance_overview_interventions,
+                      AppLocalizations.of(context)!
+                          .performance_overview_interventions,
                       style: theme.textTheme.titleLarge!.copyWith(
                         color: theme.primaryColor,
                       ),
@@ -68,9 +67,8 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.performance_overview_observations,
+                      AppLocalizations.of(context)!
+                          .performance_overview_observations,
                       style: theme.textTheme.titleLarge!.copyWith(
                         color: theme.primaryColor,
                       ),

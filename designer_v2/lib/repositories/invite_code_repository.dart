@@ -174,8 +174,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     ];
 
     if (study.isOwner(authRepository.currentUser)) {
-      actions.addAll([
-        ModelAction.addSeparator(),
+      actions.add(
         ModelAction(
           type: ModelActionType.delete,
           label: tr.action_delete_code,
@@ -198,7 +197,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
           },
           isDestructive: true,
         ),
-      ]);
+      );
     }
 
     return actions;

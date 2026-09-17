@@ -47,9 +47,8 @@ class FitbitCredentialsSection extends StatelessWidget {
             FormTableRow(
               control: formViewModel.clientSecretControl,
               label: AppLocalizations.of(context)!.client_secret,
-              labelHelpText: AppLocalizations.of(
-                context,
-              )!.client_secret_label_help,
+              labelHelpText: AppLocalizations.of(context)!
+                  .client_secret_label_help,
               input: ReactiveTextField<String>(
                 formControl: formViewModel.clientSecretControl,
                 decoration: InputDecoration(
@@ -235,51 +234,44 @@ class _FitbitCredentialsScreenshotsSectionState
                   _buildScreenshot(
                     context,
                     'assets/images/step1.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step1,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step1,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step2.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step2,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step2,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step3.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step3,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step3,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step4.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step4,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step4,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step5.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step5,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step5,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step6.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step6,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step6,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step7.png',
-                    AppLocalizations.of(
-                      context,
-                    )!.fitbit_credentials_screenshot_step7,
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step7,
                   ),
                 ],
               ),
