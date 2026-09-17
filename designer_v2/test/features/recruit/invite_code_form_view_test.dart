@@ -100,34 +100,38 @@ void main() {
     expect(downloadButton.text, tr.action_qr_code_download);
     expect(downloadButton.icon, Icons.download);
 
-    final invitationMessage = tester.widget<SelectableText>(
+    final invitationHeader = find.text(tr.form_field_invitation_message);
+    await tester.ensureVisible(invitationHeader);
+    await tester.tap(invitationHeader);
+    await tester.pump();
+
+    final invitationMessage = tester.widget<Text>(
       find.byKey(const ValueKey('invitation_message_preview')),
     );
-    expect(invitationMessage.data, contains('Study: Test study'));
-    expect(invitationMessage.data, contains('Invitation link: $expectedLink'));
-    expect(invitationMessage.data, contains('Invitation code: new-code'));
-    expect(
-      invitationMessage.data,
-      contains(
-        'https://play.google.com/store/apps/details?id=com.example.studyu&referrer=invite=new-code',
+    final expectedInvitationMessage = [
+      tr.invitation_message_intro('Test study'),
+      '',
+      tr.invitation_message_install_app,
+      tr.invitation_message_android(
+        'https://play.google.com/store/apps/details?id=com.example.studyu&referrer=invite%3Dnew-code',
       ),
-    );
-    expect(
-      invitationMessage.data,
-      contains('https://apps.apple.com/app/id123456789'),
-    );
-    expect(
-      invitationMessage.data,
-      contains(
-        'Install StudyU if needed, then open the invitation link on your phone.',
-      ),
-    );
+      tr.invitation_message_ios('https://apps.apple.com/app/id123456789'),
+      '',
+      tr.invitation_message_open_link,
+      expectedLink,
+      '',
+      tr.invitation_message_alternative,
+      'new-code',
+    ].join('\n');
+    expect(invitationMessage.data, expectedInvitationMessage);
 
-    await tester.tap(find.text(tr.action_copy_invitation));
+    await tester.tap(find.byTooltip(tr.action_copy_invitation));
     await tester.pump();
-    expect(clipboard.copiedText, invitationMessage.data);
+    expect(clipboard.copiedText, expectedInvitationMessage);
 
-    await tester.tap(find.byTooltip(tr.action_copy_invite_code));
+    final copyInviteCodeButton = find.byTooltip(tr.action_copy_invite_code);
+    await tester.ensureVisible(copyInviteCodeButton);
+    await tester.tap(copyInviteCodeButton);
     await tester.pump();
 
     expect(clipboard.copiedText, 'new-code');
