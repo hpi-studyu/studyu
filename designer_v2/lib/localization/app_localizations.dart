@@ -5380,6 +5380,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The QR code could not be displayed.'**
   String get error_qr_code_generation;
+
   /// No description provided for @form_field_report_improvementDirection_hint.
   ///
   /// In en, this message translates to:
