@@ -379,7 +379,11 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                                     ),
                                   );
                                 },
+                                onOpenNewTab:
+                                    _activeFrameController?.openNewPage,
                                 enabled: state.canTest,
+                                openNewTabEnabled:
+                                    state.canTest && _frameActivated,
                               ),
                             ],
                           ),
