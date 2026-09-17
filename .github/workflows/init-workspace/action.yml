@@ -10,7 +10,6 @@ runs:
       with:
         # Caches the Flutter SDK, keyed on .fvmrc
         cache: true
-        pub-cache: false
 
     - name: Cache pub dependencies
       uses: actions/cache@v5
