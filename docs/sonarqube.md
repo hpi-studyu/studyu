@@ -11,8 +11,10 @@ Dashboard: <https://sonar.cloud.studyu.health/dashboard?id=studyu-health_studyu>
 The project uses a 30-day new-code definition and the built-in **Sonar way** quality gate. The
 gate fails when coverage on new code is below 80%.
 
-The gate reports its result on the pull request. The `Ready to Merge` workflow checks the
-`SonarQube` workflow run as well, so a failing quality gate blocks the merge into `dev`.
+The gate reports its result on the pull request. `dev` requires only the `ready_to_merge` status
+check, and the `Ready to Merge` workflow observes the `SonarQube` workflow run. A failing quality
+gate therefore fails `Ready to Merge` and blocks the merge. The `SonarQube` workflows are not
+required checks themselves.
 
 ## When analysis runs
 
