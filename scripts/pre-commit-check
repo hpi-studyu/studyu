@@ -42,7 +42,10 @@ cd "$ROOT"
 echo "Running format before commit..."
 run_and_require_clean_tree ${rtk_prefix}melos format
 
-if printf '%s\n' "$STAGED_FILES" | grep -Eq '^(core|designer_v2)/(lib/.*\.dart|build\.yaml|pubspec\.yaml)$|^pubspec\.yaml$|\.g\.dart$'; then
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Running generate..."
+  run_and_require_clean_tree ${rtk_prefix}melos generate
+elif printf '%s\n' "$STAGED_FILES" | grep -Eq '^(core|designer_v2)/(lib/.*\.dart|build\.yaml|pubspec\.yaml)$|^pubspec\.yaml$|\.g\.dart$'; then
   echo "Build-related files staged. Running generate..."
   run_and_require_clean_tree ${rtk_prefix}melos generate
 else

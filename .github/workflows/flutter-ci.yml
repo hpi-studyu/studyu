@@ -32,3 +32,26 @@ jobs:
 
       - name: Run Flutter tests
         run: dart run melos test --no-select
+
+  qualitycheck:
+    name: Code quality checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        with:
+          cache: false
+
+      - name: Install melos
+        run: dart pub global activate melos
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run pre-commit checks
+        run: sh scripts/pre-commit-check
