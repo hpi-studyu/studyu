@@ -5,7 +5,7 @@ import 'package:studyu_app/constants.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class FitbitHandler {
+class FitbitHandler() {
   static const String _fitbitCredentialsPrefix = 'fitbit_credentials_';
 
   static Map<String, dynamic> _credentialsToJson(

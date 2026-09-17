@@ -12,34 +12,31 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef ParticipantCountProvider = int Function(StudyInvite invite);
 
-enum InviteCodesTableColumn { code, enrolled, interventionA, interventionB }
-
-class _InviteCodeTableWidthConfig {
-  const _InviteCodeTableWidthConfig({
-    required this.codeWidth,
-    required this.enrolledWidth,
-    required this.interventionWidth,
-  });
-
-  final double codeWidth;
-  final double enrolledWidth;
-  final double interventionWidth;
+enum InviteCodesTableColumn() {
+  code,
+  enrolled,
+  interventionA,
+  interventionB,
 }
 
-class StudyInvitesTable extends StatelessWidget {
-  const StudyInvitesTable({
-    required this.invites,
-    required this.onSelect,
-    required this.getInlineActions,
-    required this.getActions,
-    required this.getIntervention,
-    required this.getParticipantCountForInvite,
-    required this.sortColumn,
-    required this.sortAscending,
-    required this.onSortColumn,
-    super.key,
-  });
+class const _InviteCodeTableWidthConfig({
+  required final double codeWidth,
+  required final double enrolledWidth,
+  required final double interventionWidth,
+});
 
+class const StudyInvitesTable({
+  required final List<StudyInvite> invites,
+  required final OnSelectHandler<StudyInvite> onSelect,
+  required final ActionsProviderFor<StudyInvite> getInlineActions,
+  required final ActionsProviderFor<StudyInvite> getActions,
+  required final InterventionProvider getIntervention,
+  required final ParticipantCountProvider getParticipantCountForInvite,
+  required final InviteCodesSortColumn sortColumn,
+  required final bool sortAscending,
+  required final void Function(InviteCodesSortColumn column) onSortColumn,
+  super.key,
+}) extends StatelessWidget {
   static const _tableMinRowHeight = 34.0;
   static const _compactBreakpoint = 640.0;
   static const _narrowBreakpoint = 520.0;
@@ -55,16 +52,6 @@ class StudyInvitesTable extends StatelessWidget {
   static const _copyButtonSize = 20.0;
   static const _rowActionSplashRadius = 18.0;
   static const _rowSpacing = 0.0;
-
-  final List<StudyInvite> invites;
-  final OnSelectHandler<StudyInvite> onSelect;
-  final ActionsProviderFor<StudyInvite> getActions;
-  final ActionsProviderFor<StudyInvite> getInlineActions;
-  final InterventionProvider getIntervention;
-  final ParticipantCountProvider getParticipantCountForInvite;
-  final InviteCodesSortColumn sortColumn;
-  final bool sortAscending;
-  final void Function(InviteCodesSortColumn column) onSortColumn;
 
   @override
   Widget build(BuildContext context) {

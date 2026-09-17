@@ -9,18 +9,13 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:uuid/uuid.dart';
 
-class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
-  InviteCodeFormViewModel({
-    required this.study,
-    required this.inviteCodeRepository,
-    super.formData,
-    super.delegate,
-    super.validationSet = StudyFormValidationSet.draft,
-  });
-
-  final Study study;
-  final InviteCodeFormRepository inviteCodeRepository;
-
+class InviteCodeFormViewModel({
+  required final Study study,
+  required final InviteCodeFormRepository inviteCodeRepository,
+  super.formData,
+  super.delegate,
+  super.validationSet = StudyFormValidationSet.draft,
+}) extends FormViewModel<StudyInvite> {
   @override
   Map<FormMode, String> get titles => {
     FormMode.create: tr.form_code_create,

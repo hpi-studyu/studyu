@@ -17,7 +17,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 part 'study_recruit_controller.g.dart';
 
 @riverpod
-class StudyRecruitController extends _$StudyRecruitController
+class StudyRecruitController()
+    extends _$StudyRecruitController
     implements IModelActionProvider<StudyInvite> {
   static const _searchDebounceDuration = Duration(milliseconds: 300);
 

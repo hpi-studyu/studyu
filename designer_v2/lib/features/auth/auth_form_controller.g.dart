@@ -59,7 +59,7 @@ final class AuthFormControllerProvider
 }
 
 String _$authFormControllerHash() =>
-    r'85a7614611690dd81404c90ca9866c1ecc3ee32f';
+    r'3e5ce90cda126c544cd08be2ae2af7914b552b38';
 
 final class AuthFormControllerFamily extends $Family
     with

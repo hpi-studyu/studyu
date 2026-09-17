@@ -30,7 +30,7 @@ const _rowMenuItemHorizontalTitleGap = 4.0;
 const _rowMenuIconFallbackSize = 14.0;
 const _shareMenuElevation = 5.0;
 
-abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
+abstract class IInviteCodeRepository() implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
 
   Future<List<StudyInvite>> fetchPage({
@@ -44,32 +44,27 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<int> count({String? query});
 }
 
-class InviteCodeRepository extends ModelRepository<StudyInvite>
-    implements IInviteCodeRepository, InviteCodeFormRepository {
-  InviteCodeRepository({
-    required this.studyId,
-    required this.apiClient,
-    required this.authRepository,
-    required this.studyRepository,
-    required this.ref,
-  }) : super(
-         InviteCodeRepositoryDelegate(
-           study: studyRepository.get(studyId)!.model,
-           apiClient: apiClient,
-           studyRepository: studyRepository,
-         ),
-       );
-
+class InviteCodeRepository({
   /// The [Study] this repository operates on
-  final StudyID studyId;
-  Study get study => studyRepository.get(studyId)!.model;
+  required final StudyID studyId,
+  required final StudyUApi apiClient,
+  required final IAuthRepository authRepository,
+  required final IStudyRepository studyRepository,
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final Ref ref;
+  required final Ref ref,
+}) extends ModelRepository<StudyInvite>
+    implements IInviteCodeRepository, InviteCodeFormRepository {
+  this
+    : super(
+        InviteCodeRepositoryDelegate(
+          study: studyRepository.get(studyId)!.model,
+          apiClient: apiClient,
+          studyRepository: studyRepository,
+        ),
+      );
 
-  final StudyUApi apiClient;
-  final IAuthRepository authRepository;
-  final IStudyRepository studyRepository;
+  Study get study => studyRepository.get(studyId)!.model;
 
   final Map<ModelID, WrappedModel<StudyInvite>> _pageCache = {};
   int _pageFetchToken = 0;
@@ -293,18 +288,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   }
 }
 
-class InviteCodeRepositoryDelegate
-    extends IModelRepositoryDelegate<StudyInvite> {
-  InviteCodeRepositoryDelegate({
-    required this.study,
-    required this.apiClient,
-    required this.studyRepository,
-  });
-
-  final Study study;
-  final StudyUApi apiClient;
-  final IStudyRepository studyRepository;
-
+class InviteCodeRepositoryDelegate({
+  required final Study study,
+  required final StudyUApi apiClient,
+  required final IStudyRepository studyRepository,
+}) extends IModelRepositoryDelegate<StudyInvite> {
   @override
   Future<StudyInvite> fetch(ModelID modelId) {
     return apiClient.fetchStudyInvite(modelId);

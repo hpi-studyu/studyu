@@ -17,14 +17,12 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class JourneyOverviewScreen extends StatefulWidget {
-  const JourneyOverviewScreen({super.key});
-
+class const JourneyOverviewScreen({super.key}) extends StatefulWidget {
   @override
   State<JourneyOverviewScreen> createState() => _JourneyOverviewScreen();
 }
 
-class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
+class _JourneyOverviewScreen() extends State<JourneyOverviewScreen> {
   StudySubject? subject;
   bool _isStartingStudy = false;
 
@@ -148,11 +146,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   }
 }
 
-class Timeline extends StatelessWidget {
-  final StudySubject? subject;
-
-  const Timeline({required this.subject, super.key});
-
+class const Timeline({required final StudySubject? subject, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -188,24 +183,15 @@ class Timeline extends StatelessWidget {
   }
 }
 
-class InterventionTile extends StatelessWidget {
-  final String? title;
-  final String iconName;
-  final DateTime date;
-  final Color? color;
-  final bool isFirst;
-  final bool isLast;
-
-  const InterventionTile({
-    required this.title,
-    required this.iconName,
-    required this.date,
-    this.color,
-    this.isFirst = false,
-    this.isLast = false,
-    super.key,
-  });
-
+class const InterventionTile({
+  required final String? title,
+  required final String iconName,
+  required final DateTime date,
+  final Color? color,
+  final bool isFirst = false,
+  final bool isLast = false,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -240,12 +226,11 @@ class InterventionTile extends StatelessWidget {
   }
 }
 
-class IconIndicator extends StatelessWidget {
-  final String iconName;
-  final Color? color;
-
-  const IconIndicator({required this.iconName, this.color, super.key});
-
+class const IconIndicator({
+  required final String iconName,
+  final Color? color,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -260,11 +245,8 @@ class IconIndicator extends StatelessWidget {
   }
 }
 
-class TimelineChild extends StatelessWidget {
-  final Widget? child;
-
-  const TimelineChild({super.key, this.child});
-
+class const TimelineChild({super.key, final Widget? child})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

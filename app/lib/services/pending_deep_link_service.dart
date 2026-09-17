@@ -2,7 +2,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class PendingDeepLinkService {
+class PendingDeepLinkService() {
   static const _inviteKey = 'pending_deferred_link_invite';
   static const _studyKey = 'pending_deferred_link_study';
 

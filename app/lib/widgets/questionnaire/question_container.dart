@@ -15,32 +15,19 @@ import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget
 import 'package:studyu_app/widgets/questionnaire/questions/visual_analogue_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
-class QuestionContainer extends StatelessWidget {
-  final Function(Answer, int) onDone;
-  final VoidCallback? onCleared;
-  final Question question;
-  final int index;
-  final String? taskId;
-  final GlobalKey? containerKey;
-  final Answer? initialAnswer;
-  final void Function(String questionId, String value)? onFreeTextDraftChanged;
-  final bool isLastQuestion;
-  final GlobalKey<FreeTextQuestionWidgetState>? freeTextKey;
-
-  const QuestionContainer({
-    required this.onDone,
-    required this.question,
-    required this.index,
-    this.onCleared,
-    this.taskId,
-    this.containerKey,
-    this.initialAnswer,
-    this.onFreeTextDraftChanged,
-    this.isLastQuestion = false,
-    this.freeTextKey,
-    super.key,
-  });
-
+class const QuestionContainer({
+  required final Function(Answer, int) onDone,
+  required final Question question,
+  required final int index,
+  final VoidCallback? onCleared,
+  final String? taskId,
+  final GlobalKey? containerKey,
+  final Answer? initialAnswer,
+  final void Function(String questionId, String value)? onFreeTextDraftChanged,
+  final bool isLastQuestion = false,
+  final GlobalKey<FreeTextQuestionWidgetState>? freeTextKey,
+  super.key,
+}) extends StatelessWidget {
   QuestionWidget _buildQuestionBody(BuildContext context) {
     switch (question) {
       case final ChoiceQuestion choiceQuestion:

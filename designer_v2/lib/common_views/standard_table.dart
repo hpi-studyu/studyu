@@ -23,55 +23,57 @@ typedef StandardTableCellsBuilder<T> = List<Widget> Function(
   Set<WidgetState> states,
 );
 
-enum StandardTableStyle { plain, material, flat }
+enum StandardTableStyle() {
+  plain,
+  material,
+  flat,
+}
 
 /// Default descriptor for a table column
-class StandardTableColumn {
-  StandardTableColumn({
-    required this.label,
-    this.tooltip,
-    this.columnWidth = const FlexColumnWidth(),
-    this.sortable = false,
-  });
-
-  final String label;
-  final String? tooltip;
-  final TableColumnWidth columnWidth;
-  final bool sortable;
-
+class StandardTableColumn({
+  required final String label,
+  final String? tooltip,
+  final TableColumnWidth columnWidth = const FlexColumnWidth(),
+  final bool sortable = false,
+}) {
   bool? sortAscending;
   Widget? sortableIcon;
 }
 
-class StandardTable<T> extends StatefulWidget {
-  StandardTable({
-    required this.items,
-    required List<StandardTableColumn>? columns,
-    required this.onSelectItem,
-    required this.buildCellsAt,
-    this.sortColumnPredicates,
-    this.trailingActionsAt,
-    StandardTableColumn? trailingActionsColumn,
-    this.trailingActionsMenuType = ActionMenuType.popup,
-    this.headerRowBuilder,
-    this.dataRowBuilder,
-    this.cellSpacing = 10.0,
-    this.rowSpacing = 9.0,
-    this.minRowHeight = 60.0,
-    this.headerMaxLines = 1,
-    this.softWrapHeader = false,
-    this.showTableHeader = true,
-    this.tableWrapper,
-    this.leadingWidget,
-    this.trailingWidget,
-    this.leadingWidgetSpacing = 12.0,
-    this.trailingWidgetSpacing = 8.0,
-    this.emptyWidget,
-    this.rowStyle = StandardTableStyle.material,
-    this.disableRowInteractions = false,
-    this.hideLeadingTrailingWhenEmpty = true,
-    super.key,
-  }) {
+class StandardTable<T>({
+  required final List<T> items,
+  required List<StandardTableColumn>? columns,
+  required final OnSelectHandler<T> onSelectItem,
+  required final StandardTableCellsBuilder<T> buildCellsAt,
+  final List<int Function(T a, T b)?>? sortColumnPredicates,
+  final ActionsProviderAt<T>? trailingActionsAt,
+  StandardTableColumn? trailingActionsColumn,
+  final ActionMenuType? trailingActionsMenuType = ActionMenuType.popup,
+  final StandardTableRowBuilder? headerRowBuilder,
+  final StandardTableRowBuilder? dataRowBuilder,
+  final double cellSpacing = 10.0,
+  final double rowSpacing = 9.0,
+  final double? minRowHeight = 60.0,
+  final int headerMaxLines = 1,
+  final bool softWrapHeader = false,
+  final bool showTableHeader = true,
+  final WidgetDecorator? tableWrapper,
+
+  /// Optional widget rendered above/below the table body
+  final Widget? leadingWidget,
+  final Widget? trailingWidget,
+  final double? leadingWidgetSpacing = 12.0,
+  final double? trailingWidgetSpacing = 8.0,
+
+  /// Optional widget rendered when there are no rows in the table
+  /// If undefined, renders an empty table instead
+  final Widget? emptyWidget,
+  final StandardTableStyle rowStyle = StandardTableStyle.material,
+  final bool disableRowInteractions = false,
+  final bool hideLeadingTrailingWhenEmpty = true,
+  super.key,
+}) extends StatefulWidget {
+  this {
     if (trailingActionsColumn == null) {
       inputTrailingActionsColumn = StandardTableColumn(
         label: '',
@@ -92,49 +94,14 @@ class StandardTable<T> extends StatefulWidget {
     }
   }
 
-  final List<T> items;
   late final List<StandardTableColumn> inputColumns;
-  final OnSelectHandler<T> onSelectItem;
-  final ActionsProviderAt<T>? trailingActionsAt;
-  final ActionMenuType? trailingActionsMenuType;
-
-  final StandardTableCellsBuilder<T> buildCellsAt;
-  final List<int Function(T a, T b)?>? sortColumnPredicates;
-  final StandardTableRowBuilder? headerRowBuilder;
-  final StandardTableRowBuilder? dataRowBuilder;
   late final StandardTableColumn inputTrailingActionsColumn;
-
-  final WidgetDecorator? tableWrapper;
-
-  final double cellSpacing;
-  final double rowSpacing;
-  final double? minRowHeight;
-
-  final int headerMaxLines;
-  final bool softWrapHeader;
-  final bool showTableHeader;
-  final bool hideLeadingTrailingWhenEmpty;
-
-  /// Optional widget rendered above/below the table body
-  final Widget? leadingWidget;
-  final Widget? trailingWidget;
-
-  final double? leadingWidgetSpacing;
-  final double? trailingWidgetSpacing;
-
-  /// Optional widget rendered when there are no rows in the table
-  /// If undefined, renders an empty table instead
-  final Widget? emptyWidget;
-
-  final StandardTableStyle rowStyle;
-
-  final bool disableRowInteractions;
 
   @override
   State<StandardTable<T>> createState() => _StandardTableState<T>();
 }
 
-class _StandardTableState<T> extends State<StandardTable<T>> {
+class _StandardTableState<T>() extends State<StandardTable<T>> {
   /// Cached list of [TableRow]s corresponding to each item in [widget.items]
   final List<TableRow> _cachedRows = [];
 

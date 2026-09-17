@@ -12,14 +12,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 typedef _InformationItem = ({IconData icon, String label, String value});
 
-class StudyInformationScreen extends StatefulWidget {
-  const StudyInformationScreen({super.key});
-
+class const StudyInformationScreen({super.key}) extends StatefulWidget {
   @override
   State<StudyInformationScreen> createState() => _StudyInformationScreenState();
 }
 
-class _StudyInformationScreenState extends State<StudyInformationScreen> {
+class _StudyInformationScreenState() extends State<StudyInformationScreen> {
   late final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
 
   @override
@@ -190,11 +188,8 @@ class _StudyInformationScreenState extends State<StudyInformationScreen> {
       information.map((item) => '${item.label}: ${item.value}').join('\n');
 }
 
-class _InformationTile extends StatelessWidget {
-  const _InformationTile({required this.item});
-
-  final _InformationItem item;
-
+class const _InformationTile({required final _InformationItem item})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(

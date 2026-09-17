@@ -20,17 +20,13 @@ const _excludedPrefixes = [
 
 /// Thrown when an LCOV record cannot be normalized because the source path is
 /// invalid, outside the repository, or does not exist.
-class CoverageSourceException implements Exception {
-  CoverageSourceException(this.message);
-  final String message;
+class CoverageSourceException(final String message) implements Exception {
   @override
   String toString() => message;
 }
 
 /// Thrown when an LCOV record is malformed or incomplete.
-class CoverageFormatException implements Exception {
-  CoverageFormatException(this.message);
-  final String message;
+class CoverageFormatException(final String message) implements Exception {
   @override
   String toString() => message;
 }

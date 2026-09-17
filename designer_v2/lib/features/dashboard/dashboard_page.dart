@@ -20,16 +20,13 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/comparator_utils.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
-class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({required this.filter, super.key});
-
-  final StudiesFilter? filter;
-
+class const DashboardScreen({required final StudiesFilter? filter, super.key})
+    extends ConsumerStatefulWidget {
   @override
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+class _DashboardScreenState() extends ConsumerState<DashboardScreen> {
   static const _compactFilterBreakpoint = 600.0;
   static const _compactSearchBreakpoint = 900.0;
   static const _wideHeaderMinWidth = 600.0;

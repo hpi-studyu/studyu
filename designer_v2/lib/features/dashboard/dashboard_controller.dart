@@ -19,7 +19,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 part 'dashboard_controller.g.dart';
 
 @riverpod
-class DashboardController extends _$DashboardController
+class DashboardController()
+    extends _$DashboardController
     implements IModelActionProvider<Study> {
   @override
   DashboardState build() {

@@ -33,10 +33,3 @@ linter:
     avoid_print: false
     # Automatically sort pub dependencies
     sort_pub_dependencies: true
-
-    # DISABLE until the Dart 3.13 constructor migration is complete.
-    empty_container_bodies: false
-    unnecessary_const_in_enum_constructor: false
-    unnecessary_type_name_in_constructor: false
-    use_primary_constructors: false
-    prefer_initializing_formals: false

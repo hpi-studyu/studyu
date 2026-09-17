@@ -11,7 +11,7 @@ import 'package:studyu_core/core.dart';
 /// eligibility check, has preselected interventions or at most two
 /// interventions, or requires no consent. [complete] marks a started
 /// subject.
-enum StudyOnboardingPhase {
+enum StudyOnboardingPhase() {
   overview,
   terms,
   eligibility,
@@ -21,7 +21,7 @@ enum StudyOnboardingPhase {
   complete,
 }
 
-class AppState with ChangeNotifier {
+class AppState() with ChangeNotifier {
   Study? selectedStudy;
   List<Intervention>? selectedInterventions;
   StudySubject? activeSubject;
@@ -118,8 +118,6 @@ class AppState with ChangeNotifier {
   /// being viewed in test/preview mode while already launched (to avoid
   /// mixing results from test users with actual participants)
   bool get trackParticipantProgress => !(isPreview && selectedStudy!.isRunning);
-
-  AppState();
 
   void init(BuildContext context) {
     scheduleNotifications(context);

@@ -5,11 +5,10 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class StudyPreviewLayout extends ConsumerWidget {
-  const StudyPreviewLayout({required this.routeArgs, super.key});
-
-  final StudyFormRouteArgs routeArgs;
-
+class const StudyPreviewLayout({
+  required final StudyFormRouteArgs routeArgs,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final banner = previewBanner(ref, routeArgs.studyId);

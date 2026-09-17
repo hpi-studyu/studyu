@@ -14,21 +14,16 @@ import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_app/widgets/why_dialog.dart';
 
-class RecoveryPhraseScreen extends StatefulWidget {
-  final List<String>? initialPhrase;
-  final bool continueToDashboard;
-
-  const RecoveryPhraseScreen({
-    super.key,
-    this.initialPhrase,
-    this.continueToDashboard = false,
-  });
-
+class const RecoveryPhraseScreen({
+  super.key,
+  final List<String>? initialPhrase,
+  final bool continueToDashboard = false,
+}) extends StatefulWidget {
   @override
   State<RecoveryPhraseScreen> createState() => _RecoveryPhraseScreenState();
 }
 
-class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
+class _RecoveryPhraseScreenState() extends State<RecoveryPhraseScreen> {
   bool _isChecked = kDebugMode;
   bool _isRevealed = false;
 

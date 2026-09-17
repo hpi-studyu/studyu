@@ -9,11 +9,11 @@ part 'intervention_result.g.dart';
 class InterventionResult extends StudyResult {
   static const String studyResultType = 'intervention';
 
-  InterventionResult() : super(studyResultType);
+  new() : super(studyResultType);
 
-  InterventionResult.withId() : super.withId(studyResultType);
+  new withId() : super.withId(studyResultType);
 
-  factory InterventionResult.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$InterventionResultFromJson(json);
 
   @override

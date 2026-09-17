@@ -12,18 +12,12 @@ import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class AverageSectionFormView extends ConsumerWidget {
-  const AverageSectionFormView({
-    required this.formViewModel,
-    required this.studyId,
-    required this.reportSectionColumnWidth,
-    super.key,
-  });
-
-  final ReportItemFormViewModel formViewModel;
-  final StudyID studyId;
-  final Map<int, TableColumnWidth> reportSectionColumnWidth;
-
+class const AverageSectionFormView({
+  required final ReportItemFormViewModel formViewModel,
+  required final StudyID studyId,
+  required final Map<int, TableColumnWidth> reportSectionColumnWidth,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);

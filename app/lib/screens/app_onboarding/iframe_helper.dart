@@ -49,7 +49,7 @@ bool _isTrustedDesignerHost(Uri referrer, Uri? fallback) {
   ).hasMatch(host);
 }
 
-class IFrameHelper {
+class IFrameHelper() {
   // The listener must outlive LoadingScreen so loaded preview routes keep
   // receiving live study updates from the Designer.
   static StreamSubscription<html.MessageEvent>? _messageSubscription;

@@ -4,7 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:supabase/supabase.dart';
 
-abstract class SupabaseObject {
+abstract class SupabaseObject() {
   Map<String, Object> get primaryKeys;
 
   Map<String, dynamic> toJson();
@@ -22,7 +22,7 @@ String tableName(Type cls) {
   throw ArgumentError('$cls is not a supported Supabase type');
 }
 
-abstract class SupabaseObjectFunctions<T extends SupabaseObject>
+abstract class SupabaseObjectFunctions<T extends SupabaseObject>()
     implements SupabaseObject {
   static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) {
     if (T == Study) return Study.fromJson(json) as T;
@@ -66,7 +66,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject>
 }
 
 // ignore: avoid_classes_with_only_static_members
-class SupabaseQuery {
+class SupabaseQuery() {
   static Future<List<T>> getAll<T extends SupabaseObject>({
     List<String> selectedColumns = const ['*'],
     Map<String, Object>? filters,
@@ -194,22 +194,14 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
   }
 }
 
-sealed class ExtractionResult<T> {
-  final List<T> extracted;
+sealed class ExtractionResult<T>(final List<T> extracted);
 
-  ExtractionResult(this.extracted);
-}
+class ExtractionSuccess<T>(super.extracted) extends ExtractionResult<T>;
 
-class ExtractionSuccess<T> extends ExtractionResult<T> {
-  ExtractionSuccess(super.extracted);
-}
-
-class ExtractionFailedException<T> extends ExtractionResult<T>
-    implements Exception {
-  final List<JsonWithError> notExtracted;
-
-  ExtractionFailedException(super.extracted, this.notExtracted);
-
+class ExtractionFailedException<T>(
+  super.extracted,
+  final List<JsonWithError> notExtracted,
+) extends ExtractionResult<T> implements Exception {
   @override
   String toString() =>
       'ExtractionFailedException: ${notExtracted.length} records failed to extract.\n'
@@ -217,9 +209,4 @@ class ExtractionFailedException<T> extends ExtractionResult<T>
       'Not Extracted: ${notExtracted.map((e) => 'json: ${e.json}, error: ${e.error}').join('; ')}';
 }
 
-class JsonWithError {
-  final Map<String, dynamic> json;
-  final Object error;
-
-  JsonWithError(this.json, this.error);
-}
+class JsonWithError(final Map<String, dynamic> json, final Object error);

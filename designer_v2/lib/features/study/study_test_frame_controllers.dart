@@ -64,23 +64,19 @@ void _removePreviewIframeStyles() {
   }
 }
 
-class RouteInformation {
-  String? route;
-  String? extra;
-  String? cmd;
-  String? data;
-
-  RouteInformation(this.route, this.extra, this.cmd, this.data);
-
+class RouteInformation(
+  var String? route,
+  var String? extra,
+  var String? cmd,
+  var String? data,
+) {
   @override
   String toString() {
     return 'RouteInformation{route: $route, extra: $extra, cmd: $cmd, data: $data}';
   }
 }
 
-abstract class PlatformController {
-  final String studyId;
-  final String baseSrc;
+abstract class PlatformController(final String baseSrc, final String studyId) {
   final ValueNotifier<bool> navigationEnabled = ValueNotifier(false);
   late String previewSrc;
   late RouteInformation routeInformation;
@@ -90,8 +86,6 @@ abstract class PlatformController {
   VoidCallback? onLoading;
   VoidCallback? onReady;
   ValueChanged<String>? onError;
-
-  PlatformController(this.baseSrc, this.studyId);
 
   void activate();
   void registerViews(Key key);
@@ -109,13 +103,16 @@ abstract class PlatformController {
   void dispose() {}
 }
 
-class WebController extends PlatformController {
+class WebController(
+  super.baseSrc,
+  super.studyId,
+  final String serializedSession,
+) extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
-  final String serializedSession;
   bool _isListening = false;
   StreamSubscription<web.MessageEvent>? _messageSubscription;
 
-  WebController(super.baseSrc, super.studyId, this.serializedSession) {
+  this {
     super.frameWidget = Container();
     routeInformation = RouteInformation(null, null, null, null);
   }
@@ -333,8 +330,9 @@ class WebController extends PlatformController {
 }
 
 // Mostly unfinished, since we only support Desktop for now
-class MobileController extends PlatformController {
-  MobileController(super.previewSrc, super.studyId) {
+class MobileController(super.previewSrc, super.studyId)
+    extends PlatformController {
+  this {
     frameWidget = const MobileFrame();
   }
 

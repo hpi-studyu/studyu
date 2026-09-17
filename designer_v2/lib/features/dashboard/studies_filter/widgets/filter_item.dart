@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-class FilterItem extends StatefulWidget {
-  final String keyName;
-  final String title;
-  final Widget child;
-  final bool isActive;
-  final VoidCallback? onReset;
-  final bool isInitiallyExpanded;
-  final ValueChanged<bool>? onExpansionChanged;
-
-  const FilterItem({
-    required this.keyName,
-    required this.title,
-    required this.child,
-    required this.isActive,
-    this.onReset,
-    this.isInitiallyExpanded = false,
-    this.onExpansionChanged,
-    super.key,
-  });
-
+class const FilterItem({
+  required final String keyName,
+  required final String title,
+  required final Widget child,
+  required final bool isActive,
+  final VoidCallback? onReset,
+  final bool isInitiallyExpanded = false,
+  final ValueChanged<bool>? onExpansionChanged,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<FilterItem> createState() => _FilterItemState();
 }
 
-class _FilterItemState extends State<FilterItem> {
+class _FilterItemState() extends State<FilterItem> {
   // We keep internal state for expansion if no external controller is used,
   // but the original code used a Set<String> _expandedFields passed down (implicitly or explicitly).
   // The original _buildFilterItem took a 'key' and checked against _expandedFields.

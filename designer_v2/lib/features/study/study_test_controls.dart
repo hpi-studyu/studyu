@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 // todo move this either to study_test_fame_views or do something like PreviewWidget(
-class FrameControlsWidget extends ConsumerWidget {
-  const FrameControlsWidget({this.enabled = true, this.onRefresh, super.key});
-
-  final VoidCallback? onRefresh;
-  final bool enabled;
-
+class const FrameControlsWidget({
+  final bool enabled = true,
+  final VoidCallback? onRefresh,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(

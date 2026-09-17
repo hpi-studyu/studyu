@@ -4,33 +4,22 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/recovery_file_utils.dart';
 
-class RecoveryPhraseContent extends StatefulWidget {
-  final bool useGridLayout;
-  final List<String>? initialPhrase;
-  final bool isChecked;
-  final ValueChanged<bool?>? onCheckedChanged;
-  final bool showConfirmation;
-  final bool showSuccessFeedback;
-  final bool showRotation;
-  final VoidCallback? onLoadError;
-
-  const RecoveryPhraseContent({
-    super.key,
-    this.useGridLayout = true,
-    this.initialPhrase,
-    this.isChecked = false,
-    this.onCheckedChanged,
-    this.showConfirmation = true,
-    this.showSuccessFeedback = true,
-    this.showRotation = true,
-    this.onLoadError,
-  });
-
+class const RecoveryPhraseContent({
+  super.key,
+  final bool useGridLayout = true,
+  final List<String>? initialPhrase,
+  final bool isChecked = false,
+  final ValueChanged<bool?>? onCheckedChanged,
+  final bool showConfirmation = true,
+  final bool showSuccessFeedback = true,
+  final bool showRotation = true,
+  final VoidCallback? onLoadError,
+}) extends StatefulWidget {
   @override
   State<RecoveryPhraseContent> createState() => RecoveryPhraseContentState();
 }
 
-class RecoveryPhraseContentState extends State<RecoveryPhraseContent> {
+class RecoveryPhraseContentState() extends State<RecoveryPhraseContent> {
   late List<String>? _phrase = widget.initialPhrase;
   late bool _isLoading = widget.initialPhrase == null;
   bool _isRotating = false;

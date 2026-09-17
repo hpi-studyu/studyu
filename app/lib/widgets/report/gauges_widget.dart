@@ -2,22 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:statistics/statistics.dart';
 
-class GaugesWidget extends StatelessWidget {
-  final String nameInterventionA;
-  final String nameInterventionB;
-  final num meanInterventionA;
-  final num meanInterventionB;
-  final bool showColors;
-
-  GaugesWidget(
-    this.nameInterventionA,
-    this.nameInterventionB,
-    List<num> valuesInterventionA,
-    List<num> valuesInterventionB, {
-    this.showColors = true,
-    super.key,
-  }) : meanInterventionA = valuesInterventionA.mean,
-       meanInterventionB = valuesInterventionB.mean;
+// ignore: prefer_const_constructors_in_immutables
+class GaugesWidget(
+  final String nameInterventionA,
+  final String nameInterventionB,
+  List<num> valuesInterventionA,
+  List<num> valuesInterventionB, {
+  final bool showColors = true,
+  super.key,
+}) extends StatelessWidget {
+  final num meanInterventionA = valuesInterventionA.mean;
+  final num meanInterventionB = valuesInterventionB.mean;
 
   @override
   Widget build(BuildContext context) {
