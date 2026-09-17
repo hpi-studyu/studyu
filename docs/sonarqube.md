@@ -11,8 +11,8 @@ Dashboard: <https://sonar.cloud.studyu.health/dashboard?id=studyu-health_studyu>
 The project uses a 30-day new-code definition and the built-in **Sonar way** quality gate. The
 gate fails when coverage on new code is below 80%.
 
-The gate reports its result on the pull request. It blocks a merge only when the repository
-requires the `SonarQube Quality Gate` check for `dev`.
+The gate reports its result on the pull request. The `Ready to Merge` workflow checks the
+`SonarQube` workflow run as well, so a failing quality gate blocks the merge into `dev`.
 
 ## When analysis runs
 
@@ -26,11 +26,6 @@ The workflow skips fork and Dependabot pull requests because those runs cannot r
 SonarQube token. GitHub records a skipped job as successful. This makes those pull requests
 explicit exceptions to the required check. It does not mean SonarQube analyzed them.
 
-## Merge enforcement
-
-An active dev-only `SonarQube quality gate` ruleset must require `SonarQube Quality Gate` from
-GitHub Actions (`integration_id` `15368`). Do not require `SonarQube Code Analysis`.
-
 ## Where you see the result
 
 A pull request run adds two checks:
@@ -43,13 +38,9 @@ A pull request run adds two checks:
   the dashboard and lists the new, fixed, and unresolved issues.
 
 The workflow also writes the condition table to the run summary, and the scan step writes the
-full scanner output to the log.
-
-## GitHub integration
-
-GitHub sign-in does not configure pull request analysis. The GitHub DevOps integration and the
-project binding do that. The project is bound to `studyu-health/studyu`. Persistent SonarQube
-summary comments are disabled.
+full scanner output to the log. The annotations and the table describe the analysis of the same
+workflow run: the workflow reads the compute engine task of its own scan and asks SonarQube for
+the quality gate of that analysis.
 
 ## What the analysis covers
 
@@ -100,8 +91,9 @@ The quality gate measures new code, not the complete code base.
 | New issues | one or more |
 | Security hotspots reviewed on new code | below 100% |
 
-SonarQube ignores the coverage condition and the duplication condition when a change adds fewer
-than 20 new coverable lines. A documentation-only pull request therefore passes the gate.
+SonarQube ignores the coverage condition when a change adds fewer than 20 new coverable lines,
+and it ignores the duplication condition when a change adds fewer than 20 new lines. A
+documentation-only pull request therefore passes the gate.
 
 ## When the quality gate fails
 
@@ -144,5 +136,6 @@ requires `SONAR_TOKEN` and `SONAR_HOST_URL`, so it runs in GitHub Actions only.
   database tests do not change the coverage value.
 - A skipped workflow run leaves the pull request without a quality gate result. A manual run
   does not replace it, because a manual run analyzes `dev`.
-- Flutter LCOV has no record for a source file that no unit or widget test loads. SonarQube does
-  not evaluate new-code coverage for that file.
+- Flutter LCOV has no record for a source file that no unit or widget test loads. The analysis
+  stores no coverage measure for that file, so it adds no lines to cover and counts neither as
+  covered nor as uncovered, also on new code.
