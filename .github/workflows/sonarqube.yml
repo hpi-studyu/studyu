@@ -65,6 +65,29 @@ jobs:
       - name: Run tests with coverage
         run: melos run test:coverage --no-select
 
+      - name: Validate Flutter test reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          reports=(
+            app/coverage/tests.output
+            core/coverage/tests.output
+            designer_v2/coverage/tests.output
+            flutter_common/coverage/tests.output
+          )
+          for report in "${reports[@]}"; do
+            if [[ ! -s "$report" ]]; then
+              echo "::error::Missing or empty Flutter test report: $report" >&2
+              exit 1
+            fi
+            if ! jq -s -e \
+              'length > 0 and any(.[]; .type == "suite") and (.[-1].type == "done" and .[-1].success == true)' \
+              "$report" >/dev/null; then
+              echo "::error::Invalid or unsuccessful Flutter test report: $report" >&2
+              exit 1
+            fi
+          done
+
       - name: Validate and normalize coverage
         run: dart scripts/normalize_lcov.dart coverage/sonar/lcov.info
 
