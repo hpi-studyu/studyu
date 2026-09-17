@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class DashboardShowcaseStorage {
+class const DashboardShowcaseStorage._() {
   static const _completedKey = 'dashboard_showcase_completed';
-
-  const DashboardShowcaseStorage._();
 
   static Future<bool> isCompleted() async {
     return await SecureStorage.readBool(_completedKey) ?? false;
@@ -19,13 +17,11 @@ class DashboardShowcaseStorage {
   }
 }
 
-class RecoveryPhraseStorage {
+class const RecoveryPhraseStorage._() {
   static const _pendingKeyPrefix = 'recovery_phrase_pending';
   static Future<bool?> Function(String) _pendingReader = _readPending;
   static Future<void> Function(String) _pendingMarker = _markPending;
   static Future<void> Function(String) _pendingClearer = _clearPending;
-
-  const RecoveryPhraseStorage._();
 
   static String _key(String subjectId) => '${_pendingKeyPrefix}_$subjectId';
 

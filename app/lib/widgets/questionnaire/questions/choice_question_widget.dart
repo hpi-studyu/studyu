@@ -4,24 +4,15 @@ import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart'
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
 
-class ChoiceQuestionWidget extends QuestionWidget {
-  final ChoiceQuestion question;
-  final Function(Answer) onDone;
-  final String multiSelectionText;
-  final String requiredMultiSelectionText;
-  final Answer<List<String>>? initialAnswer;
-  final VoidCallback? onCleared;
-
-  const ChoiceQuestionWidget({
-    super.key,
-    required this.question,
-    required this.onDone,
-    required this.multiSelectionText,
-    required this.requiredMultiSelectionText,
-    this.initialAnswer,
-    this.onCleared,
-  });
-
+class const ChoiceQuestionWidget({
+  super.key,
+  required final ChoiceQuestion question,
+  required final Function(Answer) onDone,
+  required final String multiSelectionText,
+  required final String requiredMultiSelectionText,
+  final Answer<List<String>>? initialAnswer,
+  final VoidCallback? onCleared,
+}) extends QuestionWidget {
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
 
@@ -33,7 +24,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
       : null;
 }
 
-class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
+class _ChoiceQuestionWidgetState() extends State<ChoiceQuestionWidget> {
   late List<Choice> selected;
   late bool confirmButtonTouched;
 

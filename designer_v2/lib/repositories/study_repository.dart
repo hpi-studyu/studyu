@@ -29,30 +29,25 @@ export 'study_repository_interface.dart';
 
 part 'study_repository.g.dart';
 
-class StudyRepository extends ModelRepository<Study>
-    implements IStudyRepository {
-  StudyRepository({
-    this.sortCallback,
-    required this.apiClient,
-    required this.authRepository,
-    required this.ref,
-  }) : super(
-         StudyRepositoryDelegate(
-           apiClient: apiClient,
-           authRepository: authRepository,
-         ),
-       );
+class StudyRepository({
+  final VoidCallback? sortCallback,
 
   /// Reference to the StudyU API injected via Riverpod
-  final StudyUApi apiClient;
+  required final StudyUApi apiClient,
 
   /// Reference to the auth repository injected via Riverpod
-  final IAuthRepository authRepository;
+  required final IAuthRepository authRepository,
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final Ref ref;
-
-  final VoidCallback? sortCallback;
+  required final Ref ref,
+}) extends ModelRepository<Study> implements IStudyRepository {
+  this
+    : super(
+        StudyRepositoryDelegate(
+          apiClient: apiClient,
+          authRepository: authRepository,
+        ),
+      );
 
   @override
   ModelID getKey(Study model) {
@@ -316,15 +311,10 @@ class StudyRepository extends ModelRepository<Study>
   }
 }
 
-class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
-  StudyRepositoryDelegate({
-    required this.apiClient,
-    required this.authRepository,
-  });
-
-  final StudyUApi apiClient;
-  final IAuthRepository authRepository;
-
+class StudyRepositoryDelegate({
+  required final StudyUApi apiClient,
+  required final IAuthRepository authRepository,
+}) extends IModelRepositoryDelegate<Study> {
   @override
   Future<List<Study>> fetchAll() {
     return apiClient.getUserStudies(forDashboardDisplay: true);

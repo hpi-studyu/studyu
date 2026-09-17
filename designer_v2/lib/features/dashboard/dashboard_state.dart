@@ -9,107 +9,81 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/study_repository_interface.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class DashboardState extends Equatable {
-  static const defaultFilter = StudiesFilter.owned;
-  static const pageSize = 20;
-
-  const DashboardState({
-    this.loadedStudies = const [],
-    this.pinnedStudiesList = const [],
-    this.totalCount = 0,
-    this.pageTotalCount = 0,
-    this.isLoadingInitial = true,
-    this.isLoadingMore = false,
-    this.isLoadingPinned = false,
-    this.isRefreshing = false,
-    this.retainedStudies,
-    this.pendingStudyIds = const {},
-    this.hasMore = true,
-    this.loadError,
-    this.studiesFilter = defaultFilter,
-    this.activeFilter,
-    this.advancedFilterUnsupported = false,
-    this.query = '',
-    this.sortByColumn = StudiesTableColumn.createdAt,
-    this.sortAscending = false,
-    this.savedFilters = const [],
-    this.selectedSavedFilterId,
-    required this.currentUser,
-    required this.searchController,
-  });
-
+class const DashboardState({
   /// Paginated studies fetched so far (excludes pinned, which render above).
-  final List<Study> loadedStudies;
+  final List<Study> loadedStudies = const [],
 
   /// Pinned studies fetched separately, always shown above the paginated list.
-  final List<Study> pinnedStudiesList;
+  final List<Study> pinnedStudiesList = const [],
 
   /// Total number of studies that match the current query (from PostgREST
   /// exact count). Used to know when [hasMore] should flip to false.
-  final int totalCount;
+  final int totalCount = 0,
 
   /// Total number of studies available on the current page before search or
   /// additional filter refinements are applied. Excludes pinned rows, which
   /// are added back via derived getters.
-  final int pageTotalCount;
+  final int pageTotalCount = 0,
 
   /// True while the first page (and pinned set) is loading.
-  final bool isLoadingInitial;
+  final bool isLoadingInitial = true,
 
   /// True while a "load more" page is in flight.
-  final bool isLoadingMore;
+  final bool isLoadingMore = false,
 
   /// True while pinned studies are being refreshed.
-  final bool isLoadingPinned;
+  final bool isLoadingPinned = false,
 
   /// True while existing results refresh in the background.
-  final bool isRefreshing;
+  final bool isRefreshing = false,
 
   /// Visible rows retained until replacement results arrive, including on failure.
-  final List<Study>? retainedStudies;
+  final List<Study>? retainedStudies,
 
   /// Study actions remain disabled until their requests and refreshes finish.
-  final Set<String> pendingStudyIds;
+  final Set<String> pendingStudyIds = const {},
 
   /// Whether more pages remain on the server.
-  final bool hasMore;
+  final bool hasMore = true,
 
   /// Last error from a fetch attempt, or null.
-  final Object? loadError;
+  final Object? loadError,
+
+  /// Currently selected filter preset (e.g. Owned, Shared, Public)
+  /// Used for UI highlighting. If null, a custom filter is active.
+  final StudiesFilter? studiesFilter = defaultFilter,
+
+  /// The actual filter logic to be applied.
+  /// If null, it falls back to the [studiesFilter] logic.
+  final FilterGroup? activeFilter,
 
   /// True if the current [activeFilter] contains a condition that cannot be
   /// expressed in PostgREST. When true the
   /// list is empty and the UI should show a "filter not supported" message
   /// rather than silently dropping rows.
-  final bool advancedFilterUnsupported;
-
-  /// Currently selected filter preset (e.g. Owned, Shared, Public)
-  /// Used for UI highlighting. If null, a custom filter is active.
-  final StudiesFilter? studiesFilter;
-
-  /// The ID of the currently selected saved filter preset
-  final String? selectedSavedFilterId;
-
-  /// The actual filter logic to be applied.
-  /// If null, it falls back to the [studiesFilter] logic.
-  final FilterGroup? activeFilter;
-
-  /// List of saved custom filters
-  final List<SavedFilter> savedFilters;
+  final bool advancedFilterUnsupported = false,
+  final String query = '',
 
   /// Currently selected sort column applied server-side.
-  final StudiesTableColumn sortByColumn;
+  final StudiesTableColumn sortByColumn = StudiesTableColumn.createdAt,
 
   /// Currently selected sort direction applied server-side.
-  final bool sortAscending;
+  final bool sortAscending = false,
+
+  /// List of saved custom filters
+  final List<SavedFilter> savedFilters = const [],
+
+  /// The ID of the currently selected saved filter preset
+  final String? selectedSavedFilterId,
 
   /// Currently authenticated user (used for filtering studies)
-  final User currentUser;
-
-  final String query;
+  required final User currentUser,
 
   /// Search controller for managing search functionality
-  final SearchController searchController;
+  required final SearchController searchController,
+}) extends Equatable {
+  static const defaultFilter = StudiesFilter.owned;
+  static const pageSize = 20;
 
   /// Studies actually rendered: pinned first, then the paginated list.
   /// Wrapped in [AsyncValue] for backwards-compatible UI scaffolding that

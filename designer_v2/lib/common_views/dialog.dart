@@ -3,41 +3,22 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class StandardDialog extends StatelessWidget {
-  const StandardDialog({
-    this.title,
-    this.titleText,
-    required this.body,
-    this.width,
-    this.height,
-    this.padding = const EdgeInsets.fromLTRB(42.0, 36.0, 42.0, 36.0),
-    this.minWidth = 400,
-    this.minHeight = 300,
-    this.maxWidth,
-    this.maxHeight,
-    this.actionButtons = const [],
-    this.backgroundColor,
-    this.borderRadius = 20.0,
-    super.key,
-  });
-
-  final Widget? title;
-  final String? titleText;
-  final Widget body;
-  final List<Widget> actionButtons;
-
-  final Color? backgroundColor;
-  final double? borderRadius;
-
-  final double? width;
-  final double? height;
-  final double minWidth;
-  final double minHeight;
-  final double? maxWidth;
-  final double? maxHeight;
-
-  final EdgeInsets padding;
-
+class const StandardDialog({
+  final Widget? title,
+  final String? titleText,
+  required final Widget body,
+  final double? width,
+  final double? height,
+  final EdgeInsets padding = const EdgeInsets.fromLTRB(42.0, 36.0, 42.0, 36.0),
+  final double minWidth = 400,
+  final double minHeight = 300,
+  final double? maxWidth,
+  final double? maxHeight,
+  final List<Widget> actionButtons = const [],
+  final Color? backgroundColor,
+  final double? borderRadius = 20.0,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

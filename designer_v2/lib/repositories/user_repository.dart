@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
 part 'user_repository.g.dart';
 
-abstract class IUserRepository {
+abstract class IUserRepository() {
   StudyUUser get user;
   Future<StudyUUser> fetchUser();
   Future<StudyUUser> saveUser();
@@ -40,18 +40,16 @@ abstract class IUserRepository {
   });
 }
 
-enum PreferenceAction { pin, pinOff }
+enum PreferenceAction() {
+  pin,
+  pinOff,
+}
 
-class UserRepository implements IUserRepository {
-  UserRepository({
-    required this.authRepository,
-    required this.apiClient,
-    required this.ref,
-  });
-
-  final StudyUApi apiClient;
-  final IAuthRepository authRepository;
-  final Ref ref;
+class UserRepository({
+  required final IAuthRepository authRepository,
+  required final StudyUApi apiClient,
+  required final Ref ref,
+}) implements IUserRepository {
   StudyUUser? _user;
   Future<StudyUUser>? _fetchFuture;
 

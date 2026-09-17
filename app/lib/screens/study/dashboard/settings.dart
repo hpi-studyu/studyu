@@ -20,14 +20,12 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart' show PostgrestException;
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
-
+class const Settings({super.key}) extends StatefulWidget {
   @override
   State<Settings> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState() extends State<Settings> {
   Locale? _selectedValue;
   StudySubject? subject;
 
@@ -266,14 +264,12 @@ class _SettingsState extends State<Settings> {
   }
 }
 
-class RecoveryPhraseWidget extends StatefulWidget {
-  const RecoveryPhraseWidget({super.key});
-
+class const RecoveryPhraseWidget({super.key}) extends StatefulWidget {
   @override
   State<RecoveryPhraseWidget> createState() => _RecoveryPhraseWidgetState();
 }
 
-class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
+class _RecoveryPhraseWidgetState() extends State<RecoveryPhraseWidget> {
   bool _hasExpanded = false;
 
   @override
@@ -326,16 +322,13 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
   }
 }
 
-class OptOutAlertDialog extends StatefulWidget {
-  final StudySubject? subject;
-
-  const OptOutAlertDialog({super.key, required this.subject});
-
+class const OptOutAlertDialog({super.key, required final StudySubject? subject})
+    extends StatefulWidget {
   @override
   State<OptOutAlertDialog> createState() => _OptOutAlertDialogState();
 }
 
-class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
+class _OptOutAlertDialogState() extends State<OptOutAlertDialog> {
   bool acknowledged = false;
 
   @override
@@ -418,16 +411,13 @@ class _OptOutAlertDialogState extends State<OptOutAlertDialog> {
   }
 }
 
-class DeleteAlertDialog extends StatefulWidget {
-  final StudySubject? subject;
-
-  const DeleteAlertDialog({super.key, required this.subject});
-
+class const DeleteAlertDialog({super.key, required final StudySubject? subject})
+    extends StatefulWidget {
   @override
   State<DeleteAlertDialog> createState() => _DeleteAlertDialogState();
 }
 
-class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
+class _DeleteAlertDialogState() extends State<DeleteAlertDialog> {
   bool acknowledged = false;
 
   @override

@@ -17,29 +17,24 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AuthScaffold extends ConsumerStatefulWidget {
-  const AuthScaffold({
-    required this.body,
-    required this.formKey,
-    this.leftContentMinWidth = 424.0,
-    this.leftPanelMinWidth = 500.0,
-    this.leftPanelPadding = const EdgeInsets.fromLTRB(88.0, 54.0, 88.0, 40.0),
-    super.key,
-  });
-
-  final Widget body;
-  final AuthFormKey formKey;
-
-  final double leftContentMinWidth;
-  final double leftPanelMinWidth;
-
-  final EdgeInsets leftPanelPadding;
-
+class const AuthScaffold({
+  required final Widget body,
+  required final AuthFormKey formKey,
+  final double leftContentMinWidth = 424.0,
+  final double leftPanelMinWidth = 500.0,
+  final EdgeInsets leftPanelPadding = const EdgeInsets.fromLTRB(
+    88.0,
+    54.0,
+    88.0,
+    40.0,
+  ),
+  super.key,
+}) extends ConsumerStatefulWidget {
   @override
   ConsumerState<AuthScaffold> createState() => _AuthScaffoldState();
 }
 
-class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
+class _AuthScaffoldState() extends ConsumerState<AuthScaffold> {
   AuthFormKey get formKey => widget.formKey;
   static const double _compactBreakpoint = 1000.0;
 

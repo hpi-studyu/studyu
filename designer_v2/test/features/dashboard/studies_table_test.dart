@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-class _DashboardController extends DashboardController {
+class _DashboardController() extends DashboardController {
   @override
   bool isSortAscending() => false;
 

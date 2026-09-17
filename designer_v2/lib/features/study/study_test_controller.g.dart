@@ -59,7 +59,7 @@ final class StudyTestControllerProvider
 }
 
 String _$studyTestControllerHash() =>
-    r'e5b7e5041c187964ea5b807a58fe637c95dd3b1b';
+    r'9a0cf27813e58fff60d1652f2ee4044c40763736';
 
 final class StudyTestControllerFamily extends $Family
     with

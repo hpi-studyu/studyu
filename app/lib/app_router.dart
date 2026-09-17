@@ -32,7 +32,7 @@ import 'package:studyu_app/widgets/onboarding_shell.dart';
 import 'package:studyu_core/core.dart';
 
 /// Route name constants
-class RouteNames {
+class RouteNames() {
   static const String loading = 'loading';
   static const String preview = 'preview';
   static const String appOutdated = 'appOutdated';

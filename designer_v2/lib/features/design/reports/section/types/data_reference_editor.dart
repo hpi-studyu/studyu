@@ -6,15 +6,10 @@ import 'package:studyu_designer_v2/features/design/reports/section/types/data_re
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class DataReferenceEditor<T> {
-  const DataReferenceEditor({
-    required this.formControl,
-    required this.availableTasks,
-  });
-
-  final FormControl<DataReferenceIdentifier<T>> formControl;
-  final List<Task> availableTasks;
-
+class const DataReferenceEditor<T>({
+  required final FormControl<DataReferenceIdentifier<T>> formControl,
+  required final List<Task> availableTasks,
+}) {
   ReactiveDropdownField get buildReactiveDropdownField {
     final items = _dataReferenceItems();
     return ReactiveDropdownField<DataReferenceIdentifier>(

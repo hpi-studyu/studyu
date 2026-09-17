@@ -328,7 +328,7 @@ void main() {
   });
 }
 
-class _TestAppLanguage extends ChangeNotifier implements AppLanguage {
+class _TestAppLanguage() extends ChangeNotifier implements AppLanguage {
   @override
   Locale? get appLocal => null;
 

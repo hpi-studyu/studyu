@@ -1,10 +1,8 @@
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class UnsupportedFilterException implements Exception {
-  final String reason;
-  const UnsupportedFilterException(this.reason);
-
+class const UnsupportedFilterException(final String reason)
+    implements Exception {
   @override
   String toString() => 'UnsupportedFilterException: $reason';
 }

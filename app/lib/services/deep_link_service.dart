@@ -2,48 +2,35 @@ import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 
 /// Result types for deep link processing
-sealed class DeepLinkResult {}
+sealed class DeepLinkResult();
 
 /// Deep link was successfully processed
-class DeepLinkSuccess extends DeepLinkResult {
-  final Study study;
-  final String? inviteCode;
-  final List<String>? preselectedInterventionIds;
-  final bool alreadyEnrolled;
-
-  DeepLinkSuccess({
-    required this.study,
-    this.inviteCode,
-    this.preselectedInterventionIds,
-    this.alreadyEnrolled = false,
-  });
-}
+class DeepLinkSuccess({
+  required final Study study,
+  final String? inviteCode,
+  final List<String>? preselectedInterventionIds,
+  final bool alreadyEnrolled = false,
+}) extends DeepLinkResult;
 
 /// Deep link processing failed
-class DeepLinkError extends DeepLinkResult {
-  final DeepLinkErrorType type;
-  final String? errorValue;
-
-  DeepLinkError(this.type, [this.errorValue]);
-}
+class DeepLinkError(final DeepLinkErrorType type, [final String? errorValue])
+    extends DeepLinkResult;
 
 /// User needs to authenticate first
-class DeepLinkNeedsAuth extends DeepLinkResult {
-  final Study study;
-  final String? inviteCode;
-  final List<String>? preselectedInterventionIds;
-
-  DeepLinkNeedsAuth({
-    required this.study,
-    this.inviteCode,
-    this.preselectedInterventionIds,
-  });
-}
+class DeepLinkNeedsAuth({
+  required final Study study,
+  final String? inviteCode,
+  final List<String>? preselectedInterventionIds,
+}) extends DeepLinkResult;
 
 /// Types of deep link errors
-enum DeepLinkErrorType { studyNotFound, inviteOnly, invalidInvite }
+enum DeepLinkErrorType() {
+  studyNotFound,
+  inviteOnly,
+  invalidInvite,
+}
 
-class DeepLinkService {
+class DeepLinkService() {
   @visibleForTesting
   static Future<(StudyInvite?, Study?)> Function(String code)
   fetchInviteForDeepLink = Study.fetchByInviteCode;

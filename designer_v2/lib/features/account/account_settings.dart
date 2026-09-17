@@ -16,15 +16,14 @@ import 'package:studyu_designer_v2/localization/language_picker.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 
-class AccountSettingsDialog extends ConsumerStatefulWidget {
-  const AccountSettingsDialog({super.key});
-
+class const AccountSettingsDialog({super.key}) extends ConsumerStatefulWidget {
   @override
   ConsumerState<AccountSettingsDialog> createState() =>
       _AccountSettingsDialogState();
 }
 
-class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
+class _AccountSettingsDialogState()
+    extends ConsumerState<AccountSettingsDialog> {
   bool _isImported = false;
 
   @override

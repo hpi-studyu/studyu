@@ -3,11 +3,7 @@ import 'package:patrol_finders/patrol_finders.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-class AuthRobot {
-  const AuthRobot(this.$);
-
-  final PatrolTester $;
-
+class const AuthRobot(final PatrolTester $) {
   Future<void> enterEmail(String email) async {
     await $(ReactiveTextField).containing(tr.form_field_email).enterText(email);
   }

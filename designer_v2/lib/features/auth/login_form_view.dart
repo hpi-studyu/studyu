@@ -11,9 +11,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class LoginForm extends FormConsumerRefWidget {
-  const LoginForm({super.key});
-
+class const LoginForm({super.key}) extends FormConsumerRefWidget {
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
     const formKey = AuthFormKey.login;

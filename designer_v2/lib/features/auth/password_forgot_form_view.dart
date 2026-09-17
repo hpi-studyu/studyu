@@ -10,9 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class PasswordForgotForm extends FormConsumerRefWidget {
-  const PasswordForgotForm({super.key});
-
+class const PasswordForgotForm({super.key}) extends FormConsumerRefWidget {
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
     const formKey = AuthFormKey.passwordForgot;

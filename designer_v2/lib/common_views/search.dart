@@ -6,25 +6,18 @@ const _searchIconSize = 20.0;
 const _searchLeadingInset = 4.0;
 const _searchHorizontalPadding = 12.0;
 
-class Search extends StatefulWidget {
-  final Function(String) onQueryChanged;
-  final SearchController? searchController;
-  final String? hintText;
-  final String? initialText;
-
-  const Search({
-    super.key,
-    required this.onQueryChanged,
-    this.searchController,
-    this.hintText,
-    this.initialText,
-  });
-
+class const Search({
+  super.key,
+  required final Function(String) onQueryChanged,
+  final SearchController? searchController,
+  final String? hintText,
+  final String? initialText,
+}) extends StatefulWidget {
   @override
   SearchState createState() => SearchState();
 }
 
-class SearchState extends State<Search> {
+class SearchState() extends State<Search> {
   late TextEditingController _searchController;
 
   @override
@@ -104,6 +97,6 @@ class SearchState extends State<Search> {
   }
 }
 
-class SearchController {
+class SearchController() {
   late void Function(String text) setText;
 }

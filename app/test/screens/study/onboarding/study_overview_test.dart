@@ -320,7 +320,7 @@ void main() {
   });
 }
 
-class _PopObserver extends NavigatorObserver {
+class _PopObserver() extends NavigatorObserver {
   int popCount = 0;
 
   @override

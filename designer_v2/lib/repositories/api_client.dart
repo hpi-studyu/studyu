@@ -13,7 +13,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'api_client.g.dart';
 
-abstract class StudyUApi {
+abstract class StudyUApi() {
   Future<Study> saveStudy(Study study);
 
   Future<Study> fetchStudy(
@@ -91,44 +91,39 @@ abstract class StudyUApi {
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 
 /// Base class for domain-specific exceptions
-class APIException implements Exception {}
+class APIException() implements Exception;
 
-class StudyNotFoundException extends APIException {}
+class StudyNotFoundException() extends APIException;
 
-class MeasurementNotFoundException extends APIException {}
+class MeasurementNotFoundException() extends APIException;
 
-class QuestionNotFoundException extends APIException {}
+class QuestionNotFoundException() extends APIException;
 
-class ConsentItemNotFoundException extends APIException {}
+class ConsentItemNotFoundException() extends APIException;
 
-class InterventionNotFoundException extends APIException {}
+class InterventionNotFoundException() extends APIException;
 
-class InterventionTaskNotFoundException extends APIException {}
+class InterventionTaskNotFoundException() extends APIException;
 
-class ReportNotFoundException extends APIException {}
+class ReportNotFoundException() extends APIException;
 
-class ReportSectionNotFoundException extends APIException {}
+class ReportSectionNotFoundException() extends APIException;
 
-class StudyInviteNotFoundException extends APIException {}
+class StudyInviteNotFoundException() extends APIException;
 
-class UserNotFoundException extends APIException {}
+class UserNotFoundException() extends APIException;
 
-abstract class PostgrestErrorCodes {
+abstract class PostgrestErrorCodes() {
   static const String isNotSingleItem = 'PGRST116';
 }
 
-class StudyUApiClient extends SupabaseClientDependant
+class StudyUApiClient({
+  /// Reference to the [SupabaseClient] injected via Riverpod
+  @override required final SupabaseClient supabaseClient,
+  final int testDelayMilliseconds = 0,
+}) extends SupabaseClientDependant
     with SupabaseQueryMixin
     implements StudyUApi {
-  StudyUApiClient({
-    required this.supabaseClient,
-    this.testDelayMilliseconds = 0,
-  });
-
-  /// Reference to the [SupabaseClient] injected via Riverpod
-  @override
-  final SupabaseClient supabaseClient;
-
   static const studyInviteColumn = 'study_invite!study_invite_studyId_fkey(*)';
 
   static final studyColumns = [
@@ -163,8 +158,6 @@ class StudyUApiClient extends SupabaseClientDependant
     'study_subject!study_subject_studyId_fkey(*)',
     'study_progress_export(*)',
   ];
-
-  final int testDelayMilliseconds;
 
   @override
   Future<List<StudySubject>> deleteParticipants(

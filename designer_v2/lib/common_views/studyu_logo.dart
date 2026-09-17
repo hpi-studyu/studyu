@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
-class StudyULogo extends StatelessWidget {
-  const StudyULogo({this.onTap, super.key});
-
-  final VoidCallback? onTap;
-
+class const StudyULogo({final VoidCallback? onTap, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MouseEventsRegion(

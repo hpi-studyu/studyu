@@ -14,14 +14,12 @@ import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:uuid/uuid.dart';
 
-class FilterBuilder extends ConsumerStatefulWidget {
-  const FilterBuilder({super.key});
-
+class const FilterBuilder({super.key}) extends ConsumerStatefulWidget {
   @override
   ConsumerState<FilterBuilder> createState() => _FilterBuilderState();
 }
 
-class _FilterBuilderState extends ConsumerState<FilterBuilder> {
+class _FilterBuilderState() extends ConsumerState<FilterBuilder> {
   // Text/Number inputs need controllers for the UI, but we sync them with state
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _participantCountController =

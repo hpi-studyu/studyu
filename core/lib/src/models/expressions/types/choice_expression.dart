@@ -9,11 +9,11 @@ class ChoiceExpression extends ValueExpression<dynamic> {
 
   Set<dynamic> choices = {};
 
-  ChoiceExpression() : super(expressionType);
+  new() : super(expressionType);
 
-  ChoiceExpression.withId() : super(expressionType);
+  new withId() : super(expressionType);
 
-  factory ChoiceExpression.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$ChoiceExpressionFromJson(json);
 
   @override

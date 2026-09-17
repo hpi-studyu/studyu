@@ -9,34 +9,26 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/unsaved_changes_dialog.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class FormSideSheetTab<T extends FormViewModel> extends NavbarTab {
-  FormSideSheetTab({
-    required super.title,
-    required super.index,
-    required this.formViewBuilder,
-    super.enabled,
-  });
+class FormSideSheetTab<T extends FormViewModel>({
+  required super.title,
+  required super.index,
 
   /// The widget to be rendered as the sidesheet content with a [FormViewModel]
   /// of type [T] when the tab is selected
-  FormViewBuilder<T> formViewBuilder;
-}
+  required var FormViewBuilder<T> formViewBuilder,
+  super.enabled,
+}) extends NavbarTab;
 
-class _FormSidesheetPopEntry<T extends FormViewModel> extends StatefulWidget {
-  const _FormSidesheetPopEntry({
-    required this.formViewModel,
-    required this.child,
-  });
-
-  final T formViewModel;
-  final Widget child;
-
+class const _FormSidesheetPopEntry<T extends FormViewModel>({
+  required final T formViewModel,
+  required final Widget child,
+}) extends StatefulWidget {
   @override
   State<_FormSidesheetPopEntry<T>> createState() =>
       _FormSidesheetPopEntryState<T>();
 }
 
-class _FormSidesheetPopEntryState<T extends FormViewModel>
+class _FormSidesheetPopEntryState<T extends FormViewModel>()
     extends State<_FormSidesheetPopEntry<T>>
     implements PopEntry {
   ModalRoute<dynamic>? _route;
