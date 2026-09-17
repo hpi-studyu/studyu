@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/onboarding/invite_qr_scanner.dart';
 import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
@@ -234,6 +235,18 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
   final _controller = TextEditingController();
   String? _errorMessage;
 
+  Future<void> _scanInviteCode() async {
+    final code = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (_) => const InviteQrScannerScreen()),
+    );
+    if (!mounted || code == null) return;
+
+    _controller
+      ..text = code
+      ..selection = TextSelection.collapsed(offset: code.length);
+    await _submitInviteCode();
+  }
+
   _InviteCodeDialogState();
 
   @override
@@ -243,8 +256,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
   }
 
   Future<void> _submitInviteCode() async {
+    final code = _controller.text.trim();
     try {
-      final (invite, study) = await Study.fetchByInviteCode(_controller.text);
+      final (invite, study) = await Study.fetchByInviteCode(code);
 
       if (!mounted) return;
 
@@ -272,7 +286,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
       await navigateToStudyOverview(
         context,
         study,
-        inviteCode: _controller.text,
+        inviteCode: code,
         preselectedIds: invite?.preselectedInterventionIds,
       );
     } catch (e) {
@@ -315,7 +329,14 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             autovalidateMode: AutovalidateMode.always,
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) => unawaited(_submitInviteCode()),
-            decoration: InputDecoration(labelText: l10n.invite_code),
+            decoration: InputDecoration(
+              labelText: l10n.invite_code,
+              suffixIcon: IconButton(
+                tooltip: l10n.scan_invite_code,
+                onPressed: _scanInviteCode,
+                icon: const Icon(Icons.qr_code_scanner),
+              ),
+            ),
           ),
         ],
       ),
