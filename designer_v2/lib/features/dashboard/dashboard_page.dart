@@ -83,9 +83,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (id == DefaultPresets.myActiveStudies.id) {
       return AppLocalizations.of(context)!.preset_tooltip_my_active_studies;
     } else if (id == DefaultPresets.studiesNeedingAttention.id) {
-      return AppLocalizations.of(
-        context,
-      )!.preset_tooltip_studies_needing_attention;
+      return AppLocalizations.of(context)!
+          .preset_tooltip_studies_needing_attention;
     } else if (id == DefaultPresets.recentlyCreated.id) {
       return AppLocalizations.of(context)!.preset_tooltip_recently_created;
     } else if (id == DefaultPresets.publicStudies.id) {
@@ -249,9 +248,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Text(
       countLabel,
-      style: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+      style: Theme.of(context).textTheme.bodyMedium
+          ?.copyWith(color: Theme.of(context).hintColor),
     );
   }
 

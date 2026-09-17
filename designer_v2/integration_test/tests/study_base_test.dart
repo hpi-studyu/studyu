@@ -24,21 +24,20 @@ abstract class StudyBaseTest extends StudyRobots {
         : 'test@studyu.health';
     const password = 'password';
 
-    await super.$.pumpWidgetAndSettle(
-      ExcludeSemantics(
-        child: ProviderScope(
-          overrides: [
-            dashboardDispatchProvider.overrideWith(
-              (ref) =>
-                  (studyId) => ref
-                      .read(routerProvider)
-                      .dispatch(RoutingIntents.studyEdit(studyId)),
-            ),
-          ],
-          child: const App(),
-        ),
+    await super.$.tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          dashboardDispatchProvider.overrideWith(
+            (ref) =>
+                (studyId) => ref
+                    .read(routerProvider)
+                    .dispatch(RoutingIntents.studyEdit(studyId)),
+          ),
+        ],
+        child: const ExcludeSemantics(child: App()),
       ),
     );
+    await super.$.pumpAndSettle();
 
     await execute(email, password);
     await finish();

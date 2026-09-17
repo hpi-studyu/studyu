@@ -215,8 +215,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   FormControlValidation get alphaConfidenceRequired => FormControlValidation(
     control: alphaControl,
     validators: [
-      Validators
-          .required, // todo numeric but also support decimal numbers e.g. 0.2 or 0,2
+      Validators.required, // todo numeric but also support decimal numbers e.g. 0.2 or 0,2
     ],
     validationMessages: {
       ValidationMessage.number: (error) =>

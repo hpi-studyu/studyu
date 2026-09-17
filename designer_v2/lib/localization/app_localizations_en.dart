@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1606,8 +1607,7 @@ class AppLocalizationsEn extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_intervention_tasks_minlength',
-      one:
-          'You must define at least one task for participants to complete during this intervention phase',
+      one: 'You must define at least one task for participants to complete during this intervention phase',
     );
     return '$_temp0';
   }
@@ -1718,8 +1718,7 @@ class AppLocalizationsEn extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_measurements_minlength',
-      one:
-          'You need to define at least one survey to determine the effect of your intervention(s).',
+      one: 'You need to define at least one survey to determine the effect of your intervention(s).',
     );
     return '$_temp0';
   }
@@ -1794,8 +1793,7 @@ class AppLocalizationsEn extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_measurement_survey_questions_minlength',
-      one:
-          'You need to define at least one question to determine the effect of your intervention(s)',
+      one: 'You need to define at least one question to determine the effect of your intervention(s)',
     );
     return '$_temp0';
   }

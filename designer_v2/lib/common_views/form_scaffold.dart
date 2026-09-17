@@ -10,13 +10,15 @@ import 'package:studyu_designer_v2/theme.dart';
 
 /// Signature for a builder that renders the widget corresponding to the
 /// [FormViewModel] of type [T]
-typedef FormViewBuilder<T extends FormViewModel> =
-    Widget Function(T formViewModel);
+typedef FormViewBuilder<T extends FormViewModel> = Widget Function(
+  T formViewModel,
+);
 
 /// Signature for a builder that resolves the [FormViewModel] of type [T]
 /// via a Riverpod [WidgetRef]
-typedef FormViewModelBuilder<T extends FormViewModel> =
-    T Function(WidgetRef ref);
+typedef FormViewModelBuilder<T extends FormViewModel> = T Function(
+  WidgetRef ref,
+);
 
 class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
   const FormScaffold({

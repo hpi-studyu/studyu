@@ -147,8 +147,7 @@ class GaugesWidget extends StatelessWidget {
         ),
         // Text placed inside the gauge box
         Positioned(
-          bottom:
-              30, // Position text inside the gauge without overlapping the needle
+          bottom: 30, // Position text inside the gauge without overlapping the needle
           child: RichText(
             text: TextSpan(
               children: <TextSpan>[

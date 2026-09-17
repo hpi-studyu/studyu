@@ -123,9 +123,8 @@ class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
                                   isLoading: state.isLoading,
                                   onPressedFuture: () async {
                                     final controller = ref.read(
-                                      authFormControllerProvider(
-                                        formKey,
-                                      ).notifier,
+                                      authFormControllerProvider(formKey)
+                                          .notifier,
                                     );
 
                                     final result = await controller

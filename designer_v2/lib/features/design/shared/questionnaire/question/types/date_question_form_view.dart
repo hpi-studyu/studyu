@@ -82,9 +82,8 @@ class DateQuestionFormView extends ConsumerWidget {
                   formControl: formViewModel.timeFormatPresetControl,
                   items: TimeFormatPreset.values.map((preset) {
                     final exampleTime = DateTime(2000, 1, 1, 14, 30);
-                    final example = DateFormat(
-                      preset.pattern,
-                    ).format(exampleTime);
+                    final example = DateFormat(preset.pattern)
+                        .format(exampleTime);
                     return DropdownMenuItem(
                       value: preset,
                       child: Text(example),

@@ -40,8 +40,9 @@ class FormControlOption<T> extends Equatable {
   List<Object?> get props => [value, label, description];
 }
 
-typedef FormControlUpdateFutureBuilder =
-    Future Function(AbstractControl control);
+typedef FormControlUpdateFutureBuilder = Future Function(
+  AbstractControl control,
+);
 
 /// This class represents a form view model.
 ///
@@ -210,9 +211,9 @@ abstract class FormViewModel<T> implements IFormGroupController {
     form.updateValueAndValidity(updateParent: false, emitEvent: false);
 
     // 3. Deep copy the full value
-    final fullValue =
-        jsonDecode(jsonEncode(form.value, toEncodable: _jsonEncodable))
-            as JsonMap;
+    final fullValue = jsonDecode(
+      jsonEncode(form.value, toEncodable: _jsonEncodable),
+    ) as JsonMap;
 
     // 4. Restore original states and rebuild the cache again
     _restoreControlStates(emitEvent: false, updateParent: false);

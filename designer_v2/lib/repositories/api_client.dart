@@ -173,11 +173,11 @@ class StudyUApiClient extends SupabaseClientDependant
   ) async {
     await _testDelay();
     if (participants.isEmpty) {
-      return Future.value([]);
+      return await Future.value([]);
     }
     final selectionCriteria = participants.first.foreignKey(study);
     final request = deleteAll<StudySubject>(selectionCriteria);
-    return _awaitGuarded(request);
+    return await _awaitGuarded(request);
   }
 
   /*
@@ -217,7 +217,7 @@ class StudyUApiClient extends SupabaseClientDependant
         ? studyDisplayColumns
         : studyColumns;
     final request = getAll<Study>(selectedColumns: columns);
-    return _awaitGuarded(request);
+    return await _awaitGuarded(request);
   }
 
   @override
@@ -370,7 +370,7 @@ class StudyUApiClient extends SupabaseClientDependant
       if (withInvites) studyInviteColumn,
     ];
     final request = getById<Study>(studyId, selectedColumns: columns);
-    return _awaitGuarded(
+    return await _awaitGuarded(
       request,
       onError: {
         PostgrestErrorCodes.isNotSingleItem: (e) =>
@@ -390,7 +390,7 @@ class StudyUApiClient extends SupabaseClientDependant
     await _testDelay();
     // Chain a fetch request to make sure we return a complete and updated study
     final request = study.save().then((study) => fetchStudy(study.id));
-    return _awaitGuarded<Study>(request);
+    return await _awaitGuarded<Study>(request);
   }
 
   @override
@@ -398,7 +398,7 @@ class StudyUApiClient extends SupabaseClientDependant
     final cleanCode = code.trim().toLowerCase();
     await _testDelay();
     final request = getByColumn<StudyInvite>('code', cleanCode);
-    return _awaitGuarded(
+    return await _awaitGuarded(
       request,
       onError: {
         PostgrestErrorCodes.isNotSingleItem: (e) =>
@@ -437,7 +437,7 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<int> countStudyInvites(StudyID studyId, {String? query}) async {
     await _testDelay();
-    return _awaitGuarded(
+    return await _awaitGuarded(
       _applyInviteCodeQuery(
         supabaseClient.from(StudyInvite.tableName).count(),
         studyId: studyId,
@@ -499,7 +499,7 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<StudyInvite> saveStudyInvite(StudyInvite invite) async {
     await _testDelay();
     final request = invite.save(); // upsert will override existing record
-    return _awaitGuarded<StudyInvite>(request);
+    return await _awaitGuarded<StudyInvite>(request);
   }
 
   @override
@@ -507,7 +507,7 @@ class StudyUApiClient extends SupabaseClientDependant
     await _testDelay();
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
-    return _awaitGuarded<void>(request);
+    return await _awaitGuarded<void>(request);
   }
 
   @override
@@ -537,7 +537,7 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<StudyUUser> fetchUser(String userId) async {
     await _testDelay();
     final request = getById<StudyUUser>(userId);
-    return _awaitGuarded(
+    return await _awaitGuarded(
       request,
       onError: {
         PostgrestErrorCodes.isNotSingleItem: (e) =>
@@ -550,7 +550,7 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<StudyUUser> saveUser(StudyUUser user) async {
     await _testDelay();
     final request = user.save();
-    return _awaitGuarded<StudyUUser>(request);
+    return await _awaitGuarded<StudyUUser>(request);
   }
 
   @override
@@ -559,7 +559,7 @@ class StudyUApiClient extends SupabaseClientDependant
   ) async {
     await _testDelay();
     final request = credentials.save();
-    return _awaitGuarded<StudyFitbitCredentials>(request);
+    return await _awaitGuarded<StudyFitbitCredentials>(request);
   }
 
   @override
@@ -568,7 +568,7 @@ class StudyUApiClient extends SupabaseClientDependant
   ) async {
     await _testDelay();
     final request = getById<StudyFitbitCredentials>(studyId);
-    return _awaitGuarded(
+    return await _awaitGuarded(
       request,
       onError: {
         PostgrestErrorCodes.isNotSingleItem: (e) =>
@@ -583,7 +583,7 @@ class StudyUApiClient extends SupabaseClientDependant
   ) async {
     await _testDelay();
     final request = credentials.delete();
-    return _awaitGuarded<void>(request);
+    return await _awaitGuarded<void>(request);
   }
 
   /// Helper that tries to complete the given Supabase query [future] while
