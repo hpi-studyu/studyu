@@ -7,6 +7,18 @@ import 'package:synchronized/synchronized.dart';
 
 final storageLock = Lock();
 
+String effectiveStorageEnvironment(
+  String configuredEnvironment, {
+  required bool isDebug,
+}) {
+  return isDebug ? configuredEnvironment : '.env';
+}
+
+String storageKeyForEnvironment(String key, String environment) {
+  if (environment == '.env') return key;
+  return '${Uri.encodeComponent(environment)}:$key';
+}
+
 class SupabaseStorage extends LocalStorage {
   @override
   Future<void> initialize() async {}
@@ -37,23 +49,31 @@ class SupabaseStorage extends LocalStorage {
 
 class SecureStorage {
   static const storage = FlutterSecureStorage();
+  static String environment = '.env';
+
+  static String _scopedKey(String key) {
+    return storageKeyForEnvironment(key, environment);
+  }
 
   static Future<bool> containsKey(String key) async {
+    final scopedKey = _scopedKey(key);
     return await storageLock.synchronized(() async {
-      return await storage.containsKey(key: key);
+      return await storage.containsKey(key: scopedKey);
     });
   }
 
   static Future<void> write(String key, String value) async {
+    final scopedKey = _scopedKey(key);
     return await storageLock.synchronized(() async {
-      return await storage.write(key: key, value: value);
+      return await storage.write(key: scopedKey, value: value);
     });
   }
 
   static Future<String?> read(String key) async {
+    final scopedKey = _scopedKey(key);
     return await storageLock.synchronized(() async {
       try {
-        return await storage.read(key: key);
+        return await storage.read(key: scopedKey);
       } catch (e) {
         StudyULogger.error("Error reading key $key from secure storage: $e");
         if (e is PlatformException && e.code == 'BadPaddingException') {
@@ -73,8 +93,9 @@ class SecureStorage {
   }
 
   static Future<void> delete(String key) async {
+    final scopedKey = _scopedKey(key);
     return await storageLock.synchronized(() async {
-      return await storage.delete(key: key);
+      return await storage.delete(key: scopedKey);
     });
   }
 
