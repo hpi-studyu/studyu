@@ -138,7 +138,7 @@ jobs:
         run: |
           set -uo pipefail
 
-          project=hpi-studyu_studyu
+          project=studyu-health_studyu
           host="${SONAR_HOST_URL%/}"
           scope="branch=dev"
           target="branch dev"
