@@ -2,7 +2,7 @@ name: studyu
 description: The root of the StudyU project
 publish_to: none
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: '>=3.13.0 <4.0.0'
 workspace:
   - core
   - flutter_common
