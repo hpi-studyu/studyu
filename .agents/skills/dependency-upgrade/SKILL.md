@@ -91,6 +91,21 @@ Inspect:
 - Platform lockfiles such as `app/ios/Podfile.lock` and
   `app/android/Gemfile.lock`, when present.
 
+When `app` is in scope, inspect these native inputs:
+
+- Android: `app/android/settings.gradle.kts`, `app/android/app/build.gradle.kts`,
+  `app/android/gradle/wrapper/gradle-wrapper.properties`, `app/android/gradle.properties`,
+  and the Android Gemfile and lockfile when present.
+- iOS: `app/ios/Podfile`, `app/ios/Podfile.lock`,
+  `app/ios/Runner.xcworkspace/contents.xcworkspacedata`, relevant Runner project settings,
+  and the iOS Gemfile and lockfile when present.
+
+Record native plugin versions, Android Gradle Plugin, Kotlin, Gradle, Java and Kotlin
+versions, Flutter-derived Android SDK and NDK values, iOS platform and deployment targets,
+CocoaPods version, and lockfile presence. Treat `app/android/Gemfile.lock` as a Fastlane
+tooling lock only. Record that `app/ios/Gemfile.lock` is absent when it is absent. Keep the
+root `pubspec.yaml` as the command source of truth.
+
 Run and record the full result of:
 
 ```bash
@@ -211,6 +226,63 @@ unrelated dependency churn. Do not repair a lockfile by hand.
 
 ## 7. Validate the update
 
+### Native-platform gate
+
+Run this gate when an approved change affects an app SDK, a plugin, native files, platform
+minimums, or a required platform build. Complete the dependency resolution step first.
+
+The agent may inspect native inputs and propose commands. After final update-table approval,
+obtain explicit user approval before `flutter pub get`, `pod install`, or an
+environment-qualified non-signing build. The approval must cover repository, cache, and
+build mutation and the required host. Pair with the user for `flutter precache --ios`,
+`pod install --repo-update`, `flutter clean`, Bundler installation, and direct native
+diagnostics. The user must run signed Xcode builds, device and archive checks, signing,
+keychain work, Fastlane, TestFlight, Play upload, and any command that uses production
+credentials.
+
+Review the diff immediately after every mutating native step. Do not hand-edit `Podfile.lock`,
+generated files, or native lockfiles. Require macOS, Xcode, and CocoaPods for iOS. Require
+Android SDK, Java, and Android tooling for Android. `fvm exec melos test` does not provide
+native Android or iOS coverage. Record every native command, result, and skipped check with
+its reason.
+
+If an approved SDK, manifest, or plugin-resolution change affects the app, or generated
+Flutter inputs are missing or stale, run:
+
+```bash
+fvm exec melos exec --scope studyu_app -- "flutter pub get"
+```
+
+Acknowledge that `fvm exec melos upgrade` already performs approved workspace
+resolution and bootstrap. This command is not a second general dependency upgrade.
+
+If iOS plugin resolution or Flutter pod integration changed, or Pods are absent or out of
+sync, then run:
+
+```bash
+fvm exec melos exec --scope studyu_app -- "cd ios && pod install"
+```
+
+The iOS `app/ios/Podfile:13-26` requires generated Flutter settings before manual pod work.
+Use `pod install --repo-update` only when plain `pod install` reports that a required
+specification is unavailable or stale. Use `fvm flutter precache --ios` before pod work only
+after the selected SDK lacks `Flutter.xcframework` or Flutter reports that exact missing-
+artifact condition.
+
+Do not run `pod update` for routine upgrades. Do not automatically run `bundle install`,
+`bundle update`, Gradle refreshes, Gradle wrapper generation, AGP or Kotlin changes, or
+`flutter create`. Treat these as separate, approved native or tooling changes.
+
+### Native project regeneration handoff
+
+This workflow must not run native project regeneration. Stop when Flutter migration evidence or
+a concrete missing or outdated template file requires regeneration. Follow
+`.agents/skills/flutter-platform-regeneration/SKILL.md` under a separate explicit approval.
+
+Resume dependency validation only after that skill returns its approved patch and report. Keep
+the native diff, approvals, command results, skipped checks, and residual risks in the upgrade
+record. Prefer a narrow native compatibility edit when it fixes the issue without regeneration.
+
 Run the narrowest checks for the affected packages and platforms. Use the
 existing root Melos scripts and inspect their current definitions before use.
 Record every command, result, and skipped check.
@@ -243,17 +315,21 @@ Build every affected platform. Use a current environment-specific build
 script from the root `pubspec.yaml`. Every app or Designer build must provide
 `--dart-define=STUDYU_ENV=.env.dev` or `--dart-define=STUDYU_ENV=.env.local`.
 Do not invoke an unqualified `build:android`, `build:ios`, or `build:web` script.
-If the catalog has no safe environment-specific build script, run a root-level
-targeted command instead:
+If the catalog has no safe environment-specific build script, run these root-level
+commands for the participant app:
 
 ```bash
-fvm exec melos exec --scope <package-scope> -- \
-  "flutter build <platform> --dart-define=STUDYU_ENV=.env.dev"
+fvm exec melos exec --scope studyu_app -- \
+  "flutter build apk --dart-define=STUDYU_ENV=.env.dev"
+
+fvm exec melos exec --scope studyu_app -- \
+  "flutter build ipa --no-codesign --dart-define=STUDYU_ENV=.env.dev"
 ```
 
-Use `.env.local` when local services are required. Stop when no safe command
-exists for an affected platform. Do not run an unqualified production
-application or Designer command for routine validation.
+Use `.env.local` when local services are required. These are validation builds, not release
+builds. Flutter uses the CocoaPods workspace for the iOS build. A signed, device, or archive
+check does not follow this unattended path. Ask the user to run it. Stop when the required
+host or toolchain is unavailable. Do not fall back to an unqualified production command.
 
 ### Local E2E gate
 
@@ -337,6 +413,11 @@ Stop and request a decision or remediation when any of these conditions occurs:
 - A breaking persistent-data, auth, storage, routing, camera, notification,
   permission, or other native migration lacks an approved plan.
 - A required validation command fails or is unavailable.
+- A required native host, toolchain, or platform validation is unavailable.
+- A native dependency or platform-minimum change lacks explicit approval.
+- `pod install` or native synchronization fails, `Podfile.lock` has unexpected churn, or a required podspec is unavailable.
+- Regeneration lacks explicit approval, leaves an unexplained dirty native tree, removes custom native behavior, or changes identity, signing, or capabilities.
+- Routine native validation uses an unqualified or production environment.
 - The diff contains unrelated changes, workflow edits, or a tracked `.env.local`.
 - A generated, lockfile, platform, or compatibility change has no update cause.
 
