@@ -8,23 +8,17 @@ import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/round_checkbox.dart';
 import 'package:studyu_core/core.dart';
 
-class TaskBox extends StatefulWidget {
-  final TaskInstance taskInstance;
-  final Icon icon;
-  final Function() onCompleted;
-
-  const TaskBox({
-    super.key,
-    required this.taskInstance,
-    required this.icon,
-    required this.onCompleted,
-  });
-
+class const TaskBox({
+  super.key,
+  required final TaskInstance taskInstance,
+  required final Icon icon,
+  required final Function() onCompleted,
+}) extends StatefulWidget {
   @override
   State<TaskBox> createState() => _TaskBoxState();
 }
 
-class _TaskBoxState extends State<TaskBox> {
+class _TaskBoxState() extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     await context.push<bool>('/${RouteNames.task}', extra: widget.taskInstance);
     widget.onCompleted();

@@ -17,18 +17,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 typedef TermsContinuation = Future<void> Function(BuildContext context);
 
-class TermsScreenArguments {
-  final TermsContinuation onAccepted;
+class const TermsScreenArguments({required final TermsContinuation onAccepted});
 
-  const TermsScreenArguments({required this.onAccepted});
-}
-
-class TermsScreen extends StatefulWidget {
-  final bool? isPushed;
-  final TermsContinuation? onAccepted;
-
-  const TermsScreen({this.isPushed, this.onAccepted, super.key});
-
+class const TermsScreen({
+  final bool? isPushed,
+  final TermsContinuation? onAccepted,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<TermsScreen> createState() => _TermsScreenState();
 }
@@ -39,7 +34,7 @@ String? routeAfterTerms(AppState state, {required bool canPop}) {
   return canPop ? null : '/${RouteNames.studyOverview}';
 }
 
-class _TermsScreenState extends State<TermsScreen> {
+class _TermsScreenState() extends State<TermsScreen> {
   bool _acceptedTerms = kDebugMode;
   bool _acceptedPrivacy = kDebugMode;
   bool _participantReady = false;
@@ -165,28 +160,17 @@ class _TermsScreenState extends State<TermsScreen> {
   }
 }
 
-class LegalSection extends StatelessWidget {
-  final String? title;
-  final String? description;
-  final Icon? icon;
-  final String? pdfUrl;
-  final String? pdfUrlLabel;
-  final String? acknowledgment;
-  final bool? isChecked;
-  final ValueChanged<bool?>? onChanged;
-
-  const LegalSection({
-    super.key,
-    this.title,
-    this.description,
-    this.icon,
-    this.pdfUrl,
-    this.pdfUrlLabel,
-    this.acknowledgment,
-    this.isChecked,
-    this.onChanged,
-  });
-
+class const LegalSection({
+  super.key,
+  final String? title,
+  final String? description,
+  final Icon? icon,
+  final String? pdfUrl,
+  final String? pdfUrlLabel,
+  final String? acknowledgment,
+  final bool? isChecked,
+  final ValueChanged<bool?>? onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

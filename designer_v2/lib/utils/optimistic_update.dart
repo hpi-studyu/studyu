@@ -8,34 +8,20 @@ typedef ErrorCallback = void Function(Object error, StackTrace? stackTrace);
 
 /// Helper class to encapsulate optimistic operations that are rolled back
 /// on error
-class OptimisticUpdate {
-  OptimisticUpdate({
-    required this.applyOptimistic,
-    required this.apply,
-    required this.rollback,
-    this.onUpdate,
-    this.onError,
-    this.rethrowErrors = false,
-    this.runOptimistically = true,
-    this.completeFutureOptimistically = true,
-  });
-
-  final VoidCallback applyOptimistic;
-  final VoidFutureCallback apply;
-  final VoidCallback rollback;
+class OptimisticUpdate({
+  required final VoidCallback applyOptimistic,
+  required final VoidFutureCallback apply,
+  required final VoidCallback rollback,
 
   /// Callback that is always called after [apply] and [rollback]
-  final VoidCallback? onUpdate;
-
-  final ErrorCallback? onError;
-
-  final bool rethrowErrors;
+  final VoidCallback? onUpdate,
+  final ErrorCallback? onError,
+  final bool rethrowErrors = false,
 
   /// Flag indicating whether the optimistic update should be run
-  final bool runOptimistically;
-
-  final bool completeFutureOptimistically;
-
+  final bool runOptimistically = true,
+  final bool completeFutureOptimistically = true,
+}) {
   Future<void> execute() async {
     if (runOptimistically) {
       applyOptimistic();

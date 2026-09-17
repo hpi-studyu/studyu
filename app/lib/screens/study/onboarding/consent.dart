@@ -21,14 +21,12 @@ import 'package:studyu_app/widgets/why_dialog.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class ConsentScreen extends StatefulWidget {
-  const ConsentScreen({super.key});
-
+class const ConsentScreen({super.key}) extends StatefulWidget {
   @override
   State<ConsentScreen> createState() => _ConsentScreenState();
 }
 
-class _ConsentScreenState extends State<ConsentScreen> {
+class _ConsentScreenState() extends State<ConsentScreen> {
   StudySubject? subject;
   late List<bool> boxLogic;
   late List<ConsentItem> consentList;
@@ -215,20 +213,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
   }
 }
 
-class ConsentCard extends StatelessWidget {
-  final ConsentItem? consent;
-  final int? index;
-  final Function(int) onTapped;
-  final bool? isChecked;
-
-  const ConsentCard({
-    super.key,
-    this.consent,
-    this.index,
-    required this.onTapped,
-    this.isChecked,
-  });
-
+class const ConsentCard({
+  super.key,
+  final ConsentItem? consent,
+  final int? index,
+  required final Function(int) onTapped,
+  final bool? isChecked,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -304,16 +295,9 @@ class ConsentCard extends StatelessWidget {
   }
 }
 
-class ConsentElement {
-  final String title;
-  final String descriptionText;
-  final String acknowledgmentText;
-  final IconData icon;
-
-  ConsentElement(
-    this.title,
-    this.descriptionText,
-    this.acknowledgmentText,
-    this.icon,
-  );
-}
+class ConsentElement(
+  final String title,
+  final String descriptionText,
+  final String acknowledgmentText,
+  final IconData icon,
+);

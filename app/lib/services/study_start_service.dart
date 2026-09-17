@@ -15,9 +15,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 /// Callers own the loading UI: show a spinner while this runs and treat a
 /// `false` result as failure. On success this method navigates away, so the
 /// calling screen is disposed.
-class StudyStartService {
-  const StudyStartService._();
-
+class const StudyStartService._() {
   /// Returns `true` when the study was started and navigation happened;
   /// `false` when the subject could not be created.
   static Future<bool> startStudy(

@@ -1,33 +1,19 @@
 import 'package:flutter/material.dart';
 
-class TitleDescriptionLayout extends StatelessWidget {
-  final String title;
-  final IconData? titleIcon;
-  final String description;
-  final Widget? descriptionWidget;
-  final Widget child;
-  final Widget? bottomContent;
-  final Widget? bottomNavigationBar;
-  final double maxWidth;
-  final double descriptionBottomSpacing;
-  final EdgeInsetsGeometry padding;
-  final bool scrollable;
-
-  const TitleDescriptionLayout({
-    super.key,
-    this.title = '',
-    this.description = '',
-    this.titleIcon,
-    this.descriptionWidget,
-    required this.child,
-    this.bottomContent,
-    this.bottomNavigationBar,
-    this.maxWidth = 700,
-    this.descriptionBottomSpacing = 24,
-    this.padding = const EdgeInsets.fromLTRB(24, 0, 24, 16),
-    this.scrollable = true,
-  });
-
+class const TitleDescriptionLayout({
+  super.key,
+  final String title = '',
+  final String description = '',
+  final IconData? titleIcon,
+  final Widget? descriptionWidget,
+  required final Widget child,
+  final Widget? bottomContent,
+  final Widget? bottomNavigationBar,
+  final double maxWidth = 700,
+  final double descriptionBottomSpacing = 24,
+  final EdgeInsetsGeometry padding = const EdgeInsets.fromLTRB(24, 0, 24, 16),
+  final bool scrollable = true,
+}) extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     final theme = Theme.of(context);
     return Column(

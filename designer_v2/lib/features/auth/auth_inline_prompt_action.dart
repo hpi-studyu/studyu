@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AuthInlinePromptAction extends StatelessWidget {
-  const AuthInlinePromptAction({
-    required this.promptText,
-    required this.actionText,
-    required this.onPressed,
-    super.key,
-  });
-
-  final String promptText;
-  final String actionText;
-  final VoidCallback onPressed;
-
+class const AuthInlinePromptAction({
+  required final String promptText,
+  required final String actionText,
+  required final VoidCallback onPressed,
+  super.key,
+}) extends StatelessWidget {
   static const _narrowLayoutBreakpoint = 360.0;
 
   @override

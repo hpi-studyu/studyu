@@ -2,42 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
-class BottomOnboardingNavigation extends StatelessWidget {
-  final VoidCallback? onBack;
-  final VoidCallback? onNext;
-  final String? backLabel;
-  final String? nextLabel;
-  final bool hideNext;
-  final bool hideBack;
-  final bool backEnabled;
-  final bool showNextIcon;
-  final bool showBackIcon;
-  final bool primaryNext;
-  final Icon? nextIcon;
-  final Icon? backIcon;
-  final Widget? progress;
-  final Key? backButtonKey;
-  final Key? nextButtonKey;
-
-  const BottomOnboardingNavigation({
-    super.key,
-    this.onNext,
-    this.onBack,
-    this.backLabel,
-    this.nextLabel,
-    this.hideNext = false,
-    this.hideBack = false,
-    this.backEnabled = true,
-    this.showNextIcon = true,
-    this.showBackIcon = true,
-    this.primaryNext = false,
-    this.nextIcon,
-    this.backIcon,
-    this.progress,
-    this.backButtonKey,
-    this.nextButtonKey,
-  });
-
+class const BottomOnboardingNavigation({
+  super.key,
+  final VoidCallback? onNext,
+  final VoidCallback? onBack,
+  final String? backLabel,
+  final String? nextLabel,
+  final bool hideNext = false,
+  final bool hideBack = false,
+  final bool backEnabled = true,
+  final bool showNextIcon = true,
+  final bool showBackIcon = true,
+  final bool primaryNext = false,
+  final Icon? nextIcon,
+  final Icon? backIcon,
+  final Widget? progress,
+  final Key? backButtonKey,
+  final Key? nextButtonKey,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // A custom onBack handler may perform its own navigation regardless of

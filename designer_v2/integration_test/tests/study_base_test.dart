@@ -10,13 +10,15 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import '../controller/robots/robots.dart';
 import '../controller/study_integration_controller.dart';
 
-abstract class StudyBaseTest extends StudyRobots {
+abstract class StudyBaseTest.go(
+  super.$,
+  final Study Function() selectedMockupStudy,
+) extends StudyRobots {
   final bool randomTest = true;
-  final Study Function() selectedMockupStudy;
-  final StudyIntegrationController controller;
-
-  StudyBaseTest.go(super.$, this.selectedMockupStudy)
-    : controller = StudyIntegrationController($, selectedMockupStudy);
+  final StudyIntegrationController controller = StudyIntegrationController(
+    $,
+    selectedMockupStudy,
+  );
 
   Future<void> init() async {
     final email = randomTest

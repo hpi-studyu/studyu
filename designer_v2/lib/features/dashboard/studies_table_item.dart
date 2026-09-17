@@ -10,38 +10,26 @@ import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
-class StudiesTableItem extends StatefulWidget {
+class const StudiesTableItem({
+  super.key,
+  required final Study study,
+  required final List<ModelAction> actions,
+  required final List<StudiesTableColumnSize> columnSizes,
+  required final bool isPinned,
+  final bool isBusy = false,
+  final void Function(Study, bool)? onPinnedChanged,
+  final void Function(Study)? onTap,
+  final double itemHeight = 60.0,
+  final double itemPadding = 10.0,
+  final double rowSpacing = 9.0,
+  final double columnSpacing = 10.0,
+}) extends StatefulWidget {
   static const _prototypeStudyTitle =
       'MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM';
 
-  final Study study;
-  final double itemHeight;
-  final double itemPadding;
-  final double rowSpacing;
-  final double columnSpacing;
-  final List<ModelAction> actions;
-  final List<StudiesTableColumnSize> columnSizes;
-  final bool isPinned;
-  final bool isBusy;
-  final void Function(Study, bool)? onPinnedChanged;
-  final void Function(Study)? onTap;
+  this : assert(columnSizes.length == 9);
 
-  const StudiesTableItem({
-    super.key,
-    required this.study,
-    required this.actions,
-    required this.columnSizes,
-    required this.isPinned,
-    this.isBusy = false,
-    this.onPinnedChanged,
-    this.onTap,
-    this.itemHeight = 60.0,
-    this.itemPadding = 10.0,
-    this.rowSpacing = 9.0,
-    this.columnSpacing = 10.0,
-  }) : assert(columnSizes.length == 9);
-
-  factory StudiesTableItem.prototype({
+  factory prototype({
     required List<StudiesTableColumnSize> columnSizes,
     required double itemHeight,
     required double itemPadding,
@@ -69,7 +57,7 @@ class StudiesTableItem extends StatefulWidget {
   State<StudiesTableItem> createState() => _StudiesTableItemState();
 }
 
-class _StudiesTableItemState extends State<StudiesTableItem> {
+class _StudiesTableItemState() extends State<StudiesTableItem> {
   bool isHovering = false;
   bool isHoveringPin = false;
 

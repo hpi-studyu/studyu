@@ -4,7 +4,7 @@ import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
 part 'composite_expression.g.dart';
 
-enum LogicType {
+enum LogicType() {
   @JsonValue('and')
   and,
   @JsonValue('or')
@@ -15,16 +15,17 @@ enum LogicType {
 }
 
 @JsonSerializable()
-class CompositeExpression extends Expression {
+class CompositeExpression({
+  required var LogicType logicType,
+  required var List<Expression> expressions,
+}) extends Expression {
   static const String expressionType = 'composite';
 
-  LogicType logicType;
-  List<Expression> expressions; // List of sub-expressions
+  // List of sub-expressions
 
-  CompositeExpression({required this.logicType, required this.expressions})
-    : super(expressionType);
+  this : super(expressionType);
 
-  factory CompositeExpression.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$CompositeExpressionFromJson(json);
 
   @override

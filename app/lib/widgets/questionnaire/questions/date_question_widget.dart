@@ -4,25 +4,18 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
-class DateQuestionWidget extends QuestionWidget {
-  final DateQuestion question;
-  final Function(Answer)? onDone;
-  final VoidCallback? onCleared;
-  final Answer<DateTime>? initialAnswer;
-
-  const DateQuestionWidget({
-    super.key,
-    required this.question,
-    this.onDone,
-    this.onCleared,
-    this.initialAnswer,
-  });
-
+class const DateQuestionWidget({
+  super.key,
+  required final DateQuestion question,
+  final Function(Answer)? onDone,
+  final VoidCallback? onCleared,
+  final Answer<DateTime>? initialAnswer,
+}) extends QuestionWidget {
   @override
   State<DateQuestionWidget> createState() => _DateQuestionWidgetState();
 }
 
-class _DateQuestionWidgetState extends State<DateQuestionWidget> {
+class _DateQuestionWidgetState() extends State<DateQuestionWidget> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   bool _hasInteracted = false;

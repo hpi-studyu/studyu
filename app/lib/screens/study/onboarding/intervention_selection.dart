@@ -15,15 +15,13 @@ import 'package:studyu_app/widgets/why_dialog.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class InterventionSelectionScreen extends StatefulWidget {
-  const InterventionSelectionScreen({super.key});
-
+class const InterventionSelectionScreen({super.key}) extends StatefulWidget {
   @override
   State<InterventionSelectionScreen> createState() =>
       _InterventionSelectionScreenState();
 }
 
-class _InterventionSelectionScreenState
+class _InterventionSelectionScreenState()
     extends State<InterventionSelectionScreen> {
   final List<String> selectedInterventionIds = [];
   Study? selectedStudy;

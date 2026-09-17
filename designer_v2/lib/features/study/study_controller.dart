@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 part 'study_controller.g.dart';
 
 @riverpod
-class StudyController extends _$StudyController {
+class StudyController() extends _$StudyController {
   @override
   StudyControllerState build(StudyID studyId) {
     state = StudyControllerState(

@@ -4,11 +4,10 @@ import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
-class SurveyPreview extends ConsumerWidget {
-  const SurveyPreview({required this.routeArgs, super.key});
-
-  final MeasurementFormRouteArgs routeArgs;
-
+class const SurveyPreview({
+  required final MeasurementFormRouteArgs routeArgs,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(

@@ -21,7 +21,7 @@ class OnboardingNavConfig {
   final Key? nextButtonKey;
   final String? loadingMessage;
 
-  const OnboardingNavConfig({
+  const new({
     this.onBack,
     this.onNext,
     this.backLabel,
@@ -41,24 +41,22 @@ class OnboardingNavConfig {
   });
 
   /// Copies the page navigation properties into the shell configuration.
-  OnboardingNavConfig.fromNav(
-    BottomOnboardingNavigation navigation, {
-    this.loadingMessage,
-  }) : onBack = navigation.onBack,
-       onNext = navigation.onNext,
-       backLabel = navigation.backLabel,
-       nextLabel = navigation.nextLabel,
-       hideNext = navigation.hideNext,
-       hideBack = navigation.hideBack,
-       backEnabled = navigation.backEnabled,
-       showNextIcon = navigation.showNextIcon,
-       showBackIcon = navigation.showBackIcon,
-       primaryNext = navigation.primaryNext,
-       nextIcon = navigation.nextIcon,
-       backIcon = navigation.backIcon,
-       progress = navigation.progress,
-       backButtonKey = navigation.backButtonKey,
-       nextButtonKey = navigation.nextButtonKey;
+  new fromNav(BottomOnboardingNavigation navigation, {this.loadingMessage})
+    : onBack = navigation.onBack,
+      onNext = navigation.onNext,
+      backLabel = navigation.backLabel,
+      nextLabel = navigation.nextLabel,
+      hideNext = navigation.hideNext,
+      hideBack = navigation.hideBack,
+      backEnabled = navigation.backEnabled,
+      showNextIcon = navigation.showNextIcon,
+      showBackIcon = navigation.showBackIcon,
+      primaryNext = navigation.primaryNext,
+      nextIcon = navigation.nextIcon,
+      backIcon = navigation.backIcon,
+      progress = navigation.progress,
+      backButtonKey = navigation.backButtonKey,
+      nextButtonKey = navigation.nextButtonKey;
 
   BottomOnboardingNavigation build() => BottomOnboardingNavigation(
     onBack: onBack,
@@ -95,13 +93,10 @@ class OnboardingNavConfig {
   );
 }
 
-class _OnboardingNavController extends ChangeNotifier {
-  String routePath;
+class _OnboardingNavController(var String routePath) extends ChangeNotifier {
   OnboardingNavConfig? config;
   Object? _owner;
   bool _disposed = false;
-
-  _OnboardingNavController(this.routePath);
 
   void activateRoute(String routePath) {
     if (this.routePath == routePath) return;
@@ -132,16 +127,11 @@ class _OnboardingNavController extends ChangeNotifier {
 }
 
 /// Lets onboarding pages register navigation for the active shell route.
-class OnboardingNavNotifier extends InheritedWidget {
-  final _OnboardingNavController _controller;
-  final String routePath;
-
-  const OnboardingNavNotifier({
-    required _OnboardingNavController controller,
-    required this.routePath,
-    required super.child,
-  }) : _controller = controller;
-
+class const OnboardingNavNotifier({
+  required final _OnboardingNavController _controller,
+  required final String routePath,
+  required super.child,
+}) extends InheritedWidget {
   static OnboardingNavNotifier? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<OnboardingNavNotifier>();
 
@@ -159,23 +149,17 @@ class OnboardingNavNotifier extends InheritedWidget {
 }
 
 /// Keeps the onboarding navigation mounted while child routes change.
-class OnboardingShell extends StatefulWidget {
-  final String routePath;
-  final bool hideNavigation;
-  final Widget child;
-
-  const OnboardingShell({
-    required this.routePath,
-    this.hideNavigation = false,
-    required this.child,
-    super.key,
-  });
-
+class const OnboardingShell({
+  required final String routePath,
+  final bool hideNavigation = false,
+  required final Widget child,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<OnboardingShell> createState() => _OnboardingShellState();
 }
 
-class _OnboardingShellState extends State<OnboardingShell> {
+class _OnboardingShellState() extends State<OnboardingShell> {
   late final _controller = _OnboardingNavController(widget.routePath);
 
   @override

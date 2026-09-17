@@ -13,7 +13,7 @@ class StudyTile extends StatelessWidget {
   final String iconName;
   final EdgeInsetsGeometry contentPadding;
 
-  const StudyTile({
+  const new({
     required this.title,
     required this.description,
     required this.iconName,
@@ -21,7 +21,7 @@ class StudyTile extends StatelessWidget {
     super.key,
   });
 
-  StudyTile.fromStudy({
+  new fromStudy({
     required Study study,
     this.contentPadding = const EdgeInsets.all(16),
     super.key,
@@ -29,7 +29,7 @@ class StudyTile extends StatelessWidget {
        description = study.description,
        iconName = study.iconName;
 
-  StudyTile.fromUserStudy({
+  new fromUserStudy({
     required StudySubject subject,
     this.contentPadding = const EdgeInsets.all(16),
     super.key,

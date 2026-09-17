@@ -4,14 +4,12 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_type
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class StudiesPage {
-  const StudiesPage({required this.studies, required this.totalCount});
+class const StudiesPage({
+  required final List<Study> studies,
+  required final int totalCount,
+});
 
-  final List<Study> studies;
-  final int totalCount;
-}
-
-enum StudiesTableColumn {
+enum StudiesTableColumn() {
   pin,
   title,
   status,
@@ -23,7 +21,7 @@ enum StudiesTableColumn {
   action,
 }
 
-abstract class IStudyRepository implements ModelRepository<Study> {
+abstract class IStudyRepository() implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
   Future<void> close(Study study);

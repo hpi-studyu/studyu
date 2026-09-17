@@ -26,9 +26,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart'
     show AuthApiException, PostgrestException;
 
-class SubjectDeletedException implements Exception {
-  const SubjectDeletedException();
-
+class const SubjectDeletedException() implements Exception {
   @override
   String toString() =>
       'SubjectDeletedException: subject no longer exists in the backend';
@@ -50,27 +48,20 @@ String initialRouteForMissingSubjectRoute({
 String activeStudyDeepLinkRoute(bool? openSettings) =>
     '/${openSettings == true ? RouteNames.appSettings : RouteNames.dashboard}';
 
-class LoadingScreen extends StatefulWidget {
-  final String? sessionString;
-  final Map<String, String>? queryParameters;
-  final String? deepLinkStudyId;
-  final String? deepLinkInviteCode;
-
-  const LoadingScreen({
-    super.key,
-    this.sessionString,
-    this.queryParameters,
-    this.deepLinkStudyId,
-    this.deepLinkInviteCode,
-  });
-
+class const LoadingScreen({
+  super.key,
+  final String? sessionString,
+  final Map<String, String>? queryParameters,
+  final String? deepLinkStudyId,
+  final String? deepLinkInviteCode,
+}) extends StatefulWidget {
   bool get hasDeepLink => deepLinkStudyId != null || deepLinkInviteCode != null;
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _LoadingScreenState() extends State<LoadingScreen> {
   final IFrameHelper _iFrameHelper = IFrameHelper();
   bool _previewNavigationInProgress = false;
   String? _pendingPreviewRoute;

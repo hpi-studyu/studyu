@@ -177,9 +177,4 @@ Future<void> cancelNotifications(BuildContext context) async {
   await cancelNotificationsForAppState(context.read<AppState>());
 }
 
-class StudyNotification {
-  StudyNotification(this.taskInstance, this.date);
-
-  final TaskInstance taskInstance;
-  final DateTime date;
-}
+class StudyNotification(final TaskInstance taskInstance, final DateTime date);

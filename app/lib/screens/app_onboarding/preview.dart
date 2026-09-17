@@ -7,9 +7,10 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Preview {
-  final Map<String, String>? queryParameters;
-  final AppLanguage appLanguage;
+class Preview(
+  final Map<String, String>? queryParameters,
+  final AppLanguage appLanguage,
+) {
   String? selectedRoute;
   String? extra;
 
@@ -18,7 +19,7 @@ class Preview {
   String? selectedStudyObjectId;
   StudySubject? subject;
 
-  Preview(this.queryParameters, this.appLanguage) {
+  this {
     handleQueries();
   }
 

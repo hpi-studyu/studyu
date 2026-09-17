@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
-class FAQ extends StatelessWidget {
-  const FAQ({super.key});
-
+class const FAQ({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -57,17 +55,9 @@ class FAQ extends StatelessWidget {
   }
 }
 
-class Entry {
-  Entry(this.title, [this.children = const <Entry>[]]);
-  final String title;
-  final List<Entry> children;
-}
+class Entry(final String title, [final List<Entry> children = const <Entry>[]]);
 
-class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry, {super.key});
-
-  final Entry entry;
-
+class const EntryItem(final Entry entry, {super.key}) extends StatelessWidget {
   Widget _buildTiles(Entry root) {
     if (root.children.isEmpty) return ListTile(title: Text(root.title));
     return ExpansionTile(

@@ -16,7 +16,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DebugScreen {
+class DebugScreen() {
   static Future<void> showDebugScreen(BuildContext context) async {
     final studyNotifications = context.read<AppState>().studyNotifications;
 
@@ -114,24 +114,18 @@ class DebugScreen {
   }
 }
 
-class _DebugDialog extends StatefulWidget {
-  const _DebugDialog({
-    required this.studyNotifications,
-    required this.pendingNotifications,
-    required this.pendingNotificationsPlugin,
-    required this.versionString,
-  });
-
-  final StudyNotifications? studyNotifications;
-  final Future<List> pendingNotifications;
-  final Future<List<PendingNotificationRequest>> pendingNotificationsPlugin;
-  final String versionString;
-
+class const _DebugDialog({
+  required final StudyNotifications? studyNotifications,
+  required final Future<List> pendingNotifications,
+  required final Future<List<PendingNotificationRequest>>
+  pendingNotificationsPlugin,
+  required final String versionString,
+}) extends StatefulWidget {
   @override
   State<_DebugDialog> createState() => __DebugDialogState();
 }
 
-class __DebugDialogState extends State<_DebugDialog> {
+class __DebugDialogState() extends State<_DebugDialog> {
   bool? ignoreBatteryOptimizations;
   int? pendingNotificationCount;
   int? pendingNotificationsPluginCount;

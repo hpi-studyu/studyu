@@ -3,32 +3,19 @@ import 'package:flutter_material_design_icons/flutter_material_design_icons.dart
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/localization.dart';
 
-class WelcomeEntryHub extends StatelessWidget {
-  final VoidCallback onLogoDoubleTap;
-  final VoidCallback onBrowsePublicStudies;
-  final VoidCallback onUseInviteCode;
-  final VoidCallback onRestoreAccount;
-  final VoidCallback onAbout;
-  final VoidCallback onFaq;
-  final VoidCallback onContact;
-  final Locale? selectedLocale;
-  final ValueChanged<Locale?>? onLocaleChanged;
-  final String logoAssetPath;
-
-  const WelcomeEntryHub({
-    required this.onLogoDoubleTap,
-    required this.onBrowsePublicStudies,
-    required this.onUseInviteCode,
-    required this.onRestoreAccount,
-    required this.onAbout,
-    required this.onFaq,
-    required this.onContact,
-    required this.selectedLocale,
-    required this.onLocaleChanged,
-    this.logoAssetPath = 'assets/icon/logo.png',
-    super.key,
-  });
-
+class const WelcomeEntryHub({
+  required final VoidCallback onLogoDoubleTap,
+  required final VoidCallback onBrowsePublicStudies,
+  required final VoidCallback onUseInviteCode,
+  required final VoidCallback onRestoreAccount,
+  required final VoidCallback onAbout,
+  required final VoidCallback onFaq,
+  required final VoidCallback onContact,
+  required final Locale? selectedLocale,
+  required final ValueChanged<Locale?>? onLocaleChanged,
+  final String logoAssetPath = 'assets/icon/logo.png',
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;

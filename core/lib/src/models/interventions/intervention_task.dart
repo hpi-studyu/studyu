@@ -7,13 +7,12 @@ typedef InterventionTaskParser = InterventionTask Function(
 );
 
 abstract class InterventionTask extends Task {
-  InterventionTask(super.type);
+  new(super.type);
 
-  InterventionTask.withId(super.type) : super.withId();
+  new withId(super.type) : super.withId();
 
-  factory InterventionTask.fromJson(Map<String, dynamic> data) =>
-      switch (data[Task.keyType]) {
-        CheckmarkTask.taskType => CheckmarkTask.fromJson(data),
-        _ => throw UnknownJsonTypeError(data[Task.keyType]),
-      };
+  factory fromJson(Map<String, dynamic> data) => switch (data[Task.keyType]) {
+    CheckmarkTask.taskType => CheckmarkTask.fromJson(data),
+    _ => throw UnknownJsonTypeError(data[Task.keyType]),
+  };
 }

@@ -1,4 +1,4 @@
-class Config {
+class Config() {
   static const isDebugMode = false;
 
   static const defaultLocale = {'en', 'US'};
