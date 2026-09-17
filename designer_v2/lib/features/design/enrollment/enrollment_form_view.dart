@@ -160,12 +160,12 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                               message: viewModel.questionType.string,
                               child: Icon(
                                 viewModel.questionType.icon,
-                                color: ThemeConfig.dropdownMenuItemTheme(
-                                  theme,
-                                ).iconTheme!.color,
-                                size: ThemeConfig.dropdownMenuItemTheme(
-                                  theme,
-                                ).iconTheme!.size,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .color,
+                                size: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .size,
                               ),
                             ),
                             const SizedBox(width: 16.0),

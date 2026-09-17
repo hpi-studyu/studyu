@@ -111,9 +111,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           onAction: () => showDialog(
             context: context,
             builder: (context) => WhyDialog(
-              content: AppLocalizations.of(
-                context,
-              )!.study_selection_single_reason,
+              content: AppLocalizations.of(context)!
+                  .study_selection_single_reason,
             ),
           ),
         ),
@@ -298,9 +297,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         await showAppOutdatedDialog(context);
       } else if (e is PostgrestException) {
         setState(
-          () => _errorMessage = AppLocalizations.of(
-            context,
-          )!.error_occurred_with_message(e.message),
+          () =>
+              _errorMessage = AppLocalizations.of(context)!
+                  .error_occurred_with_message(e.message),
         );
       } else {
         setState(

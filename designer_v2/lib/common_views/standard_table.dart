@@ -11,16 +11,17 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef OnSelectHandler<T> = void Function(T item);
 
-typedef StandardTableRowBuilder =
-    TableRow Function(BuildContext context, List<StandardTableColumn> columns);
+typedef StandardTableRowBuilder = TableRow Function(
+  BuildContext context,
+  List<StandardTableColumn> columns,
+);
 
-typedef StandardTableCellsBuilder<T> =
-    List<Widget> Function(
-      BuildContext context,
-      T item,
-      int rowIdx,
-      Set<WidgetState> states,
-    );
+typedef StandardTableCellsBuilder<T> = List<Widget> Function(
+  BuildContext context,
+  T item,
+  int rowIdx,
+  Set<WidgetState> states,
+);
 
 enum StandardTableStyle { plain, material, flat }
 
@@ -592,9 +593,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       final theme = Theme.of(context);
       actionMenuWidget = ActionPopUpMenuButton(
         actions: actions,
-        triggerIconColor: ThemeConfig.bodyTextMuted(
-          theme,
-        ).color?.withValues(alpha: 0.6),
+        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color
+            ?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,

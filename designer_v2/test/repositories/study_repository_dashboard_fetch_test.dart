@@ -103,9 +103,8 @@ void main() {
   test('pinned fetch caches studies and marks them as fetched', () async {
     final h = _Harness();
     final study = _study('pinned');
-    when(
-      h.apiClient.getPinnedUserStudies(pinnedIds: {'pinned'}),
-    ).thenAnswer((_) async => [study]);
+    when(h.apiClient.getPinnedUserStudies(pinnedIds: {'pinned'}))
+        .thenAnswer((_) async => [study]);
 
     final studies = await h.repository.fetchPinned({'pinned'});
 

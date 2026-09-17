@@ -142,9 +142,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       AppLocalizations.of(context)!.save_not_supported,
                     ),
                     content: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.save_not_supported_description,
+                      AppLocalizations.of(context)!
+                          .save_not_supported_description,
                     ),
                   ),
                 );
