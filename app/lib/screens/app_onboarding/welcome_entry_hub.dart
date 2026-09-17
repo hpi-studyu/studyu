@@ -78,56 +78,6 @@ class WelcomeEntryHub extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Semantics(
-                            label: l10n.language,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.language,
-                                  color: theme.colorScheme.primary,
-                                ),
-                                const SizedBox(width: 8),
-                                DropdownButtonHideUnderline(
-                                  child: DropdownButton<Locale>(
-                                    key: const ValueKey(
-                                      'welcome_language_picker',
-                                    ),
-                                    value: selectedLocale?.languageCode == 'ko'
-                                        ? null
-                                        : selectedLocale,
-                                    hint: Text(l10n.use_device_language),
-                                    borderRadius: BorderRadius.circular(12),
-                                    items: [
-                                      DropdownMenuItem<Locale>(
-                                        child: Text(l10n.use_device_language),
-                                      ),
-                                      for (final locale
-                                          in AppLocalizations.supportedLocales
-                                              .where(
-                                                (locale) =>
-                                                    locale.languageCode != 'ko',
-                                              ))
-                                        DropdownMenuItem(
-                                          value: locale,
-                                          child: Text(
-                                            localeName(
-                                              context,
-                                              locale.languageCode,
-                                            )!,
-                                          ),
-                                        ),
-                                    ],
-                                    onChanged: onLocaleChanged,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
                         GestureDetector(
                           onDoubleTap: onLogoDoubleTap,
                           child: Image.asset(logoAssetPath, height: 140),
@@ -240,6 +190,82 @@ class WelcomeEntryHub extends StatelessWidget {
                                     const SizedBox(width: 4),
                                     Flexible(child: Text(l10n.contact)),
                                   ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: PopupMenuButton<Locale>(
+                                key: const ValueKey('welcome_language_picker'),
+                                tooltip: l10n.language,
+                                enabled: onLocaleChanged != null,
+                                onSelected: (locale) =>
+                                    onLocaleChanged?.call(locale),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem<Locale>(
+                                    enabled: false,
+                                    child: Text(
+                                      l10n.language,
+                                      style: theme.textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  for (final locale
+                                      in AppLocalizations.supportedLocales
+                                          .where(
+                                            (locale) =>
+                                                locale.languageCode != 'ko',
+                                          ))
+                                    PopupMenuItem<Locale>(
+                                      value: locale,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 24,
+                                            child:
+                                                selectedLocale?.languageCode ==
+                                                    locale.languageCode
+                                                ? const Icon(
+                                                    Icons.check,
+                                                    size: 18,
+                                                  )
+                                                : null,
+                                          ),
+                                          Text(
+                                            localeName(
+                                              context,
+                                              locale.languageCode,
+                                            )!,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                                child: SizedBox(
+                                  height: 48,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.language,
+                                        size: 18,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          l10n.language,
+                                          style: theme.textTheme.labelLarge
+                                              ?.copyWith(
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                                fontSize: 13,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
