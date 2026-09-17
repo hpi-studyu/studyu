@@ -35,10 +35,13 @@ void main() {
     );
   });
 
-  test('keeps the original scan string when encoded invite code is malformed', () {
-    const malformedCodeUrl = 'studyu-app://invite/%E0%A4%A';
-    expect(inviteCodeFromScan(malformedCodeUrl), malformedCodeUrl);
-  });
+  test(
+    'keeps the original scan string when encoded invite code is malformed',
+    () {
+      const malformedCodeUrl = 'studyu-app://invite/%E0%A4%A';
+      expect(inviteCodeFromScan(malformedCodeUrl), malformedCodeUrl);
+    },
+  );
 
   test('rejects an empty scan result', () {
     expect(inviteCodeFromScan('  '), isNull);
