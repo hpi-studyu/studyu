@@ -8,8 +8,10 @@ import 'package:studyu_app/screens/study/report/sections/linear_regression_secti
 import 'package:studyu_app/screens/study/report/sections/textual_summary_section_widget.dart';
 import 'package:studyu_core/core.dart';
 
-typedef SectionBuilder =
-    ReportSectionWidget Function(ReportSection section, StudySubject subject);
+typedef SectionBuilder = ReportSectionWidget Function(
+  ReportSection section,
+  StudySubject subject,
+);
 
 class ReportSectionContainer extends StatelessWidget {
   final ReportSection section;

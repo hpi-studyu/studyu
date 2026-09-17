@@ -35,9 +35,8 @@ class QrCodePreviewDialog extends StatelessWidget {
               Positioned.fill(
                 child: ModalBarrier(
                   color: Colors.transparent,
-                  semanticsLabel: MaterialLocalizations.of(
-                    dialogContext,
-                  ).modalBarrierDismissLabel,
+                  semanticsLabel: MaterialLocalizations.of(dialogContext)
+                      .modalBarrierDismissLabel,
                   onDismiss: () => Navigator.of(dialogContext).maybePop(),
                 ),
               ),

@@ -605,10 +605,8 @@ class QuestionnaireWidgetState extends State<QuestionnaireWidget> {
             const SizedBox(width: 8),
             Text(
               l10n.answer_reviewed,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: color, fontWeight: FontWeight.w600),
             ),
           ],
         ),

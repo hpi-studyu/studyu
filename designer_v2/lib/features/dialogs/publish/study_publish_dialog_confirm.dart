@@ -59,9 +59,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       const SizedBox(height: 4.0),
                       SelectableText(
                         state.studyParticipation!.launchDescription,
-                        style: ThemeConfig.bodyTextMuted(
-                          theme,
-                        ).copyWith(fontStyle: FontStyle.italic),
+                        style: ThemeConfig.bodyTextMuted(theme)
+                            .copyWith(fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),
@@ -81,9 +80,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.maybePop(
-                        context,
-                      ).then((_) => controller.onChangeStudyParticipation());
+                      Navigator.maybePop(context)
+                          .then((_) => controller.onChangeStudyParticipation());
                     },
                   ),
                 ),

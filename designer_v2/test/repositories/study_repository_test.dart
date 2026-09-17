@@ -54,9 +54,8 @@ void main() {
       final user = MockUser();
       when(user.id).thenReturn('me');
       when(authRepository.currentUser).thenReturn(user);
-      when(
-        router.routeInformationProvider,
-      ).thenReturn(routeInformationProvider);
+      when(router.routeInformationProvider)
+          .thenReturn(routeInformationProvider);
       final container = ProviderContainer(
         overrides: [
           apiClientProvider.overrideWithValue(apiClient),
@@ -82,9 +81,8 @@ void main() {
         .singleWhere((action) => action.type == StudyActionType.delete);
 
     void setRoute(String path) {
-      when(
-        routeInformationProvider.value,
-      ).thenReturn(RouteInformation(uri: Uri.parse(path)));
+      when(routeInformationProvider.value)
+          .thenReturn(RouteInformation(uri: Uri.parse(path)));
     }
 
     void verifyNoRedirect() {
@@ -151,9 +149,8 @@ void main() {
       () async {
         setRoute('/studies/study/edit');
         final persistence = Completer<void>();
-        when(
-          apiClient.deleteStudy(study),
-        ).thenAnswer((_) => persistence.future);
+        when(apiClient.deleteStudy(study))
+            .thenAnswer((_) => persistence.future);
 
         final deletion = deleteAction().onExecute();
         await Future<void>.delayed(Duration.zero);

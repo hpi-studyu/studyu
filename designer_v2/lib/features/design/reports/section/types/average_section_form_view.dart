@@ -55,9 +55,8 @@ class AverageSectionFormView extends ConsumerWidget {
                 child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
                   hint: Text(
-                    AppLocalizations.of(
-                      context,
-                    )!.form_field_report_select_aggregation,
+                    AppLocalizations.of(context)!
+                        .form_field_report_select_aggregation,
                   ),
                   items: ReportItemFormViewModel
                       .temporalAggregationControlOptions

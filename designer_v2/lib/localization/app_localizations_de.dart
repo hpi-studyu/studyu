@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1552,8 +1553,7 @@ class AppLocalizationsDe extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_interventions_minlength',
-      two:
-          'Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.',
+      two: 'Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.',
     );
     return '$_temp0';
   }
@@ -1622,8 +1622,7 @@ class AppLocalizationsDe extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_intervention_tasks_minlength',
-      one:
-          'Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll',
+      one: 'Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll',
     );
     return '$_temp0';
   }
@@ -1736,8 +1735,7 @@ class AppLocalizationsDe extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_measurements_minlength',
-      one:
-          'Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.',
+      one: 'Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.',
     );
     return '$_temp0';
   }
@@ -1813,8 +1811,7 @@ class AppLocalizationsDe extends AppLocalizations {
       count,
       locale: localeName,
       other: 'form_array_measurement_survey_questions_minlength',
-      one:
-          'Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.',
+      one: 'Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.',
     );
     return '$_temp0';
   }
@@ -2140,8 +2137,7 @@ class AppLocalizationsDe extends AppLocalizations {
       other:
           '$count Teilnehmer haben sich mit diesem Code zur Studie angemeldet',
       one: '$count Teilnehmer hat sich mit diesem Code zur Studie angemeldet',
-      zero:
-          'Bisher hat sich niemand mit diesem Teilnahme-Code zur Studie angemeldet',
+      zero: 'Bisher hat sich niemand mit diesem Teilnahme-Code zur Studie angemeldet',
     );
     return '$_temp0';
   }

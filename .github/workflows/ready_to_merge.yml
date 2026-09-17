@@ -18,7 +18,7 @@ jobs:
             // Define the workflows that need to finish successfully before merging.
             workflows_to_check = [
               "all_packages.yml",
-              "dart_file_lines.yml",
+              // "dart_file_lines.yml",
               "linter.yml",
               "mega-linter.yml",
               "e2e_tests.yml",

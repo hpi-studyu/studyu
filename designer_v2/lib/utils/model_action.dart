@@ -5,8 +5,10 @@ import 'package:studyu_designer_v2/common_views/confirmation_dialog.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 typedef ModelActionHandler = FutureOr<void> Function();
-typedef ModelActionConfirmationDialogBuilder =
-    Widget Function(BuildContext dialogContext, ModelAction action);
+typedef ModelActionConfirmationDialogBuilder = Widget Function(
+  BuildContext dialogContext,
+  ModelAction action,
+);
 
 class ModelActionConfirmation {
   const ModelActionConfirmation({

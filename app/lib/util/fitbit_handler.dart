@@ -268,9 +268,9 @@ class FitbitHandler {
             detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
           );
 
-      final items =
-          await manager.fetch(url)
-              as List<fitbitter.FitbitActivityTimeseriesData>;
+      final items = await manager.fetch(
+        url,
+      ) as List<fitbitter.FitbitActivityTimeseriesData>;
 
       return items
           .map((item) => FitbitStepData(item.value!, item.dateOfMonitoring!))
@@ -441,7 +441,7 @@ class FitbitHandler {
         'Failed to obtain Fitbit credentials. Please try syncing again',
       );
     }
-    return _getFitbitData(
+    return await _getFitbitData(
       question.types,
       study.fitbitCredentials!.fitbitCredentials,
       credentials,
