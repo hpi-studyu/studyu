@@ -28,13 +28,28 @@ jobs:
             const completionDelay = 60000;
 
             // Push workflows run for every branch. Path-filtered workflows
-            // are optional.
+            // are optional. Fork pull requests push their commits to a fork
+            // repository. Push workflows never run for their head SHA in this
+            // repository, so the required push checks are skipped for them.
+            const fromFork =
+              context.payload.pull_request?.head?.repo?.full_name !==
+                undefined &&
+              context.payload.pull_request.head.repo.full_name !==
+                `${owner}/${repo}`;
             const workflowsToCheck = [
-              { id: "linter.yml", required: true },
-              { id: "mega-linter.yml", required: true },
+              ...(fromFork
+                ? []
+                : [
+                    { id: "linter.yml", required: true },
+                    { id: "mega-linter.yml", required: true },
+                  ]),
               { id: "all_packages.yml", required: false },
               { id: "e2e_tests.yml", required: false },
               { id: "supabase-test.yml", required: false },
+              // SonarQube runs only for pull requests from this repository
+              // that are not from dependabot. A failed SonarQube run blocks
+              // the merge. A missing run does not.
+              { id: "sonarqube.yml", required: false },
             ];
             // dart_file_lines.yml is dispatch-only, so it is not a merge gate.
 
