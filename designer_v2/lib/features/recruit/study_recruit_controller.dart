@@ -260,6 +260,8 @@ class StudyRecruitController extends _$StudyRecruitController
         .availableActions(model)
         .where((action) => action.type != ModelActionType.share)
         .where((action) => action.type != ModelActionType.clipboard)
+        .where((action) => action.type != ModelActionType.copyLink)
+        .where((action) => action.type != ModelActionType.qrCodeShow)
         .map(_withPageRefresh)
         .toList();
     return withIcons(actions, modelActionIcons);
@@ -270,7 +272,7 @@ class StudyRecruitController extends _$StudyRecruitController
         .availableActions(model)
         .where(
           (action) =>
-              action.type == ModelActionType.clipboard ||
+              action.type == ModelActionType.copyLink ||
               action.type == ModelActionType.share,
         )
         .toList();

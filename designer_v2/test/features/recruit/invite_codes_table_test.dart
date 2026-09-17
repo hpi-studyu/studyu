@@ -60,9 +60,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('invite table renders target headers and code copy action', (
-    tester,
-  ) async {
+  testWidgets('invite table renders inline link copy action', (tester) async {
     final invite = StudyInvite('invite-2', 'study-1');
     var copied = false;
     await tester.binding.setSurfaceSize(const Size(1600, 1200));
@@ -73,9 +71,9 @@ void main() {
         invites: [invite],
         getInlineActions: (_) => [
           ModelAction(
-            type: ModelActionType.clipboard,
-            label: tr.action_copy_invite_code,
-            icon: Icons.copy_rounded,
+            type: ModelActionType.copyLink,
+            label: tr.action_copy_invite_link,
+            icon: Icons.link_rounded,
             onExecute: () {
               copied = true;
             },
@@ -103,7 +101,10 @@ void main() {
     expect(find.text(tr.code_list_header_actions), findsNothing);
     expect(find.text('#'), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.copy_rounded));
+    final copyLinkAction = find.byTooltip(tr.action_copy_invite_link);
+    expect(copyLinkAction, findsOneWidget);
+
+    await tester.tap(copyLinkAction);
     await tester.pumpAndSettle();
 
     expect(copied, isTrue);
@@ -152,7 +153,6 @@ void main() {
             icon: Icons.qr_code_rounded,
             onExecute: () {},
           ),
-          ModelAction.addSeparator(),
           ModelAction(
             type: ModelActionType.delete,
             label: tr.action_delete_code,
@@ -171,5 +171,6 @@ void main() {
     expect(find.text(tr.action_copy_invite_link), findsOneWidget);
     expect(find.text(tr.action_qr_code_show), findsOneWidget);
     expect(find.text(tr.action_delete_code), findsOneWidget);
+    expect(find.byType(PopupMenuDivider), findsNothing);
   });
 }

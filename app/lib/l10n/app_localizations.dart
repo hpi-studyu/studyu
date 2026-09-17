@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_ko.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +97,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
     Locale('en'),
+    Locale('ko'),
   ];
 
   /// No description provided for @loading.
@@ -2975,6 +2977,12 @@ abstract class AppLocalizations {
   /// **'Confirm hard delete'**
   String get deep_link_switch_confirm_hard_button;
 
+  /// No description provided for @open_link_on_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Please open this link on your mobile device.'**
+  String get open_link_on_mobile;
+
   /// No description provided for @you_have_been_invited.
   ///
   /// In en, this message translates to:
@@ -3329,6 +3337,210 @@ abstract class AppLocalizations {
   /// **'Come back tomorrow to begin. We’ll remind you when there’s something to do.'**
   String get study_not_started_description;
 
+  /// No description provided for @recovery_phrase_word_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/{total} words'**
+  String recovery_phrase_word_count(Object count, Object total);
+
+  /// No description provided for @ko.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean'**
+  String get ko;
+
+  /// No description provided for @faq_section_data_storage_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Storage and Privacy'**
+  String get faq_section_data_storage_privacy;
+
+  /// No description provided for @faq_question_data_storage.
+  ///
+  /// In en, this message translates to:
+  /// **'Where and how is my data stored?'**
+  String get faq_question_data_storage;
+
+  /// No description provided for @faq_answer_data_storage.
+  ///
+  /// In en, this message translates to:
+  /// **'The data collected from you is stored locally on your device and is uploaded to a secure server when it is connected to the internet. All study data is collected and stored anonymously.'**
+  String get faq_answer_data_storage;
+
+  /// No description provided for @faq_question_personal_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Which personal data does the app collect?'**
+  String get faq_question_personal_data;
+
+  /// No description provided for @faq_answer_personal_data.
+  ///
+  /// In en, this message translates to:
+  /// **'The app does not collect any personal data of the user.'**
+  String get faq_answer_personal_data;
+
+  /// No description provided for @faq_section_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Studies'**
+  String get faq_section_studies;
+
+  /// No description provided for @faq_question_study_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'How long will the study take to finish?'**
+  String get faq_question_study_duration;
+
+  /// No description provided for @faq_answer_study_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'The duration of each study is mentioned during initial study selection.'**
+  String get faq_answer_study_duration;
+
+  /// No description provided for @faq_question_change_intervention.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I select a different intervention?'**
+  String get faq_question_change_intervention;
+
+  /// No description provided for @faq_answer_change_intervention.
+  ///
+  /// In en, this message translates to:
+  /// **'Before starting the study, go back to the intervention selection screen to choose different interventions. After the study has started, you cannot change the selected interventions for that participation. To choose different interventions, leave the study from Settings, choose whether to keep or permanently delete your existing data, and then select a study and its interventions again during enrollment.'**
+  String get faq_answer_change_intervention;
+
+  /// No description provided for @faq_question_missed_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I redo my missed tasks on a later date?'**
+  String get faq_question_missed_tasks;
+
+  /// No description provided for @faq_answer_missed_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'No, you cannot redo a missed task on a later date. However, you can finish it at anytime on the same day.'**
+  String get faq_answer_missed_tasks;
+
+  /// No description provided for @faq_question_leave_study.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I leave the current study?'**
+  String get faq_question_leave_study;
+
+  /// No description provided for @faq_answer_leave_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Settings tab on the Dashboard and click \"Leave study\". This will exit the study without deleting your progress data, allowing it to be included in the study analysis. To leave the study and delete all progress data both locally and on the server, click \"Leave study and delete all data\". All data will be permanently removed from the server and your device.'**
+  String get faq_answer_leave_study;
+
+  /// No description provided for @faq_section_report_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get faq_section_report_details;
+
+  /// No description provided for @faq_question_daily_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'What are daily tasks and how do I complete them?'**
+  String get faq_question_daily_tasks;
+
+  /// No description provided for @faq_answer_daily_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'To find out which intervention works best for you, you need to perform some daily tasks for each intervention. Please make sure to hit the \"Complete\" button after finishing it'**
+  String get faq_answer_daily_tasks;
+
+  /// No description provided for @faq_question_rate_your_day.
+  ///
+  /// In en, this message translates to:
+  /// **'What is \"Rate your day\"?'**
+  String get faq_question_rate_your_day;
+
+  /// No description provided for @faq_answer_rate_your_day.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Rate your day\" is a feature that tracks your health during entire study period. It requires you to rate certain health-related queries on a scale of 1 to 10.'**
+  String get faq_answer_rate_your_day;
+
+  /// No description provided for @faq_question_track_activities.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I keep track of my activities?'**
+  String get faq_question_track_activities;
+
+  /// No description provided for @faq_answer_track_activities.
+  ///
+  /// In en, this message translates to:
+  /// **'You can get an overview of your daily tasks and health status in the \"Reports History section\"'**
+  String get faq_answer_track_activities;
+
+  /// No description provided for @faq_question_download_report.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I download my Study report?'**
+  String get faq_question_download_report;
+
+  /// No description provided for @faq_answer_download_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Your report will be ready to download once you have completed the minimum required tasks for a study. It will be available in the Report History tab located on the Dashboard.'**
+  String get faq_answer_download_report;
+
+  /// No description provided for @debug_notifications_not_initialized.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are not initialized yet. Please start a study and open this through the about section.'**
+  String get debug_notifications_not_initialized;
+
+  /// No description provided for @debug_test_notification_title.
+  ///
+  /// In en, this message translates to:
+  /// **'StudyU Test Notification'**
+  String get debug_test_notification_title;
+
+  /// No description provided for @debug_test_notification_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This notification confirms that you receive StudyU notifications'**
+  String get debug_test_notification_body;
+
+  /// No description provided for @debug_reset_success.
+  ///
+  /// In en, this message translates to:
+  /// **'App reset successfully! Please restart the app.'**
+  String get debug_reset_success;
+
+  /// No description provided for @debug_reset_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while resetting the app. Please try again.'**
+  String get debug_reset_error;
+
+  /// No description provided for @debug_screen_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Screen'**
+  String get debug_screen_title;
+
+  /// No description provided for @debug_send_information_via_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Send debug information via email'**
+  String get debug_send_information_via_email;
+
+  /// No description provided for @debug_receive_test_notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive test notification'**
+  String get debug_receive_test_notification;
+
+  /// No description provided for @debug_show_onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Show onboarding'**
+  String get debug_show_onboarding;
+
   /// No description provided for @invite_landing_instruction_title.
   ///
   /// In en, this message translates to:
@@ -3449,12 +3661,6 @@ abstract class AppLocalizations {
   /// **'Copied'**
   String get invite_landing_copied;
 
-  /// No description provided for @recovery_phrase_word_count.
-  ///
-  /// In en, this message translates to:
-  /// **'{count}/{total} words'**
-  String recovery_phrase_word_count(Object count, Object total);
-
   /// No description provided for @invite_landing_copy_code.
   ///
   /// In en, this message translates to:
@@ -3473,7 +3679,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en'].contains(locale.languageCode);
+      <String>['de', 'en', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -3486,6 +3692,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'ko':
+      return AppLocalizationsKo();
   }
 
   throw FlutterError(

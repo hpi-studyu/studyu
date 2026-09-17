@@ -117,6 +117,12 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     prevFormValue = {...form.value};
   }
 
+  @override
+  set formMode(FormMode mode) {
+    super.formMode = mode;
+    syncCodeControlEnabledState();
+  }
+
   void syncCodeControlEnabledState() {
     if (formMode == FormMode.edit) {
       codeControl.markAsDisabled();

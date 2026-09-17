@@ -283,6 +283,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_invite_link_copied => 'Invite link copied';
 
   @override
+  String get notification_invitation_copied => 'Invitation copied';
+
+  @override
   String get action_button_new_study => 'New study';
 
   @override
@@ -2202,9 +2205,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_button_code_new => 'New code';
 
   @override
-  String get action_button_code_save => 'Save code';
-
-  @override
   String get participant_details_title => 'Participant details';
 
   @override
@@ -2530,6 +2530,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_copy_link => 'Copy link';
+
+  @override
+  String get action_copy_invitation => 'Copy invitation';
 
   @override
   String get action_reportPrimary => 'Set as primary report';
@@ -3133,7 +3136,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialog_qr_code_description =>
-      'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.';
+      'Share the link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.';
 
   @override
   String get all_studies => 'All Studies';
@@ -3150,4 +3153,55 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get studies_end_of_list_public =>
       'Didn\'t find what you\'re looking for?';
+
+  @override
+  String get error_qr_code_generation => 'The QR code could not be displayed.';
+
+  @override
+  String get form_field_invite_link => 'Invite link';
+
+  @override
+  String get form_field_invite_link_tooltip =>
+      'Share this link with participants so they can open the StudyU App and join the study.';
+
+  @override
+  String get form_field_invitation_message => 'Invitation message';
+
+  @override
+  String invitation_message_intro(Object title) {
+    return 'You have been invited to participate in the study \"$title\" using StudyU.';
+  }
+
+  @override
+  String get invitation_message_install_app =>
+      '1. Install the StudyU Health app on your phone if needed:';
+
+  @override
+  String invitation_message_android(Object link) {
+    return 'Android: $link';
+  }
+
+  @override
+  String invitation_message_ios(Object link) {
+    return 'iPhone/iPad: $link';
+  }
+
+  @override
+  String get invitation_message_open_link =>
+      '2. Open this invitation link on your phone:';
+
+  @override
+  String get invitation_message_alternative =>
+      'Alternatively, open the StudyU Health app and enter this invitation code:';
+
+  @override
+  String get form_field_report_improvementDirection_hint =>
+      'Select an improvement direction';
+
+  @override
+  String get form_field_report_data_source_hint => 'Select a data source';
+
+  @override
+  String get form_field_report_data_source_empty =>
+      'No scale survey question defined';
 }
