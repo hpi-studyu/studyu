@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/deep_link_onboarding_widgets.dart';
@@ -247,6 +248,24 @@ void main() {
       final previousPlatform = debugDefaultTargetPlatformOverride;
       debugDefaultTargetPlatformOverride = TargetPlatform.linux;
       try {
+        String? clipboardText;
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          (call) async {
+            if (call.method == 'Clipboard.setData') {
+              clipboardText =
+                  (call.arguments as Map<Object?, Object?>)['text']! as String;
+            }
+            return null;
+          },
+        );
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            SystemChannels.platform,
+            null,
+          ),
+        );
+
         final study = Study('study-copy', 'owner-123')..title = 'Invite study';
 
         await tester.pumpWidget(
@@ -264,13 +283,13 @@ void main() {
 
         final context = tester.element(find.byType(DeepLinkWebLandingPage));
         final l10n = AppLocalizations.of(context)!;
-        expect(
-          find.widgetWithText(FilledButton, l10n.copy_btn),
-          findsOneWidget,
-        );
+        final copyButton = find.widgetWithText(FilledButton, l10n.copy_btn);
+        expect(copyButton, findsOneWidget);
 
-        await tester.tap(find.widgetWithText(FilledButton, l10n.copy_btn));
+        await tester.ensureVisible(copyButton);
+        await tester.tap(copyButton);
         await tester.pump();
+        expect(clipboardText, 'invite-copy');
         expect(
           find.widgetWithText(FilledButton, l10n.invite_landing_copied),
           findsOneWidget,
