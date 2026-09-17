@@ -224,7 +224,7 @@ GoRouter createAppRouter({
               ? state.uri.pathSegments.first
               : '';
           if (code.isNotEmpty) {
-            return '/${RouteNames.invite}/$code';
+            return '/${RouteNames.invite}/${Uri.encodeComponent(code)}';
           }
         }
 

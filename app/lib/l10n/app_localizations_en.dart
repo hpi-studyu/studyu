@@ -1577,10 +1577,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deep_link_switch_confirm_hard_button => 'Confirm hard delete';
 
   @override
-  String get open_link_on_mobile =>
-      'Please open this link on your mobile device.';
-
-  @override
   String get you_have_been_invited => 'You have been invited to a study!';
 
   @override
@@ -1793,7 +1789,77 @@ class AppLocalizationsEn extends AppLocalizations {
       'Come back tomorrow to begin. We’ll remind you when there’s something to do.';
 
   @override
+  String get invite_landing_instruction_title =>
+      'Join the study with StudyU Health';
+
+  @override
+  String get invite_landing_qr_label => 'Study invitation QR code';
+
+  @override
+  String get invite_landing_invite_code => 'Invite code';
+
+  @override
+  String get invite_landing_invalid =>
+      'This invitation is no longer available. Please check the link or code and try again.';
+
+  @override
+  String get invite_landing_load_error =>
+      'We could not load this invitation. Please try again later.';
+
+  @override
+  String get invite_landing_loading => 'Loading invitation…';
+
+  @override
+  String get scan_invite_code => 'Scan QR code';
+
+  @override
+  String get scan_invite_code_description =>
+      'Point your camera at the invitation QR code.';
+
+  @override
+  String get open_study_app => 'Open in StudyU Health';
+
+  @override
+  String get invite_landing_google_play => 'Get it on Google Play';
+
+  @override
+  String get invite_landing_app_store => 'Download on the App Store';
+
+  @override
+  String get invite_landing_step_download => 'Get the StudyU Health app';
+
+  @override
+  String get invite_landing_step_join => 'Join the study in the app';
+
+  @override
+  String get invite_landing_step_join_description =>
+      'Open StudyU Health on your phone and tap Join with an invite code. Enter the invite code or scan the QR code to join the study.';
+
+  @override
+  String get invite_landing_invited_title => 'You’re invited to join';
+
+  @override
+  String get invite_landing_phone_instruction =>
+      'Enter this invite code in the StudyU Health app.';
+
+  @override
+  String get invite_landing_other_device_instruction =>
+      'For quick access, scan this QR code with your phone.';
+
+  @override
+  String get invite_landing_enter_code_title => 'Enter invite code';
+
+  @override
+  String get invite_landing_scan_qr_title => 'Scan QR code';
+
+  @override
+  String get invite_landing_copied => 'Copied';
+
+  @override
   String recovery_phrase_word_count(Object count, Object total) {
     return '$count/$total words';
   }
+
+  @override
+  String get invite_landing_copy_code => 'Copy invite code';
 }
