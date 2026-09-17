@@ -104,9 +104,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   List<int> get phasePos {
     final numberOfPhases = widget.subject.interventionOrder.length;
     final phaseDuration = widget.subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(
-      numberOfPhases,
-    ).map((i) => (i + 1) * phaseDuration).toList();
+    return Iterable<int>.generate(numberOfPhases)
+        .map((i) => (i + 1) * phaseDuration)
+        .toList();
   }
 
   Widget getLegend(BuildContext context, List<DiagramDatum> data) {

@@ -16,9 +16,8 @@ class StudyULogo extends StatelessWidget {
 
         return Container(
           foregroundDecoration: BoxDecoration(
-            color: Theme.of(
-              context,
-            ).colorScheme.primary.withValues(alpha: colorBlendFactor),
+            color: Theme.of(context).colorScheme.primary
+                .withValues(alpha: colorBlendFactor),
             backgroundBlendMode: BlendMode.color,
           ),
           child: Image.asset(Assets.logoWide, fit: BoxFit.scaleDown),

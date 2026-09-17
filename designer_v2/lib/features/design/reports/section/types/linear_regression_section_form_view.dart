@@ -50,7 +50,7 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
                 ),
                 child: ReactiveDropdownField<ImprovementDirectionFormatted>(
                   formControl: formViewModel.improvementDirectionControl,
-                  hint: const Text("Select an improvement direction"),
+                  hint: Text(tr.form_field_report_improvementDirection_hint),
                   items: ReportItemFormViewModel
                       .improvementDirectionControlOptions
                       .map((option) {

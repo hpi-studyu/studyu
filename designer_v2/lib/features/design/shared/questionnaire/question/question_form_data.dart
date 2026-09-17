@@ -7,11 +7,10 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
-typedef SurveyQuestionFormDataFactory =
-    QuestionFormData Function(
-      Question question,
-      List<EligibilityCriterion> eligibilityCriteria,
-    );
+typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
+  Question question,
+  List<EligibilityCriterion> eligibilityCriteria,
+);
 
 abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>

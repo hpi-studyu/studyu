@@ -238,8 +238,7 @@ class _AudioRecordingQuestionWidgetState
     final errorMessage = isPermissionRelated
         ? AppLocalizations.of(context)!.microphone_access_denied
         : AppLocalizations.of(context)!.recording_error;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(errorMessage)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(errorMessage)));
   }
 }

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_ko.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +97,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
     Locale('en'),
+    Locale('ko'),
   ];
 
   /// No description provided for @studyu.
@@ -607,6 +609,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invite link copied'**
   String get notification_invite_link_copied;
+
+  /// No description provided for @notification_invitation_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation copied'**
+  String get notification_invitation_copied;
 
   /// No description provided for @action_button_new_study.
   ///
@@ -3783,12 +3791,6 @@ abstract class AppLocalizations {
   /// **'New code'**
   String get action_button_code_new;
 
-  /// No description provided for @action_button_code_save.
-  ///
-  /// In en, this message translates to:
-  /// **'Save code'**
-  String get action_button_code_save;
-
   /// No description provided for @participant_details_title.
   ///
   /// In en, this message translates to:
@@ -4280,6 +4282,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy link'**
   String get action_copy_link;
+
+  /// No description provided for @action_copy_invitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invitation'**
+  String get action_copy_invitation;
 
   /// No description provided for @action_reportPrimary.
   ///
@@ -5346,7 +5354,7 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_qr_code_description.
   ///
   /// In en, this message translates to:
-  /// **'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.'**
+  /// **'Share the link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.'**
   String get dialog_qr_code_description;
 
   /// No description provided for @all_studies.
@@ -5378,6 +5386,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Didn\'t find what you\'re looking for?'**
   String get studies_end_of_list_public;
+
+  /// No description provided for @error_qr_code_generation.
+  ///
+  /// In en, this message translates to:
+  /// **'The QR code could not be displayed.'**
+  String get error_qr_code_generation;
+
+  /// No description provided for @form_field_invite_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link'**
+  String get form_field_invite_link;
+
+  /// No description provided for @form_field_invite_link_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this link with participants so they can open the StudyU App and join the study.'**
+  String get form_field_invite_link_tooltip;
+
+  /// No description provided for @form_field_invitation_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation message'**
+  String get form_field_invitation_message;
+
+  /// No description provided for @invitation_message_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been invited to participate in the study \"{title}\" using StudyU.'**
+  String invitation_message_intro(Object title);
+
+  /// No description provided for @invitation_message_install_app.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Install the StudyU Health app on your phone if needed:'**
+  String get invitation_message_install_app;
+
+  /// No description provided for @invitation_message_android.
+  ///
+  /// In en, this message translates to:
+  /// **'Android: {link}'**
+  String invitation_message_android(Object link);
+
+  /// No description provided for @invitation_message_ios.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone/iPad: {link}'**
+  String invitation_message_ios(Object link);
+
+  /// No description provided for @invitation_message_open_link.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Open this invitation link on your phone:'**
+  String get invitation_message_open_link;
+
+  /// No description provided for @invitation_message_alternative.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternatively, open the StudyU Health app and enter this invitation code:'**
+  String get invitation_message_alternative;
+
+  /// No description provided for @form_field_report_improvementDirection_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an improvement direction'**
+  String get form_field_report_improvementDirection_hint;
+
+  /// No description provided for @form_field_report_data_source_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a data source'**
+  String get form_field_report_data_source_hint;
+
+  /// No description provided for @form_field_report_data_source_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No scale survey question defined'**
+  String get form_field_report_data_source_empty;
 }
 
 class _AppLocalizationsDelegate
@@ -5391,7 +5477,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en'].contains(locale.languageCode);
+      <String>['de', 'en', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -5404,6 +5490,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'ko':
+      return AppLocalizationsKo();
   }
 
   throw FlutterError(

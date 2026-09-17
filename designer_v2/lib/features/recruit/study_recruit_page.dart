@@ -163,7 +163,7 @@ class StudyRecruitScreen extends StudyPageWidget {
         );
       },
       error: (error, stackTrace) => Center(child: Text(error.toString())),
-      loading: () => const SizedBox.shrink(),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -396,7 +396,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           }
 
           return PrimaryButton(
-            text: tr.action_button_code_save,
+            text: tr.dialog_save,
             icon: null,
             innerPadding: EdgeInsets.zero,
             enabled: formViewModel.isValid,

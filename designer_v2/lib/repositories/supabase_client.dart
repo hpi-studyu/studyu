@@ -117,9 +117,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
   List<T> deserializeList<T extends SupabaseObject>(dynamic data) {
     return List<T>.from(
-      List<Map<String, dynamic>>.from(
-        data as List,
-      ).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
+      List<Map<String, dynamic>>.from(data as List)
+          .map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
     );
   }
 

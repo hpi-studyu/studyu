@@ -85,7 +85,7 @@ class StudyDesignNav {
   );
   static NavbarTab reports(StudyID studyId) => NavbarTab(
     index: 4,
-    title: "Reports",
+    title: tr.form_array_report_items_title,
     intent: RoutingIntents.studyEditReports(studyId),
   );
 }

@@ -39,6 +39,9 @@ Widget welcomeEntryHubPreview() => const WelcomeEntryHub(
   onAbout: _noop,
   onFaq: _noop,
   onContact: _noop,
+  selectedLocale: Locale('en'),
+  onLocaleChanged: _noopLocale,
 );
 
 void _noop() {}
+void _noopLocale(Locale? _) {}

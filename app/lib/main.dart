@@ -87,6 +87,8 @@ Future<void> main() async {
     initialRoute = '/${RouteNames.appOutdated}';
   }
 
+  // This application uses Provider rather than Riverpod, so it does not need a ProviderScope.
+  // ignore: riverpod_lint/missing_provider_scope
   runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
 
   AppLifecycleListener(

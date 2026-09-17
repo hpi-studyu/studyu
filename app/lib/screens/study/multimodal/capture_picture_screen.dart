@@ -98,9 +98,8 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       }
 
       context.pop();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(errorText)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorText)));
     }
   }
 

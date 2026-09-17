@@ -284,9 +284,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
             child: Container(
               foregroundDecoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.primary.withValues(alpha: 0.4),
+                color: Theme.of(context).colorScheme.primary
+                    .withValues(alpha: 0.4),
                 backgroundBlendMode: BlendMode.color,
               ),
               child: Image.asset(Assets.logoWide, fit: BoxFit.cover),

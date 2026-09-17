@@ -2,14 +2,14 @@ name: studyu
 description: The root of the StudyU project
 publish_to: none
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: '>=3.13.0 <4.0.0'
 workspace:
   - core
   - flutter_common
   - app
   - designer_v2
 dev_dependencies:
-  melos: ^8.2.0
+  melos: ^8.7.0
 
 melos:
   repository: https://github.com/hpi-studyu/studyu
@@ -65,7 +65,7 @@ melos:
           rtk_prefix="rtk "
         fi
         melos exec -c 6 --fail-fast -- \
-          "${rtk_prefix}flutter test --coverage"
+          "mkdir -p coverage && ${rtk_prefix}flutter test --coverage --file-reporter=json:coverage/tests.output"
       description: Run `flutter test --coverage` per package with a test directory
       packageFilters:
         dirExists: test

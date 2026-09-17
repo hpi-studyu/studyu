@@ -75,9 +75,8 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
           style: theme.textTheme.titleLarge,
         ),
         subtitle: Text(
-          AppLocalizations.of(
-            context,
-          )!.compare_results_between(statsA.name, statsB.name),
+          AppLocalizations.of(context)!
+              .compare_results_between(statsA.name, statsB.name),
           style: theme.textTheme.bodyMedium,
         ),
         initiallyExpanded: initiallyExpanded,

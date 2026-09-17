@@ -17,9 +17,8 @@ class FilterCategory extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(
-            context,
-          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+          color: Theme.of(context).colorScheme.outlineVariant
+              .withValues(alpha: 0.5),
         ),
       ),
       clipBehavior: Clip.hardEdge,
