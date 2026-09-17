@@ -1,186 +1,149 @@
 # SonarQube
 
-This guide describes the StudyU SonarQube workflow and its GitHub integration.
+SonarQube analyzes StudyU pull requests that target `dev`, and every push to `dev`.
 
-> **Server verification required.** The actual SonarQube server edition,
-> version, and installed plugins have not been verified for this repository. A
-> server administrator must confirm that both of the following are installed and
-> compatible before relying on these settings:
->
-> - The **sonar-flutter** analyzer plugin for Dart/Flutter analysis.
-> - A community **branch plugin** (for example,
->   `mc1arke/sonarqube-with-community-branch-plugin`) for branch and pull
->   request support.
+Project key: `studyu-health_studyu`
 
-## Project
+Repository: <https://github.com/studyu-health/studyu/>
 
-The workflow uses one SonarQube project for both push analysis and same-
-repository pull request analysis.
+Dashboard: <https://sonar.cloud.studyu.health/dashboard?id=studyu-health_studyu>
 
-| Setting | Value |
+The project uses a 30-day new-code definition and the built-in **Sonar way** quality gate. The
+gate fails when coverage on new code is below 80%.
+
+The gate reports its result on the pull request. `dev` requires only the `ready_to_merge` status
+check, and the `Ready to Merge` workflow observes the `SonarQube` workflow run. A failing quality
+gate therefore fails `Ready to Merge` and blocks the merge. The `SonarQube` workflows are not
+required checks themselves.
+
+## When analysis runs
+
+| Event | Analysis |
 | --- | --- |
-| Project key | `hpi-studyu_studyu` |
-| Project name | `StudyU` |
-| Main branch | `dev` |
-| Server host URL | `https://sonar.cloud.studyu.health/` |
+| Pull request to `dev` from `studyu-health/studyu` | Pull request analysis |
+| Push to `dev` | Branch analysis |
+| Manual run of the `SonarQube` workflow on `dev` | Branch analysis |
 
-The project configuration lives in
-[`sonar-project.properties`](../sonar-project.properties):
+The workflow skips fork and Dependabot pull requests because those runs cannot receive the
+SonarQube token. GitHub records a skipped job as successful. This makes those pull requests
+explicit exceptions to the required check. It does not mean SonarQube analyzed them.
 
-- Analyzes `app/`, `core/`, `designer_v2/`, and `flutter_common` `lib/` and
-  `test/` directories.
-- Excludes generated `*.g.dart` files and generated localization files for
-  `app` and `designer_v2`.
-- Reads the merged coverage report from `coverage/sonar/lcov.info`.
-- Reads the Dart analyzer report from `coverage/sonar/dart-analyze.txt`.
-- Waits for the SonarQube quality gate.
+## Where you see the result
 
-## Workflow
+A pull request run adds two checks:
 
-The workflow is defined in
-[`.github/workflows/sonarqube.yml`](../.github/workflows/sonarqube.yml).
+- **`SonarQube Quality Gate`** is the workflow check. It obtains the coverage reports, runs the
+  analyzer, and runs the scan. When the quality gate fails, the check shows one error annotation
+  for each failing condition, and the run summary shows a table with the value and the threshold
+  of each condition.
+- **`SonarQube Code Analysis`** is the SonarQube check. It links to the pull request analysis in
+  the dashboard and lists the new, fixed, and unresolved issues.
 
-It runs on:
+The workflow also writes the condition table to the run summary, and the scan step writes the
+full scanner output to the log. The annotations and the table describe the analysis of the same
+workflow run: the workflow reads the compute engine task of its own scan and asks SonarQube for
+the quality gate of that analysis.
 
-- Pushes to `dev`.
-- Pull requests targeting `dev` from the same repository.
-- Manual dispatches on `dev`.
+## What the analysis covers
 
-It explicitly skips analysis for fork pull requests and Dependabot pull
-requests. A skipped run is not proof that analysis passed.
+The analysis reads the Dart and Flutter code of four packages:
 
-The workflow performs these steps:
+- Sources: `app/lib`, `core/lib`, `designer_v2/lib`, `flutter_common/lib`.
+- Tests: `app/test`, `core/test`, `designer_v2/test`, `flutter_common/test`.
 
-1. Checks out the repository with full Git history.
-2. Verifies that `SONAR_TOKEN` and `SONAR_HOST_URL` are available.
-3. Initializes the workspace with FVM, Melos, and dependencies.
-4. Runs the coverage normalizer regression check.
-5. Runs `flutter test --coverage` for each workspace package with a test
-   directory.
-6. Validates and merges the package LCOV reports into
-   `coverage/sonar/lcov.info`.
-7. Runs the Dart analyzer and writes the machine-readable report to
-   `coverage/sonar/dart-analyze.txt`. Analyzer errors fail the step.
-8. Runs the SonarQube scanner.
+The analysis excludes these files:
 
-For same-repository pull requests, the scanner passes the pull request
-properties supported by the branch plugin:
+- Generated code, for example `*.g.dart`.
+- Generated localization files of `app` and `designer_v2`.
+- Generated Mockito mocks, for example `*.mocks.dart`.
 
-- `sonar.pullrequest.key`
-- `sonar.pullrequest.branch`
-- `sonar.pullrequest.base`
-- `sonar.scm.revision`
+Coverage comes from the unit and widget tests of the four packages. The workflow merges the
+package LCOV reports into one scan report.
 
-`sonar.branch.name` is not used for pull request analysis.
+The `All Packages` workflow runs the same coverage command and uploads the reports as the
+`sonar-coverage` artifact. The `SonarQube` workflow downloads the artifact of the same commit
+when it exists, and it skips its own test run. It reuses the artifact only when the reports of
+all four packages are present and not empty. When no artifact is available, the `SonarQube`
+workflow runs the tests itself.
 
-## Coverage scope
+The workflow also validates these Flutter JSON execution reports before it scans:
 
-Coverage is collected from the four Flutter/Dart workspace packages that have
-test directories:
+- `app/coverage/tests.output`
+- `core/coverage/tests.output`
+- `designer_v2/coverage/tests.output`
+- `flutter_common/coverage/tests.output`
 
-- `app`
-- `core`
-- `designer_v2`
-- `flutter_common`
+Each report must be non-empty, contain a suite, and end with a successful `done` event. These
+reports provide unit-test execution data. They do not calculate coverage.
 
-Coverage does not include:
+The analysis does not cover:
 
 - Designer browser end-to-end tests.
 - Supabase database tests.
-- Native platform code (Android, iOS).
-- Generated code (`*.g.dart`) and generated localization files.
+- Native Android and iOS code.
+- Generated code and generated localization files.
 
-## Server configuration
+## New code
 
-Before the workflow runs successfully, confirm that:
+The quality gate measures new code, not the complete code base.
 
-- The SonarQube server is reachable from the GitHub-hosted runner.
-- The server uses HTTPS with a certificate trusted by public runners.
-- The SonarQube project key is `hpi-studyu_studyu`.
-- The SonarQube main branch is `dev`.
-- The **sonar-flutter** analyzer plugin and a compatible **branch plugin** are
-  installed and enabled. The server administrator must verify edition, version,
-  and plugin compatibility.
+- A pull request analysis uses the pull request diff against `dev`.
+- A branch analysis uses a window of the last 30 days.
 
-If the server is available only through a private network, GitHub-hosted
-runners cannot reach it. Use a suitable network path or an isolated self-hosted
-runner. Do not run untrusted fork pull requests on a self-hosted runner that
-has access to SonarQube secrets.
+## Quality gate conditions
 
-## GitHub Actions configuration
+| Condition | Fails when |
+| --- | --- |
+| Coverage on new code | below 80.0% |
+| Duplicated lines on new code | above 3.0% |
+| New issues | one or more |
+| Security hotspots reviewed on new code | below 100% |
 
-Configure these repository-level settings:
+SonarQube ignores the coverage condition when a change adds fewer than 20 new coverable lines,
+and it ignores the duplication condition when a change adds fewer than 20 new lines. A
+documentation-only pull request therefore passes the gate.
 
-| Name | Type | Value |
-| --- | --- | --- |
-| `SONAR_HOST_URL` | Variable | `https://sonar.cloud.studyu.health/` |
-| `SONAR_TOKEN` | Secret | A SonarQube token with Execute Analysis permission |
+## When the quality gate fails
 
-`SONAR_HOST_URL` and `SONAR_TOKEN` are configured names and values that the
-workflow expects; they are not themselves secret values, but the token must be
-stored as a GitHub Actions secret. Do not place it in
-`sonar-project.properties`, workflow files, `.env` files, or commits.
+1. Open the failing `SonarQube Quality Gate` check. The annotations and summary table show the
+   failing condition, its value, and its threshold.
+2. Open the dashboard link in the same check. The dashboard shows the affected files and lines.
+3. Fix the failing condition:
+   - **Coverage on new code** — add tests that execute the new lines.
+   - **New issues** — fix the reported issues, or mark a false positive in the dashboard and
+     give a reason.
+   - **Duplicated lines on new code** — remove the duplication, or extract the shared code into
+     one place.
+   - **Security hotspots reviewed on new code** — review each hotspot in the dashboard, then
+     mark it safe or fixed.
+4. Push the fix. The workflow analyzes the pull request again.
 
-The workflow requests only:
+A bypass hides the failing condition from the reviewer and from the next analysis. Fix the
+condition, or discuss the exception in the pull request.
 
-```yaml
-permissions:
-  contents: read
-```
-
-`SONAR_TOKEN` is available only to the preflight verification and SonarQube
-scan steps. Tests and analyzer steps do not receive it.
-
-## GitHub App integration
-
-Use the modern server-side GitHub App integration for ALM credentials and
-project binding:
-
-1. Configure the GitHub App credentials globally in SonarQube.
-2. Install the GitHub App only for the organization and repositories that
-   SonarQube must access.
-3. Grant these repository permissions:
-   - **Checks** read and write
-   - **Pull requests** read and write
-   - **Metadata** read
-4. Bind the project `hpi-studyu_studyu` to repository `hpi-studyu/studyu` in
-   the SonarQube project DevOps platform integration settings.
-
-Do not use the legacy `sonar.pullrequest.github.token.secured` property. Keep
-all GitHub App private configuration in SonarQube protected settings.
-
-## Branch protection
-
-After the first successful `dev` baseline run and a same-repository pull
-request run, configure branch protection for `dev` to require the SonarQube
-and/or plugin checks. The workflow check is named `SonarQube Quality Gate`.
-The branch plugin may add a `SonarQube Code Analysis` check. Select the exact
-names that appear after the first successful analysis.
-
-## Local validation
+## Reproduce the coverage result locally
 
 Run these commands from the repository root:
 
 ```bash
-actionlint .github/workflows/sonarqube.yml
-fvm dart format --output=none --set-exit-if-changed scripts/normalize_lcov.dart
-fvm dart analyze --no-fatal-warnings scripts/normalize_lcov.dart
+fvm exec melos test:coverage
+fvm dart scripts/normalize_lcov.dart coverage/sonar/lcov.info
 fvm dart scripts/normalize_lcov.dart --check
 ```
 
-A full SonarQube scan requires the configured `SONAR_TOKEN` and `SONAR_HOST_URL`
-and must run in GitHub Actions.
+`test:coverage` runs `flutter test --coverage` for each package with a test directory. It writes
+the package test reports and the package LCOV reports. The normalizer merges the package reports
+into `coverage/sonar/lcov.info`. This file is the only coverage input of the scan.
 
-## Security checklist
+A local run does not contact SonarQube, and it does not evaluate the quality gate. The scan
+requires `SONAR_TOKEN` and `SONAR_HOST_URL`, so it runs in GitHub Actions only.
 
-- Store `SONAR_TOKEN` as a GitHub Actions secret.
-- Store `SONAR_HOST_URL` as a GitHub Actions variable.
-- Use a SonarQube token with the smallest required permissions.
-- Do not expose `SONAR_TOKEN` to fork pull requests.
-- Do not use `pull_request_target` or `workflow_run` to expose secrets to
-  untrusted code.
-- Keep GitHub App private keys and configuration out of the repository and
-  CLI.
-- Keep third-party actions pinned to full commit SHAs.
-- Rotate credentials when an authorized maintainer leaves or a credential may
-  have been exposed.
+## Known limits
+
+- Coverage includes unit and widget tests only. Integration tests, browser end-to-end tests, and
+  database tests do not change the coverage value.
+- A skipped workflow run leaves the pull request without a quality gate result. A manual run
+  does not replace it, because a manual run analyzes `dev`.
+- Flutter LCOV has no record for a source file that no unit or widget test loads. The analysis
+  stores no coverage measure for that file, so it adds no lines to cover and counts neither as
+  covered nor as uncovered, also on new code.

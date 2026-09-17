@@ -65,7 +65,7 @@ melos:
           rtk_prefix="rtk "
         fi
         melos exec -c 6 --fail-fast -- \
-          "${rtk_prefix}flutter test --coverage"
+          "mkdir -p coverage && ${rtk_prefix}flutter test --coverage --file-reporter=json:coverage/tests.output"
       description: Run `flutter test --coverage` per package with a test directory
       packageFilters:
         dirExists: test

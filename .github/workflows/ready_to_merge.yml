@@ -23,6 +23,7 @@ jobs:
               "mega-linter.yml",
               "e2e_tests.yml",
               "supabase-test.yml",
+              "sonarqube.yml",
             ];
             console.log(
               "Initializing with workflows to check: " + workflows_to_check
