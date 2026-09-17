@@ -24,11 +24,11 @@ Do not mutate the repository until every preflight check passes.
 
    If the worktree is not clean, create a fresh worktree without changing the
    existing one. Never stash, reset, or remove unrelated work.
-3. Require a Jira ticket key and URL. The key must match the task and the branch.
-4. Require a branch that matches the repository rule:
-   `^(feat|fix|refactor|chore|docs|test|perf|ci|build)/studyu-[0-9]+-[a-z0-9][a-z0-9-]*$`.
-   Do not rename a branch automatically. Stop and request an approved branch if
-   the name does not match.
+3. Treat dependency upgrades as ticketless maintenance. Do not require a Jira
+   ticket.
+4. Require a branch that matches `^chore/[a-z0-9][a-z0-9-]*$`. Do not rename a
+   branch automatically. Stop and request an approved branch if the name does
+   not match.
 5. Print the target branch and the current commit. Confirm that the target is
    not the task branch.
 6. Confirm the intended scope. Allowed changes are dependency manifests,
@@ -291,7 +291,7 @@ optional check as skipped only with a reason in the upgrade record.
 
 Stop and request a decision or remediation when any of these conditions occurs:
 
-- The repository root, clean worktree, Jira ticket, or valid branch is missing.
+- The repository root, clean worktree, or valid maintenance branch is missing.
 - The SDK proposal is not the latest stable release, or migration notes are
   unavailable.
 - The solver conflicts, downgrades, changes a source, or requires an override.
@@ -363,10 +363,10 @@ Never push tags before the pull request merges. Never run `git push --tags` or
 ## 10. Pull request and post-merge handoff
 
 After the version step, follow `.agents/skills/pull-request/SKILL.md`. Complete
-its branch, Conventional Commit, diff, Jira, template, testing, confirmation,
-and author-attestation gates. If the task branch does not match its naming
-rule, report the mismatch and request explicit confirmation before continuing
-with the pull-request step. Do not rename it automatically.
+its ticketless maintenance branch, Conventional Commit, diff, template,
+testing, confirmation, and author-attestation gates. Use
+`chore(deps): <description>` for the PR title and
+`Not applicable — maintenance PR.` for the Jira section.
 
 Push the branch only. Do not include tags:
 

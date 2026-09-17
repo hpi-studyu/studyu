@@ -197,6 +197,9 @@ pull request template and these conventions:
 
 - Jira-backed branch: `<type>/studyu-<ticket-number>-<short-description>`
 - Jira-backed PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
+- Dependency-upgrade PRs created through `.agents/skills/dependency-upgrade`
+  are maintenance and do not require Jira. Use a `chore/<short-description>`
+  branch and a `chore(deps): <description>` PR title.
 - A small maintenance PR can omit Jira only when all these conditions apply:
   - Its type is `chore`, `docs`, `ci`, `build`, or `test`.
   - It changes no user-facing behavior, database, deployment, or release.

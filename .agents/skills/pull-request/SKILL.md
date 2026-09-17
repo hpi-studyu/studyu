@@ -9,7 +9,7 @@ argument-hint: "[target-branch]"
 ## Defaults
 
 - Default target branch: `dev`, unless the user specifies a target branch or repository context clearly indicates a different default.
-- Jira is required unless the change meets the ticketless maintenance exception in `CONTRIBUTING.md`.
+- Jira is required unless the change is a dependency upgrade or meets the ticketless maintenance exception in `CONTRIBUTING.md`.
 - Do not force-push, rebase, amend, or rename branches unless the user explicitly asks.
 - Never create a PR until branch name, commit compliance, and diff size audit have been presented and the user confirms continuing.
 
@@ -93,10 +93,14 @@ Count changed lines excluding generated and translation files:
 - `*.lock`
 - `pubspec.lock`
 
-For a ticketless branch, confirm all maintenance exception conditions from
-`CONTRIBUTING.md`. Stop if the diff exceeds 500 non-generated lines or changes
-user-facing behavior, a database, a deployment, or a release. Record the
-user's explicit confirmation that no Jira ticket is needed.
+A dependency upgrade performed through `.agents/skills/dependency-upgrade` is
+ticketless maintenance. Do not require Jira or apply the small-maintenance
+scope limits to it.
+
+For any other ticketless branch, confirm all maintenance exception conditions
+from `CONTRIBUTING.md`. Stop if the diff exceeds 500 non-generated lines or
+changes user-facing behavior, a database, a deployment, or a release. Record
+the user's explicit confirmation that no Jira ticket is needed.
 
 If total non-excluded changed lines exceed 500, analyze the diff and propose an independently mergeable split by feature area, layer, or dependency order:
 
