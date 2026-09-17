@@ -195,10 +195,18 @@ Examples from this repo:
 For any new feature or bug fix, create a branch and open a pull request. Follow the
 pull request template and these conventions:
 
-- Branch: `<type>/studyu-<ticket-number>-<short-description>`
-- PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
+- Jira-backed branch: `<type>/studyu-<ticket-number>-<short-description>`
+- Jira-backed PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
+- A small maintenance PR can omit Jira only when all these conditions apply:
+  - Its type is `chore`, `docs`, `ci`, `build`, or `test`.
+  - It changes no user-facing behavior, database, deployment, or release.
+  - It changes at most 500 non-generated lines.
+  - The author explicitly confirms that no Jira ticket is needed.
+- A ticketless maintenance branch uses `<type>/<short-description>`.
+- A ticketless maintenance PR title uses `<type>[(<scope>)]: <description>`.
 - PR description must include:
-  - A direct link to the matching Jira ticket.
+  - A direct Jira link, or `Not applicable — maintenance PR.` for an approved
+    ticketless maintenance PR.
   - A **description** of the change and its motivation, with any related
     issues or context.
   - **Testing steps** that let a reviewer reproduce and verify the change
