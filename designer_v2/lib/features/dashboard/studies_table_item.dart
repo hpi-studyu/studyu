@@ -260,9 +260,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
         key: ValueKey('study_row_actions_${widget.study.id}'),
         actions: actions,
         enabled: !widget.isBusy,
-        triggerIconColor: ThemeConfig.bodyTextMuted(
-          theme,
-        ).color?.withValues(alpha: 0.6),
+        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color
+            ?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,

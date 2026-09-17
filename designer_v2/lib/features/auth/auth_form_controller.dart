@@ -341,9 +341,8 @@ class AuthFormController extends _$AuthFormController {
     if (currentForm == null || !currentForm.valid) {
       return Future.value();
     }
-    return resetPasswordForEmail(
-      getEmailControl().value!,
-    ).then((_) => _notificationService.show(Notifications.passwordReset));
+    return resetPasswordForEmail(getEmailControl().value!)
+        .then((_) => _notificationService.show(Notifications.passwordReset));
   }
 
   Future<void> recoverPassword() {
@@ -378,9 +377,8 @@ class AuthFormController extends _$AuthFormController {
   Future<bool> updateUser(String newPassword) async {
     try {
       state = const AsyncValue.loading();
-      return (await _authRepository.updateUser(
-            newPassword: newPassword,
-          )).user !=
+      return (await _authRepository.updateUser(newPassword: newPassword))
+              .user !=
           null;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);

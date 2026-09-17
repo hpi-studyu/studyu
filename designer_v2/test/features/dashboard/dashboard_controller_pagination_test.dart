@@ -79,9 +79,8 @@ class _Harness {
     when(userRepo.fetchUser()).thenAnswer((_) async => studyUUser);
     when(userRepo.user).thenReturn(studyUUser);
     when(userRepo.getCustomPresets()).thenReturn(const []);
-    when(
-      userRepo.getActiveFilter(any),
-    ).thenReturn((presetId: null, filterGroup: null));
+    when(userRepo.getActiveFilter(any))
+        .thenReturn((presetId: null, filterGroup: null));
     when(userRepo.getActiveSort(any)).thenReturn(activeSort);
 
     final defaultPage =
@@ -330,17 +329,15 @@ void main() {
         );
         await h.settle();
         final save = Completer<StudyUUser>();
-        when(
-          h.userRepo.updatePreferences(PreferenceAction.pinOff, 'p'),
-        ).thenAnswer((_) => save.future);
+        when(h.userRepo.updatePreferences(PreferenceAction.pinOff, 'p'))
+            .thenAnswer((_) => save.future);
         final page = h.holdPage();
 
         final action = h.controller.pinOffStudy('p');
         await h.controller.pinOffStudy('p');
         expect(h.state.pendingStudyIds, {'p'});
-        verify(
-          h.userRepo.updatePreferences(PreferenceAction.pinOff, 'p'),
-        ).called(1);
+        verify(h.userRepo.updatePreferences(PreferenceAction.pinOff, 'p'))
+            .called(1);
         expect(h.state.displayedStudies.requireValue, [pinned]);
 
         h.studyUUser.preferences.pinnedStudies.clear();
@@ -367,9 +364,8 @@ void main() {
       );
       await h.settle();
       final error = StateError('save failed');
-      when(
-        h.userRepo.updatePreferences(PreferenceAction.pin, 'a'),
-      ).thenAnswer((_) => Future<StudyUUser>.error(error));
+      when(h.userRepo.updatePreferences(PreferenceAction.pin, 'a'))
+          .thenAnswer((_) => Future<StudyUUser>.error(error));
 
       await h.controller.pinStudy('a');
       expect(h.state.displayedStudies.requireValue, [study]);
@@ -758,12 +754,10 @@ void main() {
       when(userRepo.fetchUser()).thenAnswer((_) async => studyUUser);
       when(userRepo.user).thenReturn(studyUUser);
       when(userRepo.getCustomPresets()).thenReturn(const []);
-      when(
-        userRepo.getActiveFilter(any),
-      ).thenReturn((presetId: null, filterGroup: null));
-      when(
-        userRepo.getActiveSort(any),
-      ).thenReturn((sortColumn: null, sortAscending: null));
+      when(userRepo.getActiveFilter(any))
+          .thenReturn((presetId: null, filterGroup: null));
+      when(userRepo.getActiveSort(any))
+          .thenReturn((sortColumn: null, sortAscending: null));
       final pageCompleter = Completer<StudiesPage>();
       when(
         studyRepo.fetchPage(
@@ -911,9 +905,8 @@ void main() {
         currentUser = updatedUser;
         return updatedUser;
       });
-      when(
-        h.studyRepo.fetchPinned(any),
-      ).thenAnswer((_) async => [_study('missing')]);
+      when(h.studyRepo.fetchPinned(any))
+          .thenAnswer((_) async => [_study('missing')]);
       when(
         h.studyRepo.fetchPage(
           offset: anyNamed('offset'),

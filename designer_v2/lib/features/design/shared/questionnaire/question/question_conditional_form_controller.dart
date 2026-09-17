@@ -297,9 +297,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     if (streams.isEmpty) {
       _conditionsValueChangesStream = const Stream<void>.empty();
     } else {
-      _conditionsValueChangesStream = StreamGroup.merge(
-        streams,
-      ).distinct().asBroadcastStream();
+      _conditionsValueChangesStream = StreamGroup.merge(streams)
+          .distinct()
+          .asBroadcastStream();
 
       _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen(
         (_) {

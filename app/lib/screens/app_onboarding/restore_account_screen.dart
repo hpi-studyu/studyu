@@ -192,21 +192,18 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
               TextFormField(
                 controller: _phraseController,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(
-                    context,
-                  )!.enter_recovery_phrase,
+                  labelText: AppLocalizations.of(context)!
+                      .enter_recovery_phrase,
                   hintText: 'apple banana cherry ...',
                   border: const OutlineInputBorder(),
                   helperText: _hasTooManyWords
-                      ? AppLocalizations.of(
-                          context,
-                        )!.recovery_phrase_too_many_words
-                      : AppLocalizations.of(
-                          context,
-                        )!.recovery_phrase_word_count(
-                          _words.length,
-                          RecoveryConstants.totalWordCount,
-                        ),
+                      ? AppLocalizations.of(context)!
+                            .recovery_phrase_too_many_words
+                      : AppLocalizations.of(context)!
+                            .recovery_phrase_word_count(
+                              _words.length,
+                              RecoveryConstants.totalWordCount,
+                            ),
                   helperStyle: TextStyle(
                     color: _hasTooManyWords
                         ? Theme.of(context).colorScheme.error
@@ -231,9 +228,8 @@ class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
                     return AppLocalizations.of(context)!.required;
                   }
                   if (_hasTooManyWords) {
-                    return AppLocalizations.of(
-                      context,
-                    )!.recovery_phrase_too_many_words;
+                    return AppLocalizations.of(context)!
+                        .recovery_phrase_too_many_words;
                   }
                   return null;
                 },

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
-typedef FormControlVoidCallback<T> =
-    void Function(AbstractControl<T> formControl);
+typedef FormControlVoidCallback<T> = void Function(
+  AbstractControl<T> formControl,
+);
 
 class FormControlLabel extends StatelessWidget {
   const FormControlLabel({

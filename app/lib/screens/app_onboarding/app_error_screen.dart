@@ -148,9 +148,9 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                         onPressed: () => _contactStudyTeam(context),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary,
                         ),
                         label: Text(loc.email_study_team),
                       ),

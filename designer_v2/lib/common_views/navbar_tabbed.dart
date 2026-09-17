@@ -24,8 +24,10 @@ class NavbarTab {
   final bool enabled;
 }
 
-typedef OnTabSelectCallback<T extends NavbarTab> =
-    void Function(int tabIdx, T tab);
+typedef OnTabSelectCallback<T extends NavbarTab> = void Function(
+  int tabIdx,
+  T tab,
+);
 
 class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
   const TabbedNavbar({

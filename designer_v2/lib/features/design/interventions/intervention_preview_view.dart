@@ -12,9 +12,8 @@ class InterventionPreview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
-      color: Theme.of(
-        context,
-      ).colorScheme.primaryContainer.withValues(alpha: 0.25),
+      color: Theme.of(context).colorScheme.primaryContainer
+          .withValues(alpha: 0.25),
       child: Stack(
         fit: StackFit.expand,
         children: [

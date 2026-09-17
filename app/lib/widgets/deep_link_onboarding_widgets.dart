@@ -429,8 +429,7 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
                                                                   .textTheme
                                                                   .headlineSmall
                                                                   ?.copyWith(
-                                                                    fontFamily:
-                                                                        'monospace',
+                                                                    fontFamily: 'monospace',
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w700,
@@ -498,22 +497,24 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
                                             aspectRatio: 1,
                                             child: PrettyQrView(
                                               qrImage: QrImage(qrCode),
-                                              decoration: const PrettyQrDecoration(
-                                                background: Colors.white,
-                                                image: PrettyQrDecorationImage(
-                                                  image: AssetImage(
-                                                    'assets/icon/icon.png',
+                                              decoration:
+                                                  const PrettyQrDecoration(
+                                                    background: Colors.white,
+                                                    image:
+                                                        PrettyQrDecorationImage(
+                                                          image: AssetImage(
+                                                            'assets/icon/icon.png',
+                                                          ),
+                                                        ),
+                                                    // ignore: experimental_member_use
+                                                    shape: PrettyQrShape.custom(
+                                                      PrettyQrSquaresSymbol(),
+                                                      finderPattern:
+                                                          PrettyQrSmoothSymbol(),
+                                                      alignmentPatterns:
+                                                          PrettyQrDotsSymbol(),
+                                                    ),
                                                   ),
-                                                ),
-                                                // ignore: experimental_member_use
-                                                shape: PrettyQrShape.custom(
-                                                  PrettyQrSquaresSymbol(),
-                                                  finderPattern:
-                                                      PrettyQrSmoothSymbol(),
-                                                  alignmentPatterns:
-                                                      PrettyQrDotsSymbol(),
-                                                ),
-                                              ),
                                             ),
                                           ),
                                         ),

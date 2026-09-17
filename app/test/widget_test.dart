@@ -349,9 +349,8 @@ void main() {
     await tester.pumpWidget(setup(overview, appState: appState));
     await tester.pumpAndSettle();
 
-    GoRouter.of(
-      tester.element(find.byWidget(overview)),
-    ).push('/${RouteNames.terms}');
+    GoRouter.of(tester.element(find.byWidget(overview)))
+        .push('/${RouteNames.terms}');
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey('terms_back')));

@@ -268,9 +268,9 @@ class FitbitHandler {
             detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
           );
 
-      final items =
-          await manager.fetch(url)
-              as List<fitbitter.FitbitActivityTimeseriesData>;
+      final items = await manager.fetch(
+        url,
+      ) as List<fitbitter.FitbitActivityTimeseriesData>;
 
       return items
           .map((item) => FitbitStepData(item.value!, item.dateOfMonitoring!))

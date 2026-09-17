@@ -42,9 +42,9 @@ void main() {
     expect(supportingText.textAlign, TextAlign.start);
     expect(
       supportingText.style!.color,
-      Theme.of(
-        tester.element(supportingTextFinder),
-      ).colorScheme.onSurfaceVariant,
+      Theme.of(tester.element(supportingTextFinder))
+          .colorScheme
+          .onSurfaceVariant,
     );
 
     expect(
