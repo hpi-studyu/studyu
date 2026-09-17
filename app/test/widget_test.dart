@@ -20,11 +20,17 @@ import 'package:studyu_app/screens/app_onboarding/welcome.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart';
 
-Widget setup(Widget child, {AppState? appState}) {
-  return ChangeNotifierProvider(
-    create: (_) => appState ?? AppState(),
+Widget setup(Widget child, {AppState? appState, AppLanguage? appLanguage}) {
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => appState ?? AppState()),
+      ChangeNotifierProvider<AppLanguage>.value(
+        value: appLanguage ?? _TestAppLanguage(),
+      ),
+    ],
     child: MaterialApp.router(
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -109,6 +115,25 @@ void main() {
       findsOneWidget,
     );
     expect(find.widgetWithText(TextButton, 'Restore account'), findsOneWidget);
+  });
+
+  testWidgets('welcome language picker changes the app language', (
+    tester,
+  ) async {
+    final appLanguage = _TestAppLanguage();
+    await tester.pumpWidget(
+      setup(const WelcomeScreen(), appLanguage: appLanguage),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('welcome_language_picker')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Korean'), findsOneWidget);
+    await tester.tap(find.text('Korean').last);
+    await tester.pumpAndSettle();
+
+    expect(appLanguage.appLocal, const Locale('ko'));
   });
 
   testWidgets('invite dialog returns after backing out of study overview', (
@@ -359,4 +384,26 @@ void main() {
     expect(find.byType(TermsScreen), findsNothing);
     expect(find.byType(AboutScreen), findsNothing);
   });
+}
+
+class _TestAppLanguage extends ChangeNotifier implements AppLanguage {
+  Locale? _locale = const Locale('en');
+
+  @override
+  Locale? get appLocal => _locale;
+
+  @override
+  List<Locale> get supportedLocales => AppLocalizations.supportedLocales;
+
+  @override
+  Future<void> changeLanguage(Locale? locale) async {
+    _locale = locale;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> fetchLocale() async {}
+
+  @override
+  Future<void> synchronizeWithServer() async {}
 }

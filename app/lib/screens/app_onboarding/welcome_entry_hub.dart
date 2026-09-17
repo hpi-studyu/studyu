@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/util/localization.dart';
 
 class WelcomeEntryHub extends StatelessWidget {
   final VoidCallback onLogoDoubleTap;
@@ -10,6 +11,8 @@ class WelcomeEntryHub extends StatelessWidget {
   final VoidCallback onAbout;
   final VoidCallback onFaq;
   final VoidCallback onContact;
+  final Locale? selectedLocale;
+  final ValueChanged<Locale?>? onLocaleChanged;
   final String logoAssetPath;
 
   const WelcomeEntryHub({
@@ -20,6 +23,8 @@ class WelcomeEntryHub extends StatelessWidget {
     required this.onAbout,
     required this.onFaq,
     required this.onContact,
+    required this.selectedLocale,
+    required this.onLocaleChanged,
     this.logoAssetPath = 'assets/icon/logo.png',
     super.key,
   });
@@ -185,6 +190,78 @@ class WelcomeEntryHub extends StatelessWidget {
                                     const SizedBox(width: 4),
                                     Flexible(child: Text(l10n.contact)),
                                   ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: PopupMenuButton<Locale>(
+                                key: const ValueKey('welcome_language_picker'),
+                                tooltip: l10n.language,
+                                enabled: onLocaleChanged != null,
+                                onSelected: (locale) =>
+                                    onLocaleChanged?.call(locale),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem<Locale>(
+                                    enabled: false,
+                                    child: Text(
+                                      l10n.language,
+                                      style: theme.textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  for (final locale
+                                      in AppLocalizations.supportedLocales)
+                                    PopupMenuItem<Locale>(
+                                      value: locale,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 24,
+                                            child:
+                                                selectedLocale?.languageCode ==
+                                                    locale.languageCode
+                                                ? const Icon(
+                                                    Icons.check,
+                                                    size: 18,
+                                                  )
+                                                : null,
+                                          ),
+                                          Text(
+                                            localeName(
+                                              context,
+                                              locale.languageCode,
+                                            )!,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                                child: SizedBox(
+                                  height: 48,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.language,
+                                        size: 18,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          l10n.language,
+                                          style: theme.textTheme.labelLarge
+                                              ?.copyWith(
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                                fontSize: 13,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

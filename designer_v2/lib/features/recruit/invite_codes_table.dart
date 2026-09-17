@@ -305,10 +305,10 @@ class StudyInvitesTable extends StatelessWidget {
     }
 
     final participantCount = getParticipantCountForInvite(item);
-    ModelAction? copyCodeAction;
+    ModelAction? copyInviteLinkAction;
     for (final action in getInlineActions(item)) {
-      if (action.type == ModelActionType.clipboard) {
-        copyCodeAction = action;
+      if (action.type == ModelActionType.copyLink) {
+        copyInviteLinkAction = action;
         break;
       }
     }
@@ -327,12 +327,12 @@ class StudyInvitesTable extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (copyCodeAction != null) ...[
+                if (copyInviteLinkAction != null) ...[
                   const SizedBox(width: _codeCellSpacing),
                   Tooltip(
-                    message: copyCodeAction.label,
+                    message: copyInviteLinkAction.label,
                     child: IconButton(
-                      onPressed: () => copyCodeAction!.execute(context),
+                      onPressed: () => copyInviteLinkAction!.execute(context),
                       constraints: const BoxConstraints.tightFor(
                         width: _copyButtonSize,
                         height: _copyButtonSize,
@@ -340,7 +340,7 @@ class StudyInvitesTable extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       splashRadius: _rowActionSplashRadius,
                       icon: Icon(
-                        copyCodeAction.icon,
+                        copyInviteLinkAction.icon,
                         size: _copyIconSize,
                         color: ThemeConfig.bodyTextMuted(theme).color,
                       ),

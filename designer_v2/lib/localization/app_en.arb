@@ -97,6 +97,7 @@
   "notification_code_clipboard": "Code copied to clipboard",
   "notification_invite_code_copied": "Invite code copied",
   "notification_invite_link_copied": "Invite link copied",
+  "notification_invitation_copied": "Invitation copied",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "New study",
   "action_button_retry": "Retry",
@@ -849,7 +850,6 @@
   "code_list_header_code": "Code",
   "code_list_header_actions": "Actions",
   "action_button_code_new": "New code",
-  "action_button_code_save": "Save code",
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Participant details",
   "participant_details_study_days_overview": "Study days overview",
@@ -979,6 +979,7 @@
   "action_qr_code_download": "Download QR code",
   "action_share": "Share invite link",
   "action_copy_link": "Copy link",
+  "action_copy_invitation": "Copy invitation",
   "action_reportPrimary": "Set as primary report",
   "action_study_duplicate_draft": "Copy as draft",
   "action_study_export_results": "Export results",
@@ -1222,10 +1223,38 @@
   "code_list_previous_page": "Previous page",
   "code_list_next_page": "Next page",
   "action_regenerate_invite_code": "Regenerate invite code",
-  "dialog_qr_code_description": "Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.",
+  "dialog_qr_code_description": "Share the link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.",
   "all_studies": "All Studies",
   "studies_filter_add_filter": "Add filter",
   "studies_filter_remove_filter": "Remove filter",
   "studies_end_of_list_create": "Create a study.",
-  "studies_end_of_list_public": "Didn't find what you're looking for?"
+  "studies_end_of_list_public": "Didn't find what you're looking for?",
+  "error_qr_code_generation": "The QR code could not be displayed.",
+  "form_field_invite_link": "Invite link",
+  "form_field_invite_link_tooltip": "Share this link with participants so they can open the StudyU App and join the study.",
+  "form_field_invitation_message": "Invitation message",
+  "invitation_message_intro": "You have been invited to participate in the study \"{title}\" using StudyU.",
+  "@invitation_message_intro": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "invitation_message_install_app": "1. Install the StudyU Health app on your phone if needed:",
+  "invitation_message_android": "Android: {link}",
+  "@invitation_message_android": {
+    "placeholders": {
+      "link": {}
+    }
+  },
+  "invitation_message_ios": "iPhone/iPad: {link}",
+  "@invitation_message_ios": {
+    "placeholders": {
+      "link": {}
+    }
+  },
+  "invitation_message_open_link": "2. Open this invitation link on your phone:",
+  "invitation_message_alternative": "Alternatively, open the StudyU Health app and enter this invitation code:",
+  "form_field_report_improvementDirection_hint": "Select an improvement direction",
+  "form_field_report_data_source_hint": "Select a data source",
+  "form_field_report_data_source_empty": "No scale survey question defined"
 }
