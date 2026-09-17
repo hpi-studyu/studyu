@@ -124,8 +124,9 @@ jobs:
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
       # The scan action fails when the quality gate does not pass, but it does
-      # not report which condition failed. This step publishes that result to
-      # the check run and the job summary.
+      # not report which condition failed. This step resolves the analysis of
+      # this run from the scanner metadata and publishes the quality gate of
+      # that analysis to the check run and the job summary.
       - name: Report quality gate failure
         if: >-
           failure() &&
@@ -142,67 +143,65 @@ jobs:
           host="${SONAR_HOST_URL%/}"
           scope="branch=dev"
           target="branch dev"
-          task_mode=main
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             scope="pullRequest=${PR_NUMBER}"
             target="pull request #${PR_NUMBER}"
-            task_mode=pull_request
           fi
           dashboard="${host}/dashboard?id=${project}&${scope}"
 
-          gate=$(curl -sS -u "${SONAR_TOKEN}:" \
-            "${host}/api/qualitygates/project_status?projectKey=${project}&${scope}" || true)
-          status=$(jq -r '.projectStatus.status // empty' <<<"${gate}" 2>/dev/null || true)
-
-          if [[ -z "${status}" ]]; then
-            echo "SonarQube returned no quality gate result for ${target}." >&2
-            echo "The analysis did not reach an accepted state." >&2
-          else
-            {
-              echo "### SonarQube quality gate: ${status}"
-              echo
-              echo "| Condition | Status | Value | Threshold |"
-              echo "| --- | --- | --- | --- |"
-              jq -r '.projectStatus.conditions[]
-                | "| `\(.metricKey)` | \(.status) | \(.actualValue) | \(.errorThreshold) |"' <<<"${gate}"
-              echo
-              echo "[Open the analysis in SonarQube](${dashboard})"
-            } | tee -a "${GITHUB_STEP_SUMMARY}"
-            jq -r --arg target "${target}" --arg dashboard "${dashboard}" '
-              .projectStatus.conditions[]
-              | select(.status == "ERROR")
-              | "::error title=SonarQube quality gate::\(.metricKey) is \(.actualValue) on \($target), \(
-                  if .comparator == "LT" then "below"
-                  elif .comparator == "GT" then "above"
-                  else "at"
-                  end) the \(.errorThreshold) threshold. \($dashboard)"
-            ' <<<"${gate}"
+          # The scanner records the id of its own compute engine task in the
+          # metadata file of the analysis working directory. Resolving the
+          # quality gate through that task reports the analysis of this run,
+          # not the latest analysis of the branch or the pull request.
+          metadata=.scannerwork/report-task.txt
+          task="{}"
+          task_status=""
+          analysis_id=""
+          if [[ -f "${metadata}" ]]; then
+            task_id=$(sed -n 's/^ceTaskId=//p' "${metadata}" | tr -d '\r' | head -n 1)
+            task=$(curl -sS -u "${SONAR_TOKEN}:" \
+              "${host}/api/ce/task?id=${task_id}" || true)
+            task_status=$(jq -r '.task.status // empty' <<<"${task}" 2>/dev/null || true)
+            analysis_id=$(jq -r '.task.analysisId // empty' <<<"${task}" 2>/dev/null || true)
           fi
 
-          analysis=$(curl -sS -u "${SONAR_TOKEN}:" \
-            "${host}/api/ce/activity?component=${project}&ps=10" || true)
-          task=$(jq -c --arg pr "${PR_NUMBER}" --arg mode "${task_mode}" '
-            [.tasks[]
-              | select(if $mode == "pull_request"
-                  then (.pullRequest == $pr)
-                  else (.pullRequest == null)
-                  end)]
-            | first // {}' <<<"${analysis}" 2>/dev/null || echo '{}')
-          case "$(jq -r '.status // "unknown"' <<<"${task}")" in
-            FAILED)
-              jq -r '.errorMessage // "SonarQube reported no error message."' \
-                <<<"${task}" | tr '\n' ' ' \
-                | sed 's/^/::error title=SonarQube analysis failed::/'
-              ;;
-            SUCCESS)
-              if [[ "${status:-}" == "ERROR" ]]; then
-                echo "The latest SonarQube analysis task succeeded, so the quality gate rejected the analysis."
-              else
-                echo "The latest SonarQube analysis task succeeded, so the scan action failed for another reason. Inspect the scan step log."
-              fi
-              ;;
-            *)
-              echo "The latest SonarQube analysis task status is unknown."
-              ;;
-          esac
+          if [[ ! -f "${metadata}" ]]; then
+            echo "::error title=SonarQube analysis::The scanner did not write ${metadata}. The quality gate of this run is unknown. Inspect the scan step log."
+          elif [[ "${task_status}" == "FAILED" ]]; then
+            message=$(jq -r '.task.errorMessage // "SonarQube reported no error message."' \
+              <<<"${task}" | tr '\n' ' ')
+            echo "::error title=SonarQube analysis failed::${message}"
+          elif [[ "${task_status}" != "SUCCESS" || -z "${analysis_id}" ]]; then
+            echo "::error title=SonarQube analysis::The analysis task of this run is ${task_status:-unknown}. The quality gate of this run is unknown. Inspect the scan step log."
+          else
+            gate=$(curl -sS -u "${SONAR_TOKEN}:" \
+              "${host}/api/qualitygates/project_status?analysisId=${analysis_id}" || true)
+            status=$(jq -r '.projectStatus.status // empty' <<<"${gate}" 2>/dev/null || true)
+
+            if [[ -z "${status}" ]]; then
+              echo "::error title=SonarQube quality gate::SonarQube returned no quality gate result for the analysis of ${target}. Inspect the scan step log. ${dashboard}"
+            elif [[ "${status}" == "OK" ]]; then
+              echo "The analysis task and the quality gate of this run succeeded, so the scan step failed for another reason. Inspect the scan step log."
+            else
+              {
+                echo "### SonarQube quality gate: ${status}"
+                echo
+                echo "| Condition | Status | Value | Threshold |"
+                echo "| --- | --- | --- | --- |"
+                jq -r '.projectStatus.conditions[]
+                  | "| `\(.metricKey)` | \(.status) | \(.actualValue) | \(.errorThreshold) |"' <<<"${gate}"
+                echo
+                echo "[Open the analysis in SonarQube](${dashboard})"
+              } | tee -a "${GITHUB_STEP_SUMMARY}"
+              jq -r --arg target "${target}" --arg dashboard "${dashboard}" '
+                .projectStatus.conditions[]
+                | select(.status == "ERROR")
+                | "::error title=SonarQube quality gate::\(.metricKey) is \(.actualValue) on \($target), \(
+                    if .comparator == "LT" then "below"
+                    elif .comparator == "GT" then "above"
+                    else "at"
+                    end) the \(.errorThreshold) threshold. \($dashboard)"
+              ' <<<"${gate}"
+            fi
+          fi
           echo "Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
