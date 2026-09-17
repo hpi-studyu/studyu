@@ -50,12 +50,34 @@ Inspect at least:
   tests, and Fastlane files.
 
 Do not print secret contents. Do not record signing keys, certificates, or environment values.
+Use `file` to detect binary files by file type, not by filename extension. Hash each file
+that `file` classifies as binary. This includes `.a` archives and binaries inside `.framework`
+and `.xcframework` bundles, including binaries without extensions.
+
 Use these read-only inventory commands when needed:
 
 ```bash
-find app/android app/ios -type f -not -path '*/Pods/*' -not -path '*/xcuserdata/*' -print | sort
-find app/android app/ios -type l -print
-find app/android app/ios -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' -o -name '*.gif' -o -name '*.webp' \) -exec shasum -a 256 {} +
+find app/android app/ios -type f \
+  -not -path '*/Pods/*' \
+  -not -path '*/xcuserdata/*' \
+  -not -name 'local.properties' \
+  -not -name 'key.properties' \
+  -print0 |
+while IFS= read -r -d '' path; do
+  file_type="$(file -b "$path")"
+  encoding="$(file -b --mime-encoding "$path")"
+  printf '%s\t%s\n' "$path" "$file_type"
+  if [ "$encoding" = 'binary' ]; then
+    shasum -a 256 "$path"
+  fi
+done
+
+find app/android app/ios -type l \
+  -not -path '*/Pods/*' \
+  -not -path '*/xcuserdata/*' \
+  -not -name 'local.properties' \
+  -not -name 'key.properties' \
+  -print
 ```
 
 Record these custom contracts:
@@ -117,42 +139,68 @@ fvm exec melos setup
 
 Run `./setup.sh` and `fvm exec melos setup` only when the selected Flutter SDK or repository
 state requires setup. Ask for approval before setup or cache mutation. Do not alter the source
-worktree. The approved `fvm flutter create --platforms=android,ios app` command and its
-immediate status and diff review also run from this exact temporary worktree root.
+worktree. The approved `fvm flutter create --platforms=android,ios --overwrite app` command
+and its immediate status and diff review also run from this exact temporary worktree root.
+
+After preparation, record the full temporary-worktree baseline before regeneration:
+
+```bash
+git status --short --untracked-files=all
+git status --short --ignored --untracked-files=all
+git ls-files --others --ignored --exclude-standard
+```
 
 After the user approves the exact command, run only this regeneration command from the
 temporary worktree root:
 
 ```bash
-fvm flutter create --platforms=android,ios app
+fvm flutter create --platforms=android,ios --overwrite app
 ```
 
-Do not add `--overwrite`. Never delete or recreate `app/android` or `app/ios` wholesale. Never
-run `flutter create .`. Never include desktop or web platforms. Do not add `--org`, change the
-bundle ID, or change the package name. Do not regenerate Fastlane, web, desktop, or unrelated
-files.
+Use `--overwrite` only for this command in the temporary worktree. Do not use it for setup
+commands or commands in the source worktree. Never delete or recreate `app/android` or
+`app/ios` wholesale. Never run `flutter create .`. Never include desktop or web platforms. Do
+not add `--org`, change the bundle ID, or change the package name. Do not regenerate Fastlane,
+web, desktop, or unrelated files.
 
 If Flutter cannot limit output to Android and iOS, stop. If the command proposes files outside
 `app/android` and `app/ios`, stop before accepting the output.
 
 ## 4. Diff and reconciliation
 
-From the same temporary worktree root, review the generated tree immediately:
+From the same temporary worktree root, inspect the full worktree immediately:
+
+```bash
+git status --short --untracked-files=all
+git status --short --ignored --untracked-files=all
+git ls-files --others --ignored --exclude-standard
+git diff --stat
+git diff --name-status
+git diff
+```
+
+Compare the full-worktree results with the recorded temporary-worktree baseline. Classify every
+changed tracked path and every untracked or ignored path. Reject every unexpected path. Stop
+before platform review if any path remains unexplained or exceeds the approved regeneration
+scope.
+
+After the full-worktree gate passes, run the detailed platform review:
 
 ```bash
 git status --short --untracked-files=all -- app/android app/ios
-git status --short --ignored -- app/android app/ios
+git status --short --ignored --untracked-files=all -- app/android app/ios
+git ls-files --others --ignored --exclude-standard -- app/android app/ios
 git diff --stat -- app/android app/ios
 git diff --name-status -- app/android app/ios
 git diff -- app/android app/ios
 ```
 
-Compare both status results with the baseline. Classify every new tracked, untracked, and
-ignored path. Exclude secrets and local generated state from transfer. No unexplained path may
-remain. Compare binary files by path and SHA-256. Compare text files with full diffs. Compare
-Xcode project graph counts and references. Review every deletion, rename, identity change,
-signing setting, entitlement, manifest or plist key, Gradle or Podfile hook, scheme, workspace,
-lockfile, and asset.
+Compare the platform results with the baseline inventory. Classify every new tracked,
+untracked, and ignored path. Exclude secrets and local generated state from transfer. No
+unexplained path may remain. Compare binary files by path and SHA-256. Compare text files with
+full diffs. Compare Xcode project graph counts and references. Review every deletion, rename,
+identity change, signing setting, entitlement, manifest or plist key, Gradle or Podfile hook,
+scheme, workspace, lockfile, and asset.
 
 Stop immediately when the diff:
 
