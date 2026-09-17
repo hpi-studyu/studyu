@@ -63,7 +63,7 @@ jobs:
         run: dart scripts/normalize_lcov.dart --check
 
       - name: Run tests with coverage
-        run: melos run test:coverage --no-select
+        run: dart run melos run test:coverage --no-select
 
       - name: Validate and normalize coverage
         run: dart scripts/normalize_lcov.dart coverage/sonar/lcov.info

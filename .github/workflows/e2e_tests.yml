@@ -38,8 +38,7 @@ jobs:
       - name: Prepare environment
         run: |
           dart pub get
-          dart pub global activate melos
-          melos bootstrap
+          dart run melos bootstrap
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v2
