@@ -61,29 +61,33 @@ class IFrameHelper {
     return deriveDesignerOrigin(referrer, env.designerUrl);
   }
 
-  html.WindowBase? _parentWindow() {
+  html.WindowBase? _messageTarget() {
     try {
-      return html.window.parent;
+      final parent = html.window.parent;
+      if (parent != null && parent != html.window) return parent;
+      return html.window.opener;
     } catch (_) {
       return null;
     }
   }
 
-  bool _isExpectedMessage(
-    html.MessageEvent event,
-    html.WindowBase parent,
-    String designerOrigin,
-  ) => event.origin == designerOrigin && event.source == parent;
+  // Validate by origin only: dart:html wraps `event.source` via
+  // `_convertNativeToDart_EventTarget`, so it is never identical to
+  // `window.parent`/`window.opener`, even for the genuine sender. The origin
+  // check is the postMessage security boundary; `deriveDesignerOrigin`
+  // already restricts it to trusted hosts.
+  bool _isExpectedMessage(html.MessageEvent event, String designerOrigin) =>
+      event.origin == designerOrigin;
 
   Future<String?> requestPreviewSession() async {
-    final parent = _parentWindow();
+    final parent = _messageTarget();
     final designerOrigin = _designerOrigin();
     if (parent == null || designerOrigin == null) return null;
 
     final completer = Completer<String?>();
     late final StreamSubscription<html.MessageEvent> subscription;
     subscription = html.window.onMessage.listen((event) {
-      if (!_isExpectedMessage(event, parent, designerOrigin)) return;
+      if (!_isExpectedMessage(event, designerOrigin)) return;
       final session = parsePreviewSession(event.data);
       if (session != null && !completer.isCompleted) {
         completer.complete(session);
@@ -101,7 +105,7 @@ class IFrameHelper {
   }
 
   Future<Study?> requestPreviewStudy() async {
-    final parent = _parentWindow();
+    final parent = _messageTarget();
     final designerOrigin = _designerOrigin();
     if (parent == null || designerOrigin == null) return null;
 
@@ -135,7 +139,7 @@ class IFrameHelper {
   }
 
   void _postMessage(Object message) {
-    final parent = _parentWindow();
+    final parent = _messageTarget();
     if (parent == null) return;
 
     final designerOrigin = _designerOrigin();
@@ -149,13 +153,13 @@ class IFrameHelper {
     PreviewNavigationHandler? onNavigate,
     PreviewStudyHandler? onStudy,
   }) {
-    final parent = _parentWindow();
+    final parent = _messageTarget();
     final designerOrigin = _designerOrigin();
     if (parent == null || designerOrigin == null) return;
 
     _messageSubscription?.cancel();
     _messageSubscription = html.window.onMessage.listen((event) async {
-      if (!_isExpectedMessage(event, parent, designerOrigin)) return;
+      if (!_isExpectedMessage(event, designerOrigin)) return;
       final data = event.data;
 
       final serializedStudy = parsePreviewStudy(data);
