@@ -5380,6 +5380,23 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The QR code could not be displayed.'**
   String get error_qr_code_generation;
+  /// No description provided for @form_field_report_improvementDirection_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an improvement direction'**
+  String get form_field_report_improvementDirection_hint;
+
+  /// No description provided for @form_field_report_data_source_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a data source'**
+  String get form_field_report_data_source_hint;
+
+  /// No description provided for @form_field_report_data_source_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No scale survey question defined'**
+  String get form_field_report_data_source_empty;
 }
 
 class _AppLocalizationsDelegate

@@ -1227,5 +1227,8 @@
   "studies_filter_remove_filter": "Filter entfernen",
   "studies_end_of_list_create": "Erstelle eine Studie.",
   "studies_end_of_list_public": "Nicht gefunden, was du suchst?",
-  "error_qr_code_generation": "Der QR-Code konnte nicht angezeigt werden."
+  "error_qr_code_generation": "Der QR-Code konnte nicht angezeigt werden.",
+  "form_field_report_improvementDirection_hint": "Wählen Sie eine Verbesserungsrichtung aus",
+  "form_field_report_data_source_hint": "Wählen Sie eine Datenquelle aus",
+  "form_field_report_data_source_empty": "Keine Skalenfrage definiert"
 }

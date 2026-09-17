@@ -129,11 +129,11 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('welcome_language_picker')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Korean'), findsNothing);
-    await tester.tap(find.text('German').last);
+    expect(find.text('Korean'), findsOneWidget);
+    await tester.tap(find.text('Korean').last);
     await tester.pumpAndSettle();
 
-    expect(appLanguage.appLocal, const Locale('de'));
+    expect(appLanguage.appLocal, const Locale('ko'));
   });
 
   testWidgets('invite dialog returns after backing out of study overview', (

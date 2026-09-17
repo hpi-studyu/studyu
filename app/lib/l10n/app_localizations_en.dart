@@ -1799,4 +1799,122 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ko => 'Korean';
+
+  @override
+  String get faq_section_data_storage_privacy => 'Data Storage and Privacy';
+
+  @override
+  String get faq_question_data_storage => 'Where and how is my data stored?';
+
+  @override
+  String get faq_answer_data_storage =>
+      'The data collected from you is stored locally on your device and is uploaded to a secure server when it is connected to the internet. All study data is collected and stored anonymously.';
+
+  @override
+  String get faq_question_personal_data =>
+      'Which personal data does the app collect?';
+
+  @override
+  String get faq_answer_personal_data =>
+      'The app does not collect any personal data of the user.';
+
+  @override
+  String get faq_section_studies => 'Studies';
+
+  @override
+  String get faq_question_study_duration =>
+      'How long will the study take to finish?';
+
+  @override
+  String get faq_answer_study_duration =>
+      'The duration of each study is mentioned during initial study selection.';
+
+  @override
+  String get faq_question_change_intervention =>
+      'Can I select a different intervention?';
+
+  @override
+  String get faq_answer_change_intervention =>
+      'Before starting the study, go back to the intervention selection screen to choose different interventions. After the study has started, you cannot change the selected interventions for that participation. To choose different interventions, leave the study from Settings, choose whether to keep or permanently delete your existing data, and then select a study and its interventions again during enrollment.';
+
+  @override
+  String get faq_question_missed_tasks =>
+      'Can I redo my missed tasks on a later date?';
+
+  @override
+  String get faq_answer_missed_tasks =>
+      'No, you cannot redo a missed task on a later date. However, you can finish it at anytime on the same day.';
+
+  @override
+  String get faq_question_leave_study => 'How can I leave the current study?';
+
+  @override
+  String get faq_answer_leave_study =>
+      'Go to the Settings tab on the Dashboard and click \"Leave study\". This will exit the study without deleting your progress data, allowing it to be included in the study analysis. To leave the study and delete all progress data both locally and on the server, click \"Leave study and delete all data\". All data will be permanently removed from the server and your device.';
+
+  @override
+  String get faq_section_report_details => 'Report Details';
+
+  @override
+  String get faq_question_daily_tasks =>
+      'What are daily tasks and how do I complete them?';
+
+  @override
+  String get faq_answer_daily_tasks =>
+      'To find out which intervention works best for you, you need to perform some daily tasks for each intervention. Please make sure to hit the \"Complete\" button after finishing it';
+
+  @override
+  String get faq_question_rate_your_day => 'What is \"Rate your day\"?';
+
+  @override
+  String get faq_answer_rate_your_day =>
+      '\"Rate your day\" is a feature that tracks your health during entire study period. It requires you to rate certain health-related queries on a scale of 1 to 10.';
+
+  @override
+  String get faq_question_track_activities =>
+      'How can I keep track of my activities?';
+
+  @override
+  String get faq_answer_track_activities =>
+      'You can get an overview of your daily tasks and health status in the \"Reports History section\"';
+
+  @override
+  String get faq_question_download_report =>
+      'How can I download my Study report?';
+
+  @override
+  String get faq_answer_download_report =>
+      'Your report will be ready to download once you have completed the minimum required tasks for a study. It will be available in the Report History tab located on the Dashboard.';
+
+  @override
+  String get debug_notifications_not_initialized =>
+      'Notifications are not initialized yet. Please start a study and open this through the about section.';
+
+  @override
+  String get debug_test_notification_title => 'StudyU Test Notification';
+
+  @override
+  String get debug_test_notification_body =>
+      'This notification confirms that you receive StudyU notifications';
+
+  @override
+  String get debug_reset_success =>
+      'App reset successfully! Please restart the app.';
+
+  @override
+  String get debug_reset_error =>
+      'Error while resetting the app. Please try again.';
+
+  @override
+  String get debug_screen_title => 'Debug Screen';
+
+  @override
+  String get debug_send_information_via_email =>
+      'Send debug information via email';
+
+  @override
+  String get debug_receive_test_notification => 'Receive test notification';
+
+  @override
+  String get debug_show_onboarding => 'Show onboarding';
 }

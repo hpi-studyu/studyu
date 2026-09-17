@@ -3150,4 +3150,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_qr_code_generation => 'The QR code could not be displayed.';
+  @override
+  String get form_field_report_improvementDirection_hint =>
+      'Select an improvement direction';
+
+  @override
+  String get form_field_report_data_source_hint => 'Select a data source';
+
+  @override
+  String get form_field_report_data_source_empty =>
+      'No scale survey question defined';
 }

@@ -1821,4 +1821,127 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ko => 'Koreanisch';
+
+  @override
+  String get faq_section_data_storage_privacy =>
+      'Datenspeicherung und Datenschutz';
+
+  @override
+  String get faq_question_data_storage =>
+      'Wo und wie werden meine Daten gespeichert?';
+
+  @override
+  String get faq_answer_data_storage =>
+      'Die von Ihnen gesammelten Daten werden lokal auf Ihrem Gerät gespeichert und bei Verbindung mit dem Internet auf einen sicheren Server hochgeladen. Alle Studiendaten werden anonymisiert erfasst und gespeichert.';
+
+  @override
+  String get faq_question_personal_data =>
+      'Welche persönlichen Daten sammelt die App?';
+
+  @override
+  String get faq_answer_personal_data =>
+      'Die App sammelt keine persönlichen Daten des Benutzers.';
+
+  @override
+  String get faq_section_studies => 'Die Studie';
+
+  @override
+  String get faq_question_study_duration =>
+      'Wie lange dauert es, bis die Studie abgeschlossen ist?';
+
+  @override
+  String get faq_answer_study_duration =>
+      'Die Dauer jeder Studie wird bei der Studienauswahl angegeben.';
+
+  @override
+  String get faq_question_change_intervention =>
+      'Kann ich eine andere Intervention auswählen?';
+
+  @override
+  String get faq_answer_change_intervention =>
+      'Vor Beginn der Studie können Sie zum Bildschirm für die Interventionsauswahl zurückkehren und andere Interventionen auswählen. Nach Beginn der Studie können die ausgewählten Interventionen für diese Teilnahme nicht mehr geändert werden. Um andere Interventionen auszuwählen, verlassen Sie die Studie über die Einstellungen, wählen Sie, ob Sie Ihre vorhandenen Daten behalten oder dauerhaft löschen möchten, und wählen Sie anschließend während der Anmeldung erneut eine Studie und deren Interventionen aus.';
+
+  @override
+  String get faq_question_missed_tasks =>
+      'Kann ich meine verpassten Aufgaben zu einem späteren Zeitpunkt wiederholen?';
+
+  @override
+  String get faq_answer_missed_tasks =>
+      'Nein, Sie können eine verpasste Aufgabe zu einem späteren Zeitpunkt nicht wiederholen. Sie können die Aufgabe nur am selben Tag bearbeiten.';
+
+  @override
+  String get faq_question_leave_study =>
+      'Wie kann ich mich von der aktuellen Studie abmelden?';
+
+  @override
+  String get faq_answer_leave_study =>
+      'Gehen Sie zur Registerkarte \"Einstellungen\" im Dashboard und klicken Sie auf \"Studie verlassen\". Dies wird die Studie beenden, ohne Ihre Fortschrittsdaten zu löschen, sodass sie in die Studienanalyse einbezogen werden können. Um die Studie zu verlassen und alle Fortschrittsdaten sowohl lokal als auch auf dem Server zu löschen, klicken Sie auf \"Studie verlassen und alle Daten löschen\". Alle Daten werden dauerhaft vom Server und Ihrem Gerät entfernt.';
+
+  @override
+  String get faq_section_report_details => 'Berichtsdetails';
+
+  @override
+  String get faq_question_daily_tasks =>
+      'Was sind tägliche Aufgaben und wie erledige ich sie?';
+
+  @override
+  String get faq_answer_daily_tasks =>
+      'Um herauszufinden, welche Intervention für Sie am besten geeignet ist, müssen Sie für jede Intervention einige tägliche Aufgaben ausführen. Bitte stellen Sie sicher, dass Sie nach Abschluss auf die Schaltfläche \"Fertig stellen\" klicken.';
+
+  @override
+  String get faq_question_rate_your_day =>
+      'Was ist \"Bewerten Sie Ihren Tag\"?';
+
+  @override
+  String get faq_answer_rate_your_day =>
+      '\"Bewerten Sie Ihren Tag\" ist eine Funktion, die Ihre Gesundheit während des gesamten Studienzeitraums erfasst. Sie müssen bestimmte gesundheitsbezogene Abfragen auf einer Skala von 1 bis 10 bewerten.';
+
+  @override
+  String get faq_question_track_activities =>
+      'Wie kann ich meine Aktivitäten verfolgen?';
+
+  @override
+  String get faq_answer_track_activities =>
+      'Im Abschnitt \"Berichtsverlauf\" erhalten Sie einen Überblick über Ihre täglichen Aufgaben und Ihren Gesundheitszustand.';
+
+  @override
+  String get faq_question_download_report =>
+      'Wie kann ich meinen Studienbericht herunterladen?';
+
+  @override
+  String get faq_answer_download_report =>
+      'Ihr Bericht kann heruntergeladen werden, sobald Sie die für eine Studie erforderlichen Mindestaufgaben erledigt haben. Es ist auf der Registerkarte Berichtsverlauf im Dashboard verfügbar.';
+
+  @override
+  String get debug_notifications_not_initialized =>
+      'Benachrichtigungen sind noch nicht initialisiert. Bitte starten Sie eine Studie und öffnen Sie diese Funktion über den Bereich Über.';
+
+  @override
+  String get debug_test_notification_title => 'StudyU-Testbenachrichtigung';
+
+  @override
+  String get debug_test_notification_body =>
+      'Diese Benachrichtigung bestätigt, dass Sie StudyU-Benachrichtigungen empfangen.';
+
+  @override
+  String get debug_reset_success =>
+      'Die App wurde erfolgreich zurückgesetzt. Bitte starten Sie die App neu.';
+
+  @override
+  String get debug_reset_error =>
+      'Beim Zurücksetzen der App ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get debug_screen_title => 'Debug-Bildschirm';
+
+  @override
+  String get debug_send_information_via_email =>
+      'Debug-Informationen per E-Mail senden';
+
+  @override
+  String get debug_receive_test_notification =>
+      'Testbenachrichtigung empfangen';
+
+  @override
+  String get debug_show_onboarding => 'Onboarding anzeigen';
 }

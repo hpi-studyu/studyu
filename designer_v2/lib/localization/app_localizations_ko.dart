@@ -3029,4 +3029,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get error_qr_code_generation => 'QR 코드를 표시할 수 없습니다.';
+  @override
+  String get form_field_report_improvementDirection_hint => '개선 방향을 선택하세요';
+
+  @override
+  String get form_field_report_data_source_hint => '데이터 소스를 선택하세요';
+
+  @override
+  String get form_field_report_data_source_empty => '척도 설문 문항이 정의되지 않았습니다';
 }
