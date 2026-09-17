@@ -30,10 +30,10 @@ explicit exceptions to the required check. It does not mean SonarQube analyzed t
 
 A pull request run adds two checks:
 
-- **`SonarQube Quality Gate`** is the workflow check. It runs the tests, the analyzer, and the
-  scan. When the quality gate fails, the check shows one error annotation for each failing
-  condition, and the run summary shows a table with the value and the threshold of each
-  condition.
+- **`SonarQube Quality Gate`** is the workflow check. It obtains the coverage reports, runs the
+  analyzer, and runs the scan. When the quality gate fails, the check shows one error annotation
+  for each failing condition, and the run summary shows a table with the value and the threshold
+  of each condition.
 - **`SonarQube Code Analysis`** is the SonarQube check. It links to the pull request analysis in
   the dashboard and lists the new, fixed, and unresolved issues.
 
@@ -57,6 +57,12 @@ The analysis excludes these files:
 
 Coverage comes from the unit and widget tests of the four packages. The workflow merges the
 package LCOV reports into one scan report.
+
+The `All Packages` workflow runs the same coverage command and uploads the reports as the
+`sonar-coverage` artifact. The `SonarQube` workflow downloads the artifact of the same commit
+when it exists, and it skips its own test run. It reuses the artifact only when the reports of
+all four packages are present and not empty. When no artifact is available, the `SonarQube`
+workflow runs the tests itself.
 
 The workflow also validates these Flutter JSON execution reports before it scans:
 

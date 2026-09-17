@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 env:
   MELOS_SDK_PATH: auto
@@ -62,7 +63,60 @@ jobs:
       - name: Verify coverage normalizer
         run: dart scripts/normalize_lcov.dart --check
 
+      # All Packages runs the same coverage command and uploads its reports as
+      # the `sonar-coverage` artifact for the same commit. Reusing that artifact
+      # avoids running the full test suite twice for one commit. When no
+      # artifact is available, the test run below generates the reports.
+      - name: Reuse coverage from All Packages
+        id: reuse-coverage
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -uo pipefail
+
+          sha="${TARGET_SHA}"
+          reused="false"
+          runs_json() {
+            gh run list -R "${GITHUB_REPOSITORY}" --commit "$sha" --workflow all_packages.yml --limit 20 \
+              --json databaseId,conclusion,status 2>/dev/null || printf '[]'
+          }
+          runs="$(runs_json)"
+          run_id="$(jq -r '[.[] | select(.conclusion == "success")] | .[0].databaseId // empty' <<<"$runs")"
+          if [[ -z "$run_id" ]]; then
+            for _ in $(seq 1 15); do
+              active="$(jq -r '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "waiting" or .status == "requested" or .status == "pending")] | length' <<<"$runs")"
+              if [[ "$active" == "0" ]]; then
+                break
+              fi
+              sleep 60
+              runs="$(runs_json)"
+              run_id="$(jq -r '[.[] | select(.conclusion == "success")] | .[0].databaseId // empty' <<<"$runs")"
+              [[ -n "$run_id" ]] && break
+            done
+          fi
+          if [[ -n "$run_id" ]] && gh run download -R "${GITHUB_REPOSITORY}" "$run_id" --name sonar-coverage --dir . 2>/dev/null; then
+            files_ok="true"
+            for package in app core designer_v2 flutter_common; do
+              if [[ ! -s "${package}/coverage/lcov.info" || ! -s "${package}/coverage/tests.output" ]]; then
+                files_ok="false"
+                break
+              fi
+            done
+            if [[ "$files_ok" == "true" ]]; then
+              reused="true"
+              echo "Reused coverage from All Packages run ${run_id} for commit ${sha}."
+            fi
+          fi
+          if [[ "$reused" != "true" ]]; then
+            echo "::notice::No reusable All Packages coverage artifact for commit ${sha}; running tests in this workflow."
+          fi
+          echo "reused=${reused}" >> "${GITHUB_OUTPUT}"
+
       - name: Run tests with coverage
+        if: steps.reuse-coverage.outputs.reused != 'true'
         run: melos run test:coverage --no-select
 
       - name: Validate Flutter test reports
