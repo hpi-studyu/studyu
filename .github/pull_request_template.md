@@ -1,12 +1,12 @@
 <!--
 PR conventions:
-- Branch: `<type>/studyu-<ticket-number>-<short-description>`
-- PR title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
-- Description: include a direct link to the matching Jira ticket.
+- Jira-backed branch: `<type>/studyu-<ticket-number>-<short-description>`
+- Jira-backed title: `[STUDYU-<ticket-number>] <type>[(<scope>)]: <description>`
+- Approved maintenance exception: `<type>/<short-description>` and `<type>[(<scope>)]: <description>`
 -->
 
 ## Jira ticket
-<!-- Direct link to the matching Jira ticket. Required for every PR. -->
+<!-- Add the direct Jira link. For an approved ticketless maintenance PR, write: Not applicable — maintenance PR. -->
 
 ## Description
 <!-- Explain the change and motivation. -->
