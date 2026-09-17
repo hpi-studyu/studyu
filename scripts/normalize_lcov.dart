@@ -161,9 +161,7 @@ List<List<String>> parseLcovReport(
 
     if (line == 'end_of_record') {
       if (!hasData) {
-        throw CoverageFormatException(
-          'No data lines in record in $reportPath',
-        );
+        throw CoverageFormatException('No data lines in record in $reportPath');
       }
       final rawSource = currentRecord.first.substring(3);
       final normalized = normalizeSourcePath(rawSource, package, repoRoot);
@@ -192,10 +190,7 @@ List<List<String>> parseLcovReport(
   return records;
 }
 
-void normalizeCoverage({
-  required String repoRoot,
-  required String outputPath,
-}) {
+void normalizeCoverage({required String repoRoot, required String outputPath}) {
   final output = File(outputPath);
   output.parent.createSync(recursive: true);
   final buffer = StringBuffer();
@@ -228,7 +223,8 @@ void normalizeCoverage({
 
   if (recordCount == 0) {
     throw Exception(
-        'No analyzable coverage records found across all packages.');
+      'No analyzable coverage records found across all packages.',
+    );
   }
 
   output.writeAsStringSync(buffer.toString());
@@ -277,18 +273,10 @@ void _runChecks() {
     }
 
     // Valid record with a repo-relative path.
-    _writeLcov(
-      root,
-      'app',
-      'SF:lib/example.dart\nDA:1,1\nend_of_record\n',
-    );
+    _writeLcov(root, 'app', 'SF:lib/example.dart\nDA:1,1\nend_of_record\n');
 
     for (final pkg in _packages.where((p) => p != 'app')) {
-      _writeLcov(
-        root,
-        pkg,
-        'SF:lib/example.dart\nDA:1,1\nend_of_record\n',
-      );
+      _writeLcov(root, pkg, 'SF:lib/example.dart\nDA:1,1\nend_of_record\n');
     }
 
     final outputPath = '$root/coverage/sonar/lcov.info';

@@ -109,6 +109,7 @@ class WebController(
   final String serializedSession,
 ) extends PlatformController {
   late web.HTMLIFrameElement iFrameElement;
+  web.CrossOriginWindow? _previewWindow;
   bool _isListening = false;
   StreamSubscription<web.MessageEvent>? _messageSubscription;
 
@@ -173,6 +174,7 @@ class WebController(
     navigationEnabled.value = false;
     routeInformation = RouteInformation(route, extra, cmd, data);
     previewSrc = _buildPreviewUrl(route: route, extra: extra, cmd: cmd);
+    _navigatePreviewWindow();
   }
 
   @override
@@ -235,6 +237,55 @@ class WebController(
         : uri.origin;
   }
 
+  web.CrossOriginWindow? get _activePreviewWindow {
+    final previewWindow = _previewWindow;
+    if (previewWindow == null) return null;
+    try {
+      if (previewWindow.closed) {
+        _previewWindow = null;
+        return null;
+      }
+    } catch (_) {
+      _previewWindow = null;
+      return null;
+    }
+    return previewWindow;
+  }
+
+  void _navigatePreviewWindow() {
+    final previewWindow = _activePreviewWindow;
+    if (previewWindow == null) return;
+    try {
+      final location = previewWindow.location;
+      if (location == null) {
+        _previewWindow = null;
+        return;
+      }
+      location.href = previewSrc;
+      previewWindow.focus();
+    } catch (_) {
+      _previewWindow = null;
+    }
+  }
+
+  @override
+  void openNewPage() {
+    if (baseSrc == '' || previewSrc == '') return;
+
+    final existingWindow = _activePreviewWindow;
+    if (existingWindow != null) {
+      _navigatePreviewWindow();
+      return;
+    }
+
+    try {
+      _previewWindow = web.window.openCrossOrigin(previewSrc);
+      _previewWindow?.focus();
+    } catch (_) {
+      _previewWindow = null;
+    }
+  }
+
   @override
   void listen() {
     if (_isListening) return;
@@ -242,31 +293,47 @@ class WebController(
     _messageSubscription = web.window.onMessage.listen((event) {
       final appOrigin = _appOrigin;
       final frameWindow = iFrameElement.contentWindow;
+      final previewWindow = _activePreviewWindow;
+      // Use identity, not ==: comparing cross-origin Window objects with
+      // Dart == makes DDC read `dartx._equals` from the foreign Window, which
+      // the browser blocks with a SecurityError.
+      final isFrameMessage =
+          frameWindow != null && identical(event.source, frameWindow);
+      final isPreviewMessage =
+          previewWindow != null &&
+          identical(event.source, previewWindow.unsafeWindow);
       if (appOrigin == null ||
           event.origin != appOrigin ||
-          frameWindow == null ||
-          event.source != frameWindow) {
+          (!isFrameMessage && !isPreviewMessage)) {
         return;
       }
 
       final data = event.data.dartify();
       if (isPreviewSessionRequest(data)) {
-        frameWindow.postMessage(
-          createPreviewSessionMessage(serializedSession).toJS,
-          appOrigin.toJS,
-        );
+        final message = createPreviewSessionMessage(serializedSession).toJS;
+        if (isFrameMessage) {
+          frameWindow.postMessage(message, appOrigin.toJS);
+        } else {
+          previewWindow!.postMessage(message, appOrigin.toJS);
+        }
         return;
       }
       if (isPreviewStudyRequest(data)) {
         final study = routeInformation.data;
         if (study != null) {
-          frameWindow.postMessage(
-            createPreviewStudyMessage(study).toJS,
-            appOrigin.toJS,
-          );
+          final message = createPreviewStudyMessage(study).toJS;
+          if (isFrameMessage) {
+            frameWindow.postMessage(message, appOrigin.toJS);
+          } else {
+            previewWindow!.postMessage(message, appOrigin.toJS);
+          }
         }
         return;
       }
+
+      // Only the embedded iframe controls the Designer's loading state.
+      if (!isFrameMessage) return;
+
       if (data is String) {
         try {
           final parsed = jsonDecode(data);
@@ -317,13 +384,23 @@ class WebController(
   void send(String message) {
     final appOrigin = _appOrigin;
     if (appOrigin == null) return;
+
     iFrameElement.contentWindow?.postMessage(message.toJS, appOrigin.toJS);
+    final previewWindow = _activePreviewWindow;
+    previewWindow?.postMessage(message.toJS, appOrigin.toJS);
   }
 
   @override
   void dispose() {
     _messageSubscription?.cancel();
     _messageSubscription = null;
+    final previewWindow = _previewWindow;
+    _previewWindow = null;
+    try {
+      previewWindow?.close();
+    } catch (_) {
+      // The popup may have been closed or become inaccessible already.
+    }
     // Clean up injected styles when the controller is disposed
     _removePreviewIframeStyles();
   }
