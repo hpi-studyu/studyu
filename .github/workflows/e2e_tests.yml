@@ -30,7 +30,7 @@ jobs:
         uses: ./.github/workflows/init-workspace
 
       - name: Setup ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
+        uses: nanasess/setup-chromedriver@v3
 
       - name: Enable web support
         run: flutter config --enable-web
@@ -38,11 +38,10 @@ jobs:
       - name: Prepare environment
         run: |
           dart pub get
-          dart pub global activate melos
-          melos bootstrap
+          dart run melos bootstrap
 
       - name: Set up Supabase CLI
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@v3
         with:
           version: latest
 
@@ -86,10 +85,18 @@ jobs:
           # share browser/app state. Successful recovery persists credentials
           # and an active subject.
           #
-          # Ordering note: recovery_e2e_active_test.dart must run before
-          # recovery_e2e_reused_phrase_test.dart. The reused-phrase target
-          # verifies that the completed recovery keeps the fixed phrase valid.
-          # Alphabetical glob order satisfies this (active < reused_phrase).
+          # recovery_e2e_signed_out_test.dart merges the former active,
+          # no_study, and reused_phrase targets into one browser session so
+          # CI compiles the app once for all three. Its test cases call
+          # resetToSignedOut (recovery_e2e_support.dart) between recoveries.
+          # Declaration order in the file keeps the active-subject case
+          # before the reused-phrase case, which restores the same fixed
+          # phrase the active-subject case already consumed.
+          # recovery_e2e_confirmation_test.dart stays a separate process so
+          # its launch-time dart-define sign-in bootstrap keeps real cold
+          # start semantics. No ordering dependency exists between the two
+          # files; alphabetical glob order (confirmation < signed_out) is
+          # fine.
           e2e_email="recovery-signed-in@local.studyu.test"
           e2e_password="recovery-signed-in-pass"
           for target in integration_test/*_test.dart; do

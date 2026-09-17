@@ -9,12 +9,14 @@ void main() {
     AppTranslation.setForTesting(AppLocalizationsEn());
   });
 
-  testWidgets('preview controls show only the reset action', (tester) async {
+  testWidgets('preview controls show reset and open-new-tab actions', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(home: Scaffold(body: FrameControlsWidget())),
     );
 
     expect(find.byIcon(Icons.restart_alt), findsOneWidget);
-    expect(find.byIcon(Icons.open_in_new_sharp), findsNothing);
+    expect(find.byIcon(Icons.open_in_new_sharp), findsOneWidget);
   });
 }
