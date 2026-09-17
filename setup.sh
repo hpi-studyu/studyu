@@ -32,4 +32,36 @@ fvm dart pub get
 echo "Configuring Git hooks via fvm exec melos..."
 fvm exec melos setup
 
+# Optional: enable repo-provided coding-agent integrations (MCP servers + skills).
+# Generic: templates under .agents/templates/ and servers in .mcp.json.example are
+# copied into the active, gitignored locations. Re-copying is idempotent.
+if [ -f .mcp.json ] && [ -d .agents/skills/sonar-analyze ]; then
+  echo "Coding-agent integrations already enabled (remove .mcp.json and .agents/skills/sonar-* to reset)."
+elif [ -f .mcp.json.example ]; then
+  printf 'Enable repo-provided coding-agent integrations (MCP servers and skills)? [y/N] '
+  read -r enable_agents || true
+  case "$enable_agents" in
+    [yY]*)
+      cp -n .mcp.json.example .mcp.json
+      mkdir -p .agents/skills .agents/agents .claude/skills .claude/agents .omp/agents
+      if [ -d .agents/templates/skills ]; then cp -R .agents/templates/skills/. .agents/skills/; fi
+      if [ -d .agents/templates/agents ]; then cp -R .agents/templates/agents/. .agents/agents/; fi
+      for d in .agents/templates/skills/*; do
+        [ -d "$d" ] || continue
+        name=$(basename "$d")
+        mkdir -p ".claude/skills/$name"
+        ln -sfn "../../../.agents/skills/$name/SKILL.md" ".claude/skills/$name/SKILL.md"
+      done
+      for f in .agents/templates/agents/*.md; do
+        [ -f "$f" ] || continue
+        name=$(basename "$f")
+        ln -sfn "../../.agents/agents/$name" ".claude/agents/$name"
+        ln -sfn "../../.agents/agents/$name" ".omp/agents/$name"
+      done
+      echo "Enabled. For SonarQube: install the CLI and log in (see docs/sonarqube.md)."
+      ;;
+    *) echo "Skipped coding-agent integrations. Enable later: cp .mcp.json.example .mcp.json && cp -R .agents/templates/. .agents/";;
+  esac
+fi
+
 echo "Setup complete!"
