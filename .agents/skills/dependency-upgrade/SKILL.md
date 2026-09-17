@@ -36,10 +36,12 @@ Do not mutate the repository until every preflight check passes.
    Do not edit `.github/workflows/*`. Do not add helper scripts or unrelated
    cleanup.
 
-Never run `git clean`, `melos reset`, `supabase link`, `supabase db push`, a
-Supabase reset against a non-local target, a deployment, a publish operation, or
-a tag push during this workflow. Local Melos versioning is allowed only in
-section 9, after all checks pass.
+Never run `git clean`, `melos reset`, `supabase link`, `supabase db push`, or a
+Supabase reset against a non-local target. Never deploy or publish during this
+workflow. Before the pull request merges, never create or push a tag. After the
+merge, tag creation and tag pushes are allowed only through the production
+handoff in section 10. They require explicit production release authorization.
+Local Melos versioning is allowed only in section 9, after all checks pass.
 
 ## 2. Prepare the worktree
 
@@ -265,14 +267,48 @@ Start the local Supabase services from the current workflow:
 supabase start -x studio,imgproxy
 ```
 
-Verify that the Supabase database target is local. Confirm that
-`SUPABASE_DB_URL` resolves to `localhost` or `127.0.0.1`, and inspect
-`supabase status`. Stop for any remote or unknown target.
+Validate the same effective database URL that `scripts/reset-test-db.sh` uses.
+The script uses `SUPABASE_DB_URL` when it is non-empty. Otherwise, it uses
+`postgresql://postgres:postgres@127.0.0.1:54322/postgres`.
 
-Immediately before the reset, show the verified local target and state that the
-reset deletes local database data. Ask the user for explicit authorization to
-run `./scripts/reset-test-db.sh --yes`. Do not infer authorization from an
-earlier approval. After that immediate authorization, run:
+Immediately before the reset, parse the effective URL and inspect its host:
+
+```bash
+effective_db_url="${SUPABASE_DB_URL:-postgresql://postgres:postgres@127.0.0.1:54322/postgres}"
+db_host="$({ EFFECTIVE_DB_URL="$effective_db_url" python3 - <<'PY'
+import os
+from urllib.parse import urlparse
+
+try:
+    parsed = urlparse(os.environ["EFFECTIVE_DB_URL"])
+    if parsed.scheme not in {"postgres", "postgresql"} or not parsed.hostname:
+        raise ValueError
+    print(parsed.hostname)
+except (TypeError, ValueError):
+    raise SystemExit(1)
+PY
+} )" || {
+  echo "Cannot parse the effective Supabase database host." >&2
+  exit 1
+}
+
+case "$db_host" in
+  localhost|127.0.0.1) ;;
+  *)
+    echo "Refusing to reset database host: $db_host" >&2
+    exit 1
+    ;;
+esac
+supabase status
+```
+
+Stop if the URL is empty, malformed, or has an unknown or remote host. Treat a
+failed `supabase status` as evidence that the local services are not ready.
+
+Show the verified local host without printing credentials. State that the reset
+deletes local database data. Ask the user for explicit authorization to run
+`./scripts/reset-test-db.sh --yes`. Do not infer authorization from an earlier
+approval. After that immediate authorization, run:
 
 ```bash
 ./scripts/reset-test-db.sh --yes
@@ -375,50 +411,84 @@ git push -u origin HEAD
 ```
 
 Create the pull request only after the pull-request skill receives the required
-confirmation. Do not deploy, publish, or push tags in this workflow. Allow
-squash or rebase merges because tags use the merged commit on `main`.
+confirmation. Do not deploy or publish. Before the pull request merges, do not
+create or push tags. Allow merge, squash, and rebase outcomes. The production
+handoff resolves the actual resulting commit on `main`.
 
-After the pull request merges, handle tags only on `main` or under an explicitly
-approved production release plan. An ordinary merge to `dev` must never create
-or push package tags. Fetch the merged target and identify the commit on `main`
-that contains the merged version files:
+After the dependency-upgrade pull request merges, handle tags only through an
+explicitly approved production release plan. An ordinary merge to `dev` must
+never create or push package tags. Use the dependency-upgrade pull request when
+it merged directly to `main`. Otherwise, use the production pull request that
+carried the change from `dev` to `main`.
+
+Resolve the resulting commit from GitHub pull request metadata first:
 
 ```bash
-git fetch origin main
-git log origin/main --oneline --decorate -- core/pubspec.yaml \
-  flutter_common/pubspec.yaml app/pubspec.yaml designer_v2/pubspec.yaml
+gh pr view <main-pr-number> --repo studyu-health/studyu \
+  --json state,mergedAt,baseRefName,headRefOid,mergeCommit,url
+git fetch origin main --tags
 ```
 
-Verify the selected `<main-release-commit>` contains the approved package
-versions. Use only the recorded released-package list from the actual Melos
-version commit. Do not add packages from the workspace list. If `app/pubspec.yaml`
-did not change in that commit, do not create a `studyu_app-v*` tag.
+Require a merged pull request whose base is `main`. Use `mergeCommit.oid` when
+GitHub returns it and the commit is an ancestor of `origin/main`:
 
-For each recorded `<released-package>` and `<version>`, construct one exact tag.
-Before creating any tag, verify that the exact name is absent locally and on
-origin:
+```bash
+git merge-base --is-ancestor <merge-commit-oid> origin/main
+```
+
+For a rebase outcome or unavailable merge commit metadata, inspect the
+applicable first-parent history:
+
+```bash
+git log --first-parent --format='%H %cI %s' origin/main
+```
+
+Use the pull request merge time and verified manifest contents to select the
+commit that resulted from the pull request. Stop if more than one commit is
+plausible. Do not select a commit from a path-filtered log alone. Record the
+resolved commit as `<main-release-commit>`.
+
+Use only the manifest paths and package names recorded from the actual Melos
+version commit in section 9. This recorded list is the allowed package subset.
+Do not add packages from the workspace or production pull request. If the
+recorded list does not include an app version change, do not create a
+`studyu_app-v*` tag.
+
+For each recorded manifest, read the file at the exact resolved commit:
+
+```bash
+git show '<main-release-commit>:<manifest-path>'
+```
+
+Verify that `name:` matches the recorded package. Verify that `version:` matches
+the version approved in the dependency-upgrade pull request. Stop if a manifest
+is missing or either value differs. Construct each exact tag from these verified
+values. Every tag must point to `<main-release-commit>`.
+
+Before creating any tag, verify that its exact name is absent locally and on
+`origin`:
 
 ```bash
 git tag --list '<exact-tag>'
 git ls-remote --exit-code --refs origin 'refs/tags/<exact-tag>'
 ```
 
-Stop if either command finds the tag. Never move or overwrite an existing tag.
-Replace every placeholder with the recorded package, version, tag, and main
-commit. Show the conditional commands, but do not run them until explicit
+Stop if either command finds the tag. Also stop if the remote check fails for a
+reason other than an absent reference. Never move or overwrite an existing tag.
+Show the exact conditional commands, but do not run them until explicit
 production release authorization is given:
 
 ```bash
-# Repeat only for each recorded released-package entry.
+# Repeat only for each verified package entry.
 git tag --annotate --message="Release <released-package> v<version>" \
   <released-package>-v<version> <main-release-commit>
 git push origin <exact-tag-1> <exact-tag-2> ...
 ```
 
 Pushing `studyu_app-v*` tags triggers `.github/workflows/release_app.yml`.
-Tag creation and tag pushes require explicit release authorization. Never create
-or push tags for an ordinary `dev` merge. Record the main commit, released
-package subset, exact tags, authorization, and commands.
+Tag creation and tag pushes require explicit production release authorization.
+Never create or push tags for an ordinary `dev` merge. Record the main commit,
+verified package subset, exact tags, authorization, and commands.
 
 Record the changed files, approvals, commands, results, skipped checks with
 reasons, release commit, exact tags, branch push, and residual risks.
