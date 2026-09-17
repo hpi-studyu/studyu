@@ -142,7 +142,7 @@ class StudyNotifications {
                   context.pop();
                   await context.push('/${RouteNames.dashboard}');
                 },
-                child: const Text('Ok'),
+                child: Text(AppLocalizations.of(context)!.ok),
               ),
             ],
           ),

@@ -8,6 +8,7 @@ import 'package:studyu_app/screens/app_onboarding/welcome_entry_hub.dart';
 import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
 import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/debug_screen.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -82,13 +83,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   );
 
   @override
-  Widget build(BuildContext context) => WelcomeEntryHub(
-    onLogoDoubleTap: () => DebugScreen.showDebugScreen(context),
-    onBrowsePublicStudies: () => context.push('/${RouteNames.studySelection}'),
-    onUseInviteCode: _showInviteCodeDialog,
-    onRestoreAccount: () => context.pushNamed(RouteNames.restoreAccount),
-    onAbout: () => context.push('/${RouteNames.about}'),
-    onFaq: () => context.push('/${RouteNames.faq}'),
-    onContact: () => context.push('/${RouteNames.contact}'),
-  );
+  Widget build(BuildContext context) {
+    final appLanguage = context.watch<AppLanguage?>();
+
+    return WelcomeEntryHub(
+      onLogoDoubleTap: () => DebugScreen.showDebugScreen(context),
+      onBrowsePublicStudies: () =>
+          context.push('/${RouteNames.studySelection}'),
+      onUseInviteCode: _showInviteCodeDialog,
+      onRestoreAccount: () => context.pushNamed(RouteNames.restoreAccount),
+      onAbout: () => context.push('/${RouteNames.about}'),
+      onFaq: () => context.push('/${RouteNames.faq}'),
+      onContact: () => context.push('/${RouteNames.contact}'),
+      selectedLocale:
+          appLanguage?.appLocal ??
+          resolveSupportedLocale(
+            Localizations.localeOf(context).toLanguageTag(),
+            AppLocalizations.supportedLocales,
+          ),
+      onLocaleChanged: appLanguage?.changeLanguage,
+    );
+  }
 }
