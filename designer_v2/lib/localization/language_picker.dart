@@ -6,7 +6,6 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
-import 'package:studyu_designer_v2/utils/font.dart';
 
 enum LanguagePickerType { field, icon }
 
@@ -79,7 +78,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
         PopupMenuItem(
           value: locale,
           child: Text(
-            '${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}',
+            translateLocaleName(locale: locale),
           ),
         ),
       );
@@ -97,7 +96,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
         DropdownMenuItem(
           value: locale,
           child: Text(
-            '${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}',
+            translateLocaleName(locale: locale),
           ),
         ),
       );
