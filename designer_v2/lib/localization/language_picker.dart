@@ -77,9 +77,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
       options.add(
         PopupMenuItem(
           value: locale,
-          child: Text(
-            translateLocaleName(locale: locale),
-          ),
+          child: Text(translateLocaleName(locale: locale)),
         ),
       );
     });
@@ -95,9 +93,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
       options.add(
         DropdownMenuItem(
           value: locale,
-          child: Text(
-            translateLocaleName(locale: locale),
-          ),
+          child: Text(translateLocaleName(locale: locale)),
         ),
       );
     });
