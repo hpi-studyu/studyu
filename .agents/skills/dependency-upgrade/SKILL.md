@@ -31,10 +31,10 @@ Do not mutate the repository until every preflight check passes.
    not match.
 5. Print the target branch and the current commit. Confirm that the target is
    not the task branch.
-6. Confirm the intended scope. Allowed changes are dependency manifests,
-   lockfiles, generated output, and compatibility fixes caused by the update.
-   Do not edit `.github/workflows/*`. Do not add helper scripts or unrelated
-   cleanup.
+6. Confirm the intended scope. Allowed changes are `.fvmrc`, dependency
+   manifests, lockfiles, generated output, and compatibility fixes caused by
+   the update. Do not edit `.github/workflows/*`. Do not add helper scripts or
+   unrelated cleanup.
 
 Never run `git clean`, `melos reset`, `supabase link`, `supabase db push`, or a
 Supabase reset against a non-local target. Never deploy or publish during this
@@ -347,48 +347,87 @@ Validate the same effective database URL that `scripts/reset-test-db.sh` uses.
 The script uses `SUPABASE_DB_URL` when it is non-empty. Otherwise, it uses
 `postgresql://postgres:postgres@127.0.0.1:54322/postgres`.
 
-Immediately before the reset, parse the effective URL and inspect its host:
+Immediately before the reset, read the running local database endpoint from
+Supabase status and compare the effective URL with that endpoint and the local
+configuration. Do not authorize a reset from a loopback hostname alone:
 
 ```bash
 effective_db_url="${SUPABASE_DB_URL:-postgresql://postgres:postgres@127.0.0.1:54322/postgres}"
-db_host="$({ EFFECTIVE_DB_URL="$effective_db_url" python3 - <<'PY'
-import os
-from urllib.parse import urlparse
+status_db_url="$({
+  supabase status -o env |
+    python3 -c '
+import sys
 
-try:
-    parsed = urlparse(os.environ["EFFECTIVE_DB_URL"])
-    if parsed.scheme not in {"postgres", "postgresql"} or not parsed.hostname:
-        raise ValueError
-    _ = parsed.port
-    print(parsed.hostname)
-except (TypeError, ValueError):
+db_url = None
+for line in sys.stdin:
+    if line.startswith("DB_URL=") and db_url is None:
+        db_url = line.rstrip("\n").split("=", 1)[1]
+
+if db_url is None:
     raise SystemExit(1)
-PY
+print(db_url)
+'
 } )" || {
-  echo "Cannot parse the effective Supabase database host." >&2
+  echo "Cannot read the local database endpoint from supabase status." >&2
   exit 1
 }
 
-case "$db_host" in
-  localhost|127.0.0.1) ;;
-  *)
-    echo "Refusing to reset database host: $db_host" >&2
-    exit 1
-    ;;
-esac
-supabase status
+EFFECTIVE_DB_URL="$effective_db_url" STATUS_DB_URL="$status_db_url" python3 - <<'PY'
+import os
+import tomllib
+from urllib.parse import urlparse
+
+
+def endpoint(raw_url):
+    parsed = urlparse(raw_url)
+    database = parsed.path.removeprefix("/")
+    if (
+        parsed.scheme not in {"postgres", "postgresql"}
+        or parsed.hostname not in {"localhost", "127.0.0.1", "::1"}
+        or parsed.port is None
+        or not database
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise ValueError
+    return parsed.scheme, parsed.hostname, parsed.port, database
+
+try:
+    effective = endpoint(os.environ["EFFECTIVE_DB_URL"])
+    running = endpoint(os.environ["STATUS_DB_URL"])
+    with open("supabase/config.toml", "rb") as config_file:
+        configured_port = tomllib.load(config_file)["db"]["port"]
+except (KeyError, OSError, TypeError, ValueError):
+    raise SystemExit("Cannot validate the local Supabase database endpoint.")
+
+if effective != running:
+    raise SystemExit(
+        "The effective SUPABASE_DB_URL does not match the running local endpoint."
+    )
+if running[2] != configured_port:
+    raise SystemExit(
+        "The running Supabase database port does not match supabase/config.toml."
+    )
+
+print(f"Verified local Supabase endpoint: {running[1]}:{running[2]}/{running[3]}")
+PY
 ```
 
-Stop if the URL is empty, malformed, or has an unknown or remote host. Treat a
-failed `supabase status` as evidence that the local services are not ready.
+Stop if the URL is empty, malformed, remote, or differs in scheme, host, port,
+database, query, or fragment from the running local endpoint. Stop if the
+running database port differs from `supabase/config.toml`. Treat a failed
+`supabase status` or endpoint comparison as evidence that the local services
+are not ready.
 
-Show the verified local host without printing credentials. State that the reset
-deletes local database data. Ask the user for explicit authorization to run
-`./scripts/reset-test-db.sh --yes`. Do not infer authorization from an earlier
-approval. After that immediate authorization, run:
+Show the verified local endpoint without printing credentials. State that the
+reset deletes local database data and that the reset script applies test
+fixtures to the verified endpoint. Ask the user for explicit authorization to
+run the reset with the validated URL. Do not infer authorization from an
+earlier approval. After that immediate authorization, pin the validated URL
+for the reset and fixture inserts:
 
 ```bash
-./scripts/reset-test-db.sh --yes
+SUPABASE_DB_URL="$effective_db_url" ./scripts/reset-test-db.sh --yes
 ```
 
 Ensure the ignored `.env.local` exists without overwriting it. Populate local
