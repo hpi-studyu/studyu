@@ -180,7 +180,7 @@ final class StudyTestPlatformControllerProvider
 }
 
 String _$studyTestPlatformControllerHash() =>
-    r'ccd31ea8cb82fe7d8b497c3cd6fbfdbabbd4158a';
+    r'1c9fb9e71895b8be7542eafd6185641c2b31766e';
 
 /// Provide a controller parametrized by [StudyID]
 
