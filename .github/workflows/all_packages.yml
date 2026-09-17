@@ -40,7 +40,14 @@ jobs:
         run: dart run melos generate
 
       - name: Check generated files
-        run: git diff --exit-code
+        run: |
+          git diff --exit-code
+          untracked=$(git ls-files --others --exclude-standard)
+          if [ -n "$untracked" ]; then
+            echo "Generation produced untracked files:"
+            echo "$untracked"
+            exit 1
+          fi
 
       - name: Run quality check
         run: dart run melos qualitycheck

@@ -101,7 +101,6 @@ melos:
         ${rtk_prefix}${dart_cmd} format \
           --output=none --set-exit-if-changed .
         ${rtk_prefix}${dart_cmd} analyze
-        ${rtk_prefix}${flutter_cmd} analyze
       description: Run read-only format and analysis checks
 
     reset:
