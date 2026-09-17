@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -120,6 +122,153 @@ void main() {
         ),
         findsNothing,
       );
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatform;
+    }
+  });
+
+  testWidgets('desktop invite landing shows loading before invite resolves', (
+    tester,
+  ) async {
+    final previousPlatform = debugDefaultTargetPlatformOverride;
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final completer = Completer<(StudyInvite?, Study?)>();
+    try {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DeepLinkWebLandingPage(
+            inviteCode: 'invite-loading',
+            lookupInvite: (_) => completer.future,
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byKey(const Key('invite-static-steps')), findsNothing);
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatform;
+      if (!completer.isCompleted) {
+        completer.complete((null, null));
+      }
+    }
+  });
+
+  testWidgets('desktop invite landing shows localized load error message', (
+    tester,
+  ) async {
+    final previousPlatform = debugDefaultTargetPlatformOverride;
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    try {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DeepLinkWebLandingPage(
+            inviteCode: 'invite-error',
+            lookupInvite: (_) async => throw Exception('failed'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final context = tester.element(find.byType(DeepLinkWebLandingPage));
+      final l10n = AppLocalizations.of(context)!;
+      expect(find.text(l10n.invite_landing_load_error), findsOneWidget);
+      expect(find.byKey(const Key('invite-static-steps')), findsNothing);
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatform;
+    }
+  });
+
+  testWidgets('desktop invite landing shows invalid invite message when missing study', (
+    tester,
+  ) async {
+    final previousPlatform = debugDefaultTargetPlatformOverride;
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    try {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DeepLinkWebLandingPage(
+            inviteCode: 'invite-invalid',
+            lookupInvite: (_) async => (StudyInvite('invite-invalid', 'study'), null),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final context = tester.element(find.byType(DeepLinkWebLandingPage));
+      final l10n = AppLocalizations.of(context)!;
+      expect(find.text(l10n.invite_landing_invalid), findsOneWidget);
+      expect(find.byKey(const Key('invite-static-steps')), findsNothing);
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatform;
+    }
+  });
+
+  testWidgets('desktop study deep link shows join description without invite options', (
+    tester,
+  ) async {
+    final previousPlatform = debugDefaultTargetPlatformOverride;
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    try {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const DeepLinkWebLandingPage(studyId: 'study-123'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final context = tester.element(find.byType(DeepLinkWebLandingPage));
+      final l10n = AppLocalizations.of(context)!;
+      expect(find.text(l10n.invite_landing_step_join_description), findsOneWidget);
+      expect(find.byKey(const Key('invite-static-steps')), findsNothing);
+      expect(find.byKey(const Key('invite-code')), findsNothing);
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatform;
+    }
+  });
+
+  testWidgets('copy button shows temporary copied feedback on desktop invite landing', (
+    tester,
+  ) async {
+    final previousPlatform = debugDefaultTargetPlatformOverride;
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    try {
+      final study = Study('study-copy', 'owner-123')..title = 'Invite study';
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DeepLinkWebLandingPage(
+            inviteCode: 'invite-copy',
+            lookupInvite: (_) async =>
+                (StudyInvite('invite-copy', study.id), study),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final context = tester.element(find.byType(DeepLinkWebLandingPage));
+      final l10n = AppLocalizations.of(context)!;
+      expect(find.widgetWithText(FilledButton, l10n.copy_btn), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(FilledButton, l10n.copy_btn));
+      await tester.pump();
+      expect(
+        find.widgetWithText(FilledButton, l10n.invite_landing_copied),
+        findsOneWidget,
+      );
+
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.widgetWithText(FilledButton, l10n.copy_btn), findsOneWidget);
     } finally {
       debugDefaultTargetPlatformOverride = previousPlatform;
     }

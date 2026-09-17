@@ -17,6 +17,10 @@ void main() {
     expect(inviteCodeFromScan('studyu-app://invite/AbC-123'), 'AbC-123');
   });
 
+  test('extracts a code from the StudyU app invite URL with an empty host', () {
+    expect(inviteCodeFromScan('studyu-app:///invite/AbC-123'), 'AbC-123');
+  });
+
   test('decodes reserved characters exactly once', () {
     const expected = 'abc/xyz#part%value';
     expect(
@@ -29,6 +33,11 @@ void main() {
       inviteCodeFromScan('studyu-app://invite/abc%2Fxyz%23part%25value'),
       expected,
     );
+  });
+
+  test('keeps the original scan string when encoded invite code is malformed', () {
+    const malformedCodeUrl = 'studyu-app://invite/%E0%A4%A';
+    expect(inviteCodeFromScan(malformedCodeUrl), malformedCodeUrl);
   });
 
   test('rejects an empty scan result', () {
