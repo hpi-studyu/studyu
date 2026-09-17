@@ -53,8 +53,10 @@ code, tests, or linked project documentation.
 
 - Run all commands from the repository root. Do not change into a package directory for routine
   work.
+- After creating a linked worktree, run `./setup.sh` once from its repository root before any
+  other project command.
 - Use `fvm dart run melos <script>` for root Melos scripts.
-- Use `fvm dart` or `fvm flutter` for direct SDK commands. Run `fvm install` if the configured
+- Use `fvm dart` or `fvm flutter` for direct SDK commands. Run `./setup.sh` if the configured
   SDK is unavailable.
 - Prefer the existing root script catalog. For a targeted package check with no catalog entry,
   use a root-level `fvm dart run melos exec` command with the appropriate package filter.

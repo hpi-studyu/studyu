@@ -49,6 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -60,4 +61,16 @@ jobs:
         uses: ./.github/workflows/init-workspace
 
       - name: Run Test
-        run: dart run melos test --no-select
+        run: dart run melos run test:coverage --no-select
+
+      - name: Upload Sonar coverage artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: sonar-coverage
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            app/coverage
+            core/coverage
+            designer_v2/coverage
+            flutter_common/coverage

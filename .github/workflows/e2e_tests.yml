@@ -30,7 +30,7 @@ jobs:
         uses: ./.github/workflows/init-workspace
 
       - name: Setup ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
+        uses: nanasess/setup-chromedriver@v3
 
       - name: Enable web support
         run: flutter config --enable-web
@@ -41,7 +41,7 @@ jobs:
           dart run melos bootstrap
 
       - name: Set up Supabase CLI
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@v3
         with:
           version: latest
 

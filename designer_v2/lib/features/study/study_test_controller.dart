@@ -64,5 +64,6 @@ PlatformController studyTestPlatformController(Ref ref, StudyID studyId) {
       ref.watch(authRepositoryProvider).serializedSession ?? '',
     );
   }
+  ref.onDispose(platformController.dispose);
   return platformController;
 }
