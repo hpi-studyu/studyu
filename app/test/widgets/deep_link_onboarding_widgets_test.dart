@@ -243,7 +243,7 @@ void main() {
   );
 
   testWidgets(
-    'copy button shows temporary copied feedback on desktop invite landing',
+    'copy icon has an accessible label and shows a temporary checkmark',
     (tester) async {
       final previousPlatform = debugDefaultTargetPlatformOverride;
       debugDefaultTargetPlatformOverride = TargetPlatform.linux;
@@ -283,23 +283,65 @@ void main() {
 
         final context = tester.element(find.byType(DeepLinkWebLandingPage));
         final l10n = AppLocalizations.of(context)!;
-        final copyButton = find.widgetWithText(FilledButton, l10n.copy_btn);
-        expect(copyButton, findsOneWidget);
+        final semantics = tester.ensureSemantics();
+        final copyButton = find.byKey(const Key('invite-code-copy-button'));
 
+        expect(copyButton, findsOneWidget);
         await tester.ensureVisible(copyButton);
+        await tester.pump();
+        expect(
+          tester
+              .getSemantics(find.byKey(const Key('invite-code-copy-semantics')))
+              .label,
+          l10n.invite_landing_copy_code,
+        );
+        expect(
+          find.descendant(
+            of: copyButton,
+            matching: find.byIcon(Icons.copy_rounded),
+          ),
+          findsOneWidget,
+        );
+        expect(find.text(l10n.copy_btn), findsNothing);
+
         await tester.tap(copyButton);
         await tester.pump();
+
         expect(clipboardText, 'invite-copy');
         expect(
-          find.widgetWithText(FilledButton, l10n.invite_landing_copied),
+          find.descendant(
+            of: copyButton,
+            matching: find.byIcon(Icons.check_rounded),
+          ),
           findsOneWidget,
+        );
+        expect(
+          tester
+              .widget<Tooltip>(
+                find.ancestor(of: copyButton, matching: find.byType(Tooltip)),
+              )
+              .message,
+          l10n.invite_landing_copied,
         );
 
         await tester.pump(const Duration(seconds: 2));
+
         expect(
-          find.widgetWithText(FilledButton, l10n.copy_btn),
+          find.descendant(
+            of: copyButton,
+            matching: find.byIcon(Icons.copy_rounded),
+          ),
           findsOneWidget,
         );
+        expect(
+          tester
+              .widget<Tooltip>(
+                find.ancestor(of: copyButton, matching: find.byType(Tooltip)),
+              )
+              .message,
+          l10n.invite_landing_copy_code,
+        );
+        semantics.dispose();
       } finally {
         debugDefaultTargetPlatformOverride = previousPlatform;
       }

@@ -704,5 +704,6 @@
   "invite_landing_enter_code_title": "Einladungscode eingeben",
   "invite_landing_scan_qr_title": "QR-Code scannen",
   "invite_landing_copied": "Kopiert",
-  "recovery_phrase_word_count": "{count}/{total} Wörter"
+  "recovery_phrase_word_count": "{count}/{total} Wörter",
+  "invite_landing_copy_code": "Einladungscode kopieren"
 }

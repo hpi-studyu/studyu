@@ -1859,4 +1859,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String recovery_phrase_word_count(Object count, Object total) {
     return '$count/$total words';
   }
+
+  @override
+  String get invite_landing_copy_code => 'Copy invite code';
 }

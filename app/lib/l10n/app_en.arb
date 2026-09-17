@@ -723,5 +723,6 @@
   "invite_landing_enter_code_title": "Enter invite code",
   "invite_landing_scan_qr_title": "Scan QR code",
   "invite_landing_copied": "Copied",
-  "recovery_phrase_word_count": "{count}/{total} words"
+  "recovery_phrase_word_count": "{count}/{total} words",
+  "invite_landing_copy_code": "Copy invite code"
 }

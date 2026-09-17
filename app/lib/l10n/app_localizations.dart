@@ -3454,6 +3454,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count}/{total} words'**
   String recovery_phrase_word_count(Object count, Object total);
+
+  /// No description provided for @invite_landing_copy_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invite code'**
+  String get invite_landing_copy_code;
 }
 
 class _AppLocalizationsDelegate
