@@ -18,14 +18,10 @@ runs:
         key: pub-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
         restore-keys: pub-${{ runner.os }}-
 
-    - name: Install melos
-      run: dart pub global activate melos
-      shell: bash
-
     - name: Install dependencies
       run: dart pub get
       shell: bash
 
     - name: Bootstrap workspace
-      run: melos bootstrap
+      run: dart run melos bootstrap
       shell: bash

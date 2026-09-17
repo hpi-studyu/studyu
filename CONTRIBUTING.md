@@ -4,11 +4,11 @@
 
 1. Install [FVM](https://fvm.app/documentation/getting-started/installation).
 2. Clone this repository and open its root directory.
-3. Run `./setup.sh` to install the pinned Flutter SDK, Melos, dependencies, workspace links,
-   and tracked Git hooks.
+3. Run `./setup.sh` to install the pinned Flutter SDK, resolve Melos from the lockfile,
+   dependencies, workspace links, and tracked Git hooks.
 
 The root [`pubspec.yaml`](pubspec.yaml) is the command catalog. Run its Melos
-scripts as `fvm exec melos <script>`.
+scripts as `fvm dart run melos <script>`.
 
 ## Flutter SDK Setup
 
@@ -42,9 +42,9 @@ Use the project SDK for development commands:
 ```bash
 fvm flutter test
 fvm dart analyze
-fvm exec melos test
-fvm exec melos dev:app
-fvm exec melos local:designer_v2
+fvm dart run melos test
+fvm dart run melos dev:app
+fvm dart run melos local:designer_v2
 ```
 
 ### IDE configuration
@@ -84,7 +84,7 @@ Backend and tooling at the repo root (outside the Flutter workspace):
 - [supabase/](./supabase): migrations, seeds, local CLI config, and database tests.
 - [database/migration-legacy/](./database/migration-legacy): historical migrations; no longer the current migration path.
 
-Run `fvm exec melos <script>` from the repository root to operate on the
+Run `fvm dart run melos <script>` from the repository root to operate on the
 workspace. See `pubspec.yaml` for the full script catalog.
 
 ## Environments
@@ -148,7 +148,7 @@ adds Riverpod, routing, and json_serializable output on top of that.
 After changing annotated models, controllers, or routes, run:
 
 ```bash
-fvm exec melos generate
+fvm dart run melos generate
 ```
 
 Contrary to most recommendations, the generated files (`*.g.dart`) are committed
@@ -162,8 +162,9 @@ The shared Dart and Flutter lint rules are defined in [`analysis_options.yaml`](
 The tracked pre-commit hook runs [`scripts/pre-commit-check`](scripts/pre-commit-check), which
 formats, generates affected output, and analyzes the workspace. The Git hooks are configured by
 `./setup.sh`. If you develop manually without the automated pre-commit check running your
-changes, run `fvm exec melos qualitycheck` instead; it formats, analyzes, and regenerates code
-across the workspace. Otherwise run `fvm exec melos qualitycheck` for a full CI-style workspace
+changes, run `fvm dart run melos qualitycheck` instead; it checks formatting and
+analyzes the workspace without writing files. Run `fvm dart run melos generate` separately when
+code generation is required. Use `fvm dart run melos qualitycheck` for a full CI-style workspace
 check or when explicitly requested.
 
 ## Frontend
