@@ -35,7 +35,7 @@ String? inviteCodeFromScan(String value) {
     if (encodedCode.isEmpty) return null;
     try {
       return Uri.decodeComponent(encodedCode);
-    } on FormatException {
+    } catch (_) {
       return input;
     }
   }
