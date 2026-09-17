@@ -209,11 +209,7 @@ class WelcomeEntryHub extends StatelessWidget {
                                     ),
                                   ),
                                   for (final locale
-                                      in AppLocalizations.supportedLocales
-                                          .where(
-                                            (locale) =>
-                                                locale.languageCode != 'ko',
-                                          ))
+                                      in AppLocalizations.supportedLocales)
                                     PopupMenuItem<Locale>(
                                       value: locale,
                                       child: Row(

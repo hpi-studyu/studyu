@@ -276,6 +276,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notification_invite_link_copied => '초대 링크가 복사되었습니다';
 
   @override
+  String get notification_invitation_copied => '초대장이 복사되었습니다';
+
+  @override
   String get action_button_new_study => '새 연구';
 
   @override
@@ -2424,6 +2427,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get action_copy_link => '링크 복사';
 
   @override
+  String get action_copy_invitation => '초대장 복사';
+
+  @override
   String get action_reportPrimary => '주요 보고서로 설정';
 
   @override
@@ -3010,7 +3016,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get dialog_qr_code_description =>
-      '참여자가 이 연구에 접근할 수 있도록 이 링크나 QR 코드를 공유하세요. 참여자가 휴대전화로 링크를 열거나 QR 코드를 스캔하면 StudyU 앱이 열리고 연구에 참여하게 됩니다.';
+      '참여자가 이 연구에 접근할 수 있도록 링크나 QR 코드를 공유하세요. 참여자가 휴대전화로 링크를 열거나 QR 코드를 스캔하면 StudyU 앱이 열리고 연구에 참여하게 됩니다.';
 
   @override
   String get all_studies => '모든 연구';
@@ -3029,6 +3035,43 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get error_qr_code_generation => 'QR 코드를 표시할 수 없습니다.';
+
+  @override
+  String get form_field_invite_link => '초대 링크';
+
+  @override
+  String get form_field_invite_link_tooltip =>
+      '참여자가 StudyU 앱을 열고 연구에 참여할 수 있도록 이 링크를 공유하세요.';
+
+  @override
+  String get form_field_invitation_message => '초대 메시지';
+
+  @override
+  String invitation_message_intro(Object title) {
+    return 'StudyU를 사용하여 “$title” 연구에 참여하도록 초대되었습니다.';
+  }
+
+  @override
+  String get invitation_message_install_app =>
+      '1. 필요한 경우 휴대폰에 StudyU Health 앱을 설치하세요:';
+
+  @override
+  String invitation_message_android(Object link) {
+    return 'Android: $link';
+  }
+
+  @override
+  String invitation_message_ios(Object link) {
+    return 'iPhone/iPad: $link';
+  }
+
+  @override
+  String get invitation_message_open_link => '2. 휴대폰에서 이 초대 링크를 여세요:';
+
+  @override
+  String get invitation_message_alternative =>
+      '또는 StudyU Health 앱을 열고 다음 초대 코드를 입력하세요:';
+
   @override
   String get form_field_report_improvementDirection_hint => '개선 방향을 선택하세요';
 

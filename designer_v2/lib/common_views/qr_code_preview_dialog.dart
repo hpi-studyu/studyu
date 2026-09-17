@@ -78,12 +78,16 @@ class QrCodePreview extends ConsumerStatefulWidget {
     required this.data,
     this.inviteCode,
     this.snackBarWidth,
+    this.showInviteLink = true,
+    this.downloadFilename,
     super.key,
   });
 
   final String data;
   final String? inviteCode;
   final double? snackBarWidth;
+  final bool showInviteLink;
+  final String? downloadFilename;
 
   @override
   ConsumerState<QrCodePreview> createState() => _QrCodePreviewState();
@@ -106,32 +110,6 @@ class _QrCodePreviewState extends ConsumerState<QrCodePreview> {
     }
   }
 
-  Future<void> _copyLink() async {
-    await ref.read(clipboardServiceProvider).copy(widget.data);
-    if (!mounted) return;
-
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            tr.notification_invite_link_copied,
-            style: theme.textTheme.titleMedium!.copyWith(
-              color: theme.colorScheme.onPrimary,
-            ),
-          ),
-          width: widget.snackBarWidth,
-          duration: const Duration(milliseconds: 2500),
-          persist: false,
-          padding: const EdgeInsets.fromLTRB(40.0, 16.0, 24.0, 16.0),
-          behavior: SnackBarBehavior.floating,
-          showCloseIcon: true,
-          closeIconColor: theme.colorScheme.onPrimary,
-        ),
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -151,68 +129,132 @@ class _QrCodePreviewState extends ConsumerState<QrCodePreview> {
           ),
         ],
         const SizedBox(height: 16.0),
-        FutureBuilder<Widget>(
-          future: _qrWidgetFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              debugLog('Failed to generate QR code: ${snapshot.error}');
-              return Center(
-                child: Text(
-                  tr.error_qr_code_generation,
-                  style: TextStyle(color: theme.colorScheme.error),
+        SizedBox(
+          height: 232.0,
+          child: Row(
+            children: [
+              SizedBox(
+                width: 232.0,
+                child: FutureBuilder<Widget>(
+                  future: _qrWidgetFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      debugLog('Failed to generate QR code: ${snapshot.error}');
+                      return Center(
+                        child: Text(
+                          tr.error_qr_code_generation,
+                          style: TextStyle(color: theme.colorScheme.error),
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: snapshot.data,
+                      ),
+                    );
+                  },
                 ),
-              );
-            }
-            return Center(
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
+              ),
+              if (widget.downloadFilename case final String filename) ...[
+                const SizedBox(width: 24.0),
+                PrimaryButton(
+                  text: tr.action_qr_code_download,
+                  icon: Icons.download,
+                  onPressed: () async {
+                    await QrCodeDownloader.downloadQrCode(
+                      data: widget.data,
+                      filename: filename,
+                    );
+                  },
                 ),
-                child: snapshot.data,
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: 16.0),
-        Material(
-          key: const ValueKey('invite_link_preview'),
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(8.0),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(8.0),
-            mouseCursor: SystemMouseCursors.click,
-            onTap: _copyLink,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.data,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  Tooltip(
-                    message: tr.action_copy_link,
-                    preferBelow: true,
-                    child: Icon(
-                      Icons.copy_rounded,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+              ],
+            ],
           ),
         ),
+        if (widget.showInviteLink) ...[
+          const SizedBox(height: 16.0),
+          InviteLinkPreview(
+            data: widget.data,
+            snackBarWidth: widget.snackBarWidth,
+          ),
+        ],
       ],
+    );
+  }
+}
+
+class InviteLinkPreview extends ConsumerWidget {
+  const InviteLinkPreview({required this.data, this.snackBarWidth, super.key});
+
+  final String data;
+  final double? snackBarWidth;
+
+  Future<void> _copyLink(BuildContext context, WidgetRef ref) async {
+    await ref.read(clipboardServiceProvider).copy(data);
+    if (!context.mounted) return;
+
+    final theme = Theme.of(context);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            tr.notification_invite_link_copied,
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: theme.colorScheme.onPrimary,
+            ),
+          ),
+          width: snackBarWidth,
+          duration: const Duration(milliseconds: 2500),
+          persist: false,
+          padding: const EdgeInsets.fromLTRB(40.0, 16.0, 24.0, 16.0),
+          behavior: SnackBarBehavior.floating,
+          showCloseIcon: true,
+          closeIconColor: theme.colorScheme.onPrimary,
+        ),
+      );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
+    return Material(
+      key: const ValueKey('invite_link_preview'),
+      color: theme.colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(8.0),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8.0),
+        mouseCursor: SystemMouseCursors.click,
+        onTap: () => _copyLink(context, ref),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(data, maxLines: 1, overflow: TextOverflow.ellipsis),
+              ),
+              const SizedBox(width: 12.0),
+              Tooltip(
+                message: tr.action_copy_link,
+                preferBelow: true,
+                child: Icon(
+                  Icons.copy_rounded,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

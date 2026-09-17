@@ -610,6 +610,12 @@ abstract class AppLocalizations {
   /// **'Invite link copied'**
   String get notification_invite_link_copied;
 
+  /// No description provided for @notification_invitation_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation copied'**
+  String get notification_invitation_copied;
+
   /// No description provided for @action_button_new_study.
   ///
   /// In en, this message translates to:
@@ -4277,6 +4283,12 @@ abstract class AppLocalizations {
   /// **'Copy link'**
   String get action_copy_link;
 
+  /// No description provided for @action_copy_invitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy invitation'**
+  String get action_copy_invitation;
+
   /// No description provided for @action_reportPrimary.
   ///
   /// In en, this message translates to:
@@ -5342,7 +5354,7 @@ abstract class AppLocalizations {
   /// No description provided for @dialog_qr_code_description.
   ///
   /// In en, this message translates to:
-  /// **'Share this link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.'**
+  /// **'Share the link or QR code with participants so they can access this study. When participants open the link or scan the QR code with their phone, the StudyU App opens and adds them to the study.'**
   String get dialog_qr_code_description;
 
   /// No description provided for @all_studies.
@@ -5380,6 +5392,61 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The QR code could not be displayed.'**
   String get error_qr_code_generation;
+
+  /// No description provided for @form_field_invite_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link'**
+  String get form_field_invite_link;
+
+  /// No description provided for @form_field_invite_link_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this link with participants so they can open the StudyU App and join the study.'**
+  String get form_field_invite_link_tooltip;
+
+  /// No description provided for @form_field_invitation_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation message'**
+  String get form_field_invitation_message;
+
+  /// No description provided for @invitation_message_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been invited to participate in the study \"{title}\" using StudyU.'**
+  String invitation_message_intro(Object title);
+
+  /// No description provided for @invitation_message_install_app.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Install the StudyU Health app on your phone if needed:'**
+  String get invitation_message_install_app;
+
+  /// No description provided for @invitation_message_android.
+  ///
+  /// In en, this message translates to:
+  /// **'Android: {link}'**
+  String invitation_message_android(Object link);
+
+  /// No description provided for @invitation_message_ios.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone/iPad: {link}'**
+  String invitation_message_ios(Object link);
+
+  /// No description provided for @invitation_message_open_link.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Open this invitation link on your phone:'**
+  String get invitation_message_open_link;
+
+  /// No description provided for @invitation_message_alternative.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternatively, open the StudyU Health app and enter this invitation code:'**
+  String get invitation_message_alternative;
+
   /// No description provided for @form_field_report_improvementDirection_hint.
   ///
   /// In en, this message translates to:

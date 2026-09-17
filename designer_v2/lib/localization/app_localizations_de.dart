@@ -289,6 +289,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notification_invite_link_copied => 'Einladungslink kopiert';
 
   @override
+  String get notification_invitation_copied => 'Einladung kopiert';
+
+  @override
   String get action_button_new_study => 'Neue Studie';
 
   @override
@@ -2557,6 +2560,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_copy_link => 'Link kopieren';
 
   @override
+  String get action_copy_invitation => 'Einladung kopieren';
+
+  @override
   String get action_reportPrimary => 'Als Primärauswertung setzen';
 
   @override
@@ -3161,7 +3167,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get dialog_qr_code_description =>
-      'Teilen Sie diesen Link oder QR-Code mit den Teilnehmenden, damit sie auf diese Studie zugreifen können. Wenn Teilnehmende den Link öffnen oder den QR-Code mit ihrem Smartphone scannen, öffnet sich die StudyU-App und fügt sie dieser Studie hinzu.';
+      'Teilen Sie den Link oder QR-Code mit den Teilnehmenden, damit sie auf diese Studie zugreifen können. Wenn Teilnehmende den Link öffnen oder den QR-Code mit ihrem Smartphone scannen, öffnet sich die StudyU-App und fügt sie dieser Studie hinzu.';
 
   @override
   String get all_studies => 'Alle Studien';
@@ -3181,6 +3187,44 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get error_qr_code_generation =>
       'Der QR-Code konnte nicht angezeigt werden.';
+
+  @override
+  String get form_field_invite_link => 'Einladungslink';
+
+  @override
+  String get form_field_invite_link_tooltip =>
+      'Teilen Sie diesen Link mit den Teilnehmenden, damit sie die StudyU-App öffnen und auf diese Studie zugreifen können.';
+
+  @override
+  String get form_field_invitation_message => 'Einladungsnachricht';
+
+  @override
+  String invitation_message_intro(Object title) {
+    return 'Sie wurden eingeladen, mit StudyU an der Studie „$title“ teilzunehmen.';
+  }
+
+  @override
+  String get invitation_message_install_app =>
+      '1. Installieren Sie bei Bedarf die StudyU Health-App auf Ihrem Telefon:';
+
+  @override
+  String invitation_message_android(Object link) {
+    return 'Android: $link';
+  }
+
+  @override
+  String invitation_message_ios(Object link) {
+    return 'iPhone/iPad: $link';
+  }
+
+  @override
+  String get invitation_message_open_link =>
+      '2. Öffnen Sie diesen Einladungslink auf Ihrem Telefon:';
+
+  @override
+  String get invitation_message_alternative =>
+      'Alternativ können Sie die StudyU Health-App öffnen und diesen Teilnahmecode eingeben:';
+
   @override
   String get form_field_report_improvementDirection_hint =>
       'Wählen Sie eine Verbesserungsrichtung aus';

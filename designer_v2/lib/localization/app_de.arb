@@ -849,6 +849,7 @@
   "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",
   "notification_invite_code_copied": "Teilnahmecode kopiert",
   "notification_invite_link_copied": "Einladungslink kopiert",
+  "notification_invitation_copied": "Einladung kopiert",
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Teilnehmerdetails",
   "participant_details_study_days_overview": "Übersicht über Studientage",
@@ -978,6 +979,7 @@
   "action_qr_code_download": "QR-Code herunterladen",
   "action_share": "Einladungslink teilen",
   "action_copy_link": "Link kopieren",
+  "action_copy_invitation": "Einladung kopieren",
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",
@@ -1221,13 +1223,37 @@
   "code_list_next_page": "Nächste Seite",
   "code_list_search_hint_compact": "Codes suchen",
   "action_regenerate_invite_code": "Teilnahmecode neu generieren",
-  "dialog_qr_code_description": "Teilen Sie diesen Link oder QR-Code mit den Teilnehmenden, damit sie auf diese Studie zugreifen können. Wenn Teilnehmende den Link öffnen oder den QR-Code mit ihrem Smartphone scannen, öffnet sich die StudyU-App und fügt sie dieser Studie hinzu.",
+  "dialog_qr_code_description": "Teilen Sie den Link oder QR-Code mit den Teilnehmenden, damit sie auf diese Studie zugreifen können. Wenn Teilnehmende den Link öffnen oder den QR-Code mit ihrem Smartphone scannen, öffnet sich die StudyU-App und fügt sie dieser Studie hinzu.",
   "all_studies": "Alle Studien",
   "studies_filter_add_filter": "Filter hinzufügen",
   "studies_filter_remove_filter": "Filter entfernen",
   "studies_end_of_list_create": "Erstelle eine Studie.",
   "studies_end_of_list_public": "Nicht gefunden, was du suchst?",
   "error_qr_code_generation": "Der QR-Code konnte nicht angezeigt werden.",
+  "form_field_invite_link": "Einladungslink",
+  "form_field_invite_link_tooltip": "Teilen Sie diesen Link mit den Teilnehmenden, damit sie die StudyU-App öffnen und auf diese Studie zugreifen können.",
+  "form_field_invitation_message": "Einladungsnachricht",
+  "invitation_message_intro": "Sie wurden eingeladen, mit StudyU an der Studie „{title}“ teilzunehmen.",
+  "@invitation_message_intro": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "invitation_message_install_app": "1. Installieren Sie bei Bedarf die StudyU Health-App auf Ihrem Telefon:",
+  "invitation_message_android": "Android: {link}",
+  "@invitation_message_android": {
+    "placeholders": {
+      "link": {}
+    }
+  },
+  "invitation_message_ios": "iPhone/iPad: {link}",
+  "@invitation_message_ios": {
+    "placeholders": {
+      "link": {}
+    }
+  },
+  "invitation_message_open_link": "2. Öffnen Sie diesen Einladungslink auf Ihrem Telefon:",
+  "invitation_message_alternative": "Alternativ können Sie die StudyU Health-App öffnen und diesen Teilnahmecode eingeben:",
   "form_field_report_improvementDirection_hint": "Wählen Sie eine Verbesserungsrichtung aus",
   "form_field_report_data_source_hint": "Wählen Sie eine Datenquelle aus",
   "form_field_report_data_source_empty": "Keine Skalenfrage definiert"

@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/qr_code_preview_dialog.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.dart';
@@ -50,13 +51,16 @@ void main() {
     env.setEnv(
       'https://example.supabase.co',
       'test-anon-key',
+      envAndroidPackageName: 'com.example.studyu',
+      envIosAppStoreId: '123456789',
       supabaseClient: SupabaseClient('https://example.supabase.co', 'test'),
     );
   });
 
   testWidgets('invite link and QR code follow the code field', (tester) async {
+    final study = Study('study-12345678', 'owner-id')..title = 'Test study';
     final viewModel = InviteCodeFormViewModel(
-      study: Study('study-12345678', 'owner-id'),
+      study: study,
       inviteCodeRepository: _FakeInviteCodeRepository(),
     );
     final clipboard = _FakeClipboardService();
@@ -84,10 +88,44 @@ void main() {
 
     const expectedLink = 'https://app.studyu.health/invite/new-code';
     expect(find.text(expectedLink), findsOneWidget);
-    expect(
-      tester.widget<QrCodePreview>(find.byType(QrCodePreview)).data,
-      expectedLink,
+    final qrCodePreview = tester.widget<QrCodePreview>(
+      find.byType(QrCodePreview),
     );
+    expect(qrCodePreview.data, expectedLink);
+    expect(qrCodePreview.downloadFilename, 'studyu-invite-new-code');
+
+    final downloadButton = tester.widget<PrimaryButton>(
+      find.byType(PrimaryButton),
+    );
+    expect(downloadButton.text, tr.action_qr_code_download);
+    expect(downloadButton.icon, Icons.download);
+
+    final invitationMessage = tester.widget<SelectableText>(
+      find.byKey(const ValueKey('invitation_message_preview')),
+    );
+    expect(invitationMessage.data, contains('Study: Test study'));
+    expect(invitationMessage.data, contains('Invitation link: $expectedLink'));
+    expect(invitationMessage.data, contains('Invitation code: new-code'));
+    expect(
+      invitationMessage.data,
+      contains(
+        'https://play.google.com/store/apps/details?id=com.example.studyu&referrer=invite=new-code',
+      ),
+    );
+    expect(
+      invitationMessage.data,
+      contains('https://apps.apple.com/app/id123456789'),
+    );
+    expect(
+      invitationMessage.data,
+      contains(
+        'Install StudyU if needed, then open the invitation link on your phone.',
+      ),
+    );
+
+    await tester.tap(find.text(tr.action_copy_invitation));
+    await tester.pump();
+    expect(clipboard.copiedText, invitationMessage.data);
 
     await tester.tap(find.byTooltip(tr.action_copy_invite_code));
     await tester.pump();
