@@ -337,130 +337,123 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
                                   );
 
                                   final inviteCodeField = Align(
+                                    alignment: Alignment.centerLeft,
                                     child: ConstrainedBox(
                                       constraints: const BoxConstraints(
                                         maxWidth: 360,
                                       ),
-                                      child: Material(
-                                        key: const Key('invite-code-field'),
-                                        color: theme.colorScheme.surface,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          side: BorderSide(
-                                            color: theme
-                                                .colorScheme
-                                                .outlineVariant,
-                                          ),
+                                      child: Semantics(
+                                        key: const Key(
+                                          'invite-code-copy-semantics',
                                         ),
-                                        child: SizedBox(
-                                          height: 76,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8,
+                                        container: true,
+                                        button: true,
+                                        excludeSemantics: true,
+                                        liveRegion: _inviteCodeCopied,
+                                        label: _inviteCodeCopied
+                                            ? l10n.invite_landing_copied
+                                            : l10n.invite_landing_copy_code,
+                                        onTap: _copyInviteCode,
+                                        child: Tooltip(
+                                          message: _inviteCodeCopied
+                                              ? l10n.invite_landing_copied
+                                              : l10n.invite_landing_copy_code,
+                                          excludeFromSemantics: true,
+                                          child: Material(
+                                            key: const Key('invite-code-field'),
+                                            color: theme.colorScheme.surface,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              side: BorderSide(
+                                                color: theme
+                                                    .colorScheme
+                                                    .outlineVariant,
+                                              ),
                                             ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                            child: InkWell(
+                                              key: const Key(
+                                                'invite-code-copy-button',
+                                              ),
+                                              onTap: _copyInviteCode,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              hoverColor: theme
+                                                  .colorScheme
+                                                  .surfaceContainerHighest,
+                                              focusColor: theme
+                                                  .colorScheme
+                                                  .surfaceContainerHighest,
+                                              highlightColor: theme
+                                                  .colorScheme
+                                                  .surfaceContainerHigh,
+                                              child: SizedBox(
+                                                height: 76,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
+                                                      ),
+                                                  child: Row(
                                                     children: [
-                                                      Text(
-                                                        l10n.invite_landing_invite_code,
-                                                        style: theme
-                                                            .textTheme
-                                                            .labelMedium
-                                                            ?.copyWith(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
+                                                      Expanded(
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              l10n.invite_landing_invite_code,
+                                                              style: theme
+                                                                  .textTheme
+                                                                  .labelMedium
+                                                                  ?.copyWith(
+                                                                    color: theme
+                                                                        .colorScheme
+                                                                        .onSurfaceVariant,
+                                                                  ),
                                                             ),
-                                                      ),
-                                                      const SizedBox(height: 2),
-                                                      SelectableText(
-                                                        inviteCode,
-                                                        key: const Key(
-                                                          'invite-code',
+                                                            const SizedBox(
+                                                              height: 2,
+                                                            ),
+                                                            Text(
+                                                              inviteCode,
+                                                              key: const Key(
+                                                                'invite-code',
+                                                              ),
+                                                              maxLines: 1,
+                                                              style: theme
+                                                                  .textTheme
+                                                                  .headlineSmall
+                                                                  ?.copyWith(
+                                                                    fontFamily:
+                                                                        'monospace',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    letterSpacing:
+                                                                        1.4,
+                                                                  ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        maxLines: 1,
-                                                        style: theme
-                                                            .textTheme
-                                                            .headlineSmall
-                                                            ?.copyWith(
-                                                              fontFamily:
-                                                                  'monospace',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              letterSpacing:
-                                                                  1.4,
-                                                            ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 12),
-                                                Semantics(
-                                                  key: const Key(
-                                                    'invite-code-copy-semantics',
-                                                  ),
-                                                  container: true,
-                                                  button: true,
-                                                  excludeSemantics: true,
-                                                  liveRegion: _inviteCodeCopied,
-                                                  label: _inviteCodeCopied
-                                                      ? l10n.invite_landing_copied
-                                                      : l10n.invite_landing_copy_code,
-                                                  onTap: _copyInviteCode,
-                                                  child: Tooltip(
-                                                    message: _inviteCodeCopied
-                                                        ? l10n.invite_landing_copied
-                                                        : l10n.invite_landing_copy_code,
-                                                    excludeFromSemantics: true,
-                                                    child: IconButton(
-                                                      key: const Key(
-                                                        'invite-code-copy-button',
-                                                      ),
-                                                      style: IconButton.styleFrom(
-                                                        fixedSize:
-                                                            const Size.square(
-                                                              44,
-                                                            ),
-                                                        iconSize: 20,
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        tapTargetSize:
-                                                            MaterialTapTargetSize
-                                                                .shrinkWrap,
-                                                        hoverColor: theme
-                                                            .colorScheme
-                                                            .surfaceContainerHighest,
-                                                        focusColor: theme
-                                                            .colorScheme
-                                                            .surfaceContainerHighest,
-                                                        highlightColor: theme
-                                                            .colorScheme
-                                                            .surfaceContainerHigh,
-                                                      ),
-                                                      onPressed:
-                                                          _copyInviteCode,
-                                                      icon: Icon(
+                                                      const SizedBox(width: 12),
+                                                      Icon(
                                                         _inviteCodeCopied
                                                             ? Icons
                                                                   .check_rounded
                                                             : Icons
                                                                   .copy_rounded,
+                                                        size: 20,
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -544,29 +537,30 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
                                     );
                                   }
 
-                                  return Column(
+                                  return Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(child: inviteCodeHeader),
-                                          const SizedBox(width: 32),
-                                          Expanded(child: qrCodeHeader),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 12),
-                                      SizedBox(
-                                        height: 210,
-                                        child: Row(
+                                      Expanded(
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.stretch,
                                           children: [
-                                            Expanded(child: inviteCodeField),
-                                            const SizedBox(width: 32),
-                                            Expanded(child: qrCard),
+                                            inviteCodeHeader,
+                                            const SizedBox(height: 12),
+                                            inviteCodeField,
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 32),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            qrCodeHeader,
+                                            const SizedBox(height: 12),
+                                            qrCard,
                                           ],
                                         ),
                                       ),

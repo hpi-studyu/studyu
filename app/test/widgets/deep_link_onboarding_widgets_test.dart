@@ -243,7 +243,7 @@ void main() {
   );
 
   testWidgets(
-    'copy icon has an accessible label and shows a temporary checkmark',
+    'full invite code field copies with an accessible checkmark state',
     (tester) async {
       final previousPlatform = debugDefaultTargetPlatformOverride;
       debugDefaultTargetPlatformOverride = TargetPlatform.linux;
@@ -284,10 +284,13 @@ void main() {
         final context = tester.element(find.byType(DeepLinkWebLandingPage));
         final l10n = AppLocalizations.of(context)!;
         final semantics = tester.ensureSemantics();
+        final inviteCodeField = find.byKey(const Key('invite-code-field'));
         final copyButton = find.byKey(const Key('invite-code-copy-button'));
 
+        expect(inviteCodeField, findsOneWidget);
+        expect(tester.getSize(inviteCodeField), const Size(360, 76));
         expect(copyButton, findsOneWidget);
-        await tester.ensureVisible(copyButton);
+        await tester.ensureVisible(inviteCodeField);
         await tester.pump();
         expect(
           tester
@@ -304,8 +307,8 @@ void main() {
         );
         expect(find.text(l10n.copy_btn), findsNothing);
 
-        await tester.tap(copyButton);
-        await tester.pump();
+        await tester.tap(inviteCodeField);
+        await tester.pumpAndSettle();
 
         expect(clipboardText, 'invite-copy');
         expect(
