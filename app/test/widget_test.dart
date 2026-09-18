@@ -295,6 +295,41 @@ void main() {
     expect(appState.selectedStudy, same(study));
   });
 
+  testWidgets('study selection scrolls to the last study in a short viewport', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(600, 320);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    final studies = List.generate(
+      30,
+      (index) => Study('study-$index', 'owner-1')
+        ..title = 'Study $index'
+        ..iconName = 'account',
+    );
+    await tester.pumpWidget(
+      setup(
+        StudySelectionScreen(
+          publicStudies: Future.value(ExtractionSuccess<Study>(studies)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Study 29'), findsNothing);
+
+    await tester.scrollUntilVisible(
+      find.text('Study 29'),
+      400,
+      scrollable: find.byType(Scrollable),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Study 29'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('invite action opens invite code dialog over welcome', (
     tester,
   ) async {
