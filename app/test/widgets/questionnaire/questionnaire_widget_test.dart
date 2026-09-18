@@ -63,12 +63,12 @@ ChoiceQuestion _multiChoiceQuestion(String id, String prompt) {
     ..prompt = prompt;
 }
 
-class RequiresBoolAnswerExpression extends Expression {
-  RequiresBoolAnswerExpression({required this.target, required this.expected})
-    : super('test-requires-bool-answer');
+class RequiresBoolAnswerExpression({
+  required final String target,
+  required final bool expected,
+}) extends Expression {
+  this : super('test-requires-bool-answer');
 
-  final String target;
-  final bool expected;
   final List<bool?> observedValues = [];
 
   @override
@@ -83,9 +83,9 @@ class RequiresBoolAnswerExpression extends Expression {
   Map<String, dynamic> toJson() => <String, dynamic>{'type': type};
 }
 
-class RequiresDateAnswerExpression extends ValueExpression<DateTime> {
-  RequiresDateAnswerExpression({required String target})
-    : super('test-requires-date-answer') {
+class RequiresDateAnswerExpression({required String target})
+    extends ValueExpression<DateTime> {
+  this : super('test-requires-date-answer') {
     this.target = target;
   }
 
@@ -2105,9 +2105,8 @@ void main() {
       expect(find.byType(DateQuestionWidget), findsOneWidget);
       expect(
         find.text(
-          DateFormat(
-            DateTimeFormat.defaultDateFormat().pattern,
-          ).format(DateTime(2025, 6, 15)),
+          DateFormat(DateTimeFormat.defaultDateFormat().pattern)
+              .format(DateTime(2025, 6, 15)),
         ),
         findsOneWidget,
       );

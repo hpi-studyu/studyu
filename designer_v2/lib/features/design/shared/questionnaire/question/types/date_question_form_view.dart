@@ -9,11 +9,10 @@ import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class DateQuestionFormView extends ConsumerWidget {
-  const DateQuestionFormView({required this.formViewModel, super.key});
-
-  final QuestionFormViewModel formViewModel;
-
+class const DateQuestionFormView({
+  required final QuestionFormViewModel formViewModel,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
@@ -244,20 +243,13 @@ class DateQuestionFormView extends ConsumerWidget {
 }
 
 /// Custom reactive date picker field
-class ReactiveDatePickerField extends ConsumerWidget {
-  const ReactiveDatePickerField({
-    required this.formControl,
-    required this.firstDate,
-    required this.lastDate,
-    this.placeholder,
-    super.key,
-  });
-
-  final FormControl<DateTime?> formControl;
-  final DateTime firstDate;
-  final DateTime lastDate;
-  final String? placeholder;
-
+class const ReactiveDatePickerField({
+  required final FormControl<DateTime?> formControl,
+  required final DateTime firstDate,
+  required final DateTime lastDate,
+  final String? placeholder,
+  super.key,
+}) extends ConsumerWidget {
   Future<void> _pickDate(BuildContext context) async {
     final now = DateTime.now();
     final initialDate = formControl.value ?? now;
@@ -321,16 +313,11 @@ class ReactiveDatePickerField extends ConsumerWidget {
 }
 
 /// Custom reactive time picker field
-class ReactiveTimePickerField extends ConsumerWidget {
-  const ReactiveTimePickerField({
-    required this.formControl,
-    this.placeholder,
-    super.key,
-  });
-
-  final FormControl<String?> formControl;
-  final String? placeholder;
-
+class const ReactiveTimePickerField({
+  required final FormControl<String?> formControl,
+  final String? placeholder,
+  super.key,
+}) extends ConsumerWidget {
   Future<void> _pickTime(
     BuildContext context,
     TimeFormatPreference? preference,
@@ -339,9 +326,8 @@ class ReactiveTimePickerField extends ConsumerWidget {
     final initialTime = formControl.value != null
         ? _parseTime(formControl.value!)
         : now;
-    final platformUses24HourFormat = MediaQuery.of(
-      context,
-    ).alwaysUse24HourFormat;
+    final platformUses24HourFormat = MediaQuery.of(context)
+        .alwaysUse24HourFormat;
 
     final pickedTime = await showTimePicker(
       context: context,

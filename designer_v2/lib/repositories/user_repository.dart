@@ -1,5 +1,3 @@
-// ignore_for_file: join_return_with_assignment
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
@@ -8,7 +6,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
 part 'user_repository.g.dart';
 
-abstract class IUserRepository {
+abstract class IUserRepository() {
   StudyUUser get user;
   StudyUUser? get cachedUser;
   Future<StudyUUser> fetchUser();
@@ -19,6 +17,7 @@ abstract class IUserRepository {
   );
   Future<StudyUUser> updateDateFormat(DateFormatPreference? value);
   Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value);
+  Future<StudyUUser> updateLanguage(String language);
   Future<StudyUUser> saveCustomPreset(SavedFilter filter);
   Future<StudyUUser> deleteCustomPreset(String id);
   List<SavedFilter> getCustomPresets();
@@ -28,20 +27,32 @@ abstract class IUserRepository {
     String? presetId,
     FilterGroup? filterGroup,
   });
+
+  /// Active sort column + direction for the given dashboard page.
+  /// `sortColumn` is the [StudiesTableColumn] enum name (e.g. `'createdAt'`);
+  /// callers map it back to the enum value. Returns `(null, null)` when the
+  /// user has not set a sort yet, in which case defaults apply.
+  ({String? sortColumn, bool? sortAscending}) getActiveSort(String page);
+
+  /// Persists the sort selection for the given dashboard page. Fire-and-forget
+  /// from the controller — failure to save should not block UI updates.
+  Future<StudyUUser> saveActiveSort({
+    required String page,
+    required String sortColumn,
+    required bool sortAscending,
+  });
 }
 
-enum PreferenceAction { pin, pinOff }
+enum PreferenceAction() {
+  pin,
+  pinOff,
+}
 
-class UserRepository implements IUserRepository {
-  UserRepository({
-    required this.authRepository,
-    required this.apiClient,
-    required this.ref,
-  });
-
-  final StudyUApi apiClient;
-  final IAuthRepository authRepository;
-  final Ref ref;
+class UserRepository({
+  required final IAuthRepository authRepository,
+  required final StudyUApi apiClient,
+  required final Ref ref,
+}) implements IUserRepository {
   StudyUUser? _user;
   Future<StudyUUser>? _fetchFuture;
 
@@ -57,7 +68,7 @@ class UserRepository implements IUserRepository {
 
     // If a fetch is already in progress, return the same future
     if (_fetchFuture != null) {
-      return _fetchFuture!;
+      return await _fetchFuture!;
     }
 
     final userId = authRepository.currentUser!.id;
@@ -93,6 +104,7 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<StudyUUser> updateDateFormat(DateFormatPreference? value) async {
+    await fetchUser();
     final currentUser = user;
     final updatedUser = StudyUUser(
       id: currentUser.id,
@@ -107,13 +119,13 @@ class UserRepository implements IUserRepository {
         ),
       ),
     );
-    final savedUser = await apiClient.saveUser(updatedUser);
-    _user = savedUser;
-    return savedUser;
+    _user = await apiClient.saveUser(updatedUser);
+    return user;
   }
 
   @override
   Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value) async {
+    await fetchUser();
     final currentUser = user;
     final updatedUser = StudyUUser(
       id: currentUser.id,
@@ -128,9 +140,15 @@ class UserRepository implements IUserRepository {
         ),
       ),
     );
-    final savedUser = await apiClient.saveUser(updatedUser);
-    _user = savedUser;
-    return savedUser;
+    _user = await apiClient.saveUser(updatedUser);
+    return user;
+  }
+
+  @override
+  Future<StudyUUser> updateLanguage(String language) async {
+    await fetchUser();
+    user.preferences.language = language;
+    return await saveUser();
   }
 
   @override
@@ -182,7 +200,7 @@ class UserRepository implements IUserRepository {
     );
 
     activeFilters[page] = {
-      if (presetId != null) 'preset_id': presetId,
+      'preset_id': ?presetId,
       if (filterGroup != null) 'filter_group': filterGroup.toJson(),
     };
 
@@ -209,6 +227,44 @@ class UserRepository implements IUserRepository {
     return (presetId: presetId, filterGroup: filterGroup);
   }
 
+  @override
+  ({String? sortColumn, bool? sortAscending}) getActiveSort(String page) {
+    final filtering = user.preferences.studyFiltering;
+    final activeSort = filtering['active_sort'] as Map?;
+    if (activeSort == null) return (sortColumn: null, sortAscending: null);
+
+    final pageSort = activeSort[page] as Map?;
+    if (pageSort == null) return (sortColumn: null, sortAscending: null);
+
+    return (
+      sortColumn: pageSort['sort_column'] as String?,
+      sortAscending: pageSort['sort_ascending'] as bool?,
+    );
+  }
+
+  @override
+  Future<StudyUUser> saveActiveSort({
+    required String page,
+    required String sortColumn,
+    required bool sortAscending,
+  }) {
+    final filtering = Map<String, dynamic>.from(
+      user.preferences.studyFiltering,
+    );
+    final activeSort = Map<String, dynamic>.from(
+      filtering['active_sort'] as Map? ?? {},
+    );
+
+    activeSort[page] = {
+      'sort_column': sortColumn,
+      'sort_ascending': sortAscending,
+    };
+
+    filtering['active_sort'] = activeSort;
+    user.preferences.studyFiltering = filtering;
+    return saveUser();
+  }
+
   Future<StudyUUser> _updateStudyFiltering(String key, dynamic value) {
     final filtering = Map<String, dynamic>.from(
       user.preferences.studyFiltering,
@@ -229,7 +285,7 @@ UserRepository userRepository(Ref ref) {
 }
 
 @riverpod
-class UserState extends _$UserState {
+class UserState() extends _$UserState {
   @override
   Future<StudyUUser> build() {
     return ref.watch(userRepositoryProvider).fetchUser();

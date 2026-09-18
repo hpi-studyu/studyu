@@ -74,7 +74,7 @@ final class UserStateProvider
   UserState create() => UserState();
 }
 
-String _$userStateHash() => r'7ddd6482359420f7ed2bbeb05db868405a70c309';
+String _$userStateHash() => r'8debda214e3dd6cb53468cc4d477df8adb482932';
 
 abstract class _$UserState extends $AsyncNotifier<StudyUUser> {
   FutureOr<StudyUUser> build();

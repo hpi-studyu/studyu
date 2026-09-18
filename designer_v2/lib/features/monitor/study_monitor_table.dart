@@ -9,18 +9,12 @@ import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class StudyMonitorTable extends ConsumerWidget {
-  final WidgetRef ref;
-  final List<StudyMonitorItem> studyMonitorItems;
-  final OnSelectHandler<StudyMonitorItem> onSelectItem;
-
-  const StudyMonitorTable({
-    required this.ref,
-    required this.studyMonitorItems,
-    required this.onSelectItem,
-    super.key,
-  });
-
+class const StudyMonitorTable({
+  required final WidgetRef ref,
+  required final List<StudyMonitorItem> studyMonitorItems,
+  required final OnSelectHandler<StudyMonitorItem> onSelectItem,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return StandardTable<StudyMonitorItem>(

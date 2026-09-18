@@ -12,7 +12,7 @@ T? synchronizedPreference<T>({
   required bool localValueIsDirty,
 }) => localValueIsDirty ? localValue : serverValue;
 
-class DateTimePreferences extends ChangeNotifier {
+class DateTimePreferences() extends ChangeNotifier {
   static const _dateFormatKeyPrefix = 'date_format_';
   static const _timeFormatKeyPrefix = 'time_format_';
   static const _dateFormatDirtyKeyPrefix = 'date_format_dirty_';
@@ -25,7 +25,7 @@ class DateTimePreferences extends ChangeNotifier {
   StreamSubscription<AuthState>? _authSubscription;
   int _loadGeneration = 0;
 
-  DateTimePreferences() {
+  this {
     _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
       (authState) => _loadUser(authState.session?.user.id),
     );

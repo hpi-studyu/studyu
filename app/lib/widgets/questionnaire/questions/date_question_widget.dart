@@ -6,25 +6,18 @@ import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart'
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class DateQuestionWidget extends QuestionWidget {
-  final DateQuestion question;
-  final Function(Answer)? onDone;
-  final VoidCallback? onCleared;
-  final Answer<DateTime>? initialAnswer;
-
-  const DateQuestionWidget({
-    super.key,
-    required this.question,
-    this.onDone,
-    this.onCleared,
-    this.initialAnswer,
-  });
-
+class const DateQuestionWidget({
+  super.key,
+  required final DateQuestion question,
+  final Function(Answer)? onDone,
+  final VoidCallback? onCleared,
+  final Answer<DateTime>? initialAnswer,
+}) extends QuestionWidget {
   @override
   State<DateQuestionWidget> createState() => _DateQuestionWidgetState();
 }
 
-class _DateQuestionWidgetState extends State<DateQuestionWidget> {
+class _DateQuestionWidgetState() extends State<DateQuestionWidget> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   bool _hasInteracted = false;
@@ -118,9 +111,8 @@ class _DateQuestionWidgetState extends State<DateQuestionWidget> {
       builder: (context, child) {
         if (use24HourFormat == null) return child!;
         return MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(alwaysUse24HourFormat: use24HourFormat),
+          data: MediaQuery.of(context)
+              .copyWith(alwaysUse24HourFormat: use24HourFormat),
           child: child!,
         );
       },

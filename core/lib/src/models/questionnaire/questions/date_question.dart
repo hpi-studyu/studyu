@@ -36,7 +36,7 @@ class DateQuestion extends Question<DateTime> {
   @JsonKey(name: 'defaultSpecificTime')
   String? defaultSpecificTime;
 
-  DateQuestion({
+  new({
     this.inputType = DateInputType.date,
     this.minDate,
     this.maxDate,
@@ -47,7 +47,7 @@ class DateQuestion extends Question<DateTime> {
     this.defaultSpecificTime,
   }) : super(questionType);
 
-  DateQuestion.withId({
+  new withId({
     this.inputType = DateInputType.date,
     this.minDate,
     this.maxDate,
@@ -58,8 +58,20 @@ class DateQuestion extends Question<DateTime> {
     this.defaultSpecificTime,
   }) : super.withId(questionType);
 
-  factory DateQuestion.fromJson(Map<String, dynamic> json) =>
-      _$DateQuestionFromJson(json);
+  factory fromJson(Map<String, dynamic> json) {
+    final dateFormatPreset = json['dateFormatPreset'] as String?;
+    if (!json.containsKey('inputType') && dateFormatPreset != null) {
+      json['inputType'] =
+          const {
+            'isoDateTime',
+            'europeanDateTime',
+            'usDateTimeAmPm',
+          }.contains(dateFormatPreset)
+          ? 'dateTime'
+          : 'date';
+    }
+    return _$DateQuestionFromJson(json);
+  }
 
   @override
   Map<String, dynamic> toJson() => _$DateQuestionToJson(this);

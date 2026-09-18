@@ -80,10 +80,7 @@ void main() {
   });
 }
 
-class _FakeApi implements StudyUApi {
-  _FakeApi(this.user);
-
-  StudyUUser user;
+class _FakeApi(var StudyUUser user) implements StudyUApi {
   bool throwOnSave = false;
   final savedUsers = <StudyUUser>[];
 
@@ -102,7 +99,7 @@ class _FakeApi implements StudyUApi {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeAuthRepository implements IAuthRepository {
+class _FakeAuthRepository() implements IAuthRepository {
   @override
   User? get currentUser => const User(
     id: 'user-id',

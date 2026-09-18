@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
 
-abstract final class DateTimeFormat {
+abstract final class DateTimeFormat() {
   static DateFormatPreference defaultDateFormat([Locale? locale]) {
     locale ??= PlatformDispatcher.instance.locale;
     if (locale.languageCode == 'de') return DateFormatPreference.german;

@@ -79,12 +79,6 @@ jobs:
         timeout-minutes: 5
         working-directory: ./app/android
 
-      - name: Set up Flutter with FVM
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          # todo
-          cache: false
-
       - name: Prepare upload key
         run: |
           echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
@@ -153,12 +147,6 @@ jobs:
         run: bundle install
         timeout-minutes: 5
         working-directory: ./app/ios
-
-      - name: Set up Flutter with FVM
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          # todo
-          cache: false
 
       - name: Get StudyU app version
         run: |
