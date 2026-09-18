@@ -3,14 +3,12 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/services/invite_code_parser.dart';
 
-class InviteQrScannerScreen extends StatefulWidget {
-  const InviteQrScannerScreen({super.key});
-
+class const InviteQrScannerScreen({super.key}) extends StatefulWidget {
   @override
   State<InviteQrScannerScreen> createState() => _InviteQrScannerScreenState();
 }
 
-class _InviteQrScannerScreenState extends State<InviteQrScannerScreen> {
+class _InviteQrScannerScreenState() extends State<InviteQrScannerScreen> {
   bool _hasResult = false;
 
   void _onDetect(BarcodeCapture capture) {

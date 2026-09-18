@@ -73,16 +73,15 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
   );
 }
 
-class StudySelectionScreen extends StatefulWidget {
-  final Future<ExtractionResult<Study>>? publicStudies;
-
-  const StudySelectionScreen({super.key, this.publicStudies});
-
+class const StudySelectionScreen({
+  super.key,
+  final Future<ExtractionResult<Study>>? publicStudies,
+}) extends StatefulWidget {
   @override
   State<StudySelectionScreen> createState() => _StudySelectionScreenState();
 }
 
-class _StudySelectionScreenState extends State<StudySelectionScreen> {
+class _StudySelectionScreenState() extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
 
   Future<ExtractionResult<Study>> get publishedStudies =>
@@ -195,9 +194,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   }
 }
 
-class NoPublicStudiesWidget extends StatelessWidget {
-  const NoPublicStudiesWidget({super.key});
-
+class const NoPublicStudiesWidget({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -223,14 +220,12 @@ class NoPublicStudiesWidget extends StatelessWidget {
   }
 }
 
-class InviteCodeDialog extends StatefulWidget {
-  const InviteCodeDialog({super.key});
-
+class const InviteCodeDialog({super.key}) extends StatefulWidget {
   @override
   State<InviteCodeDialog> createState() => _InviteCodeDialogState();
 }
 
-class _InviteCodeDialogState extends State<InviteCodeDialog> {
+class _InviteCodeDialogState() extends State<InviteCodeDialog> {
   final _controller = TextEditingController();
   String? _errorMessage;
 
@@ -245,8 +240,6 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
       ..selection = TextSelection.collapsed(offset: code.length);
     await _submitInviteCode();
   }
-
-  _InviteCodeDialogState();
 
   @override
   void dispose() {

@@ -7,25 +7,22 @@ import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
 
-enum LanguagePickerType { field, icon }
+enum LanguagePickerType() {
+  field,
+  icon,
+}
 
-class LanguagePicker extends ConsumerStatefulWidget {
-  const LanguagePicker({
-    super.key,
-    this.languagePickerType = LanguagePickerType.field,
-    this.iconColor,
-    this.offset,
-  });
-
-  final LanguagePickerType languagePickerType;
-  final Color? iconColor;
-  final Offset? offset;
-
+class const LanguagePicker({
+  super.key,
+  final LanguagePickerType languagePickerType = LanguagePickerType.field,
+  final Color? iconColor,
+  final Offset? offset,
+}) extends ConsumerStatefulWidget {
   @override
   ConsumerState<LanguagePicker> createState() => _LanguagePickerState();
 }
 
-class _LanguagePickerState extends ConsumerState<LanguagePicker> {
+class _LanguagePickerState() extends ConsumerState<LanguagePicker> {
   static const IconData _languageIcon = Icons.translate;
 
   @override

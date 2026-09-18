@@ -6,9 +6,7 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 
-class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
-
+class const AboutScreen({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasActiveSubject = context.read<AppState>().activeSubject != null;

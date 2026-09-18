@@ -12,12 +12,11 @@ class NumericResult extends StudyResult {
 
   late DataReference<num> resultProperty;
 
-  NumericResult() : super(studyResultType);
+  new() : super(studyResultType);
 
-  NumericResult.withId() : super.withId(studyResultType);
+  new withId() : super.withId(studyResultType);
 
-  factory NumericResult.fromJson(Map<String, dynamic> json) =>
-      _$NumericResultFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$NumericResultFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$NumericResultToJson(this);

@@ -30,4 +30,4 @@ void main() {
   });
 }
 
-class _StudyRepository extends Mock implements IStudyRepository {}
+class _StudyRepository() extends Mock implements IStudyRepository;

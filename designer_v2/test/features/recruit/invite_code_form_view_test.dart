@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:supabase/supabase.dart';
 
-class _FakeClipboardService implements IClipboardService {
+class _FakeClipboardService() implements IClipboardService {
   String? copiedText;
 
   @override
@@ -28,7 +28,7 @@ class _FakeClipboardService implements IClipboardService {
   }
 }
 
-class _FakeInviteCodeRepository implements InviteCodeFormRepository {
+class _FakeInviteCodeRepository() implements InviteCodeFormRepository {
   @override
   Future<bool> isCodeAlreadyUsed(String code) async => false;
 

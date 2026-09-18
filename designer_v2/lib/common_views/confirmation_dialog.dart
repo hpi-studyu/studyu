@@ -4,34 +4,20 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 
-class ConfirmationDialogAction {
-  const ConfirmationDialogAction({
-    required this.label,
-    required this.onPressed,
-    this.isDestructive = false,
-  });
+class const ConfirmationDialogAction({
+  required final String label,
+  required final VoidCallback onPressed,
+  final bool isDestructive = false,
+});
 
-  final String label;
-  final VoidCallback onPressed;
-  final bool isDestructive;
-}
-
-class StandardConfirmationDialog extends StatelessWidget {
-  const StandardConfirmationDialog({
-    required this.title,
-    required this.actions,
-    this.message,
-    this.customContent,
-    this.icon,
-    super.key,
-  });
-
-  final String title;
-  final String? message;
-  final Widget? customContent;
-  final IconData? icon;
-  final List<ConfirmationDialogAction> actions;
-
+class const StandardConfirmationDialog({
+  required final String title,
+  required final List<ConfirmationDialogAction> actions,
+  final String? message,
+  final Widget? customContent,
+  final IconData? icon,
+  super.key,
+}) extends StatelessWidget {
   bool get isDestructive => actions.any((action) => action.isDestructive);
 
   @override

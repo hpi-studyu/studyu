@@ -7,60 +7,38 @@ import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-enum InviteCodePaginationStatus { idle, loading, error }
+enum InviteCodePaginationStatus() {
+  idle,
+  loading,
+  error,
+}
 
-class StudyRecruitControllerState extends StudyControllerBaseState {
-  const StudyRecruitControllerState({
-    required super.studyId,
-    required super.studyRepository,
-    required super.router,
-    required super.currentUser,
-    required super.studyWithMetadata,
-    required this.inviteCodeRepository,
-    this.invites = const AsyncValue.loading(),
-    this.inviteCodePageIndex = 0,
-    this.inviteCodePageSize = defaultInviteCodePageSize,
-    this.inviteCodeSearchQuery = '',
-    this.inviteCodeCount = 0,
-    this.hasNextInviteCodePage = false,
-    this.inviteCodeSortColumn = InviteCodesSortColumn.code,
-    this.inviteCodeSortAscending = true,
-    this.isSearchPending = false,
-    this.paginationStatus = InviteCodePaginationStatus.idle,
-    this.pendingInviteCodePageIndex,
-    this.paginationError,
-  });
+class const StudyRecruitControllerState({
+  required super.studyId,
+  required super.studyRepository,
+  required super.router,
+  required super.currentUser,
+  required super.studyWithMetadata,
+  required final InviteCodeRepository inviteCodeRepository,
 
   /// The list of invite codes (if any) for the currently selected study
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [StudyController]'s current
   /// [Study] async states, so that it can be used with [AsyncValueWidget]
-  final AsyncValue<List<StudyInvite>?> invites;
-
-  final InviteCodeRepository inviteCodeRepository;
-
-  final int inviteCodePageIndex;
-
-  final int inviteCodePageSize;
-
-  final String inviteCodeSearchQuery;
-
-  final int inviteCodeCount;
-
-  final bool hasNextInviteCodePage;
-
-  final InviteCodesSortColumn inviteCodeSortColumn;
-
-  final bool inviteCodeSortAscending;
-
-  final bool isSearchPending;
-
-  final InviteCodePaginationStatus paginationStatus;
-
-  final int? pendingInviteCodePageIndex;
-
-  final Object? paginationError;
-
+  final AsyncValue<List<StudyInvite>?> invites = const AsyncValue.loading(),
+  final int inviteCodePageIndex = 0,
+  final int inviteCodePageSize = defaultInviteCodePageSize,
+  final String inviteCodeSearchQuery = '',
+  final int inviteCodeCount = 0,
+  final bool hasNextInviteCodePage = false,
+  final InviteCodesSortColumn inviteCodeSortColumn = InviteCodesSortColumn.code,
+  final bool inviteCodeSortAscending = true,
+  final bool isSearchPending = false,
+  final InviteCodePaginationStatus paginationStatus =
+      InviteCodePaginationStatus.idle,
+  final int? pendingInviteCodePageIndex,
+  final Object? paginationError,
+}) extends StudyControllerBaseState {
   bool get hasPreviousInviteCodePage => inviteCodePageIndex > 0;
 
   bool get hasComputedNextInviteCodePage =>

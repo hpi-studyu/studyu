@@ -9,14 +9,12 @@ import 'package:studyu_app/widgets/study_onboarding_description.dart';
 import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 
-class RestoreAccountScreen extends StatefulWidget {
-  const RestoreAccountScreen({super.key});
-
+class const RestoreAccountScreen({super.key}) extends StatefulWidget {
   @override
   State<RestoreAccountScreen> createState() => _RestoreAccountScreenState();
 }
 
-class _RestoreAccountScreenState extends State<RestoreAccountScreen> {
+class _RestoreAccountScreenState() extends State<RestoreAccountScreen> {
   final TextEditingController _phraseController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;

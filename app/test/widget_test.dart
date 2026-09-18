@@ -385,7 +385,7 @@ void main() {
   });
 }
 
-class _TestAppLanguage extends ChangeNotifier implements AppLanguage {
+class _TestAppLanguage() extends ChangeNotifier implements AppLanguage {
   Locale? _locale = const Locale('en');
 
   @override

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
-class WhyDialog extends StatelessWidget {
-  final String content;
-
-  const WhyDialog({required this.content, super.key});
-
+class const WhyDialog({required final String content, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

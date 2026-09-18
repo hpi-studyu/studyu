@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 
-class StudyOnboardingDescription extends StatelessWidget {
-  final String text;
-  final String? actionLabel;
-  final VoidCallback? onAction;
-  final String? supportingText;
-
-  const StudyOnboardingDescription({
-    required this.text,
-    this.actionLabel,
-    this.onAction,
-    this.supportingText,
-    super.key,
-  }) : assert(
-         (actionLabel == null) == (onAction == null),
-         'actionLabel and onAction must be provided together',
-       );
+class const StudyOnboardingDescription({
+  required final String text,
+  final String? actionLabel,
+  final VoidCallback? onAction,
+  final String? supportingText,
+  super.key,
+}) extends StatelessWidget {
+  this
+    : assert(
+        (actionLabel == null) == (onAction == null),
+        'actionLabel and onAction must be provided together',
+      );
 
   @override
   Widget build(BuildContext context) {

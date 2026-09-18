@@ -8,28 +8,22 @@ part 'supabase_client.g.dart';
 // TODO: Transfer networking code to core package (+ update app if needed)
 
 /// Interface for implementation by any class that wants to use [SupabaseQueryMixin]
-abstract class SupabaseClientDependant {
+abstract class SupabaseClientDependant() {
   SupabaseClient get supabaseClient;
 }
 
 /// An exception that is thrown when Supabase returns a [PostgrestResponse]
 /// with an associated [PostgrestError]
-class SupabaseQueryError implements Exception {
-  SupabaseQueryError({
-    required this.statusCode,
-    required this.message,
-    this.details,
-  });
-
+class SupabaseQueryError({
   /// Status code of the erroneous [PostgrestResponse]
-  final String? statusCode;
+  required final String? statusCode,
 
   /// The [PostgrestError] message associated with the [PostgrestResponse]
-  final String message;
+  required final String message,
 
   /// The [PostgrestError] details associated with the [PostgrestResponse]
-  final dynamic details;
-}
+  final dynamic details,
+}) implements Exception;
 
 typedef PostgrestDataCallback = Object Function(dynamic data);
 

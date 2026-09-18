@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
-class HelpIcon extends StatefulWidget {
-  const HelpIcon({this.tooltipText, super.key});
-
-  final String? tooltipText;
-
+class const HelpIcon({final String? tooltipText, super.key})
+    extends StatefulWidget {
   @override
   State<HelpIcon> createState() => _HelpIconState();
 }
 
-class _HelpIconState extends State<HelpIcon> {
+class _HelpIconState() extends State<HelpIcon> {
   bool _hovered = false;
 
   @override

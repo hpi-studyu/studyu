@@ -13,18 +13,14 @@ Locale fallbackLocale = Locale(
 );
 
 @immutable
-class LocaleState {
-  const LocaleState(this.locale);
-
-  final Locale locale;
-
+class const LocaleState(final Locale locale) {
   LocaleState copyWith({Locale? locale}) {
     return LocaleState(locale ?? this.locale);
   }
 }
 
 @riverpod
-class LocaleStateNotifier extends _$LocaleStateNotifier {
+class LocaleStateNotifier() extends _$LocaleStateNotifier {
   @override
   LocaleState build() {
     /// Initialize Locale

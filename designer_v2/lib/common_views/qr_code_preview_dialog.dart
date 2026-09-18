@@ -8,20 +8,13 @@ import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
-class QrCodePreviewDialog extends StatelessWidget {
-  const QrCodePreviewDialog({
-    required this.data,
-    required this.filename,
-    this.title,
-    this.inviteCode,
-    super.key,
-  });
-
-  final String data;
-  final String filename;
-  final String? title;
-  final String? inviteCode;
-
+class const QrCodePreviewDialog({
+  required final String data,
+  required final String filename,
+  final String? title,
+  final String? inviteCode,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const dialogWidth = 450.0;
@@ -72,27 +65,19 @@ class QrCodePreviewDialog extends StatelessWidget {
   }
 }
 
-class QrCodePreview extends ConsumerStatefulWidget {
-  const QrCodePreview({
-    required this.data,
-    this.inviteCode,
-    this.snackBarWidth,
-    this.showInviteLink = true,
-    this.downloadFilename,
-    super.key,
-  });
-
-  final String data;
-  final String? inviteCode;
-  final double? snackBarWidth;
-  final bool showInviteLink;
-  final String? downloadFilename;
-
+class const QrCodePreview({
+  required final String data,
+  final String? inviteCode,
+  final double? snackBarWidth,
+  final bool showInviteLink = true,
+  final String? downloadFilename,
+  super.key,
+}) extends ConsumerStatefulWidget {
   @override
   ConsumerState<QrCodePreview> createState() => _QrCodePreviewState();
 }
 
-class _QrCodePreviewState extends ConsumerState<QrCodePreview> {
+class _QrCodePreviewState() extends ConsumerState<QrCodePreview> {
   late Future<Widget> _qrWidgetFuture;
 
   @override
@@ -190,12 +175,11 @@ class _QrCodePreviewState extends ConsumerState<QrCodePreview> {
   }
 }
 
-class InviteLinkPreview extends ConsumerWidget {
-  const InviteLinkPreview({required this.data, this.snackBarWidth, super.key});
-
-  final String data;
-  final double? snackBarWidth;
-
+class const InviteLinkPreview({
+  required final String data,
+  final double? snackBarWidth,
+  super.key,
+}) extends ConsumerWidget {
   Future<void> _copyLink(BuildContext context, WidgetRef ref) async {
     await ref.read(clipboardServiceProvider).copy(data);
     if (!context.mounted) return;

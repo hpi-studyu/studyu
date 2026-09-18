@@ -1,7 +1,7 @@
 import 'package:studyu_core/src/util/wordlists.dart';
 
 /// Recovery phrase configuration constants
-class RecoveryConstants {
+class RecoveryConstants() {
   /// Number of bits for the recovery ID (128-bit UUID)
   static const int defaultBitCount = 128;
 
@@ -21,15 +21,10 @@ class RecoveryConstants {
   static const EncodingConfig defaultConfig = EncodingConfig();
 }
 
-class EncodingConfig {
-  final int bitsPerWord;
-  final bool useChecksum;
-
-  const EncodingConfig({
-    this.bitsPerWord = RecoveryConstants.defaultBitsPerWord,
-    this.useChecksum = RecoveryConstants.defaultUseChecksum,
-  });
-
+class const EncodingConfig({
+  final int bitsPerWord = RecoveryConstants.defaultBitsPerWord,
+  final bool useChecksum = RecoveryConstants.defaultUseChecksum,
+}) {
   int wordsNeeded(int bitCount) {
     return (bitCount / bitsPerWord).ceil();
   }

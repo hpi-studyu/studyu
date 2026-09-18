@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 ///
 /// Must be a direct child of a [Stack]: it fills the stack and absorbs all
 /// pointers, so nothing underneath can be interacted with while visible.
-class LoadingOverlay extends StatelessWidget {
-  final String message;
-
-  const LoadingOverlay({super.key, required this.message});
-
+class const LoadingOverlay({super.key, required final String message})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

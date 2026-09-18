@@ -20,14 +20,12 @@ import 'package:studyu_core/core.dart';
 @visibleForTesting
 bool shouldReturnToStudySelection(AppState state) => !state.hasPendingDeepLink;
 
-class StudyOverviewScreen extends StatefulWidget {
-  const StudyOverviewScreen({super.key});
-
+class const StudyOverviewScreen({super.key}) extends StatefulWidget {
   @override
   State<StudyOverviewScreen> createState() => _StudyOverviewScreen();
 }
 
-class _StudyOverviewScreen extends State<StudyOverviewScreen> {
+class _StudyOverviewScreen() extends State<StudyOverviewScreen> {
   Study? study;
 
   @override
@@ -158,11 +156,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 }
 
-class StudyDetailsView extends StatelessWidget {
-  final Study? study;
-
-  const StudyDetailsView({required this.study, super.key});
-
+class const StudyDetailsView({required final Study? study, super.key})
+    extends StatelessWidget {
   double get iconSize => 40;
 
   @override

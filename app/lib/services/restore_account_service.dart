@@ -9,22 +9,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 const bool Function() _defaultUserLoggedIn = isUserLoggedIn;
 
-class RecoveryResult {
-  final bool success;
-  final String? email;
-  final String? password;
-  final String? subjectId;
-  final String? error;
-
-  RecoveryResult({
-    required this.success,
-    this.email,
-    this.password,
-    this.subjectId,
-    this.error,
-  });
-
-  factory RecoveryResult.fromJson(Map<String, dynamic> json) {
+class RecoveryResult({
+  required final bool success,
+  final String? email,
+  final String? password,
+  final String? subjectId,
+  final String? error,
+}) {
+  factory fromJson(Map<String, dynamic> json) {
     return RecoveryResult(
       success: json['success'] as bool? ?? false,
       email: json['email'] as String?,
@@ -35,7 +27,7 @@ class RecoveryResult {
   }
 }
 
-class RestoreAccountService {
+class RestoreAccountService() {
   static List<String>? _cachedPhrase;
   static String? _cachedRecoveryId;
   static String? _cachedUserId;

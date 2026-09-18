@@ -3,16 +3,15 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
-class PerformanceDetailsScreen extends StatelessWidget {
-  final StudySubject? reportSubject;
-
+class const PerformanceDetailsScreen(
+  final StudySubject? reportSubject, {
+  super.key,
+}) extends StatelessWidget {
   static MaterialPageRoute routeFor({required StudySubject? subject}) =>
       MaterialPageRoute(
         builder: (_) => PerformanceDetailsScreen(subject),
         settings: const RouteSettings(name: 'performanceDetails'),
       );
-
-  const PerformanceDetailsScreen(this.reportSubject, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +92,11 @@ class PerformanceDetailsScreen extends StatelessWidget {
   }
 }
 
-class InterventionPerformanceBar extends StatelessWidget {
-  final Intervention intervention;
-  final StudySubject? subject;
-
-  const InterventionPerformanceBar({
-    required this.intervention,
-    required this.subject,
-    super.key,
-  });
-
+class const InterventionPerformanceBar({
+  required final Intervention intervention,
+  required final StudySubject? subject,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -130,16 +124,11 @@ class InterventionPerformanceBar extends StatelessWidget {
   }
 }
 
-class ObservationPerformanceBar extends StatelessWidget {
-  final Observation observation;
-  final StudySubject? subject;
-
-  const ObservationPerformanceBar({
-    required this.observation,
-    required this.subject,
-    super.key,
-  });
-
+class const ObservationPerformanceBar({
+  required final Observation observation,
+  required final StudySubject? subject,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -155,18 +144,12 @@ class ObservationPerformanceBar extends StatelessWidget {
   }
 }
 
-class PerformanceBar extends StatelessWidget {
-  final Task task;
-  final int completed;
-  final int total;
-
-  const PerformanceBar({
-    required this.task,
-    required this.completed,
-    required this.total,
-    super.key,
-  });
-
+class const PerformanceBar({
+  required final Task task,
+  required final int completed,
+  required final int total,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -3,9 +3,7 @@ import 'package:studyu_designer_v2/common_views/striped_gradient.dart';
 import 'package:studyu_designer_v2/features/monitor/participant/colors.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-class ParticipantLegend extends StatelessWidget {
-  const ParticipantLegend();
-
+class const ParticipantLegend() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

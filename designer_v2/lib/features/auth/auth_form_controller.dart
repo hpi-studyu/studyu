@@ -14,7 +14,7 @@ import 'package:supabase/supabase.dart';
 
 part 'auth_form_controller.g.dart';
 
-enum AuthFormKey {
+enum AuthFormKey() {
   login,
   signup,
   passwordForgot,
@@ -57,7 +57,7 @@ enum AuthFormKey {
 }
 
 @riverpod
-class AuthFormController extends _$AuthFormController {
+class AuthFormController() extends _$AuthFormController {
   @override
   AsyncValue<void> build(AuthFormKey formKeyArg) {
     _authRepository = ref.watch(authRepositoryProvider);
