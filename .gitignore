@@ -191,3 +191,4 @@ interview/
 .claude/skills/sonar-*/
 .claude/agents/sonarqube-reviewer.md
 .omp/
+.pi/
