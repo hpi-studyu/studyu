@@ -15,6 +15,11 @@
       "enabled": false
     },
     {
+      "description": "Android toolchain and Flutter Android workaround dependencies follow Flutter defaults; update them with Flutter upgrades",
+      "matchManagers": ["gradle", "gradle-wrapper"],
+      "enabled": false
+    },
+    {
       "description": "Use chore(deps) commits for all updates (repo convention)",
       "matchPackageNames": ["*"],
       "semanticCommitType": "chore"
