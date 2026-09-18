@@ -219,6 +219,82 @@ void main() {
     },
   );
 
+  testWidgets(
+    'study selection shows a banner and extracted studies when some studies fail to load',
+    (tester) async {
+      final study = Study('study-1', 'owner-1')
+        ..title = 'Study'
+        ..iconName = 'account';
+      await tester.pumpWidget(
+        setup(
+          StudySelectionScreen(
+            publicStudies: Future.value(
+              ExtractionFailedException<Study>(
+                [study],
+                [JsonWithError(const {}, Exception('invalid json'))],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(MaterialBanner), findsOneWidget);
+      expect(
+        find.textContaining('Some studies could not be displayed'),
+        findsOneWidget,
+      );
+      expect(find.text('Study'), findsOneWidget);
+    },
+  );
+
+  testWidgets('study selection opens the why dialog', (tester) async {
+    await tester.pumpWidget(
+      setup(
+        StudySelectionScreen(
+          publicStudies: Future.value(ExtractionSuccess<Study>([])),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Why?'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(
+      find.text(
+        'If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('tapping a study opens the study overview', (tester) async {
+    final study = Study('study-1', 'owner-1')
+      ..title = 'Study'
+      ..iconName = 'account';
+    final appState = AppState();
+    await tester.pumpWidget(
+      setup(
+        StudySelectionScreen(
+          publicStudies: Future.value(ExtractionSuccess<Study>([study])),
+        ),
+        appState: appState,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Study'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('invited_study_overview_back')),
+      findsOneWidget,
+    );
+    expect(appState.selectedStudy, same(study));
+  });
+
   testWidgets('invite action opens invite code dialog over welcome', (
     tester,
   ) async {
