@@ -1,24 +1,50 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "enabledManagers": ["pub"],
+  "semanticCommits": "enabled",
+  "labels": ["dependencies"],
   "packageRules": [
     {
-      "description": "Disable major updates",
-      "matchUpdateTypes": ["major"],
+      "description": "Internal workspace packages are versioned by melos releases, not Renovate",
+      "matchPackageNames": ["studyu_core", "studyu_flutter_common", "studyu_app", "studyu_designer_v2"],
       "enabled": false
     },
     {
-      "description": "Group weekly minor and patch updates",
+      "description": "fitbitter is a pinned fork (git ref master); skip automated updates",
+      "matchPackageNames": ["fitbitter"],
+      "enabled": false
+    },
+    {
+      "description": "Use chore(deps) commits for all updates (repo convention)",
+      "matchPackageNames": ["*"],
+      "semanticCommitType": "chore"
+    },
+    {
+      "description": "Group minor and patch updates into one weekly PR",
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "Safe Flutter Updates",
+      "groupName": "all-non-major-dependencies",
+      "schedule": ["* 0-4 * * 1"]
+    },
+    {
+      "description": "Major updates raise a separate weekly PR marked as breaking",
+      "matchUpdateTypes": ["major"],
+      "groupName": "major updates with breaking changes (review required)",
+      "groupSlug": "major-dependencies",
       "schedule": ["* 0-4 * * 1"],
-      "commitMessagePrefix": "chore(deps):",
+      "addLabels": ["Do not merge"],
       "commitMessageAction": "",
-      "commitMessageTopic": "Safe Flutter Updates",
       "commitMessageExtra": "",
-      "commitMessageLowerCase": "never",
-      "prTitleStrict": true
+      "prTitleStrict": true,
+      "prBodyNotes": [
+        "This PR contains major (breaking) dependency updates. Review each dependency's changelog before merging.",
+        "Remove the `Do not merge` label when the updates are approved."
+      ]
+    },
+    {
+      "description": "Group Flutter and Dart SDK updates into one weekly PR",
+      "matchDatasources": ["flutter-version", "dart-version"],
+      "groupName": "flutter-sdk",
+      "schedule": ["* 0-4 * * 1"]
     }
   ]
 }
