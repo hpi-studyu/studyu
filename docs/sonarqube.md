@@ -147,3 +147,22 @@ requires `SONAR_TOKEN` and `SONAR_HOST_URL`, so it runs in GitHub Actions only.
 - Flutter LCOV has no record for a source file that no unit or widget test loads. The analysis
   stores no coverage measure for that file, so it adds no lines to cover and counts neither as
   covered nor as uncovered, also on new code.
+
+## Optional: coding-agent integrations
+
+The repo ships opt-in agent integrations — an MCP server, 9 skills, and a review subagent — as
+templates under `.agents/templates/` plus `.mcp.json.example`. Nothing activates until enabled.
+
+1. `brew install --cask sonarqube-cli`
+2. `sonar auth login -s https://sonar.cloud.studyu.health` (browser flow; token stays in the OS keychain)
+3. Keep a container runtime (Docker) running — the MCP server runs the `sonarsource/sonarqube-mcp` image.
+4. Enable: run `./setup.sh` and answer `y`, or copy manually:
+   `cp .mcp.json.example .mcp.json` and `cp -R .agents/templates/. .agents/`.
+5. Restart your agent client. You get the `sonarqube` MCP server and its tools, the 9 `sonar-*`
+   skills, and the `sonarqube-reviewer` subagent.
+
+Disable: delete the generated files — `.mcp.json`, `.agents/skills/sonar-*/`,
+`.agents/agents/sonarqube-reviewer.md`, `.claude/skills/sonar-*/`,
+`.claude/agents/sonarqube-reviewer.md`, `.omp/agents/sonarqube-reviewer.md` (all gitignored).
+Update the templates by re-copying from https://github.com/SonarSource/sonarqube-agent-plugins.
+

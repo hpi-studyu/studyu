@@ -7,6 +7,9 @@
 3. Run `./setup.sh` to install the pinned Flutter SDK, resolve Melos from the lockfile,
    dependencies, workspace links, and tracked Git hooks.
 
+Optionally, answer `y` at the end of `./setup.sh` to enable the repo-provided coding-agent
+integrations (MCP servers and skills). See `docs/sonarqube.md`.
+
 The root [`pubspec.yaml`](pubspec.yaml) is the command catalog. Run its Melos
 scripts as `fvm dart run melos <script>`.
 
