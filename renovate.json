@@ -20,17 +20,15 @@
       "semanticCommitType": "chore"
     },
     {
-      "description": "Group minor and patch updates into one weekly PR",
+      "description": "Group minor and patch updates into one PR",
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "all-non-major-dependencies",
-      "schedule": ["* 0-4 * * 1"]
+      "groupName": "all-non-major-dependencies"
     },
     {
-      "description": "Major updates raise a separate weekly PR marked as breaking",
+      "description": "Major updates raise a separate PR marked as breaking",
       "matchUpdateTypes": ["major"],
       "groupName": "major updates with breaking changes (review required)",
       "groupSlug": "major-dependencies",
-      "schedule": ["* 0-4 * * 1"],
       "addLabels": ["Do not merge"],
       "commitMessageAction": "",
       "commitMessageExtra": "",
@@ -41,10 +39,9 @@
       ]
     },
     {
-      "description": "Group Flutter and Dart SDK updates into one weekly PR",
+      "description": "Group Flutter and Dart SDK updates into one PR",
       "matchDatasources": ["flutter-version", "dart-version"],
-      "groupName": "flutter-sdk",
-      "schedule": ["* 0-4 * * 1"]
+      "groupName": "flutter-sdk"
     }
   ]
 }
