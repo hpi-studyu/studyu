@@ -104,6 +104,7 @@ class _StudySelectionScreenState() extends State<StudySelectionScreen> {
         title: Text(AppLocalizations.of(context)!.browse_public_studies),
       ),
       body: TitleDescriptionLayout(
+        scrollable: false,
         descriptionWidget: StudyOnboardingDescription(
           text: AppLocalizations.of(context)!.study_selection_single,
           actionLabel: AppLocalizations.of(context)!.study_selection_single_why,
@@ -115,79 +116,80 @@ class _StudySelectionScreenState() extends State<StudySelectionScreen> {
             ),
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (_hiddenStudies) ...[
-              MaterialBanner(
-                padding: const EdgeInsets.all(8),
-                leading: const Icon(
-                  MdiIcons.exclamationThick,
-                  color: Colors.orange,
-                  size: 32,
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (_hiddenStudies) ...[
+                MaterialBanner(
+                  padding: const EdgeInsets.all(8),
+                  leading: const Icon(
+                    MdiIcons.exclamationThick,
+                    color: Colors.orange,
+                    size: 32,
+                  ),
+                  content: Text(
+                    AppLocalizations.of(context)!
+                        .study_selection_hidden_studies,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  actions: const [SizedBox.shrink()],
+                  backgroundColor: Colors.yellow[100],
                 ),
-                content: Text(
-                  AppLocalizations.of(context)!.study_selection_hidden_studies,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                actions: const [SizedBox.shrink()],
-                backgroundColor: Colors.yellow[100],
-              ),
-              const SizedBox(height: 16),
-            ],
-            SizedBox(
-              height: 360,
-              child: RetryFutureBuilder<ExtractionResult<Study>>(
-                tryFunction: () => publishedStudies,
-                successBuilder:
-                    (
-                      BuildContext context,
-                      ExtractionResult<Study>? extractionResult,
-                    ) {
-                      final studies = extractionResult!.extracted;
-                      if (extractionResult
-                          is ExtractionFailedException<Study>) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (_hiddenStudies) return;
-                          debugPrint(
-                            '${extractionResult.notExtracted.length} studies could not be extracted.',
-                          );
-                          setState(() {
-                            _hiddenStudies = true;
+                const SizedBox(height: 16),
+              ],
+              Expanded(
+                child: RetryFutureBuilder<ExtractionResult<Study>>(
+                  tryFunction: () => publishedStudies,
+                  successBuilder:
+                      (
+                        BuildContext context,
+                        ExtractionResult<Study>? extractionResult,
+                      ) {
+                        final studies = extractionResult!.extracted;
+                        if (extractionResult
+                            is ExtractionFailedException<Study>) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (_hiddenStudies) return;
+                            debugPrint(
+                              '${extractionResult.notExtracted.length} studies could not be extracted.',
+                            );
+                            setState(() {
+                              _hiddenStudies = true;
+                            });
                           });
-                        });
-                      }
-                      if (studies.isEmpty) {
-                        return const NoPublicStudiesWidget();
-                      }
+                        }
+                        if (studies.isEmpty) {
+                          return const NoPublicStudiesWidget();
+                        }
 
-                      return ListView.builder(
-                        itemCount: studies.length,
-                        itemBuilder: (context, index) {
-                          final study = studies[index];
-                          return Material(
-                            child: InkWell(
-                              onTap: () {
-                                unawaited(
-                                  navigateToStudyOverview(context, study),
-                                );
-                              },
-                              child: Hero(
-                                tag: 'study_tile_${studies[index].id}',
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: StudyTile.fromStudy(study: study),
+                        return ListView.builder(
+                          itemCount: studies.length,
+                          itemBuilder: (context, index) {
+                            final study = studies[index];
+                            return Material(
+                              child: InkWell(
+                                onTap: () {
+                                  unawaited(
+                                    navigateToStudyOverview(context, study),
+                                  );
+                                },
+                                child: Hero(
+                                  tag: 'study_tile_${studies[index].id}',
+                                  child: Material(
+                                    type: MaterialType.transparency,
+                                    child: StudyTile.fromStudy(study: study),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                            );
+                          },
+                        );
+                      },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
