@@ -15,8 +15,8 @@
       "enabled": false
     },
     {
-      "description": "Android toolchain and Flutter Android workaround dependencies follow Flutter defaults; update them with Flutter upgrades",
-      "matchManagers": ["gradle", "gradle-wrapper"],
+      "description": "Native platform tooling (Android Gradle, iOS CocoaPods, fastlane Gemfiles) follows Flutter and platform defaults; update it with Flutter upgrades",
+      "matchManagers": ["gradle", "gradle-wrapper", "cocoapods", "bundler"],
       "enabled": false
     },
     {
