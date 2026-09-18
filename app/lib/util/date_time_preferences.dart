@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
@@ -24,6 +25,8 @@ class DateTimePreferences() extends ChangeNotifier {
   String? _userId;
   StreamSubscription<AuthState>? _authSubscription;
   int _loadGeneration = 0;
+  int _dateFormatOperation = 0;
+  int _timeFormatOperation = 0;
 
   this {
     _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
@@ -141,6 +144,7 @@ class DateTimePreferences() extends ChangeNotifier {
 
   Future<void> changeDateFormat(DateFormatPreference? value) async {
     final generation = _loadGeneration;
+    final operation = ++_dateFormatOperation;
     final userId = _userId;
     final user = _user;
     final previousValue = _dateFormat;
@@ -156,7 +160,7 @@ class DateTimePreferences() extends ChangeNotifier {
         user: user,
       );
     } catch (error) {
-      if (_isCurrent(generation, userId)) {
+      if (_isCurrent(generation, userId) && operation == _dateFormatOperation) {
         _dateFormat = previousValue;
         if (user != null && _user == user) {
           _user!.preferences.dateFormat = previousUserValue;
@@ -165,11 +169,14 @@ class DateTimePreferences() extends ChangeNotifier {
       }
       rethrow;
     }
-    if (_isCurrent(generation, userId)) notifyListeners();
+    if (_isCurrent(generation, userId) && operation == _dateFormatOperation) {
+      notifyListeners();
+    }
   }
 
   Future<void> changeTimeFormat(TimeFormatPreference? value) async {
     final generation = _loadGeneration;
+    final operation = ++_timeFormatOperation;
     final userId = _userId;
     final user = _user;
     final previousValue = _timeFormat;
@@ -185,7 +192,7 @@ class DateTimePreferences() extends ChangeNotifier {
         user: user,
       );
     } catch (error) {
-      if (_isCurrent(generation, userId)) {
+      if (_isCurrent(generation, userId) && operation == _timeFormatOperation) {
         _timeFormat = previousValue;
         if (user != null && _user == user) {
           _user!.preferences.timeFormat = previousUserValue;
@@ -194,7 +201,9 @@ class DateTimePreferences() extends ChangeNotifier {
       }
       rethrow;
     }
-    if (_isCurrent(generation, userId)) notifyListeners();
+    if (_isCurrent(generation, userId) && operation == _timeFormatOperation) {
+      notifyListeners();
+    }
   }
 
   String formatDate(BuildContext context, DateTime date) {
@@ -232,22 +241,29 @@ class DateTimePreferences() extends ChangeNotifier {
     final previousDirtyValue = await SecureStorage.readBool(dirtyKey);
 
     if (user == null) {
-      try {
-        await _writeCachedPreference(cacheKey, value);
-        await SecureStorage.write(dirtyKey, 'true');
-      } catch (error) {
-        await _restorePreference(
-          cacheKey,
-          dirtyKey,
-          previousCachedValue,
-          previousDirtyValue,
-        );
-        rethrow;
-      }
+      await _cacheDirtyPreference(
+        cacheKey,
+        dirtyKey,
+        value,
+        previousCachedValue,
+        previousDirtyValue,
+      );
       return;
     }
 
-    final savedUser = await user.save(onlyUpdate: true);
+    StudyUUser savedUser;
+    try {
+      savedUser = await user.save(onlyUpdate: true);
+    } on SocketException {
+      await _cacheDirtyPreference(
+        cacheKey,
+        dirtyKey,
+        value,
+        previousCachedValue,
+        previousDirtyValue,
+      );
+      return;
+    }
     await _cachePreference(keyPrefix, userId, value);
     await _clearDirtyPreference(dirtyKeyPrefix, userId);
     if (_isCurrent(generation, userId)) _user = savedUser;
@@ -255,6 +271,27 @@ class DateTimePreferences() extends ChangeNotifier {
 
   bool _isCurrent(int generation, String? userId) {
     return generation == _loadGeneration && userId == _userId;
+  }
+
+  Future<void> _cacheDirtyPreference(
+    String cacheKey,
+    String dirtyKey,
+    Object? value,
+    String? previousCachedValue,
+    bool? previousDirtyValue,
+  ) async {
+    try {
+      await _writeCachedPreference(cacheKey, value);
+      await SecureStorage.write(dirtyKey, 'true');
+    } catch (error) {
+      await _restorePreference(
+        cacheKey,
+        dirtyKey,
+        previousCachedValue,
+        previousDirtyValue,
+      );
+      rethrow;
+    }
   }
 
   Future<void> _writeCachedPreference(String key, Object? value) async {
@@ -293,7 +330,10 @@ class DateTimePreferences() extends ChangeNotifier {
       if (value == null) {
         await SecureStorage.delete(key);
       } else {
-        await SecureStorage.write(key, value.toString());
+        await SecureStorage.write(
+          key,
+          value is Enum ? value.name : value.toString(),
+        );
       }
       return true;
     } catch (error) {

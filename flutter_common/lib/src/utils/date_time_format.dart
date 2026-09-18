@@ -43,7 +43,7 @@ abstract final class DateTimeFormat() {
     DateTime date, {
     DateFormatPreference? preference,
   }) {
-    final format = preference ?? defaultDateFormat();
+    final format = preference ?? defaultDateFormat(locale);
     return DateFormat(format.pattern, locale.toString()).format(date);
   }
 
@@ -72,7 +72,7 @@ abstract final class DateTimeFormat() {
             ? TimeFormatPreference.h24
             : use24HourFormat == false
             ? TimeFormatPreference.h12
-            : defaultTimeFormatForLocale(PlatformDispatcher.instance.locale));
+            : defaultTimeFormatForLocale(locale));
     return DateFormat(
       format.pattern,
       locale.toString(),

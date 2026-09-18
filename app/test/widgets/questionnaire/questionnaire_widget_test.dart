@@ -2105,8 +2105,9 @@ void main() {
       expect(find.byType(DateQuestionWidget), findsOneWidget);
       expect(
         find.text(
-          DateFormat(DateTimeFormat.defaultDateFormat().pattern)
-              .format(DateTime(2025, 6, 15)),
+          DateFormat(
+            DateTimeFormat.defaultDateFormat(const Locale('en')).pattern,
+          ).format(DateTime(2025, 6, 15)),
         ),
         findsOneWidget,
       );

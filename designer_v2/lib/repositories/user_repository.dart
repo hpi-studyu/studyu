@@ -55,6 +55,7 @@ class UserRepository({
 }) implements IUserRepository {
   StudyUUser? _user;
   Future<StudyUUser>? _fetchFuture;
+  Future<void> _dateTimePreferenceUpdates = Future.value();
 
   @override
   StudyUUser get user => _user!;
@@ -103,45 +104,66 @@ class UserRepository({
   }
 
   @override
-  Future<StudyUUser> updateDateFormat(DateFormatPreference? value) async {
-    await fetchUser();
-    final currentUser = user;
-    final updatedUser = StudyUUser(
-      id: currentUser.id,
-      email: currentUser.email,
-      preferences: Preferences(
-        language: currentUser.preferences.language,
-        dateFormat: value,
-        timeFormat: currentUser.preferences.timeFormat,
-        pinnedStudies: Set<String>.from(currentUser.preferences.pinnedStudies),
-        studyFiltering: Map<String, dynamic>.from(
-          currentUser.preferences.studyFiltering,
+  Future<StudyUUser> updateDateFormat(DateFormatPreference? value) {
+    return _queueDateTimePreferenceUpdate(() async {
+      await fetchUser();
+      final currentUser = user;
+      final updatedUser = StudyUUser(
+        id: currentUser.id,
+        email: currentUser.email,
+        preferences: Preferences(
+          language: currentUser.preferences.language,
+          dateFormat: value,
+          timeFormat: currentUser.preferences.timeFormat,
+          pinnedStudies: Set<String>.from(
+            currentUser.preferences.pinnedStudies,
+          ),
+          studyFiltering: Map<String, dynamic>.from(
+            currentUser.preferences.studyFiltering,
+          ),
         ),
-      ),
-    );
-    _user = await apiClient.saveUser(updatedUser);
-    return user;
+      );
+      final savedUser = await apiClient.saveUser(updatedUser);
+      _user = savedUser;
+      return savedUser;
+    });
   }
 
   @override
-  Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value) async {
-    await fetchUser();
-    final currentUser = user;
-    final updatedUser = StudyUUser(
-      id: currentUser.id,
-      email: currentUser.email,
-      preferences: Preferences(
-        language: currentUser.preferences.language,
-        dateFormat: currentUser.preferences.dateFormat,
-        timeFormat: value,
-        pinnedStudies: Set<String>.from(currentUser.preferences.pinnedStudies),
-        studyFiltering: Map<String, dynamic>.from(
-          currentUser.preferences.studyFiltering,
+  Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value) {
+    return _queueDateTimePreferenceUpdate(() async {
+      await fetchUser();
+      final currentUser = user;
+      final updatedUser = StudyUUser(
+        id: currentUser.id,
+        email: currentUser.email,
+        preferences: Preferences(
+          language: currentUser.preferences.language,
+          dateFormat: currentUser.preferences.dateFormat,
+          timeFormat: value,
+          pinnedStudies: Set<String>.from(
+            currentUser.preferences.pinnedStudies,
+          ),
+          studyFiltering: Map<String, dynamic>.from(
+            currentUser.preferences.studyFiltering,
+          ),
         ),
-      ),
+      );
+      final savedUser = await apiClient.saveUser(updatedUser);
+      _user = savedUser;
+      return savedUser;
+    });
+  }
+
+  Future<StudyUUser> _queueDateTimePreferenceUpdate(
+    Future<StudyUUser> Function() update,
+  ) {
+    final operation = _dateTimePreferenceUpdates.then((_) => update());
+    _dateTimePreferenceUpdates = operation.then<void>(
+      (_) {},
+      onError: (_, _) {},
     );
-    _user = await apiClient.saveUser(updatedUser);
-    return user;
+    return operation;
   }
 
   @override

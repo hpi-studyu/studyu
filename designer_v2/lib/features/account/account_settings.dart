@@ -29,7 +29,8 @@ class _AccountSettingsDialogState()
   bool _isImported = false;
 
   Widget _buildDateTimePreferences(StudyUUser user) {
-    final repository = ref.read(userRepositoryProvider);
+    final container = ProviderScope.containerOf(context);
+    final repository = container.read(userRepositoryProvider);
     return FormTableLayout(
       rowSpacing: 24.0,
       rows: [
@@ -51,7 +52,7 @@ class _AccountSettingsDialogState()
               onChanged: (value) async {
                 try {
                   final savedUser = await repository.updateDateFormat(value);
-                  ref.read(userStateProvider.notifier).setUser(savedUser);
+                  container.read(userStateProvider.notifier).setUser(savedUser);
                 } catch (error) {
                   debugPrint('Could not save date format preference: $error');
                 }
@@ -77,7 +78,7 @@ class _AccountSettingsDialogState()
               onChanged: (value) async {
                 try {
                   final savedUser = await repository.updateTimeFormat(value);
-                  ref.read(userStateProvider.notifier).setUser(savedUser);
+                  container.read(userStateProvider.notifier).setUser(savedUser);
                 } catch (error) {
                   debugPrint('Could not save time format preference: $error');
                 }

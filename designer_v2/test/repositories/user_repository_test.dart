@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_core/core.dart';
@@ -44,17 +46,42 @@ void main() {
     expect(api.savedUsers, hasLength(2));
   });
 
+  test('overlapping date and time updates preserve both values', () async {
+    final api = _FakeApi(initialUser)..firstSaveBlocker = Completer<void>();
+    final container = createContainer(api);
+    addTearDown(container.dispose);
+
+    final repository = container.read(userRepositoryProvider);
+    await repository.fetchUser();
+
+    final dateUpdate = repository.updateDateFormat(DateFormatPreference.iso);
+    final timeUpdate = repository.updateTimeFormat(TimeFormatPreference.h12);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(api.saveCalls, 1);
+    api.firstSaveBlocker!.complete();
+    await Future.wait([dateUpdate, timeUpdate]);
+
+    expect(
+      repository.cachedUser?.preferences.dateFormat,
+      DateFormatPreference.iso,
+    );
+    expect(
+      repository.cachedUser?.preferences.timeFormat,
+      TimeFormatPreference.h12,
+    );
+    expect(api.savedUsers, hasLength(2));
+  });
+
   test('user state publishes the saved preferences to consumers', () async {
     final api = _FakeApi(initialUser);
     final container = createContainer(api);
     addTearDown(container.dispose);
 
     await container.read(userStateProvider.future);
-    final repository = container.read(userRepositoryProvider);
-    final savedUser = await repository.updateDateFormat(
-      DateFormatPreference.german,
-    );
-
+    final savedUser = await container
+        .read(userRepositoryProvider)
+        .updateDateFormat(DateFormatPreference.german);
     container.read(userStateProvider.notifier).setUser(savedUser);
 
     expect(
@@ -82,6 +109,8 @@ void main() {
 
 class _FakeApi(var StudyUUser user) implements StudyUApi {
   bool throwOnSave = false;
+  int saveCalls = 0;
+  Completer<void>? firstSaveBlocker;
   final savedUsers = <StudyUUser>[];
 
   @override
@@ -89,7 +118,11 @@ class _FakeApi(var StudyUUser user) implements StudyUApi {
 
   @override
   Future<StudyUUser> saveUser(StudyUUser user) async {
+    final saveCall = ++saveCalls;
     if (throwOnSave) throw StateError('save failed');
+    if (saveCall == 1 && firstSaveBlocker != null) {
+      await firstSaveBlocker!.future;
+    }
     this.user = user;
     savedUsers.add(user);
     return user;

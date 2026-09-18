@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/src/utils/date_time_format.dart';
 import 'package:studyu_flutter_common/src/utils/user.dart';
@@ -44,6 +45,24 @@ void main() {
     expect(
       DateTimeFormat.defaultTimeFormatForLocale(const Locale('de', 'DE')),
       TimeFormatPreference.h24,
+    );
+  });
+
+  test('uses the supplied locale for default formatting', () async {
+    await initializeDateFormatting('de_DE');
+    expect(
+      DateTimeFormat.formatDateForLocale(
+        const Locale('de', 'DE'),
+        DateTime(2024, 12, 31),
+      ),
+      '31.12.2024',
+    );
+    expect(
+      DateTimeFormat.formatTimeForLocale(
+        const Locale('en', 'US'),
+        const TimeOfDay(hour: 14, minute: 30),
+      ),
+      '2:30 PM',
     );
   });
 
