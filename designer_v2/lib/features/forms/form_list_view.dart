@@ -59,7 +59,7 @@ class FormListView<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (leadingWidget != null) leadingWidget!,
+        ?leadingWidget,
         if (sectionTitle != null && !(hasEmptyWidget && items.isEmpty))
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
@@ -83,12 +83,9 @@ class FormListView<T> extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            onReorder:
+            onReorderItem:
                 onReorder ??
                 (oldIndex, newIndex) {
-                  if (newIndex > oldIndex) {
-                    newIndex -= 1;
-                  }
                   final item = items.removeAt(oldIndex);
                   items.insert(newIndex, item);
                   // Optionally, call setState or notify listeners if needed

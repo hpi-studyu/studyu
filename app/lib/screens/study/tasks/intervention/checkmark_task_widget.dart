@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
@@ -56,7 +57,7 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
           _isLoading = false;
         });
         if (!context.mounted) return;
-        Navigator.pop(context, true);
+        context.pop(true);
       },
       icon: _isLoading
           ? const CircularProgressIndicator(color: Colors.white)

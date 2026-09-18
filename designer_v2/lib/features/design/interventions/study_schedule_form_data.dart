@@ -1,6 +1,7 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
+import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
 class StudyScheduleFormData implements IStudyFormData {
   StudyScheduleFormData({
@@ -30,7 +31,7 @@ class StudyScheduleFormData implements IStudyFormData {
   StudySchedule toStudySchedule() {
     final schedule = StudySchedule();
     schedule.sequence = sequenceType;
-    schedule.sequenceCustom = sequenceTypeCustom;
+    schedule.sequenceCustom = normalizeStudySequenceInput(sequenceTypeCustom);
     schedule.numberOfCycles = numCycles;
     schedule.phaseDuration = phaseDuration;
     schedule.includeBaseline = includeBaseline;

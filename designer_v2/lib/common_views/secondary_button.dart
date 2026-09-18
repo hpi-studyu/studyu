@@ -20,14 +20,23 @@ class SecondaryButton extends StatelessWidget {
     this.icon = Icons.add,
     this.isLoading = false,
     this.onPressed,
+    this.foregroundColor,
+    this.borderColor,
+    this.minimumSize,
     super.key,
   });
+
+  final Color? foregroundColor;
+  final Color? borderColor;
+  final Size? minimumSize;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final secondaryStyle = OutlinedButton.styleFrom(
-      side: BorderSide(color: theme.colorScheme.primary),
+      foregroundColor: foregroundColor ?? theme.colorScheme.primary,
+      side: BorderSide(color: borderColor ?? theme.colorScheme.primary),
+      minimumSize: minimumSize,
     );
 
     if (icon != null) {

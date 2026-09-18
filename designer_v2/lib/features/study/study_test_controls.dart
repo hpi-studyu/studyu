@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 class FrameControlsWidget extends ConsumerWidget {
   const FrameControlsWidget({
     this.enabled = true,
+    this.openNewTabEnabled = false,
     this.onRefresh,
     this.onOpenNewTab,
     super.key,
@@ -14,6 +15,7 @@ class FrameControlsWidget extends ConsumerWidget {
   final VoidCallback? onRefresh;
   final VoidCallback? onOpenNewTab;
   final bool enabled;
+  final bool openNewTabEnabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +30,7 @@ class FrameControlsWidget extends ConsumerWidget {
         TextButton.icon(
           icon: const Icon(Icons.open_in_new_sharp),
           label: Text(tr.action_button_study_test_open_new_tab),
-          onPressed: (!enabled) ? null : onOpenNewTab,
+          onPressed: (!openNewTabEnabled) ? null : onOpenNewTab,
         ),
       ],
     );

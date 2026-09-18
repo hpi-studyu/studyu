@@ -5,6 +5,16 @@ include: package:lint/strict.yaml
 analyzer:
   exclude:
     - "**/*.g.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+plugins:
+  riverpod_lint: ^3.1.9
 
 # You can customize the lint rules set to your own liking. A list of all rules
 # can be found at https://dart-lang.github.io/linter/lints/options/options.html
@@ -23,3 +33,10 @@ linter:
     avoid_print: false
     # Automatically sort pub dependencies
     sort_pub_dependencies: true
+
+    # DISABLE until the Dart 3.13 constructor migration is complete.
+    empty_container_bodies: false
+    unnecessary_const_in_enum_constructor: false
+    unnecessary_type_name_in_constructor: false
+    use_primary_constructors: false
+    prefer_initializing_formals: false

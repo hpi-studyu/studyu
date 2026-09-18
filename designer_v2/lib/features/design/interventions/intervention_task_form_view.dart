@@ -56,28 +56,27 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
                 ),
                 FormTableRow(
                   control: widget.formViewModel.taskDescriptionControl,
-                  labelBuilder: (context) => Row(
+                  labelBuilder: (context) => Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 3.0,
+                    runSpacing: 8.0,
                     children: [
                       FormLabel(
                         labelText: tr.form_field_intervention_task_description,
                         helpText:
                             tr.form_field_intervention_task_description_tooltip,
                       ),
-                      const SizedBox(height: 8),
-                      Container(
-                        margin: const EdgeInsets.only(left: 3.0),
-                        child: Opacity(
-                          opacity: ThemeConfig.kMuteFadeFactor,
-                          child: Tooltip(
-                            message: "Use html to style your content",
-                            child: Hyperlink(
-                              text: "styleable",
-                              onClick: () => setState(() {
-                                isStylingInformationDismissed =
-                                    !isStylingInformationDismissed;
-                              }),
-                              visitedColor: null,
-                            ),
+                      Opacity(
+                        opacity: ThemeConfig.kMuteFadeFactor,
+                        child: Tooltip(
+                          message: "Use html to style your content",
+                          child: Hyperlink(
+                            text: "styleable",
+                            onClick: () => setState(() {
+                              isStylingInformationDismissed =
+                                  !isStylingInformationDismissed;
+                            }),
+                            visitedColor: null,
                           ),
                         ),
                       ),

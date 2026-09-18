@@ -93,7 +93,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   CompositeExpression? get compositeExpression {
     final List<Expression> currentExpressions = [];
     for (final formViewModel in conditionFormViewModels.formViewModels) {
-      final expression = formViewModel.buildFormData().buildExpression();
+      final expression = formViewModel.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
       }
@@ -297,9 +297,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     if (streams.isEmpty) {
       _conditionsValueChangesStream = const Stream<void>.empty();
     } else {
-      _conditionsValueChangesStream = StreamGroup.merge(
-        streams,
-      ).distinct().asBroadcastStream();
+      _conditionsValueChangesStream = StreamGroup.merge(streams)
+          .distinct()
+          .asBroadcastStream();
 
       _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen(
         (_) {

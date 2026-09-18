@@ -73,19 +73,19 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               _buildMinMaxColorPickers(context),
             ],
           )
+        else if (!formViewModel.isReadonly)
+          Opacity(
+            opacity: ThemeConfig.kMuteFadeFactor,
+            child: Hyperlink(
+              text: "+ ${tr.form_field_response_scale_colors_add}",
+              onClick: () => setState(() {
+                isMinMaxColorsVisible = true;
+              }),
+              visitedColor: null,
+            ),
+          )
         else
-          (!formViewModel.isReadonly)
-              ? Opacity(
-                  opacity: ThemeConfig.kMuteFadeFactor,
-                  child: Hyperlink(
-                    text: "+ ${tr.form_field_response_scale_colors_add}",
-                    onClick: () => setState(() {
-                      isMinMaxColorsVisible = true;
-                    }),
-                    visitedColor: null,
-                  ),
-                )
-              : const SizedBox.shrink(),
+          const SizedBox.shrink(),
       ],
     );
   }

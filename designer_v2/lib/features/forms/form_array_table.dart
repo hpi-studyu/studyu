@@ -8,8 +8,11 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
-typedef WidgetBuilderAt<T> =
-    Widget Function(BuildContext context, T item, int rowIdx);
+typedef WidgetBuilderAt<T> = Widget Function(
+  BuildContext context,
+  T item,
+  int rowIdx,
+);
 
 class FormArrayTable<T> extends StatelessWidget {
   const FormArrayTable({

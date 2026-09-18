@@ -97,16 +97,22 @@ class _SidesheetState extends State<Sidesheet> {
         child: SizedBox(
           width: actualWidth,
           height: actualHeight,
-          child: Scaffold(
-            backgroundColor: backgroundColor,
-            body: widget.withCloseButton
-                ? Stack(
-                    children: [
-                      _build(context, widget.body, widget.tabs),
-                      const Positioned(top: 5, right: 5, child: CloseButton()),
-                    ],
-                  )
-                : _build(context, widget.body, widget.tabs),
+          child: ScaffoldMessenger(
+            child: Scaffold(
+              backgroundColor: backgroundColor,
+              body: widget.withCloseButton
+                  ? Stack(
+                      children: [
+                        _build(context, widget.body, widget.tabs),
+                        const Positioned(
+                          top: 5,
+                          right: 5,
+                          child: CloseButton(),
+                        ),
+                      ],
+                    )
+                  : _build(context, widget.body, widget.tabs),
+            ),
           ),
         ),
       ),
@@ -248,6 +254,7 @@ Future<T?> showModalSideSheet<T extends Object?>({
   String? barrierLabel = "Sidesheet",
   bool useRootNavigator = true,
   RouteSettings? routeSettings,
+  Widget Function(Widget)? wrapRoute,
 }) {
   assert(!barrierDismissible || barrierLabel != null);
   return showGeneralDialog(
@@ -259,16 +266,19 @@ Future<T?> showModalSideSheet<T extends Object?>({
     useRootNavigator: useRootNavigator,
     routeSettings: routeSettings,
     context: context,
-    pageBuilder: (BuildContext context, _, _) => Sidesheet(
-      body: body,
-      tabs: tabs,
-      wrapContent: wrapContent,
-      width: width,
-      withCloseButton: withCloseButton,
-      ignoreAppBar: ignoreAppBar,
-      actionButtons: actionButtons,
-      titleText: title,
-    ),
+    pageBuilder: (BuildContext context, _, _) {
+      final sidesheet = Sidesheet(
+        body: body,
+        tabs: tabs,
+        wrapContent: wrapContent,
+        width: width,
+        withCloseButton: withCloseButton,
+        ignoreAppBar: ignoreAppBar,
+        actionButtons: actionButtons,
+        titleText: title,
+      );
+      return wrapRoute != null ? wrapRoute(sidesheet) : sidesheet;
+    },
     transitionBuilder: (_, animation, _, child) {
       return SlideTransition(
         position: Tween<Offset>(

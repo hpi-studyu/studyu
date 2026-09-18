@@ -17,6 +17,8 @@ class PrimaryButton extends StatefulWidget {
       vertical: 8.0,
     ),
     this.minimumSize,
+    this.backgroundColor,
+    this.foregroundColor,
     super.key,
   });
 
@@ -47,6 +49,9 @@ class PrimaryButton extends StatefulWidget {
 
   final Size? minimumSize;
 
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
 }
@@ -58,8 +63,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryStyle = ElevatedButton.styleFrom(
-      foregroundColor: theme.colorScheme.onPrimary,
-      backgroundColor: theme.colorScheme.primary,
+      foregroundColor: widget.foregroundColor ?? theme.colorScheme.onPrimary,
+      backgroundColor: widget.backgroundColor ?? theme.colorScheme.primary,
       minimumSize: widget.minimumSize,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 

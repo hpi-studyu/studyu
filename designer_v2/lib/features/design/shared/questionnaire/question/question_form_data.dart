@@ -7,11 +7,10 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
-typedef SurveyQuestionFormDataFactory =
-    QuestionFormData Function(
-      Question question,
-      List<EligibilityCriterion> eligibilityCriteria,
-    );
+typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
+  Question question,
+  List<EligibilityCriterion> eligibilityCriteria,
+);
 
 abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
@@ -77,6 +76,11 @@ abstract class QuestionFormData implements IFormData {
           question as PainQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.date: (question, eligibilityCriteria) =>
+        DateQuestionFormData.fromDomainModel(
+          question as DateQuestion,
+          eligibilityCriteria,
+        ),
   };
 
   QuestionFormData({
@@ -94,7 +98,7 @@ abstract class QuestionFormData implements IFormData {
   final QuestionConditional? conditional;
 
   /// Mapping from response option => qualifying/disqualifying
-  late final Map<dynamic, bool> responseOptionsValidity;
+  Map<dynamic, bool> responseOptionsValidity = {};
 
   List<dynamic> get responseOptions; // subclass responsibility
 
@@ -120,7 +124,9 @@ abstract class QuestionFormData implements IFormData {
 
   Question toQuestion(); // subclass responsibility
 
-  EligibilityCriterion toEligibilityCriterion() {
+  EligibilityCriterion? toEligibilityCriterion() {
+    if (responseOptions.isEmpty) return null;
+
     final criterion = EligibilityCriterion.withId();
     // todo implement other expression types
     final expression = ChoiceExpression()..target = questionId;
@@ -184,10 +190,12 @@ class ChoiceQuestionFormData extends QuestionFormData {
     super.questionInfoText,
     super.conditional,
     this.isMultipleChoice = false,
+    this.isSelectionRequired = false,
     required this.answerOptions,
   });
 
   final bool isMultipleChoice;
+  final bool isSelectionRequired;
   final List<Choice> answerOptions;
 
   @override
@@ -203,6 +211,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
+      isSelectionRequired: question.selectionRequired,
       answerOptions: question.choices,
       conditional: question.conditional,
     );
@@ -217,6 +226,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
+    question.selectionRequired = isSelectionRequired;
     question.choices = answerOptions;
     question.conditional = conditional == null
         ? null
@@ -236,10 +246,11 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
       isMultipleChoice: isMultipleChoice,
+      isSelectionRequired: isSelectionRequired,
       answerOptions: [...answerOptions],
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -307,7 +318,7 @@ class BoolQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -374,7 +385,7 @@ class ImageQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -448,7 +459,7 @@ class AudioQuestionFormData extends QuestionFormData {
       conditional: conditional?.deepCopy(),
       maxRecordingDurationSeconds: maxRecordingDurationSeconds,
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -585,7 +596,7 @@ class ScaleQuestionFormData extends QuestionFormData {
       midValues: midValues,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -664,7 +675,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textTypeExpression: textTypeExpression,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -733,7 +744,7 @@ class FitbitQuestionFormData extends QuestionFormData {
       types: types,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -814,7 +825,7 @@ class PainQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       conditional: conditional?.deepCopy(),
     );
-    data.responseOptionsValidity = responseOptionsValidity;
+    data.responseOptionsValidity = {...responseOptionsValidity};
     return data;
   }
 
@@ -823,5 +834,143 @@ class PainQuestionFormData extends QuestionFormData {
     final question = toQuestion() as PainQuestion;
     final value = kResponseOptions[responseOption];
     return question.constructAnswer(value!);
+  }
+}
+
+class DateQuestionFormData extends QuestionFormData {
+  DateQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+    super.conditional,
+    this.inputType = DateInputType.date,
+    this.minDate,
+    this.maxDate,
+    this.minTime,
+    this.maxTime,
+    this.dateFormatPreset = DateFormatPreset.iso,
+    this.timeFormatPreset = TimeFormatPreset.h24,
+    this.defaultOption = DefaultDateOption.none,
+    this.defaultSpecificDate,
+    this.defaultSpecificTime,
+  });
+
+  final DateInputType inputType;
+  final DateTime? minDate;
+  final DateTime? maxDate;
+  final String? minTime;
+  final String? maxTime;
+  final DateFormatPreset dateFormatPreset;
+  final TimeFormatPreset timeFormatPreset;
+  final DefaultDateOption defaultOption;
+  final DateTime? defaultSpecificDate;
+  final String? defaultSpecificTime;
+
+  @override
+  List<String> get responseOptions => []; // Date questions don't have fixed response options
+
+  factory DateQuestionFormData.fromDomainModel(
+    DateQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = DateQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.date,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      inputType: question.inputType,
+      minDate: question.minDate,
+      maxDate: question.maxDate,
+      minTime: question.minTime,
+      maxTime: question.maxTime,
+      dateFormatPreset: question.dateFormatPreset,
+      timeFormatPreset: question.timeFormatPreset,
+      defaultOption: question.defaultOption,
+      defaultSpecificDate: question.defaultSpecificDate,
+      defaultSpecificTime: question.defaultSpecificTime,
+      conditional: question.conditional,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = DateQuestion(
+      inputType: inputType,
+      minDate: minDate,
+      maxDate: maxDate,
+      minTime: minTime,
+      maxTime: maxTime,
+      dateFormatPreset: dateFormatPreset,
+      timeFormatPreset: timeFormatPreset,
+      defaultOption: defaultOption,
+      defaultSpecificDate: defaultSpecificDate,
+      defaultSpecificTime: defaultSpecificTime,
+    );
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<DateTime>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as DateTime?,
+          );
+    return question;
+  }
+
+  @override
+  DateQuestionFormData copy() {
+    final data = DateQuestionFormData(
+      questionId: const Uuid().v4(),
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      inputType: inputType,
+      minDate: minDate,
+      maxDate: maxDate,
+      minTime: minTime,
+      maxTime: maxTime,
+      dateFormatPreset: dateFormatPreset,
+      timeFormatPreset: timeFormatPreset,
+      defaultOption: defaultOption,
+      defaultSpecificDate: defaultSpecificDate,
+      defaultSpecificTime: defaultSpecificTime,
+      conditional: conditional?.deepCopy(),
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as DateQuestion;
+    // For date questions, eligibility criteria aren't typically used
+    // Return a default date for validation purposes
+    return question.constructAnswer(DateTime.now());
+  }
+
+  /// Converts the date question form data to a JSON-serializable map
+  Map<String, dynamic> toJson() {
+    return {
+      'questionId': questionId,
+      'questionText': questionText,
+      'questionType': questionType.name,
+      'questionInfoText': questionInfoText,
+      'inputType': inputType.name,
+      'minDate': minDate?.toIso8601String(),
+      'maxDate': maxDate?.toIso8601String(),
+      'minTime': minTime,
+      'maxTime': maxTime,
+      'dateFormatPreset': dateFormatPreset.name,
+      'timeFormatPreset': timeFormatPreset.name,
+      'defaultOption': defaultOption.name,
+      'defaultSpecificDate': defaultSpecificDate?.toIso8601String(),
+      'defaultSpecificTime': defaultSpecificTime,
+      'conditional': conditional?.toString(),
+      'responseOptions': responseOptions,
+    };
   }
 }

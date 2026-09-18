@@ -102,31 +102,40 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
 
   @override
   Widget build(BuildContext context) {
-    Widget leftWidget = widget.leftWidget;
-    Widget rightWidget = widget.rightWidget;
+    Widget leftWidgetBase = widget.leftWidget;
+    Widget rightWidgetBase = widget.rightWidget;
 
     if (widget.paddingLeft != null) {
-      leftWidget = Padding(padding: widget.paddingLeft!, child: leftWidget);
+      leftWidgetBase = Padding(
+        padding: widget.paddingLeft!,
+        child: leftWidgetBase,
+      );
     }
     if (widget.paddingRight != null) {
-      rightWidget = Padding(padding: widget.paddingRight!, child: rightWidget);
+      rightWidgetBase = Padding(
+        padding: widget.paddingRight!,
+        child: rightWidgetBase,
+      );
     }
 
     if (widget.backgroundColorLeft != null) {
-      leftWidget = Material(
+      leftWidgetBase = Material(
         color: widget.backgroundColorLeft,
-        child: leftWidget,
+        child: leftWidgetBase,
       );
     }
     if (widget.backgroundColorRight != null) {
-      rightWidget = Material(
+      rightWidgetBase = Material(
         color: widget.backgroundColorRight,
-        child: rightWidget,
+        child: rightWidgetBase,
       );
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        Widget leftWidget = leftWidgetBase;
+        Widget rightWidget = rightWidgetBase;
+
         if (widget.stretchHeight) {
           leftWidget = SizedBox(
             height: constraints.maxHeight,

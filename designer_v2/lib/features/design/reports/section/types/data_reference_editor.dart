@@ -22,8 +22,8 @@ class DataReferenceEditor<T> {
       items: items,
       isExpanded: true,
       hint: items.isNotEmpty
-          ? const Text("Select a data source")
-          : const Text("No scale survey question defined"),
+          ? Text(tr.form_field_report_data_source_hint)
+          : Text(tr.form_field_report_data_source_empty),
     );
   }
 

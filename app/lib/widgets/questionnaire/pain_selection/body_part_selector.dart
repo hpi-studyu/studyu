@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/pain_selection/svg_service.dart';
 import 'package:studyu_core/core.dart';
@@ -377,14 +378,14 @@ class _PainEditDialogState extends State<PainEditDialog> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => context.pop(false),
                   child: Text(AppLocalizations.of(context)!.cancelButton),
                 ),
                 TextButton(
                   onPressed: selectedLevel != null
                       ? () {
                           _currentPain = selectedLevel!;
-                          Navigator.of(context).pop(true);
+                          context.pop(true);
                         }
                       : null,
                   child: Text(AppLocalizations.of(context)!.done),
@@ -403,7 +404,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
       await _showPainTypeDialog();
     } else if (result == false) {
       if (!mounted) return;
-      Navigator.of(context).pop();
+      context.pop();
     }
   }
 
@@ -422,7 +423,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.of(context).pop(false),
+                    onPressed: () => context.pop(false),
                     tooltip: loc.back,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -468,7 +469,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                 TextButton(
                   onPressed: () {
                     _selectedPainType = selectedType;
-                    Navigator.of(context).pop(true);
+                    context.pop(true);
                   },
                   child: Text(loc.done),
                 ),
@@ -533,13 +534,13 @@ class _PainEditDialogState extends State<PainEditDialog> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => context.pop(false),
                   child: Text(AppLocalizations.of(context)!.cancelButton),
                 ),
                 TextButton(
                   onPressed: () {
                     _selectedPartId = selectedId ?? _selectedPartId;
-                    Navigator.of(context).pop(true);
+                    context.pop(true);
                   },
                   child: Text(loc.done),
                 ),
@@ -553,12 +554,12 @@ class _PainEditDialogState extends State<PainEditDialog> {
       await _showPainLevelDialog();
     } else {
       if (!mounted) return;
-      Navigator.of(context).pop();
+      context.pop();
     }
   }
 
   void _finish() {
-    Navigator.of(context).pop((
+    context.pop((
       parentPartId: widget.tappedPart.id,
       childPartId: _selectedPartId,
       pain: BodyPain(painLevel: _currentPain, type: _selectedPainType),

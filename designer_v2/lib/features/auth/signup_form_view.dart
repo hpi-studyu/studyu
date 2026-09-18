@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
+import 'package:studyu_designer_v2/features/auth/auth_inline_prompt_action.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/repositories/app_repository.dart';
@@ -28,13 +29,20 @@ class SignupForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(formControl: controller.getEmailControl()),
-        //const SizedBox(height: 12.0),
-        const SizedBox(height: 4.0),
-        PasswordTextField(formControl: controller.getPasswordControl()),
+        EmailTextField(
+          key: const ValueKey('signup_email'),
+          formControl: controller.getEmailControl(),
+        ),
         //const SizedBox(height: 12.0),
         const SizedBox(height: 4.0),
         PasswordTextField(
+          key: const ValueKey('signup_password'),
+          formControl: controller.getPasswordControl(),
+        ),
+        //const SizedBox(height: 12.0),
+        const SizedBox(height: 4.0),
+        PasswordTextField(
+          key: const ValueKey('signup_password_confirm'),
           formControl: controller.getPasswordConfirmationControl(),
           labelText: tr.form_field_password_confirm,
           hintText: tr.form_field_password_confirm_hint,
@@ -93,8 +101,10 @@ class SignupForm extends FormConsumerRefWidget {
         const SizedBox(height: 24.0),
         ReactiveFormConsumer(
           builder: (context, form, child) {
-            return Center(
+            return SizedBox(
+              width: double.infinity,
               child: PrimaryButton(
+                key: const ValueKey('signup_button'),
                 text: tr.action_button_signup,
                 isLoading: state.isLoading,
                 enabled: form.valid,
@@ -113,17 +123,12 @@ class SignupForm extends FormConsumerRefWidget {
         const SizedBox(height: 24.0),
         const Divider(height: 1),
         const SizedBox(height: 12.0),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(tr.link_login_description),
-            const SizedBox(width: 4.0),
-            Hyperlink(
-              text: tr.link_login,
-              onClick: () =>
-                  ref.read(routerProvider).dispatch(RoutingIntents.login),
-            ),
-          ],
+        AuthInlinePromptAction(
+          key: const ValueKey('login_link'),
+          promptText: tr.link_login_description,
+          actionText: tr.link_login,
+          onPressed: () =>
+              ref.read(routerProvider).dispatch(RoutingIntents.login),
         ),
       ],
     );

@@ -81,9 +81,9 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             Text(
                               ''.alphabetLetterFrom(rowIdx).toUpperCase(),
                               style: TextStyle(
-                                color: ThemeConfig.dropdownMenuItemTheme(
-                                  theme,
-                                ).iconTheme!.color,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .color,
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -128,15 +128,21 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                       ),
                       reorderable: !formViewModel.isReadonly,
                       onReorder: (oldIndex, newIndex) {
-                        if (newIndex > oldIndex) newIndex -= 1;
+                        var effectiveNewIndex = newIndex;
+                        if (effectiveNewIndex > oldIndex) {
+                          effectiveNewIndex -= 1;
+                        }
                         final item = formViewModel.reportItemModels.removeAt(
                           oldIndex,
                         );
-                        formViewModel.reportItemModels.insert(newIndex, item);
+                        formViewModel.reportItemModels.insert(
+                          effectiveNewIndex,
+                          item,
+                        );
                         final controlItem = formViewModel.reportItemArray
                             .removeAt(oldIndex);
                         formViewModel.reportItemArray.insert(
-                          newIndex,
+                          effectiveNewIndex,
                           controlItem,
                         );
                         formViewModel.save();

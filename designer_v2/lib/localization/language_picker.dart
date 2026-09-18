@@ -6,7 +6,6 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
-import 'package:studyu_designer_v2/utils/font.dart';
 
 enum LanguagePickerType { field, icon }
 
@@ -27,6 +26,8 @@ class LanguagePicker extends ConsumerStatefulWidget {
 }
 
 class _LanguagePickerState extends ConsumerState<LanguagePicker> {
+  static const IconData _languageIcon = Icons.translate;
+
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(localeStateProvider.notifier);
@@ -50,7 +51,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
               //isExpanded: false,
               //isDense: true,
               items: _buildLanguageOptionsField(context),
-              icon: Icon(Icons.language, color: widget.iconColor),
+              icon: Icon(_languageIcon, color: widget.iconColor),
               onChanged: (locale) => controller.setLocale(locale.value!),
             ),
           ),
@@ -60,7 +61,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
           tooltip: tr.language_select_tooltip,
           offset: widget.offset ?? Offset.zero,
           position: PopupMenuPosition.over,
-          icon: Icon(Icons.language, color: widget.iconColor),
+          icon: Icon(_languageIcon, color: widget.iconColor),
           itemBuilder: (BuildContext context) {
             return _buildLanguageOptionsIcon(context);
           },
@@ -76,9 +77,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
       options.add(
         PopupMenuItem(
           value: locale,
-          child: Text(
-            '${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}',
-          ),
+          child: Text(translateLocaleName(locale: locale)),
         ),
       );
     });
@@ -94,9 +93,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
       options.add(
         DropdownMenuItem(
           value: locale,
-          child: Text(
-            '${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}',
-          ),
+          child: Text(translateLocaleName(locale: locale)),
         ),
       );
     });

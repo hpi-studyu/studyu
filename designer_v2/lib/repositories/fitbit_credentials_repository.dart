@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -72,6 +73,9 @@ class FitbitCredentialsRepository
       ModelAction(
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
+        confirmation: ModelActionConfirmations.delete(
+          subject: tr.dialog_subject_fitbit_credentials,
+        ),
         onExecute: () async {
           return await delete(getKey(model))
               .then(

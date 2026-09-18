@@ -78,9 +78,9 @@ class Cache {
     return null;
   }
 
-  static Future<void> delete() async {
+  static Future<void> delete() {
     StudyULogger.warning("Delete cache");
-    SecureStorage.delete(cacheSubjectKey);
+    return SecureStorage.delete(cacheSubjectKey);
   }
 
   static Future<void> uploadBlobFiles() async {
@@ -165,11 +165,8 @@ class Cache {
           StudyULogger.fatal(
             "Cache synchronization found local changes that cannot be merged",
           );
-          StudyUDiagnostics.captureMessage(
+          StudyULogger.error(
             "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}",
-          );
-          StudyUDiagnostics.captureException(
-            Exception("CacheSynchronizationException"),
           );
         }
       }
@@ -185,11 +182,6 @@ class Cache {
     debugInfo.writeln('=== Cached User Data Debug Info ===');
 
     try {
-      // Check for fake StudyU email domain
-      debugInfo.writeln(
-        'Fake StudyU Email Domain: fake-studyu-email-domain.com',
-      );
-
       // Check selected subject ID
       if (await SecureStorage.containsKey('selected_study_object_id')) {
         final selectedSubjectId = await SecureStorage.read(
