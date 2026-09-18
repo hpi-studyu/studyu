@@ -22,24 +22,20 @@ String buildAppLaunchLink({String? inviteCode, String? studyId}) {
 ///
 /// Desktop browsers receive an invitation handoff surface. Mobile browsers
 /// attempt to open the installed app and retain the existing store fallback.
-class DeepLinkWebLandingPage extends StatefulWidget {
-  final String? inviteCode;
-  final String? studyId;
+class const DeepLinkWebLandingPage({
+  super.key,
+  final String? inviteCode,
+  final String? studyId,
   @visibleForTesting
-  final Future<(StudyInvite?, Study?)> Function(String)? lookupInvite;
-
-  const DeepLinkWebLandingPage({
-    super.key,
-    this.inviteCode,
-    this.studyId,
-    this.lookupInvite,
-  }) : assert(inviteCode != null || studyId != null);
+  final Future<(StudyInvite?, Study?)> Function(String)? lookupInvite,
+}) extends StatefulWidget {
+  this : assert(inviteCode != null || studyId != null);
 
   @override
   State<DeepLinkWebLandingPage> createState() => _DeepLinkWebLandingPageState();
 }
 
-class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
+class _DeepLinkWebLandingPageState() extends State<DeepLinkWebLandingPage> {
   Future<(StudyInvite?, Study?)>? _inviteFuture;
   Timer? _copyFeedbackTimer;
   bool _inviteCodeCopied = false;
@@ -647,18 +643,12 @@ class _DeepLinkWebLandingPageState extends State<DeepLinkWebLandingPage> {
   }
 }
 
-class _InviteStep extends StatelessWidget {
-  const _InviteStep({
-    required this.number,
-    required this.title,
-    required this.child,
-    super.key,
-  });
-
-  final int number;
-  final String title;
-  final Widget child;
-
+class const _InviteStep({
+  required final int number,
+  required final String title,
+  required final Widget child,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

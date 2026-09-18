@@ -25,8 +25,8 @@ Study _study(String id, {StudyStatus status = StudyStatus.draft}) {
     ..status = status;
 }
 
-class _Harness {
-  _Harness() {
+class _Harness() {
+  this {
     apiClient = MockStudyUApiClient();
     authRepository = MockAuthRepository();
     router = MockGoRouter();

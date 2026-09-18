@@ -8,5 +8,5 @@ abstract class PlatformLocale {
   Locale getPlatformLocale();
 
   // Return the correct implementation
-  factory PlatformLocale() => getImplementation();
+  factory() => getImplementation();
 }

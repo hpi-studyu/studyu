@@ -2,18 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:stack_deferred_link/stack_deferred_link.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class DeferredLink {
-  final String? inviteCode;
-  final String? studyId;
+class const DeferredLink._({final String? inviteCode, final String? studyId}) {
+  this : assert(inviteCode != null || studyId != null);
 
-  const DeferredLink._({this.inviteCode, this.studyId})
-    : assert(inviteCode != null || studyId != null);
+  factory invite(String inviteCode) => DeferredLink._(inviteCode: inviteCode);
 
-  factory DeferredLink.invite(String inviteCode) =>
-      DeferredLink._(inviteCode: inviteCode);
-
-  factory DeferredLink.study(String studyId) =>
-      DeferredLink._(studyId: studyId);
+  factory study(String studyId) => DeferredLink._(studyId: studyId);
 }
 
 @visibleForTesting
@@ -89,7 +83,7 @@ String? _extractReferrerValue(String referrer, String key) {
   }
 }
 
-class DeferredLinkService {
+class DeferredLinkService() {
   static Future<DeferredLink?> checkForDeferredLink() async {
     try {
       final hasProcessed =

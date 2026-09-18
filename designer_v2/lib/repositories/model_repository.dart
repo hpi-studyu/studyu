@@ -10,12 +10,11 @@ import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 typedef ModelID = String;
 
 // TODO make this immutable
-class WrappedModel<T> {
-  WrappedModel(T model) : _model = model {
-    this.model = model;
+class WrappedModel<T>(var T _model) {
+  this {
+    model = _model;
   }
 
-  T _model;
   T get model => _model;
   set model(T model) {
     _model = model;
@@ -61,11 +60,11 @@ class WrappedModel<T> {
   }
 }
 
-class ModelRepositoryException implements Exception {}
+class ModelRepositoryException() implements Exception;
 
-class ModelNotFoundException implements ModelRepositoryException {}
+class ModelNotFoundException() implements ModelRepositoryException;
 
-abstract class IModelRepository<T> implements IModelActionProvider<T> {
+abstract class IModelRepository<T>() implements IModelActionProvider<T> {
   ModelID getKey(T model);
   WrappedModel<T>? get(ModelID modelId);
   Future<List<WrappedModel<T>>> fetchAll();
@@ -86,7 +85,7 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   void dispose();
 }
 
-abstract class IModelRepositoryDelegate<T> {
+abstract class IModelRepositoryDelegate<T>() {
   Future<List<T>> fetchAll();
   Future<T> fetch(ModelID modelId);
   Future<T> save(T model);
@@ -99,12 +98,10 @@ abstract class IModelRepositoryDelegate<T> {
 }
 
 // TODO: revisit user-facing error handling & flow
-abstract class ModelRepository<T> extends IModelRepository<T> {
-  ModelRepository(this.delegate);
-
+abstract class ModelRepository<T>(
   /// Injected delegate reference
-  final IModelRepositoryDelegate<T> delegate;
-
+  final IModelRepositoryDelegate<T> delegate,
+) extends IModelRepository<T> {
   /// Stream controller for broadcasting all models stored in the repository
   final BehaviorSubject<List<WrappedModel<T>>> _allModelsStreamController =
       BehaviorSubject();

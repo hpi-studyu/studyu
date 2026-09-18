@@ -28,9 +28,8 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 
 typedef InterventionProvider = Intervention? Function(String id);
 
-class StudyRecruitScreen extends StudyPageWidget {
-  const StudyRecruitScreen(super.studyId, {super.key});
-
+class const StudyRecruitScreen(super.studyId, {super.key})
+    extends StudyPageWidget {
   static const _searchFieldWidth = 250.0;
   static const _searchFieldCompactWidth = 220.0;
   static const _searchFieldUltraCompactWidth = 190.0;

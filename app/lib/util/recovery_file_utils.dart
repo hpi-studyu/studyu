@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:universal_html/html.dart' as html;
 
-class RecoveryFileUtils {
+class RecoveryFileUtils() {
   static Future<void> downloadRecoveryText(List<String> phrase) async {
     try {
       final text = phrase.join(' ');

@@ -102,14 +102,12 @@ void main() {
   );
 }
 
-class _CapturedRequest {
-  const _CapturedRequest({
-    required this.method,
-    required this.uri,
-    required this.headers,
-  });
-
-  factory _CapturedRequest.from(HttpRequest request) {
+class const _CapturedRequest({
+  required final String method,
+  required final Uri uri,
+  required final Map<String, String> headers,
+}) {
+  factory from(HttpRequest request) {
     final headers = <String, String>{};
     request.headers.forEach((name, values) {
       headers[name] = values.join(',');
@@ -120,8 +118,4 @@ class _CapturedRequest {
       headers: headers,
     );
   }
-
-  final String method;
-  final Uri uri;
-  final Map<String, String> headers;
 }

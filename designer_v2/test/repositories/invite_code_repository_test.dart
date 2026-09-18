@@ -16,12 +16,10 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 
 final _refProvider = Provider<Ref>((ref) => ref);
 
-class _MockAuthRepository extends Mock implements IAuthRepository {}
+class _MockAuthRepository() extends Mock implements IAuthRepository;
 
-class _FakeStudyRepository implements IStudyRepository {
-  _FakeStudyRepository(Study study) : _study = WrappedModel(study);
-
-  final WrappedModel<Study> _study;
+class _FakeStudyRepository(Study study) implements IStudyRepository {
+  final WrappedModel<Study> _study = WrappedModel(study);
 
   @override
   WrappedModel<Study>? get(ModelID modelId, {bool strict = false}) => _study;
@@ -30,7 +28,7 @@ class _FakeStudyRepository implements IStudyRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeApiClient implements StudyUApi {
+class _FakeApiClient() implements StudyUApi {
   final pages = <List<StudyInvite>>[];
   final deletedInvites = <StudyInvite>[];
 

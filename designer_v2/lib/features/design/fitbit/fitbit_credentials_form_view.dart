@@ -7,11 +7,10 @@ import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_for
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FitbitCredentialsSection extends StatelessWidget {
-  const FitbitCredentialsSection({required this.formViewModel, super.key});
-
-  final FitbitCredentialsFormViewModel formViewModel;
-
+class const FitbitCredentialsSection({
+  required final FitbitCredentialsFormViewModel formViewModel,
+  super.key,
+}) extends StatelessWidget {
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
@@ -64,11 +63,10 @@ class FitbitCredentialsSection extends StatelessWidget {
   }
 }
 
-class FitbitCredentialsHelpContent extends StatelessWidget {
-  const FitbitCredentialsHelpContent({required this.onLaunchUrl, super.key});
-
-  final Future<void> Function(String url) onLaunchUrl;
-
+class const FitbitCredentialsHelpContent({
+  required final Future<void> Function(String url) onLaunchUrl,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -135,9 +133,8 @@ class FitbitCredentialsHelpContent extends StatelessWidget {
   }
 }
 
-class FitbitSingleParticipantInstructions extends StatelessWidget {
-  const FitbitSingleParticipantInstructions({super.key});
-
+class const FitbitSingleParticipantInstructions({super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -186,15 +183,14 @@ class FitbitSingleParticipantInstructions extends StatelessWidget {
   }
 }
 
-class FitbitCredentialsScreenshotsSection extends StatefulWidget {
-  const FitbitCredentialsScreenshotsSection({super.key});
-
+class const FitbitCredentialsScreenshotsSection({super.key})
+    extends StatefulWidget {
   @override
   State<FitbitCredentialsScreenshotsSection> createState() =>
       _FitbitCredentialsScreenshotsSectionState();
 }
 
-class _FitbitCredentialsScreenshotsSectionState
+class _FitbitCredentialsScreenshotsSectionState()
     extends State<FitbitCredentialsScreenshotsSection> {
   late final ScrollController scrollController = ScrollController();
 

@@ -23,12 +23,11 @@ Locale? resolveSupportedLocale(String? value, List<Locale> supportedLocales) {
   return null;
 }
 
-class AppLanguage extends ChangeNotifier {
+class AppLanguage(final List<Locale> supportedLocales) extends ChangeNotifier {
   static const String keyLanguageCode = 'language_code';
-  final List<Locale> supportedLocales;
   Locale? _appLocale;
 
-  AppLanguage(this.supportedLocales) : super() {
+  this : super() {
     fetchLocale();
   }
 

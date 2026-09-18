@@ -2,9 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-enum FilterLogic { and, or }
+enum FilterLogic() {
+  and,
+  or,
+}
 
-enum FilterOperator {
+enum FilterOperator() {
   equals,
   notEquals,
   contains,
@@ -22,7 +25,7 @@ enum FilterOperator {
   inLast, // e.g. in last 30 days
 }
 
-enum StudyProperty {
+enum StudyProperty() {
   title,
   status,
   participation,
@@ -37,13 +40,12 @@ enum StudyProperty {
   editor, // derived from isEditor
 }
 
-abstract class FilterElement extends Equatable {
-  const FilterElement();
+abstract class const FilterElement() extends Equatable {
   String get id;
 
   Map<String, dynamic> toJson();
 
-  factory FilterElement.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final type = json['type'] as String?;
     if (type == 'group') {
       return FilterGroup.fromJson(json);
@@ -54,21 +56,18 @@ abstract class FilterElement extends Equatable {
   }
 }
 
-class FilterCondition extends FilterElement {
+// ignore: prefer_const_constructors_in_immutables
+class FilterCondition({
+  String? id,
+  required final StudyProperty property,
+  required final FilterOperator operator,
+  final dynamic value,
+}) extends FilterElement {
   @override
-  final String id;
-  final StudyProperty property;
-  final FilterOperator operator;
-  final dynamic value; // String, num, DateTime, bool, etc.
+  final String id = id ?? const Uuid().v4();
+  // String, num, DateTime, bool, etc.
 
-  FilterCondition({
-    String? id,
-    required this.property,
-    required this.operator,
-    this.value,
-  }) : id = id ?? const Uuid().v4();
-
-  factory FilterCondition.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final propertyName = json['property'];
     final operatorName = json['operator'];
     final property = propertyName is String
@@ -130,20 +129,18 @@ class FilterCondition extends FilterElement {
   List<Object?> get props => [id, property, operator, value];
 }
 
-class FilterGroup extends FilterElement {
+// ignore: prefer_const_constructors_in_immutables
+class FilterGroup({
+  String? id,
+  final FilterLogic logic = FilterLogic.and,
+  List<FilterElement>? children,
+}) extends FilterElement {
   @override
-  final String id;
-  final FilterLogic logic;
-  final List<FilterElement> children; // Can be FilterCondition or FilterGroup
+  final String id = id ?? const Uuid().v4();
+  final List<FilterElement> children =
+      children ?? []; // Can be FilterCondition or FilterGroup
 
-  FilterGroup({
-    String? id,
-    this.logic = FilterLogic.and,
-    List<FilterElement>? children,
-  }) : id = id ?? const Uuid().v4(),
-       children = children ?? [];
-
-  factory FilterGroup.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final children = <FilterElement>[];
     for (final child in json['children'] as List<dynamic>) {
       if (child is! Map<String, dynamic>) continue;
@@ -183,31 +180,22 @@ class FilterGroup extends FilterElement {
   List<Object?> get props => [id, logic, children];
 }
 
-class SavedFilter {
-  final String id;
-  String name;
-  FilterGroup root;
-  String? sortColumn; // Matches StudiesTableColumn enum name
-  bool sortAscending;
-  bool isDefault;
-  IconData? icon;
-  DateTime createdAt;
-  DateTime updatedAt;
+class SavedFilter({
+  required final String id,
+  required var String name,
+  required var FilterGroup root,
+  var String? sortColumn,
+  var bool sortAscending = true,
+  var bool isDefault = false,
+  var IconData? icon,
+  DateTime? createdAt,
+  DateTime? updatedAt,
+}) {
+  // Matches StudiesTableColumn enum name
+  DateTime createdAt = createdAt ?? DateTime.now();
+  DateTime updatedAt = updatedAt ?? DateTime.now();
 
-  SavedFilter({
-    required this.id,
-    required this.name,
-    required this.root,
-    this.sortColumn,
-    this.sortAscending = true,
-    this.isDefault = false,
-    this.icon,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) : createdAt = createdAt ?? DateTime.now(),
-       updatedAt = updatedAt ?? DateTime.now();
-
-  factory SavedFilter.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     return SavedFilter(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -240,7 +228,7 @@ class SavedFilter {
   }
 }
 
-class DefaultPresets {
+class DefaultPresets() {
   static SavedFilter get myActiveStudies => SavedFilter(
     id: 'preset_my_active_studies',
     name: 'My Active Studies',

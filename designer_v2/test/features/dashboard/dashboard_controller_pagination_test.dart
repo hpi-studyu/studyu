@@ -51,18 +51,18 @@ Study _study(String id, {String? title}) {
     ..endedCount = 0;
 }
 
-class _Harness {
-  _Harness({
-    Set<String> pinnedIds = const {},
-    StudiesPage? initialPage,
-    List<Study> initialPinned = const [],
-    Object? pinnedError,
-    ({String? sortColumn, bool? sortAscending}) activeSort = (
-      sortColumn: null,
-      sortAscending: null,
-    ),
-    StudiesFilter? initialFilter,
-  }) {
+class _Harness({
+  Set<String> pinnedIds = const {},
+  StudiesPage? initialPage,
+  List<Study> initialPinned = const [],
+  Object? pinnedError,
+  ({String? sortColumn, bool? sortAscending}) activeSort = (
+    sortColumn: null,
+    sortAscending: null,
+  ),
+  StudiesFilter? initialFilter,
+}) {
+  this {
     studyRepo = MockStudyRepository();
     authRepo = MockAuthRepository();
     userRepo = MockUserRepository();

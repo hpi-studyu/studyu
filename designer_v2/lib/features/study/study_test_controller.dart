@@ -13,7 +13,7 @@ import 'package:studyu_designer_v2/routing/router.dart';
 part 'study_test_controller.g.dart';
 
 @riverpod
-class StudyTestController extends _$StudyTestController {
+class StudyTestController() extends _$StudyTestController {
   @override
   StudyTestControllerState build(StudyID studyId) {
     final studyRepo = ref.watch(studyRepositoryProvider);

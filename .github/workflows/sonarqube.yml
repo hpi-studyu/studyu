@@ -117,7 +117,7 @@ jobs:
 
       - name: Run tests with coverage
         if: steps.reuse-coverage.outputs.reused != 'true'
-        run: melos run test:coverage --no-select
+        run: dart run melos run test:coverage --no-select
 
       - name: Validate Flutter test reports
         shell: bash

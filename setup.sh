@@ -16,21 +16,18 @@ env_example="flutter_common/lib/envs/.env.local.example"
 env_local="flutter_common/lib/envs/.env.local"
 [ -e "$env_local" ] || cp "$env_example" "$env_local"
 
-# Install Melos via the pinned SDK.
-echo "Installing Melos via fvm dart..."
-fvm dart pub global activate melos
-
-# Bootstrap Melos packages via the pinned SDK.
-echo "Bootstrapping Melos packages via fvm exec melos..."
-fvm exec melos bootstrap
-
-# Run dart pub get for the root project via the pinned SDK.
+# Resolve root dependencies via the pinned SDK. This also resolves the
+# workspace-local Melos package from the lockfile.
 echo "Running fvm dart pub get in root project..."
 fvm dart pub get
 
+# Bootstrap Melos packages via the lockfile-resolved package.
+echo "Bootstrapping Melos packages via fvm dart run melos..."
+fvm dart run melos bootstrap
+
 # Configure Git to use the tracked hooks.
-echo "Configuring Git hooks via fvm exec melos..."
-fvm exec melos setup
+echo "Configuring Git hooks via fvm dart run melos..."
+fvm dart run melos setup
 
 # Optional: enable repo-provided coding-agent integrations (MCP servers + skills).
 # Generic: templates under .agents/templates/ and servers in .mcp.json.example are

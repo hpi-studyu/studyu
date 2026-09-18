@@ -17,17 +17,13 @@ class Result<T> {
   @JsonKey(includeToJson: false, includeFromJson: false)
   late T result;
 
-  Result(this.type);
+  new(this.type);
 
-  Result.app({
-    required this.type,
-    required this.periodId,
-    required this.result,
-  });
+  new app({required this.type, required this.periodId, required this.result});
 
-  factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
+  factory parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
-  factory Result.fromJson(Map<String, dynamic> json) => switch (json[keyType]) {
+  factory fromJson(Map<String, dynamic> json) => switch (json[keyType]) {
     'QuestionnaireState' =>
       Result<QuestionnaireState>.parseJson(json)
         ..result = QuestionnaireState.fromJson(

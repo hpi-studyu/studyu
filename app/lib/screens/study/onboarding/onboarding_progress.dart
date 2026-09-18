@@ -3,7 +3,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 
 /// Pages of the study onboarding flow, in the order participants see them.
-enum OnboardingStep {
+enum OnboardingStep() {
   overview,
   terms,
   eligibility,
@@ -13,24 +13,19 @@ enum OnboardingStep {
   recovery,
 }
 
-class OnboardingProgress extends StatelessWidget {
+class const OnboardingProgress({
   /// 0-based index of the page the participant is currently on.
-  final int currentStep;
+  required final int currentStep,
 
   /// Number of pages this study's onboarding flow shows.
-  final int stepCount;
-
-  const OnboardingProgress({
-    required this.currentStep,
-    required this.stepCount,
-    super.key,
-  });
-
+  required final int stepCount,
+  super.key,
+}) extends StatelessWidget {
   /// Builds the progress for [page] with one segment per page that this
   /// study's onboarding flow actually shows. Conditional pages (eligibility
   /// check, intervention selection, consent, recovery phrase) only count
   /// when the study includes them.
-  factory OnboardingProgress.forPage(AppState state, OnboardingStep page) {
+  factory forPage(AppState state, OnboardingStep page) {
     final study = state.selectedStudy ?? state.activeSubject?.study;
     final shownPages = [
       true, // study overview

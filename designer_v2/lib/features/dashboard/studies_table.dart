@@ -14,15 +14,14 @@ import 'package:studyu_designer_v2/repositories/study_repository_interface.dart'
 export 'package:studyu_designer_v2/repositories/study_repository_interface.dart'
     show StudiesTableColumn;
 
-class StudiesTableColumnSize {
-  final bool collapsed;
-  final int? flex;
-  final double? width;
-
-  StudiesTableColumnSize._(this.flex, this.width, this.collapsed);
-  StudiesTableColumnSize.fixedWidth(double width) : this._(null, width, false);
-  StudiesTableColumnSize.flexWidth(int flex) : this._(flex, null, false);
-  StudiesTableColumnSize.collapsed() : this._(null, null, true);
+class StudiesTableColumnSize._(
+  final int? flex,
+  final double? width,
+  final bool collapsed,
+) {
+  new fixedWidth(double width) : this._(null, width, false);
+  new flexWidth(int flex) : this._(flex, null, false);
+  new collapsed() : this._(null, null, true);
 
   Widget createContainer({required Widget child, double? height}) {
     if (collapsed) {
@@ -36,55 +35,31 @@ class StudiesTableColumnSize {
   }
 }
 
-class StudiesTable extends StatelessWidget {
+class const StudiesTable({
+  required final List<Study> studies,
+  required final OnSelectHandler<Study> onSelect,
+  required final ActionsProviderFor<Study> getActions,
+  required final Widget emptyWidget,
+  required final Iterable<String> pinnedStudies,
+  required final DashboardController dashboardController,
+  final Set<String> pendingStudyIds = const {},
+  final bool isLoadingMore = false,
+  final bool hasMore = false,
+  final bool advancedFilterUnsupported = false,
+  final bool showCreateStudyLink = false,
+  final Object? loadError,
+  final VoidCallback? onRetry,
+  final Future<void> Function()? onLoadMore,
+  final double itemHeight = 60.0,
+  final double itemPadding = 10.0,
+  final double rowSpacing = 9.0,
+  final double columnSpacing = 10.0,
+  final double compactWidthThreshold = 1000.0,
+  final double superCompactWidthThreshold = 600.0,
+  final double compactStatTitleThreshold = 1100.0,
+  super.key,
+}) extends StatelessWidget {
   static const _loadMorePrefetchThreshold = 5;
-
-  const StudiesTable({
-    required this.studies,
-    required this.onSelect,
-    required this.getActions,
-    required this.emptyWidget,
-    required this.pinnedStudies,
-    required this.dashboardController,
-    this.pendingStudyIds = const {},
-    this.isLoadingMore = false,
-    this.hasMore = false,
-    this.advancedFilterUnsupported = false,
-    this.showCreateStudyLink = false,
-    this.loadError,
-    this.onRetry,
-    this.onLoadMore,
-    this.itemHeight = 60.0,
-    this.itemPadding = 10.0,
-    this.rowSpacing = 9.0,
-    this.columnSpacing = 10.0,
-    this.compactWidthThreshold = 1000.0,
-    this.superCompactWidthThreshold = 600.0,
-    this.compactStatTitleThreshold = 1100.0,
-    super.key,
-  });
-
-  final double itemHeight;
-  final double itemPadding;
-  final double rowSpacing;
-  final double columnSpacing;
-  final double compactWidthThreshold;
-  final double superCompactWidthThreshold;
-  final double compactStatTitleThreshold;
-  final List<Study> studies;
-  final OnSelectHandler<Study> onSelect;
-  final ActionsProviderFor<Study> getActions;
-  final Widget emptyWidget;
-  final Iterable<String> pinnedStudies;
-  final DashboardController dashboardController;
-  final Set<String> pendingStudyIds;
-  final bool isLoadingMore;
-  final bool hasMore;
-  final bool advancedFilterUnsupported;
-  final bool showCreateStudyLink;
-  final Object? loadError;
-  final VoidCallback? onRetry;
-  final Future<void> Function()? onLoadMore;
 
   @override
   Widget build(BuildContext context) {
@@ -430,10 +405,9 @@ class StudiesTable extends StatelessWidget {
   }
 }
 
-class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
-  const _AdvancedFilterUnsupportedNotice({required this.onRetry});
-  final VoidCallback? onRetry;
-
+class const _AdvancedFilterUnsupportedNotice({
+  required final VoidCallback? onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -466,11 +440,10 @@ class _AdvancedFilterUnsupportedNotice extends StatelessWidget {
   }
 }
 
-class _LoadErrorNotice extends StatelessWidget {
-  const _LoadErrorNotice({required this.error, required this.onRetry});
-  final Object error;
-  final VoidCallback? onRetry;
-
+class const _LoadErrorNotice({
+  required final Object error,
+  required final VoidCallback? onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

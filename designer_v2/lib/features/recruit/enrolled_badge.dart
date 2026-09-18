@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-class EnrolledBadge extends StatelessWidget {
-  const EnrolledBadge({required this.enrolledCount, super.key});
-
-  final int enrolledCount;
-
+class const EnrolledBadge({required final int enrolledCount, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

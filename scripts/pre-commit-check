@@ -9,9 +9,17 @@ if ! command -v fvm >/dev/null 2>&1; then
 fi
 
 rtk_prefix=""
-if command -v rtk >/dev/null 2>&1; then
+if [ "${CI:-}" != "true" ] && command -v rtk >/dev/null 2>&1; then
   rtk_prefix="rtk "
 fi
+
+run_melos() {
+  if [ "${CI:-}" = "true" ]; then
+    dart run melos "$@"
+  else
+    ${rtk_prefix}fvm dart run melos "$@"
+  fi
+}
 
 STAGED_FILES="$(git diff --cached --name-only --diff-filter=ACMR)"
 
@@ -34,11 +42,11 @@ run_and_require_clean_tree() {
 cd "$ROOT"
 
 echo "Running format before commit..."
-run_and_require_clean_tree ${rtk_prefix}fvm exec melos format
+run_and_require_clean_tree run_melos format
 
 if printf '%s\n' "$STAGED_FILES" | grep -Eq '^(core|designer_v2)/(lib/.*\.dart|build\.yaml|pubspec\.yaml)$|^pubspec\.yaml$|\.g\.dart$'; then
   echo "Build-related files staged. Running generate..."
-  run_and_require_clean_tree ${rtk_prefix}fvm exec melos generate
+  run_and_require_clean_tree run_melos generate
 else
   echo "No build-related files staged. Skipping generate."
 fi

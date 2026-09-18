@@ -9,11 +9,10 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class ChoiceQuestionFormView extends ConsumerWidget {
-  const ChoiceQuestionFormView({required this.formViewModel, super.key});
-
-  final QuestionFormViewModel formViewModel;
-
+class const ChoiceQuestionFormView({
+  required final QuestionFormViewModel formViewModel,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
@@ -130,11 +129,8 @@ List<Widget> buildChoiceOptionRow(
   ];
 }
 
-class ChoiceValueAccessor extends ControlValueAccessor<Choice, String> {
-  final FormControl<Choice>? _control;
-
-  ChoiceValueAccessor([this._control]);
-
+class ChoiceValueAccessor([final FormControl<Choice>? _control])
+    extends ControlValueAccessor<Choice, String> {
   @override
   String? modelToViewValue(Choice? modelValue) {
     return modelValue?.text;

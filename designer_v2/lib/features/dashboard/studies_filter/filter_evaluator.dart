@@ -2,7 +2,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
-class FilterEvaluator {
+class FilterEvaluator() {
   static bool evaluate(FilterGroup group, Study study, supabase.User user) {
     if (group.children.isEmpty) return true;
 

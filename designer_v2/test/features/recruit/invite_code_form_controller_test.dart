@@ -6,11 +6,9 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-class _FakeInviteCodeRepository implements InviteCodeFormRepository {
-  _FakeInviteCodeRepository({Set<String>? usedCodes})
-    : _usedCodes = usedCodes ?? <String>{};
-
-  final Set<String> _usedCodes;
+class _FakeInviteCodeRepository({Set<String>? usedCodes})
+    implements InviteCodeFormRepository {
+  final Set<String> _usedCodes = usedCodes ?? <String>{};
   final List<String> lookedUpCodes = <String>[];
   final List<StudyInvite> savedInvites = <StudyInvite>[];
   final List<String> deletedCodes = <String>[];

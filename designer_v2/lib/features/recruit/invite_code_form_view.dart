@@ -14,11 +14,10 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/clipboard.dart';
 
-class InviteCodeFormView extends FormConsumerRefWidget {
-  const InviteCodeFormView({required this.formViewModel, super.key});
-
-  final InviteCodeFormViewModel formViewModel;
-
+class const InviteCodeFormView({
+  required final InviteCodeFormViewModel formViewModel,
+  super.key,
+}) extends FormConsumerRefWidget {
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
     final isEditableCodeField = formViewModel.formMode == FormMode.create;

@@ -640,16 +640,6 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
 /// See the documentation for Mockito's code generation for more information.
 class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
   @override
-  _i2.StudyUApi get apiClient => (super.noSuchMethod(
-    Invocation.getter(#apiClient),
-    returnValue: _FakeStudyUApi_0(this, Invocation.getter(#apiClient)),
-    returnValueForMissingStub: _FakeStudyUApi_0(
-      this,
-      Invocation.getter(#apiClient),
-    ),
-  ) as _i2.StudyUApi);
-
-  @override
   _i3.IAuthRepository get authRepository => (super.noSuchMethod(
     Invocation.getter(#authRepository),
     returnValue: _FakeIAuthRepository_1(
@@ -661,6 +651,16 @@ class MockUserRepository extends _i1.Mock implements _i17.UserRepository {
       Invocation.getter(#authRepository),
     ),
   ) as _i3.IAuthRepository);
+
+  @override
+  _i2.StudyUApi get apiClient => (super.noSuchMethod(
+    Invocation.getter(#apiClient),
+    returnValue: _FakeStudyUApi_0(this, Invocation.getter(#apiClient)),
+    returnValueForMissingStub: _FakeStudyUApi_0(
+      this,
+      Invocation.getter(#apiClient),
+    ),
+  ) as _i2.StudyUApi);
 
   @override
   _i10.Ref get ref => (super.noSuchMethod(

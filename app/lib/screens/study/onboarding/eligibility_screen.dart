@@ -16,13 +16,11 @@ import 'package:studyu_app/widgets/title_description_layout.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class EligibilityResult {
-  final bool eligible;
-  final QuestionnaireState answers;
-  final EligibilityCriterion? firstFailed;
-
-  EligibilityResult(this.answers, {required this.eligible, this.firstFailed});
-}
+class EligibilityResult(
+  final QuestionnaireState answers, {
+  required final bool eligible,
+  final EligibilityCriterion? firstFailed,
+});
 
 typedef EligibilityContinuation = Future<void> Function(BuildContext context);
 
@@ -52,17 +50,16 @@ Future<void> continueAfterEligibility(BuildContext context) async {
   context.push('/${RouteNames.journey}');
 }
 
-class EligibilityScreenArguments {
-  final Study? study;
-  final EligibilityContinuation? onEligible;
+class const EligibilityScreenArguments({
+  required final Study? study,
+  final EligibilityContinuation? onEligible,
+});
 
-  const EligibilityScreenArguments({required this.study, this.onEligible});
-}
-
-class EligibilityScreen extends StatefulWidget {
-  final Study? study;
-  final EligibilityContinuation? onEligible;
-
+class const EligibilityScreen({
+  required final Study? study,
+  final EligibilityContinuation? onEligible,
+  super.key,
+}) extends StatefulWidget {
   static MaterialPageRoute<EligibilityResult> routeFor({
     required Study? study,
   }) => MaterialPageRoute(
@@ -70,13 +67,11 @@ class EligibilityScreen extends StatefulWidget {
     settings: const RouteSettings(name: '/eligibilityCheck'),
   );
 
-  const EligibilityScreen({required this.study, this.onEligible, super.key});
-
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();
 }
 
-class _EligibilityScreenState extends State<EligibilityScreen> {
+class _EligibilityScreenState() extends State<EligibilityScreen> {
   EligibilityResult? activeResult;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool _ignoreNextNullResponse = false;

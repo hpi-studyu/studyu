@@ -39,25 +39,21 @@ bool shouldMarkDashboardShowcaseCompleted({required bool wasStarted}) {
   return wasStarted;
 }
 
-class DashboardScreen extends StatefulWidget {
-  final String? error;
-
-  const DashboardScreen({super.key, this.error});
-
+class const DashboardScreen({super.key, final String? error})
+    extends StatefulWidget {
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class OverflowMenuItem {
-  final String name;
-  final IconData icon;
-  final String? routeName;
-  final Future<void> Function()? onTap;
+class OverflowMenuItem(
+  final String name,
+  final IconData icon, {
+  final String? routeName,
+  final Future<void> Function()? onTap,
+});
 
-  OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
-}
-
-class _DashboardScreenState extends State<DashboardScreen>
+class _DashboardScreenState()
+    extends State<DashboardScreen>
     with WidgetsBindingObserver {
   final GlobalKey _progressShowcaseKey = GlobalKey();
   final GlobalKey _currentInterventionShowcaseKey = GlobalKey();
@@ -562,10 +558,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 }
 
-class StudyFinishedPlaceholder extends StatelessWidget {
+class const StudyFinishedPlaceholder({super.key}) extends StatelessWidget {
   static const space = SizedBox(height: 80);
-
-  const StudyFinishedPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {

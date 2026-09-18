@@ -9,33 +9,26 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-enum AppErrorReason { loading, deletedStudy }
-
-class AppErrorScreenArguments {
-  final String? selectedSubjectId;
-  final AppErrorReason reason;
-
-  const AppErrorScreenArguments({
-    this.selectedSubjectId,
-    this.reason = AppErrorReason.loading,
-  });
+enum AppErrorReason() {
+  loading,
+  deletedStudy,
 }
 
-class AppErrorScreen extends StatefulWidget {
-  final String? selectedSubjectId;
-  final AppErrorReason reason;
+class const AppErrorScreenArguments({
+  final String? selectedSubjectId,
+  final AppErrorReason reason = AppErrorReason.loading,
+});
 
-  const AppErrorScreen({
-    super.key,
-    this.selectedSubjectId,
-    this.reason = AppErrorReason.loading,
-  });
-
+class const AppErrorScreen({
+  super.key,
+  final String? selectedSubjectId,
+  final AppErrorReason reason = AppErrorReason.loading,
+}) extends StatefulWidget {
   @override
   State<AppErrorScreen> createState() => _AppErrorScreenState();
 }
 
-class _AppErrorScreenState extends State<AppErrorScreen> {
+class _AppErrorScreenState() extends State<AppErrorScreen> {
   String? cachedUserData;
   bool isLoadingData = true;
 

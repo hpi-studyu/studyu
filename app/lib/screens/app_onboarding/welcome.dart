@@ -10,14 +10,12 @@ import 'package:studyu_app/services/pending_deep_link_service.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
-
+class const WelcomeScreen({super.key}) extends StatefulWidget {
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState() extends State<WelcomeScreen> {
   bool _inviteDialogShown = false;
 
   @override
