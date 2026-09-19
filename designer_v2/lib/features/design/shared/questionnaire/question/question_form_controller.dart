@@ -192,6 +192,7 @@ class QuestionFormViewModel({
     SurveyQuestionType.scale: _scaleResponseOptionsArray,
     SurveyQuestionType.image: imageResponseOptionsArray,
     SurveyQuestionType.audio: audioResponseOptionsArray,
+    SurveyQuestionType.medication: medicationResponseOptionsArray,
     SurveyQuestionType.freeText: freeTextResponseOptionsArray,
     SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
     SurveyQuestionType.pain: painResponseOptionsArray,
@@ -231,6 +232,9 @@ class QuestionFormViewModel({
     imageOptions,
   );
 
+
+  // Medication
+  late final FormArray<String> medicationResponseOptionsArray = FormArray([]);
   //Pain
   List<AbstractControl<String>> get painOptions => PainQuestionFormData
       .kResponseOptions
@@ -576,6 +580,7 @@ class QuestionFormViewModel({
       'audioOptionsArray': audioResponseOptionsArray,
       'maxRecordingDurationSeconds': maxRecordingDurationSecondsControl,
     }),
+    SurveyQuestionType.medication: FormGroup({}),
     SurveyQuestionType.freeText: FormGroup({
       'freeTextOptionsArray': freeTextResponseOptionsArray,
     }),
@@ -945,6 +950,7 @@ class QuestionFormViewModel({
       case SurveyQuestionType.bool:
         break;
       case SurveyQuestionType.image:
+      case SurveyQuestionType.medication:
         break;
       case SurveyQuestionType.audio:
         maxRecordingDurationSecondsControl.value =
@@ -1075,6 +1081,14 @@ class QuestionFormViewModel({
         );
       case SurveyQuestionType.image:
         return ImageQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
+        );
+      case SurveyQuestionType.medication:
+        return MedicationQuestionFormData(
           questionId: questionId,
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required

@@ -709,6 +709,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_image => 'Bild';
 
   @override
+  String get question_type_medication => 'Medikament';
+
+  @override
   String get question_type_audio => 'Audio';
 
   @override

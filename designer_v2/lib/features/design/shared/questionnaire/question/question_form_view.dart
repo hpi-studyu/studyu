@@ -14,6 +14,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/fitbit_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/free_text_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/image_capturing_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/medication_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/pain_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
@@ -56,6 +57,8 @@ class _SurveyQuestionFormViewState()
           ScaleQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.image: (_) =>
           ImageCapturingQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.medication: (_) =>
+          MedicationQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.audio: (_) =>
           AudioRecordingQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.freeText: (_) =>

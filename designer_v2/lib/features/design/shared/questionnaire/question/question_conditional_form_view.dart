@@ -53,6 +53,7 @@ class ConditionalQuestionFormView({
     AudioRecordingQuestion.questionType,
     FitbitQuestion.questionType,
     PainQuestion.questionType,
+    MedicationQuestion.questionType,
   ];
 
   List<Question> get availableQuestions {

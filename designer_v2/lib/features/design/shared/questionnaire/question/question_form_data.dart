@@ -61,6 +61,11 @@ abstract class QuestionFormData({
           question as ImageCapturingQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.medication: (question, eligibilityCriteria) =>
+        MedicationQuestionFormData.fromDomainModel(
+          question as MedicationQuestion,
+          eligibilityCriteria,
+        ),
     SurveyQuestionType.audio: (question, eligibilityCriteria) =>
         AudioQuestionFormData.fromDomainModel(
           question as AudioRecordingQuestion,
@@ -377,6 +382,63 @@ class ImageQuestionFormData({
     final value = kResponseOptions[responseOption]!;
     return question.constructAnswer(value);
   }
+}
+
+class MedicationQuestionFormData({
+  required super.questionId,
+  required super.questionText,
+  required super.questionType,
+  super.questionInfoText,
+  super.conditional,
+}) extends QuestionFormData {
+  @override
+  List<dynamic> get responseOptions => const <dynamic>[];
+
+  factory MedicationQuestionFormData.fromDomainModel(
+    MedicationQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = MedicationQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.medication,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  MedicationQuestion toQuestion() {
+    final question = MedicationQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<MedicationAnswer>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as MedicationAnswer?,
+          );
+    return question;
+  }
+
+  @override
+  MedicationQuestionFormData copy() {
+    final data = MedicationQuestionFormData(
+      questionId: const Uuid().v4(),
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
+    );
+    data.responseOptionsValidity = {...responseOptionsValidity};
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) => throw UnimplementedError();
 }
 
 class AudioQuestionFormData({

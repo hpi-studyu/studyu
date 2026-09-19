@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:archive/archive.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -13,10 +15,20 @@ extension StudyExportZipX on StudyExportData {
     final archive = Archive();
     final toCSVString = CSVStringEncoder();
     final toJsonString = JsonStringEncoder();
+    final csvMeasurements = measurementsData
+        .map(
+          (row) => row.map(
+            (key, value) => MapEntry(
+              key,
+              (value is Map || value is List) ? jsonEncode(value) : value,
+            ),
+          ),
+        )
+        .toList();
 
     final files = {
       'study_definition.json': prettyJson(study.toJson()),
-      'measurements.csv': toCSVString(measurementsData),
+      'measurements.csv': toCSVString(csvMeasurements),
       'measurements.json': toJsonString(measurementsData),
       'interventions.csv': toCSVString(interventionsData),
       'interventions.json': toJsonString(interventionsData),
