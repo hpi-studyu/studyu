@@ -11,6 +11,6 @@
   ],
   "language": "en",
   "noConfigSearch": true,
-  "words": ["megalinter", "oxsecurity", "bfarm", "BfArM"],
+  "words": ["megalinter", "oxsecurity", "bfarm", "BfArM", "medication", "PZN"],
   "version": "0.2"
 }

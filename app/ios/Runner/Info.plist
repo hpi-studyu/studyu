@@ -41,8 +41,8 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>StudyU Health uses the camera to scan study invitation QR codes and take photos for study tasks.</string>
+  <key>NSCameraUsageDescription</key>
+  <string>StudyU Health uses the camera to scan study invitation QR codes, medication barcodes, and take photos for study tasks.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

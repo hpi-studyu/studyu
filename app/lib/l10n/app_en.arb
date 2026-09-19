@@ -758,5 +758,18 @@
   "invite_landing_enter_code_title": "Enter invite code",
   "invite_landing_scan_qr_title": "Scan QR code",
   "invite_landing_copied": "Copied",
-  "invite_landing_copy_code": "Copy invite code"
+  "invite_landing_copy_code": "Copy invite code",
+  "medicationSearchHint": "Search by medication name or PZN",
+  "medicationScanTitle": "Scan medication barcode",
+  "medicationScanDescription": "Point your camera at a medication barcode.",
+  "medicationScanButtonTooltip": "Scan medication barcode",
+  "medicationSearchNeedMoreChars": "Enter at least two characters.",
+  "medicationSearchNoResults": "No medications found.",
+  "medicationSearchError": "Medication search failed.",
+  "medicationScanNothingFound": "The barcode is not a supported medication barcode.",
+  "medicationRetry": "Retry",
+  "medicationClearSelection": "Choose another medication",
+  "medicationQuantityLabel": "Quantity",
+  "medicationQuantityInvalid": "Enter a quantity greater than zero.",
+  "medicationConfirm": "Use this medication"
 }
