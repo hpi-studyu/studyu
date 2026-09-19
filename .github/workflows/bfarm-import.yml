@@ -1,0 +1,75 @@
+name: Import BfArM medication data
+
+on:
+  schedule:
+    - cron: "17 7 1-3,15-17 * *"
+  workflow_dispatch:
+    inputs:
+      allow_large_drop:
+        description: "Allow a product count drop below 90 percent"
+        required: false
+        default: false
+        type: boolean
+      allow_same_date_correction:
+        description: "Allow a same-date correction"
+        required: false
+        default: false
+        type: boolean
+      corrects_release_id:
+        description: "Release UUID corrected by this delivery"
+        required: false
+        type: string
+      expected_attachment_sha256:
+        description: "Expected canonical attachment SHA-256"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bfarm-import-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  import:
+    name: Import BfArM delivery
+    runs-on: ubuntu-latest
+    environment: bfarm-production
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Run importer
+        env:
+          BFARM_IMAP_HOST: ${{ secrets.BFARM_IMAP_HOST }}
+          BFARM_IMAP_PORT: ${{ vars.BFARM_IMAP_PORT || 993 }}
+          BFARM_IMAP_USERNAME: ${{ secrets.BFARM_IMAP_USERNAME }}
+          BFARM_IMAP_PASSWORD: ${{ secrets.BFARM_IMAP_PASSWORD }}
+          BFARM_ALLOWED_SENDER: ${{ vars.BFARM_ALLOWED_SENDER }}
+          BFARM_TRUSTED_AUTHSERV_ID: ${{ vars.BFARM_TRUSTED_AUTHSERV_ID }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          BFARM_PRODUCTION_ENABLED: ${{ vars.BFARM_PRODUCTION_ENABLED || false }}
+          BFARM_SCHEDULE_ENABLED: ${{ vars.BFARM_SCHEDULE_ENABLED || false }}
+          BFARM_IMPORTER_VERSION: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          args=()
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            args+=(--manual)
+            if [[ "${{ inputs.allow_large_drop }}" == "true" ]]; then
+              args+=(--allow-large-drop)
+            fi
+            if [[ "${{ inputs.allow_same_date_correction }}" == "true" ]]; then
+              args+=(--allow-same-date-correction)
+            fi
+            if [[ -n "${{ inputs.corrects_release_id }}" ]]; then
+              args+=(--corrects-release-id "${{ inputs.corrects_release_id }}")
+            fi
+            if [[ -n "${{ inputs.expected_attachment_sha256 }}" ]]; then
+              args+=(--expected-attachment-sha256 "${{ inputs.expected_attachment_sha256 }}")
+            fi
+          fi
+          python3 scripts/bfarm_importer.py "${args[@]}"

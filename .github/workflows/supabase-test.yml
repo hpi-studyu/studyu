@@ -5,6 +5,7 @@ on:
       - "database/**"
       - "supabase/**"
       - ".github/workflows/supabase-test.yml"
+      - "scripts/**"
   workflow_dispatch:
 
 jobs:
@@ -36,3 +37,7 @@ jobs:
       - name: Run Supabase Tests
         run: |
           supabase test db --local supabase/tests
+
+      - name: Run importer unit tests
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_*.py'
