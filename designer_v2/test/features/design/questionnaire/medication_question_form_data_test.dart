@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
@@ -60,6 +61,15 @@ void main() {
       expect(duplicate.questionId, isNot(formData.questionId));
       expect(duplicate.questionText, 'Medication (Copy)');
       expect(formData.toEligibilityCriterion(), isNull);
+    });
+
+    test('exposes medication question type metadata', () {
+      expect(
+        SurveyQuestionType.of(MedicationQuestion()),
+        SurveyQuestionType.medication,
+      );
+      expect(SurveyQuestionType.medication.string, isNotEmpty);
+      expect(SurveyQuestionType.medication.icon, Icons.medication_rounded);
     });
   });
 }
