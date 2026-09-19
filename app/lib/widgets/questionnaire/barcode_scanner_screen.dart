@@ -74,7 +74,9 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
               const SizedBox(height: 24),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                child: Text(
+                  MaterialLocalizations.of(context).cancelButtonLabel,
+                ),
               ),
             ],
           ),

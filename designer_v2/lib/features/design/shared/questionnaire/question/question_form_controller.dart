@@ -232,7 +232,6 @@ class QuestionFormViewModel({
     imageOptions,
   );
 
-
   // Medication
   late final FormArray<String> medicationResponseOptionsArray = FormArray([]);
   //Pain

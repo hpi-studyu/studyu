@@ -78,7 +78,11 @@ String ppnCheck(String payload) {
 /// Calculates the GS1 mod-10 check digit for thirteen numeric data digits.
 int gtinCheckDigit(String data13) {
   if (!RegExp(r'^[0-9]{13}$').hasMatch(data13)) {
-    throw ArgumentError.value(data13, 'data13', 'Must contain exactly 13 digits.');
+    throw ArgumentError.value(
+      data13,
+      'data13',
+      'Must contain exactly 13 digits.',
+    );
   }
 
   var sum = 0;
@@ -117,7 +121,9 @@ String? parseAscPayload(String payload) {
   // field position.
   if (fields.length < 2 || fields.first != '06') return null;
 
-  final ppnFields = fields.where(_ascPpnPattern.hasMatch).toList(growable: false);
+  final ppnFields = fields
+      .where(_ascPpnPattern.hasMatch)
+      .toList(growable: false);
   if (ppnFields.length != 1) return null;
 
   final field = ppnFields.single;
@@ -157,9 +163,11 @@ String? _stripSymbologyIdentifier(String payload) {
   if (!payload.startsWith(']')) return payload;
 
   final identifierAndValue = payload.substring(1);
-  for (var length = 3;
-      length >= 1 && length <= identifierAndValue.length;
-      length--) {
+  for (
+    var length = 3;
+    length >= 1 && length <= identifierAndValue.length;
+    length--
+  ) {
     final identifier = identifierAndValue.substring(0, length);
     final value = identifierAndValue.substring(length);
     if (RegExp(r'^[A-Za-z0-9]+$').hasMatch(identifier) &&

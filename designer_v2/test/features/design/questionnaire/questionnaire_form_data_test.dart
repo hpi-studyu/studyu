@@ -63,20 +63,23 @@ void main() {
   });
 
   group('MedicationQuestionFormData', () {
-    test('converts a measurement medication question from its domain model', () {
-      final question = MedicationQuestion()
-        ..id = 'medication-question'
-        ..prompt = 'What medication did you take?'
-        ..rationale = 'Include the quantity.';
+    test(
+      'converts a measurement medication question from its domain model',
+      () {
+        final question = MedicationQuestion()
+          ..id = 'medication-question'
+          ..prompt = 'What medication did you take?'
+          ..rationale = 'Include the quantity.';
 
-      final formData = QuestionFormData.fromDomainModel(question, []);
+        final formData = QuestionFormData.fromDomainModel(question, []);
 
-      expect(formData, isA<MedicationQuestionFormData>());
-      expect(formData.questionType, SurveyQuestionType.medication);
-      expect(formData.questionId, question.id);
-      expect(formData.questionText, question.prompt);
-      expect(formData.questionInfoText, question.rationale);
-    });
+        expect(formData, isA<MedicationQuestionFormData>());
+        expect(formData.questionType, SurveyQuestionType.medication);
+        expect(formData.questionId, question.id);
+        expect(formData.questionText, question.prompt);
+        expect(formData.questionInfoText, question.rationale);
+      },
+    );
 
     test('round-trips prompt, rationale, and conditional', () {
       final conditional = QuestionConditional<MedicationAnswer>.withCondition(
@@ -96,7 +99,10 @@ void main() {
       expect(question.id, formData.questionId);
       expect(question.prompt, formData.questionText);
       expect(question.rationale, formData.questionInfoText);
-      expect(question.conditional?.condition.toJson(), conditional.condition.toJson());
+      expect(
+        question.conditional?.condition.toJson(),
+        conditional.condition.toJson(),
+      );
     });
 
     test('duplicates without eligibility semantics', () {

@@ -438,7 +438,8 @@ class MedicationQuestionFormData({
   }
 
   @override
-  Answer constructAnswerFor(dynamic responseOption) => throw UnimplementedError();
+  Answer constructAnswerFor(dynamic responseOption) =>
+      throw UnimplementedError();
 }
 
 class AudioQuestionFormData({
