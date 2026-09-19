@@ -8,6 +8,7 @@ export 'fitbit/fitbit_models.dart';
 export 'interventions/interventions.dart';
 export 'observations/observations.dart';
 export 'questionnaire/questionnaire_models.dart';
+export 'medication/medication_models.dart';
 export 'report/report_models.dart';
 export 'results/result.dart';
 export 'study_results/study_results.dart';
