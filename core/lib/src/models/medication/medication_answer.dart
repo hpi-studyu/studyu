@@ -9,10 +9,7 @@ class MedicationAnswer {
   final MedicationProductSnapshot medication;
   final num quantity;
 
-  const MedicationAnswer({
-    required this.medication,
-    required this.quantity,
-  });
+  const MedicationAnswer({required this.medication, required this.quantity});
 
   factory MedicationAnswer.fromJson(Map<String, dynamic> json) =>
       _$MedicationAnswerFromJson(json);
