@@ -11,6 +11,6 @@
   ],
   "language": "en",
   "noConfigSearch": true,
-  "words": ["megalinter", "oxsecurity"],
+  "words": ["megalinter", "oxsecurity", "bfarm", "BfArM"],
   "version": "0.2"
 }
