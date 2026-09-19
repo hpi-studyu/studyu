@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'medication_product_snapshot.dart';
+import 'package:studyu_core/src/models/medication/medication_product_snapshot.dart';
 
 part 'medication_answer.g.dart';
 

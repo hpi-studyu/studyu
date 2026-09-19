@@ -1,38 +1,34 @@
 import 'package:studyu_core/core.dart';
 import 'package:test/test.dart';
 
-MedicationProductSnapshot buildSnapshot() => MedicationProductSnapshot(
+MedicationProductSnapshot buildSnapshot() => const MedicationProductSnapshot(
   pzn: '03752864',
   officialName: 'Ibuprofen Test 400 mg Filmtabletten',
   activeIngredientCount: 1,
-  dosageForm: const MedicationDosageForm(
+  dosageForm: MedicationDosageForm(
     patientFriendlyShort: 'Tablet',
-    patientFriendlyLong: null,
     bfarmName: 'Tablette',
     bfarmTermId: 'T1',
   ),
   components: [
-    const MedicationComponent(
+    MedicationComponent(
       key: 'rpp-1',
       number: 1,
       dosageForm: MedicationDosageForm(
         patientFriendlyShort: 'Tablet',
-        patientFriendlyLong: null,
         bfarmName: 'Tablette',
         bfarmTermId: 'T1',
       ),
-      description: null,
       activeIngredients: [
         MedicationActiveIngredient(
           key: 'rse-1',
           name: 'Ibuprofen',
           strength: '400 mg',
-          bfarmSubstanceId: null,
           rank: 1,
         ),
       ],
     ),
-    const MedicationComponent(
+    MedicationComponent(
       key: 'rpp-2',
       number: 2,
       dosageForm: MedicationDosageForm(
@@ -46,8 +42,6 @@ MedicationProductSnapshot buildSnapshot() => MedicationProductSnapshot(
         MedicationActiveIngredient(
           key: 'rse-2',
           name: 'Other ingredient',
-          strength: null,
-          bfarmSubstanceId: null,
           rank: 1,
         ),
       ],
