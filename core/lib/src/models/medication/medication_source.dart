@@ -7,10 +7,7 @@ class MedicationSource {
   final String name;
   final String releaseDate;
 
-  const MedicationSource({
-    required this.name,
-    required this.releaseDate,
-  });
+  const MedicationSource({required this.name, required this.releaseDate});
 
   factory MedicationSource.fromJson(Map<String, dynamic> json) =>
       _$MedicationSourceFromJson(json);

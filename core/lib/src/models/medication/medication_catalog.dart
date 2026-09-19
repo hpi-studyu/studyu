@@ -23,11 +23,7 @@ class MedicationCatalog {
   }) async {
     final response = await client.rpc<dynamic>(
       'search_bfarm_medications',
-      params: {
-        'p_query': query,
-        'p_limit': limit,
-        'p_offset': offset,
-      },
+      params: {'p_query': query, 'p_limit': limit, 'p_offset': offset},
     );
     return (response as List)
         .map(
