@@ -8,12 +8,15 @@ part 'user_repository.g.dart';
 
 abstract class IUserRepository() {
   StudyUUser get user;
+  StudyUUser? get cachedUser;
   Future<StudyUUser> fetchUser();
   Future<StudyUUser> saveUser();
   Future<StudyUUser> updatePreferences(
     PreferenceAction pinAction,
     String modelId,
   );
+  Future<StudyUUser> updateDateFormat(DateFormatPreference? value);
+  Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value);
   Future<StudyUUser> updateLanguage(String language);
   Future<StudyUUser> saveCustomPreset(SavedFilter filter);
   Future<StudyUUser> deleteCustomPreset(String id);
@@ -52,9 +55,13 @@ class UserRepository({
 }) implements IUserRepository {
   StudyUUser? _user;
   Future<StudyUUser>? _fetchFuture;
+  Future<void> _dateTimePreferenceUpdates = Future.value();
 
   @override
   StudyUUser get user => _user!;
+
+  @override
+  StudyUUser? get cachedUser => _user;
 
   @override
   Future<StudyUUser> fetchUser() async {
@@ -65,7 +72,7 @@ class UserRepository({
       return await _fetchFuture!;
     }
 
-    final userId = ref.read(authRepositoryProvider).currentUser!.id;
+    final userId = authRepository.currentUser!.id;
 
     _fetchFuture = apiClient.fetchUser(userId);
     _user = await _fetchFuture;
@@ -94,6 +101,69 @@ class UserRepository({
     }
     user.preferences.pinnedStudies = newPinnedStudies;
     return saveUser();
+  }
+
+  @override
+  Future<StudyUUser> updateDateFormat(DateFormatPreference? value) {
+    return _queueDateTimePreferenceUpdate(() async {
+      await fetchUser();
+      final currentUser = user;
+      final updatedUser = StudyUUser(
+        id: currentUser.id,
+        email: currentUser.email,
+        preferences: Preferences(
+          language: currentUser.preferences.language,
+          dateFormat: value,
+          timeFormat: currentUser.preferences.timeFormat,
+          pinnedStudies: Set<String>.from(
+            currentUser.preferences.pinnedStudies,
+          ),
+          studyFiltering: Map<String, dynamic>.from(
+            currentUser.preferences.studyFiltering,
+          ),
+        ),
+      );
+      final savedUser = await apiClient.saveUser(updatedUser);
+      _user = savedUser;
+      return savedUser;
+    });
+  }
+
+  @override
+  Future<StudyUUser> updateTimeFormat(TimeFormatPreference? value) {
+    return _queueDateTimePreferenceUpdate(() async {
+      await fetchUser();
+      final currentUser = user;
+      final updatedUser = StudyUUser(
+        id: currentUser.id,
+        email: currentUser.email,
+        preferences: Preferences(
+          language: currentUser.preferences.language,
+          dateFormat: currentUser.preferences.dateFormat,
+          timeFormat: value,
+          pinnedStudies: Set<String>.from(
+            currentUser.preferences.pinnedStudies,
+          ),
+          studyFiltering: Map<String, dynamic>.from(
+            currentUser.preferences.studyFiltering,
+          ),
+        ),
+      );
+      final savedUser = await apiClient.saveUser(updatedUser);
+      _user = savedUser;
+      return savedUser;
+    });
+  }
+
+  Future<StudyUUser> _queueDateTimePreferenceUpdate(
+    Future<StudyUUser> Function() update,
+  ) {
+    final operation = _dateTimePreferenceUpdates.then((_) => update());
+    _dateTimePreferenceUpdates = operation.then<void>(
+      (_) {},
+      onError: (_, _) {},
+    );
+    return operation;
   }
 
   @override
@@ -234,4 +304,16 @@ UserRepository userRepository(Ref ref) {
     apiClient: ref.watch(apiClientProvider),
     ref: ref,
   );
+}
+
+@riverpod
+class UserState() extends _$UserState {
+  @override
+  Future<StudyUUser> build() {
+    return ref.watch(userRepositoryProvider).fetchUser();
+  }
+
+  void setUser(StudyUUser user) {
+    state = AsyncData(user);
+  }
 }

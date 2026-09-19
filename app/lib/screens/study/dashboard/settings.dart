@@ -9,6 +9,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/services/restore_account_service.dart';
 import 'package:studyu_app/util/dashboard_showcase.dart';
+import 'package:studyu_app/util/date_time_preferences.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -54,6 +55,35 @@ class _SettingsState() extends State<Settings> {
       ),
     );
     return dropDownItems;
+  }
+
+  String _dateFormatLabel(
+    AppLocalizations localizations,
+    DateFormatPreference format,
+  ) => switch (format) {
+    DateFormatPreference.iso => localizations.date_format_iso,
+    DateFormatPreference.european => localizations.date_format_european,
+    DateFormatPreference.us => localizations.date_format_us,
+    DateFormatPreference.german => localizations.date_format_german,
+  };
+
+  String _timeFormatLabel(
+    AppLocalizations localizations,
+    TimeFormatPreference format,
+  ) => switch (format) {
+    TimeFormatPreference.h24 => localizations.time_format_24_hour,
+    TimeFormatPreference.h12 => localizations.time_format_12_hour,
+  };
+
+  void _showPreferenceSaveError(Object error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          AppLocalizations.of(context)!
+              .error_occurred_with_message(error.toString()),
+        ),
+      ),
+    );
   }
 
   @override
@@ -114,6 +144,100 @@ class _SettingsState() extends State<Settings> {
                           _selectedValue = value;
                         });
                         await context.read<AppLanguage>().changeLanguage(value);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.date_range, color: theme.primaryColor),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.date_format,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                    DropdownButton<DateFormatPreference?>(
+                      value: context.watch<DateTimePreferences>().dateFormat,
+                      underline: const SizedBox(),
+                      items: [
+                        DropdownMenuItem<DateFormatPreference?>(
+                          child: Text(AppLocalizations.of(context)!.system),
+                        ),
+                        ...DateFormatPreference.values.map(
+                          (format) => DropdownMenuItem(
+                            value: format,
+                            child: Text(
+                              _dateFormatLabel(
+                                AppLocalizations.of(context)!,
+                                format,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) async {
+                        try {
+                          await context
+                              .read<DateTimePreferences>()
+                              .changeDateFormat(value);
+                        } catch (error) {
+                          if (mounted) _showPreferenceSaveError(error);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time, color: theme.primaryColor),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.time_format,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                    DropdownButton<TimeFormatPreference?>(
+                      value: context.watch<DateTimePreferences>().timeFormat,
+                      underline: const SizedBox(),
+                      items: [
+                        DropdownMenuItem<TimeFormatPreference?>(
+                          child: Text(AppLocalizations.of(context)!.system),
+                        ),
+                        ...TimeFormatPreference.values.map(
+                          (format) => DropdownMenuItem(
+                            value: format,
+                            child: Text(
+                              _timeFormatLabel(
+                                AppLocalizations.of(context)!,
+                                format,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) async {
+                        try {
+                          await context
+                              .read<DateTimePreferences>()
+                              .changeTimeFormat(value);
+                        } catch (error) {
+                          if (mounted) _showPreferenceSaveError(error);
+                        }
                       },
                     ),
                   ],
