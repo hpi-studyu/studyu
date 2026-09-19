@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'medication_active_ingredient.dart';
-import 'medication_dosage_form.dart';
+import 'package:studyu_core/src/models/medication/medication_active_ingredient.dart';
+import 'package:studyu_core/src/models/medication/medication_dosage_form.dart';
 
 part 'medication_component.g.dart';
 

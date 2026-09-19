@@ -1,6 +1,6 @@
 import 'package:studyu_core/src/env/env.dart';
 
-import 'medication_product_snapshot.dart';
+import 'package:studyu_core/src/models/medication/medication_product_snapshot.dart';
 
 class MedicationCatalog {
   const MedicationCatalog._();
