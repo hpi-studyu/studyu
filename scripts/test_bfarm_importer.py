@@ -88,8 +88,8 @@ class ImporterTest(unittest.TestCase):
 
     def test_parse_delivery_authenticates_sender_and_archive(self):
         config = importer.ImportConfig(
-            "imap.example", 993, "user", "password", "referenzdaten@bfarm.de",
-            "trusted.example", "https://supabase.example", "service-key", True, True
+            "imap.example", 993, "user", "x", "referenzdaten@bfarm.de",
+            "trusted.example", "https://supabase.example", "x", True, True
         )
         delivery = importer.parse_delivery(
             importer.MailboxMessage(b"1", message_bytes()), config
@@ -102,16 +102,16 @@ class ImporterTest(unittest.TestCase):
         message = email.message_from_bytes(message_bytes())
         message.replace_header("Authentication-Results", "other.example; dmarc=pass header.d=bfarm.de")
         config = importer.ImportConfig(
-            "imap.example", 993, "user", "password", "referenzdaten@bfarm.de",
-            "trusted.example", "https://supabase.example", "service-key", True, True
+            "imap.example", 993, "user", "x", "referenzdaten@bfarm.de",
+            "trusted.example", "https://supabase.example", "x", True, True
         )
         with self.assertRaisesRegex(importer.ImporterError, "Trusted MTA"):
             importer.authenticate_message(message, config.allowed_sender, config.trusted_authserv_id)
 
     def test_import_stages_chunks_and_acknowledges_after_readback(self):
         config = importer.ImportConfig(
-            "imap.example", 993, "user", "password", "referenzdaten@bfarm.de",
-            "trusted.example", "https://supabase.example", "service-key", True, True
+            "imap.example", 993, "user", "x", "referenzdaten@bfarm.de",
+            "trusted.example", "https://supabase.example", "x", True, True
         )
         delivery = importer.parse_delivery(
             importer.MailboxMessage(b"1", message_bytes()), config
