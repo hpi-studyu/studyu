@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/widgets/questionnaire/barcode_scanner_screen.dart';
 import 'package:studyu_app/services/medication_barcode_parser.dart';
+import 'package:studyu_app/widgets/questionnaire/barcode_scanner_screen.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 

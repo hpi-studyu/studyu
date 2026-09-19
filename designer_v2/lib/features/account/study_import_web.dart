@@ -6,6 +6,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:web/web.dart' as web;
 
 Future<bool> importStudy(WidgetRef ref) async {
@@ -41,7 +42,7 @@ Future<bool> importStudy(WidgetRef ref) async {
     await ref.read(studyRepositoryProvider).save(newDraft);
     return true;
   } catch (e) {
-    print('Failed to import study: $e');
+    debugLog('Failed to import study: $e');
     return false;
   }
 }
