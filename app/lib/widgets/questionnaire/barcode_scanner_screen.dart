@@ -5,23 +5,17 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 
 /// A camera screen that returns the first detected barcode to its caller.
-class BarcodeScannerScreen extends StatefulWidget {
-  const BarcodeScannerScreen({
-    required this.title,
-    required this.description,
-    required this.formats,
-    super.key,
-  });
-
-  final String title;
-  final String description;
-  final List<BarcodeFormat> formats;
-
+class const BarcodeScannerScreen({
+  required final String title,
+  required final String description,
+  required final List<BarcodeFormat> formats,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<BarcodeScannerScreen> createState() => _BarcodeScannerScreenState();
 }
 
-class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
+class _BarcodeScannerScreenState() extends State<BarcodeScannerScreen> {
   late final MobileScannerController _controller;
   bool _hasResult = false;
 
