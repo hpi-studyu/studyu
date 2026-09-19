@@ -132,6 +132,7 @@ class QuestionnaireWidgetState() extends State<QuestionnaireWidget> {
         question is ScaleQuestion ||
         question is FreeTextQuestion ||
         question is DateQuestion ||
+        question is MedicationQuestion ||
         question is AnnotatedScaleQuestion ||
         // todo remove this when older studies are finished
         question is VisualAnalogueQuestion;

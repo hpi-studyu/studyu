@@ -593,5 +593,18 @@
   "invite_landing_enter_code_title": "초대 코드 입력",
   "invite_landing_scan_qr_title": "QR 코드 스캔",
   "invite_landing_copied": "복사됨",
-  "invite_landing_copy_code": "초대 코드 복사"
+  "invite_landing_copy_code": "초대 코드 복사",
+  "medicationSearchHint": "약 이름 또는 PZN으로 검색",
+  "medicationScanTitle": "약 바코드 스캔",
+  "medicationScanDescription": "카메라를 약 바코드에 맞추세요.",
+  "medicationScanButtonTooltip": "약 바코드 스캔",
+  "medicationSearchNeedMoreChars": "두 글자 이상 입력하세요.",
+  "medicationSearchNoResults": "약을 찾을 수 없습니다.",
+  "medicationSearchError": "약 검색에 실패했습니다.",
+  "medicationScanNothingFound": "지원되는 약 바코드가 아닙니다.",
+  "medicationRetry": "다시 시도",
+  "medicationClearSelection": "다른 약 선택",
+  "medicationQuantityLabel": "수량",
+  "medicationQuantityInvalid": "0보다 큰 수량을 입력하세요.",
+  "medicationConfirm": "이 약 사용"
 }

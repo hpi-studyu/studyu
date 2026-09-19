@@ -13,6 +13,7 @@ import 'package:studyu_app/widgets/questionnaire/questions/pain_question_widget.
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/visual_analogue_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/medication_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
 class const QuestionContainer({
@@ -99,6 +100,13 @@ class const QuestionContainer({
         return PainQuestionWidget(
           question: painQuestion,
           onDone: (answer) => onDone(answer, index),
+        );
+      case final MedicationQuestion medicationQuestion:
+        return MedicationQuestionWidget(
+          question: medicationQuestion,
+          onDone: (answer) => onDone(answer, index),
+          initialAnswer: initialAnswer as Answer<MedicationAnswer>?,
+          onCleared: onCleared,
         );
       case final DateQuestion dateQuestion:
         return DateQuestionWidget(

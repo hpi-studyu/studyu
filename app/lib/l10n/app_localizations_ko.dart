@@ -1919,4 +1919,43 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get invite_landing_copy_code => '초대 코드 복사';
+
+  @override
+  String get medicationSearchHint => '약 이름 또는 PZN으로 검색';
+
+  @override
+  String get medicationScanTitle => '약 바코드 스캔';
+
+  @override
+  String get medicationScanDescription => '카메라를 약 바코드에 맞추세요.';
+
+  @override
+  String get medicationScanButtonTooltip => '약 바코드 스캔';
+
+  @override
+  String get medicationSearchNeedMoreChars => '두 글자 이상 입력하세요.';
+
+  @override
+  String get medicationSearchNoResults => '약을 찾을 수 없습니다.';
+
+  @override
+  String get medicationSearchError => '약 검색에 실패했습니다.';
+
+  @override
+  String get medicationScanNothingFound => '지원되는 약 바코드가 아닙니다.';
+
+  @override
+  String get medicationRetry => '다시 시도';
+
+  @override
+  String get medicationClearSelection => '다른 약 선택';
+
+  @override
+  String get medicationQuantityLabel => '수량';
+
+  @override
+  String get medicationQuantityInvalid => '0보다 큰 수량을 입력하세요.';
+
+  @override
+  String get medicationConfirm => '이 약 사용';
 }

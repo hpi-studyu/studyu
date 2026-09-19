@@ -2016,4 +2016,48 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get invite_landing_copy_code => 'Einladungscode kopieren';
+
+  @override
+  String get medicationSearchHint => 'Nach Medikamentenname oder PZN suchen';
+
+  @override
+  String get medicationScanTitle => 'Medikamenten-Barcode scannen';
+
+  @override
+  String get medicationScanDescription =>
+      'Richten Sie die Kamera auf einen Medikamenten-Barcode.';
+
+  @override
+  String get medicationScanButtonTooltip => 'Medikamenten-Barcode scannen';
+
+  @override
+  String get medicationSearchNeedMoreChars =>
+      'Geben Sie mindestens zwei Zeichen ein.';
+
+  @override
+  String get medicationSearchNoResults => 'Keine Medikamente gefunden.';
+
+  @override
+  String get medicationSearchError =>
+      'Die Medikamentensuche ist fehlgeschlagen.';
+
+  @override
+  String get medicationScanNothingFound =>
+      'Der Barcode ist kein unterstützter Medikamenten-Barcode.';
+
+  @override
+  String get medicationRetry => 'Erneut versuchen';
+
+  @override
+  String get medicationClearSelection => 'Anderes Medikament auswählen';
+
+  @override
+  String get medicationQuantityLabel => 'Menge';
+
+  @override
+  String get medicationQuantityInvalid =>
+      'Geben Sie eine Menge größer als null ein.';
+
+  @override
+  String get medicationConfirm => 'Dieses Medikament verwenden';
 }

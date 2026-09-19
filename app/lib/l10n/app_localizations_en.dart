@@ -1988,4 +1988,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invite_landing_copy_code => 'Copy invite code';
+
+  @override
+  String get medicationSearchHint => 'Search by medication name or PZN';
+
+  @override
+  String get medicationScanTitle => 'Scan medication barcode';
+
+  @override
+  String get medicationScanDescription =>
+      'Point your camera at a medication barcode.';
+
+  @override
+  String get medicationScanButtonTooltip => 'Scan medication barcode';
+
+  @override
+  String get medicationSearchNeedMoreChars => 'Enter at least two characters.';
+
+  @override
+  String get medicationSearchNoResults => 'No medications found.';
+
+  @override
+  String get medicationSearchError => 'Medication search failed.';
+
+  @override
+  String get medicationScanNothingFound =>
+      'The barcode is not a supported medication barcode.';
+
+  @override
+  String get medicationRetry => 'Retry';
+
+  @override
+  String get medicationClearSelection => 'Choose another medication';
+
+  @override
+  String get medicationQuantityLabel => 'Quantity';
+
+  @override
+  String get medicationQuantityInvalid => 'Enter a quantity greater than zero.';
+
+  @override
+  String get medicationConfirm => 'Use this medication';
 }

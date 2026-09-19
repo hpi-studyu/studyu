@@ -1,29 +1,47 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/services/invite_code_parser.dart';
 
-class const InviteQrScannerScreen({super.key}) extends StatefulWidget {
+/// A camera screen that returns the first detected barcode to its caller.
+class BarcodeScannerScreen extends StatefulWidget {
+  const BarcodeScannerScreen({
+    required this.title,
+    required this.description,
+    required this.formats,
+    super.key,
+  });
+
+  final String title;
+  final String description;
+  final List<BarcodeFormat> formats;
+
   @override
-  State<InviteQrScannerScreen> createState() => _InviteQrScannerScreenState();
+  State<BarcodeScannerScreen> createState() => _BarcodeScannerScreenState();
 }
 
-class _InviteQrScannerScreenState() extends State<InviteQrScannerScreen> {
+class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
+  late final MobileScannerController _controller;
   bool _hasResult = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller = MobileScannerController(formats: widget.formats);
+  }
+
+  @override
+  void dispose() {
+    unawaited(_controller.dispose());
+    super.dispose();
+  }
+
   void _onDetect(BarcodeCapture capture) {
-    if (_hasResult) return;
+    if (_hasResult || capture.barcodes.isEmpty) return;
 
-    for (final barcode in capture.barcodes) {
-      final rawValue = barcode.rawValue;
-      if (rawValue == null) continue;
-      final code = inviteCodeFromScan(rawValue);
-      if (code == null) continue;
-
-      _hasResult = true;
-      Navigator.of(context).pop(code);
-      return;
-    }
+    _hasResult = true;
+    Navigator.of(context).pop(capture.barcodes.first);
   }
 
   Widget _errorView(BuildContext context, MobileScannerException error) {
@@ -56,9 +74,7 @@ class _InviteQrScannerScreenState() extends State<InviteQrScannerScreen> {
               const SizedBox(height: 24),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  MaterialLocalizations.of(context).cancelButtonLabel,
-                ),
+                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
               ),
             ],
           ),
@@ -69,13 +85,12 @@ class _InviteQrScannerScreenState() extends State<InviteQrScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(l10n.scan_invite_code),
+        title: Text(widget.title),
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
         actions: [
@@ -89,7 +104,11 @@ class _InviteQrScannerScreenState() extends State<InviteQrScannerScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          MobileScanner(onDetect: _onDetect, errorBuilder: _errorView),
+          MobileScanner(
+            controller: _controller,
+            onDetect: _onDetect,
+            errorBuilder: _errorView,
+          ),
           IgnorePointer(
             child: Center(
               child: Container(
@@ -118,7 +137,7 @@ class _InviteQrScannerScreenState() extends State<InviteQrScannerScreen> {
                     vertical: 14,
                   ),
                   child: Text(
-                    l10n.scan_invite_code_description,
+                    widget.description,
                     style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),

@@ -739,5 +739,18 @@
   "invite_landing_enter_code_title": "Einladungscode eingeben",
   "invite_landing_scan_qr_title": "QR-Code scannen",
   "invite_landing_copied": "Kopiert",
-  "invite_landing_copy_code": "Einladungscode kopieren"
+  "invite_landing_copy_code": "Einladungscode kopieren",
+  "medicationSearchHint": "Nach Medikamentenname oder PZN suchen",
+  "medicationScanTitle": "Medikamenten-Barcode scannen",
+  "medicationScanDescription": "Richten Sie die Kamera auf einen Medikamenten-Barcode.",
+  "medicationScanButtonTooltip": "Medikamenten-Barcode scannen",
+  "medicationSearchNeedMoreChars": "Geben Sie mindestens zwei Zeichen ein.",
+  "medicationSearchNoResults": "Keine Medikamente gefunden.",
+  "medicationSearchError": "Die Medikamentensuche ist fehlgeschlagen.",
+  "medicationScanNothingFound": "Der Barcode ist kein unterstützter Medikamenten-Barcode.",
+  "medicationRetry": "Erneut versuchen",
+  "medicationClearSelection": "Anderes Medikament auswählen",
+  "medicationQuantityLabel": "Menge",
+  "medicationQuantityInvalid": "Geben Sie eine Menge größer als null ein.",
+  "medicationConfirm": "Dieses Medikament verwenden"
 }

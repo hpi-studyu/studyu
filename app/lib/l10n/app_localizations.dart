@@ -3666,6 +3666,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy invite code'**
   String get invite_landing_copy_code;
+
+  /// No description provided for @medicationSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by medication name or PZN'**
+  String get medicationSearchHint;
+
+  /// No description provided for @medicationScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan medication barcode'**
+  String get medicationScanTitle;
+
+  /// No description provided for @medicationScanDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at a medication barcode.'**
+  String get medicationScanDescription;
+
+  /// No description provided for @medicationScanButtonTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan medication barcode'**
+  String get medicationScanButtonTooltip;
+
+  /// No description provided for @medicationSearchNeedMoreChars.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least two characters.'**
+  String get medicationSearchNeedMoreChars;
+
+  /// No description provided for @medicationSearchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No medications found.'**
+  String get medicationSearchNoResults;
+
+  /// No description provided for @medicationSearchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication search failed.'**
+  String get medicationSearchError;
+
+  /// No description provided for @medicationScanNothingFound.
+  ///
+  /// In en, this message translates to:
+  /// **'The barcode is not a supported medication barcode.'**
+  String get medicationScanNothingFound;
+
+  /// No description provided for @medicationRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get medicationRetry;
+
+  /// No description provided for @medicationClearSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another medication'**
+  String get medicationClearSelection;
+
+  /// No description provided for @medicationQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get medicationQuantityLabel;
+
+  /// No description provided for @medicationQuantityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a quantity greater than zero.'**
+  String get medicationQuantityInvalid;
+
+  /// No description provided for @medicationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this medication'**
+  String get medicationConfirm;
 }
 
 class _AppLocalizationsDelegate
