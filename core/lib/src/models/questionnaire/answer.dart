@@ -1,3 +1,4 @@
+import 'package:studyu_core/src/models/medication/medication_answer.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -28,16 +29,26 @@ class Answer<V> {
   Map<String, dynamic> toJson() {
     final dynamic encodableResponse = response is DateTime
         ? (response as DateTime).toIso8601String()
+        : response is MedicationAnswer
+        ? (response as MedicationAnswer).toJson()
         : response;
     return mergeMaps<String, dynamic>(_$AnswerToJson(this), {
       keyResponse: encodableResponse,
       if (response is DateTime) keyResponseType: 'DateTime',
+      if (response is MedicationAnswer) keyResponseType: 'MedicationAnswer',
     });
   }
 
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];
     final String? responseType = data[keyResponseType] as String?;
+
+    if (responseType == 'MedicationAnswer' && value is Map) {
+      return Answer<MedicationAnswer>(
+        data['question'] as String,
+        DateTime.parse(data['timestamp'] as String),
+      )..response = MedicationAnswer.fromJson(Map<String, dynamic>.from(value));
+    }
 
     if (responseType == 'DateTime') {
       return Answer<DateTime>(

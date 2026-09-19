@@ -8,6 +8,7 @@ export 'date_question.dart';
 export 'default_date_option.dart';
 export 'fitbit_question.dart';
 export 'free_text_question.dart';
+export 'medication_question.dart';
 export 'image_capturing_question.dart';
 export 'pain_question.dart';
 export 'scale_question.dart';
