@@ -2,8 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:studyu_core/src/models/medication/medication_answer.dart';
 import 'package:studyu_core/src/models/questionnaire/answer.dart';
-import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 
 part 'medication_question.g.dart';
 

@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'medication_component.dart';
-import 'medication_dosage_form.dart';
-import 'medication_source.dart';
+import 'package:studyu_core/src/models/medication/medication_component.dart';
+import 'package:studyu_core/src/models/medication/medication_dosage_form.dart';
+import 'package:studyu_core/src/models/medication/medication_source.dart';
 
 part 'medication_product_snapshot.g.dart';
 
