@@ -58,7 +58,7 @@ void main() {
     final gtin = '$gtinData${gtinCheckDigit(gtinData)}';
     expect(parseGs1Payload('(01)$gtin'), pzn);
 
-    final ppid = '00$pzn';
+    const ppid = '00$pzn';
     final ascField = '9N$ppid${ppnCheck(ppid)}';
     final ascPayload = '[)>\u001e06\u001d$ascField\u001e\u0004';
     expect(parseAscPayload(ascPayload), pzn);

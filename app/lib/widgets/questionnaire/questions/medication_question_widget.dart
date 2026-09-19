@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/widgets/questionnaire/barcode_scanner_screen.dart';
 import 'package:studyu_app/services/medication_barcode_parser.dart';
+import 'package:studyu_app/widgets/questionnaire/barcode_scanner_screen.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -33,8 +33,8 @@ class MedicationQuestionWidget extends QuestionWidget {
 
   static Future<List<MedicationProductSnapshot>> Function(String)
   defaultNameSearch = MedicationCatalog.searchByName;
-  static Future<MedicationProductSnapshot?> Function(String) defaultExactLookup =
-      MedicationCatalog.lookupByPzn;
+  static Future<MedicationProductSnapshot?> Function(String)
+  defaultExactLookup = MedicationCatalog.lookupByPzn;
   static BuildContext? _scannerContext;
   static Future<Barcode?> Function() defaultScanBarcode = _openScanner;
 
@@ -179,10 +179,9 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
     });
 
     try {
-      final result = await (widget.exactLookup ??
-              MedicationQuestionWidget.defaultExactLookup)(
-            pzn,
-          );
+      final result =
+          await (widget.exactLookup ??
+              MedicationQuestionWidget.defaultExactLookup)(pzn);
       if (!mounted || sequence != _requestSequence) return;
       setState(() {
         _results = result == null ? const [] : [result];
@@ -209,10 +208,9 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
     });
 
     try {
-      final results = await (widget.nameSearch ??
-              MedicationQuestionWidget.defaultNameSearch)(
-            query,
-          );
+      final results =
+          await (widget.nameSearch ??
+              MedicationQuestionWidget.defaultNameSearch)(query);
       if (!mounted || sequence != _requestSequence) return;
       setState(() {
         _results = results.take(20).toList(growable: false);
@@ -245,7 +243,8 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
 
   Future<void> _scanMedicationCode() async {
     try {
-      final barcode = await (widget.scanBarcode ??
+      final barcode =
+          await (widget.scanBarcode ??
               MedicationQuestionWidget.defaultScanBarcode)();
       if (!mounted || barcode == null) return;
 
@@ -324,7 +323,8 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
     return medication.components
         .expand((component) => component.activeIngredients)
         .map(
-          (ingredient) => ingredient.strength == null || ingredient.strength!.isEmpty
+          (ingredient) =>
+              ingredient.strength == null || ingredient.strength!.isEmpty
               ? ingredient.name
               : '${ingredient.name} ${ingredient.strength}',
         )
@@ -378,7 +378,10 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
           children: [
             _SearchMessage(message: l10n.medicationSearchError),
             const SizedBox(height: 8),
-            TextButton(onPressed: _retrySearch, child: Text(l10n.medicationRetry)),
+            TextButton(
+              onPressed: _retrySearch,
+              child: Text(l10n.medicationRetry),
+            ),
           ],
         );
     }
@@ -390,9 +393,8 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
     final l10n = AppLocalizations.of(context)!;
     final medication = _selectedMedication;
     final dosageForm = medication?.dosageForm.patientFriendlyShort;
-    final showQuantityError = medication != null &&
-        _quantityTouched &&
-        !_hasValidQuantity;
+    final showQuantityError =
+        medication != null && _quantityTouched && !_hasValidQuantity;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -464,7 +466,9 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
               labelText: dosageForm == null || dosageForm.isEmpty
                   ? l10n.medicationQuantityLabel
                   : '${l10n.medicationQuantityLabel} ($dosageForm)',
-              errorText: showQuantityError ? l10n.medicationQuantityInvalid : null,
+              errorText: showQuantityError
+                  ? l10n.medicationQuantityInvalid
+                  : null,
             ),
             onChanged: (_) {
               setState(() => _quantityTouched = true);
@@ -474,7 +478,7 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
           FilledButton(
             onPressed: _hasValidQuantity ? _confirmSelection : null,
             child: Text(l10n.medicationConfirm),
-          )
+          ),
         ],
       ],
     );
