@@ -9,28 +9,17 @@ import 'package:studyu_app/widgets/questionnaire/barcode_scanner_screen.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
-class MedicationQuestionWidget extends QuestionWidget {
-  const MedicationQuestionWidget({
-    required this.question,
-    required this.onDone,
-    this.initialAnswer,
-    this.onCleared,
-    this.nameSearch,
-    this.exactLookup,
-    this.scanBarcode,
-    this.debounceDuration = const Duration(milliseconds: 300),
-    super.key,
-  });
-
-  final MedicationQuestion question;
-  final void Function(Answer<MedicationAnswer>) onDone;
-  final Answer<MedicationAnswer>? initialAnswer;
-  final VoidCallback? onCleared;
-  final Future<List<MedicationProductSnapshot>> Function(String)? nameSearch;
-  final Future<MedicationProductSnapshot?> Function(String)? exactLookup;
-  final Future<Barcode?> Function()? scanBarcode;
-  final Duration debounceDuration;
-
+class const MedicationQuestionWidget({
+  required final MedicationQuestion question,
+  required final void Function(Answer<MedicationAnswer>) onDone,
+  final Answer<MedicationAnswer>? initialAnswer,
+  final VoidCallback? onCleared,
+  final Future<List<MedicationProductSnapshot>> Function(String)? nameSearch,
+  final Future<MedicationProductSnapshot?> Function(String)? exactLookup,
+  final Future<Barcode?> Function()? scanBarcode,
+  final Duration debounceDuration = const Duration(milliseconds: 300),
+  super.key,
+}) extends QuestionWidget {
   static Future<List<MedicationProductSnapshot>> Function(String)
   defaultNameSearch = MedicationCatalog.searchByName;
   static Future<MedicationProductSnapshot?> Function(String)
@@ -44,7 +33,7 @@ class MedicationQuestionWidget extends QuestionWidget {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) return null;
 
-    return Navigator.of(context).push<Barcode>(
+    return await Navigator.of(context).push<Barcode>(
       MaterialPageRoute(
         builder: (_) => BarcodeScannerScreen(
           title: l10n.medicationScanTitle,
@@ -60,7 +49,7 @@ class MedicationQuestionWidget extends QuestionWidget {
       _MedicationQuestionWidgetState();
 }
 
-enum _MedicationSearchState {
+enum _MedicationSearchState() {
   idle,
   needMoreCharacters,
   loading,
@@ -69,9 +58,12 @@ enum _MedicationSearchState {
   scanNothingFound,
 }
 
-enum _MedicationRequestKind { name, exact }
+enum _MedicationRequestKind() {
+  name,
+  exact,
+}
 
-class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
+class _MedicationQuestionWidgetState() extends State<MedicationQuestionWidget> {
   static final RegExp _quantityPattern = RegExp(r'^\d*[.,]?\d*$');
   static final RegExp _normalizationDiscardPattern = RegExp(
     r'[^\p{L}\p{N} ]',
@@ -485,11 +477,8 @@ class _MedicationQuestionWidgetState extends State<MedicationQuestionWidget> {
   }
 }
 
-class _SearchMessage extends StatelessWidget {
-  const _SearchMessage({required this.message});
-
-  final String message;
-
+class const _SearchMessage({required final String message})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8),

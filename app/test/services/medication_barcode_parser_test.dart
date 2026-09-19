@@ -44,7 +44,6 @@ void main() {
     final visionBarcode = Barcode(
       format: BarcodeFormat.code39,
       rawDecodedBytes: DecodedVisionBarcodeBytes(
-        bytes: null,
         rawBytes: Uint8List.fromList('-03752864'.codeUnits),
       ),
       rawValue: '-03752865',
