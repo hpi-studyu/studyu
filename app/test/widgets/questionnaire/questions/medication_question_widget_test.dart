@@ -5,23 +5,20 @@ import 'package:studyu_app/widgets/questionnaire/questions/medication_question_w
 import 'package:studyu_core/core.dart';
 
 MedicationProductSnapshot snapshot() => const MedicationProductSnapshot(
-      pzn: '03752864',
-      officialName: 'Ibuprofen Test',
-      activeIngredientCount: 1,
-      dosageForm: MedicationDosageForm(patientFriendlyShort: 'Tablet'),
-      components: [],
-      source: MedicationSource(
-        name: 'BfArM',
-        releaseDate: '2026-09-15',
-      ),
-    );
+  pzn: '03752864',
+  officialName: 'Ibuprofen Test',
+  activeIngredientCount: 1,
+  dosageForm: MedicationDosageForm(patientFriendlyShort: 'Tablet'),
+  components: [],
+  source: MedicationSource(name: 'BfArM', releaseDate: '2026-09-15'),
+);
 
 Widget setup(Widget child) => MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('en'),
-      home: Scaffold(body: child),
-    );
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  locale: const Locale('en'),
+  home: Scaffold(body: child),
+);
 
 void main() {
   testWidgets('looks up a PZN, accepts quantity, and submits a typed answer', (
@@ -52,7 +49,10 @@ void main() {
     expect(find.text('Ibuprofen Test'), findsOneWidget);
     await tester.tap(find.text('Ibuprofen Test'));
     await tester.pump();
-    await tester.enterText(find.byKey(const ValueKey('medication_quantity')), '0,5');
+    await tester.enterText(
+      find.byKey(const ValueKey('medication_quantity')),
+      '0,5',
+    );
     await tester.pump();
     await tester.tap(find.text('Use this medication'));
     await tester.pump();
