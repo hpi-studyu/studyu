@@ -163,7 +163,7 @@ void main() {
       final study = _study('study');
       when(h.apiClient.fetchStudy(study.id)).thenAnswer((_) async => study);
       final persistence = Completer<Study>();
-      late Study duplicate;
+      Study? duplicate;
       when(h.apiClient.saveStudy(any)).thenAnswer((invocation) {
         duplicate = invocation.positionalArguments.single as Study;
         return persistence.future;
@@ -173,10 +173,10 @@ void main() {
       final duplication = h.repository.duplicateAndSave(study).then((_) {
         completed = true;
       });
-      await Future<void>.delayed(Duration.zero);
+      await untilCalled(h.apiClient.saveStudy(any));
 
       expect(completed, isFalse);
-      persistence.complete(duplicate);
+      persistence.complete(duplicate!);
       await duplication;
       expect(completed, isTrue);
     },

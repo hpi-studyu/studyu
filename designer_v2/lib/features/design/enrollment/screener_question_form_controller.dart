@@ -3,6 +3,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -21,6 +22,12 @@ class ScreenerQuestionFormViewModel({
   }
 
   static const defaultResponseOptionValidity = true;
+
+  @override
+  List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
+      super.questionTypeControlOptions
+          .where((option) => option.value != SurveyQuestionType.medication)
+          .toList();
 
   late final FormArray responseOptionsDisabledArray = FormArray(
     _copyFormControls(answerOptionsArray.controls),

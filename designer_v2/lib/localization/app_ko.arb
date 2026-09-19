@@ -734,6 +734,7 @@
   "question_type_fitbit": "Fitbit",
   "question_type_free_text": "자유 입력",
   "question_type_image": "이미지",
+  "question_type_medication": "약물",
   "question_type_pain": "통증 추적기",
   "question_type_pain_back_view": "뒤쪽 보기",
   "question_type_pain_description": "참가자는 다이어그램에서 하나 이상의 신체 부위를 선택하고 각 선택한 부위에 대해 통증 수준을 통증 척도로 지정할 수 있습니다. 이는 국소적인 통증을 추적하는 데 유용합니다.",

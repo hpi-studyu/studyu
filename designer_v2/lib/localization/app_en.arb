@@ -269,6 +269,7 @@
   "question_type_bool": "Yes/no",
   "question_type_scale": "Scale",
   "question_type_image": "Image",
+  "question_type_medication": "Medication",
   "question_type_audio": "Audio",
   "question_type_fitbit": "Fitbit",
   "form_array_response_options_bool_yes": "Yes",

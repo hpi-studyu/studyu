@@ -74,6 +74,7 @@ sql_paths = [
   "./seeds/dev/11_mockup_helpers.sql",
   "./seeds/dev/20_dev_users.sql",
   "./seeds/dev/30_dev_studies.sql",
+  "./seeds/dev/40_bfarm_medication_fixture.sql",
 ]
 
 [db.network_restrictions]

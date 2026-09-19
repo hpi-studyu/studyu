@@ -684,6 +684,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get question_type_image => '이미지';
 
   @override
+  String get question_type_medication => '약물';
+
+  @override
   String get question_type_audio => '오디오';
 
   @override

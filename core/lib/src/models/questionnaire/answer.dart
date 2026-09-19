@@ -1,7 +1,7 @@
-import 'package:studyu_core/src/models/medication/medication_answer.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:studyu_core/src/models/medication/medication_answer.dart';
 import 'package:studyu_core/src/models/questionnaire/question.dart';
 
 part 'answer.g.dart';

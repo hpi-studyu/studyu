@@ -31,6 +31,9 @@ extension StudyExportX on Study {
     if (question is ChoiceQuestion && response is List<String>) {
       return _formatChoiceResponse(response, question);
     }
+    if (response is MedicationAnswer) {
+      return response.toJson();
+    }
     return response.toString();
   }
 

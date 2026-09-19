@@ -11,7 +11,8 @@ enum SurveyQuestionType() {
   freeText,
   fitbit,
   pain,
-  date;
+  date,
+  medication;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -26,6 +27,7 @@ enum SurveyQuestionType() {
       FitbitQuestion.questionType: SurveyQuestionType.fitbit,
       PainQuestion.questionType: SurveyQuestionType.pain,
       DateQuestion.questionType: SurveyQuestionType.date,
+      MedicationQuestion.questionType: SurveyQuestionType.medication,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError(
@@ -55,6 +57,8 @@ enum SurveyQuestionType() {
         return tr.question_type_pain;
       case SurveyQuestionType.date:
         return tr.question_type_date;
+      case SurveyQuestionType.medication:
+        return tr.question_type_medication;
     }
   }
 
@@ -78,6 +82,8 @@ enum SurveyQuestionType() {
         return Icons.accessibility;
       case SurveyQuestionType.date:
         return Icons.calendar_today;
+      case SurveyQuestionType.medication:
+        return Icons.medication_rounded;
     }
   }
 

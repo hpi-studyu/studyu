@@ -698,6 +698,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_image => 'Image';
 
   @override
+  String get question_type_medication => 'Medication';
+
+  @override
   String get question_type_audio => 'Audio';
 
   @override

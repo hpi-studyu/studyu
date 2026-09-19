@@ -3,8 +3,12 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
+import 'package:studyu_designer_v2/localization/app_localizations_en.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 void main() {
+  setUpAll(() => AppTranslation.setForTesting(AppLocalizationsEn()));
+
   group('QuestionnaireFormData', () {
     test('does not create eligibility criteria for free text questions', () {
       final formData = QuestionnaireFormData(

@@ -1312,6 +1312,12 @@ abstract class AppLocalizations {
   /// **'Image'**
   String get question_type_image;
 
+  /// No description provided for @question_type_medication.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication'**
+  String get question_type_medication;
+
   /// No description provided for @question_type_audio.
   ///
   /// In en, this message translates to:

@@ -265,6 +265,7 @@
   "question_type_scale": "Skala",
   "question_type_date": "Datum/Zeit",
   "question_type_image": "Bild",
+  "question_type_medication": "Medikament",
   "question_type_audio": "Audio",
   "question_type_fitbit": "Fitbit",
   "date_min_date_label": "Frühestes Datum",
