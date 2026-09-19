@@ -13,6 +13,7 @@ import 'package:studyu_app/widgets/questionnaire/questions/medication_question_w
 import 'package:studyu_app/widgets/questionnaire/questions/pain_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/visual_analogue_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
 class const QuestionContainer({
