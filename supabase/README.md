@@ -30,6 +30,7 @@ private and secure.
 - `supabase/seeds/dev/`: local development data loaded by normal `supabase db reset`.
 - `supabase/seeds/test/`: deterministic baseline loaded by `scripts/reset-test-db.sh` before database tests.
 - `supabase/tests/_helpers/`: test-only SQL helpers.
+- BfArM medication data governance, API, and importer operations: [`docs/bfarm-medication-data.md`](../docs/bfarm-medication-data.md).
 
 ### Production deployments
 
