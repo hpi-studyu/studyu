@@ -47,9 +47,7 @@ class Answer<V> {
       return Answer<MedicationAnswer>(
         data['question'] as String,
         DateTime.parse(data['timestamp'] as String),
-      )..response = MedicationAnswer.fromJson(
-          Map<String, dynamic>.from(value),
-        );
+      )..response = MedicationAnswer.fromJson(Map<String, dynamic>.from(value));
     }
 
     if (responseType == 'DateTime') {

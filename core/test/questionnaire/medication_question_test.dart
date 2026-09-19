@@ -2,62 +2,62 @@ import 'package:studyu_core/core.dart';
 import 'package:test/test.dart';
 
 MedicationProductSnapshot buildSnapshot() => MedicationProductSnapshot(
-      pzn: '03752864',
-      officialName: 'Ibuprofen Test 400 mg Filmtabletten',
-      activeIngredientCount: 1,
-      dosageForm: const MedicationDosageForm(
+  pzn: '03752864',
+  officialName: 'Ibuprofen Test 400 mg Filmtabletten',
+  activeIngredientCount: 1,
+  dosageForm: const MedicationDosageForm(
+    patientFriendlyShort: 'Tablet',
+    patientFriendlyLong: null,
+    bfarmName: 'Tablette',
+    bfarmTermId: 'T1',
+  ),
+  components: [
+    const MedicationComponent(
+      key: 'rpp-1',
+      number: 1,
+      dosageForm: MedicationDosageForm(
         patientFriendlyShort: 'Tablet',
         patientFriendlyLong: null,
         bfarmName: 'Tablette',
         bfarmTermId: 'T1',
       ),
-      components: [
-        const MedicationComponent(
-          key: 'rpp-1',
-          number: 1,
-          dosageForm: MedicationDosageForm(
-            patientFriendlyShort: 'Tablet',
-            patientFriendlyLong: null,
-            bfarmName: 'Tablette',
-            bfarmTermId: 'T1',
-          ),
-          description: null,
-          activeIngredients: [
-            MedicationActiveIngredient(
-              key: 'rse-1',
-              name: 'Ibuprofen',
-              strength: '400 mg',
-              bfarmSubstanceId: null,
-              rank: 1,
-            ),
-          ],
-        ),
-        const MedicationComponent(
-          key: 'rpp-2',
-          number: 2,
-          dosageForm: MedicationDosageForm(
-            patientFriendlyShort: 'Coated tablet',
-            patientFriendlyLong: 'Long form',
-            bfarmName: 'Überzug',
-            bfarmTermId: 'T2',
-          ),
-          description: 'Second component',
-          activeIngredients: [
-            MedicationActiveIngredient(
-              key: 'rse-2',
-              name: 'Other ingredient',
-              strength: null,
-              bfarmSubstanceId: null,
-              rank: 1,
-            ),
-          ],
+      description: null,
+      activeIngredients: [
+        MedicationActiveIngredient(
+          key: 'rse-1',
+          name: 'Ibuprofen',
+          strength: '400 mg',
+          bfarmSubstanceId: null,
+          rank: 1,
         ),
       ],
-      source: MedicationSource(
-        name: 'BfArM Referenzdatenbank gemäß § 31b SGB V',
-        releaseDate: '2026-09-15',
+    ),
+    const MedicationComponent(
+      key: 'rpp-2',
+      number: 2,
+      dosageForm: MedicationDosageForm(
+        patientFriendlyShort: 'Coated tablet',
+        patientFriendlyLong: 'Long form',
+        bfarmName: 'Überzug',
+        bfarmTermId: 'T2',
       ),
-    );
+      description: 'Second component',
+      activeIngredients: [
+        MedicationActiveIngredient(
+          key: 'rse-2',
+          name: 'Other ingredient',
+          strength: null,
+          bfarmSubstanceId: null,
+          rank: 1,
+        ),
+      ],
+    ),
+  ],
+  source: MedicationSource(
+    name: 'BfArM Referenzdatenbank gemäß § 31b SGB V',
+    releaseDate: '2026-09-15',
+  ),
+);
 
 void main() {
   test('MedicationQuestion round-trips inherited fields', () {
@@ -81,28 +81,37 @@ void main() {
     expect(restored.toJson(), answer.toJson());
     expect(restored.medication.pzn, '03752864');
     expect(restored.medication.components, hasLength(2));
-    expect(restored.medication.components[0].activeIngredients[0].strength, '400 mg');
-    expect(restored.medication.components[1].activeIngredients[0].strength, isNull);
+    expect(
+      restored.medication.components[0].activeIngredients[0].strength,
+      '400 mg',
+    );
+    expect(
+      restored.medication.components[1].activeIngredients[0].strength,
+      isNull,
+    );
     expect(restored.quantity, 0.5);
     expect(restored.medication.source.releaseDate, '2026-09-15');
   });
 
-  test('Answer uses MedicationAnswer discriminator and restores nested value', () {
-    final question = MedicationQuestion.withId();
-    final answer = question.constructAnswer(
-      MedicationAnswer(medication: buildSnapshot(), quantity: 0.5),
-    );
+  test(
+    'Answer uses MedicationAnswer discriminator and restores nested value',
+    () {
+      final question = MedicationQuestion.withId();
+      final answer = question.constructAnswer(
+        MedicationAnswer(medication: buildSnapshot(), quantity: 0.5),
+      );
 
-    final json = answer.toJson();
-    expect(json[Answer.keyResponseType], 'MedicationAnswer');
-    expect(json[Answer.keyResponse], isA<Map<String, dynamic>>());
+      final json = answer.toJson();
+      expect(json[Answer.keyResponseType], 'MedicationAnswer');
+      expect(json[Answer.keyResponse], isA<Map<String, dynamic>>());
 
-    final restored = Answer.fromJson(json) as Answer<MedicationAnswer>;
-    expect(restored.question, answer.question);
-    expect(restored.timestamp, answer.timestamp);
-    expect(restored.response.toJson(), answer.response.toJson());
-    expect(restored.response.quantity, 0.5);
-  });
+      final restored = Answer.fromJson(json) as Answer<MedicationAnswer>;
+      expect(restored.question, answer.question);
+      expect(restored.timestamp, answer.timestamp);
+      expect(restored.response.toJson(), answer.response.toJson());
+      expect(restored.response.quantity, 0.5);
+    },
+  );
 
   test('legacy primitive and DateTime answers remain compatible', () {
     final timestamp = DateTime.utc(2026, 9, 15, 12, 30);
@@ -118,7 +127,10 @@ void main() {
       final restored = Answer.fromJson(answer.toJson());
       expect(restored.question, answer.question);
       expect(restored.timestamp, timestamp);
-      expect(restored.toJson()[Answer.keyResponse], answer.toJson()[Answer.keyResponse]);
+      expect(
+        restored.toJson()[Answer.keyResponse],
+        answer.toJson()[Answer.keyResponse],
+      );
     }
 
     final legacyDate = {
